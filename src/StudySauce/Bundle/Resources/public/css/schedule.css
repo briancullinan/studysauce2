@@ -1,0 +1,287 @@
+
+
+#schedule header,
+.schedule .class-row
+{
+    clear: both;
+    display: block;
+    vertical-align: top;
+    position: relative;
+    white-space: nowrap;
+}
+
+#schedule header > *,
+.schedule .class-row > *
+{
+    vertical-align: top;
+    display:inline-block;
+    box-sizing: border-box;
+}
+
+#schedule header > label:first-child,
+.schedule .class-name
+{
+    width: 20%;
+}
+
+#schedule header .day-of-the-week,
+.schedule .day-of-the-week
+{
+    width: 30%;
+    padding-right:30px;
+    white-space: nowrap;
+}
+
+#schedule header .day-of-the-week label,
+.schedule .day-of-the-week label
+{
+    display:inline-block;
+    width:14%;
+    text-align: center;
+    overflow:hidden;
+}
+
+.schedule .class-row label
+{
+    color:transparent;
+}
+
+.schedule .class-row:not(.edit) label
+{
+    pointer-events:none;
+}
+
+.schedule .class-row:not(.edit) input:not([type]),
+.schedule .class-row:not(.edit) input[type="email"],
+.schedule .class-row:not(.edit) input[type="number"],
+.schedule .class-row:not(.edit) input[type="password"],
+.schedule .class-row:not(.edit) input[type="tel"],
+.schedule .class-row:not(.edit) input[type="url"],
+.schedule .class-row:not(.edit) input[type="text"],
+.schedule .class-row:not(.edit) select,
+.schedule .class-row:not(.edit) textarea,
+.schedule .class-row:not(.edit) input[type=date],
+.schedule .class-row:not(.edit) input[type=time],
+.schedule .class-row:not(.edit) input[type="datetime"],
+.schedule .class-row:not(.edit) input[type=datetime-local],
+.schedule .class-row:not(.edit) input[type=month]
+{
+    border-color:transparent;
+    background: transparent;
+}
+
+.schedule .class-row .recurring
+{
+    text-align: center;
+}
+
+.schedule .class-row .recurring label
+{
+    color:inherit;
+    width:auto;
+}
+.schedule .class-row .recurring i
+{
+    margin-left:5px;
+    margin-right:5px;
+}
+
+#schedule header > label:nth-child(3),
+#schedule header > label:nth-child(4)
+{
+    width: 24%;
+    margin-right:-30px;
+}
+
+.schedule .start-time,
+.schedule .end-time,
+.schedule .start-date,
+.schedule .end-date
+{
+    width: 12%;
+    padding-right:15px;
+}
+
+.schedule .start-time input[type="time"],
+.schedule .end-time input[type="time"]
+{
+    display:none;
+}
+
+.schedule .end-time,
+.schedule .start-date,
+.schedule .end-date
+{
+    margin-left:-15px;
+}
+
+.schedule .end-date
+{
+    margin-right:-15px;
+}
+
+a[href="#edit-class"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/edit.png) no-repeat 50% 50% transparent;
+}
+
+a[href="#remove-class"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/trash.png) no-repeat 50% 50% transparent;
+}
+
+a[href="#add-class"] {
+    position: relative;
+    z-index: 0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, .5);
+    border-bottom: 0;
+    color: #555555;
+    font-size: 22px;
+    font-weight: 700;
+    display: inline-block;
+    float:left;
+    margin-top:5px;
+}
+
+a[href="#add-class"] span {
+    margin: 0 10px 0 0;
+    line-height: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    top:0;
+    float: left;
+    font-size: 50px;
+    vertical-align: middle;
+}
+
+.schedule .invalid-times,
+.schedule .invalid-only,
+.schedule .overlaps-only {
+    display:none;
+}
+
+.schedule .class-row.overlaps .class-name,
+.schedule .invalid-times,
+.schedule .invalid-only,
+.schedule .overlaps-only {
+    clear: both;
+    padding-left: 35px;
+    position: relative;
+}
+
+.schedule .class-row.overlaps .class-name:before,
+.schedule .invalid-times:before,
+.schedule .invalid-only:before,
+.schedule .overlaps-only:before {
+    content: " ";
+    left: 0;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+    display: block;
+    clear: both;
+    padding-left: 35px;
+    background: url('../images/menu_icons_32.png') no-repeat left -1472px transparent;
+    position: absolute;
+}
+
+.schedule .class-row.overlaps .class-name:before,
+#schedule.invalid-time .invalid-times:before,
+#schedule.invalid-only .invalid-only:before,
+#schedule.overlaps .overlaps-only:before {
+    display:block;
+}
+
+@media all and (max-width: 1000px)
+{
+
+    .schedule .class-row label
+    {
+        color:inherit;
+    }
+
+    #schedule header,
+    .schedule .class-row
+    {
+        white-space: normal;
+        text-align: left;
+    }
+
+    #schedule header
+    {
+        display:none;
+    }
+
+    .schedule .class-name,
+    .schedule .day-of-the-week
+    {
+        width: 49%;
+    }
+
+    .schedule .start-time
+    {
+        clear:left;
+    }
+
+    .schedule .start-time,
+    .schedule .end-time,
+    .schedule .start-date,
+    .schedule .end-date
+    {
+        width: 24%;
+    }
+}
+
+@media all and (max-width: 700px) {
+    .schedule .start-time input[type="text"],
+    .schedule .end-time input[type="text"]
+    {
+        display:none;
+    }
+
+    .schedule .start-time input[type="time"],
+    .schedule .end-time input[type="time"]
+    {
+        display:block;
+    }
+
+    .schedule .class-name,
+    .schedule .day-of-the-week
+    {
+        width: 99%;
+    }
+
+    .schedule .start-time,
+    .schedule .start-date
+    {
+        clear:left;
+    }
+
+    .schedule .start-date
+    {
+        margin-left:0;
+    }
+
+    .schedule .end-time,
+    .schedule .end-date
+    {
+        margin-left:-30px;
+        margin-right:-30px;
+    }
+
+    .schedule .start-time,
+    .schedule .end-time,
+    .schedule .start-date,
+    .schedule .end-date
+    {
+        width: 49%;
+        padding-right:30px;
+    }
+}

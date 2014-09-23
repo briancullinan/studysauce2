@@ -1,0 +1,80 @@
+.footer
+{
+    background: #0d0d0d url("../images/noise_darkgray.png") repeat;
+    color: #555555;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 0;
+    position: static;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.footer > *
+{
+    vertical-align: middle;
+}
+
+.footer ul.menu
+{
+    margin: 0;
+    padding: 0 10px;
+    display: inline;
+}
+
+.footer ul.menu li
+{
+    border-right: 1px solid #555555;
+    display: inline;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 10px;
+    white-space: nowrap;
+}
+
+.footer li a
+{
+    color: #555555;
+}
+
+.footer li a:hover,
+.footer li a:focus,
+.footer li a:active
+{
+    color: #FFFFFF;
+}
+
+.footer .facebook-like
+{
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+}
+
+.footer a[href*="facebook"],
+.footer a[href*="google"],
+.footer a[href*="twitter"]
+{
+    background: url(../images/social_sprites_v2.png) no-repeat 0 0 transparent;
+    background-size: 25px auto;
+    height: 27px;
+    width: 25px;
+    display: inline-block;
+    line-height: 35px;
+}
+
+.footer a[href*="google"]
+{
+    background-position: 0 -52px;
+}
+
+.footer a[href*="twitter"] {
+    background-position: 0 -104px;
+}
+

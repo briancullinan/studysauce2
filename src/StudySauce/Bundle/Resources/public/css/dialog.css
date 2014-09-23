@@ -1,0 +1,79 @@
+
+.modal-content
+{
+    border: none;
+    border-radius: 10px;
+}
+
+.modal .modal-header
+{
+    background-color: #0099BB;
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
+    color: #fff;
+}
+
+.close
+{
+    color:#FFF;
+    opacity: .9;
+    font-size: 24px;
+}
+
+.close:hover, .close:focus
+{
+    color:#FFF;
+    opacity: 1;
+}
+
+.dialog
+{
+    z-index: 99;
+    margin: -275px auto 0;
+    max-width: 650px;
+    padding: 20px;
+    background: url("../images/noise_gray.png") repeat scroll 0 0 #DDDDDD;
+    box-shadow: 0 0 20px rgba(0,0,0,.75);
+    border-radius: 10px;
+    position: relative;
+    text-align: left;
+    display: none;
+}
+
+.dialog > *:first-child
+{
+    margin-top:0;
+}
+
+.dialog > *:last-child
+{
+    margin-bottom:0;
+}
+
+a[href="#close"]
+{
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    background: url("../images/menu_icons_48.png") no-repeat scroll -10px -730px rgba(0, 0, 0, 0);
+    cursor: pointer;
+    z-index: 1103;
+    display: block;
+    position: absolute;
+}
+
+@media all and (max-width:720px),
+all and (max-height:720px)
+{
+
+    .dialog
+    {
+        padding: 10px;
+        min-height: 100%;
+        position: absolute;
+        width: auto;
+        margin: 10px;
+    }
+
+}

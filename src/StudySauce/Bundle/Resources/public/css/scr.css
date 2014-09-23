@@ -1,0 +1,52 @@
+.landing-home .page-top
+{
+    background: url("../images/noise_gray.png") repeat scroll 0 0 #ffffff;
+    text-align: center;
+}
+
+.landing-home .page-top h1
+{
+    margin-top:30px;
+}
+
+.landing-home .scr
+{
+    margin: 0 auto;
+    max-width: 960px;
+    text-align: justify;
+}
+
+.landing-home .scr .grid_6
+{
+    width: 50%;
+    margin: 0 -2px;
+    display:inline-block;
+    vertical-align: middle;
+    padding:0 20px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.landing-home .scr .grid_6 img {
+    width: 100%;
+}
+
+.landing-home .scr .swap > *
+{
+    vertical-align: middle;
+}
+
+.landing-home .scr .swap .grid_6:first-child
+{
+    clear: left;
+}
+
+.landing-home .scr .swap + .grid_6
+{
+    clear: both;
+}
+
+
+.landing-home .scr .highlighted-link {
+    margin-bottom: 40px;
+}

@@ -1,0 +1,210 @@
+
+#right-panel,
+#left-panel
+{
+    display: block;
+    overflow: hidden;
+    background: url("../images/noise.png") repeat scroll 0 0 #FFFFFF;
+    min-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 70px;
+    padding-bottom: 30px;
+    transition: ease-in-out .15s;
+    width: 220px;
+    box-sizing: border-box;
+    z-index: 900;
+}
+
+#right-panel h3,
+#left-panel h3
+{
+    border-bottom:3px solid #555555;
+    margin:10px 0 0;
+    padding:5px;
+}
+
+#right-panel h3
+{
+    text-align: right;
+}
+
+#right-panel
+{
+    right: 0;
+    left:auto;
+}
+
+#right-panel ul,
+#left-panel ul
+{
+    list-style: none none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.main-menu li
+{
+    margin: 0;
+    padding:0;
+    width:220px;
+    text-align: left;
+    position:relative;
+}
+
+.main-menu li.like-us a
+{
+    background:none;
+}
+
+.main-menu a.skrollable-after,
+.main-menu a
+{
+    display:block;
+    padding:10px 0 10px 50px;
+    position:relative;
+}
+
+.main-menu span
+{
+    padding: 0;
+    display:block;
+    overflow:hidden;
+    vertical-align: middle;
+    height:40px;
+    width:40px;
+    position:absolute;
+    top:50%;
+    margin-top:-20px;
+    left:0;
+}
+
+#left-panel span
+{
+    margin-top:-15px;
+    text-align: center;
+    font-size: 30px;
+    color:#555555;
+}
+
+#right-panel span
+{
+    background: url(../images/menu_icons_48.png) no-repeat top left;
+}
+
+.main-menu a:hover,
+.main-menu a:focus,
+.main-menu a:active,
+.main-menu a.skrollable-between
+{
+    padding-left:45px;
+    background-color:#DDDDDD;
+    border-left:5px solid #0099BB;
+    transition:background-color ease-in-out .15s;
+}
+
+.main-menu a:hover span,
+.main-menu a:focus span,
+.main-menu a:active span,
+.main-menu a.skrollable-between span {
+    left:-5px;
+}
+#left-panel a:hover span,
+#left-panel a:focus span,
+#left-panel a:active span,
+#left-panel a.skrollable-between span {
+    color:#0099BB;
+}
+
+#right-panel a[href="#userlist"] span
+{
+    background-position: 50% -530px;
+}
+
+#right-panel a[href="#metrics"] span
+{
+    background-position: 50% -198px;
+}
+
+#right-panel a[href="#home"] span
+{
+    background-position: 50% -530px;
+}
+
+#right-panel a[href="#environment"] span
+{
+    background-position: 50% 0;
+}
+
+#right-panel a[href="#time"] span
+{
+    background-position: 50% -93px;
+}
+
+#right-panel a[href="#strategies"] span
+{
+    background-position: 50% -147px;
+}
+
+#right-panel a[href="#import"] span
+{
+    background-position: 50% -2118px;
+}
+
+#right-panel a[href="#settings"] span
+{
+    background-position: 50% -1920px;
+}
+
+#right-panel a[href="#premium"] span
+{
+    background-position: 50% -197px;
+}
+
+#right-panel a.selected + ul
+{
+    overflow: visible;
+    max-height:500px;
+}
+
+@media all and (max-width: 1300px), (max-height: 700px)
+{
+    #left-panel {
+        width:40px;
+        white-space: nowrap;
+    }
+
+    a[href="#toggle-menu"]
+    {
+        background: url(../images/menu_new_half.png) top left transparent;
+        position:absolute;
+        top:65px;
+        left:-5px;
+        width:45px;
+        height:45px;
+    }
+
+    #right-panel a[href="#toggle-menu"]
+    {
+        background-position: left -100px;
+    }
+
+    .main-menu h3
+    {
+        visibility: hidden;
+    }
+
+    #right-panel {
+        right: 0;
+        width:40px;
+        white-space: nowrap;
+    }
+}
+
+@media all and (max-width: 700px) {
+    #left-panel, #right-panel {
+        width:0;
+    }
+}

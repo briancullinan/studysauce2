@@ -1,0 +1,39 @@
+.landing-home .testimonials
+{
+    background: url("../images/noise_gray.png") repeat scroll 0 0 #FFFFFF;
+}
+
+.landing-home .testimonials h1
+{
+    margin-top:30px;
+}
+
+.landing-home .testimony
+{
+    margin:0 auto;
+    max-width: 960px;
+}
+
+.landing-home .testimony-inner
+{
+    border-top: 2px solid #CCCCCC;
+    border-bottom: 2px solid #CCCCCC;
+    padding: 20px 0 20px 64px;
+    position:relative;
+    margin-bottom:40px;
+}
+
+.landing-home .testimony-inner img
+{
+    height: 58px;
+    width: 58px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-top: -29px;
+}
+
+.landing-home .testimony-inner .author
+{
+    float:right;
+}

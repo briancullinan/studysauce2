@@ -1,0 +1,344 @@
+
+#goals .split-description {
+    width: 49%;
+    margin: 0;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+#goals .split-description {
+    padding-left: 75px;
+    position: relative;
+    text-align: center;
+}
+
+#goals .split-description h3 {
+    text-align: center;
+}
+
+#goals .split-description p {
+    text-align: justify;
+}
+
+#goals .big-arrow {
+    padding-right: 75px;
+    padding-left: 0;
+    position: relative;
+}
+
+#goals .big-arrow:after {
+    display: block;
+    content: " ";
+    position: absolute;
+    height: 128px;
+    width: 128px;
+    background: url("../images/menu_icons_128.png") no-repeat scroll rgba(0, 0, 0, 0);
+    background-position: 0 -2176px;
+    top: 50%;
+    margin-top: -64px;
+    left: 100%;
+    margin-left: -64px;
+}
+
+#goals header,
+#goals .goal-row
+{
+    clear: both;
+    display: block;
+    vertical-align: top;
+    position: relative;
+    white-space: nowrap;
+}
+
+#goals header > *,
+#goals .goal-row > *
+{
+    vertical-align: top;
+    display:inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    white-space: normal;
+}
+
+#goals .type,
+#goals .reward,
+#goals .hours,
+#goals header label
+{
+    width: 29%;
+}
+
+#goals .type {
+    background: rgba(0, 0, 0, 0) url("../images/menu_icons_48.png") no-repeat scroll left -576px;
+    padding: 12px 10px 14px 68px;
+    height: 48px;
+    margin-top:16px;
+}
+
+#goals .row:nth-child(2) .type {
+    background-position: 10px -624px;
+}
+
+#goals .goal-row .highlighted-link
+{
+    margin-top:24px;
+}
+
+#goals .form-actions
+{
+    text-align:center;
+}
+
+#goals .form-actions a[href="#save-goal"]
+{
+    float:right;
+}
+
+#goals .goal-row label
+{
+    color:transparent;
+}
+
+#goals .goal-row label .description
+{
+    color:#555555;
+    display:inline;
+}
+
+#goals .form-actions a[href="/partner"]
+{
+    margin:0 auto;
+}
+
+
+#goals .type strong {
+    font-weight: bold;
+    display: inline-block;
+    background: url("../images/noise_gray.png") repeat scroll 0 0 #DDDDDD;
+    white-space: nowrap;
+}
+
+#goals a[href="#edit-reward"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/edit.png) no-repeat 50% 50% transparent;
+}
+
+#goals select
+{
+    width:auto;
+}
+
+#goals textarea
+{
+    height:4em;
+    vertical-align: top;
+}
+
+#goals .goal-row:not(.edit) label
+{
+    pointer-events:none;
+}
+
+#goals .goal-row .reward label
+{
+    padding-right: 50px;
+    margin-right: -50px;
+    width: 100%;
+    display: inline-block;
+}
+
+#goals .goal-row label span
+{
+    display:block;
+}
+
+#goals .goal-row:not(.edit) input:not([type]),
+#goals .goal-row:not(.edit) input[type="email"],
+#goals .goal-row:not(.edit) input[type="number"],
+#goals .goal-row:not(.edit) input[type="password"],
+#goals .goal-row:not(.edit) input[type="tel"],
+#goals .goal-row:not(.edit) input[type="url"],
+#goals .goal-row:not(.edit) input[type="text"],
+#goals .goal-row:not(.edit) select,
+#goals .goal-row:not(.edit) textarea,
+#goals .goal-row:not(.edit) input[type=date],
+#goals .goal-row:not(.edit) input[type=time],
+#goals .goal-row:not(.edit) input[type="datetime"],
+#goals .goal-row:not(.edit) input[type=datetime-local],
+#goals .goal-row:not(.edit) input[type=month]
+{
+    border-color:transparent;
+    background: transparent;
+    -webkit-appearance:none;
+    -moz-appearance:button;
+    appearance: none;
+    overflow:hidden;
+    display:inline;
+}
+
+#achievements .grid_6,
+#achievements .grid_3 {
+    margin:0 -3px;
+}
+
+#achievements .grid_6 strong,
+#achievements .grid_3 strong {
+    display: block;
+    clear: both;
+}
+
+#achievements .grid_6 img,
+#achievements .grid_3 img {
+    float: left;
+    margin: 5px auto;
+    display: inline-block;
+}
+
+#achievements .grid_3 img,
+#achievements .grid_3 p,
+#achievements .grid_6 img,
+#achievements .grid_6 p {
+    width:49%;
+}
+
+#achievements .grid_6 p,
+#achievements .grid_3 p {
+    border: 1px solid #BBBBBB;
+    border-radius: 5px;
+    float: left;
+    display: inline-block;
+    margin: 0 auto;
+    padding-bottom: 100%;
+    position: relative;
+    height: 0;
+}
+
+#achievements .grid_6 img
+{
+    margin-right:.5%;
+}
+
+#achievements .grid_6 p
+{
+    margin-left:.5%;
+    padding-bottom: 50%;
+}
+
+#achievements .grid_6 {
+    width: 49%;
+    margin: 0;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+@media all and (max-width:1000px) {
+    #goals .split-description {
+        width:auto;
+        display:block;
+        padding-left:0;
+        padding-right:0;
+    }
+
+    #goals .big-arrow:after
+    {
+        display:none;
+    }
+
+    #goals .type {
+        background: url("../images/menu_icons_64.png") no-repeat scroll transparent;
+        text-align: center;
+        padding: 0 0 48px 0;
+        height: 96px;
+        background-position: 50% -736px;
+        width: auto;
+        display: block;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+
+    #goals .goal-row {
+        padding: 40px 0 0 0;
+    }
+
+    #goals .goal-row:not(.edit) label span
+    {
+        display:inline;
+    }
+
+    #goals .goal-row label
+    {
+        color:inherit;
+    }
+
+    #goals header
+    {
+        display:none;
+    }
+
+    #goals .type strong {
+        font-size: 28px;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    #goals .hours,
+    #goals .reward
+    {
+        display: block;
+        width: auto;
+        max-width: none;
+        clear: both;
+        text-align: left;
+        padding-right: 0px;
+    }
+
+    #goals .goal-row .highlighted-link
+    {
+        display:block;
+    }
+
+    #goals .form-actions a[href="/partner"]
+    {
+        display:block;
+        clear:both;
+    }
+
+    #goals .form-actions a[href="#save-goal"]
+    {
+        float:none;
+    }
+
+    #achievements .grid_6 {
+        width:auto;
+        text-align: center;
+    }
+
+    #achievements .grid_3 img,
+    #achievements .grid_3 p,
+    #achievements .grid_6 img,
+    #achievements .grid_6 p {
+        vertical-align: bottom;
+        text-align: left;
+    }
+
+    #goals .goal-row:not(.edit) .hours label,
+    #goals .goal-row:not(.edit) .reward label
+    {
+        padding-left:100px;
+        position:relative;
+    }
+
+    #goals .goal-row:not(.edit) .reward label span,
+    #goals .goal-row:not(.edit) .hours label span
+    {
+        position:absolute;
+        right:100%;
+        margin-right:-100px;
+    }
+}
+
+

@@ -1,0 +1,88 @@
+
+.dashboard-home
+{
+    background: url(../images/grunge.png) repeat fixed 0 0 #555555;
+}
+
+.dashboard-home .footer
+{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    z-index: 1001;
+}
+
+.panel-pane
+{
+    margin:0 auto;
+    max-width: none;
+    width: 100%;
+    padding:90px 240px 50px 240px;
+    box-sizing: border-box;
+}
+
+.pane-content
+{
+    min-height: 500px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,.5);
+    background: url("../images/noise_gray.png") repeat scroll 0 0 #EEEEEE;
+    position: relative;
+}
+
+.pane-content h2
+{
+    margin-top:0;
+}
+
+@media all and (max-width: 1300px)
+{
+    .panel-pane
+    {
+        padding-left:20px;
+        padding-right:20px;
+        max-width: 900px;
+    }
+}
+
+@media all and (max-width: 1000px) {
+    .panel-pane {
+        padding-left: 60px;
+        padding-right: 60px;
+        max-width: 900px;
+    }
+}
+
+@media all and (min-height: 700px) {
+    .dashboard-home .footer {
+        position:fixed;
+    }
+
+    .panel-pane {
+        padding-top: 90px;
+        padding-bottom: 70px;
+    }
+}
+
+@media all and (min-width: 1000px) {
+    .panel-pane {
+        padding-bottom: 50px;
+    }
+}
+
+@media all and (max-width: 700px)
+{
+    .panel-pane {
+        padding: 60px 10px 10px 10px;
+        max-width: 900px;
+    }
+
+    .dashboard-home .footer {
+        position:relative;
+    }
+
+    .pane-content
+    {
+        padding:10px;
+    }
+}

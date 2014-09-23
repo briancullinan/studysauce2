@@ -1,0 +1,6 @@
+
+# AcmeDemoBundle routes (to be removed)
+_studysauce:
+    resource: "@StudySauceBundle/Resources/config/routing.php"
+_course1:
+    resource: "@Course1Bundle/Resources/config/routing.php"
