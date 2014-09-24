@@ -29,7 +29,7 @@
             <label>Reward</label>
         </header>
 
-        <div class="goal-row gid7259 valid">
+        <div class="goal-row gid7259 valid read-only">
             <div class="type"><strong>Study Hours</strong></div>
             <div class="hours">
                 <label class="select">
@@ -51,7 +51,7 @@
                     <span>Reward</span>
                     <textarea placeholder="Ex. $25 gift card" cols="60" rows="2">Movie night</textarea>
                 </label>
-                <a href="#edit-reward">&nbsp;</a>
+                <a href="#goal-edit">&nbsp;</a>
             </div>
             <input type="hidden" name="goal-read-only" value="1">
             <div class="highlighted-link">
@@ -81,7 +81,7 @@
                     <span>Reward</span>
                     <textarea placeholder="Ex. $50 gift card" cols="60" rows="2">Frozen yogurt</textarea>
                 </label>
-                <a href="#edit-reward">&nbsp;</a>
+                <a href="#goal-edit">&nbsp;</a>
             </div>
             <input type="hidden" name="goal-read-only" value="1">
             <div class="highlighted-link">
@@ -117,7 +117,7 @@
                     <span>Reward</span>
                     <textarea placeholder="Ex. Fancy dinner" cols="60" rows="2">Celebration dinner</textarea>
                 </label>
-                <a href="#edit-reward">&nbsp;</a>
+                <a href="#goal-edit">&nbsp;</a>
             </div>
             <input type="hidden" name="goal-read-only" value="1">
             <div class="highlighted-link">

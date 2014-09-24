@@ -14,19 +14,24 @@ $view['slots']->start('stylesheets'); ?>
         '@StudySauceBundle/Resources/public/css/dashboard.css',
         '@StudySauceBundle/Resources/public/css/footer.css'
     ), array(), array('output' => 'bundles/studysauce/css/*.css')) as $url):
-    ?><link rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach; ?>
 <?php $view['slots']->output('tmp-stylesheets'); ?>
 <?php $view['slots']->stop() ?>
 
 
-<?php $view['slots']->start('javascripts') ?>
+<?php
+$view['slots']->start('tmp-javascripts');
+$view['slots']->output('javascripts');
+$view['slots']->stop();
+$view['slots']->start('javascripts'); ?>
 <?php foreach ($view['assetic']->javascripts(array(
         '@StudySauceBundle/Resources/public/js/sauce.js',
         '@StudySauceBundle/Resources/public/js/contact.js'
     ), array(), array('output' => 'bundles/studysauce/js/*.js')) as $url):
-    ?><script src="<?php echo $view->escape($url) ?>"></script>
+    ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
+<?php $view['slots']->output('tmp-javascripts'); ?>
 <?php $view['slots']->stop() ?>
 
 <?php

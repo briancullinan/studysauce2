@@ -78,3 +78,8 @@
     background-position: 0 -104px;
 }
 
+.footer iframe
+{
+    border:none;
+    overflow:hidden;
+}

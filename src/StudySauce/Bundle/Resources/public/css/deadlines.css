@@ -1,0 +1,242 @@
+
+#deadlines .sort-by {
+    vertical-align: top;
+    position: relative;
+}
+
+#deadlines .sort-by label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+#deadlines .sort-by label:last-child {
+    position: absolute;
+    right: 0;
+    top:0;
+}
+
+#deadlines header,
+#deadlines .deadline-row {
+    clear: both;
+    display: block;
+    vertical-align: top;
+    position: relative;
+    white-space: nowrap;
+}
+
+#deadlines header > *,
+.deadline-row > * {
+    vertical-align: top;
+    display:inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    white-space: normal;
+}
+
+a[href="#add-deadline"] {
+    position: relative;
+    z-index: 0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, .5);
+    border-bottom: 0;
+    color: #555555;
+    font-size: 22px;
+    font-weight: 700;
+    display: inline-block;
+    float:left;
+    margin-top:5px;
+}
+
+#deadlines a[href*="/schedule"] {
+    float: left;
+}
+
+a[href="#add-deadline"] span {
+    margin: 0 10px 0 0;
+    line-height: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    top:0;
+    float: left;
+    font-size: 50px;
+    vertical-align: middle;
+}
+
+a[href="#edit-deadline"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/edit.png) no-repeat 50% 50% transparent;
+}
+
+a[href="#remove-deadline"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/trash.png) no-repeat 50% 50% transparent;
+}
+
+#deadlines header label:first-child,
+.deadline-row .class-name
+{
+    width:15%;
+}
+
+#deadlines header label:nth-child(2),
+.deadline-row .assignment
+{
+    width:20%;
+}
+
+#deadlines header label:nth-child(3),
+.deadline-row .reminder
+{
+    width:30%;
+    white-space: nowrap;
+}
+
+.deadline-row .reminder label.checkbox {
+    display: inline-block;
+    width: 19%;
+    text-align: center;
+    overflow: hidden;
+}
+
+#deadlines header label:nth-child(4),
+.deadline-row .due-date
+{
+    width:15%;
+}
+
+#deadlines header label:nth-child(5),
+.deadline-row .percent
+{
+    width:10%;
+    white-space: nowrap;
+}
+
+.deadline-row label span,
+.deadline-row .reminder label:first-child
+{
+    display:none;
+}
+
+#deadlines header label:nth-child(4),
+.deadline-row.read-only .due-date
+{
+    visibility:hidden;
+}
+
+.deadline-row.edit .read-only
+{
+    display:none;
+}
+
+@media all and (max-width:1000px)
+{
+    #deadlines .deadline-row
+    {
+        white-space: normal;
+    }
+
+    #deadlines .highlighted-link.class-actions
+    {
+        text-align: right;
+    }
+
+    #deadlines header label:nth-child(1),
+    .deadline-row .class-name
+    {
+        width:30%;
+    }
+
+    #deadlines header label:nth-child(2),
+    .deadline-row .assignment
+    {
+        width:30%;
+    }
+
+    .deadline-row.edit .class-name
+    {
+        width: 39%;
+    }
+
+    .deadline-row.edit .assignment
+    {
+        width: 59%;
+    }
+
+    .deadline-row .reminder
+    {
+        clear:left;
+        width:59%;
+    }
+
+    #deadlines header label:nth-child(4),
+    .deadline-row .due-date
+    {
+        width:20%;
+    }
+
+    #deadlines header label:nth-child(5),
+    .deadline-row .percent
+    {
+        width:12%;
+        margin-right:-30px;
+    }
+
+    #deadlines header label:nth-child(3),
+    .deadline-row:not(.selected).read-only .reminder
+    {
+        display:none;
+    }
+
+    .deadline-row.edit label span,
+    .deadline-row.edit .reminder label:first-child
+    {
+        display:block;
+    }
+
+    .deadline-row.edit .reminder label:first-child
+    {
+        margin-bottom:0;
+    }
+}
+
+@media all and (max-width:700px)
+{
+
+    .deadline-row.edit > *
+    {
+        display: block;
+    }
+
+    .deadline-row.edit .assignment,
+    .deadline-row.edit .class-name,
+    .deadline-row.edit .reminder,
+    .deadline-row.edit .due-date,
+    .deadline-row.edit .percent
+    {
+        width:auto;
+    }
+
+    .deadline-row.edit .percent
+    {
+        margin-right: 0;
+    }
+}
+
+@media all and (max-width:500px)
+{
+    #deadlines .sort-by label:last-child
+    {
+        position:static;
+    }
+
+    #deadlines header label:nth-child(4),
+    .deadline-row.read-only .due-date
+    {
+        width:10%;
+    }
+}

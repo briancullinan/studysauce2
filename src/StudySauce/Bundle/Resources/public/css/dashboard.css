@@ -30,6 +30,7 @@
     position: relative;
 }
 
+.pane-content h4,
 .pane-content h2
 {
     margin-top:0;
@@ -49,7 +50,7 @@
     .panel-pane {
         padding-left: 60px;
         padding-right: 60px;
-        max-width: 900px;
+        max-width: none;
     }
 }
 

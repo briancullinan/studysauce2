@@ -40,6 +40,12 @@ h2, h3, h4, h5
     text-align: left;
 }
 
+h4, h2
+{
+    color:#0099BB;
+    font-weight: bold;
+}
+
 .clearfix:after,
 .clearfix:before
 {
@@ -255,7 +261,7 @@ input[type=month]
     -moz-box-sizing: border-box;
     box-shadow: none;
     height:28px;
-    transition: border-color ease-in-out .15s;
+    transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
     vertical-align: middle;
 }
 
@@ -275,6 +281,106 @@ input[type=datetime-local]:focus,
 input[type=month]:focus
 {
     border-color:#0099BB;
+}
+
+.read-only input:not([type]),
+.read-only input[type="email"],
+.read-only input[type="number"],
+.read-only input[type="password"],
+.read-only input[type="tel"],
+.read-only input[type="url"],
+.read-only input[type="text"],
+.read-only select,
+.read-only textarea,
+.read-only input[type=date],
+.read-only input[type=time],
+.read-only input[type="datetime"],
+.read-only input[type=datetime-local],
+.read-only input[type=month],
+input:not([type])[readonly],
+input[type="email"][readonly],
+input[type="number"][readonly],
+input[type="password"][readonly],
+input[type="tel"][readonly],
+input[type="url"][readonly],
+input[type="text"][readonly],
+select[readonly],
+textarea[readonly],
+input[type=date][readonly],
+input[type=time][readonly],
+input[type="datetime"][readonly],
+input[type=datetime-local][readonly],
+input[type=month][disabled],
+input:not([type])[disabled],
+input[type="email"][disabled],
+input[type="number"][disabled],
+input[type="password"][disabled],
+input[type="tel"][disabled],
+input[type="url"][disabled],
+input[type="text"][disabled],
+select[disabled],
+textarea[disabled],
+input[type=date][disabled],
+input[type=time][disabled],
+input[type="datetime"][disabled],
+input[type=datetime-local][disabled],
+input[type=month][disabled]
+{
+    border-color:transparent;
+    background: transparent;
+    -webkit-appearance:none;
+    -moz-appearance:button;
+    appearance: none;
+    overflow:hidden;
+    display:inline;
+    pointer-events:none;
+    padding:0;
+}
+
+.read-only .radio,
+.radio.read-only,
+.read-only .checkbox,
+.checkbox.read-only,
+.read-only .input,
+.input.read-only,
+.read-only .select,
+.select.read-only
+{
+    pointer-events:none;
+}
+
+.read-only .radio input[type=radio]+i,
+.read-only .radio-inline input[type=radio]+i,
+.read-only .checkbox input[type=checkbox]+i,
+.read-only .checkbox-inline input[type=checkbox]+i,
+.radio input[type=radio][readonly]+i,
+.radio-inline input[type=radio][readonly]+i,
+.checkbox input[type=checkbox][readonly]+i,
+.checkbox-inline input[type=checkbox][readonly]+i,
+.radio input[type=radio][disabled]+i,
+.radio-inline input[type=radio][disabled]+i,
+.checkbox input[type=checkbox][disabled]+i,
+.checkbox-inline input[type=checkbox][disabled]+i
+{
+    border-color:transparent;
+    background: transparent;
+    pointer-events:none;
+}
+
+.read-only .radio input[type=radio]+i:after,
+.read-only .radio-inline input[type=radio]+i:after,
+.read-only .checkbox input[type=checkbox]+i:after,
+.read-only .checkbox-inline input[type=checkbox]+i:after,
+.radio input[type=radio][readonly]+i:after,
+.radio-inline input[type=radio][readonly]+i:after,
+.checkbox input[type=checkbox][readonly]+i:after,
+.checkbox-inline input[type=checkbox][readonly]+i:after,
+.radio input[type=radio][disabled]+i:after,
+.radio-inline input[type=radio][disabled]+i:after,
+.checkbox input[type=checkbox][disabled]+i:after,
+.checkbox-inline input[type=checkbox][disabled]+i:after
+{
+    background-color:#555555;
 }
 
 .radio, .checkbox {
@@ -312,10 +418,10 @@ input[type=month]:focus
     outline: 0;
     border:2px solid #555555;
     background: #FFF;
-    margin:2px 0;
+    margin:2px;
     border-radius: 2px;
     vertical-align: middle;
-
+    transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
 }
 
 .radio input[type=radio]+i,
@@ -340,7 +446,7 @@ input[type=month]:focus
     display:block;
     border-radius: 1px;
     opacity: 0;
-    transition: opacity ease-in-out .15s;
+    transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
 }
 
 .radio input[type=radio]+i:after,

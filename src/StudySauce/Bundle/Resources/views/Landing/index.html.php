@@ -31,15 +31,15 @@
 
 <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:video')); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:scr'), array('strategy' => 'hinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:scr'), array('strategy' => 'sinclude')); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:banner'), array('strategy' => 'hinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:banner'), array('strategy' => 'sinclude')); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'), array('strategy' => 'hinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'), array('strategy' => 'sinclude')); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'), array('strategy' => 'hinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'), array('strategy' => 'sinclude')); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), array('strategy' => 'hinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), array('strategy' => 'sinclude')); ?>
 
 <?php echo $view->render('StudySauceBundle:Shared:footer.html.php'); ?>
 

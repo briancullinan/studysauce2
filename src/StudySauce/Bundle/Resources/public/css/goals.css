@@ -73,16 +73,11 @@
     background: rgba(0, 0, 0, 0) url("../images/menu_icons_48.png") no-repeat scroll left -576px;
     padding: 12px 10px 14px 68px;
     height: 48px;
-    margin-top:16px;
+    margin-top:-12px;
 }
 
 #goals .row:nth-child(2) .type {
     background-position: 10px -624px;
-}
-
-#goals .goal-row .highlighted-link
-{
-    margin-top:24px;
 }
 
 #goals .form-actions
@@ -95,14 +90,8 @@
     float:right;
 }
 
-#goals .goal-row label
-{
-    color:transparent;
-}
-
 #goals .goal-row label .description
 {
-    color:#555555;
     display:inline;
 }
 
@@ -119,11 +108,16 @@
     white-space: nowrap;
 }
 
-#goals a[href="#edit-reward"] {
-    display: inline-block;
+#goals a[href="#goal-edit"] {
+    display: none;
     height: 24px;
     width: 24px;
     background: url(../images/edit.png) no-repeat 50% 50% transparent;
+}
+
+#goals .read-only a[href="#goal-edit"]
+{
+    display: inline-block;
 }
 
 #goals select
@@ -137,11 +131,6 @@
     vertical-align: top;
 }
 
-#goals .goal-row:not(.edit) label
-{
-    pointer-events:none;
-}
-
 #goals .goal-row .reward label
 {
     padding-right: 50px;
@@ -152,31 +141,7 @@
 
 #goals .goal-row label span
 {
-    display:block;
-}
-
-#goals .goal-row:not(.edit) input:not([type]),
-#goals .goal-row:not(.edit) input[type="email"],
-#goals .goal-row:not(.edit) input[type="number"],
-#goals .goal-row:not(.edit) input[type="password"],
-#goals .goal-row:not(.edit) input[type="tel"],
-#goals .goal-row:not(.edit) input[type="url"],
-#goals .goal-row:not(.edit) input[type="text"],
-#goals .goal-row:not(.edit) select,
-#goals .goal-row:not(.edit) textarea,
-#goals .goal-row:not(.edit) input[type=date],
-#goals .goal-row:not(.edit) input[type=time],
-#goals .goal-row:not(.edit) input[type="datetime"],
-#goals .goal-row:not(.edit) input[type=datetime-local],
-#goals .goal-row:not(.edit) input[type=month]
-{
-    border-color:transparent;
-    background: transparent;
-    -webkit-appearance:none;
-    -moz-appearance:button;
-    appearance: none;
-    overflow:hidden;
-    display:inline;
+    display:none;
 }
 
 #achievements .grid_6,
@@ -233,6 +198,7 @@
     display: inline-block;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    max-width: 400px;
 }
 
 @media all and (max-width:1000px) {
@@ -264,14 +230,14 @@
         padding: 40px 0 0 0;
     }
 
-    #goals .goal-row:not(.edit) label span
+    #goals .goal-row.read-only label span
     {
         display:inline;
     }
 
-    #goals .goal-row label
+    #goals .goal-row label span
     {
-        color:inherit;
+        display:block;
     }
 
     #goals header
@@ -325,15 +291,15 @@
         text-align: left;
     }
 
-    #goals .goal-row:not(.edit) .hours label,
-    #goals .goal-row:not(.edit) .reward label
+    #goals .goal-row.read-only .hours label,
+    #goals .goal-row.read-only .reward label
     {
         padding-left:100px;
         position:relative;
     }
 
-    #goals .goal-row:not(.edit) .reward label span,
-    #goals .goal-row:not(.edit) .hours label span
+    #goals .goal-row.read-only .reward label span,
+    #goals .goal-row.read-only .hours label span
     {
         position:absolute;
         right:100%;

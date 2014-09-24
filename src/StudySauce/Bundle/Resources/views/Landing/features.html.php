@@ -3,7 +3,7 @@
 <div class="features clearfix">
 
     <div class="two-column-guide">
-        <h1>Study Sauce features</h1>
+        <h2>Study Sauce features</h2>
         <div class="grid_6">
             <div>
                 <h3>Proven science</h3>

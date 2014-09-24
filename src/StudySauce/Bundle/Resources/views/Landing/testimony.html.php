@@ -1,6 +1,6 @@
 <div class="testimonials">
     <div class="testimony clearfix">
-        <h1>What our students are saying</h1>
+        <h2>What our students are saying</h2>
 
         <div class="testimony-inner clearfix">
             <?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/testimonial.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>

@@ -1,6 +1,6 @@
 <div class="page-top clearfix">
     <div class="scr">
-        <h1>Learn to be a great studier</h1>
+        <h2>Learn to be a great studier</h2>
         <div class="grid_6">
             <?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/situation_compressed.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
                 <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>

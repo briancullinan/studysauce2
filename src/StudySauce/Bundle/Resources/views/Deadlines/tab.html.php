@@ -4,9 +4,10 @@
 
         <h2>Enter important dates and we will send you email reminders</h2>
 
-        <a href="#add-deadline" class="field-add-more-submit ajax-processed" name="field_reminders_add_more">
-            Add <span>+</span> deadline
-        </a>
+        <div class="highlighted-link class-actions">
+            <a href="#add-deadline">Add <span>+</span> class</a>
+            <a href="#save-deadline" class="more">Save</a>
+        </div>
 
         <div class="sort-by">
             <label>Sort by: </label>
@@ -15,12 +16,20 @@
             <label class="checkbox" title="Click here to see deadlines that have already passed."><input type="checkbox"><i></i>Past deadlines</label>
         </div>
 
+        <header>
+            <label>&nbsp;</label>
+            <label>Assignment</label>
+            <label>Reminders</label>
+            <label>Due date</label>
+            <label>% of grade</label>
+        </header>
+
         <div class="head hide">1 June <span>2014</span></div>
-        <div class="deadline-row first valid">
+        <div class="deadline-row first valid read-only">
             <div class="class-name">
                 <label class="select">
-                    Class name<br/>
-                    <select size="1">
+                    <span>Class name</span>
+                    <select>
                         <option value="_none">- Select a class -</option>
                         <option value="CHEM 101">CHEM 101</option>
                         <option value="HIST 101">HIST 101</option>
@@ -34,11 +43,11 @@
             </div>
             <div class="assignment">
                 <label class="select">
-                    Assignment<br/>
+                    <span>Assignment</span>
                     <input placeholder="Paper, exam, project, etc." type="text" value="Group project" size="60" maxlength="255">
                 </label>
             </div>
-            <div class="day-of-the-week">
+            <div class="reminder">
                 <label>Reminders</label>
                 <label class="checkbox"><input type="checkbox" value="1209600" checked="checked"><i></i><br/>2 wk</label>
                 <label class="checkbox"><input type="checkbox" value="604800"><i></i><br/>1 wk</label>
@@ -46,25 +55,25 @@
                 <label class="checkbox"><input type="checkbox" value="172800"><i></i><br/>2 days</label>
                 <label class="checkbox"><input type="checkbox" value="86400"><i></i><br/>1 day</label>
             </div>
-            <div class="assignment">
+            <div class="due-date">
                 <label class="input">
-                    Due date<br/>
-                    <input placeholder="Enter date" type="text" value="06/01/2014" size="60" maxlength="255">
+                    <span>Due date</span>
+                    <input placeholder="Enter date" type="text" value="06/01/2014" size="5" maxlength="255">
                 </label>
             </div>
-            <div class="assignment">
+            <div class="percent">
                 <label class="input">
-                    % of grade<br/>
-                    <input type="text" value="15%" size="60" maxlength="255">
+                    <span>% of grade</span>
+                    <input type="text" value="15%" size="2" maxlength="255">
                 </label>
             </div>
             <div class="read-only">
-                <a href="#edit-reminder">&nbsp;</a><a href="#remove-reminder">&nbsp;</a>
+                <a href="#edit-deadline">&nbsp;</a><a href="#remove-deadline">&nbsp;</a>
             </div>
         </div>
 
-        <div class="highlighted-link">
-            <a href="/schedule">Edit schedule</a><a href="#save-dates" class="more">Save</a>
+        <div class="highlighted-link class-actions">
+            <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a><a href="#save-deadline" class="more">Save</a>
         </div>
 
     </div>

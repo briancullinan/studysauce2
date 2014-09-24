@@ -1,7 +1,9 @@
 jQuery(document).ready(function () {
 
+    var body = jQuery('body');
+
     // look at every link with a hash, store with google analytics and search for dialogs.
-    jQuery('body').on('click', 'a[href^="#"]', function (evt)
+    body.on('click', 'a[href^="#"]', function (evt)
     {
         var that = jQuery(this),
             link = that.attr('href');
@@ -13,7 +15,7 @@ jQuery(document).ready(function () {
         }
     });
 
-    jQuery('body').on('click', '.dialog a[href="#close"]', function (evt)
+    body.on('click', '.dialog a[href="#close"]', function (evt)
     {
         evt.preventDefault();
         jQuery(this).parents('.dialog').hide(500, function () {

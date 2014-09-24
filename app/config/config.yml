@@ -75,3 +75,12 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+services:
+    sinclude:
+        class: StudySauce\Bundle\DependencyInjection\SIncludeFragmentRenderer
+        arguments: ["@service_container", "@uri_signer", ""]
+        calls:
+            - [setFragmentPath, ["/_fragment"]]
+        tags:
+            - {name: "kernel.fragment_renderer"}

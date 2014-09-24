@@ -8,8 +8,7 @@
     <?php else: ?>
         <div style="display:inline-block;">
             <iframe class="facebook-like"
-                    src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FStudy-Sauce%2F519825501425670%3Fref%3Dstream&amp;layout=button_count&amp;show_faces=false&amp;width=89&amp;action=like&amp;colorscheme=light&amp;height=35&amp;locale=en_US"
-                    scrolling="no" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>
+                    src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FStudy-Sauce%2F519825501425670%3Fref%3Dstream&amp;layout=button_count&amp;show_faces=false&amp;width=89&amp;action=like&amp;colorscheme=light&amp;height=35&amp;locale=en_US"></iframe>
             <a href="https://twitter.com/StudySauce" class="twitter-follow-button" data-show-count="false"
                data-show-screen-name="false">Follow @StudySauce</a>
             <script>!function (d, s, id) {

@@ -20,4 +20,9 @@ class DialogsController extends Controller
     {
         return $this->render('StudySauceBundle:Dialogs:achievement.html.php');
     }
+
+    public function partnerinviteAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:partnerinvite.html.php');
+    }
 }

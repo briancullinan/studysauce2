@@ -41,33 +41,9 @@
     overflow:hidden;
 }
 
-.schedule .class-row label
+.schedule .class-row label span
 {
-    color:transparent;
-}
-
-.schedule .class-row:not(.edit) label
-{
-    pointer-events:none;
-}
-
-.schedule .class-row:not(.edit) input:not([type]),
-.schedule .class-row:not(.edit) input[type="email"],
-.schedule .class-row:not(.edit) input[type="number"],
-.schedule .class-row:not(.edit) input[type="password"],
-.schedule .class-row:not(.edit) input[type="tel"],
-.schedule .class-row:not(.edit) input[type="url"],
-.schedule .class-row:not(.edit) input[type="text"],
-.schedule .class-row:not(.edit) select,
-.schedule .class-row:not(.edit) textarea,
-.schedule .class-row:not(.edit) input[type=date],
-.schedule .class-row:not(.edit) input[type=time],
-.schedule .class-row:not(.edit) input[type="datetime"],
-.schedule .class-row:not(.edit) input[type=datetime-local],
-.schedule .class-row:not(.edit) input[type=month]
-{
-    border-color:transparent;
-    background: transparent;
+    display:none;
 }
 
 .schedule .class-row .recurring
@@ -102,8 +78,8 @@
     padding-right:15px;
 }
 
-.schedule .start-time input[type="time"],
-.schedule .end-time input[type="time"]
+.schedule .start-time .input.mobile-only,
+.schedule .end-time .input.mobile-only
 {
     display:none;
 }
@@ -199,12 +175,27 @@ a[href="#add-class"] span {
     display:block;
 }
 
+.class-row .read-only
+{
+    display:none;
+}
+
+.class-row.read-only .read-only
+{
+    display:inline-block;
+}
+
 @media all and (max-width: 1000px)
 {
 
-    .schedule .class-row label
+    .highlighted-link
     {
-        color:inherit;
+        text-align: right;
+    }
+
+    .schedule .class-row label span
+    {
+        display:block;
     }
 
     #schedule header,
@@ -239,15 +230,16 @@ a[href="#add-class"] span {
     }
 }
 
-@media all and (max-width: 700px) {
-    .schedule .start-time input[type="text"],
-    .schedule .end-time input[type="text"]
+@media all and (max-width: 500px) {
+
+    .schedule .start-time .input,
+    .schedule .end-time .input
     {
         display:none;
     }
 
-    .schedule .start-time input[type="time"],
-    .schedule .end-time input[type="time"]
+    .schedule .start-time .input.mobile-only,
+    .schedule .end-time .input.mobile-only
     {
         display:block;
     }

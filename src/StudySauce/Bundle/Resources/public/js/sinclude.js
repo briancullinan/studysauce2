@@ -74,10 +74,10 @@ var hinclude;
       var i = 0;
       var mode = this.get_meta("include_mode", "buffered");
       var callback = function (element, req) {};
-      this.includes = document.getElementsByTagName("hx:include");
-      if (this.includes.length === 0) { // remove ns for IE
-        this.includes = document.getElementsByTagName("include");
-      }
+      this.includes = document.getElementsByClassName("sinclude");
+      //if (this.includes.length === 0) { // remove ns for IE
+      //  this.includes = document.getElementsByTagName("include");
+      //}
       if (mode === "async") {
         callback = this.set_content_async;
       } else if (mode === "buffered") {
@@ -86,7 +86,7 @@ var hinclude;
         setTimeout(hinclude.show_buffered_content, timeout);
       }
       for (i; i < this.includes.length; i += 1) {
-        this.include(this.includes[i], this.includes[i].getAttribute("src"), callback);
+        this.include(this.includes[i], this.includes[i].getAttribute("data-src"), callback);
       }
     },
 

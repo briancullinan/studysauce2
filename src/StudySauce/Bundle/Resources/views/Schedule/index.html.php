@@ -10,9 +10,17 @@
 <?php endforeach; ?>
 <?php $view['slots']->stop() ?>
 
+<?php $view['slots']->start('javascripts'); ?>
+<?php foreach ($view['assetic']->javascripts(array(
+        '@StudySauceBundle/Resources/public/js/schedule.js'
+    ), array(), array('output' => 'bundles/studysauce/js/*.js')) as $url):
+    ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach; ?>
+<?php $view['slots']->stop() ?>
+
 <?php $view['slots']->start('body'); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), array('strategy' => 'hinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), array('strategy' => 'sinclude')); ?>
 
 <?php echo $view->render('StudySauceBundle:Schedule:tab.html.php'); ?>
 
