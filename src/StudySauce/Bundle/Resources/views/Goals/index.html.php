@@ -22,6 +22,6 @@
 
 <?php echo $view->render('StudySauceBundle:Goals:tab.html.php'); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:achievement'), array('strategy' => 'sinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:achievement', array('id' => 'claim')), array('strategy' => 'sinclude')); ?>
 
 <?php $view['slots']->stop(); ?>

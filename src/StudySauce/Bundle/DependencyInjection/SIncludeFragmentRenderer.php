@@ -16,9 +16,12 @@ if (!defined('ENT_SUBSTITUTE')) {
 }
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
+use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 use Symfony\Component\HttpKernel\Fragment\RoutableFragmentRenderer;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -30,13 +33,17 @@ use Symfony\Component\Templating\EngineInterface;
 class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
 {
     private $container;
+    private $kernel;
+    private $dispatcher;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(ContainerInterface $container, UriSigner $signer = null, $globalDefaultTemplate = null)
+    public function __construct(ContainerInterface $container, UriSigner $signer = null, $globalDefaultTemplate = null, HttpKernelInterface $kernel, EventDispatcherInterface $dispatcher = null)
     {
         $this->container = $container;
+        $this->kernel = $kernel;
+        $this->dispatcher = $dispatcher;
 
         parent::__construct(null, $signer, $globalDefaultTemplate, $container->getParameter('kernel.charset'));
     }
@@ -51,7 +58,12 @@ class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
         if (!$this->hasTemplating()) {
             $this->setTemplating($this->container->get('templating'));
         }
-
+        $noInclude = $request->query->get('noInclude');
+        if($noInclude)
+        {
+            $renderer = new InlineFragmentRenderer($this->kernel, $this->dispatcher);
+            return $renderer->render($uri, $request, $options);
+        }
         $response = parent::render($uri, $request, $options);
         $response->setContent(str_replace('</hx:include>', '</div>', str_replace('<hx:include src=', '<div class="sinclude" data-src=', $response->getContent())));
         return $response;

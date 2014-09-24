@@ -79,7 +79,7 @@ swiftmailer:
 services:
     sinclude:
         class: StudySauce\Bundle\DependencyInjection\SIncludeFragmentRenderer
-        arguments: ["@service_container", "@uri_signer", ""]
+        arguments: ["@service_container", "@uri_signer", "", "@http_kernel", "@event_dispatcher"]
         calls:
             - [setFragmentPath, ["/_fragment"]]
         tags:

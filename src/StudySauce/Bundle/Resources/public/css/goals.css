@@ -133,10 +133,14 @@
 
 #goals .goal-row .reward label
 {
-    padding-right: 50px;
-    margin-right: -50px;
     width: 100%;
     display: inline-block;
+}
+
+#goals .goal-row.read-only .reward label
+{
+    padding-right: 50px;
+    margin-right: -50px;
 }
 
 #goals .goal-row label span
@@ -291,19 +295,20 @@
         text-align: left;
     }
 
-    #goals .goal-row.read-only .hours label,
-    #goals .goal-row.read-only .reward label
+    #goals .goal-row .hours label,
+    #goals .goal-row .reward label
     {
-        padding-left:100px;
+        padding-left:80px;
         position:relative;
     }
 
-    #goals .goal-row.read-only .reward label span,
-    #goals .goal-row.read-only .hours label span
+    #goals .goal-row .reward label span,
+    #goals .goal-row .hours label span
     {
         position:absolute;
         right:100%;
-        margin-right:-100px;
+        margin-right:-70px;
+
     }
 }
 

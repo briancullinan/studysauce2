@@ -26,10 +26,16 @@
     padding:0 20px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    text-align: center;
 }
 
 .landing-home .scr .grid_6 img {
     width: 100%;
+}
+
+.landing-home .scr .grid_6 p
+{
+    text-align: justify;
 }
 
 .landing-home .scr .swap > *
@@ -50,4 +56,25 @@
 
 .landing-home .scr .highlighted-link {
     margin-bottom: 40px;
+}
+
+@media all and (max-width:700px)
+{
+    .landing-home .scr .grid_6
+    {
+        width:auto;
+        display:block;
+        padding: 0;
+    }
+
+    .landing-home .scr .grid_6 img
+    {
+        max-width: 50%;
+        margin:0 auto;
+    }
+
+    .landing-home .scr
+    {
+        padding:0 10px;
+    }
 }

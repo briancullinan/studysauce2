@@ -14,6 +14,6 @@
 
 <?php echo $view->render('StudySauceBundle:Partner:tab.html.php'); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerinvite'), array('strategy' => 'sinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerinvite', array('id' => 'invite-sent')), array('strategy' => 'sinclude')); ?>
 
 <?php $view['slots']->stop(); ?>

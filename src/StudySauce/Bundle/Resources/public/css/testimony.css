@@ -38,3 +38,11 @@
 {
     float:right;
 }
+
+@media all and (max-width:700px)
+{
+    .landing-home .testimony
+    {
+        padding:0 10px;
+    }
+}

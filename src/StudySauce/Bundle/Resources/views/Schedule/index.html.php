@@ -20,7 +20,7 @@
 
 <?php $view['slots']->start('body'); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), array('strategy' => 'sinclude')); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building', array('id' => 'building')), array('strategy' => 'sinclude')); ?>
 
 <?php echo $view->render('StudySauceBundle:Schedule:tab.html.php'); ?>
 

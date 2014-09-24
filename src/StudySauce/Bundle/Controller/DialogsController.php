@@ -6,23 +6,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DialogsController extends Controller
 {
-    public function contactAction()
+    public function contactAction($id = '')
     {
-        return $this->render('StudySauceBundle:Dialogs:contact.html.php');
+        return $this->render('StudySauceBundle:Dialogs:contact.html.php', array('id' => $id));
     }
 
-    public function buildingAction()
+    public function buildingAction($id = '')
     {
-        return $this->render('StudySauceBundle:Dialogs:building.html.php');
+        return $this->render('StudySauceBundle:Dialogs:building.html.php', array('id' => $id));
     }
 
-    public function achievementAction()
+    public function achievementAction($id = '')
     {
-        return $this->render('StudySauceBundle:Dialogs:achievement.html.php');
+        return $this->render('StudySauceBundle:Dialogs:achievement.html.php', array('id' => $id));
     }
 
-    public function partnerinviteAction()
+    public function partnerinviteAction($id = '')
     {
-        return $this->render('StudySauceBundle:Dialogs:partnerinvite.html.php');
+        return $this->render('StudySauceBundle:Dialogs:partnerinvite.html.php', array('id' => $id));
     }
 }
