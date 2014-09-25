@@ -18,13 +18,13 @@ class Schedule
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="schedules")
+     * @ORM\ManyToOne(targetEntity="User", mappedBy="schedules")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $uid;
 
     /**
-     * @ORM\OneToMany(targetEntity="Preference", inversedBy="schedule")
+     * @ORM\OneToMany(targetEntity="Preference", mappedBy="schedule")
      * @ORM\JoinColumn(name="preferences", referencedColumnName="id")
      */
     protected $preferences;
