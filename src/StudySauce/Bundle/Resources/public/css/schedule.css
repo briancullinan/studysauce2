@@ -18,6 +18,29 @@
     box-sizing: border-box;
 }
 
+#schedule .selectize-dropdown .title {
+    display: block;
+}
+
+#schedule .selectize-dropdown .name {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+#schedule .selectize-dropdown .description {
+    display: block;
+    opacity: 0.5;
+    white-space: nowrap;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#schedule .selectize-dropdown .by {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
 #schedule header > label:first-child,
 .schedule .class-name
 {

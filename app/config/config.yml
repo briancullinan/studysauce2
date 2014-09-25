@@ -1,12 +1,33 @@
 imports:
-    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: "@StudySauceBundle/Resources/config/assets.php" }
+
+services:
+    pdo:
+        class: Doctrine\DBAL\Driver\PDOConnection
+        arguments:
+            - "sqlite:%kernel.root_dir%/data.sqlite"
+            - root
+            - ~
+        calls:
+            - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+
+    session.handler.pdo:
+        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        arguments: ["@pdo", {db_table: session, db_id_col: session_id, db_data_col: session_value, db_time_col: session_time}]
+
+    sinclude:
+        class: StudySauce\Bundle\DependencyInjection\SIncludeFragmentRenderer
+        arguments: ["@service_container", "@uri_signer", "", "@http_kernel", "@event_dispatcher"]
+        calls:
+            - [setFragmentPath, ["/_fragment"]]
+        tags:
+            - {name: "kernel.fragment_renderer"}
 
 framework:
     #esi:             ~
     #translator:      { fallback: "%locale%" }
-    secret:          "%secret%"
+    secret:          "021747d7aac1e078b0df5d2d8dd9d7abe4b90fa2"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
@@ -17,12 +38,12 @@ framework:
         engines: ['twig', 'php']
         hinclude_default_template: "StudySauceBundle:Shared:hinclude.html.php"
         #assets_version: SomeVersionScheme
-    default_locale:  "%locale%"
+    default_locale:  "en"
     trusted_hosts:   ~
     trusted_proxies: ~
     session:
         # handler_id set to null will use default session handler from php.ini
-        handler_id:  ~
+        handler_id:  session.handler.pdo
     fragments:       ~
     http_method_override: true
 #    fragments: { path: /_fragment }
@@ -53,13 +74,9 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   "%database_driver%"
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
-        charset:  UTF8
+        driver: pdo_sqlite
+        path: "%kernel.root_dir%/data.sqlite"
+        charset: UTF8
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: "%kernel.root_dir%/data/data.db3"
         # path:     "%database_path%"
@@ -70,17 +87,10 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
+    transport: smtp
+    host:      127.0.0.1
+    username:  ~
+    password:  ~
     spool:     { type: memory }
 
-services:
-    sinclude:
-        class: StudySauce\Bundle\DependencyInjection\SIncludeFragmentRenderer
-        arguments: ["@service_container", "@uri_signer", "", "@http_kernel", "@event_dispatcher"]
-        calls:
-            - [setFragmentPath, ["/_fragment"]]
-        tags:
-            - {name: "kernel.fragment_renderer"}
+

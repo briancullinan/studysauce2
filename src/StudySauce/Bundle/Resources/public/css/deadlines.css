@@ -157,14 +157,9 @@ a[href="#remove-deadline"] {
         width:30%;
     }
 
-    .deadline-row.edit .class-name
-    {
-        width: 39%;
-    }
-
     .deadline-row.edit .assignment
     {
-        width: 59%;
+        width: 69%;
     }
 
     .deadline-row .reminder

@@ -1,3 +1,4 @@
+
 html
 {
     height: 100%;
@@ -231,6 +232,8 @@ label
     display:block;
 }
 
+.selectize-input,
+.selectize-control.single .selectize-input,
 input:not([type]),
 input[type="email"],
 input[type="number"],
@@ -246,6 +249,7 @@ input[type="datetime"],
 input[type=datetime-local],
 input[type=month]
 {
+    background:#ffffff none;
     color: #555555;
     font-size: 14px;
     font-style: normal;
@@ -265,6 +269,16 @@ input[type=month]
     vertical-align: middle;
 }
 
+.selectize-input > input
+{
+    height:auto !important;
+    margin: 0 !important;
+    vertical-align: top !important;
+}
+
+.selectize-control.single .selectize-input,
+.selectize-input.focus,
+.selectize-input:focus,
 input:not([type]):focus,
 input[type="email"]:focus,
 input[type="number"]:focus,
@@ -283,6 +297,8 @@ input[type=month]:focus
     border-color:#0099BB;
 }
 
+.read-only .selectize-input,
+.read-only .selectize-control.single .selectize-input,
 .read-only input:not([type]),
 .read-only input[type="email"],
 .read-only input[type="number"],

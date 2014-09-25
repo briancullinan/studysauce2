@@ -28,6 +28,22 @@ $collection->add(
 );
 
 $collection->add(
+    'institutions',
+    new Route(
+        '/institutions',
+        array(
+            '_controller' => 'StudySauceBundle:Schedule:institutions'
+        ),
+        array(),
+        array(),
+        '',
+        array(),
+        array(),
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'goals',
     new Route(
         '/goals/{_format}', array(

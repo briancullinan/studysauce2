@@ -18,9 +18,9 @@ if (!defined('ENT_SUBSTITUTE')) {
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
-use Symfony\Component\HttpKernel\Fragment\RoutableFragmentRenderer;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Templating\EngineInterface;
@@ -58,7 +58,12 @@ class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
         if (!$this->hasTemplating()) {
             $this->setTemplating($this->container->get('templating'));
         }
+        $session = $request->getSession();
         $noInclude = $request->query->get('noInclude');
+        if($noInclude)
+            $session->set('noInclude', true);
+        else
+            $noInclude = $session->get('noInclude');
         if($noInclude)
         {
             $renderer = new InlineFragmentRenderer($this->kernel, $this->dispatcher);

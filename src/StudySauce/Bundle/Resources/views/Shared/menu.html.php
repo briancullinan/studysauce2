@@ -10,6 +10,7 @@
             <li><a href=""><span>&nbsp;</span>Midterm/final planner</a></li>
             <li><a href=""><span>&nbsp;</span>Grade calculator</a></li>
             <li><a href=""><span>&nbsp;</span>Study notes</a></li>
+            <li><a href=""><span>&nbsp;</span>Flash cards</a></li>
             <li><h3>Study Tools</h3></li>
             <li><a href="<?php print $view['router']->generate('goals'); ?>"><span>&nbsp;</span>Goals</a></li>
             <li><a href="<?php print $view['router']->generate('schedule'); ?>"><span>&nbsp;</span>Class schedule</a></li>

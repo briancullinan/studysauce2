@@ -1,10 +1,10 @@
-jQuery(document).ready(function () {
+$(document).ready(function () {
 
-    var goals = jQuery('#goals');
+    var goals = $('#goals');
 
     goals.on('click', '.goal-row a[href="#goal-edit"]', function (evt) {
         evt.preventDefault();
-        var that = jQuery(this),
+        var that = $(this),
             row = that.parents('.goal-row');
         row.removeClass('read-only').addClass('edit');
     });

@@ -59,18 +59,6 @@
                             class="premium">Premium</sup></label>
                 </ul>
             </div>
-            <script type="text/javascript">
-                jQuery(document).ready(function () {
-                    jQuery('#partner input[type="checkbox"]').each(function () {
-                        jQuery(this).data('origState', jQuery(this).prop('checked'));
-                    });
-                    jQuery('#partner').on('change', 'input[type="checkbox"]', function (evt) {
-                        evt.preventDefault();
-                        if (jQuery(this).prop('checked') != jQuery(this).data('origState'))
-                            jQuery(this).prop('checked', jQuery(this).data('origState'));
-                    });
-                });
-            </script>
         </div>
         <div class="partner-faqs">
             <h3>FAQs:</h3>

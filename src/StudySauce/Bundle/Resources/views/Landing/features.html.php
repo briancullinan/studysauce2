@@ -39,7 +39,7 @@
 <div class="support-box clearfix">
     <h3><a href="#contact-support" class="cloak highlighted-link" data-toggle="modal" data-target="#contact-support">
             <?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/chat_icon.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
-                <img width="48" height="48" src="<?php echo $view->escape($url) ?>" />
+                <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="CHAT" />
             <?php endforeach; ?>Still have questions? <span class="reveal">Talk to a study tutor.</span></a>
     </h3>
 

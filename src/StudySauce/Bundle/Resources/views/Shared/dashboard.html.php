@@ -26,6 +26,7 @@ $view['slots']->output('javascripts');
 $view['slots']->stop();
 $view['slots']->start('javascripts'); ?>
 <?php foreach ($view['assetic']->javascripts(array(
+        '@StudySauceBundle/Resources/public/js/selectize.min.js',
         '@StudySauceBundle/Resources/public/js/sauce.js',
         '@StudySauceBundle/Resources/public/js/contact.js'
     ), array(), array('output' => 'bundles/studysauce/js/*.js')) as $url):

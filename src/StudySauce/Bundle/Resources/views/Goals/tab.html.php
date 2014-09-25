@@ -137,8 +137,7 @@
             <img src="/sites/studysauce.com/themes/successinc/images/science.png">
 
             <h3>The Science of Setting Goals</h3>
-            <a href="#read-more" onclick="jQuery('.page-dashboard #goals #read-more-incentives .grid_6').toggle(); return false;">read
-                more</a>
+            <a href="#read-more">read more</a>
         </div>
 
     </div>
