@@ -7,24 +7,31 @@ $router = $this->container->get('router');
 /** @var $collection \Symfony\Component\Routing\RouteCollection */
 $collection = $router->getRouteCollection();
 
+/** @var $app \Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables */
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <link rel="apple-touch-icon-precomposed" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
+    <link rel="shortcut icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/favicon.ico'); ?>" />
+    <link rel="apple-touch-icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
+    <link rel="image_src" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
+    <meta name="description" content="Study Sauce teaches you the most effective study methods and provides you the tools to make the most of your study time." />
+    <meta property="og:image" content="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
     <title><?php $view['slots']->output('title', 'Study Sauce | Discover the secret sauce to studying') ?></title>
 
-    <?php foreach ($view['assetic']->stylesheets(
-        array(
+    <?php foreach ($view['assetic']->stylesheets([
             '@StudySauceBundle/Resources/public/css/jquery-ui.min.css',
             '@StudySauceBundle/Resources/public/css/bootstrap.min.css',
             '@StudySauceBundle/Resources/public/css/selectize.default.css',
             '@StudySauceBundle/Resources/public/css/sauce.css',
             '@StudySauceBundle/Resources/public/css/dialog.css',
-        ),
-        array(),
-        array('output' => 'bundles/studysauce/css/*.css')
+        ],
+        [],
+        ['output' => 'bundles/studysauce/css/*.css']
     ) as $url):
         ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
@@ -35,8 +42,8 @@ $collection = $router->getRouteCollection();
     <?php
     $allRoutes = $collection->all();
 
-    $routes = array();
-    $callbackPaths = array();
+    $routes = [];
+    $callbackPaths = [];
 
     /** @var $params \Symfony\Component\Routing\Route */
     foreach ($allRoutes as $route => $params) {
@@ -49,7 +56,7 @@ $collection = $router->getRouteCollection();
             $controller = $controllerAction[0];
 
             if (!isset($routes[$controller])) {
-                $routes[$controller] = array();
+                $routes[$controller] = [];
             }
             if (preg_match('/(^|\s)request.isXmlHttpRequest\(\)(\s+|$)/i', $condition)) {
                 $callbackPaths[$route] = $router->generate($route);
@@ -66,15 +73,14 @@ $collection = $router->getRouteCollection();
 </head>
 <body class="<?php $view['slots']->output('classes') ?>">
 <?php $view['slots']->output('body') ?>
-<?php foreach ($view['assetic']->javascripts(
-    array(
+<?php foreach ($view['assetic']->javascripts([
         '@StudySauceBundle/Resources/public/js/jquery-2.1.1.min.js',
         '@StudySauceBundle/Resources/public/js/jquery-ui.min.js',
         '@StudySauceBundle/Resources/public/js/bootstrap.min.js',
         '@StudySauceBundle/Resources/public/js/sinclude.js'
-    ),
-    array(),
-    array('output' => 'bundles/studysauce/js/*.js')
+    ],
+    [],
+    ['output' => 'bundles/studysauce/js/*.js']
 ) as $url):
     ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>

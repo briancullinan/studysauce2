@@ -2,7 +2,7 @@
     <div class="scr">
         <h2>Learn to be a great studier</h2>
         <div class="grid_6">
-            <?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/situation_compressed.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/situation_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                 <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>
             <?php endforeach; ?></div>
         <div class="grid_6">
@@ -14,11 +14,11 @@
                 <h3>Your study habits are hurting you</h3>
                 <p>To make things worse, many of the methods we use are either ineffective or oftentimes counterproductive.  For example, highlighting or underlining while studying offers no benefit and can even impede learning.</p>
             </div>
-            <div class="grid_6"><?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/complication_compressed.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
+            <div class="grid_6"><?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/complication_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>
                 <?php endforeach; ?></div>
         </div>
-        <div class="grid_6"><?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/resolution_compressed.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
+        <div class="grid_6"><?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/resolution_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                 <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>
             <?php endforeach; ?></div>
         <div class="grid_6">

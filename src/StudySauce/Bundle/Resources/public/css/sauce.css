@@ -30,6 +30,11 @@ p
     color: #555555;
 }
 
+hr
+{
+    border-color:#555555;
+}
+
 h1
 {
     font-size: 56px;
@@ -171,6 +176,68 @@ input[type="button"].more:active
     border-color: #993300;
 }
 
+.invalid .btn,
+.invalid .btn-default,
+.invalid a.more,
+.invalid button.more,
+.invalid input[type="submit"].more,
+.invalid input[type="reset"].more,
+.invalid input[type="button"].more,
+.invalid .btn:hover,
+.invalid .btn-default:hover,
+.invalid a.more:hover,
+.invalid button.more:hover,
+.invalid input[type="submit"].more:hover,
+.invalid input[type="reset"].more:hover,
+.invalid input[type="button"].more:hover,
+.invalid .btn:active,
+.invalid .btn-default:active,
+.invalid a.more:active,
+.invalid button.more:active,
+.invalid input[type="submit"].more:active,
+.invalid input[type="reset"].more:active,
+.invalid input[type="button"].more:active,
+.invalid .btn:focus,
+.invalid .btn-default:focus,
+.invalid a.more:focus,
+.invalid button.more:focus,
+.invalid input[type="submit"].more:focus,
+.invalid input[type="reset"].more:focus,
+.invalid input[type="button"].more:focus
+.btn[disabled],
+.btn-default[disabled],
+a.more[disabled],
+button.more[disabled],
+input[type="submit"].more[disabled],
+input[type="reset"].more[disabled],
+input[type="button"].more[disabled],
+.btn:hover[disabled],
+.btn-default:hover[disabled],
+a.more:hover[disabled],
+button.more:hover[disabled],
+input[type="submit"].more:hover[disabled],
+input[type="reset"].more:hover[disabled],
+input[type="button"].more:hover[disabled],
+.btn:active[disabled],
+.btn-default:active[disabled],
+a.more:active[disabled],
+button.more:active[disabled],
+input[type="submit"].more:active[disabled],
+input[type="reset"].more:active[disabled],
+input[type="button"].more:active[disabled],
+.btn:focus[disabled],
+.btn-default:focus[disabled],
+a.more:focus[disabled],
+button.more:focus[disabled],
+input[type="submit"].more:focus[disabled],
+input[type="reset"].more:focus[disabled],
+input[type="button"].more:focus[disabled]
+{
+    color: #555555;
+    background: #CCCCCC none;
+    border-color: #555555;
+}
+
 a.highlighted-link span.reveal,
 .highlighted-link a span.reveal
 {
@@ -247,7 +314,8 @@ input[type=date],
 input[type=time],
 input[type="datetime"],
 input[type=datetime-local],
-input[type=month]
+input[type=month],
+.ui-datepicker-title select
 {
     background:#ffffff none;
     color: #555555;
@@ -267,6 +335,92 @@ input[type=month]
     height:28px;
     transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
     vertical-align: middle;
+    margin:0;
+}
+
+.ui-datepicker table
+{
+    margin:0;
+}
+
+.ui-datepicker .ui-datepicker-title select
+{
+    margin:0;
+    font-size: 14px;
+}
+
+.ui-datepicker th
+{
+    padding:5px;
+}
+
+.selectize-dropdown.single
+{
+    border-color: #555555;
+    border-radius: 0 0 2px 2px;
+}
+
+.ui-datepicker
+{
+    position: absolute;
+    border: 1px solid #555555;
+    background: #ffffff;
+    margin: -1px 0 0 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-border-radius: 0 0 3px 3px;
+    -moz-border-radius: 0 0 3px 3px;
+    border-radius: 2px;
+    width:auto;
+    padding:0;
+    z-index: 1000 !important;
+}
+
+.ui-datepicker .ui-state-default {
+    background:#ffffff none;
+    border: 1px solid transparent;
+    font-weight: normal/*{fwDefault}*/;
+    color: #555555/*{fcDefault}*/;
+    border-radius: 2px;
+}
+
+.ui-datepicker .ui-datepicker-header
+{
+    padding:5px 0;
+}
+
+.ui-datepicker .ui-datepicker-title
+{
+    line-height:inherit;
+}
+
+.ui-datepicker .ui-state-highlight
+{
+    border: 1px solid #CCCCCC;
+}
+
+.ui-datepicker .ui-state-default:hover {
+    border: 1px solid #555555;
+    background: #EEEEEE none;
+}
+
+.ui-datepicker .ui-priority-secondary
+{
+    background: #EEEEEE none;
+}
+
+.ui-datepicker table th {
+    background: none repeat scroll 0 0 #555555;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.ui-datepicker td span, .ui-datepicker td a
+{
+    padding:5px;
 }
 
 .selectize-input > input
@@ -460,7 +614,7 @@ input[type=month][disabled]
     position: absolute;
     background: #0099BB none;
     display:block;
-    border-radius: 1px;
+    border-radius: 2px;
     opacity: 0;
     transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
 }

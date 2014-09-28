@@ -26,7 +26,7 @@ class DemoControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
 
         // submits the login form
-        $form = $crawler->selectButton('Login')->form(array('_username' => 'admin', '_password' => 'adminpass'));
+        $form = $crawler->selectButton('Login')->form(['_username' => 'admin', '_password' => 'adminpass']);
         $client->submit($form);
 
         // redirect to the original page (but now authenticated)

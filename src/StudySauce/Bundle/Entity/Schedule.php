@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="session")
+ * @ORM\Table(name="schedule")
  */
 class Schedule
 {
@@ -18,26 +18,310 @@ class Schedule
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", mappedBy="schedules")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="schedules")
      */
-    protected $uid;
+    protected $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="Preference", mappedBy="schedule")
-     * @ORM\JoinColumn(name="preferences", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Course", mappedBy="schedule")
      */
-    protected $preferences;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Class", mappedBy="schedule")
-     * @ORM\JoinColumn(name="classes", referencedColumnName="id")
-     */
-    protected $classes;
+    protected $courses;
 
     /**
      * @ORM\Column(type="string", name="university")
      */
     protected $university;
 
+    /**
+     * @ORM\Column(type="string", length=10, name="grades")
+     */
+    protected $grades;
+
+    /**
+     * @ORM\Column(type="string", length=10, name="weekends")
+     */
+    protected $weekends;
+
+    /**
+     * @ORM\Column(type="integer", length=10, name="sharp6am11am")
+     */
+    protected $sharp6am11am;
+
+    /**
+     * @ORM\Column(type="integer", length=10, name="sharp11am4pm")
+     */
+    protected $sharp11am4pm;
+
+    /**
+     * @ORM\Column(type="integer", length=10, name="sharp4pm9pm")
+     */
+    protected $sharp4pm9pm;
+
+    /**
+     * @ORM\Column(type="integer", length=10, name="sharp9pm2am")
+     */
+    protected $sharp9pm2am;
+
+    /**
+     * @ORM\Column(type="datetime", name="created", options={"default" = 0})
+     */
+    protected $created;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->courses = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set university
+     *
+     * @param string $university
+     * @return Schedule
+     */
+    public function setUniversity($university)
+    {
+        $this->university = $university;
+
+        return $this;
+    }
+
+    /**
+     * Get university
+     *
+     * @return string 
+     */
+    public function getUniversity()
+    {
+        return $this->university;
+    }
+
+    /**
+     * Add courses
+     *
+     * @param \StudySauce\Bundle\Entity\Course $courses
+     * @return Schedule
+     */
+    public function addCourse(\StudySauce\Bundle\Entity\Course $courses)
+    {
+        $this->courses[] = $courses;
+
+        return $this;
+    }
+
+    /**
+     * Remove courses
+     *
+     * @param \StudySauce\Bundle\Entity\Course $courses
+     */
+    public function removeCourse(\StudySauce\Bundle\Entity\Course $courses)
+    {
+        $this->courses->removeElement($courses);
+    }
+
+    /**
+     * Get courses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCourses()
+    {
+        return $this->courses;
+    }
+
+    /**
+     * Set grades
+     *
+     * @param string $grades
+     * @return Schedule
+     */
+    public function setGrades($grades)
+    {
+        $this->grades = $grades;
+
+        return $this;
+    }
+
+    /**
+     * Get grades
+     *
+     * @return string 
+     */
+    public function getGrades()
+    {
+        return $this->grades;
+    }
+
+    /**
+     * Set weekends
+     *
+     * @param string $weekends
+     * @return Schedule
+     */
+    public function setWeekends($weekends)
+    {
+        $this->weekends = $weekends;
+
+        return $this;
+    }
+
+    /**
+     * Get weekends
+     *
+     * @return string 
+     */
+    public function getWeekends()
+    {
+        return $this->weekends;
+    }
+
+    /**
+     * Set sharp6am11am
+     *
+     * @param integer $sharp6am11am
+     * @return Schedule
+     */
+    public function setSharp6am11am($sharp6am11am)
+    {
+        $this->sharp6am11am = $sharp6am11am;
+
+        return $this;
+    }
+
+    /**
+     * Get sharp6am11am
+     *
+     * @return integer 
+     */
+    public function getSharp6am11am()
+    {
+        return $this->sharp6am11am;
+    }
+
+    /**
+     * Set sharp11am4pm
+     *
+     * @param integer $sharp11am4pm
+     * @return Schedule
+     */
+    public function setSharp11am4pm($sharp11am4pm)
+    {
+        $this->sharp11am4pm = $sharp11am4pm;
+
+        return $this;
+    }
+
+    /**
+     * Get sharp11am4pm
+     *
+     * @return integer 
+     */
+    public function getSharp11am4pm()
+    {
+        return $this->sharp11am4pm;
+    }
+
+    /**
+     * Set sharp4pm9pm
+     *
+     * @param integer $sharp4pm9pm
+     * @return Schedule
+     */
+    public function setSharp4pm9pm($sharp4pm9pm)
+    {
+        $this->sharp4pm9pm = $sharp4pm9pm;
+
+        return $this;
+    }
+
+    /**
+     * Get sharp4pm9pm
+     *
+     * @return integer 
+     */
+    public function getSharp4pm9pm()
+    {
+        return $this->sharp4pm9pm;
+    }
+
+    /**
+     * Set sharp9pm2am
+     *
+     * @param integer $sharp9pm2am
+     * @return Schedule
+     */
+    public function setSharp9pm2am($sharp9pm2am)
+    {
+        $this->sharp9pm2am = $sharp9pm2am;
+
+        return $this;
+    }
+
+    /**
+     * Get sharp9pm2am
+     *
+     * @return integer 
+     */
+    public function getSharp9pm2am()
+    {
+        return $this->sharp9pm2am;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \StudySauce\Bundle\Entity\User $user
+     * @return Schedule
+     */
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \StudySauce\Bundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Schedule
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
 }

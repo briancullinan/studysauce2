@@ -17,6 +17,11 @@ class Session
     protected $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="sessions")
+     */
+    protected $user;
+
+    /**
      * @ORM\Column(type="text", name="session_value")
      */
     protected $value;
@@ -94,5 +99,28 @@ class Session
     public function getTime()
     {
         return $this->time;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \StudySauce\Bundle\Entity\User $user
+     * @return Session
+     */
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \StudySauce\Bundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

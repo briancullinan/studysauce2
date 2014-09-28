@@ -24,9 +24,9 @@ class DemoExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('code', array($this, 'getCode'), array('is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFunction('code', [$this, 'getCode'], ['is_safe' => ['html']]),
+        ];
     }
 
     public function getCode($template)

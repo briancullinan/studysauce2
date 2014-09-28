@@ -4,3 +4,5 @@ _studysauce:
     resource: "@StudySauceBundle/Resources/config/routing.php"
 _course1:
     resource: "@Course1Bundle/Resources/config/routing.php"
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

@@ -1,5 +1,10 @@
 $(document).ready(function () {
 
+    Date.prototype.addHours= function(h){
+        this.setHours(this.getHours()+h);
+        return this;
+    };
+
     var body = $('body'),
         jp = $('#jplayer');
 

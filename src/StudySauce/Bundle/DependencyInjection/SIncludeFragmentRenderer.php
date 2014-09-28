@@ -51,7 +51,7 @@ class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
     /**
      * {@inheritdoc}
      */
-    public function render($uri, Request $request, array $options = array())
+    public function render($uri, Request $request, array $options = [])
     {
         // setting the templating cannot be done in the constructor
         // as it would lead to an infinite recursion in the service container

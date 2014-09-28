@@ -1,13 +1,13 @@
 <div class="header-wrapper header navbar navbar-inverse navbar-fixed-top">
     <div id="site-name" class="container navbar-header">
         <a title="Home" href="/">
-            <?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/Study_Sauce_Logo.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/Study_Sauce_Logo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                 <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
             <?php endforeach; ?><strong>Study</strong> Sauce</a>
         <div id="site-slogan">Discover the secret sauce to studying</div>
     </div>
     <div id="partner-message">
-        <?php foreach ($view['assetic']->image(array('@StudySauceBundle/Resources/public/images/empty-photo.png'), array(), array('output' => 'bundles/studysauce/images/*')) as $url): ?>
+        <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>" />
         <?php endforeach; ?>
         <div style="display:inline-block;">

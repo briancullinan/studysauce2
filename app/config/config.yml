@@ -24,6 +24,13 @@ services:
         tags:
             - {name: "kernel.fragment_renderer"}
 
+    security.authentication.listener.anonymous:
+            class: StudySauce\Bundle\EventListener\AnonymousAuthenticationListener
+            public: false
+            tags:
+                - { name: monolog.logger, channel: security }
+            arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager"]
+
 framework:
     #esi:             ~
     #translator:      { fallback: "%locale%" }
@@ -52,6 +59,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        ga_tracking: UA-xxxxx-x
 
 # Assetic Configuration
 assetic:
@@ -93,4 +102,9 @@ swiftmailer:
     password:  ~
     spool:     { type: memory }
 
-
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: StudySauce\Bundle\Entity\User
+#    template:
+#        engine: php

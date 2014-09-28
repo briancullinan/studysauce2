@@ -8,6 +8,8 @@ use Composer\Autoload\ClassLoader;
  */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
-AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+$loader->addPsr4('FOS\\UserBundle\\',realpath(__DIR__.'/../vendor/friendsofsymfony/user-bundle/'));
+
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 return $loader;
