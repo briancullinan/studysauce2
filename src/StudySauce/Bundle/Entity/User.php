@@ -31,6 +31,12 @@ class User extends BaseUser
     protected $sessions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Goal", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $goals;
+
+    /**
      * @ORM\Column(type="datetime", name="created", options={"default" = 0})
      */
     protected $created;
@@ -138,5 +144,38 @@ class User extends BaseUser
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Add goals
+     *
+     * @param \StudySauce\Bundle\Entity\Goal $goals
+     * @return User
+     */
+    public function addGoal(\StudySauce\Bundle\Entity\Goal $goals)
+    {
+        $this->goals[] = $goals;
+
+        return $this;
+    }
+
+    /**
+     * Remove goals
+     *
+     * @param \StudySauce\Bundle\Entity\Goal $goals
+     */
+    public function removeGoal(\StudySauce\Bundle\Entity\Goal $goals)
+    {
+        $this->goals->removeElement($goals);
+    }
+
+    /**
+     * Get goals
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGoals()
+    {
+        return $this->goals;
     }
 }

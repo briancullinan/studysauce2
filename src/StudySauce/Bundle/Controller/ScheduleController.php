@@ -3,11 +3,13 @@
 namespace StudySauce\Bundle\Controller;
 
 //use StudySauce\Bundle\Entity\Session;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\StudySauceBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,6 +120,7 @@ class ScheduleController extends Controller
                 $orm->persist($course);
                 $orm->flush();
                 $courses[] = $course;
+                $schedule->addCourse($course);
             }
         }
 
@@ -161,6 +164,7 @@ class ScheduleController extends Controller
                 $orm->persist($course);
                 $orm->flush();
                 $others[] = $course;
+                $schedule->addCourse($course);
             }
         }
 
@@ -203,13 +207,21 @@ class ScheduleController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
 
+        // set school name
+        if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
+        {
+            $schedule->setUniversity($request->get('university'));
+            $orm->merge($schedule);
+            $orm->flush();
+        }
+
         $classes = $request->get('classes');
         if (empty($classes))
             $classes = [];
 
         // move single values in to an array so we can reuse the code from the plan page and the schedule page
-        if ($request->query->get('className') && $request->query->get('type') && $request->query->get('dotw') &&
-            $request->query->get('start') && $request->query->get('end')
+        if ($request->get('className') && $request->get('type') && $request->get('dotw') &&
+            $request->get('start') && $request->get('end')
         )
             $classes[] = [
                 'className' => $request->get('className'),
@@ -318,9 +330,37 @@ class ScheduleController extends Controller
         }
 
             //if ($isPaid && !$skipBuild)
-            //    studysauce_rebuild_schedule($node, $entities, $added, $renamed);
+            //    TODO: studysauce_rebuild_schedule($node, $entities, $added, $renamed);
 
         return new JsonResponse(['csrf_token' => $csrfToken, 'schedule' => $this->indexAction('tab')->getContent()]);
+    }
+
+    private static $institutions;
+
+    /**
+     * @param $search
+     * @return ArrayCollection
+     */
+    public static function getInstitutions($search)
+    {
+        if(empty(self::$institutions))
+        {
+            self::$institutions = json_decode(file_get_contents(StudySauceBundle::$institutions_path));
+        }
+        $results = [];
+        $search = strtolower($search);
+
+        foreach(self::$institutions as $i => $u) {
+            if (count($results) > 200) {
+                break;
+            }
+            if (strpos(strtolower($u->institution), $search) > -1 || strpos(strtolower($u->state), $search) > -1 ||
+                strpos(strtolower($u->link), $search) > -1) {
+                $results[] = ['institution' => html_entity_decode($u->institution), 'state' => $u->state, 'link' => $u->link];
+            }
+        }
+
+        return new ArrayCollection($results);
     }
 
     /**
@@ -329,23 +369,7 @@ class ScheduleController extends Controller
      */
     public function institutionsAction(Request $request)
     {
-        $results = [];
-
-        $kernel = $this->container->get('kernel');
-        $path = $kernel->locateResource('@StudySauceBundle/Resources/public/js/institutions.json');
-        $institutions = json_decode(file_get_contents($path));
-        $search = strtolower($request->query->get('q'));
-        foreach($institutions as $i => $u) {
-            //if (count($results) > 10) {
-            //    break;
-            //}
-            if (strpos(strtolower($u->institution), $search) > -1 || strpos(strtolower($u->state), $search) > -1 ||
-                strpos(strtolower($u->link), $search) > -1) {
-                $results[] = ['institution' => html_entity_decode($u->institution), 'state' => $u->state, 'link' => $u->link];
-            }
-        }
-
-        return new JsonResponse($results);
+        return new JsonResponse(self::getInstitutions($request->query->get('q'))->toArray());
     }
 
 }

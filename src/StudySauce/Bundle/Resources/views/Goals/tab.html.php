@@ -1,3 +1,10 @@
+<?php
+use StudySauce\Bundle\Entity\Goal;
+
+/** @var $outcome Goal */
+/** @var $milestone Goal */
+/** @var $behavior Goal */
+?>
 <div class="panel-pane" id="goals">
 
     <div class="pane-content">
@@ -29,9 +36,9 @@
             <label>Reward</label>
         </header>
 
-        <div class="goal-row gid7259 valid read-only">
+        <div class="goal-row valid <?php print (empty($behavior) ? 'edit' : 'read-only'); ?>">
             <div class="type"><strong>Study Hours</strong></div>
-            <div class="hours">
+            <div class="behavior">
                 <label class="select">
                     <span>Goal</span>
                     <select>
@@ -43,7 +50,7 @@
                         <option value="10">10</option>
                         <option value="5">5</option>
                     </select>
-                    <div class="description">hours per week</div>
+                    hours per week
                 </label>
             </div>
             <div class="reward">
@@ -53,17 +60,16 @@
                 </label>
                 <a href="#goal-edit">&nbsp;</a>
             </div>
-            <input type="hidden" name="goal-read-only" value="1">
-            <div class="highlighted-link">
-                <a class="more read-only" href="#claim">Brag</a>
+            <div class="highlighted-link read-only">
+                <a class="more" href="#claim">Brag</a>
             </div>
         </div>
-        <div class="goal-row gid7259 valid">
+        <div class="goal-row valid <?php print (empty($behavior) ? 'hide' : ''); ?> <?php print (empty($milestone) ? 'edit' : 'read-only'); ?>">
             <div class="type"><strong>Study Milestone</strong></div>
-            <div class="hours">
+            <div class="milestone">
                 <label class="select">
                     <span>Goal</span>
-                    <select name="goal-grade" class="form-select">
+                    <select>
                         <option value="_none">- None -</option>
                         <option value="A">A</option>
                         <option value="A-" selected="selected">A-</option>
@@ -73,7 +79,7 @@
                         <option value="C+">C+</option>
                         <option value="C">C</option>
                     </select>
-                    <div class="description">grade on exam/paper</div>
+                    grade on exam/paper
                 </label>
             </div>
             <div class="reward">
@@ -83,17 +89,16 @@
                 </label>
                 <a href="#goal-edit">&nbsp;</a>
             </div>
-            <input type="hidden" name="goal-read-only" value="1">
-            <div class="highlighted-link">
-                <a class="more read-only" href="#claim">Brag</a>
+            <div class="highlighted-link read-only">
+                <a class="more" href="#claim">Brag</a>
             </div>
         </div>
-        <div class="goal-row gid7259 valid">
+        <div class="goal-row valid <?php print (empty($milestone) ? 'hide' : ''); ?> <?php print (empty($outcome) ? 'edit' : 'read-only'); ?>">
             <div class="type"><strong>Study Outcome</strong></div>
-            <div class="hours">
+            <div class="outcome">
                 <label class="select">
                     <span>Goal</span>
-                    <select name="goal-gpa" class="form-select">
+                    <select>
                         <option value="_none">- None -</option>
                         <option value="4">4.00</option>
                         <option value="3.75">3.75</option>
@@ -109,7 +114,7 @@
                         <option value="1.25">1.25</option>
                         <option value="1">1.00</option>
                     </select>
-                    <div class="description">Target GPA for the term</div>
+                    Target GPA for the term
                 </label>
             </div>
             <div class="reward">
@@ -119,9 +124,8 @@
                 </label>
                 <a href="#goal-edit">&nbsp;</a>
             </div>
-            <input type="hidden" name="goal-read-only" value="1">
-            <div class="highlighted-link">
-                <a class="more read-only" href="#claim">Brag</a>
+            <div class="highlighted-link read-only">
+                <a class="more" href="#claim">Brag</a>
             </div>
         </div>
 
@@ -140,6 +144,7 @@
             <a href="#read-more">read more</a>
         </div>
 
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>" />
     </div>
 
 </div>

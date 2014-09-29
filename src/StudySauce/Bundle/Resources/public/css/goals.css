@@ -63,7 +63,9 @@
 
 #goals .type,
 #goals .reward,
-#goals .hours,
+#goals .behavior,
+#goals .outcome,
+#goals .milestone,
 #goals header label
 {
     width: 29%;
@@ -205,6 +207,11 @@
     max-width: 400px;
 }
 
+#goals .goal-row.edit .read-only
+{
+    display:none;
+}
+
 @media all and (max-width:1000px) {
     #goals .split-description {
         width:auto;
@@ -255,7 +262,9 @@
         white-space: nowrap;
     }
 
-    #goals .hours,
+    #goals .behavior,
+    #goals .milestone,
+    #goals .outcome,
     #goals .reward
     {
         display: block;
@@ -295,7 +304,9 @@
         text-align: left;
     }
 
-    #goals .goal-row .hours label,
+    #goals .goal-row .behavior label,
+    #goals .goal-row .milestone label,
+    #goals .goal-row .outcome label,
     #goals .goal-row .reward label
     {
         padding-left:80px;
@@ -303,7 +314,9 @@
     }
 
     #goals .goal-row .reward label span,
-    #goals .goal-row .hours label span
+    #goals .goal-row .milestone label span,
+    #goals .goal-row .outcome label span,
+    #goals .goal-row .behavior label span
     {
         position:absolute;
         right:100%;

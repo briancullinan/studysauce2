@@ -10,12 +10,13 @@ $(document).ready(function () {
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
-    schedule.find('.school-name input').selectize({
+    schedule.find('.university input').selectize({
         valueField: 'institution',
         labelField: 'institution',
         searchField: ['institution', 'link', 'state'],
         maxItems: 1,
-        create: false,
+        create: true,
+        options: [schedule.find('.university input').data('data')],
         render: {
             option: function(item) {
                 return '<div>' +
@@ -43,7 +44,7 @@ $(document).ready(function () {
                 }
             });
         }
-    });
+    }).setValue(schedule.find('.university input').data('data'));
 
     schedule.on('click', 'a[href="#remove-class"]', function (evt) {
         evt.preventDefault();
@@ -68,11 +69,11 @@ $(document).ready(function () {
     {
         // update class schedule
         $('.schedule .class-row').remove();
-        $(data.schedule).find('.schedule .class-row')
-            .appendTo($('.schedule'));
-        $('.schedule.other .class-row').remove();
+        $(data.schedule).find('.schedule:not(.other) .class-row')
+            .appendTo($('.schedule:not(.other)'));
+
         $(data.schedule).find('.schedule.other .class-row')
-            .appendTo($('.other-schedule'));
+            .appendTo($('.schedule.other'));
 
         schedule.find('.schedule .class-row').planFunc();
     }
@@ -97,10 +98,10 @@ $(document).ready(function () {
     schedule.on('click', 'a[href="#save-class"]', function (evt) {
         var building = $('#building');
         evt.preventDefault();
-        if(schedule.find('.school-name input').val().trim() == '')
-            schedule.find('.school-name').addClass('error-empty');
+        if(schedule.find('.university input').val().trim() == '')
+            schedule.find('.university').addClass('error-empty');
         else
-            schedule.find('.school-name').removeClass('error-empty');
+            schedule.find('.university').removeClass('error-empty');
         if(schedule.is('.invalid'))
         {
             schedule.addClass('invalid-only');
@@ -152,22 +153,13 @@ $(document).ready(function () {
             data: {
                 // skip building the schedule if we are in the middle of the buy funnel
                 skipBuild: (window.location.pathname == '/schedule' || window.location.pathname == '/schedule2'),
-                university: schedule.find('.school-name input').val(),
+                university: schedule.find('.university input').val(),
                 classes: classes,
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-
-                if(window.location.pathname == '/schedule')
-                    window.location = '/schedule2';
-                else if(window.location.pathname == '/schedule2')
-                    window.location = '/customization';
-                else
-                {
-                    schedule.find('input[name="csrf_token"]').val(data.csrf_token);
-
-                    updateSchedule(data);
-                }
+                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
+                updateSchedule(data);
                 building.modal('hide');
             },
             error: function () {
@@ -216,10 +208,10 @@ $(document).ready(function () {
             autoFillDate.apply(this);
         });
     });
-    schedule.on('keyup', '.class-name input, .start-time input, .end-time input, .start-date input, .end-date input, .school-name input', function () {
+    schedule.on('keyup', '.class-name input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
         jQuery(this).parents('.class-row').planFunc();
     });
-    schedule.on('change', '.class-name input, .day-of-the-week input, .start-time input, .end-time input, .start-date input, .end-date input, .school-name input', function () {
+    schedule.on('change', '.class-name input, .day-of-the-week input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
         jQuery(this).parents('.class-row').planFunc();
     });
 
@@ -339,7 +331,7 @@ $(document).ready(function () {
                     var dotwOverlaps = false,
                         dotw2 = that.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
                     for(var i in dotw)
-                        if(dotw2.indexOf(dotw[i]) > -1)
+                        if(dotw.hasOwnProperty(i) && dotw2.indexOf(dotw[i]) > -1)
                         {
                             dotwOverlaps = true;
                             break;
@@ -379,17 +371,17 @@ $(document).ready(function () {
             schedule.find('.class-row.overlaps:visible').length == 0 &&
             schedule.find('.class-row.invalid-time:visible').length == 0 &&
             schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 &&
-            schedule.find('.school-name input').val().trim() != '')
+            schedule.find('.university input').val().trim() != '')
             schedule.removeClass('invalid invalid-only').addClass('valid');
         else if(
             schedule.find('.class-row.edit.invalid:visible').length == 0 &&
             schedule.find('.class-row.overlaps:visible').length == 0 &&
             schedule.find('.class-row.invalid-time:visible').length == 0 &&
-            schedule.find('.school-name input').val().trim() != '' &&
+            schedule.find('.university input').val().trim() != '' &&
             (schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 ||
             (schedule.find('.class-row.valid').not('.blank').length > 0 &&
-            schedule.find('.school-name input').val() !=
-            schedule.find('.school-name input').prop('defaultValue'))))
+            schedule.find('.university input').val() !=
+            schedule.find('.university input').prop('defaultValue'))))
             schedule.removeClass('invalid invalid-only').addClass('valid');
         else
             schedule.removeClass('valid').addClass('invalid');
@@ -407,8 +399,8 @@ $(document).ready(function () {
     };
 
     // set default value for university name
-    if(schedule.find('.school-name input').val().trim() != '')
-        schedule.find('.school-name input').prop('defaultValue', schedule.find('.school-name input').val().trim());
+    if(schedule.find('.university input').val().trim() != '')
+        schedule.find('.university input').prop('defaultValue', schedule.find('.university input').val().trim());
 
     schedule.find('.schedule .class-row').planFunc();
 });

@@ -360,6 +360,15 @@ input[type=month],
     border-radius: 0 0 2px 2px;
 }
 
+.selectize-control.single .selectize-input .item
+{
+    background: #EEEEEE none;
+    border-radius: 3px;
+    padding: 2px 5px;
+    margin: -3px 2px;
+    border: 1px solid #CCCCCC;
+}
+
 .ui-datepicker
 {
     position: absolute;
@@ -428,6 +437,10 @@ input[type=month],
     height:auto !important;
     margin: 0 !important;
     vertical-align: top !important;
+    position:relative;
+    left:0;
+    opacity:1;
+    display:inline-block;
 }
 
 .selectize-control.single .selectize-input,

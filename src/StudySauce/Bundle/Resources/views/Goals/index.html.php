@@ -20,7 +20,12 @@
 
 <?php $view['slots']->start('body'); ?>
 
-<?php echo $view->render('StudySauceBundle:Goals:tab.html.php'); ?>
+<?php echo $view->render('StudySauceBundle:Goals:tab.html.php', [
+        'csrf_token' => $csrf_token,
+        'behavior' => $behavior,
+        'outcome' => $outcome,
+        'milestone' => $milestone
+    ]); ?>
 
 <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:achievement', ['id' => 'claim']), ['strategy' => 'sinclude']); ?>
 

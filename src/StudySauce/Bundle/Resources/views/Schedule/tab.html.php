@@ -4,7 +4,9 @@
 /** @var $app \Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables */
 use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Schedule;
 
+/** @var $schedule Schedule */
 ?>
 <div class="panel-pane" id="schedule">
 
@@ -12,10 +14,13 @@ use StudySauce\Bundle\Entity\Course;
 
         <h2>Enter your class below</h2>
 
-        <div class="school-name">
+        <div class="university">
             <label class="input">
                 School name
-                <input type="text" placeholder="<?php print $demo->getUniversity(); ?>" autocomplete="off">
+                <input type="text" placeholder="Enter the full name" data-data="<?php print (isset($schedule)
+                    ? htmlentities(json_encode(ScheduleController::getInstitutions($schedule->getUniversity())->first()), ENT_QUOTES)
+                    : ''); ?>"
+                       value="<?php print (isset($schedule) ? $schedule->getUniversity() : ''); ?>" autocomplete="off">
             </label>
         </div>
 
@@ -56,9 +61,7 @@ use StudySauce\Bundle\Entity\Course;
                 <div class="class-name">
                     <label class="input">
                         <span>Class name</span>
-                        <input type="text" value="<?php print (!$isDemo ? $c->getName() : ''); ?>" placeholder="<?php print isset($demoCourses[$i]) ?
-                            $demoCourses[$i]->getName() :
-                            ScheduleController::getRandomName(); ?>" autocomplete="off">
+                        <input type="text" value="<?php print (!$isDemo ? $c->getName() : ''); ?>" placeholder="<?php print ScheduleController::getRandomName(); ?>" autocomplete="off">
                     </label>
                 </div>
                 <div class="day-of-the-week">
@@ -164,9 +167,7 @@ use StudySauce\Bundle\Entity\Course;
                     <div class="class-name">
                         <label class="input">
                             <span>Event title</span>
-                            <input type="text" value="<?php print (!$isDemo ? $c->getName() : ''); ?>" placeholder="<?php print isset($demoCourses[$i]) ?
-                                $demoCourses[$i]->getName() :
-                                ScheduleController::getRandomOther(); ?>" autocomplete="off">
+                            <input type="text" value="<?php print (!$isDemo ? $c->getName() : ''); ?>" placeholder="<?php print ScheduleController::getRandomOther(); ?>" autocomplete="off">
                         </label>
                     </div>
                     <div class="day-of-the-week">
