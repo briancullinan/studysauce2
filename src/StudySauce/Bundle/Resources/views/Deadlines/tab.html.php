@@ -1,10 +1,31 @@
+
+<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php') ?>
+
+<?php $view['slots']->start('stylesheets'); ?>
+<?php foreach ($view['assetic']->stylesheets([
+        '@StudySauceBundle/Resources/public/css/deadlines.css'
+    ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
+    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach; ?>
+<?php $view['slots']->stop() ?>
+
+<?php $view['slots']->start('javascripts'); ?>
+<?php foreach ($view['assetic']->javascripts([
+        '@StudySauceBundle/Resources/public/js/deadlines.js'
+    ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
+    ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach; ?>
+<?php $view['slots']->stop() ?>
+
+<?php $view['slots']->start('body'); ?>
+
 <div class="panel-pane" id="deadlines">
 
     <div class="pane-content">
 
         <h2>Enter important dates and we will send you email reminders</h2>
 
-        <div class="highlighted-link class-actions">
+        <div class="highlighted-link form-actions">
             <a href="#add-deadline">Add <span>+</span> class</a>
             <a href="#save-deadline" class="more">Save</a>
         </div>
@@ -72,10 +93,12 @@
             </div>
         </div>
 
-        <div class="highlighted-link class-actions">
+        <div class="highlighted-link form-actions">
             <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a><a href="#save-deadline" class="more">Save</a>
         </div>
 
     </div>
 
 </div>
+
+<?php $view['slots']->stop(); ?>

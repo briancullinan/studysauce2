@@ -4,7 +4,29 @@ use StudySauce\Bundle\Entity\Goal;
 /** @var $outcome Goal */
 /** @var $milestone Goal */
 /** @var $behavior Goal */
-?>
+
+use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
+
+<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php') ?>
+
+<?php $view['slots']->start('stylesheets'); ?>
+<?php foreach ($view['assetic']->stylesheets([
+        '@StudySauceBundle/Resources/public/css/goals.css'
+    ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
+    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach; ?>
+<?php $view['slots']->stop() ?>
+
+<?php $view['slots']->start('javascripts'); ?>
+<?php foreach ($view['assetic']->javascripts([
+        '@StudySauceBundle/Resources/public/js/goals.js'
+    ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
+    ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach; ?>
+<?php $view['slots']->stop() ?>
+
+<?php $view['slots']->start('body'); ?>
+
 <div class="panel-pane" id="goals">
 
     <div class="pane-content">
@@ -125,11 +147,11 @@ use StudySauce\Bundle\Entity\Goal;
                 <a href="#goal-edit">&nbsp;</a>
             </div>
             <div class="highlighted-link read-only">
-                <a class="more" href="#claim">Brag</a>
+                <a class="more" href="#claim" data-target="#claim">Brag</a>
             </div>
         </div>
 
-        <p class="highlighted-link form-actions">
+        <p class="highlighted-link form-actions invalid">
             <a href="/partner" class="read-only">Now invite someone to help keep you accountable to your goals.</a>
             <a href="#save-goal" class="more">Save</a>
         </p>
@@ -148,3 +170,7 @@ use StudySauce\Bundle\Entity\Goal;
     </div>
 
 </div>
+
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:achievement'), ['strategy' => 'sinclude']); ?>
+
+<?php $view['slots']->stop(); ?>

@@ -1,15 +1,13 @@
 
 .dashboard-home
 {
-    background: url(../images/grunge.png) repeat fixed 0 0 #555555;
+    /* background: url(../images/grunge.png) repeat fixed 0 0 #555555; */
+    background: #555555;
 }
 
 .dashboard-home .footer
 {
-    position:fixed;
-    bottom:0;
-    width:100%;
-    z-index: 1001;
+    padding: 0 240px;
 }
 
 .panel-pane
@@ -17,7 +15,7 @@
     margin:0 auto;
     max-width: none;
     width: 100%;
-    padding:90px 240px 50px 240px;
+    padding:70px 240px 20px 240px;
     box-sizing: border-box;
 }
 
@@ -28,12 +26,84 @@
     box-shadow: 0 0 15px rgba(0,0,0,.5);
     background: url("../images/noise_gray.png") repeat scroll 0 0 #EEEEEE;
     position: relative;
+    border-radius: 5px;
 }
 
 .pane-content h4,
 .pane-content h2
 {
     margin-top:0;
+}
+
+#metrics ol span,
+#metrics .row .class-name span,
+.class-row .class-name i,
+#plan .class-name span
+{
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    border: 3px solid #555555;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 0;
+    color: #555555;
+    line-height: 15px;
+    margin: -3px 10px -3px 0;
+    vertical-align: top;
+}
+
+.fc-event.class0,
+.class0 {
+    background-color: #FF1100;
+}
+
+.fc-event.class1,
+.class1
+{
+    background-color:#FF9900;
+}
+
+.fc-event.class2,
+.class2
+{
+    background-color:#FFDD00;
+}
+
+.fc-event.class3,
+.class3
+{
+    background-color:#BBEE00;
+}
+
+.fc-event.class4,
+.class4
+{
+    background-color:#33DD00;
+}
+
+.fc-event.class5,
+.class5
+{
+    background-color:#009999;
+}
+
+.fc-event.class6,
+.class6
+{
+    background-color:#1133AA;
+}
+
+.fc-event.class7,
+.class7
+{
+    background-color:#6611AA;
+}
+
+.fc-event.class8,
+.class8
+{
+    background-color:#BB0088;
 }
 
 @media all and (max-width: 1300px)
@@ -44,6 +114,13 @@
         padding-right:20px;
         max-width: 900px;
     }
+
+    .dashboard-home .footer
+    {
+        padding:0;
+        margin:0 auto;
+        max-width: 900px;
+    }
 }
 
 @media all and (max-width: 1000px) {
@@ -52,22 +129,28 @@
         padding-right: 60px;
         max-width: none;
     }
+
+    .dashboard-home .footer
+    {
+        padding:0 60px;
+    }
+
+    .dashboard-home .footer
+    {
+        padding:0 10px;
+    }
 }
 
 @media all and (min-height: 700px) {
-    .dashboard-home .footer {
-        position:fixed;
-    }
-
     .panel-pane {
-        padding-top: 90px;
-        padding-bottom: 70px;
+        padding-top: 70px;
+        padding-bottom: 20px;
     }
 }
 
 @media all and (min-width: 1000px) {
     .panel-pane {
-        padding-bottom: 50px;
+        padding-bottom: 20px;
     }
 }
 
@@ -79,7 +162,6 @@
     }
 
     .dashboard-home .footer {
-        position:relative;
     }
 
     .pane-content

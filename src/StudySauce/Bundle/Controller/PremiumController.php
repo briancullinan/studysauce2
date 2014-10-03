@@ -4,11 +4,19 @@ namespace StudySauce\Bundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+/**
+ * Class PremiumController
+ * @package StudySauce\Bundle\Controller
+ */
 class PremiumController extends Controller
 {
-    public function indexAction()
+    /**
+     * @param string $_format
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction($_format = 'index')
     {
-        return $this->render('StudySauceBundle:Premium:index.html.php');
+        return $this->render('StudySauceBundle:Premium:tab.html.php');
     }
 }
 

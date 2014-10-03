@@ -1,0 +1,56 @@
+
+.dashboard-home
+{
+    background: #555555;
+}
+
+
+.dashboard-home .footer,
+.header-wrapper
+{
+    position: relative;
+}
+
+.dashboard-home .footer
+{
+    z-index: 1;
+    padding: 0 240px;
+}
+
+.panel-pane
+{
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.header-wrapper
+{
+    background: #0099BB;
+}
+
+.header-wrapper, #site-name a, #partner-message a
+{
+    color:#ffffff;
+}
+
+#right-panel, #left-panel
+{
+    background: url("../../studysauce/images/noise_gray.png") repeat scroll 0 0 #EEEEEE;
+}
+
+.pane-content
+{
+    border-radius: 5px;
+    background: url("../../studysauce/images/noise_gray.png") repeat scroll 0 0 #FFFFFF;
+}
+
+.footer
+{
+    color:#EEEEEE;
+    background: none;
+}
+
+.footer li a
+{
+    color:#eeeeee;
+}

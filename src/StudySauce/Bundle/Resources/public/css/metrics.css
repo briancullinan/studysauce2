@@ -1,0 +1,125 @@
+
+#metrics {
+    text-align: center;
+}
+
+#metrics .centrify {
+    margin: 0 auto;
+}
+
+#metrics #legend {
+    text-align: center;
+    width: 25%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    vertical-align: middle;
+    margin: 20px -10px 0 -10px;
+    padding: 0 10px;
+    display: inline-block;
+    overflow: hidden;
+}
+
+#metrics ol {
+    display: inline-block;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    vertical-align: top;
+    text-align: left;
+    width: auto;
+}
+
+#metrics ol li {
+    margin: 5px 0;
+    list-style: none;
+}
+
+#metrics #timeline {
+     display: inline-block;
+     width: 50%;
+     max-width: 600px;
+     box-sizing: border-box;
+     -moz-box-sizing: border-box;
+     margin: 0 -10px;
+     padding: 0 10px;
+     vertical-align: middle;
+     overflow: hidden;
+}
+
+#metrics #timeline svg {
+      overflow: hidden;
+}
+
+#metrics #pie-chart {
+    display: inline-block;
+    width: 25%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    margin: 0 -10px;
+    padding: 0 10px;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+#metrics .row {
+    vertical-align: top;
+}
+
+#metrics .row .mobile-only
+{
+    display:none;
+}
+
+#metrics .row .class-name {
+    display: inline-block;
+    width: 175px;
+    padding: 5px 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: top;
+    text-align: left;
+}
+
+#metrics .row .class-date {
+    white-space: nowrap;
+    display: inline-block;
+    width: 175px;
+    padding: 5px 0;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+#metrics .row .class-time {
+    white-space: nowrap;
+    display: inline-block;
+    width: 175px;
+    padding: 5px 0;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+}
+
+@media all and (max-width:1000px)
+{
+
+    #metrics .row .full-only
+    {
+        display:none;
+    }
+    #metrics .row .mobile-only
+    {
+        display:inline;
+    }
+
+    #metrics .row .class-name,
+    #metrics .row .class-date,
+    #metrics .row .class-time
+    {
+        width:31%;
+    }
+
+}

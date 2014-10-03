@@ -42,37 +42,51 @@ $collection = $router->getRouteCollection();
     <?php
     $allRoutes = $collection->all();
 
-    $routes = [];
+    //$routes = [];
     $callbackPaths = [];
+    $callbackKeys = [];
+    $callbackUri = [];
 
     /** @var $params \Symfony\Component\Routing\Route */
     foreach ($allRoutes as $route => $params) {
         $defaults = $params->getDefaults();
         $condition = $params->getCondition();
+        $requirement = $params->getRequirement('_format');
         $path = $params->getPath();
 
         if (isset($defaults['_controller'])) {
             $controllerAction = explode(':', $defaults['_controller']);
             $controller = $controllerAction[0];
 
-            if (!isset($routes[$controller])) {
-                $routes[$controller] = [];
-            }
+            //if (!isset($routes[$controller])) {
+                //$routes[$controller] = [];
+            //}
             if (preg_match('/(^|\s)request.isXmlHttpRequest\(\)(\s+|$)/i', $condition)) {
                 $callbackPaths[$route] = $router->generate($route);
+                $callbackKeys[] = $route;
+                $callbackUri[] = $router->generate($route);
             }
 
-            $routes[$controller][] = $route;
+            if (!empty($requirement) && strpos($requirement, 'tab') > -1) {
+                $callbackPaths[$route] = $router->generate($route, ['_format' => 'tab']);
+                $callbackKeys[] = $route;
+                $callbackUri[] = $router->generate($route);
+            }
+
+            //$routes[$controller][] = $route;
         }
     }
 
     ?>
     <script type="text/javascript">
         window.callbackPaths = JSON.parse('<?php print json_encode($callbackPaths); ?>');
+        window.callbackKeys = JSON.parse('<?php print json_encode($callbackKeys); ?>');
+        window.callbackUri = JSON.parse('<?php print json_encode($callbackUri); ?>');
     </script>
 </head>
 <body class="<?php $view['slots']->output('classes') ?>">
 <?php $view['slots']->output('body') ?>
+<script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 <?php foreach ($view['assetic']->javascripts([
         '@StudySauceBundle/Resources/public/js/jquery-2.1.1.min.js',
         '@StudySauceBundle/Resources/public/js/jquery-ui.min.js',

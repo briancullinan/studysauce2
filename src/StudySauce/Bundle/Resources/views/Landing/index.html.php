@@ -39,7 +39,7 @@
 
 <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'), ['strategy' => 'sinclude']); ?>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact', ['id' => 'contact-support']), ['strategy' => 'sinclude']); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']); ?>
 
 <?php echo $view->render('StudySauceBundle:Shared:footer.html.php'); ?>
 

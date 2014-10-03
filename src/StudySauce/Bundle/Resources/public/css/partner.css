@@ -37,6 +37,12 @@
     vertical-align: top;
 }
 
+#partner-permissions label
+{
+    display:block;
+    margin-bottom:10px;
+}
+
 #partner-permissions ul {
     list-style-type: none;
     padding: 0;

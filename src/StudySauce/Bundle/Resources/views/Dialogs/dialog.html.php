@@ -9,10 +9,12 @@
             <div class="modal-body">
                 <?php $view['slots']->output('modal-body') ?>
             </div>
+            <?php if($view['slots']->get('modal-footer') != null): ?>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <?php $view['slots']->output('modal-footer') ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

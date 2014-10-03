@@ -1,7 +1,7 @@
 .footer
 {
-    background: #0d0d0d url("../images/noise_darkgray.png") repeat;
-    color: #555555;
+    background: none;
+    color: #EEEEEE;
     font-weight: bold;
     font-size: 12px;
     text-align: center;
@@ -30,17 +30,16 @@
 
 .footer ul.menu li
 {
-    border-right: 1px solid #555555;
     display: inline;
     list-style-type: none;
     margin: 0;
-    padding: 0 10px;
+    padding: 0 5px;
     white-space: nowrap;
 }
 
 .footer li a
 {
-    color: #555555;
+    color: #EEEEEE;
 }
 
 .footer li a:hover,

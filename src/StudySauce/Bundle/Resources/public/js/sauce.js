@@ -1,3 +1,13 @@
+function onYouTubeIframeAPIReady(playerId) {
+    player = new YT.Player('ytplayer', {
+        events: {
+            'onStateChange': function (e) {
+                _gaq.push(['_trackPageview', location.pathname + location.search  + '#yt' + e.data]);
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
 
     Date.prototype.addHours= function(h){
@@ -6,28 +16,103 @@ $(document).ready(function () {
     };
 
     var body = $('body'),
-        jp = $('#jplayer');
+        jp = $('#jplayer'),
+        activateMenu = function (path, noPush) {
+            var i = window.callbackUri.indexOf(path);
+            var panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
+                panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray();
+            if(panel.length == 0)
+                $.ajax({
+                    url: window.callbackPaths[window.callbackKeys[i]],
+                    type: 'GET',
+                    dataType: 'text',
+                    success: function (tab) {
+                        var content = $(tab),
+                            panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
+                            styles = $.merge(content.filter('link[type="text/css"]'), content.find('link[type="text/css"]')),
+                            scripts = $.merge(content.filter('script[type="text/javascript"]'), content.find('script[type="text/javascript"]'));
 
-    // look at every link with a hash, store with google analytics and search for dialogs.
-    body.on('click', 'a[href^="#"]', function (evt)
-    {
-        var that = $(this),
-            link = that.attr('href');
-        if($(link).length > 0 && $(link).is('.dialog'))
-        {
-            evt.preventDefault();
-            $(link).parent('.fixed-centered').show();
-            $(link).show(500);
-        }
-    });
+                        $(styles).each(function () {
+                            var url = $(this).attr('href');
+                            if(typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0)
+                                $('head').append('<link href="' + url + '" type="text/css" rel="stylesheet" />');
+                            else
+                            {
+                                var re = (/url\("(.*?)"\)/ig),
+                                    match,
+                                    media = $(this).attr('media');
+                                while (match = re.exec($(this).html())) {
+                                    if($('link[href="' + match[1] + '"]').length == 0 &&
+                                        $('style:contains("' + match[1] + '")').length == 0)
+                                    {
+                                        if(typeof media == 'undefined' || media == 'all')
+                                            $('head').append('<link href="' + match[1] + '" type="text/css" rel="stylesheet" />');
+                                        else
+                                            $('head').append('<style media="' + media + '">@import url("' + match[1] + '");');
+                                    }
+                                }
+                            }
+                        });
 
-    body.on('click', '.dialog a[href="#close"]', function (evt)
-    {
+                        $(scripts).each(function () {
+                            var url = $(this).attr('src');
+                            if(typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0)
+                            {
+                                $.getScript(url.replace(/\?.*/ig, ''));
+                                console.log(url.replace(/\?.*/ig, ''));
+                            }
+                        });
+
+
+                        if(panelIds.length > 0)
+                            panes = panes.not('#' + panelIds.join(', #'));
+                        if(panes.length > 0) {
+                            panes.hide().insertBefore(body.find('.footer'));
+                            var newPane = panes.filter('#' + window.callbackKeys[i]);
+                            if(newPane.length == 0) {
+                                newPane = panes.first();
+                            }
+                            body.find('.panel-pane:visible').fadeOut(150);
+                            newPane.delay(150).fadeIn(150);
+                            if(!noPush)
+                                window.history.pushState(window.callbackKeys[i], "", path);
+                        }
+                    }
+                });
+            else if(!panel.is(':visible')) {
+                body.find('.panel-pane:visible').fadeOut(150);
+                panel.delay(150).fadeIn(150);
+                if(!noPush)
+                    window.history.pushState(window.callbackKeys[i], "", path);
+            }
+        };
+
+    body.on('click', '.main-menu a[href]', function (evt) {
+        body.find('.main-menu .active').removeClass('active');
+        $(this).addClass('active').parents('ul.collapse').addClass('in');
+
+        var path = $(this).attr('href');
+        if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
+                // check if there is a tab with the selected url
+            window.callbackUri.indexOf(path) == -1)
+            return;
         evt.preventDefault();
-        $(this).parents('.dialog').hide(500, function () {
-            $(this).parent('.fixed-centered').hide();
-        });
+        activateMenu(path);
     });
+    body.find('.main-menu a[href="' + window.location.pathname + '"]').first().trigger('click');
+
+    window.onpopstate = function(e){
+        if(typeof window.callbackPaths[e.state] != 'undefined') {
+            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state)], true);
+        }
+    };
+
+    window.onpushstate = function(e){
+        if(typeof window.callbackPaths[e.state] != 'undefined')
+        {
+            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state)], true);
+        }
+    };
 
     // -------------- Player --------------- //
     $('.minplayer-default-play').on('click', function () {
@@ -65,5 +150,7 @@ $(document).ready(function () {
         });
     }
     // -------------- END Player --------------- //
+
+
 
 });

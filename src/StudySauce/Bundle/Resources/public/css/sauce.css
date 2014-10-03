@@ -12,7 +12,7 @@ body
 html, body
 {
     font-family: 'Ubuntu',Arial,sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: normal;
     line-height: 140%;
     margin: 0;
@@ -75,7 +75,7 @@ input[type="submit"].more,
 input[type="reset"].more,
 input[type="button"].more
 {
-    font-size: inherit;
+    font-size: 16px;
     line-height: inherit;
     -webkit-appearance: none;
     margin: 0;
@@ -236,6 +236,9 @@ input[type="button"].more:focus[disabled]
     color: #555555;
     background: #CCCCCC none;
     border-color: #555555;
+    margin-top:0;
+    border-bottom-width:3px;
+    cursor: not-allowed;
 }
 
 a.highlighted-link span.reveal,
@@ -262,6 +265,11 @@ a span.reveal
     text-decoration: none;
     color: #0099BB;
     outline:none;
+}
+
+a:not([href]), a:hover:not([href])
+{
+    color:inherit;
 }
 
 .btn:focus,
@@ -319,7 +327,7 @@ input[type=month],
 {
     background:#ffffff none;
     color: #555555;
-    font-size: 14px;
+    font-size: 16px;
     font-style: normal;
     font-family: inherit;
     font-weight: normal;
@@ -346,7 +354,7 @@ input[type=month],
 .ui-datepicker .ui-datepicker-title select
 {
     margin:0;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .ui-datepicker th
@@ -365,8 +373,9 @@ input[type=month],
     background: #EEEEEE none;
     border-radius: 3px;
     padding: 2px 5px;
-    margin: -3px 2px;
+    margin: -4px 2px;
     border: 1px solid #CCCCCC;
+    vertical-align: top;
 }
 
 .ui-datepicker
@@ -568,7 +577,7 @@ input[type=month][disabled]
 
 .radio, .checkbox {
     position: relative;
-    display: block;
+    display: inline-block;
     min-height: 20px;
     margin-top:0;
     margin-bottom: 0;
@@ -587,6 +596,23 @@ input[type=month][disabled]
     height: 1px;
     width: 1px;
     float: left;
+    opacity: 0;
+}
+
+.player-wrapper {
+    width: 100%;
+    display: block;
+    padding-bottom: 56%;
+    position: relative;
+}
+
+.player-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
 }
 
 .radio input[type=radio]+i,

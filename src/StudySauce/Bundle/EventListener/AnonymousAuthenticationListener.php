@@ -57,6 +57,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
      * @param $email
      * @param EntityManager $orm
      * @param EncoderFactory $encoder
+     * @param AuthenticationProviderManager $authenticationManager
      */
     public function __construct(
         SecurityContextInterface $context,

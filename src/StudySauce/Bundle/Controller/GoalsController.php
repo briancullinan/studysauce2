@@ -18,10 +18,10 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class GoalsController extends Controller
 {
     /**
-     * @param string $format
+     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($format = 'index')
+    public function indexAction($_format = 'index')
     {
         $user = $this->getUser();
 
@@ -32,7 +32,7 @@ class GoalsController extends Controller
         /** @var  $goals ArrayCollection */
         $goals = $user->getGoals();
 
-        return $this->render('StudySauceBundle:Goals:' . $format . '.html.php', [
+        return $this->render('StudySauceBundle:Goals:tab.html.php', [
                 'behavior' => $goals->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first(),
                 'outcome' => $goals->filter(function (Goal $x) {return $x->getType() == 'outcome';})->first(),
                 'milestone' => $goals->filter(function (Goal $x) {return $x->getType() == 'milestone';})->first(),
@@ -68,8 +68,27 @@ class GoalsController extends Controller
         $goals = $request->get('goals');
         foreach($goals as $i => $g)
         {
+            /** @var $goal Goal */
             $goal = $user->getGoals()->filter(function (Goal $x) use($g) {return $x->getType() == $g['type'];})->first();
+            $new = false;
+            if($goal == null)
+            {
+                $goal = new Goal();
+                $goal->setType($g['type']);
+                $goal->setUser($user);
+                $goal->setCreated(new \DateTime());
+                $new = true;
+            }
+            $goal->setGoal($g['value']);
+            $goal->setReward(($g['reward']));
 
+            $user->addGoal($goal);
+            if($new)
+            {
+                $orm->persist($goal);
+            }
+            else
+                $orm->merge($goal);
             $orm->flush();
         }
 

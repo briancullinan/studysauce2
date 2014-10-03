@@ -3,18 +3,30 @@
 #left-panel
 {
     display: block;
-    overflow: hidden;
-    background: url("../images/noise.png") repeat scroll 0 0 #FFFFFF;
-    min-height: 100%;
-    position: absolute;
+    background: url("../images/noise_gray.png") repeat scroll 0 0 #EEEEEE;
+    height: 100%;
+    position: fixed;
     top: 0;
     left: 0;
-    padding-top: 70px;
+    padding-top: 60px;
     padding-bottom: 30px;
     transition: ease-in-out .15s;
     width: 220px;
     box-sizing: border-box;
     z-index: 900;
+}
+
+nav
+{
+    overflow-x:hidden;
+    overflow-y:auto;
+    height: 100%;
+    width: 100%;
+}
+
+#left-panel
+{
+    border-right: 1px solid #555;
 }
 
 #right-panel h3,
@@ -34,6 +46,7 @@
 {
     right: 0;
     left:auto;
+    border-left: 1px solid #555;
 }
 
 #right-panel ul,
@@ -67,26 +80,35 @@
     position:relative;
 }
 
+.main-menu a
+{
+    color:inherit;
+}
+
 .main-menu span
 {
+    line-height: 40px;
+    text-align: center;
+    color: #555555;
     padding: 0;
-    display:block;
-    overflow:hidden;
+    display: block;
+    overflow: hidden;
     vertical-align: middle;
-    height:40px;
-    width:40px;
-    position:absolute;
-    top:50%;
-    margin-top:-20px;
-    left:0;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 50%;
+    margin-top: -20px;
+    left: 0;
 }
 
 #left-panel span
 {
-    margin-top:-15px;
     text-align: center;
-    font-size: 30px;
     color:#555555;
+    left:5px;
+    font-size: 30px;
+    width:30px;
 }
 
 #right-panel span
@@ -97,25 +119,56 @@
 .main-menu a:hover,
 .main-menu a:focus,
 .main-menu a:active,
-.main-menu a.skrollable-between
+.main-menu a.active
 {
     padding-left:45px;
     background-color:#DDDDDD;
     border-left:5px solid #0099BB;
-    transition:background-color ease-in-out .15s;
+    transition:background-color ease-in-out .15s, color ease-in-out .15s;
+    color: #0099BB;
+    font-weight: bold;
+}
+
+.main-menu a.active
+{
+    background-color: #ffffff;
 }
 
 .main-menu a:hover span,
 .main-menu a:focus span,
 .main-menu a:active span,
-.main-menu a.skrollable-between span {
+.main-menu a.active span {
     left:-5px;
 }
+
 #left-panel a:hover span,
 #left-panel a:focus span,
 #left-panel a:active span,
-#left-panel a.skrollable-between span {
+#left-panel a.active span {
     color:#0099BB;
+    left:0;
+}
+
+#left-panel a:hover:not([href]),
+#left-panel a:hover:not([href]) span
+{
+    color:inherit;
+    cursor: pointer;
+}
+
+#left-panel a:not([href]) span
+{
+    display:none;
+}
+
+#left-panel a:not([href])
+{
+    padding-left:15px;
+}
+
+#left-panel a:hover:not([href])
+{
+    padding-left:10px;
 }
 
 #right-panel a[href="#userlist"] span
@@ -176,21 +229,6 @@
         white-space: nowrap;
     }
 
-    a[href="#toggle-menu"]
-    {
-        background: url(../images/menu_new_half.png) top left transparent;
-        position:absolute;
-        top:65px;
-        left:-5px;
-        width:45px;
-        height:45px;
-    }
-
-    #right-panel a[href="#toggle-menu"]
-    {
-        background-position: left -100px;
-    }
-
     .main-menu h3
     {
         visibility: hidden;
@@ -200,6 +238,75 @@
         right: 0;
         width:40px;
         white-space: nowrap;
+    }
+
+    #right-panel .navbar-toggle
+    {
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+        transform-origin: left bottom;
+        height:40px;
+        line-height: 100%;
+        vertical-align: top;
+        color:#0099BB;
+        background: url("../images/menu_new.png") no-repeat 50% 10px transparent;
+        padding:0 5px 16px 5px;
+        margin-top:-40px;
+    }
+
+    #right-panel .navbar-toggle
+    {
+        width:auto;
+    }
+
+    .navbar-toggle
+    {
+        display:block;
+        float:none;
+        margin:0;
+        padding: 5px;
+        width:100%;
+    }
+
+    .navbar-toggle .icon-bar+.icon-bar {
+        margin-top: 4px;
+    }
+
+    .navbar-toggle .icon-bar {
+        display: block;
+        width: auto;
+        height: 4px;
+        border-radius: 4px;
+        background-color:#555555;
+    }
+
+    .navbar-toggle:hover .icon-bar
+    {
+        background-color:#0099BB;
+    }
+
+    #right-panel h3, #left-panel h3,
+    #right-panel ul
+    {
+        display:none;
+    }
+
+    #left-panel a:not([href]) span
+    {
+        display:block;
+    }
+
+    #left-panel a:not([href])
+    {
+        padding-left:50px;
+    }
+
+    #left-panel a:hover:not([href])
+    {
+        padding-left:45px;
     }
 }
 

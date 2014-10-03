@@ -140,7 +140,7 @@ a[href="#remove-deadline"] {
         white-space: normal;
     }
 
-    #deadlines .highlighted-link.class-actions
+    #deadlines .highlighted-link.form-actions
     {
         text-align: right;
     }

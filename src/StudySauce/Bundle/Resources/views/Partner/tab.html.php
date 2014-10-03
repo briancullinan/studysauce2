@@ -1,3 +1,17 @@
+<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
+
+<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php') ?>
+
+<?php $view['slots']->start('stylesheets'); ?>
+<?php foreach ($view['assetic']->stylesheets([
+        '@StudySauceBundle/Resources/public/css/partner.css'
+    ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
+    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach; ?>
+<?php $view['slots']->stop() ?>
+
+<?php $view['slots']->start('body'); ?>
+
 <div class="panel-pane" id="partner">
 
     <div class="pane-content">
@@ -98,3 +112,7 @@
     </div>
 
 </div>
+
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerinvite'), ['strategy' => 'sinclude']); ?>
+
+<?php $view['slots']->stop(); ?>

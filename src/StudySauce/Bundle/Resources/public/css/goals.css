@@ -212,7 +212,13 @@
     display:none;
 }
 
+#goals .goal-row.edit .reward
+{
+    width:39%;
+}
+
 @media all and (max-width:1000px) {
+
     #goals .split-description {
         width:auto;
         display:block;
@@ -272,7 +278,12 @@
         max-width: none;
         clear: both;
         text-align: left;
-        padding-right: 0px;
+        padding-right: 0;
+    }
+
+    #goals .goal-row.edit .reward
+    {
+        width: auto;
     }
 
     #goals .goal-row .highlighted-link

@@ -33,27 +33,22 @@
     padding:0;
     overflow:visible;
     display:inline-block;
-    float:left;
+    margin:0 -2px;
+    vertical-align: middle;
 }
 
 .landing-home .video .slides .highlighted-link p {
     width: 100%;
-    padding-top: 40%;
+    padding-top: 20px;
     position: relative;
 }
 
-.landing-home .video .slides .video-floater {
-    float: right;
-    width: 59%;
-    max-width: 100%;
-}
-
-.landing-home .video .slides .video-floater iframe {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+.landing-home .video .player-divider
+{
+    margin: 0 -2px;
+    width:59%;
+    display:inline-block;
+    vertical-align: middle;
 }
 
 .landing-home .flexslider {

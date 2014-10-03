@@ -37,7 +37,7 @@
 }
 
 #schedule .selectize-dropdown .by {
-    font-size: 11px;
+    font-size: 12px;
     opacity: 0.8;
 }
 
@@ -45,6 +45,16 @@
 .schedule .class-name
 {
     width: 20%;
+}
+
+.schedule .class-name
+{
+    padding-left:40px;
+}
+
+.class-row .class-name i
+{
+    margin-left:-40px;
 }
 
 #schedule header .day-of-the-week,
@@ -67,6 +77,11 @@
 .schedule .class-row label span
 {
     display:none;
+}
+
+.schedule .class-name label span
+{
+    margin-left:-40px;
 }
 
 .schedule .class-row .recurring

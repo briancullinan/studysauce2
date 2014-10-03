@@ -6,15 +6,31 @@ use Symfony\Component\Routing\Route;
 
 $collection = new RouteCollection();
 
-$collection->add('course1', new Route('/course/1/{_format}', [
-            '_controller' => 'Course1Bundle:Course1:index',
-            '_format'     => 'dashboard'
+$collection->add('lesson1', new Route('/course/1/lesson/1/step/{_step}/{_format}', [
+            '_controller' => 'Course1Bundle:Lesson1:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
         ]));
 
-$collection->add('course1wizard', new Route('/course/1/{_step}/{_format}', [
-            '_controller' => 'Course1Bundle:Course1:wizard',
-            '_step' => 1,
-            '_format'     => 'dashboard'
+$collection->add('lesson2', new Route('/course/1/lesson/2/step/{_step}/{_format}', [
+            '_controller' => 'Course1Bundle:Lesson2:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
+$collection->add('lesson3', new Route('/course/1/lesson/3/step/{_step}/{_format}', [
+            '_controller' => 'Course1Bundle:Lesson3:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
         ]));
 
 return $collection;

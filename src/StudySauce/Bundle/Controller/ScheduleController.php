@@ -24,10 +24,10 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class ScheduleController extends Controller
 {
     /**
-     * @param string $format
+     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($format = 'index')
+    public function indexAction($_format = 'index')
     {
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -37,15 +37,15 @@ class ScheduleController extends Controller
         $demo = $this->getDemoSchedule();
 
         $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-        $demoCourses = $this->getDemoCourses($schedule);
+        $demoCourses = $this->getDemoCourses($demo);
         $others = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'o';})->toArray();
-        $demoOthers = $this->getDemoOthers($schedule);
+        $demoOthers = $this->getDemoOthers($demo);
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
             : null;
 
-        return $this->render('StudySauceBundle:Schedule:' . $format . '.html.php', [
+        return $this->render('StudySauceBundle:Schedule:tab.html.php', [
                 'schedule' => $schedule,
                 'demo' => $demo,
                 'classes' => $schedule != null ? $schedule->getCourses()->toArray() : [],
@@ -77,7 +77,7 @@ class ScheduleController extends Controller
             $schedule->setCreated(new \DateTime());
             $schedule->setUniversity('Enter the full name');
             $schedule->setGrades('as-only');
-            $schedule->setWeekends('4');
+            $schedule->setWeekends('hit-hard');
             $schedule->setSharp6am11am(2);
             $schedule->setSharp11am4pm(3);
             $schedule->setSharp4pm9pm(5);
@@ -86,6 +86,7 @@ class ScheduleController extends Controller
             /** @var $orm EntityManager */
             $orm = $this->get('doctrine')->getManager();
 
+            $guest->addSchedule($schedule);
             $orm->persist($schedule);
             $orm->flush();
         }
@@ -206,9 +207,29 @@ class ScheduleController extends Controller
 
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
-
+        // create new schedule if one does not exist
+        if($schedule == null)
+        {
+            $schedule = new Schedule();
+            // set all default on new schedule
+            $schedule->setUser($user);
+            $schedule->setCreated(new \DateTime());
+            if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
+                $schedule->setUniversity($request->get('university'));
+            else
+                $schedule->setUniversity('');
+            $schedule->setGrades('as-only');
+            $schedule->setWeekends('hit-hard');
+            $schedule->setSharp6am11am(2);
+            $schedule->setSharp11am4pm(3);
+            $schedule->setSharp4pm9pm(5);
+            $schedule->setSharp9pm2am(4);
+            $user->addSchedule($schedule);
+            $orm->persist($schedule);
+            $orm->flush();
+        }
         // set school name
-        if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
+        elseif(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
         {
             $schedule->setUniversity($request->get('university'));
             $orm->merge($schedule);

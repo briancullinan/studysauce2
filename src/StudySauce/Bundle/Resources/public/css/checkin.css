@@ -1,0 +1,37 @@
+
+#checkin .classes
+{
+}
+
+#checkin .clock,
+#checkin .classes {
+    width: 50%;
+    display: inline-block;
+    margin: 0 -2px;
+    text-align: center;
+    vertical-align: middle;
+    min-height: 400px;
+}
+
+#checkin .classes a {
+     display: inline-block;
+     height: 100px;
+     width: 100px;
+     border-radius: 100%;
+     position: relative;
+     margin: 25px;
+     vertical-align: bottom;
+     background: url("../images/classes_textured.png") no-repeat scroll 0 0 transparent;
+     padding: 10px;
+     color: #666666;
+     text-align: center;
+     /* color: #FF0D00; */
+ }
+
+#checkin .classes a span {
+      display: block;
+      width: 80px;
+      height: 80px;
+      border-radius: 100%;
+      margin-bottom: 10px;
+  }

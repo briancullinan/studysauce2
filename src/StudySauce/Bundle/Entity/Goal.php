@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="goal")
+ * @ORM\Table(name="goal",uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="type_idx", columns={"user_id", "type"})})
  */
 class Goal
 {

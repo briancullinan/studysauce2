@@ -1,7 +1,11 @@
 
 <?php
 /** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
-$view->extend('StudySauceBundle:Shared:layout.html.php') ?>
+/** @var $app \Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables */
+
+if($app->getRequest()->get('_format') == 'index') {
+    $view->extend('StudySauceBundle:Shared:layout.html.php');
+} ?>
 
 <?php $view['slots']->start('classes') ?>dashboard-home<?php $view['slots']->stop() ?>
 
@@ -58,3 +62,12 @@ $view['slots']->start('body'); ?>
 <?php echo $view->render('StudySauceBundle:Shared:footer.html.php'); ?>
 
 <?php $view['slots']->stop(); ?>
+
+<?php
+
+if($app->getRequest()->get('_format') == 'tab') {
+    $view['slots']->output('stylesheets');
+    $view['slots']->output('javascripts');
+    $view['slots']->output('body');
+}
+

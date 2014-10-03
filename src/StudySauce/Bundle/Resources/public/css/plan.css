@@ -1,0 +1,701 @@
+
+
+#plan #calendar
+{
+    margin-bottom:20px;
+    position: relative;
+}
+
+.fc-event
+{
+    border:none;
+    background-color: #eeeeee;
+    color: #FFFFFF;
+}
+
+#plan .fc-title
+{
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding-right:60px;
+    line-height: 100%;
+}
+
+#plan .sort-by {
+    vertical-align: top;
+    position: relative;
+}
+
+#plan .sort-by label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+#plan .sort-by a[href="#expand"],
+#plan .sort-by label:last-child {
+    float:right;
+    vertical-align: middle;
+}
+
+#plan .event-type-d .fc-title,
+#plan .event-type-h .fc-title,
+#plan .event-type-p .fc-title
+{
+    padding-right:80px;
+}
+
+#plan .fc-title h4
+{
+    margin:0;
+    text-align: center;
+    font-size: 14px;
+    color: #FFFFFF;
+    width: auto;
+    position: absolute;
+    right:0;
+}
+
+#plan .fc-agenda-axis
+{
+    line-height: 13px;
+}
+
+#plan .fc-agenda-slots td div
+{
+    height:10px;
+    line-height: 10px;
+}
+
+#plan .fc-slats td
+{
+    height: 1em;
+}
+
+#plan .fc-event.event-type-m
+{
+    border: 3px solid #FF9900;
+    color: #009999;
+    /*display:none;*/
+}
+
+#plan .fc-event.event-type-z
+{
+    border: 3px solid #112277;
+    color: #1133AA;
+    /*display:none;*/
+}
+
+#plan .fc-event.event-type-z h4
+{
+    color: #1133AA;
+}
+
+#plan .fc-event.event-type-m h4
+{
+    color: #FF1100;
+}
+
+#plan .event-type-c,
+#plan .fc-event.event-type-o
+{
+    border: 3px solid #555555;
+}
+
+#plan .event-type-h,
+#plan .fc-event.event-type-f,
+#plan .fc-event.event-type-o
+{
+    color:#ffffff;
+    background-color: #555555;
+}
+
+#plan .fc-event.event-type-o
+{
+    background-color: #000000;
+}
+
+#plan .drag-event
+{
+    background-color:#EEEEEE;
+}
+
+#plan .fc-title small
+{
+    display:none;
+}
+
+#plan .fc-agenda-slots tr.fc-minor th,
+#plan .fc-agenda-slots tr.fc-minor td
+{
+    border-top-style: none;
+}
+
+#plan .fc-event .fc-bg
+{
+    display:none;
+}
+
+#plan .fc-event .fc-time
+{
+    display:none;
+}
+
+#plan .fc-button
+{
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: rgb(245, 245, 245);
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230));
+    background-origin: padding-box;
+    background-repeat: repeat-x;
+    background-size: auto;
+}
+
+#plan .fc-button:hover
+{
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: rgb(230, 230, 230);
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230));
+    background-origin: padding-box;
+    background-position: 0px -15px;
+    background-repeat: repeat-x;
+    background-size: auto;
+}
+
+#plan .fc-button-group > *.fc-button:active
+{
+    margin: 0 0 0 -1px;
+    box-shadow: none;
+}
+
+#plan .fc-button:active
+{
+    margin: 0 0 0 .75em;
+    box-shadow: none;
+}
+
+#plan .fc-button.fc-state-disabled
+{
+    background-image: none;
+    background-color: #e6e6e6;
+}
+
+#plan .fc-resizer
+{
+    display: none !important;
+}
+
+#plan .session-row
+{
+    clear: both;
+    display: block;
+    vertical-align: top;
+    position: relative;
+    white-space: nowrap;
+    border-top:1px solid transparent;
+    border-bottom:1px solid transparent;
+}
+
+#plan .session-row > *
+{
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+#plan .session-row.event-type-d .field-name-field-class-name
+{
+    background: url('../images/menu_icons_32.png') no-repeat left -1312px transparent;
+}
+
+#plan .head.hide,
+#plan .session-row.hide
+{
+    display:none;
+}
+
+#plan.show-historic .head.hide,
+#plan.show-historic .session-row.hide
+{
+    display:block;
+}
+
+#plan .mini-checkin .flip-clock-wrapper
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: auto;
+}
+
+#plan .mini-checkin
+{
+    float:right;
+    text-align: center;
+    display:none;
+}
+
+#plan .selected .mini-checkin
+{
+    display: block;
+    position: absolute;
+    left: 50%;
+    margin-left: 235px;
+    width:165px;
+}
+
+#plan .return-to-top
+{
+    display: none;
+    position: fixed;
+    left: 100%;
+    margin-left: -250px;
+    width: 100px;
+    background: url(../images/arrow-up.png) no-repeat 0 0 transparent;
+    bottom: 50px;
+    text-align: center;
+    padding-top: 14px;
+    z-index: 96;
+    padding-bottom: 6px;
+    color: #ffffff;
+}
+
+.page-dashboard.adviser-user #plan .return-to-top,
+.page-dashboard.partner-user #plan .return-to-top,
+.page-dashboard.paid-user #plan .return-to-top
+{
+    display: block;
+}
+
+#plan .flip-clock-wrapper ul li a div div.inn
+{
+    font-size: 30px;
+}
+
+#plan .flip-clock-wrapper ul
+{
+    height: 40px;
+    width: 25px;
+    line-height: 40px;
+    margin: 2px;
+}
+
+#plan .flip-clock-divider
+{
+    height: 50px;
+    width: 15px;
+}
+
+#plan .flip-clock-dot.bottom,
+#plan .flip-clock-dot.top
+{
+    left:2px;
+}
+
+#plan .strategy-prework,
+#plan .strategy-teach,
+#plan .strategy-active,
+#plan .strategy-spaced,
+#plan .strategy-other,
+#plan .field-select-strategy
+{
+    margin:0 auto;
+    max-width: 800px;
+    display:none;
+    padding-right: 165px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    white-space: normal !important;
+}
+
+#plan .selected .strategy-other
+{
+    display:block;
+}
+
+#plan .selected .field-select-strategy > div
+{
+    border-bottom:3px solid #555555;
+    padding-bottom: 10px;
+}
+
+#plan .selected .field-select-strategy
+{
+    display:block;
+    margin-top:30px;
+}
+
+#plan .strategy-teach iframe,
+#plan .plupload
+{
+    display: inline-block;
+    width: 33%;
+    box-sizing: border-box;
+    vertical-align: top;
+    padding:10px;
+    position: relative;
+    border-radius: 5px;
+    border:3px solid #555555;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+#plan a[href="#expand"]
+{
+    float:left;
+    display:block;
+    padding-left:40px;
+    height:32px;
+    line-height: 30px;
+    margin:0;
+    background: url(../images/menu_icons_32.png) no-repeat 0 -1344px transparent;
+}
+
+#plan .session-row.expanded a[href="#expand"]
+{
+    background: url(../images/menu_icons_32.png) no-repeat 0 -1376px transparent;
+}
+
+#plan .session-row.expanded .strategy-prework,
+#plan .session-row.expanded .strategy-teach,
+#plan .session-row.expanded .strategy-active,
+#plan .session-row.expanded .strategy-spaced,
+#plan .session-row.expanded .strategy-other
+{
+    max-width: none;
+}
+
+#plan .session-row textarea
+{
+    min-height: 150px;
+}
+
+#plan .session-row.expanded textarea
+{
+    min-height: 250px;
+}
+
+#plan .session-row > *
+{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    padding: 5px 0;
+    vertical-align: top;
+    margin: 0;
+    cursor: pointer;
+}
+
+#plan .session-row .class-name
+{
+    display: inline-block;
+    padding: 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: top;
+    width: 50%;
+    top: 0;
+    padding-left: 70px;
+    text-overflow: ellipsis;
+}
+
+#plan .session-row .percent {
+    min-width: 150px;
+    width: 15%;
+    position: absolute;
+    right: 10%;
+    left: auto;
+    top: 0;
+}
+
+#plan .session-row .completed {
+    text-align: right;
+    min-width: 50px;
+    width: 10%;
+    position: absolute;
+    right: 0;
+    left: auto;
+    top: 0;
+}
+
+#plan .session-row .class-name span {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    border: 3px solid #555555;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 14px;
+    line-height: 15px;
+    margin: -3px 0 0 -35px;
+    vertical-align: top;
+    float: left;
+}
+
+#plan .head {
+    background-color: #555555;
+    color: #eeeeee;
+    margin-top: 30px;
+    padding: 5px;
+    clear: both;
+}
+
+#plan .selected.expanded .mini-checkin
+{
+    left:auto;
+    right:0;
+    margin-left:0;
+}
+
+#plan .plupload .plup-filelist
+{
+    border-top:0;
+}
+
+#plan .plupload .plup-list
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: block;
+    text-align: center;
+}
+
+#plan .plupload .plup-list img
+{
+    margin:0 auto;
+}
+
+#plan .plupload .plup-list li
+{
+    display:none;
+    padding:0;
+    margin:0;
+    border:0;
+}
+
+#plan .plupload .plup-list li:last-child
+{
+    display:block;
+}
+
+#plan .plupload .plup-thumb-wrapper
+{
+    text-align: center;
+}
+
+#plan .plupload .plup-thumb-wrapper img
+{
+    margin:0 auto;
+}
+
+#plan .plupload .plup-select
+{
+    position:absolute;
+    top:0;
+    height:100%;
+    width:100%;
+    left:0;
+    line-height: 0;
+    color:transparent;
+    font-size: 0;
+}
+
+#plan .plupload.uploaded .plup-select
+{
+    height:40px;
+}
+
+body.page-dashboard.file-drag  #plan .plupload .plup-filelist
+{
+    z-index: 2000;
+}
+
+#plan .plupload .plup-remove-file,
+#plan .plupload .plup-remove-item
+{
+    z-index: 100;
+}
+
+#plan .plupload .drag-main
+{
+    position:absolute;
+    top:50%;
+    left:0;
+    width:100%;
+    padding:0;
+    margin-top:-10px;
+    color:#333333;
+    text-shadow: 0 1px 4px rgba(255,255,255,1);
+    text-align: center;
+}
+
+#plan .plupload .drag-more,
+#plan .plupload .plup-filelist-size,
+#plan .plupload .plup-filelist-message,
+#plan .plupload .plup-filelist-remove,
+#plan .plupload .plup-select div
+{
+    display:none;
+}
+
+#plan .plupload .plup-bar .plup-upload
+{
+    display:none !important;
+}
+
+#plan .plupload .plupload,
+#plan .plupload .plupload-container
+{
+    min-height:200px;
+}
+
+#plan .plupload .plup-filelist-file
+{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#plan .plupload .plup-filelist,
+#plan .plupload .plupload.html5
+{
+    height: 100% !important;
+    width: 100% !important;
+    top:0 !important;
+    left:0 !important;
+    position:absolute !important;
+    background:none;
+    max-height: none !important;
+}
+
+#plan .plupload.uploaded .plup-filelist,
+#plan .plupload.uploaded .plupload.html5
+{
+    height: 40px !important;
+}
+
+#plan .strategy-spaced-notes textarea,
+#plan .strategy-notes textarea
+{
+    min-height:100px;
+}
+
+#plan .strategy-notes input
+{
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+#plan .strategy-notes
+{
+    display: inline-block;
+    width: 66%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    vertical-align: top;
+}
+
+#plan .strategy-spaced-notes
+{
+    display: inline-block;
+    width: 66%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    vertical-align: top;
+}
+
+#plan .strategy-review
+{
+    display: inline-block;
+    width: 33%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    vertical-align: top;
+}
+
+#plan .strategy-spaced-notes label:first-child,
+#plan .strategy-review label:first-child
+{
+    font-size: 20px;
+    margin-top:20px;
+    margin-bottom:10px;
+    color: #555555;
+    text-align: left;
+}
+
+#plan .strategy-review input[type="checkbox"]
+{
+    position: relative;
+    z-index: 1;
+    margin-left: 10px;
+    visibility: hidden;
+}
+
+#plan .strategy-prework input
+{
+    visibility: hidden;
+    margin: 0 0 0 -13px;
+}
+
+#plan .strategy-prework label,
+#plan .strategy-review label:not(:first-child)
+{
+    display: inline;
+    position: relative;
+    z-index: 10;
+    padding-left: 25px;
+    background: url('../images/menu_icons_128.png') no-repeat -54px -2848px transparent;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
+
+#plan .strategy-prework label
+{
+    margin-left:-30px;
+}
+
+#plan .strategy-prework input:checked + label,
+#plan .strategy-review input:checked + label
+{
+    background-position: -54px -2734px;
+}
+
+#plan a[href="#strategy-upload"] span
+{
+    display:block;
+    position: absolute;
+    top:25px;
+    margin-top:-12px;
+    text-align: center;
+    width: 100%;
+    margin-left:-10px;
+}
+
+#plan .plupload .drag-main
+{
+    top:15px;
+}
+
+#plan .plupload:hover .drag-main
+{
+    color:#02CEE8;
+}
+
+#plan .field-select-strategy label
+{
+    display:inline;
+    font-size: 20px;
+}
+
+#plan .field-select-strategy select
+{
+    float:right;
+    width:auto;
+}

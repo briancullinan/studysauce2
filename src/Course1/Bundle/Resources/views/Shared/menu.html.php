@@ -1,35 +1,38 @@
 <aside id="left-panel">
     <nav>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
         <ul class="main-menu">
-            <li><h3><span>&nbsp;</span>Course menu</h3></li>
-            <li><a href="<?php print $view['router']->generate('courses'); ?>"><span>A</span>Chapter 1</a>
-                <ul>
-                    <li><a href="<?php print $view['router']->generate('course1'); ?>"><span>1</span>Introduction to StudySauce</a></li>
-                    <li><a href="#plan"><span>2</span>How to progress</a></li>
-                    <li><a href="#metrics"><span>3</span>Where to start</a></li>
-                    <li><a href="#tips-time"><span>4</span>Study schedule</a></li>
+            <li><h3><span>&nbsp;</span>Curriculum</h3></li>
+            <li><a onclick="return false;" data-toggle="collapse" data-target="#lesson1"><span>1</span>Level 1</a>
+                <ul id="lesson1" class="collapse">
+                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Introduction to Study Sauce</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Setting goals</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson3', ['_step' => 0]); ?>"><span>&bullet;</span>Distractions</a></li>
                 </ul>
             </li>
-            <li><a href="#environment"><span>B</span>Chapter 2</a>
-                <ul>
-                    <li><a href="#checkin"><span>1</span>First study session</a></li>
-                    <li><a href="#tips-env"><span>2</span>Check in</a></li>
-                    <li><a href="#tips-env"><span>3</span>Try the music</a></li>
-                    <li><a href="#tips-env"><span>4</span>Take notes</a></li>
-                    <li><a href="#tips-env"><span>5</span>Break time!</a></li>
+            <li><a onclick="return false;" data-toggle="collapse" data-target="#lesson2"><span>2</span>Level 2</a>
+                <ul id="lesson2" class="collapse">
+                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Introduction to Study Sauce</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Setting goals</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson3', ['_step' => 0]); ?>"><span>&bullet;</span>Distractions</a></li>
                 </ul>
             </li>
-            <li><a href="#strategies"><span>C</span>Chapter 3</a>
-                <ul>
-                    <li><a href="#profile"><span>1</span>Study schedule</a></li>
-                    <li><a href="#goals"><span>2</span>Importance of persistence</a></li>
-                    <li><a href="#partner"><span>3</span>Use a partner</a></li>
-                    <li><a href="#tips-strategy"><span>4</span>Study quiz</a></li>
+            <li><a onclick="return false;" data-toggle="collapse" data-target="#lesson3"><span>3</span>Level 3</a>
+                <ul id="lesson3" class="collapse">
+                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Introduction to Study Sauce</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Setting goals</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson3', ['_step' => 0]); ?>"><span>&bullet;</span>Distractions</a></li>
                 </ul>
             </li>
-            <li><a href="#premium"><span>&nbsp;</span>Premium</a></li>
+            <li><a href="/premium"><span>&nbsp;</span>Premium</a></li>
         </ul>
     </nav>
-    <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
-    <a href="#toggle-menu">&nbsp;</a>
 </aside>

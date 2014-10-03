@@ -21,6 +21,7 @@ class AppKernel extends Kernel
         $bundles[] = new FOS\UserBundle\FOSUserBundle();
         $bundles[] = new StudySauce\Bundle\StudySauceBundle();
         $bundles[] = new Course1\Bundle\Course1Bundle();
+        //$bundles[] = new NewBrand\Bundle\NewBrandBundle();
 
         if (in_array($this->getEnvironment(), ['dev', 'test'])) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();

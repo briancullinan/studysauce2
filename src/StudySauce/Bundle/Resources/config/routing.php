@@ -72,6 +72,22 @@ $collection->add(
 );
 
 $collection->add(
+    'update_goals',
+    new Route(
+        '/goals/update',
+        [
+            '_controller' => 'StudySauceBundle:Goals:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'checkin',
     new Route(
         '/checkin/{_format}', [

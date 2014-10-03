@@ -2,220 +2,7 @@ $(document).ready(function () {
 
     var schedule = $('#schedule');
 
-    schedule.on('click', '.class-row a[href="#edit-class"]', function (evt) {
-        evt.preventDefault();
-        var that = $(this),
-            row = that.parents('.class-row');
-        row.removeClass('read-only').addClass('edit').planFunc();
-        row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
-    });
-
-    schedule.find('.university input').selectize({
-        valueField: 'institution',
-        labelField: 'institution',
-        searchField: ['institution', 'link', 'state'],
-        maxItems: 1,
-        create: true,
-        options: [schedule.find('.university input').data('data')],
-        render: {
-            option: function(item) {
-                return '<div>' +
-                '<span class="title">' +
-                '<span class="name"><i class="icon source"></i>' + item.institution + '</span>' +
-                '<span class="by">' + item.state + '</span>' +
-                '</span>' +
-                '<span class="description">' + item.link + '</span>' +
-                '</div>';
-            }
-        },
-        load: function(query, callback) {
-            if (query.length < 2) return callback();
-            $.ajax({
-                url: window.callbackPaths['institutions'],
-                dataType:'json',
-                data: {
-                    q: query
-                },
-                error: function() {
-                    callback();
-                },
-                success: function(res) {
-                    callback(res.slice(0, 100));
-                }
-            });
-        }
-    }).setValue(schedule.find('.university input').data('data'));
-
-    schedule.on('click', 'a[href="#remove-class"]', function (evt) {
-        evt.preventDefault();
-        var row = jQuery(this).parents('.class-row');
-        $.ajax({
-            url: '/schedule/remove',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                remove: row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
-                csrf_token: schedule.find('input[name="csrf_token"]').val()
-            },
-            success: function (data) {
-                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
-
-                updateSchedule(data);
-            }
-        });
-    });
-
-    function updateSchedule(data)
-    {
-        // update class schedule
-        $('.schedule .class-row').remove();
-        $(data.schedule).find('.schedule:not(.other) .class-row')
-            .appendTo($('.schedule:not(.other)'));
-
-        $(data.schedule).find('.schedule.other .class-row')
-            .appendTo($('.schedule.other'));
-
-        schedule.find('.schedule .class-row').planFunc();
-    }
-
-    schedule.on('click', 'a[href="#add-class"], a[href="#add-other"]', function (evt) {
-        evt.preventDefault();
-        var isOther = jQuery(this).is('[href="#add-other"]'),
-            examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
-            otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
-            list = schedule.find('.schedule' + (isOther ? '.other' : ':not(.other)')),
-            addClass = list.find('.class-row').first().clone().removeClass('read-only').addClass('edit').appendTo(list);
-        // reset fields for the new entry
-        addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
-            .removeClass('is-timeEntry hasDatepicker').val('');
-        addClass.find('.day-of-the-week input').removeAttr('checked').prop('checked', false);
-        addClass.find('.class-name input').attr('placeholder', isOther
-                ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
-                : examples[Math.floor(Math.random() * examples.length)]);
-        addClass.removeAttr('id').planFunc();
-    });
-
-    schedule.on('click', 'a[href="#save-class"]', function (evt) {
-        var building = $('#building');
-        evt.preventDefault();
-        if(schedule.find('.university input').val().trim() == '')
-            schedule.find('.university').addClass('error-empty');
-        else
-            schedule.find('.university').removeClass('error-empty');
-        if(schedule.is('.invalid'))
-        {
-            schedule.addClass('invalid-only');
-            schedule.find('.class-row.edit.invalid .start-time input,' +
-            ' .class-row.edit.invalid .end-time input,' +
-            ' .class-row.edit.invalid .start-date input,' +
-            ' .class-row.edit.invalid .end-date input').each(function () {
-                if($(this).val().trim() == '')
-                    $(this).parents('.class-row').addClass('invalid-time');
-            });
-            return;
-        }
-        schedule.removeClass('valid').addClass('invalid');
-
-        var classes = [];
-        schedule.find('.class-row.edit.valid:visible, .class-row.valid.edit:visible').each(function () {
-            var row = $(this),
-                dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
-            classes[classes.length] = {
-                cid: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
-                className: row.find('.class-name input').val(),
-                dotw: dotw.join(','),
-                start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
-                end: row.find('.end-time input').val() + ' ' + row.find('.end-date input').val(),
-                type: row.find('input[name="event-type"]').val()
-            };
-        });
-
-        if(window.location.pathname != '/schedule' &&
-            window.location.pathname != '/schedule2')
-        {
-            building.modal();
-            schedule.find('.timer').pietimer('reset');
-            schedule.find('.timer').pietimer({
-                timerSeconds: 60,
-                color: '#09B',
-                fill: false,
-                showPercentage: true,
-                callback: function() {
-                }
-            });
-            schedule.find('.timer').pietimer('start');
-        }
-
-        $.ajax({
-            url: window.callbackPaths['update_schedule'],
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                // skip building the schedule if we are in the middle of the buy funnel
-                skipBuild: (window.location.pathname == '/schedule' || window.location.pathname == '/schedule2'),
-                university: schedule.find('.university input').val(),
-                classes: classes,
-                csrf_token: schedule.find('input[name="csrf_token"]').val()
-            },
-            success: function (data) {
-                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
-                updateSchedule(data);
-                building.modal('hide');
-            },
-            error: function () {
-                building.modal('hide');
-            }
-        });
-    });
-
-
-    var autoFillDate = function () {
-        var row = jQuery(this).closest('.class-row'),
-            first = schedule.find('.class-row').first();
-        if(row.find('.class-name input').val() != '' &&
-            row.find('.start-date input').val() == '' &&
-            row.find('.end-date input').val() == '' &&
-            first.find('.start-date input').val() != '' &&
-            first.find('.end-date input').val() != '' &&
-            row[0] != schedule.find('.class-row').first()[0])
-        {
-            // use first rows dates
-            row.find('.start-date input').val(first.find('.start-date input').val());
-            row.find('.end-date input').val(first.find('.end-date input').val());
-        }
-    };
-    schedule.on('change', '.class-name input', autoFillDate);
-    schedule.on('keyup', '.class-name input', autoFillDate);
-    schedule.on('change', '.start-time input, .end-time input, .start-date input, .end-date input', function () {
-        jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
-            autoFillDate.apply(this);
-        });
-        if(jQuery(this).is('[type="time"]'))
-            jQuery(this).parent().find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
-        if(jQuery(this).is('.is-timeEntry[type="text"]'))
-        {
-            var t = jQuery(this).timeEntry('getTime');
-            if(typeof t != 'undefined' && t != null)
-                jQuery(this).parent().find('input[type="time"]').val((t.getHours() < 10
-                    ? ('0' + t.getHours())
-                    : t.getHours()) + ':' + (t.getMinutes() < 10
-                    ? ('0' + t.getMinutes())
-                    : t.getMinutes()) + ':00');
-        }
-    });
-    schedule.on('keyup', '.start-time input, .end-time input, .start-date input, .end-date input', function () {
-        jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
-            autoFillDate.apply(this);
-        });
-    });
-    schedule.on('keyup', '.class-name input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
-        jQuery(this).parents('.class-row').planFunc();
-    });
-    schedule.on('change', '.class-name input, .day-of-the-week input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
-        jQuery(this).parents('.class-row').planFunc();
-    });
-
-    $.fn.planFunc = function () {
+    var planFunc = function () {
         jQuery(this).each(function () {
             var row = $(this).closest('.class-row');
             if(row.find('.class-name input').val().trim() == '' &&
@@ -357,24 +144,24 @@ $(document).ready(function () {
             // if it changed, remove other overlaps
             if(overlaps && !row.is('.overlaps'))
             {
-                schedule.find('.class-row.overlaps').planFunc();
+                planFunc.apply(schedule.find('.class-row.overlaps'));
             }
         });
 
-        if(window.location.pathname == '/schedule2' &&
+        /*if(window.location.pathname == '/schedule2' &&
             schedule.find('.class-row.edit.invalid:visible').length == 0 &&
             schedule.find('.class-row.overlaps:visible').length == 0 &&
             schedule.find('.class-row.invalid-time:visible').length == 0)
-            schedule.removeClass('invalid invalid-only').addClass('valid');
+            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else if(window.location.pathname == '/schedule' &&
             schedule.find('.class-row.edit.invalid:visible').length == 0 &&
             schedule.find('.class-row.overlaps:visible').length == 0 &&
             schedule.find('.class-row.invalid-time:visible').length == 0 &&
             schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 &&
             schedule.find('.university input').val().trim() != '')
-            schedule.removeClass('invalid invalid-only').addClass('valid');
-        else if(
-            schedule.find('.class-row.edit.invalid:visible').length == 0 &&
+            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
+        else */
+        if(schedule.find('.class-row.edit.invalid:visible').length == 0 &&
             schedule.find('.class-row.overlaps:visible').length == 0 &&
             schedule.find('.class-row.invalid-time:visible').length == 0 &&
             schedule.find('.university input').val().trim() != '' &&
@@ -382,9 +169,9 @@ $(document).ready(function () {
             (schedule.find('.class-row.valid').not('.blank').length > 0 &&
             schedule.find('.university input').val() !=
             schedule.find('.university input').prop('defaultValue'))))
-            schedule.removeClass('invalid invalid-only').addClass('valid');
+            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
-            schedule.removeClass('valid').addClass('invalid');
+            schedule.find('.form-actions').removeClass('valid').addClass('invalid');
 
         if(schedule.find('.class-row.overlaps:visible').length > 0 ||
             (window.location.pathname != '/schedule2' && schedule.find('.class-row.overlaps').length > 0))
@@ -398,9 +185,224 @@ $(document).ready(function () {
             schedule.removeClass('invalid-time');
     };
 
+    schedule.on('click', '.class-row a[href="#edit-class"]', function (evt) {
+        evt.preventDefault();
+        var that = $(this),
+            row = that.parents('.class-row');
+        planFunc.apply(row.removeClass('read-only').addClass('edit'));
+        row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
+    });
+
+    var select = schedule.find('.university input').selectize({
+        valueField: 'institution',
+        labelField: 'institution',
+        searchField: ['institution', 'link', 'state'],
+        maxItems: 1,
+        create: true,
+        options: [schedule.find('.university input').data('data')],
+        render: {
+            option: function(item) {
+                return '<div>' +
+                '<span class="title">' +
+                '<span class="name"><i class="icon source"></i>' + item.institution + '</span>' +
+                '<span class="by">' + item.state + '</span>' +
+                '</span>' +
+                '<span class="description">' + item.link + '</span>' +
+                '</div>';
+            }
+        },
+        load: function(query, callback) {
+            if (query.length < 2) return callback();
+            $.ajax({
+                url: window.callbackPaths['institutions'],
+                dataType:'json',
+                data: {
+                    q: query
+                },
+                error: function() {
+                    callback();
+                },
+                success: function(res) {
+                    callback(res.slice(0, 100));
+                }
+            });
+        }
+    }).ready(function () {
+        select[0].selectize.setValue(schedule.find('.university input').val());
+    });
+
+    schedule.on('click', 'a[href="#remove-class"]', function (evt) {
+        evt.preventDefault();
+        var row = jQuery(this).parents('.class-row');
+        $.ajax({
+            url: '/schedule/remove',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                remove: row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
+                csrf_token: schedule.find('input[name="csrf_token"]').val()
+            },
+            success: function (data) {
+                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
+
+                updateSchedule(data);
+            }
+        });
+    });
+
+    function updateSchedule(data)
+    {
+        // update class schedule
+        $('.schedule .class-row').remove();
+        $(data.schedule).find('.schedule:not(.other) .class-row')
+            .appendTo($('.schedule:not(.other)'));
+
+        $(data.schedule).find('.schedule.other .class-row')
+            .appendTo($('.schedule.other'));
+
+        planFunc.apply(schedule.find('.schedule .class-row'));
+    }
+
+    schedule.on('click', 'a[href="#add-class"], a[href="#add-other"]', function (evt) {
+        evt.preventDefault();
+        var isOther = jQuery(this).is('[href="#add-other"]'),
+            examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
+            otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
+            list = schedule.find('.schedule' + (isOther ? '.other' : ':not(.other)')),
+            addClass = list.find('.class-row').first().clone().removeClass('read-only').addClass('edit').appendTo(list);
+        // reset fields for the new entry
+        addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
+            .removeClass('is-timeEntry hasDatepicker').val('');
+        addClass.find('.day-of-the-week input').removeAttr('checked').prop('checked', false);
+        addClass.find('.class-name input').attr('placeholder', isOther
+                ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
+                : examples[Math.floor(Math.random() * examples.length)]);
+        planFunc.apply(addClass.removeAttr('id'));
+    });
+
+    schedule.on('click', 'a[href="#save-class"]', function (evt) {
+        var building = $('#building');
+        evt.preventDefault();
+        if(schedule.find('.university input').val().trim() == '')
+            schedule.find('.university').addClass('error-empty');
+        else
+            schedule.find('.university').removeClass('error-empty');
+        if(schedule.find('.form-actions').is('.invalid'))
+        {
+            schedule.addClass('invalid-only');
+            schedule.find('.class-row.edit.invalid .start-time input,' +
+            ' .class-row.edit.invalid .end-time input,' +
+            ' .class-row.edit.invalid .start-date input,' +
+            ' .class-row.edit.invalid .end-date input').each(function () {
+                if($(this).val().trim() == '')
+                    $(this).parents('.class-row').addClass('invalid-time');
+            });
+            return;
+        }
+        schedule.find('.form-actions').removeClass('valid').addClass('invalid');
+
+        var classes = [];
+        schedule.find('.class-row.edit.valid:visible, .class-row.valid.edit:visible').each(function () {
+            var row = $(this),
+                dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
+            classes[classes.length] = {
+                cid: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
+                className: row.find('.class-name input').val(),
+                dotw: dotw.join(','),
+                start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
+                end: row.find('.end-time input').val() + ' ' + row.find('.end-date input').val(),
+                type: row.find('input[name="event-type"]').val()
+            };
+        });
+
+        if(window.location.pathname != '/schedule' &&
+            window.location.pathname != '/schedule2')
+        {
+            building.modal();
+            schedule.find('.timer').pietimer('reset');
+            schedule.find('.timer').pietimer({
+                timerSeconds: 60,
+                color: '#09B',
+                fill: false,
+                showPercentage: true,
+                callback: function() {
+                }
+            });
+            schedule.find('.timer').pietimer('start');
+        }
+
+        $.ajax({
+            url: window.callbackPaths['update_schedule'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                // skip building the schedule if we are in the middle of the buy funnel
+                skipBuild: (window.location.pathname == '/schedule' || window.location.pathname == '/schedule2'),
+                university: schedule.find('.university input').val(),
+                classes: classes,
+                csrf_token: schedule.find('input[name="csrf_token"]').val()
+            },
+            success: function (data) {
+                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
+                updateSchedule(data);
+                building.modal('hide');
+            },
+            error: function () {
+                building.modal('hide');
+            }
+        });
+    });
+
+
+    var autoFillDate = function () {
+        var row = jQuery(this).closest('.class-row'),
+            first = schedule.find('.class-row').first();
+        if(row.find('.class-name input').val() != '' &&
+            row.find('.start-date input').val() == '' &&
+            row.find('.end-date input').val() == '' &&
+            first.find('.start-date input').val() != '' &&
+            first.find('.end-date input').val() != '' &&
+            row[0] != schedule.find('.class-row').first()[0])
+        {
+            // use first rows dates
+            row.find('.start-date input').val(first.find('.start-date input').val());
+            row.find('.end-date input').val(first.find('.end-date input').val());
+        }
+    };
+    schedule.on('change', '.class-name input', autoFillDate);
+    schedule.on('keyup', '.class-name input', autoFillDate);
+    schedule.on('change', '.start-time input, .end-time input, .start-date input, .end-date input', function () {
+        jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
+            autoFillDate.apply(this);
+        });
+        if(jQuery(this).is('[type="time"]'))
+            jQuery(this).parent().find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
+        if(jQuery(this).is('.is-timeEntry[type="text"]'))
+        {
+            var t = jQuery(this).timeEntry('getTime');
+            if(typeof t != 'undefined' && t != null)
+                jQuery(this).parent().find('input[type="time"]').val((t.getHours() < 10
+                    ? ('0' + t.getHours())
+                    : t.getHours()) + ':' + (t.getMinutes() < 10
+                    ? ('0' + t.getMinutes())
+                    : t.getMinutes()) + ':00');
+        }
+    });
+    schedule.on('keyup', '.start-time input, .end-time input, .start-date input, .end-date input', function () {
+        jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
+            autoFillDate.apply(this);
+        });
+    });
+    schedule.on('keyup', '.class-name input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
+        planFunc.apply(jQuery(this).parents('.class-row'));
+    });
+    schedule.on('change', '.class-name input, .day-of-the-week input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
+        planFunc.apply(jQuery(this).parents('.class-row'));
+    });
+
     // set default value for university name
     if(schedule.find('.university input').val().trim() != '')
         schedule.find('.university input').prop('defaultValue', schedule.find('.university input').val().trim());
 
-    schedule.find('.schedule .class-row').planFunc();
+    planFunc.apply(schedule.find('.schedule .class-row'));
 });
