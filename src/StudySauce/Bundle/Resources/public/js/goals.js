@@ -57,16 +57,18 @@ $(document).ready(function () {
         $.ajax({
             url: window.callbackPaths['update_goals'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 goals: goalRows,
                 csrf_token: goals.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                goals.find('input[name="csrf_token"]').val(data.csrf_token);
+                var response = $(data);
+                goals.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
 
                 goals.find('.goal-row').remove();
-                $(data.goals).find('.goal-row').insertAfter(goals.find('header'));
+                $(response).find('.goal-row').insertAfter(goals.find('header'));
+                // TODO: make new rows fade in to place
 
                 goalsFunc.apply(goals.find('.goal-row'));
             },

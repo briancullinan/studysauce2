@@ -53,13 +53,16 @@ $view['slots']->output('body');
 $view['slots']->stop();
 $view['slots']->start('body'); ?>
 
+<?php if($app->getRequest()->get('_format') == 'index') { ?>
 <?php echo $view->render('StudySauceBundle:Shared:header.html.php'); ?>
-
 <?php echo $view->render('StudySauceBundle:Shared:menu.html.php'); ?>
+<?php } ?>
 
 <?php $view['slots']->output('tmp-body') ?>
 
+<?php if($app->getRequest()->get('_format') == 'index') { ?>
 <?php echo $view->render('StudySauceBundle:Shared:footer.html.php'); ?>
+<?php } ?>
 
 <?php $view['slots']->stop(); ?>
 
@@ -70,4 +73,5 @@ if($app->getRequest()->get('_format') == 'tab') {
     $view['slots']->output('javascripts');
     $view['slots']->output('body');
 }
+
 

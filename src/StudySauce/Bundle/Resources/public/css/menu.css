@@ -8,20 +8,109 @@
     position: fixed;
     top: 0;
     left: 0;
-    padding-top: 60px;
     padding-bottom: 30px;
     transition: ease-in-out .15s;
-    width: 220px;
     box-sizing: border-box;
     z-index: 900;
 }
 
-nav
+#right-panel,
+#left-panel,
+#right-panel.expanded,
+#left-panel.expanded
+{
+    width: 220px;
+    white-space: normal;
+    padding-top: 50px;
+}
+
+#right-panel.expanded h3,
+#left-panel.expanded h3,
+#right-panel.expanded .main-menu {
+    display:block;
+}
+
+#left-panel.expanded a:not([href]) span,
+#left-panel.expanded .navbar-toggle,
+#left-panel a[href="#expand"],
+#left-panel.expanded a[href="#expand"],
+#right-panel.expanded a:not([href]) span,
+#right-panel.expanded .navbar-toggle,
+#right-panel a[href="#expand"],
+#right-panel.expanded a[href="#expand"]
+{
+    display:none;
+}
+
+#left-panel.collapsed a[href="#expand"],
+#right-panel.collapsed a[href="#expand"]
+{
+    display:block;
+}
+
+#left-panel.expanded a:not([href]),
+#right-panel.expanded a:not([href])
+{
+    padding-left:15px;
+}
+
+#left-panel nav,
+#left-panel.expanded nav,
+#left-panel:not(.collapsed) nav,
+#right-panel nav,
+#right-panel.expanded nav,
+#right-panel:not(.collapsed) nav
 {
     overflow-x:hidden;
     overflow-y:auto;
     height: 100%;
     width: 100%;
+}
+
+#left-panel a[href="#collapse"],
+#right-panel a[href="#collapse"]
+{
+    position:absolute;
+    display:block;
+    height:40px;
+    width:50px;
+    left:0;
+    top:50px;
+    background:url(../images/menu_new.png) no-repeat left -105px transparent;
+    font-size:14px;
+    color:#555555;
+    font-weight: bold;
+    padding-top:20px;
+    padding-left:15px;
+    z-index:10;
+}
+
+#left-panel a[href="#collapse"]
+{
+    right:0;
+    left:auto;
+}
+
+#right-panel a[href="#collapse"]
+{
+    padding-right:15px;
+    padding-left:0;
+    text-align: right;
+    background-position: left -205px;
+}
+
+#left-panel a[href="#collapse"]:hover
+{
+    color:#0099BB;
+    background-position: left -405px;
+    background-color: #DDDDDD;
+}
+
+#right-panel a[href="#collapse"]:hover
+{
+    color:#0099BB;
+    background-position: left -505px;
+    background-color: #DDDDDD;
 }
 
 #left-panel
@@ -61,10 +150,14 @@ nav
 .main-menu li
 {
     margin: 0;
-    padding:0;
-    width:220px;
+    padding: 0;
+    width: 220px;
     text-align: left;
-    position:relative;
+    position: relative;
+    background: none;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
 }
 
 .main-menu li.like-us a
@@ -85,7 +178,7 @@ nav
     color:inherit;
 }
 
-.main-menu span
+.main-menu a span
 {
     line-height: 40px;
     text-align: center;
@@ -95,14 +188,14 @@ nav
     overflow: hidden;
     vertical-align: middle;
     height: 40px;
-    width: 40px;
+    width: 50px;
     position: absolute;
     top: 50%;
     margin-top: -20px;
     left: 0;
 }
 
-#left-panel span
+#left-panel .main-menu a span
 {
     text-align: center;
     color:#555555;
@@ -111,15 +204,128 @@ nav
     width:30px;
 }
 
-#right-panel span
+#right-panel .main-menu a span
 {
-    background: url(../images/menu_icons_48.png) no-repeat top left;
+    background: url(../images/menu_new.png) no-repeat left -605px;
+}
+
+#right-panel .main-menu a:hover span
+{
+    background: url(../images/menu_new.png) no-repeat left -705px;
+}
+
+#right-panel .main-menu a[href*="/deadlines"] span
+{
+    background-position: left -805px;
+}
+
+#right-panel .main-menu a[href*="/deadlines"]:hover span
+{
+    background-position: left -905px;
+}
+
+#right-panel .main-menu a[href*="/checkin"] span
+{
+    background-position: left -1005px;
+}
+
+#right-panel .main-menu a[href*="/checkin"]:hover span
+{
+    background-position: left -1105px;
+}
+
+#right-panel .main-menu a[href*="/metrics"] span
+{
+    background-position: left -1205px;
+}
+
+#right-panel .main-menu a[href*="/metrics"]:hover span
+{
+    background-position: left -1305px;
+}
+
+#right-panel .main-menu a[href*="/plan"] span
+{
+    background-position: left -1405px;
+}
+
+#right-panel .main-menu a[href*="/plan"]:hover span
+{
+    background-position: left -1505px;
+}
+
+#right-panel .main-menu a[href*="/partner"] span
+{
+    background-position: left -1605px;
+}
+
+#right-panel .main-menu a[href*="/partner"]:hover span
+{
+    background-position: left -1705px;
+}
+
+#right-panel .main-menu a[href*="/profile"] span
+{
+    background-position: left -1805px;
+}
+
+#right-panel .main-menu a[href*="/profile"]:hover span
+{
+    background-position: left -1905px;
+}
+
+#right-panel .main-menu a[href*="/tips"] span
+{
+    background-position: left -2005px;
+}
+
+#right-panel .main-menu a[href*="/tips"]:hover span
+{
+    background-position: left -2105px;
+}
+
+#right-panel .main-menu a[href*="/premium"] span
+{
+    background-position: left -2205px;
+}
+
+#right-panel .main-menu a[href*="/premium"]:hover span
+{
+    background-position: left -2305px;
+}
+
+#right-panel .main-menu a[href*="/account"] span
+{
+    background-position: left -2405px;
+}
+
+#right-panel .main-menu a[href*="/account"]:hover span
+{
+    background-position: left -2505px;
+}
+
+#right-panel .main-menu a[href*="/schedule"] span
+{
+    background-position: left -2605px;
+}
+
+#right-panel .main-menu a[href*="/schedule"]:hover span
+{
+    background-position: left -2705px;
 }
 
 .main-menu a:hover,
 .main-menu a:focus,
 .main-menu a:active,
-.main-menu a.active
+.main-menu a.active,
+#left-panel.expanded .main-menu a:hover,
+#left-panel.expanded .main-menu a:focus,
+#left-panel.expanded .main-menu a:active,
+#left-panel.expanded .main-menu a.active,
+#right-panel.expanded .main-menu a:hover,
+#right-panel.expanded .main-menu a:focus,
+#right-panel.expanded .main-menu a:active,
+#right-panel.expanded .main-menu a.active
 {
     padding-left:45px;
     background-color:#DDDDDD;
@@ -129,10 +335,12 @@ nav
     font-weight: bold;
 }
 
+/*
 .main-menu a.active
 {
     background-color: #ffffff;
 }
+*/
 
 .main-menu a:hover span,
 .main-menu a:focus span,
@@ -141,79 +349,41 @@ nav
     left:-5px;
 }
 
-#left-panel a:hover span,
-#left-panel a:focus span,
-#left-panel a:active span,
-#left-panel a.active span {
+#left-panel.expanded .main-menu a:hover span,
+#left-panel.expanded .main-menu a:focus span,
+#left-panel.expanded .main-menu a:active span,
+#left-panel.expanded .main-menu a.active span,
+#left-panel .main-menu a:hover span,
+#left-panel .main-menu a:focus span,
+#left-panel .main-menu a:active span,
+#left-panel .main-menu a.active span {
     color:#0099BB;
     left:0;
 }
 
-#left-panel a:hover:not([href]),
-#left-panel a:hover:not([href]) span
+#left-panel .main-menu a:hover:not([href]),
+#left-panel .main-menu a:hover:not([href]) span
 {
     color:inherit;
     cursor: pointer;
 }
 
-#left-panel a:not([href]) span
+#left-panel .main-menu a:not([href]) span,
+#left-panel.expanded .main-menu a:not([href]) span
 {
     display:none;
 }
 
-#left-panel a:not([href])
+#left-panel .main-menu a:not([href]),
+#left-panel.expanded .main-menu a:not([href])
 {
     padding-left:15px;
 }
 
-#left-panel a:hover:not([href])
+#left-panel .main-menu a:hover:not([href]),
+#left-panel.expanded .main-menu a:hover:not([href])
 {
     padding-left:10px;
-}
-
-#right-panel a[href="#userlist"] span
-{
-    background-position: 50% -530px;
-}
-
-#right-panel a[href="#metrics"] span
-{
-    background-position: 50% -198px;
-}
-
-#right-panel a[href="#home"] span
-{
-    background-position: 50% -530px;
-}
-
-#right-panel a[href="#environment"] span
-{
-    background-position: 50% 0;
-}
-
-#right-panel a[href="#time"] span
-{
-    background-position: 50% -93px;
-}
-
-#right-panel a[href="#strategies"] span
-{
-    background-position: 50% -147px;
-}
-
-#right-panel a[href="#import"] span
-{
-    background-position: 50% -2118px;
-}
-
-#right-panel a[href="#settings"] span
-{
-    background-position: 50% -1920px;
-}
-
-#right-panel a[href="#premium"] span
-{
-    background-position: 50% -197px;
 }
 
 #right-panel a.selected + ul
@@ -222,91 +392,233 @@ nav
     max-height:500px;
 }
 
+#right-panel.collapsed,
+#left-panel.collapsed
+{
+    width:40px;
+    white-space: nowrap;
+    padding-top:100px;
+}
+
+#right-panel .navbar-toggle
+{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    transform-origin: left bottom;
+    height:40px;
+    line-height: 100%;
+    vertical-align: top;
+    background: url("../images/menu_new.png") no-repeat 50% 10px transparent;
+    padding:0 5px 16px 5px;
+    margin-top:20px;
+}
+
+#right-panel a[href="#expand"]
+{
+    color:#555555;
+}
+
+#right-panel a[href="#expand"]:hover
+{
+    color:#0099BB;
+}
+
+#right-panel a[href="#expand"]:hover .navbar-toggle
+{
+    background-position: 50% -290px;
+}
+
+#left-panel .navbar-toggle
+{
+    margin-top:60px;
+}
+
+#right-panel .navbar-toggle
+{
+    width:auto;
+}
+
+.navbar-toggle
+{
+    display:inline-block;
+    float:none;
+    padding: 5px;
+    width:100%;
+    margin:0;
+}
+
+.navbar-toggle .icon-bar+.icon-bar {
+    margin-top: 4px;
+}
+
+.navbar-toggle .icon-bar {
+    display: block;
+    width: auto;
+    height: 4px;
+    border-radius: 4px;
+    background-color:#555555;
+}
+
+.navbar-toggle:hover .icon-bar
+{
+    background-color:#0099BB;
+}
+
+#left-panel a[href="#expand"],
+#right-panel a[href="#expand"]
+{
+    display:none;
+    position:absolute;
+    z-index: 0;
+    top:0;
+    height:100%;
+    width:100%;
+    left:0;
+}
+
+#left-panel.collapsed a[href="#expand"],
+#right-panel.collapsed a[href="#expand"]
+{
+    display:block;
+}
+
+#left-panel.collapsed a[href="#collapse"],
+#right-panel.collapsed a[href="#collapse"]
+{
+    display:none;
+}
+
+#right-panel.collapsed h3,
+#left-panel.collapsed h3,
+#right-panel.collapsed .main-menu
+{
+    display:none;
+}
+
+#left-panel.collapsed a[href="#expand"],
+#right-panel.collapsed a[href="#expand"]
+{
+    display:block;
+}
+
+#left-panel .main-menu a:hover:not([href]),
+#right-panel .main-menu a:hover:not([href])
+{
+    padding-left:10px;
+}
+
+#left-panel.collapsed .main-menu a:hover,
+#left-panel.collapsed .main-menu a:focus,
+#left-panel.collapsed .main-menu a:active,
+#left-panel.collapsed .main-menu a.active
+{
+    border:0;
+}
+
+#left-panel.collapsed .main-menu a:hover span,
+#left-panel.collapsed .main-menu a:focus span,
+#left-panel.collapsed .main-menu a:active span,
+#left-panel.collapsed .main-menu a.active span
+{
+    left:5px;
+}
+
+#left-panel.collapsed nav,
+#right-panel.collapsed nav
+{
+    overflow: hidden;
+}
+
+#left-panel.collapsed .main-menu a:not([href]) span
+{
+    display:block;
+}
+
+#left-panel.collapsed .main-menu a:not([href])
+{
+    padding-left:50px;
+}
+
+#left-panel.collapsed .main-menu a:hover:not([href])
+{
+    padding-left:45px;
+}
+
 @media all and (max-width: 1300px), (max-height: 700px)
 {
-    #left-panel {
-        width:40px;
-        white-space: nowrap;
-    }
-
-    .main-menu h3
-    {
-        visibility: hidden;
-    }
-
+    #left-panel,
     #right-panel {
-        right: 0;
         width:40px;
         white-space: nowrap;
+        padding-top:100px;
     }
 
-    #right-panel .navbar-toggle
-    {
-        -webkit-transform: rotate(90deg);
-        -moz-transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        -o-transform: rotate(90deg);
-        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-        transform-origin: left bottom;
-        height:40px;
-        line-height: 100%;
-        vertical-align: top;
-        color:#0099BB;
-        background: url("../images/menu_new.png") no-repeat 50% 10px transparent;
-        padding:0 5px 16px 5px;
-        margin-top:-40px;
-    }
-
-    #right-panel .navbar-toggle
-    {
-        width:auto;
-    }
-
-    .navbar-toggle
+    #left-panel a[href="#expand"],
+    #right-panel a[href="#expand"],
+    #left-panel.expanded a[href="#collapse"],
+    #right-panel.expanded a[href="#collapse"]
     {
         display:block;
-        float:none;
-        margin:0;
-        padding: 5px;
-        width:100%;
     }
 
-    .navbar-toggle .icon-bar+.icon-bar {
-        margin-top: 4px;
-    }
-
-    .navbar-toggle .icon-bar {
-        display: block;
-        width: auto;
-        height: 4px;
-        border-radius: 4px;
-        background-color:#555555;
-    }
-
-    .navbar-toggle:hover .icon-bar
-    {
-        background-color:#0099BB;
-    }
-
-    #right-panel h3, #left-panel h3,
-    #right-panel ul
+    #left-panel a[href="#collapse"],
+    #right-panel a[href="#collapse"]
     {
         display:none;
     }
 
-    #left-panel a:not([href]) span
+    #right-panel h3, #left-panel h3,
+    #right-panel .main-menu
+    {
+        display:none;
+    }
+
+    #left-panel .main-menu a:not([href]) span
     {
         display:block;
     }
 
-    #left-panel a:not([href])
+    #left-panel .main-menu a:not([href])
     {
         padding-left:50px;
     }
 
-    #left-panel a:hover:not([href])
+    #left-panel .main-menu a:hover:not([href])
     {
         padding-left:45px;
+    }
+
+    #left-panel.expanded .main-menu a:hover:not([href]),
+    #right-panel.expanded .main-menu a:hover:not([href])
+    {
+        padding-left:10px;
+    }
+
+    .main-menu a:hover,
+    .main-menu a:focus,
+    .main-menu a:active,
+    .main-menu a.active
+    {
+        border:0;
+    }
+
+    #left-panel .main-menu a:hover span,
+    #left-panel .main-menu a:focus span,
+    #left-panel .main-menu a:active span,
+    #left-panel .main-menu a.active span
+    {
+        left:5px;
+    }
+
+    #left-panel nav,
+    #left-panel:not(.expanded) nav,
+    #right-panel nav,
+    #right-panel:not(.expanded) nav
+    {
+        overflow: hidden;
     }
 }
 

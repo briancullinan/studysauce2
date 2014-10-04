@@ -9,6 +9,7 @@ use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -57,12 +58,6 @@ class GoalsController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        // get a new token so double click can't affect the post
-        $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
-            : null;
-
-        /** @var $user User */
         $user = $this->getUser();
 
         $goals = $request->get('goals');
@@ -92,7 +87,10 @@ class GoalsController extends Controller
             $orm->flush();
         }
 
-        return new JsonResponse(['csrf_token' => $csrfToken, 'goals' => $this->indexAction('tab')->getContent()]);
+        /** @var  $request Request */
+        //$request = $this->container->get('request');
+        /** @var  $goals Response */
+        return $this->forward('StudySauceBundle:Goals:index', ['_format' => 'tab']);
     }
 
 }

@@ -21,6 +21,12 @@ $(document).ready(function () {
             var i = window.callbackUri.indexOf(path);
             var panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
                 panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray();
+
+            // activate the menu
+            body.find('.main-menu .active').removeClass('active');
+            body.find('.main-menu a[href="' + path + '"]').first().addClass('active').parents('ul.collapse').addClass('in');
+
+            // download the panel
             if(panel.length == 0)
                 $.ajax({
                     url: window.callbackPaths[window.callbackKeys[i]],
@@ -72,25 +78,55 @@ $(document).ready(function () {
                             if(newPane.length == 0) {
                                 newPane = panes.first();
                             }
-                            body.find('.panel-pane:visible').fadeOut(150);
-                            newPane.delay(150).fadeIn(150);
+                            setTimeout(function () {
+                                body.find('.panel-pane:visible').fadeOut(75);
+                                newPane.delay(75).fadeIn(75);
+                            }, 100);
                             if(!noPush)
                                 window.history.pushState(window.callbackKeys[i], "", path);
                         }
                     }
                 });
             else if(!panel.is(':visible')) {
-                body.find('.panel-pane:visible').fadeOut(150);
-                panel.delay(150).fadeIn(150);
+                setTimeout(function () {
+                    body.find('.panel-pane:visible').fadeOut(75);
+                    panel.delay(75).fadeIn(75);
+                }, 100);
                 if(!noPush)
                     window.history.pushState(window.callbackKeys[i], "", path);
             }
         };
 
-    body.on('click', '.main-menu a[href]', function (evt) {
-        body.find('.main-menu .active').removeClass('active');
-        $(this).addClass('active').parents('ul.collapse').addClass('in');
+    body.on('click', '#left-panel a[href="#expand"], #right-panel a[href="#expand"]', function (evt) {
+        evt.preventDefault();
+        var parent = $(this).parents('#left-panel, #right-panel');
+        body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
+        parent.removeClass('collapsed').addClass('expanded');
+    });
 
+    body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
+        evt.preventDefault();
+        var parent = $(this).parents('#left-panel, #right-panel');
+        parent.removeClass('expanded').addClass('collapsed');
+    });
+
+    body.on('click', '.main-menu a:not([href])', function (evt) {
+        var parent = $(this).parents('#left-panel, #right-panel');
+        if (parent.width() < 150) {
+            evt.preventDefault(); // cancel navigation is we are uncollapsing
+            body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
+            parent.removeClass('collapsed').addClass('expanded');
+        }
+    });
+
+    body.on('click', '.main-menu a[href]', function (evt) {
+        var parent = $(this).parents('#left-panel, #right-panel');
+        if(parent.width() < 150) {
+            evt.preventDefault(); // cancel navigation is we are uncollapsing
+            body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
+            parent.removeClass('collapsed').addClass('expanded');
+            return;
+        }
         var path = $(this).attr('href');
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
                 // check if there is a tab with the selected url
@@ -99,7 +135,8 @@ $(document).ready(function () {
         evt.preventDefault();
         activateMenu(path);
     });
-    body.find('.main-menu a[href="' + window.location.pathname + '"]').first().trigger('click');
+    if(window.callbackUri.indexOf(window.location.pathname) > -1)
+        activateMenu(window.location.pathname);
 
     window.onpopstate = function(e){
         if(typeof window.callbackPaths[e.state] != 'undefined') {

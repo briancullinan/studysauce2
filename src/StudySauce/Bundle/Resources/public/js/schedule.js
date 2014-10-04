@@ -243,8 +243,6 @@ $(document).ready(function () {
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
-
                 updateSchedule(data);
             }
         });
@@ -252,12 +250,14 @@ $(document).ready(function () {
 
     function updateSchedule(data)
     {
+        var response = $(data);
+        schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
         // update class schedule
         $('.schedule .class-row').remove();
-        $(data.schedule).find('.schedule:not(.other) .class-row')
+        response.find('.schedule:not(.other) .class-row')
             .appendTo($('.schedule:not(.other)'));
 
-        $(data.schedule).find('.schedule.other .class-row')
+        response.find('.schedule.other .class-row')
             .appendTo($('.schedule.other'));
 
         planFunc.apply(schedule.find('.schedule .class-row'));
@@ -334,7 +334,7 @@ $(document).ready(function () {
         $.ajax({
             url: window.callbackPaths['update_schedule'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 // skip building the schedule if we are in the middle of the buy funnel
                 skipBuild: (window.location.pathname == '/schedule' || window.location.pathname == '/schedule2'),
@@ -343,7 +343,6 @@ $(document).ready(function () {
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                schedule.find('input[name="csrf_token"]').val(data.csrf_token);
                 updateSchedule(data);
                 building.modal('hide');
             },

@@ -16,7 +16,6 @@ class CourseController extends Controller
      */
     public function indexAction($_format = 'index')
     {
-        //return $this->forward('Course1Bundle:Course1:index');
         return $this->render('StudySauceBundle:Course:tab.html.php');
     }
 

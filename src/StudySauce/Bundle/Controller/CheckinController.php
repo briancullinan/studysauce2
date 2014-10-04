@@ -16,8 +16,8 @@ class CheckinController extends Controller
      */
     public function indexAction($_format = 'index')
     {
-        $request = $this->container->get('request');
-        $routeName = $request->get('_format');
+        //$request = $this->container->get('request');
+        //$routeName = $request->get('_format');
 
         return $this->render('StudySauceBundle:Checkin:tab.html.php');
     }

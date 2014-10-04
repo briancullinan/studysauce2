@@ -4,9 +4,8 @@
 
 <aside id="right-panel">
     <nav>
-        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
-            Study Tools
-        </button>
+        <a href="#expand"><span class="navbar-toggle">Study Tools</span></a>
+        <a href="#collapse">Hide</a>
         <ul class="main-menu">
             <li><h3>Study Tools</h3></li>
             <li><a href="<?php print $view['router']->generate('goals'); ?>"><span>&nbsp;</span>Goals</a></li>

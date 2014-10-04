@@ -197,11 +197,6 @@ class ScheduleController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        // get a new token so double click can't affect the post
-        $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
-            : null;
-
         /** @var $user User */
         $user = $this->getUser();
 
@@ -353,7 +348,7 @@ class ScheduleController extends Controller
             //if ($isPaid && !$skipBuild)
             //    TODO: studysauce_rebuild_schedule($node, $entities, $added, $renamed);
 
-        return new JsonResponse(['csrf_token' => $csrfToken, 'schedule' => $this->indexAction('tab')->getContent()]);
+        return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
     }
 
     private static $institutions;
