@@ -30,4 +30,10 @@
 
 <?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 1, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
 
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 2, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 3, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 4, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+
 <?php $view['slots']->stop(); ?>

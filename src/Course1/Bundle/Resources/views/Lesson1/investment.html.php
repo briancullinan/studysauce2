@@ -1,3 +1,4 @@
+<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
 
 <?php $view->extend('Course1Bundle:Lesson1:layout.html.php') ?>
 
@@ -15,5 +16,13 @@
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>
 </div>
+
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 3, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 2, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 1, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 0, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
 
 <?php $view['slots']->stop(); ?>

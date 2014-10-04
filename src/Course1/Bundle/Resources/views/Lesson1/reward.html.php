@@ -1,3 +1,4 @@
+<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
 
 <?php $view->extend('Course1Bundle:Lesson1:layout.html.php') ?>
 
