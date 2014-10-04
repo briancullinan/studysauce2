@@ -72,17 +72,29 @@
 {
     position:absolute;
     display:block;
-    height:40px;
+    height:45px;
     width:50px;
     left:0;
     top:50px;
-    background:url(../images/menu_new.png) no-repeat left -105px transparent;
+    background:url(../images/menu_new.png) no-repeat left -102px transparent;
     font-size:14px;
     color:#555555;
     font-weight: bold;
-    padding-top:20px;
+    padding-top:23px;
     padding-left:15px;
     z-index:10;
+}
+
+#left-panel .loading,
+#right-panel .loading {
+    background-color: #0099BB;
+    bottom: 0;
+    display: inline-block;
+    height: 2px;
+    left: 0;
+    line-height: 1px;
+    position: absolute;
+    width: 50px;
 }
 
 #left-panel a[href="#collapse"]
@@ -96,20 +108,20 @@
     padding-right:15px;
     padding-left:0;
     text-align: right;
-    background-position: left -205px;
+    background-position: left -202px;
 }
 
 #left-panel a[href="#collapse"]:hover
 {
     color:#0099BB;
-    background-position: left -405px;
+    background-position: left -402px;
     background-color: #DDDDDD;
 }
 
 #right-panel a[href="#collapse"]:hover
 {
     color:#0099BB;
-    background-position: left -505px;
+    background-position: left -502px;
     background-color: #DDDDDD;
 }
 
@@ -209,7 +221,10 @@
     background: url(../images/menu_new.png) no-repeat left -605px;
 }
 
-#right-panel .main-menu a:hover span
+#right-panel .main-menu a:hover span,
+#right-panel .main-menu a:focus span,
+#right-panel .main-menu a:active span,
+#right-panel .main-menu a.active span
 {
     background: url(../images/menu_new.png) no-repeat left -705px;
 }
@@ -219,8 +234,10 @@
     background-position: left -805px;
 }
 
-#right-panel .main-menu a[href*="/deadlines"]:hover span
-{
+#right-panel .main-menu a[href*="/deadlines"]:hover span,
+#right-panel .main-menu a[href*="/deadlines"]:focus span,
+#right-panel .main-menu a[href*="/deadlines"]:active span,
+#right-panel .main-menu a[href*="/deadlines"].active span {
     background-position: left -905px;
 }
 
@@ -229,8 +246,10 @@
     background-position: left -1005px;
 }
 
-#right-panel .main-menu a[href*="/checkin"]:hover span
-{
+#right-panel .main-menu a[href*="/checkin"]:hover span,
+#right-panel .main-menu a[href*="/checkin"]:focus span,
+#right-panel .main-menu a[href*="/checkin"]:active span,
+#right-panel .main-menu a[href*="/checkin"].active span {
     background-position: left -1105px;
 }
 
@@ -239,8 +258,10 @@
     background-position: left -1205px;
 }
 
-#right-panel .main-menu a[href*="/metrics"]:hover span
-{
+#right-panel .main-menu a[href*="/metrics"]:hover span,
+#right-panel .main-menu a[href*="/metrics"]:focus span,
+#right-panel .main-menu a[href*="/metrics"]:active span,
+#right-panel .main-menu a[href*="/metrics"].active span {
     background-position: left -1305px;
 }
 
@@ -249,8 +270,10 @@
     background-position: left -1405px;
 }
 
-#right-panel .main-menu a[href*="/plan"]:hover span
-{
+#right-panel .main-menu a[href*="/plan"]:hover span,
+#right-panel .main-menu a[href*="/plan"]:focus span,
+#right-panel .main-menu a[href*="/plan"]:active span,
+#right-panel .main-menu a[href*="/plan"].active span {
     background-position: left -1505px;
 }
 
@@ -259,8 +282,10 @@
     background-position: left -1605px;
 }
 
-#right-panel .main-menu a[href*="/partner"]:hover span
-{
+#right-panel .main-menu a[href*="/partner"]:hover span,
+#right-panel .main-menu a[href*="/partner"]:focus span,
+#right-panel .main-menu a[href*="/partner"]:active span,
+#right-panel .main-menu a[href*="/partner"].active span {
     background-position: left -1705px;
 }
 
@@ -269,8 +294,10 @@
     background-position: left -1805px;
 }
 
-#right-panel .main-menu a[href*="/profile"]:hover span
-{
+#right-panel .main-menu a[href*="/profile"]:hover span,
+#right-panel .main-menu a[href*="/profile"]:focus span,
+#right-panel .main-menu a[href*="/profile"]:active span,
+#right-panel .main-menu a[href*="/profile"].active span {
     background-position: left -1905px;
 }
 
@@ -279,8 +306,10 @@
     background-position: left -2005px;
 }
 
-#right-panel .main-menu a[href*="/tips"]:hover span
-{
+#right-panel .main-menu a[href*="/tips"]:hover span,
+#right-panel .main-menu a[href*="/tips"]:focus span,
+#right-panel .main-menu a[href*="/tips"]:active span,
+#right-panel .main-menu a[href*="/tips"].active span {
     background-position: left -2105px;
 }
 
@@ -289,8 +318,10 @@
     background-position: left -2205px;
 }
 
-#right-panel .main-menu a[href*="/premium"]:hover span
-{
+#right-panel .main-menu a[href*="/premium"]:hover span,
+#right-panel .main-menu a[href*="/premium"]:focus span,
+#right-panel .main-menu a[href*="/premium"]:active span,
+#right-panel .main-menu a[href*="/premium"].active span {
     background-position: left -2305px;
 }
 
@@ -299,8 +330,10 @@
     background-position: left -2405px;
 }
 
-#right-panel .main-menu a[href*="/account"]:hover span
-{
+#right-panel .main-menu a[href*="/account"]:hover span,
+#right-panel .main-menu a[href*="/account"]:focus span,
+#right-panel .main-menu a[href*="/account"]:active span,
+#right-panel .main-menu a[href*="/account"].active span {
     background-position: left -2505px;
 }
 
@@ -309,8 +342,10 @@
     background-position: left -2605px;
 }
 
-#right-panel .main-menu a[href*="/schedule"]:hover span
-{
+#right-panel .main-menu a[href*="/schedule"]:hover span,
+#right-panel .main-menu a[href*="/schedule"]:focus span,
+#right-panel .main-menu a[href*="/schedule"]:active span,
+#right-panel .main-menu a[href*="/schedule"].active span {
     background-position: left -2705px;
 }
 
@@ -362,7 +397,13 @@
 }
 
 #left-panel .main-menu a:hover:not([href]),
-#left-panel .main-menu a:hover:not([href]) span
+#left-panel .main-menu a:focus:not([href]),
+#left-panel .main-menu a:active:not([href]),
+#left-panel .main-menu a.active:not([href]),
+#left-panel .main-menu a:hover:not([href]) span,
+#left-panel .main-menu a:focus:not([href]) span,
+#left-panel .main-menu a:active:not([href]) span,
+#left-panel .main-menu a.active:not([href]) span
 {
     color:inherit;
     cursor: pointer;
@@ -505,7 +546,13 @@
 }
 
 #left-panel .main-menu a:hover:not([href]),
-#right-panel .main-menu a:hover:not([href])
+#left-panel .main-menu a:focus:not([href]),
+#left-panel .main-menu a:active:not([href]),
+#left-panel .main-menu a.active:not([href]),
+#right-panel .main-menu a:hover:not([href]),
+#right-panel .main-menu a:focus:not([href]),
+#right-panel .main-menu a:active:not([href]),
+#right-panel .main-menu a.active:not([href])
 {
     padding-left:10px;
 }
@@ -542,7 +589,10 @@
     padding-left:50px;
 }
 
-#left-panel.collapsed .main-menu a:hover:not([href])
+#left-panel.collapsed .main-menu a:hover:not([href]),
+#left-panel.collapsed .main-menu a:focus:not([href]),
+#left-panel.collapsed .main-menu a:active:not([href]),
+#left-panel.collapsed .main-menu a.active:not([href])
 {
     padding-left:45px;
 }

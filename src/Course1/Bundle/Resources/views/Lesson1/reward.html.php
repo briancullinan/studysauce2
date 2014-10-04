@@ -16,6 +16,7 @@
             <div class="highlighted-link">
                 <a href="<?php print $view['router']->generate('lesson1', ['_step' => 4]); ?>" class="more">Next</a>
             </div>
+            <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
         </div>
     </div>
 </div>

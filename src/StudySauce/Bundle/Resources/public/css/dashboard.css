@@ -12,11 +12,17 @@
 
 .panel-pane
 {
+    display:none;
     margin:0 auto;
     max-width: none;
     width: 100%;
     padding:70px 240px 20px 240px;
     box-sizing: border-box;
+}
+
+aside + .panel-pane
+{
+    display:block;
 }
 
 .pane-content

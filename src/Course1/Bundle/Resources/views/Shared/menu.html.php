@@ -1,4 +1,4 @@
-<aside id="left-panel">
+<aside id="left-panel" class="collapsed">
     <nav>
         <a href="#expand"><span class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span>
             <span class="icon-bar"></span></span></a>

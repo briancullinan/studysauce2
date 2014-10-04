@@ -73,6 +73,7 @@ $collection = $router->getRouteCollection();
                 $callbackUri[] = $router->generate($route);
             }
 
+            // TODO: add lessons with multiple steps
             //$routes[$controller][] = $route;
         }
     }

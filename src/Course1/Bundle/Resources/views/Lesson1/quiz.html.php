@@ -7,6 +7,11 @@
     <div class="pane-content">
 
         <h2>Now let's see how much you remember</h2>
+        Grade level
+        Mindset question
+        Time management question
+        Electronic devices
+        Study hours per day
 
         <div class="questions">
             <h3>Which do you agree with more?</h3>
@@ -32,6 +37,7 @@
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('lesson1', ['_step' => 3]); ?>" class="more">Next</a>
         </div>
+        <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>
 </div>
 

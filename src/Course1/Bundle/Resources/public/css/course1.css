@@ -11,22 +11,24 @@
 .course1.step0 ol a.active {
     padding-left: 45px;
     background-color: #DDDDDD;
-    border-left: 5px solid #0099BB;
+    border-left: 5px solid #555555;
     transition: background-color ease-in-out .15s;
 }
 
-.course1.step0 ol a:hover span {
+.course1.step0 ol a:hover span,
+.course1.step0 ol a:focus span,
+.course1.step0 ol a:active span,
+.course1.step0 ol a.active span {
     left: -5px;
 }
 
 .course1.step0 ol {
     list-style: none none;
     padding: 0;
-    margin: 0 -2px;
-    width:50%;
+    width:40%;
     display:inline-block;
     vertical-align: middle;
-    margin-top:40px;
+    margin: 40px 10% 0 -2px;
 }
 
 .course1 .highlighted-link
@@ -66,11 +68,11 @@
 
 .course1.step0 .player-divider
 {
-    margin: 0 -2px;
     width:50%;
     display:inline-block;
     vertical-align: middle;
-    margin-top:40px;
+    margin: 40px -2px 0;
+    padding-right:20px;
 }
 
 .course1.step2 .results,
@@ -146,6 +148,33 @@
 {
     padding-right:20px;
     padding-bottom:20px;
+}
+
+.course1 .tab-tracker
+{
+    list-style: none;
+    font-size: 40px;
+    position:absolute;
+    bottom:20px;
+    left:20px;
+}
+
+.course1 .tab-tracker li
+{
+    list-style: none;
+    display: inline-block;
+    margin:10px;
+    vertical-align: middle;
+}
+
+#lesson1 .tab-tracker li:first-child,
+#lesson1-step1 .tab-tracker li:nth-child(2),
+#lesson1-step2 .tab-tracker li:nth-child(3),
+#lesson1-step3 .tab-tracker li:nth-child(4),
+#lesson1-step4 .tab-tracker li:nth-child(5)
+{
+    font-size: 60px;
+    color: #0099BB;
 }
 
 #new-award

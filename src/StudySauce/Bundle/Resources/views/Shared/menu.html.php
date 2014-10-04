@@ -2,7 +2,7 @@
 
 <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Course:menu')); ?>
 
-<aside id="right-panel">
+<aside id="right-panel" class="collapsed">
     <nav>
         <a href="#expand"><span class="navbar-toggle">Study Tools</span></a>
         <a href="#collapse">Hide</a>

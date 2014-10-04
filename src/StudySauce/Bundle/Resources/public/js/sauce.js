@@ -15,20 +15,42 @@ $(document).ready(function () {
         return this;
     };
 
+    function loadingAnimation(that)
+    {
+        if(typeof that != 'undefined' && that.length > 0 && that.find('.loading').length == 0)
+        {
+            return loadingAnimation.call($('<small class="loading">&nbsp;</small>').appendTo(that), that);
+        }
+        else if ($(this).is('.loading'))
+        {
+            var width = $(this).parent().outerWidth(true);
+            return $(this).css('width', 0).css('left', 0)
+                .animate({width: width}, 1000, 'swing', function () {
+                    var width = $(this).parent().outerWidth(true);
+                    $(this).css('width', width).css('left', 0)
+                        .animate({left: width, width: 0}, 1000, 'swing', loadingAnimation);
+                });
+        }
+        else if(typeof that != 'undefined')
+            return that.find('.loading');
+    }
+
     var body = $('body'),
         jp = $('#jplayer'),
         activateMenu = function (path, noPush) {
             var i = window.callbackUri.indexOf(path);
             var panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
-                panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray();
+                panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
+                item = body.find('.main-menu a[href="' + path + '"]').first();
 
             // activate the menu
             body.find('.main-menu .active').removeClass('active');
             body.find('.main-menu ul.collapse.in').removeClass('in');
-            body.find('.main-menu a[href="' + path + '"]').first().addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+            item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
 
             // download the panel
-            if(panel.length == 0)
+            if(panel.length == 0) {
+                loadingAnimation(item);
                 $.ajax({
                     url: window.callbackPaths[window.callbackKeys[i]],
                     type: 'GET',
@@ -41,18 +63,16 @@ $(document).ready(function () {
 
                         $(styles).each(function () {
                             var url = $(this).attr('href');
-                            if(typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0)
+                            if (typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0)
                                 $('head').append('<link href="' + url + '" type="text/css" rel="stylesheet" />');
-                            else
-                            {
+                            else {
                                 var re = (/url\("(.*?)"\)/ig),
                                     match,
                                     media = $(this).attr('media');
                                 while (match = re.exec($(this).html())) {
-                                    if($('link[href="' + match[1] + '"]').length == 0 &&
-                                        $('style:contains("' + match[1] + '")').length == 0)
-                                    {
-                                        if(typeof media == 'undefined' || media == 'all')
+                                    if ($('link[href="' + match[1] + '"]').length == 0 &&
+                                        $('style:contains("' + match[1] + '")').length == 0) {
+                                        if (typeof media == 'undefined' || media == 'all')
                                             $('head').append('<link href="' + match[1] + '" type="text/css" rel="stylesheet" />');
                                         else
                                             $('head').append('<style media="' + media + '">@import url("' + match[1] + '");');
@@ -63,32 +83,35 @@ $(document).ready(function () {
 
                         $(scripts).each(function () {
                             var url = $(this).attr('src');
-                            if(typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0)
-                            {
+                            if (typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0) {
                                 $.getScript(url.replace(/\?.*/ig, ''));
                                 console.log(url.replace(/\?.*/ig, ''));
                             }
                         });
 
 
-                        if(panelIds.length > 0)
+                        if (panelIds.length > 0)
                             panes = panes.not('#' + panelIds.join(', #'));
-                        if(panes.length > 0) {
+                        if (panes.length > 0) {
                             panes.hide().insertBefore(body.find('.footer'));
                             var newPane = panes.filter('#' + window.callbackKeys[i]);
-                            if(newPane.length == 0) {
+                            if (newPane.length == 0) {
                                 newPane = panes.first();
                             }
+                            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+                            item.find('.loading').stop().remove();
                             setTimeout(function () {
                                 body.find('.panel-pane:visible').fadeOut(75);
                                 newPane.delay(75).fadeIn(75);
                             }, 100);
-                            if(!noPush)
+                            if (!noPush)
                                 window.history.pushState(window.callbackKeys[i], "", path);
                         }
                     }
                 });
+            }
             else if(!panel.is(':visible')) {
+                body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
                 setTimeout(function () {
                     body.find('.panel-pane:visible').fadeOut(75);
                     panel.delay(75).fadeIn(75);
@@ -120,13 +143,18 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '.main-menu a[href]', function (evt) {
+    // capture all callback links
+    body.on('click', 'a[href]', function (evt) {
         var parent = $(this).parents('#left-panel, #right-panel');
-        if(parent.width() < 150) {
+        if(parent.length > 0 && parent.width() < 150) {
             evt.preventDefault(); // cancel navigation is we are uncollapsing
             body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
             parent.removeClass('collapsed').addClass('expanded');
             return;
+        }
+        else
+        {
+            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
         }
         var path = $(this).attr('href');
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
