@@ -24,7 +24,8 @@ $(document).ready(function () {
 
             // activate the menu
             body.find('.main-menu .active').removeClass('active');
-            body.find('.main-menu a[href="' + path + '"]').first().addClass('active').parents('ul.collapse').addClass('in');
+            body.find('.main-menu ul.collapse.in').removeClass('in');
+            body.find('.main-menu a[href="' + path + '"]').first().addClass('active').parents('ul.collapse').addClass('in').css('height', '');
 
             // download the panel
             if(panel.length == 0)
