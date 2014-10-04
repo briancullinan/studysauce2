@@ -99,8 +99,8 @@ $(document).ready(function () {
                                 newPane = panes.first();
                             }
                             body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-                            item.find('.loading').stop().remove();
                             setTimeout(function () {
+                                item.find('.loading').stop().remove();
                                 body.find('.panel-pane:visible').fadeOut(75);
                                 newPane.delay(75).fadeIn(75);
                             }, 100);
@@ -152,15 +152,14 @@ $(document).ready(function () {
             parent.removeClass('collapsed').addClass('expanded');
             return;
         }
-        else
-        {
-            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-        }
+
         var path = $(this).attr('href');
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
                 // check if there is a tab with the selected url
-            window.callbackUri.indexOf(path) == -1)
+            window.callbackUri.indexOf(path) == -1) {
+            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
             return;
+        }
         evt.preventDefault();
         activateMenu(path);
     });
