@@ -61,16 +61,16 @@
     overflow: hidden;
 }
 
-#metrics .row {
+#metrics .checkin-row {
     vertical-align: top;
 }
 
-#metrics .row .mobile-only
+#metrics .checkin-row .mobile-only
 {
     display:none;
 }
 
-#metrics .row .class-name {
+#metrics .checkin-row .class-name {
     display: inline-block;
     width: 175px;
     padding: 5px 0;
@@ -81,7 +81,7 @@
     text-align: left;
 }
 
-#metrics .row .class-date {
+#metrics .checkin-row .class-date {
     white-space: nowrap;
     display: inline-block;
     width: 175px;
@@ -92,7 +92,7 @@
     text-align: center;
 }
 
-#metrics .row .class-time {
+#metrics .checkin-row .class-time {
     white-space: nowrap;
     display: inline-block;
     width: 175px;
@@ -106,18 +106,18 @@
 @media all and (max-width:1000px)
 {
 
-    #metrics .row .full-only
+    #metrics .checkin-row .full-only
     {
         display:none;
     }
-    #metrics .row .mobile-only
+    #metrics .checkin-row .mobile-only
     {
         display:inline;
     }
 
-    #metrics .row .class-name,
-    #metrics .row .class-date,
-    #metrics .row .class-time
+    #metrics .checkin-row .class-name,
+    #metrics .checkin-row .class-date,
+    #metrics .checkin-row .class-time
     {
         width:31%;
     }

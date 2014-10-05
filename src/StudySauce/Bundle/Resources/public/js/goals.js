@@ -31,11 +31,11 @@ $(document).ready(function () {
         goalsFunc.apply(row.removeClass('read-only').addClass('edit'));
     });
 
-    goals.on('change', '.goal-row select, .row textarea', function () {
-        goalsFunc.apply(jQuery(this).parents('.row'));
+    goals.on('change', '.goal-row select, .goal-row textarea', function () {
+        goalsFunc.apply(jQuery(this).parents('.goal-row'));
     });
     goals.on('keyup', '.goal-row textarea', function () {
-        goalsFunc.apply(jQuery(this).parents('.row'));
+        goalsFunc.apply(jQuery(this).parents('.goal-row'));
     });
 
     goals.on('click', 'a[href="#save-goal"]', function (evt) {

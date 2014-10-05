@@ -214,14 +214,14 @@ $view['slots']->start('body'); ?>
     window.classNames = ["MAT 100"];
 </script>
 <div id="checkins-list">
-    <div class="heading row">
+    <div class="heading checkin-row">
         <label class="class-name">Class</label>
         <label class="class-date"><span class="full-only">Check in date</span><span
                 class="mobile-only">Date</span></label>
         <label class="class-time">Duration</label>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">18 September</span><span
                 class="mobile-only">18 Sep</span></div>
@@ -229,7 +229,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">18 September</span><span
                 class="mobile-only">18 Sep</span></div>
@@ -237,7 +237,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">18 September</span><span
                 class="mobile-only">18 Sep</span></div>
@@ -245,7 +245,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">17 September</span><span
                 class="mobile-only">17 Sep</span></div>
@@ -253,7 +253,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">17 September</span><span
                 class="mobile-only">17 Sep</span></div>
@@ -261,7 +261,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">15 September</span><span
                 class="mobile-only">15 Sep</span></div>
@@ -269,7 +269,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -277,7 +277,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -285,7 +285,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -293,7 +293,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -301,7 +301,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -309,7 +309,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -317,7 +317,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">12 September</span><span
                 class="mobile-only">12 Sep</span></div>
@@ -325,7 +325,7 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 
-    <div class="row">
+    <div class="checkin-row">
         <div class="class-name"><span class="class0">&nbsp;</span>MAT 100</div>
         <div class="class-date"><span class="full-only">11 September</span><span
                 class="mobile-only">11 Sep</span></div>

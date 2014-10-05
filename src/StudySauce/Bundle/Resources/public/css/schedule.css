@@ -3,6 +3,7 @@
 #schedule header,
 .schedule .class-row
 {
+    padding-top:5px;
     clear: both;
     display: block;
     vertical-align: top;

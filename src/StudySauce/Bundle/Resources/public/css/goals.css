@@ -44,6 +44,7 @@
 #goals header,
 #goals .goal-row
 {
+    padding-top:5px;
     clear: both;
     display: block;
     vertical-align: top;
@@ -78,7 +79,7 @@
     margin-top:-12px;
 }
 
-#goals .row:nth-child(2) .type {
+#goals .goal-row:nth-child(2) .type {
     background-position: 10px -624px;
 }
 

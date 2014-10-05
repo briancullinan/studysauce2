@@ -17,6 +17,7 @@
 
 #deadlines header,
 #deadlines .deadline-row {
+    padding-top:5px;
     clear: both;
     display: block;
     vertical-align: top;
@@ -153,13 +154,13 @@ a[href="#remove-deadline"] {
 }
 
 #deadlines .head.hide,
-#deadlines .row.hide
+#deadlines .deadline-row.hide
 {
     display:none;
 }
 
 #deadlines.show-historic .head.hide,
-#deadlines.show-historic .row.hide
+#deadlines.show-historic .deadline-row.hide
 {
     display:block;
 }

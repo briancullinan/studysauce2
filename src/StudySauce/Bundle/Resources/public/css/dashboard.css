@@ -42,7 +42,7 @@ aside + .panel-pane
 }
 
 #metrics ol span,
-#metrics .row .class-name span,
+#metrics .checkin-row .class-name span,
 .class-row .class-name i,
 #plan .class-name span
 {

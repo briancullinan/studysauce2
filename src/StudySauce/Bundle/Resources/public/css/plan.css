@@ -190,6 +190,7 @@
 
 #plan .session-row
 {
+    padding-top:5px;
     clear: both;
     display: block;
     vertical-align: top;
