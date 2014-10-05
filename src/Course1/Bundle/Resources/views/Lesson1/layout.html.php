@@ -41,6 +41,7 @@ foreach ($allRoutes as $route => $params) {
         $controllerAction = explode(':', $defaults['_controller']);
         $controller = $controllerAction[0];
 
+        // add lessons with multiple steps
         if (!empty($requirement) && is_numeric(explode('|', $requirement)[0])) {
             foreach(explode('|', $requirement) as $j) {
                 $callbackPaths[$route . (intval($j) > 0 ? ('-step' . intval($j)) : '')] = $router->generate($route, ['_step' => intval($j), '_format' => 'tab']);

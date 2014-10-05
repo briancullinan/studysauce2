@@ -19,6 +19,7 @@ class Checkin
 
     /**
      * @ORM\ManyToOne(targetEntity="Course", inversedBy="checkins")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
      */
     protected $course;
 
@@ -32,6 +33,7 @@ class Checkin
      */
     protected $utc_checkin;
 
+
     /**
      * Get id
      *
@@ -40,13 +42,6 @@ class Checkin
     public function getId()
     {
         return $this->id;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->course = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -96,39 +91,6 @@ class Checkin
     }
 
     /**
-     * Add course
-     *
-     * @param \StudySauce\Bundle\Entity\Course $course
-     * @return Checkin
-     */
-    public function addCourse(\StudySauce\Bundle\Entity\Course $course)
-    {
-        $this->course[] = $course;
-
-        return $this;
-    }
-
-    /**
-     * Remove course
-     *
-     * @param \StudySauce\Bundle\Entity\Course $course
-     */
-    public function removeCourse(\StudySauce\Bundle\Entity\Course $course)
-    {
-        $this->course->removeElement($course);
-    }
-
-    /**
-     * Get course
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getCourse()
-    {
-        return $this->course;
-    }
-
-    /**
      * Set course
      *
      * @param \StudySauce\Bundle\Entity\Course $course
@@ -139,5 +101,15 @@ class Checkin
         $this->course = $course;
 
         return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return \StudySauce\Bundle\Entity\Course 
+     */
+    public function getCourse()
+    {
+        return $this->course;
     }
 }

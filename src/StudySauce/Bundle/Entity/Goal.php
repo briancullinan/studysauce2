@@ -19,7 +19,8 @@ class Goal
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="schedules")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="goals")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
@@ -42,6 +43,7 @@ class Goal
      * @ORM\Column(type="datetime", name="created", options={"default" = 0})
      */
     protected $created;
+
 
     /**
      * Get id
@@ -123,29 +125,6 @@ class Goal
     }
 
     /**
-     * Set user
-     *
-     * @param \StudySauce\Bundle\Entity\User $user
-     * @return Goal
-     */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \StudySauce\Bundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set created
      *
      * @param \DateTime $created
@@ -166,5 +145,28 @@ class Goal
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \StudySauce\Bundle\Entity\User $user
+     * @return Goal
+     */
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \StudySauce\Bundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

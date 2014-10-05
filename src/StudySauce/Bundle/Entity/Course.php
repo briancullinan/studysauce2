@@ -49,6 +49,7 @@ class Course
 
     /**
      * @ORM\ManyToOne(targetEntity="Schedule", inversedBy="courses")
+     * @ORM\JoinColumn(name="schedule_id", referencedColumnName="id")
      */
     protected $schedule;
 
@@ -145,6 +146,75 @@ class Course
     }
 
     /**
+     * Set startTime
+     *
+     * @param \DateTime $startTime
+     * @return Course
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    /**
+     * Get startTime
+     *
+     * @return \DateTime 
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * Set endTime
+     *
+     * @param \DateTime $endTime
+     * @return Course
+     */
+    public function setEndTime($endTime)
+    {
+        $this->endTime = $endTime;
+
+        return $this;
+    }
+
+    /**
+     * Get endTime
+     *
+     * @return \DateTime 
+     */
+    public function getEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Course
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
      * Add checkins
      *
      * @param \StudySauce\Bundle\Entity\Checkin $checkins
@@ -198,74 +268,5 @@ class Course
     public function getSchedule()
     {
         return $this->schedule;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Course
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set startTime
-     *
-     * @param \DateTime $startTime
-     * @return Course
-     */
-    public function setStartTime($startTime)
-    {
-        $this->startTime = $startTime;
-
-        return $this;
-    }
-
-    /**
-     * Get startTime
-     *
-     * @return \DateTime 
-     */
-    public function getStartTime()
-    {
-        return $this->startTime;
-    }
-
-    /**
-     * Set endTime
-     *
-     * @param \DateTime $endTime
-     * @return Course
-     */
-    public function setEndTime($endTime)
-    {
-        $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    /**
-     * Get endTime
-     *
-     * @return \DateTime 
-     */
-    public function getEndTime()
-    {
-        return $this->endTime;
     }
 }

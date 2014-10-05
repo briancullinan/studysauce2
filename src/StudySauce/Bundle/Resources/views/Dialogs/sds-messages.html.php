@@ -1,10 +1,10 @@
-<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php') ?>
+<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
-<?php $view['slots']->start('modal-header') ?>
+ $view['slots']->start('modal-header') ?>
 <span class="full-only">Your study tip for this session</span><span class="mobile-only">Study tip</span>
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-body') ?>
+ $view['slots']->start('modal-body') ?>
 <div class="icon">&nbsp;</div>
 <div class="multiple-locations">
     <h3>Use different study locations</h3>
@@ -74,9 +74,9 @@
     <h3>Be prepared</h3>
     <p>The Boy Scouts' motto rings true for studying too.  Try to gather all the materials needed for your study session before you start to focus.  Interrupting your session to search for things will drag down your productivity.  Another helpful tool is to be clear about what you need to accomplish in the study session.  That will keep you focused on the task at hand during your session.</p>
 </div>
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-footer') ?>
+ $view['slots']->start('modal-footer') ?>
 <a href="#study" class="btn btn-primary">Continue to session</a>
 <?php $view['slots']->stop() ?>
 

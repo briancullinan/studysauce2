@@ -1,10 +1,10 @@
-<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php') ?>
+<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
-<?php $view['slots']->start('modal-header') ?>
+ $view['slots']->start('modal-header') ?>
 Contact us
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-body') ?>
+ $view['slots']->start('modal-body') ?>
 <p>If you have any questions at all, please contact us. &nbsp;We would love to hear from you! &nbsp;
     We want to help you to get the most out of your study time and your comments and feedback are important to us.</p>
 <div class="form-item webform-component webform-component-textfield webform-component--your-name">
@@ -21,9 +21,9 @@ Contact us
         <textarea id="edit-submitted-message" name="submitted[message]" cols="60" rows="4" class="form-textarea required"></textarea>
     </div>
 </div>
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-footer') ?>
+ $view['slots']->start('modal-footer') ?>
 <button type="button" class="btn btn-primary">Send</button>
 <?php $view['slots']->stop() ?>
 

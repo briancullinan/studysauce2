@@ -154,14 +154,18 @@ $(document).ready(function () {
         }
 
         var path = $(this).attr('href');
+        // the path is not a callback so just return normally
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
                 // check if there is a tab with the selected url
             window.callbackUri.indexOf(path) == -1) {
             body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-            return;
         }
-        evt.preventDefault();
-        activateMenu(path);
+        // if the path clicked is a callback, use callback to load the new tab
+        else
+        {
+            evt.preventDefault();
+            activateMenu(path);
+        }
     });
     if(window.callbackUri.indexOf(window.location.pathname) > -1)
         activateMenu(window.location.pathname);

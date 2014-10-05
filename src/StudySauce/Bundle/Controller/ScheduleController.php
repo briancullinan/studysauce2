@@ -2,7 +2,6 @@
 
 namespace StudySauce\Bundle\Controller;
 
-//use StudySauce\Bundle\Entity\Session;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
@@ -13,7 +12,6 @@ use StudySauce\Bundle\StudySauceBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -24,22 +22,25 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class ScheduleController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $demo = self::getDemoSchedule($userManager, $orm);
+        $demoCourses = self::getDemoCourses($demo, $orm);
+        $demoOthers = $this->getDemoOthers($demo);
+
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
-
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
-        $demo = $this->getDemoSchedule();
 
         $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-        $demoCourses = $this->getDemoCourses($demo);
         $others = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'o';})->toArray();
-        $demoOthers = $this->getDemoOthers($demo);
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
@@ -58,12 +59,12 @@ class ScheduleController extends Controller
     }
 
     /**
+     * @param $userManager
+     * @param $orm
+     * @return mixed|\StudySauce\Bundle\Entity\Schedule
      */
-    private function getDemoSchedule()
+    public static function getDemoSchedule(UserManager $userManager, EntityManager $orm)
     {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
         /** @var $guest User */
         $guest = $userManager->findUserByUsername("guest");
 
@@ -83,9 +84,6 @@ class ScheduleController extends Controller
             $schedule->setSharp4pm9pm(5);
             $schedule->setSharp9pm2am(4);
 
-            /** @var $orm EntityManager */
-            $orm = $this->get('doctrine')->getManager();
-
             $guest->addSchedule($schedule);
             $orm->persist($schedule);
             $orm->flush();
@@ -96,8 +94,10 @@ class ScheduleController extends Controller
 
     /**
      * @param Schedule $schedule
+     * @param EntityManager $orm
+     * @return array
      */
-    private function getDemoCourses(Schedule $schedule)
+    public static function getDemoCourses(Schedule $schedule, EntityManager $orm)
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
         $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
@@ -115,9 +115,6 @@ class ScheduleController extends Controller
                 $course->setStartTime(date_timestamp_set(new \DateTime(), 0));
                 $course->setEndTime(date_timestamp_set(new \DateTime(), 0));
 
-                /** @var $orm EntityManager */
-                $orm = $this->get('doctrine')->getManager();
-
                 $orm->persist($course);
                 $orm->flush();
                 $courses[] = $course;
@@ -130,6 +127,7 @@ class ScheduleController extends Controller
 
     /**
      * @param Schedule $schedule
+     * @return array
      */
     private function getDemoOthers(Schedule $schedule)
     {
@@ -187,6 +185,7 @@ class ScheduleController extends Controller
 
     /**
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction(Request $request)
     {

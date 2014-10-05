@@ -1,10 +1,10 @@
-<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php') ?>
+<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
-<?php $view['slots']->start('modal-header') ?>
+ $view['slots']->start('modal-header') ?>
 Pilots run through a flight checklist to make sure they are focused and ready to go. We have built a study version for you below.
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-body') ?>
+ $view['slots']->start('modal-body') ?>
 <ol class="checkboxes">
     <li><input type="checkbox" name="mobile" id="mobile"><label for="mobile">Turn mobile device to airplane mode</label></li>
     <li><input type="checkbox" name="distractions" id="distractions"><label for="distractions">Minimize other electronic distractions (turn off TV, close FB, etc.)</label></li>
@@ -21,9 +21,9 @@ Pilots run through a flight checklist to make sure they are focused and ready to
     <li>Get comfortable, but not too comfortable (try not to study on your bed)</li>
     <li>Get ready to study for 1 hour, then you can take a short break</li>
 </ol>
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-footer') ?>
+ $view['slots']->start('modal-footer') ?>
 <a href="#study" class="btn btn-primary">Continue to session</a>
 <?php $view['slots']->stop() ?>
 

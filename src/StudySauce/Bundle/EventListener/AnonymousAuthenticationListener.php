@@ -108,7 +108,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
             $user->setPassword($password);
             $user->setEmail($this->email);
             $user->setCreated(new \DateTime());
-            $user->addRole("ROLE_GUEST");
+            $user->addRole('ROLE_GUEST');
             $user->setEnabled(true);
             $this->orm->persist($user);
             $this->orm->flush();

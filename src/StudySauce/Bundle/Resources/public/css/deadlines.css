@@ -133,6 +133,37 @@ a[href="#remove-deadline"] {
     display:none;
 }
 
+#deadlines .head
+{
+    background-color:#555555;
+    color: #eeeeee;
+    margin-top:30px;
+    padding:5px;
+    clear:both;
+}
+
+#deadlines header + .head
+{
+    margin-top:0;
+}
+
+#deadlines .head span
+{
+    display:none;
+}
+
+#deadlines .head.hide,
+#deadlines .row.hide
+{
+    display:none;
+}
+
+#deadlines.show-historic .head.hide,
+#deadlines.show-historic .row.hide
+{
+    display:block;
+}
+
 @media all and (max-width:1000px)
 {
     #deadlines .deadline-row

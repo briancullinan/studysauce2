@@ -26,7 +26,7 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="Session", mappedBy="user")
-     * @ORM\OrderBy({"created" = "DESC"})
+     * @ORM\OrderBy({"time" = "DESC"})
      */
     protected $sessions;
 
@@ -37,14 +37,26 @@ class User extends BaseUser
     protected $goals;
 
     /**
+     * @ORM\OneToMany(targetEntity="Deadline", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $deadlines;
+
+    /**
      * @ORM\Column(type="datetime", name="created", options={"default" = 0})
      */
     protected $created;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
-        // your own logic
+        $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sessions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -55,6 +67,29 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return User
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 
     /**
@@ -124,29 +159,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return User
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
      * Add goals
      *
      * @param \StudySauce\Bundle\Entity\Goal $goals
@@ -177,5 +189,38 @@ class User extends BaseUser
     public function getGoals()
     {
         return $this->goals;
+    }
+
+    /**
+     * Add deadlines
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     * @return User
+     */
+    public function addDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    {
+        $this->deadlines[] = $deadlines;
+
+        return $this;
+    }
+
+    /**
+     * Remove deadlines
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     */
+    public function removeDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    {
+        $this->deadlines->removeElement($deadlines);
+    }
+
+    /**
+     * Get deadlines
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDeadlines()
+    {
+        return $this->deadlines;
     }
 }

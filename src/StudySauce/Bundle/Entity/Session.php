@@ -18,6 +18,7 @@ class Session
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="sessions")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
@@ -35,7 +36,7 @@ class Session
     /**
      * Set id
      *
-     * @param integer $id
+     * @param string $id
      * @return Session
      */
     public function setId($id)
@@ -48,7 +49,7 @@ class Session
     /**
      * Get id
      *
-     * @return integer 
+     * @return string 
      */
     public function getId()
     {

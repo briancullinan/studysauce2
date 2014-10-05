@@ -1,10 +1,10 @@
-<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php') ?>
+<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
-<?php $view['slots']->start('modal-header') ?>
+ $view['slots']->start('modal-header') ?>
 The Mozart Effect®
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-body') ?>
+ $view['slots']->start('modal-body') ?>
 <p>There is conflicting research about the benefits of listening to Mozart as a method for improving brain performance. Our best advice is to give it a shot and see if it works for you.</p>
 <h3>Resources:</h3>
 <p style="margin-bottom:0;">

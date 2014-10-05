@@ -19,6 +19,7 @@ class Schedule
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="schedules")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
@@ -106,39 +107,6 @@ class Schedule
     public function getUniversity()
     {
         return $this->university;
-    }
-
-    /**
-     * Add courses
-     *
-     * @param \StudySauce\Bundle\Entity\Course $courses
-     * @return Schedule
-     */
-    public function addCourse(\StudySauce\Bundle\Entity\Course $courses)
-    {
-        $this->courses[] = $courses;
-
-        return $this;
-    }
-
-    /**
-     * Remove courses
-     *
-     * @param \StudySauce\Bundle\Entity\Course $courses
-     */
-    public function removeCourse(\StudySauce\Bundle\Entity\Course $courses)
-    {
-        $this->courses->removeElement($courses);
-    }
-
-    /**
-     * Get courses
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getCourses()
-    {
-        return $this->courses;
     }
 
     /**
@@ -280,6 +248,29 @@ class Schedule
     }
 
     /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Schedule
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
      * Set user
      *
      * @param \StudySauce\Bundle\Entity\User $user
@@ -303,25 +294,35 @@ class Schedule
     }
 
     /**
-     * Set created
+     * Add courses
      *
-     * @param \DateTime $created
+     * @param \StudySauce\Bundle\Entity\Course $courses
      * @return Schedule
      */
-    public function setCreated($created)
+    public function addCourse(\StudySauce\Bundle\Entity\Course $courses)
     {
-        $this->created = $created;
+        $this->courses[] = $courses;
 
         return $this;
     }
 
     /**
-     * Get created
+     * Remove courses
      *
-     * @return \DateTime 
+     * @param \StudySauce\Bundle\Entity\Course $courses
      */
-    public function getCreated()
+    public function removeCourse(\StudySauce\Bundle\Entity\Course $courses)
     {
-        return $this->created;
+        $this->courses->removeElement($courses);
+    }
+
+    /**
+     * Get courses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCourses()
+    {
+        return $this->courses;
     }
 }

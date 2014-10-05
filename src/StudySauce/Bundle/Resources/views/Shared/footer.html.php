@@ -54,6 +54,7 @@
             <noscript><img height="1" width="1" alt="" style="display:none"
                            src="https://www.facebook.com/offsite_event.php?id=6008770262329&amp;value=0&amp;currency=USD"/>
             </noscript>
-        <?php endif; ?>
-    <?php endif; ?>
+        <?php endif;
+
+ endif; ?>
 </div>

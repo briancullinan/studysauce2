@@ -1,7 +1,7 @@
 
-<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php') ?>
+<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
-<?php $view['slots']->start('body'); ?>
+ $view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="courses">
 

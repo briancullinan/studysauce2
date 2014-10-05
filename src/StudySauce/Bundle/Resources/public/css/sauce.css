@@ -1,3 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Rufina:400,700,400italic,700italic,400bold,700bold&subset=latin,greek);
+@import url(https://fonts.googleapis.com/css?family=Sintony:400,700,400italic,700italic,400bold,700bold&subset=latin,greek);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic,400bold,700bold&subset=latin,greek);
 
 html
 {
@@ -11,7 +14,7 @@ body
 
 html, body
 {
-    font-family: 'Ubuntu',Arial,sans-serif;
+    font-family: 'Sintony',sans-serif;
     font-size: 16px;
     font-weight: normal;
     line-height: 140%;
@@ -44,6 +47,7 @@ h1
 h2, h3, h4, h5
 {
     text-align: left;
+    font-family: 'Rufina',serif;
 }
 
 h4, h2
@@ -349,6 +353,14 @@ input[type=month],
     margin:0;
 }
 
+.selectize-input,
+.selectize-control.single .selectize-input,
+select,
+.ui-datepicker-title select
+{
+    padding-top:3px;
+}
+
 .ui-datepicker table
 {
     margin:0;
@@ -375,8 +387,8 @@ input[type=month],
 {
     background: #EEEEEE none;
     border-radius: 3px;
-    padding: 2px 5px;
-    margin: -4px 2px;
+    padding: 1px 5px 0 5px;
+    margin: -2px 2px;
     border: 1px solid #CCCCCC;
     vertical-align: top;
 }

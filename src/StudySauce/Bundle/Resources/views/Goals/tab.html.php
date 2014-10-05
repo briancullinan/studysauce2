@@ -5,27 +5,31 @@ use StudySauce\Bundle\Entity\Goal;
 /** @var $milestone Goal */
 /** @var $behavior Goal */
 
-use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php') ?>
+ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
-<?php $view['slots']->start('stylesheets'); ?>
-<?php foreach ($view['assetic']->stylesheets([
+ $view['slots']->start('stylesheets');
+
+ foreach ($view['assetic']->stylesheets([
         '@StudySauceBundle/Resources/public/css/goals.css'
     ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
     ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
-<?php endforeach; ?>
-<?php $view['slots']->stop() ?>
+<?php endforeach;
 
-<?php $view['slots']->start('javascripts'); ?>
-<?php foreach ($view['assetic']->javascripts([
+ $view['slots']->stop();
+
+ $view['slots']->start('javascripts');
+
+ foreach ($view['assetic']->javascripts([
         '@StudySauceBundle/Resources/public/js/goals.js'
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach; ?>
-<?php $view['slots']->stop() ?>
+<?php endforeach;
 
-<?php $view['slots']->start('body'); ?>
+ $view['slots']->stop();
+
+ $view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="goals">
 
@@ -86,7 +90,9 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
                 <a class="more" href="#claim">Brag</a>
             </div>
         </div>
-        <div class="goal-row valid <?php print (empty($behavior) ? 'hide' : ''); ?> <?php print (empty($milestone) ? 'edit' : 'read-only'); ?>">
+        <div class="goal-row valid <?php print (empty($behavior) ? 'hide' : '');
+
+ print (empty($milestone) ? 'edit' : 'read-only'); ?>">
             <div class="type"><strong>Study Milestone</strong></div>
             <div class="milestone">
                 <label class="select">
@@ -115,7 +121,9 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
                 <a class="more" href="#claim">Brag</a>
             </div>
         </div>
-        <div class="goal-row valid <?php print (empty($milestone) ? 'hide' : ''); ?> <?php print (empty($outcome) ? 'edit' : 'read-only'); ?>">
+        <div class="goal-row valid <?php print (empty($milestone) ? 'hide' : '');
+
+ print (empty($outcome) ? 'edit' : 'read-only'); ?>">
             <div class="type"><strong>Study Outcome</strong></div>
             <div class="outcome">
                 <label class="select">
@@ -171,6 +179,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
 
 </div>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:achievement'), ['strategy' => 'sinclude']); ?>
+<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:achievement'), ['strategy' => 'sinclude']);
 
-<?php $view['slots']->stop(); ?>
+ $view['slots']->stop(); ?>

@@ -1,8 +1,9 @@
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
+<?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-<?php $view->extend('Course1Bundle:Lesson1:layout.html.php') ?>
+/** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
+ $view->extend('Course1Bundle:Lesson1:layout.html.php');
 
-<?php $view['slots']->start('body'); ?>
+ $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step3" id="lesson1-step3">
     <div class="pane-content" id="new-award">
         <div>

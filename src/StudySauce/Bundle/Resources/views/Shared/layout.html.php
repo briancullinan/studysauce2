@@ -35,11 +35,11 @@ $collection = $router->getRouteCollection();
     ) as $url):
         ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
-    <?php endforeach; ?>
+    <?php endforeach;
 
-    <?php $view['slots']->output('stylesheets') ?>
+    $view['slots']->output('stylesheets');
 
-    <?php
+
     $allRoutes = $collection->all();
 
     //$routes = [];
@@ -58,9 +58,6 @@ $collection = $router->getRouteCollection();
             $controllerAction = explode(':', $defaults['_controller']);
             $controller = $controllerAction[0];
 
-            //if (!isset($routes[$controller])) {
-                //$routes[$controller] = [];
-            //}
             if (preg_match('/(^|\s)request.isXmlHttpRequest\(\)(\s+|$)/i', $condition)) {
                 $callbackPaths[$route] = $router->generate($route);
                 $callbackKeys[] = $route;
@@ -73,8 +70,6 @@ $collection = $router->getRouteCollection();
                 $callbackUri[] = $router->generate($route);
             }
 
-            // TODO: add lessons with multiple steps
-            //$routes[$controller][] = $route;
         }
     }
 
@@ -99,8 +94,8 @@ $collection = $router->getRouteCollection();
 ) as $url):
     ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach; ?>
+<?php endforeach;
 
-<?php $view['slots']->output('javascripts') ?>
+ $view['slots']->output('javascripts') ?>
 </body>
 </html>

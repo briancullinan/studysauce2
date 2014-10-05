@@ -1,6 +1,6 @@
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
+<?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Course:menu')); ?>
+ echo $view['actions']->render(new ControllerReference('StudySauceBundle:Course:menu')); ?>
 
 <aside id="right-panel" class="collapsed">
     <nav>

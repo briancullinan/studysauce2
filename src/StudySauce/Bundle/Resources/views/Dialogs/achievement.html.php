@@ -1,10 +1,10 @@
-<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php') ?>
+<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
-<?php $view['slots']->start('modal-header') ?>
+ $view['slots']->start('modal-header') ?>
 Let your sponsor know about your study achievement.
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-body') ?>
+ $view['slots']->start('modal-body') ?>
 <div class="field-type-image field-name-field-photo-evidence field-widget-image-plupload ">
     <div class="form-item form-type-plupload-file">
         <div class="plupload" id="goals-plupload" style="position: relative;">
@@ -43,9 +43,9 @@ Let your sponsor know about your study achievement.
         </div>
     </div>
 </div>
-<?php $view['slots']->stop() ?>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->start('modal-footer') ?>
+ $view['slots']->start('modal-footer') ?>
 <button type="button" class="btn btn-primary">Save</button>
 <?php $view['slots']->stop() ?>
 

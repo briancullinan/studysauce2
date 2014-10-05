@@ -11,29 +11,33 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var $schedule Schedule */
 /** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
 
-?>
 
-<?php $view->extend('StudySauceBundle:Shared:dashboard.html.php') ?>
 
-<?php $view['slots']->start('stylesheets'); ?>
-<?php foreach ($view['assetic']->stylesheets([
+ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
+
+ $view['slots']->start('stylesheets');
+
+ foreach ($view['assetic']->stylesheets([
         '@StudySauceBundle/Resources/public/css/schedule.css'
     ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
     ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
-<?php endforeach; ?>
-<?php $view['slots']->stop() ?>
+<?php endforeach;
 
-<?php $view['slots']->start('javascripts'); ?>
-<?php foreach ($view['assetic']->javascripts([
+ $view['slots']->stop();
+
+ $view['slots']->start('javascripts');
+
+ foreach ($view['assetic']->javascripts([
         '@StudySauceBundle/Resources/public/js/schedule.js'
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach; ?>
-<?php $view['slots']->stop() ?>
+<?php endforeach;
 
-<?php $view['slots']->start('body'); ?>
+ $view['slots']->stop();
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), ['strategy' => 'sinclude']); ?>
+ $view['slots']->start('body');
+
+ echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), ['strategy' => 'sinclude']); ?>
 
 <div class="panel-pane" id="schedule">
 
@@ -74,6 +78,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
     }
     foreach($courses as $i => $c)
     {
+        if($isDemo && $i > 5)
+            break;
         /** @var $c Course */
         $daysOfTheWeek = explode(',', $c->getDotw());
         $startDate = null;
@@ -108,38 +114,38 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
                 <label class="input">
                     <span>Time</span>
                     <input type="text" placeholder="Start" title="What time does your class begin?"
-                           autocomplete="off" value="<?php print ($startDate == null ? '' : date('H:i:s', $startDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('H:i:s', $startDate)); ?>">
                 </label>
                 <label class="input mobile-only">
                     <span>Time</span>
                     <input type="time" title="What time does your class begin?"
-                           autocomplete="off" value="<?php print ($startDate == null ? '' : date('H:i:s', $startDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('H:i:s', $startDate)); ?>">
                 </label>
             </div>
             <div class="end-time">
                 <label class="input">
                     <span>&nbsp;</span>
                     <input type="text" placeholder="End" title="What time does your class end?" autocomplete="off"
-                           value="<?php print ($endDate == null ? '' : date('H:i:s', $endDate)); ?>">
+                           value="<?php print ($isDemo || $endDate == null ? '' : date('H:i:s', $endDate)); ?>">
                 </label>
                 <label class="input mobile-only">
                     <span>&nbsp;</span>
                     <input type="time" title="What time does your class end?" autocomplete="off"
-                           value="<?php print ($endDate == null ? '' : date('H:i:s', $endDate)); ?>">
+                           value="<?php print ($isDemo || $endDate == null ? '' : date('H:i:s', $endDate)); ?>">
                 </label>
             </div>
             <div class="start-date">
                 <label class="input">
                     <span>Date</span>
                     <input type="text" placeholder="First class" title="What day does your academic term begin?"
-                           autocomplete="off" value="<?php print ($startDate == null ? '' : date('m/d/Y', $startDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/Y', $startDate)); ?>">
                 </label>
             </div>
             <div class="end-date">
                 <label class="input">
                     <span>&nbsp;</span>
                     <input type="text" placeholder="Last class" title="What day does your academic term end?"
-                           autocomplete="off" value="<?php print ($endDate == null ? '' : date('m/d/Y', $endDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/Y', $endDate)); ?>">
                 </label>
             </div>
             <input type="hidden" name="event-type" value="c">
@@ -177,10 +183,12 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
     <?php
     if(empty($courses)) {
         $isDemo = true;
-        $courses = $demoOthers;
+        $others = $demoOthers;
     }
     foreach($others as $i => $c)
     {
+        if($isDemo && $i > 0)
+            break;
         /** @var $c Course */
         $daysOfTheWeek = explode(',', $c->getDotw());
         $startDate = null;
@@ -220,13 +228,13 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
                 <div class="input">
                     <label><span>Time</span>
                         <input type="text" placeholder="Start" autocomplete="off"
-                               value="<?php print ($startDate == null ? '' : date('H:i:s', $startDate)); ?>">
+                               value="<?php print ($isDemo || $startDate == null ? '' : date('H:i:s', $startDate)); ?>">
                     </label>
                 </div>
                 <div class="input mobile-only">
                     <label><span>Time</span>
                         <input type="time" title="What time does your class begin?" autocomplete="off"
-                               value="<?php print ($startDate == null ? '' : date('H:i:s', $startDate)); ?>">
+                               value="<?php print ($isDemo || $startDate == null ? '' : date('H:i:s', $startDate)); ?>">
                     </label>
                 </div>
             </div>
@@ -234,26 +242,26 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
                 <label class="input">
                     <span>&nbsp;</span>
                     <input type="text" placeholder="End" autocomplete="off"
-                           value="<?php print ($endDate == null ? '' : date('H:i:s', $endDate)); ?>">
+                           value="<?php print ($isDemo || $endDate == null ? '' : date('H:i:s', $endDate)); ?>">
                 </label>
                 <label class="input mobile-only">
                     <span>&nbsp;</span>
                     <input type="time" title="What time does your class end?" autocomplete="off"
-                           value="<?php print ($endDate == null ? '' : date('H:i:s', $endDate)); ?>">
+                           value="<?php print ($isDemo || $endDate == null ? '' : date('H:i:s', $endDate)); ?>">
                 </label>
             </div>
             <div class="start-date">
                 <label class="input">
                     <span>Date</span>
                     <input type="text" placeholder="Start"
-                           autocomplete="off" value="<?php print ($startDate == null ? '' : date('m/d/Y', $startDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/Y', $startDate)); ?>">
                 </label>
             </div>
             <div class="end-date">
                 <label class="input">
                     <span>&nbsp;</span>
                     <input type="text" placeholder="End"
-                           autocomplete="off" value="<?php print ($endDate == null ? '' : date('m/d/Y', $endDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/Y', $endDate)); ?>">
                 </label>
             </div>
             <input type="hidden" name="event-type" value="o">

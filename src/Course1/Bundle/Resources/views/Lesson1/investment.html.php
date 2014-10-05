@@ -1,8 +1,8 @@
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
+<?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-<?php $view->extend('Course1Bundle:Lesson1:layout.html.php') ?>
+ $view->extend('Course1Bundle:Lesson1:layout.html.php');
 
-<?php $view['slots']->start('body'); ?>
+ $view['slots']->start('body'); ?>
 <div class="panel-pane course1" id="lesson1-step4">
 
     <div class="pane-content">
@@ -17,12 +17,12 @@
     </div>
 </div>
 
-<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 3, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 3, '_format' => 'tab']), ['strategy' => 'sinclude']);
 
-<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 2, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+ echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 2, '_format' => 'tab']), ['strategy' => 'sinclude']);
 
-<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 1, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+ echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 1, '_format' => 'tab']), ['strategy' => 'sinclude']);
 
-<?php echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 0, '_format' => 'tab']), ['strategy' => 'sinclude']); ?>
+ echo $view['actions']->render(new ControllerReference('Course1Bundle:Lesson1:wizard', ['_step' => 0, '_format' => 'tab']), ['strategy' => 'sinclude']);
 
-<?php $view['slots']->stop(); ?>
+ $view['slots']->stop(); ?>
