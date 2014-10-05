@@ -8,6 +8,31 @@ function onYouTubeIframeAPIReady(playerId) {
     });
 }
 
+function ssMergeStyles(content)
+{
+    var styles = $.merge(content.filter('link[type="text/css"]'), content.find('link[type="text/css"]'));
+
+    $(styles).each(function () {
+        var url = $(this).attr('href');
+        if (typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0)
+            $('head').append('<link href="' + url + '" type="text/css" rel="stylesheet" />');
+        else {
+            var re = (/url\("(.*?)"\)/ig),
+                match,
+                media = $(this).attr('media');
+            while (match = re.exec($(this).html())) {
+                if ($('link[href="' + match[1] + '"]').length == 0 &&
+                    $('style:contains("' + match[1] + '")').length == 0) {
+                    if (typeof media == 'undefined' || media == 'all')
+                        $('head').append('<link href="' + match[1] + '" type="text/css" rel="stylesheet" />');
+                    else
+                        $('head').append('<style media="' + media + '">@import url("' + match[1] + '");');
+                }
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
 
     Date.prototype.addHours= function(h){
@@ -58,28 +83,9 @@ $(document).ready(function () {
                     success: function (tab) {
                         var content = $(tab),
                             panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
-                            styles = $.merge(content.filter('link[type="text/css"]'), content.find('link[type="text/css"]')),
                             scripts = $.merge(content.filter('script[type="text/javascript"]'), content.find('script[type="text/javascript"]'));
 
-                        $(styles).each(function () {
-                            var url = $(this).attr('href');
-                            if (typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0)
-                                $('head').append('<link href="' + url + '" type="text/css" rel="stylesheet" />');
-                            else {
-                                var re = (/url\("(.*?)"\)/ig),
-                                    match,
-                                    media = $(this).attr('media');
-                                while (match = re.exec($(this).html())) {
-                                    if ($('link[href="' + match[1] + '"]').length == 0 &&
-                                        $('style:contains("' + match[1] + '")').length == 0) {
-                                        if (typeof media == 'undefined' || media == 'all')
-                                            $('head').append('<link href="' + match[1] + '" type="text/css" rel="stylesheet" />');
-                                        else
-                                            $('head').append('<style media="' + media + '">@import url("' + match[1] + '");');
-                                    }
-                                }
-                            }
-                        });
+                        ssMergeStyles(content);
 
                         $(scripts).each(function () {
                             var url = $(this).attr('src');

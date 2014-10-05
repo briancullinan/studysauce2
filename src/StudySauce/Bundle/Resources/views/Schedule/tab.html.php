@@ -16,28 +16,22 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
  $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
  $view['slots']->start('stylesheets');
-
  foreach ($view['assetic']->stylesheets([
         '@StudySauceBundle/Resources/public/css/schedule.css'
     ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
     ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
-
  $view['slots']->stop();
 
  $view['slots']->start('javascripts');
-
  foreach ($view['assetic']->javascripts([
         '@StudySauceBundle/Resources/public/js/schedule.js'
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
+$view['slots']->stop();
 
- $view['slots']->stop();
-
- $view['slots']->start('body');
-
- echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), ['strategy' => 'sinclude']); ?>
+ $view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="schedule">
 
@@ -284,4 +278,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 </div>
 </div>
 
-<?php $view['slots']->stop(); ?>
+<?php $view['slots']->stop();
+
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), ['strategy' => 'sinclude']);
+$view['slots']->stop();

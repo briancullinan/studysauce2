@@ -96,6 +96,10 @@ $collection = $router->getRouteCollection();
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 
- $view['slots']->output('javascripts') ?>
+$view['slots']->output('javascripts');
+$view['slots']->output('sincludes');
+
+echo $view->render('StudySauceBundle:Shared:footer.html.php');
+?>
 </body>
 </html>

@@ -64,7 +64,7 @@ class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
             $session->set('noInclude', true);
         else
             $noInclude = $session->get('noInclude');
-        if($noInclude)
+        if($noInclude || $request->isXmlHttpRequest())
         {
             $renderer = new InlineFragmentRenderer($this->kernel, $this->dispatcher);
             return $renderer->render($uri, $request, $options);

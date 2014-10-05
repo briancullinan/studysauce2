@@ -21,10 +21,9 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
+$view['slots']->stop();
 
- $view['slots']->stop();
-
- $view['slots']->start('body'); ?>
+$view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="checkin">
 
@@ -105,6 +104,8 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 </div>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinempty'), ['strategy' => 'sinclude']);
+<?php $view['slots']->stop();
 
- $view['slots']->stop(); ?>
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinempty'), ['strategy' => 'sinclude']);
+$view['slots']->stop();

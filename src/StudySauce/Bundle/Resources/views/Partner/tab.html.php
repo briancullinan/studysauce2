@@ -9,8 +9,7 @@
     ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
     ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
-
- $view['slots']->stop();
+$view['slots']->stop();
 
  $view['slots']->start('body'); ?>
 
@@ -115,6 +114,8 @@
 
 </div>
 
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerinvite'), ['strategy' => 'sinclude']);
+<?php $view['slots']->stop();
 
- $view['slots']->stop(); ?>
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerinvite'), ['strategy' => 'sinclude']);
+$view['slots']->stop();
