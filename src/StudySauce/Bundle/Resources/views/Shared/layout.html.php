@@ -51,7 +51,8 @@ $collection = $router->getRouteCollection();
     foreach ($allRoutes as $route => $params) {
         $defaults = $params->getDefaults();
         $condition = $params->getCondition();
-        $requirement = $params->getRequirement('_format');
+        $format = $params->getRequirement('_format');
+        $step = $params->getRequirement('_step');
         $path = $params->getPath();
 
         if (isset($defaults['_controller'])) {
@@ -64,12 +65,23 @@ $collection = $router->getRouteCollection();
                 $callbackUri[] = $router->generate($route);
             }
 
-            if (!empty($requirement) && strpos($requirement, 'tab') > -1) {
+            if (!empty($format) && strpos($format, 'tab') > -1) {
                 $callbackPaths[$route] = $router->generate($route, ['_format' => 'tab']);
                 $callbackKeys[] = $route;
                 $callbackUri[] = $router->generate($route);
             }
 
+            if (!empty($step) && is_numeric(explode('|', $step)[0])) {
+                foreach (explode('|', $step) as $j) {
+                    $key = $route . (intval($j) > 0 ? ('-step' . intval($j)) : '');
+                    $callbackPaths[$key] = $router->generate(
+                        $route,
+                        ['_step' => intval($j), '_format' => 'tab']
+                    );
+                    $callbackKeys[] = $key;
+                    $callbackUri[] = $router->generate($route, ['_step' => intval($j)]);
+                }
+            }
         }
     }
 

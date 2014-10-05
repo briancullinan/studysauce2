@@ -10,6 +10,10 @@
         <h2>Great job!</h2>
         <h3>Finally, before we get started, we have one last easy question for you.</h3>
         <h3>Why do you want to become better at studying?</h3>
+        <label class="input">
+            <span>Enter your response below:</span>
+            <textarea placeholder="" cols="60" rows="2"></textarea>
+        </label>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('schedule'); ?>" class="more">Go</a>
         </div>

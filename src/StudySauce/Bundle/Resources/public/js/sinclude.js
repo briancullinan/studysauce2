@@ -62,7 +62,11 @@ var hinclude;
       while (hinclude.buffer.length > 0) {
         var include = hinclude.buffer.pop();
         if (include[1].status === 200 || include[1].status === 304) {
-          include[0].innerHTML = include[1].responseText;
+            var newStuff = $(include[1].responseText),
+                styles = ssMergeStyles(newStuff),
+                scripts = ssMergeScripts(newStuff);
+            newStuff = newStuff.not(styles).not(scripts);
+            newStuff.appendTo($(include[0]));
         }
         include[0].className = hinclude.classprefix + include[1].status;
       }

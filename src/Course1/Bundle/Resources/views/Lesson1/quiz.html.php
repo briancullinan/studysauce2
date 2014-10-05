@@ -7,31 +7,63 @@
 
     <div class="pane-content">
 
-        <h2>Now let's see how much you remember</h2>
-        Grade level
-        Mindset question
-        Time management question
-        Electronic devices
-        Study hours per day
+        <h2>To help us better tailor Study Sauce to you, please answer the below questions.</h2>
 
         <div class="questions">
-            <h3>Which do you agree with more?</h3>
-            <label class="radio"><input name="quiz-1" type="radio" value="born"><i></i><span>Some people are born good at academics.</span></label>
-            <label class="radio"><input name="quiz-1" type="radio" value="practice"><i></i><span>People become good at academics through experience and building skills.</span></label>
+            <h3>What grade are you in?</h3>
+            <label class="radio"><input name="quiz-education" type="radio" value="highschool"><i></i><span>High school student</span></label>
+            <label class="radio"><input name="quiz-education" type="radio" value="college-freshman"><i></i><span>College Freshman</span></label>
+            <label class="radio"><input name="quiz-education" type="radio" value="college-sophomore"><i></i><span>College Sophomore</span></label>
+            <label class="radio"><input name="quiz-education" type="radio" value="college-junior"><i></i><span>College Junior</span></label>
+            <label class="radio"><input name="quiz-education" type="radio" value="college-senior"><i></i><span>College Senior</span></label>
+            <label class="radio"><input name="quiz-education" type="radio" value="graduate"><i></i><span>Graduate student</span></label>
         </div>
         <div class="results">
-            <h3>Correct!</h3>
-            <p>Simply varying the location of where you study has been proven to dramatically improve information retention.</p>
+            <h3></h3>
+            <p>We are excited to help you learn how to study more effectively.</p>
         </div>
         <hr />
         <div class="questions">
-            <h3>How do your manage your weekends?</h3>
-            <label class="radio"><input name="quiz-2" type="radio" value="hit_hard"><i></i><span>Hit hard, keep weeks open</span></label>
-            <label class="radio"><input name="quiz-2" type="radio" value="light_work"><i></i><span>Light work, focus during the week</span></label>
+            <h3>Which do you agree with more?</h3>
+            <label class="radio"><input name="quiz-mindset" type="radio" value="born"><i></i><span>Some people are born good at academics.</span></label>
+            <label class="radio"><input name="quiz-mindset" type="radio" value="practice"><i></i><span>People become good at academics through experience and building skills.</span></label>
         </div>
         <div class="results">
-            <h3>Wrong.</h3>
-            <p>It turns out that highlighting and underlining are some of the least effective study methods.&nbsp; Don't spend too much time doing them.&nbsp; Instead, quickly identify the important material and then create flash cards.&nbsp; Flash cards are a very effective way to train your brain to remember important information.</p>
+            <h3></h3>
+            <p>We will talk about this concept in great detail later in the course.</p>
+        </div>
+        <hr />
+        <div class="questions">
+            <h3>How do you manage your time studying for exams?</h3>
+            <label class="radio"><input name="quiz-time-management" type="radio" value="advance"><i></i><span>I have to space out my studying far in advance of my exam. Otherwise, I get too stressed out.</span></label>
+            <label class="radio"><input name="quiz-time-management" type="radio" value="cram"><i></i><span>I try to space it out, but usually end up cramming a day or two before my exam.</span></label>
+            <label class="radio"><input name="quiz-time-management" type="radio" value="pressure"><i></i><span>I do my best work under pressure and plan to cram before each exam.</span></label>
+        </div>
+        <div class="results">
+            <h3></h3>
+            <p>Our study tools will help you break the procrastination habit.</p>
+        </div>
+        <hr />
+        <div class="questions">
+            <h3>How do you manage your electronic devices when you study?</h3>
+            <label class="radio"><input name="quiz-devices" type="radio" value="on"><i></i><span>I keep them nearby. I will respond to texts, etc. if I get them, and then I right back to work.</span></label>
+            <label class="radio"><input name="quiz-devices" type="radio" value="off"><i></i><span>I turn them off or put them somewhere so they won't distract me.</span></label>
+        </div>
+        <div class="results">
+            <h3></h3>
+            <p>Get ready to learn how your electronic devices are killing your ability to study effectively.</p>
+        </div>
+        <hr />
+        <div class="questions">
+            <h3>How much do you study per day?</h3>
+            <label class="radio"><input name="quiz-study-much" type="radio" value="one"><i></i><span>0-1 hour</span></label>
+            <label class="radio"><input name="quiz-study-much" type="radio" value="two"><i></i><span>1-2 hours</span></label>
+            <label class="radio"><input name="quiz-study-much" type="radio" value="four"><i></i><span>2-4 hours</span></label>
+            <label class="radio"><input name="quiz-study-much" type="radio" value="more"><i></i><span>4+ hours</span></label>
+        </div>
+        <div class="results">
+            <h3></h3>
+            <p>We will help you develop a plan to make sure that you are spending the right amount of time studying.</p>
         </div>
 
         <div class="highlighted-link">

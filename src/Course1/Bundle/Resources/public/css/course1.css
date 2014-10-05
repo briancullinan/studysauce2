@@ -104,16 +104,21 @@
 {
     padding-left:40px;
     display: block;
+    position: relative;
+}
+
+#lesson2-step2 label.input span
+{
+    position:absolute;
+    left:0;
+    top:50%;
+    margin-top:-12px;
 }
 
 .course1.step2 label i
 {
     margin-left:-40px;
     margin-right:20px;
-}
-
-.course1.step2 label span
-{
 }
 
 .course1.step2 .highlighted-link
@@ -171,7 +176,12 @@
 #lesson1-step1 .tab-tracker li:nth-child(2),
 #lesson1-step2 .tab-tracker li:nth-child(3),
 #lesson1-step3 .tab-tracker li:nth-child(4),
-#lesson1-step4 .tab-tracker li:nth-child(5)
+#lesson1-step4 .tab-tracker li:nth-child(5),
+#lesson2 .tab-tracker li:first-child,
+#lesson2-step1 .tab-tracker li:nth-child(2),
+#lesson2-step2 .tab-tracker li:nth-child(3),
+#lesson2-step3 .tab-tracker li:nth-child(4),
+#lesson2-step4 .tab-tracker li:nth-child(5)
 {
     font-size: 60px;
     color: #0099BB;

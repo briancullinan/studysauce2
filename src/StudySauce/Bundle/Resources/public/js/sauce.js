@@ -31,6 +31,23 @@ function ssMergeStyles(content)
             }
         }
     });
+
+    return styles;
+}
+
+function ssMergeScripts(content)
+{
+    var scripts = $.merge(content.filter('script[type="text/javascript"]'), content.find('script[type="text/javascript"]'));
+
+    $(scripts).each(function () {
+        var url = $(this).attr('src');
+        if (typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0) {
+            $.getScript(url.replace(/\?.*/ig, ''));
+            console.log(url.replace(/\?.*/ig, ''));
+        }
+    });
+
+    return scripts;
 }
 
 $(document).ready(function () {
@@ -82,19 +99,11 @@ $(document).ready(function () {
                     dataType: 'text',
                     success: function (tab) {
                         var content = $(tab),
-                            panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
-                            scripts = $.merge(content.filter('script[type="text/javascript"]'), content.find('script[type="text/javascript"]'));
+                            panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane'));
 
                         ssMergeStyles(content);
 
-                        $(scripts).each(function () {
-                            var url = $(this).attr('src');
-                            if (typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0) {
-                                $.getScript(url.replace(/\?.*/ig, ''));
-                                console.log(url.replace(/\?.*/ig, ''));
-                            }
-                        });
-
+                        ssMergeScripts(content);
 
                         if (panelIds.length > 0)
                             panes = panes.not('#' + panelIds.join(', #'));
@@ -177,15 +186,15 @@ $(document).ready(function () {
         activateMenu(window.location.pathname);
 
     window.onpopstate = function(e){
-        if(typeof window.callbackPaths[e.state] != 'undefined') {
-            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state)], true);
+        if(typeof window.callbackPaths[e.state || window.location.pathname] != 'undefined') {
+            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state || window.location.pathname)], true);
         }
     };
 
     window.onpushstate = function(e){
-        if(typeof window.callbackPaths[e.state] != 'undefined')
+        if(typeof window.callbackPaths[e.state || window.location.pathname] != 'undefined')
         {
-            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state)], true);
+            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state || window.location.pathname)], true);
         }
     };
 

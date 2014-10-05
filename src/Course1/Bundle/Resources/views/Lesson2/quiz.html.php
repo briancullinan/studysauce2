@@ -9,29 +9,45 @@
         <h2>Now let's see how much you remember</h2>
 
         <div class="questions">
-            <h3>Which do you agree with more?</h3>
-            <label class="radio"><input name="quiz-1" type="radio" value="born"><i></i><span>Some people are born good at academics.</span></label>
-            <label class="radio"><input name="quiz-1" type="radio" value="practice"><i></i><span>People become good at academics through experience and building skills.</span></label>
+            <h3>How much more likely are you to perform at a higher level if you set specific and challenging goals?</h3>
+            <label class="radio"><input name="quiz-goal-performance" type="radio" value="20"><i></i><span>20%</span></label>
+            <label class="radio"><input name="quiz-goal-performance" type="radio" value="40"><i></i><span>40%</span></label>
+            <label class="radio"><input name="quiz-goal-performance" type="radio" value="60"><i></i><span>60%</span></label>
+            <label class="radio"><input name="quiz-goal-performance" type="radio" value="90"><i></i><span>90%</span></label>
         </div>
         <div class="results">
             <h3>Correct!</h3>
-            <p>Simply varying the location of where you study has been proven to dramatically improve information retention.</p>
+            <p>You are 90% more likely to perform at a higher level if you set specific and challenging goals.</p>
         </div>
         <hr />
         <div class="questions">
-            <h3>How do your manage your weekends?</h3>
-            <label class="radio"><input name="quiz-2" type="radio" value="hit_hard"><i></i><span>Hit hard, keep weeks open</span></label>
-            <label class="radio"><input name="quiz-2" type="radio" value="light_work"><i></i><span>Light work, focus during the week</span></label>
+            <h3>What does the SMART acronym stand for?</h3>
+            <label class="input"><span>S</span><input name="quiz-smart-acronym-S" type="text" value=""></label>
+            <label class="input"><span>M</span><input name="quiz-smart-acronym-M" type="text" value=""></label>
+            <label class="input"><span>A</span><input name="quiz-smart-acronym-A" type="text" value=""></label>
+            <label class="input"><span>R</span><input name="quiz-smart-acronym-R" type="text" value=""></label>
+            <label class="input"><span>T</span><input name="quiz-smart-acronym-T" type="text" value=""></label>
         </div>
         <div class="results">
             <h3>Wrong.</h3>
-            <p>It turns out that highlighting and underlining are some of the least effective study methods.&nbsp; Don't spend too much time doing them.&nbsp; Instead, quickly identify the important material and then create flash cards.&nbsp; Flash cards are a very effective way to train your brain to remember important information.</p>
+            <p>Answers are specific, measurable, achievable, relevant, time-bound</p>
+        </div>
+        <hr />
+        <div class="questions">
+            <h3>What are the two types of motivation?</h3>
+            <label class="input"><span>1</span><input name="quiz-motivation-I" type="text" value=""></label>
+            <label class="input"><span>2</span><input name="quiz-motivation-E" type="text" value=""></label>
+        </div>
+        <div class="results">
+            <h3>Wrong.</h3>
+            <p>The two types of motivation are intrinsic and extrinsic motivation.  Intrinsic motivation is motivation that comes from within.  Ex. studying because you want the satisfaction of learning something new.  Extrinsic motivation is a reward that comes externally.  Ex. studying in order to get a good grade.</p>
         </div>
 
         <div class="highlighted-link">
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('lesson2', ['_step' => 3]); ?>" class="more">Next</a>
         </div>
+        <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>
 </div>
 

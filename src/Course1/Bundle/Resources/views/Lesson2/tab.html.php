@@ -2,16 +2,14 @@
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step0" id="lesson2">
-
     <div class="pane-content">
-
         <h2>In this course you will learn:</h2>
 
         <ol>
-            <li><a ><span>1</span>Introduction to StudySauce</a></li>
-            <li><a ><span>2</span>How to progress</a></li>
-            <li><a ><span>3</span>Where to start</a></li>
-            <li><a ><span>4</span>Study schedule</a></li>
+            <li><a ><span>1</span>Why goal setting is so powerful</a></li>
+            <li><a ><span>2</span>How your brain works while you are studying</a></li>
+            <li><a ><span>3</span>How to set effective goals</a></li>
+            <li><a ><span>4</span>How to stay motivated with intrinsic and extrinsic rewards</a></li>
         </ol>
         <div class="player-divider">
             <div class="player-wrapper">
@@ -22,7 +20,7 @@
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('lesson2', ['_step' => 1]); ?>" class="more">Launch</a>
         </div>
+        <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>
-
 </div>
 <?php $view['slots']->stop(); ?>
