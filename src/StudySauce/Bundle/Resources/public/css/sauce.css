@@ -82,7 +82,7 @@ input[type="button"].more
     -webkit-appearance: none;
     margin: 0;
     text-align: center;
-    padding: 10px 15px;
+    padding: 15px 20px;
     font-weight: 800;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -353,7 +353,7 @@ input[type=month],
 
 textarea
 {
-    height:4em;
+    height:8em;
 }
 
 .selectize-input,

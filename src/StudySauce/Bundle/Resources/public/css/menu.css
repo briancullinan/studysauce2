@@ -183,6 +183,7 @@
     display:block;
     padding:10px 0 10px 50px;
     position:relative;
+    letter-spacing: -1px;
 }
 
 .main-menu a
@@ -349,33 +350,105 @@
     background-position: left -2705px;
 }
 
-.pane-content a[href*="/goals"],
-.pane-content a[href*="/deadlines"],
-.pane-content a[href*="/checkin"],
-.pane-content a[href*="/metrics"],
-.pane-content a[href*="/plan"],
-.pane-content a[href*="/partner"],
-.pane-content a[href*="/profile"],
-.pane-content a[href*="/tips"],
-.pane-content a[href*="/premium"],
-.pane-content a[href*="/account"],
-.pane-content a[href*="/schedule"]
+#right-panel .main-menu a[href*="#calculator"] span
+{
+    background-position: left -3605px;
+}
+
+#right-panel .main-menu a[href*="#calculator"]:hover span,
+#right-panel .main-menu a[href*="#calculator"]:focus span,
+#right-panel .main-menu a[href*="#calculator"]:active span,
+#right-panel .main-menu a[href*="#calculator"].active span {
+    background-position: left -3705px;
+}
+
+#right-panel .main-menu a[href*="#midterm"] span
+{
+    background-position: left -3805px;
+}
+
+#right-panel .main-menu a[href*="#midterm"]:hover span,
+#right-panel .main-menu a[href*="#midterm"]:focus span,
+#right-panel .main-menu a[href*="#midterm"]:active span,
+#right-panel .main-menu a[href*="#midterm"].active span {
+    background-position: left -3905px;
+}
+
+#right-panel .main-menu a[href*="#quizlet"] span
+{
+    background-position: left -4005px;
+}
+
+#right-panel .main-menu a[href*="#quizlet"]:hover span,
+#right-panel .main-menu a[href*="#quizlet"]:focus span,
+#right-panel .main-menu a[href*="#quizlet"]:active span,
+#right-panel .main-menu a[href*="#quizlet"].active span {
+    background-position: left -4105px;
+}
+
+#right-panel .main-menu a[href*="#drive"] span
+{
+    background-position: left -4205px;
+}
+
+#right-panel .main-menu a[href*="#drive"]:hover span,
+#right-panel .main-menu a[href*="#drive"]:focus span,
+#right-panel .main-menu a[href*="#drive"]:active span,
+#right-panel .main-menu a[href*="#drive"].active span {
+    background-position: left -4305px;
+}
+
+#right-panel .main-menu a[href*="#evernote"] span
+{
+    background-position: left -4405px;
+}
+
+#right-panel .main-menu a[href*="#evernote"]:hover span,
+#right-panel .main-menu a[href*="#evernote"]:focus span,
+#right-panel .main-menu a[href*="#evernote"]:active span,
+#right-panel .main-menu a[href*="#evernote"].active span {
+    background-position: left -4505px;
+}
+
+#right-panel .main-menu a[href*="#blackboard"] span
+{
+    background-position: left -4605px;
+}
+
+#right-panel .main-menu a[href*="#blackboard"]:hover span,
+#right-panel .main-menu a[href*="#blackboard"]:focus span,
+#right-panel .main-menu a[href*="#blackboard"]:active span,
+#right-panel .main-menu a[href*="#blackboard"].active span {
+    background-position: left -4705px;
+}
+
+.pane-content a[href*="/goals"]:not(.more),
+.pane-content a[href*="/deadlines"]:not(.more),
+.pane-content a[href*="/checkin"]:not(.more),
+.pane-content a[href*="/metrics"]:not(.more),
+.pane-content a[href*="/plan"]:not(.more),
+.pane-content a[href*="/partner"]:not(.more),
+.pane-content a[href*="/profile"]:not(.more),
+.pane-content a[href*="/tips"]:not(.more),
+.pane-content a[href*="/premium"]:not(.more),
+.pane-content a[href*="/account"]:not(.more),
+.pane-content a[href*="/schedule"]:not(.more)
 {
     padding-left:30px;
     position:relative;
 }
 
-.pane-content a[href*="/goals"]:before,
-.pane-content a[href*="/deadlines"]:before,
-.pane-content a[href*="/checkin"]:before,
-.pane-content a[href*="/metrics"]:before,
-.pane-content a[href*="/plan"]:before,
-.pane-content a[href*="/partner"]:before,
-.pane-content a[href*="/profile"]:before,
-.pane-content a[href*="/tips"]:before,
-.pane-content a[href*="/premium"]:before,
-.pane-content a[href*="/account"]:before,
-.pane-content a[href*="/schedule"]:before
+.pane-content a[href*="/goals"]:not(.more):before,
+.pane-content a[href*="/deadlines"]:not(.more):before,
+.pane-content a[href*="/checkin"]:not(.more):before,
+.pane-content a[href*="/metrics"]:not(.more):before,
+.pane-content a[href*="/plan"]:not(.more):before,
+.pane-content a[href*="/partner"]:not(.more):before,
+.pane-content a[href*="/profile"]:not(.more):before,
+.pane-content a[href*="/tips"]:not(.more):before,
+.pane-content a[href*="/premium"]:not(.more):before,
+.pane-content a[href*="/account"]:not(.more):before,
+.pane-content a[href*="/schedule"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
     content: " ";
@@ -388,7 +461,7 @@
     top:50%;
 }
 
-.pane-content a[href*="/goals"]:before
+.pane-content a[href*="/goals"]:not(.more):before
 {
 }
 
@@ -400,7 +473,7 @@
     background-position: left -352px;
 }
 
-.pane-content a[href*="/deadlines"]:before
+.pane-content a[href*="/deadlines"]:not(.more):before
 {
     background-position: left -402px;
 }
@@ -412,7 +485,7 @@
     background-position: left -452px;
 }
 
-.pane-content a[href*="/checkin"]:before
+.pane-content a[href*="/checkin"]:not(.more):before
 {
     background-position: left -502px;
 }
@@ -424,7 +497,7 @@
     background-position: left -552px;
 }
 
-.pane-content a[href*="/metrics"]:before
+.pane-content a[href*="/metrics"]:not(.more):before
 {
     background-position: left -602px;
 }
@@ -436,7 +509,7 @@
     background-position: left -652px;
 }
 
-.pane-content a[href*="/plan"]:before
+.pane-content a[href*="/plan"]:not(.more):before
 {
     background-position: left -702px;
 }
@@ -448,7 +521,7 @@
     background-position: left -752px;
 }
 
-.pane-content a[href*="/partner"]:before
+.pane-content a[href*="/partner"]:not(.more):before
 {
     background-position: left -802px;
 }
@@ -460,7 +533,7 @@
     background-position: left -852px;
 }
 
-.pane-content a[href*="/profile"]:before
+.pane-content a[href*="/profile"]:not(.more):before
 {
     background-position: left -902px;
 }
@@ -472,7 +545,7 @@
     background-position: left -952px;
 }
 
-.pane-content a[href*="/tips"]:before
+.pane-content a[href*="/tips"]:not(.more):before
 {
     background-position: left -1002px;
 }
@@ -484,7 +557,7 @@
     background-position: left -1052px;
 }
 
-.pane-content a[href*="/premium"]:before
+.pane-content a[href*="/premium"]:not(.more):before
 {
     background-position: left -1102px;
 }
@@ -496,7 +569,7 @@
     background-position: left -1152px;
 }
 
-.pane-content a[href*="/account"]:before
+.pane-content a[href*="/account"]:not(.more):before
 {
     background-position: left -1202px;
 }
@@ -508,7 +581,7 @@
     background-position: left -1252px;
 }
 
-.pane-content a[href*="/schedule"]:before
+.pane-content a[href*="/schedule"]:not(.more):before
 {
     background-position: left -1302px;
 }

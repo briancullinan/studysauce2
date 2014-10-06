@@ -20,8 +20,8 @@
             <li><a href="<?php print $view['router']->generate('tips'); ?>"><span>&nbsp;</span>Tips</a></li>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>
             <li><h3>Coming soon</h3></li>
-            <li><a href=""><span>&nbsp;</span>Midterm/final planner</a></li>
-            <li><a href=""><span>&nbsp;</span>Grade calculator</a></li>
+            <li><a href="#midterm"><span>&nbsp;</span>Midterm/final planner</a></li>
+            <li><a href="#calculator"><span>&nbsp;</span>Grade calculator</a></li>
             <li><a href="#quizlet"><span>&nbsp;</span>Quizlet</a></li>
             <li><a href="#drive"><span>&nbsp;</span>Google Drive</a></li>
             <li><a href="#evernote"><span>&nbsp;</span>Evernote</a></li>

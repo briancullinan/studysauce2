@@ -206,6 +206,32 @@
     color: #0099BB;
 }
 
+.course1.step4 .grid_6
+{
+    display:inline-block;
+    width:60%;
+    margin:0 -2px;
+    vertical-align: top;
+    padding-right:100px;
+}
+
+.course1.step4 .grid_6 + .grid_6
+{
+    padding-right:50px;
+    padding-left:50px;
+    width:40%;
+}
+
+.course1.step4 .highlighted-link
+{
+    margin-top:0;
+}
+
+.course1.step4 .grid_6 img
+{
+    width: 100%;
+}
+
 #new-award
 {
     padding:0;
@@ -217,6 +243,7 @@
     border-radius: 10px;
     padding:0;
     min-height: 400px;
+    text-align: center;
 }
 
 #new-award .badge
@@ -238,11 +265,12 @@
 
 #new-award .description
 {
-    margin-top: 320px;
+    margin: 320px auto 0 auto;
     display:inline-block !important;
     width: 100%;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    max-width:650px;
 }
 
 #new-award .description,

@@ -10,7 +10,7 @@
             <span class="badge">&nbsp;</span>
             <div class="description">
                 <h3>You have been awarded the <strong>Pulse Detected</strong> badge.</h3>
-                <p>Yep, you are alive.</p>
+                <p>Yep, you are alive.  Now let's get started.</p>
             </div>
             <div class="highlighted-link">
                 <a href="<?php print $view['router']->generate('lesson1', ['_step' => 4]); ?>" class="more">Next</a>

@@ -13,6 +13,20 @@
     text-align: center;
 }
 
+#goals .split-description img
+{
+    width:auto;
+    height:40px;
+}
+
+#goals .split-description .site-name
+{
+    font-size: 40px;
+    letter-spacing: -3px;
+    padding-left:50px;
+    background: url(../images/menu_new.png) no-repeat left -3500px transparent;
+}
+
 #goals .split-description h3 {
     text-align: center;
 }
