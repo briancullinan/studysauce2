@@ -27,6 +27,7 @@ $collection = $router->getRouteCollection();
             '@StudySauceBundle/Resources/public/css/jquery-ui.min.css',
             '@StudySauceBundle/Resources/public/css/bootstrap.min.css',
             '@StudySauceBundle/Resources/public/css/selectize.default.css',
+            '@StudySauceBundle/Resources/public/css/fonts.css',
             '@StudySauceBundle/Resources/public/css/sauce.css',
             '@StudySauceBundle/Resources/public/css/dialog.css',
         ],
