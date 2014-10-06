@@ -32,6 +32,25 @@
     margin: 40px 10% 0 -2px;
 }
 
+.course1 .time
+{
+    display:block;
+    position:absolute;
+    right:10px;
+    top:10px;
+    background:url(../../studysauce/images/menu_new_double.png) no-repeat left -9600px transparent;
+    height:100px;
+    width:100px;
+    padding:22px;
+    text-align: center;
+}
+
+.course1 .time small
+{
+    display:block;
+    font-size: 14px;
+}
+
 .course1 .highlighted-link
 {
     margin:40px 0 0 0;
@@ -61,8 +80,7 @@
     vertical-align: middle;
     height: 40px;
     position: absolute;
-    top: 50%;
-    margin-top: -20px;
+    top: 5px;
     left: 0;
     min-width: 40px;
     font-style: italic;
