@@ -3,6 +3,7 @@
     display: block;
     padding: 10px 0 10px 50px;
     position: relative;
+    font-size: 20px;
 }
 
 .course1.step0 ol a:hover,
@@ -64,6 +65,7 @@
     margin-top: -20px;
     left: 0;
     min-width: 40px;
+    font-style: italic;
 }
 
 .course1.step0 .player-divider
@@ -84,6 +86,26 @@
     vertical-align: top;
 }
 
+.course1.step2 h3
+{
+    border-bottom:1px solid #555555;
+    padding-right:50%;
+}
+
+.course1.step2 h3 span
+{
+    width: 100%;
+    float: right;
+    margin-right: -100%;
+    text-align: left;
+    padding-left:20px;
+}
+
+.course1.step2 .answer
+{
+    display:none;
+}
+
 .course1.step2 .questions
 {
     padding-right:20px;
@@ -95,6 +117,7 @@
     display:none;
 }
 
+.course1.step2.right .answer,
 .course1.step2.right .results
 {
     display:inline-block;
@@ -123,8 +146,7 @@
 
 .course1.step2 .highlighted-link
 {
-    margin-right:50%;
-    text-align: center;
+    margin-left:50%;
 }
 
 .course1.step2 .highlighted-link a:not([href="#submit-quiz"])
@@ -134,9 +156,6 @@
 
 .course1.step2.right .highlighted-link
 {
-    margin-right:0;
-    margin-left:50%;
-    text-align: center;
 }
 
 .course1.step2.right .highlighted-link a[href="#submit-quiz"]

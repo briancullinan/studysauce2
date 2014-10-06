@@ -1,6 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Rufina:400,700,400italic,700italic,400bold,700bold&subset=latin,greek);
-@import url(https://fonts.googleapis.com/css?family=Sintony:400,700,400italic,700italic,400bold,700bold&subset=latin,greek);
-@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic,400bold,700bold&subset=latin,greek);
+@import url(fonts.css);
 
 html
 {
@@ -79,12 +77,12 @@ input[type="submit"].more,
 input[type="reset"].more,
 input[type="button"].more
 {
-    font-size: 16px;
+    font-size: 20px;
     line-height: inherit;
     -webkit-appearance: none;
     margin: 0;
     text-align: center;
-    padding: 5px 10px;
+    padding: 10px 15px;
     font-weight: 800;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -470,7 +468,7 @@ select,
     left:0;
     opacity:1;
     display:inline-block;
-    width:100%!important;
+    width:auto!important;
 }
 
 .selectize-control.single .selectize-input,

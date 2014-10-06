@@ -48,7 +48,10 @@ $view['slots']->start('body'); ?>
 
             <div class="split-description big-arrow">
                 <h3>The Science of Setting Goals</h3>
-                <img src="/sites/studysauce.com/themes/successinc/images/science.png">
+
+                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/science.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+                <?php endforeach; ?>
 
                 <p>According to the Incentive Theory of motivation, using rewards increases the likelihood of repeating
                     the given activity. By incorporating this powerful psychological principle into study behavior,
@@ -56,7 +59,8 @@ $view['slots']->start('body'); ?>
                     the stronger the positive association with the activity.</p>
             </div>
             <div class="split-description">
-                <h3 style="margin-bottom:5px;">The Application</h3>
+                <h3>The Application</h3>
+
                 <span class="site-name"><strong>Study</strong> Sauce</span>
 
                 <p>Study Sauce combines the best study practices with the incentive to change. Knowledge of the harm or
@@ -167,23 +171,24 @@ $view['slots']->start('body'); ?>
             </div>
 
             <p class="highlighted-link form-actions invalid">
-                <a href="/partner" class="read-only">Now invite someone to help keep you accountable to your goals.</a>
                 <a href="#save-goal" class="more">Save</a>
             </p>
 
-            <div id="achievements">
+            <div id="achievements" class="clearfix">
                 <div class="grid_6"><strong>July 17th, 2014</strong><img
                         src="https://www.studysauce.com/sites/studysauce.com/files/styles/achievement/public/Exam%20grade%20picture.jpg?itok=5siJ9c4h">
 
                     <p>A on my test!!!</p></div>
-                <p style="margin:0;clear:both;line-height:0;">&nbsp;</p></div>
+            </div>
 
+            <!--
             <div id="read-more-incentives">
                 <img src="/sites/studysauce.com/themes/successinc/images/science.png">
 
                 <h3>The Science of Setting Goals</h3>
                 <a href="#read-more">read more</a>
             </div>
+            -->
 
             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         </div>

@@ -9,7 +9,7 @@
     top: 0;
     left: 0;
     padding-bottom: 30px;
-    transition: ease-in-out .15s;
+    transition: width ease-in-out .15s;
     box-sizing: border-box;
     z-index: 900;
 }
@@ -73,15 +73,15 @@
     position:absolute;
     display:block;
     height:45px;
-    width:50px;
+    width:70px;
     left:0;
     top:50px;
     background:url(../images/menu_new.png) no-repeat left -102px transparent;
     font-size:14px;
     color:#555555;
     font-weight: bold;
-    padding-top:23px;
-    padding-left:15px;
+    padding-top:12px;
+    padding-left:35px;
     z-index:10;
 }
 
@@ -105,10 +105,10 @@
 
 #right-panel a[href="#collapse"]
 {
-    padding-right:15px;
+    padding-right:35px;
     padding-left:0;
     text-align: right;
-    background-position: left -202px;
+    background-position: right -202px;
 }
 
 #left-panel a[href="#collapse"]:hover
@@ -121,7 +121,7 @@
 #right-panel a[href="#collapse"]:hover
 {
     color:#0099BB;
-    background-position: left -502px;
+    background-position: right -502px;
     background-color: #DDDDDD;
 }
 
@@ -624,8 +624,11 @@
     line-height: 100%;
     vertical-align: top;
     background: url("../images/menu_new.png") no-repeat 50% 10px transparent;
-    padding:5px 5px 16px 5px;
+    padding:2px 5px 12px 5px;
     margin-top:20px;
+    width:auto;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #right-panel a[href="#expand"]
@@ -646,11 +649,6 @@
 #left-panel .navbar-toggle
 {
     margin-top:60px;
-}
-
-#right-panel .navbar-toggle
-{
-    width:auto;
 }
 
 .navbar-toggle

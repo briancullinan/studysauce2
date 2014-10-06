@@ -99,7 +99,7 @@ $view['slots']->start('body'); ?>
         </div>
 
 
-        <div><a href="#schedule"><span>Edit schedule</span></a></div>
+        <div><a href="<?php print $view['router']->generate('schedule'); ?>"><span>Edit schedule</span></a></div>
     </div>
 
 </div>

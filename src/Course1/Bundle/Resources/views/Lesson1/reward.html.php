@@ -10,10 +10,7 @@
             <span class="badge">&nbsp;</span>
             <div class="description">
                 <h3>You have been awarded the <strong>Pulse Detected</strong> badge.</h3>
-                <div class="badge-date"><strong>Date achieved:</strong></div>
-                <p>Yep, you are alive.  Now let's get started.  Check in and begin a study session.</p>
-                <h4>Badge description</h4>
-                <p>Our Study Detection Software will automatically guide you to become a great studier.  Enter your class information <span>here</span> to unlock this badge.</p>
+                <p>Yep, you are alive.</p>
             </div>
             <div class="highlighted-link">
                 <a href="<?php print $view['router']->generate('lesson1', ['_step' => 4]); ?>" class="more">Next</a>

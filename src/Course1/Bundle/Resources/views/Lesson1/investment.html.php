@@ -8,13 +8,12 @@
     <div class="pane-content">
 
         <h2>Great job!</h2>
-        <h3>Finally, before we get started, we have one last easy question for you.</h3>
-        <h3>Why do you want to become better at studying?</h3>
+        <h3>Finally, before we get started, we have one last question for you.</h3>
         <label class="input">
-            <span>Enter your response below:</span>
+            <span>Why do you want to become better at studying?</span>
             <textarea placeholder="" cols="60" rows="2"></textarea>
         </label>
-        <div class="highlighted-link">
+        <div class="highlighted-link invalid">
             <a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>" class="more">Next step</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>

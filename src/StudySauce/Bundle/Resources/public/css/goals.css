@@ -72,6 +72,11 @@
     width: 29%;
 }
 
+#goals .goal-row .highlighted-link
+{
+    width:11%;
+}
+
 #goals .type {
     background: rgba(0, 0, 0, 0) url("../images/menu_icons_48.png") no-repeat scroll left -576px;
     padding: 12px 10px 14px 68px;
@@ -159,7 +164,7 @@
 #achievements .grid_6 img,
 #achievements .grid_3 img {
     float: left;
-    margin: 5px auto;
+    margin: 0 auto;
     display: inline-block;
 }
 
@@ -190,7 +195,7 @@
 #achievements .grid_6 p
 {
     margin-left:.5%;
-    padding-bottom: 50%;
+    padding-bottom: 49%;
 }
 
 #achievements .grid_6 {
