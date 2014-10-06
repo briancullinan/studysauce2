@@ -235,9 +235,9 @@ $(document).ready(function () {
         evt.preventDefault();
         var row = jQuery(this).parents('.class-row');
         $.ajax({
-            url: '/schedule/remove',
+            url: window.callbackPaths['remove_schedule'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 remove: row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
@@ -269,7 +269,8 @@ $(document).ready(function () {
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
             otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
             list = schedule.find('.schedule' + (isOther ? '.other' : ':not(.other)')),
-            addClass = list.find('.class-row').first().clone().removeClass('read-only').addClass('edit').appendTo(list);
+            addClass = list.find('.class-row').first().clone().removeAttr('id')
+                .removeClass('read-only').addClass('edit').appendTo(list);
         // reset fields for the new entry
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
             .removeClass('is-timeEntry hasDatepicker').val('');
@@ -277,7 +278,7 @@ $(document).ready(function () {
         addClass.find('.class-name input').attr('placeholder', isOther
                 ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
                 : examples[Math.floor(Math.random() * examples.length)]);
-        planFunc.apply(addClass.removeAttr('id'));
+        planFunc.apply(addClass);
     });
 
     schedule.on('click', 'a[href="#save-class"]', function (evt) {

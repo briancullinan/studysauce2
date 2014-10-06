@@ -59,6 +59,36 @@ aside + .panel-pane
     vertical-align: top;
 }
 
+a[href="#edit-class"],
+a[href="#goal-edit"],
+a[href="#edit-deadline"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/menu_new_half.png) no-repeat left -1552px transparent;
+}
+
+a[href="#edit-class"]:hover,
+a[href="#goal-edit"]:hover,
+a[href="#edit-deadline"]:hover
+{
+    background-position: left -1602px;
+}
+
+a[href="#remove-class"],
+a[href="#remove-deadline"] {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../images/menu_new_half.png) no-repeat left -1652px transparent;
+}
+
+a[href="#remove-class"]:hover,
+a[href="#remove-deadline"]:hover
+{
+    background-position: left -1702px;
+}
+
 .fc-event.class0,
 .class0 {
     background-color: #FF1100;

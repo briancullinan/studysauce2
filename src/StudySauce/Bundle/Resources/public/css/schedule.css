@@ -135,20 +135,6 @@
     margin-right:-15px;
 }
 
-a[href="#edit-class"] {
-    display: inline-block;
-    height: 24px;
-    width: 24px;
-    background: url(../images/edit.png) no-repeat 50% 50% transparent;
-}
-
-a[href="#remove-class"] {
-    display: inline-block;
-    height: 24px;
-    width: 24px;
-    background: url(../images/trash.png) no-repeat 50% 50% transparent;
-}
-
 a[href="#add-class"], a[href="#add-other"] {
     position: relative;
     z-index: 0;

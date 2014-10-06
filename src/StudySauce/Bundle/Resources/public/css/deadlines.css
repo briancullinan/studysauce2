@@ -64,20 +64,6 @@ a[href="#add-deadline"] span {
     vertical-align: middle;
 }
 
-a[href="#edit-deadline"] {
-    display: inline-block;
-    height: 24px;
-    width: 24px;
-    background: url(../images/edit.png) no-repeat 50% 50% transparent;
-}
-
-a[href="#remove-deadline"] {
-    display: inline-block;
-    height: 24px;
-    width: 24px;
-    background: url(../images/trash.png) no-repeat 50% 50% transparent;
-}
-
 #deadlines header label:first-child,
 .deadline-row .class-name
 {

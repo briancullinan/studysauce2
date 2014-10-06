@@ -99,7 +99,7 @@ input[type="button"].more
     border: none;
     outline: none;
     color: #ffffff;
-    background: #0099BB none;
+    background-color: #0099BB;
     border-bottom: 3px solid #004477;
     transition: background-color ease-in-out .15s;
 }
@@ -108,7 +108,7 @@ input[type="button"].more
 .highlighted-link .more
 {
     color: #222222;
-    background: #FF9900 none;
+    background-color: #FF9900;
     border-color: #993300;
     text-shadow: 0px 1px 2px rgba(255,255,255,.5);
 }
@@ -124,7 +124,7 @@ input[type="button"].more:hover
     -webkit-appearance: none;
     text-decoration: none;
     color: #ffffff;
-    background: #0088BB none;
+    background-color: #0088BB;
     border-color: #004477;
 }
 
@@ -132,7 +132,7 @@ input[type="button"].more:hover
 .highlighted-link .more:hover
 {
     color: #222222;
-    background: #EE7700 none;
+    background-color: #EE7700;
     border-color: #993300;
 }
 
@@ -145,7 +145,7 @@ input[type="button"].more:focus
 {
     -webkit-appearance: none;
     color: #ffffff;
-    background: #0088BB none;
+    background-color: #0088BB;
     border-color: #004477;
 }
 
@@ -153,7 +153,7 @@ input[type="button"].more:focus
 .highlighted-link .more:focus
 {
     color: #222222;
-    background: #EE7700 none;
+    background-color: #EE7700;
     border-color: #993300;
 }
 
@@ -168,7 +168,7 @@ input[type="button"].more:active
     border-bottom-width: 1px;
     margin-top: 2px;
     color: #ffffff;
-    background: #0088BB none;
+    background-color: #0088BB;
     border-color: #004477;
 }
 
@@ -176,7 +176,7 @@ input[type="button"].more:active
 .highlighted-link .more:active
 {
     color: #222222;
-    background: #EE7700 none;
+    background-color: #EE7700;
     border-color: #993300;
 }
 
@@ -238,7 +238,7 @@ input[type="reset"].more:focus[disabled],
 input[type="button"].more:focus[disabled]
 {
     color: #555555;
-    background: #CCCCCC none;
+    background-color: #CCCCCC;
     border-color: #555555;
     margin-top:0;
     border-bottom-width:3px;
@@ -470,6 +470,7 @@ select,
     left:0;
     opacity:1;
     display:inline-block;
+    width:100%!important;
 }
 
 .selectize-control.single .selectize-input,
@@ -592,7 +593,7 @@ input[type=month][disabled]
 .checkbox input[type=checkbox][disabled]+i:after,
 .checkbox-inline input[type=checkbox][disabled]+i:after
 {
-    background-position:-13px -3015px;
+    background-position:-13px -3014px;
 }
 
 .radio, .checkbox {
@@ -673,7 +674,7 @@ input[type=month][disabled]
     height: 24px;
     text-align: center;
     position: absolute;
-    background: url(../images/menu_new.png) no-repeat -13px -2915px transparent;
+    background: url(../images/menu_new.png) no-repeat -13px -2914px transparent;
     display:block;
     border-radius: 2px;
     opacity: 0;

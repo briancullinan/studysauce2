@@ -38,7 +38,7 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="Deadline", mappedBy="user")
-     * @ORM\OrderBy({"created" = "DESC"})
+     * @ORM\OrderBy({"dueDate" = "ASC"})
      */
     protected $deadlines;
 

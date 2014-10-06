@@ -15,7 +15,7 @@
             <textarea placeholder="" cols="60" rows="2"></textarea>
         </label>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('schedule'); ?>" class="more">Go</a>
+            <a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>" class="more">Next step</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

@@ -4,9 +4,11 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class DeadlinesController
@@ -30,6 +32,8 @@ class DeadlinesController extends Controller
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->toArray();
+        $schedule = $user->getSchedules()->first();
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
@@ -39,7 +43,8 @@ class DeadlinesController extends Controller
                 'csrf_token' => $csrfToken,
                 'deadlines' => $deadlines,
                 'demoDeadlines' => $demoDeadlines,
-                'courses' => $demoCourses
+                'demoCourses' => $demoCourses,
+                'courses' => $courses
             ]);
     }
 
@@ -68,6 +73,79 @@ class DeadlinesController extends Controller
         }
 
         return [$deadline];
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        // save class
+        $dates = $request->get('dates');
+        if(empty($dates))
+            $dates = [];
+
+        if($request->get('className') && $request->get('assignment') && $request->get('reminders') &&
+            $request->get('due') && $request->get('percent')) {
+            $dates[] = [
+                'eid' => isset($_POST['eid']) ? $_POST['eid'] : null,
+                'className' => $_POST['className'],
+                'assignment' => $_POST['assignment'],
+                'reminders' => $_POST['reminders'],
+                'due' => $_POST['due'],
+                'percent' => $_POST['percent']
+            ];
+        }
+
+        foreach($dates as $j => $d)
+        {
+            // check if class entity already exists by name
+            if(empty($d['eid']))
+            {
+                $deadline = new Deadline();
+                $deadline->setCreated(new \DateTime());
+                $deadline->setUser($user);
+                $deadline->setCompleted(false);
+                $deadline->setReminderSent('');
+            }
+            else
+            {
+                /** @var $deadline Deadline */
+                $deadline = $user->getDeadlines()->filter(function (Deadline $x) use($d) {return $x->getId() == $d['eid'];})->first();
+                // figure out what changed
+                if ($deadline->getDueDate()->format('Y-m-d') != date_timestamp_set(new \DateTime(),  strtotime($d['due']))->format('Y-m-d')) {
+                    // reset the sent reminders if the date changes
+                    $deadline->setReminderSent('');
+                }
+            }
+
+            $deadline->setName($d['className']);
+            $deadline->setAssignment($d['assignment']);
+            $deadline->setReminder($d['reminders']);
+            $deadline->setDueDate(date_timestamp_set(new \DateTime(),  strtotime($d['due'])));
+            $deadline->setPercent($d['percent']);
+
+            if(empty($d['eid']))
+            {
+                $user->addDeadline($deadline);
+                $orm->persist($deadline);
+            }
+            else
+            {
+                $orm->merge($deadline);
+            }
+
+            $orm->flush();
+        }
+
+        return $this->forward('StudySauceBundle:Deadlines:index', ['_format' => 'tab']);
     }
 }
 

@@ -237,7 +237,7 @@ class ScheduleController extends Controller
         // move single values in to an array so we can reuse the code from the plan page and the schedule page
         if ($request->get('className') && $request->get('type') && $request->get('dotw') &&
             $request->get('start') && $request->get('end')
-        )
+        ) {
             $classes[] = [
                 'className' => $request->get('className'),
                 'type' => $request->get('type'),
@@ -245,13 +245,14 @@ class ScheduleController extends Controller
                 'start' => $request->get('start'),
                 'end' => $request->get('end')
             ];
+        }
 
         $added = [];
         $renamed = [];
 
         foreach ($classes as $j => $c) {
             // check if class entity already exists
-            if (!isset($c['cid'])) {
+            if (empty($c['cid'])) {
                 $course = new Course();
                 $course->setSchedule($schedule);
                 $course->setCreated(new \DateTime());
@@ -328,7 +329,7 @@ class ScheduleController extends Controller
             $course->setStartTime(date_timestamp_set(new \DateTime(),  strtotime($c['start'])));
             $course->setEndTime(date_timestamp_set(new \DateTime(),  strtotime($c['end'])));
 
-            if (!isset($c['cid'])) {
+            if (empty($c['cid'])) {
                 // save course
                 $schedule->addCourse($course);
 
@@ -340,7 +341,6 @@ class ScheduleController extends Controller
             else
                 $orm->merge($course);
 
-
             $orm->flush();
         }
 
@@ -348,6 +348,14 @@ class ScheduleController extends Controller
             //    TODO: studysauce_rebuild_schedule($node, $entities, $added, $renamed);
 
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function removeAction(Request $request)
+    {
+
     }
 
     private static $institutions;

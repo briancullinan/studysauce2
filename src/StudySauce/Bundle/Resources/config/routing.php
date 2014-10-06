@@ -60,6 +60,22 @@ $collection->add(
 );
 
 $collection->add(
+    'remove_schedule',
+    new Route(
+        '/schedule/remove',
+        [
+            '_controller' => 'StudySauceBundle:Schedule:remove'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'goals',
     new Route(
         '/goals/{_format}', [
@@ -120,6 +136,38 @@ $collection->add(
         ], [
             '_format' => DASHBOARD_VIEWS,
         ]
+    )
+);
+
+$collection->add(
+    'update_deadlines',
+    new Route(
+        '/deadlines/update',
+        [
+            '_controller' => 'StudySauceBundle:Deadlines:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'remove_deadlines',
+    new Route(
+        '/deadlines/remove',
+        [
+            '_controller' => 'StudySauceBundle:Deadlines:remove'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 

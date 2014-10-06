@@ -111,16 +111,10 @@
     white-space: nowrap;
 }
 
-#goals a[href="#goal-edit"] {
-    display: none;
-    height: 24px;
-    width: 24px;
-    background: url(../images/edit.png) no-repeat 50% 50% transparent;
-}
-
-#goals .read-only a[href="#goal-edit"]
+#goals .edit:not(.read-only) a[href="#goal-edit"],
+#goals .edit a[href="#goal-edit"]
 {
-    display: inline-block;
+    display: none;
 }
 
 #goals select

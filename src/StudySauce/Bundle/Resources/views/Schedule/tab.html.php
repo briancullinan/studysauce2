@@ -193,7 +193,7 @@ $view['slots']->stop();
             $endDate = strtotime($c->getEndTime()->format('Y/m/d H:i:s'));
         ?>
         <div class="class-row valid clearfix read-only <?php print ($isDemo ? 'edit' : 'read-only'); ?>"
-             id="eid-<?php print $c->getId(); ?>">
+             id="eid-<?php print ($isDemo ? '' : $c->getId()); ?>">
             <div class="class-name">
                 <label class="input">
                     <span>Event title</span>

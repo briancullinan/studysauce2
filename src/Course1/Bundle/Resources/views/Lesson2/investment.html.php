@@ -10,7 +10,7 @@
         <h3>Assignment:</h3>
         <p>Before you move on to the next study module, take a few minutes to set up your study goals.  Our Goals study tool will help you focus on the right types of goals and will allow you to set up rewards for achieving those goals.</p>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('schedule'); ?>" class="more">Set up my goals</a>
+            <a href="<?php print $view['router']->generate('goals'); ?>" class="more">Set up my goals</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>
