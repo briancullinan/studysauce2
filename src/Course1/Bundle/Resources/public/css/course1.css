@@ -34,20 +34,20 @@
 
 .course1 .time
 {
-    display:block;
-    position:absolute;
-    right:10px;
-    top:10px;
-    background:url(../../studysauce/images/menu_new_double.png) no-repeat left -9600px transparent;
-    height:100px;
-    width:100px;
-    padding:22px;
+    display: block;
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    background: url(../../studysauce/images/menu_new.png) no-repeat left -4800px transparent;
+    height: 50px;
     text-align: center;
+    padding-left: 50px;
+    vertical-align: middle;
+    padding-top: 5px;
 }
 
 .course1 .time small
 {
-    display:block;
     font-size: 14px;
 }
 
@@ -235,8 +235,7 @@
 
 .course1.step4 .grid_6 + .grid_6
 {
-    padding-right:50px;
-    padding-left:50px;
+    padding:0;
     width:40%;
 }
 

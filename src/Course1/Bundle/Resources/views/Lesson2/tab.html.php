@@ -3,7 +3,7 @@
  $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step0" id="lesson2">
     <div class="pane-content">
-        <h2>In this course you will learn:<span class="time">10<small>min</small></span></h2>
+        <h2>In this course you will learn:<span class="time">10<small>minutes</small></span></h2>
 
         <ol>
             <li><a ><span>1</span>Why goal setting is so powerful</a></li>
