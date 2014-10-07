@@ -159,7 +159,7 @@ $(document).ready(function () {
     });
 
     // capture all callback links
-    body.on('click', '.dashboard-home a[href]', function (evt) {
+    body.filter('.dashboard-home').on('click', 'a[href]', function (evt) {
         var parent = $(this).parents('#left-panel, #right-panel');
         if(parent.length > 0 && parent.width() < 150) {
             evt.preventDefault(); // cancel navigation is we are uncollapsing
