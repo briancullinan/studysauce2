@@ -8,7 +8,6 @@
     <div class="pane-content">
 
         <h2>Great job!</h2>
-        <br />
         <div class="grid_6">
             <h3>Finally, before we get started, we have one last question for you.</h3>
             <br />

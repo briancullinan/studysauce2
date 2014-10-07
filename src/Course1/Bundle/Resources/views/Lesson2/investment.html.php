@@ -7,7 +7,6 @@
     <div class="pane-content">
 
         <h2>Great job!</h2>
-        <br />
         <div class="grid_6">
             <h3>Assignment:</h3>
             <p>Before you move on to the next study module, take a few minutes to set up your study goals.  Our Goals study tool will help you focus on the right types of goals and will allow you to set up rewards for achieving those goals.</p>
