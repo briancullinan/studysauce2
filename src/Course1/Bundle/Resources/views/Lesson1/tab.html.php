@@ -7,7 +7,7 @@
 
     <div class="pane-content">
 
-        <h2>In this course you will learn:<span class="time">10<small>minutes</small></span></h2>
+        <h2>In this course you will learn:<span class="time">10<small> minutes</small></span></h2>
 
         <ol>
             <li><a ><span>1</span>Some common misconceptions about studying</a></li>
