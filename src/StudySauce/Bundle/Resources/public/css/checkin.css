@@ -1,6 +1,5 @@
 
-#checkin .classes
-{
+#checkin .classes {
 }
 
 #checkin .clock,
@@ -14,24 +13,238 @@
 }
 
 #checkin .classes a {
-     display: inline-block;
-     height: 100px;
-     width: 100px;
-     border-radius: 100%;
-     position: relative;
-     margin: 25px;
-     vertical-align: bottom;
-     background: url("../images/classes_textured.png") no-repeat scroll 0 0 transparent;
-     padding: 10px;
-     color: #666666;
-     text-align: center;
-     /* color: #FF0D00; */
- }
+    display: inline-block;
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    position: relative;
+    margin: 25px;
+    vertical-align: bottom;
+    background: url("../images/classes_textured.png") no-repeat scroll 0 0 transparent;
+    padding: 10px;
+    color: #666666;
+    text-align: center;
+    /* color: #FF0D00; */
+}
 
 #checkin .classes a span {
-      display: block;
-      width: 80px;
-      height: 80px;
-      border-radius: 100%;
-      margin-bottom: 10px;
-  }
+    display: block;
+    width: 80px;
+    max-height: 30px;
+    border-radius: 100%;
+    margin-top: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#plan .class1 .mini-checkin .class,
+#checkin .classes .class1,
+#checkin .classes a:nth-child(2)
+{
+    background-position: 0 -100px;
+    /*    color:#FF9900; */
+}
+
+#plan .class2 .mini-checkin .class,
+#checkin .classes .class2,
+#checkin .classes a:nth-child(3)
+{
+    background-position: 0 -200px;
+    /*    color:#FFD700; */
+}
+
+#plan .class3 .mini-checkin .class,
+#checkin .classes .class3,
+#checkin .classes a:nth-child(4)
+{
+    background-position: 0 -300px;
+    /*    color:#BAF300; */
+}
+
+#plan .class4 .mini-checkin .class,
+#checkin .classes .class4,
+#checkin .classes a:nth-child(5)
+{
+    background-position: 0 -400px;
+    /*    color:#2DD700; */
+}
+
+#plan .class5 .mini-checkin .class,
+#checkin .classes .class5,
+#checkin .classes a:nth-child(6)
+{
+    background-position: 0 -500px;
+    /*    color:#009999; */
+}
+
+#plan .class6 .mini-checkin .class,
+#checkin .classes .class6,
+#checkin .classes a:nth-child(7)
+{
+    background-position: 0 -600px;
+    /*    color:#162EAE; */
+}
+
+#plan .class7 .mini-checkin .class,
+#checkin .classes .class7,
+#checkin .classes a:nth-child(8)
+{
+    background-position: 0 -700px;
+    /*    color:#6A0AAB; */
+}
+
+#plan .class8 .mini-checkin .class,
+#checkin .classes .class8,
+#checkin .classes a:nth-child(9)
+{
+    background-position: 0 -800px;
+    /*    color:#BE008A; */
+}
+
+#plan .class0 .mini-checkin .checked-in,
+#checkin .classes .class0.checked-in,
+#checkin .classes a.checked-in
+{
+    background-position: -200px 0;
+}
+
+#plan .class1 .mini-checkin .class.checked-in,
+#checkin .classes .class1.checked-in,
+#checkin .classes a:nth-child(2).checked-in
+{
+    background-position: -200px -100px;
+}
+
+#plan .class2 .mini-checkin .class.checked-in,
+#checkin .classes .class2.checked-in,
+#checkin .classes a:nth-child(3).checked-in
+{
+    background-position: -200px -200px;
+}
+
+#plan .class3 .mini-checkin .class.checked-in,
+#checkin .classes .class3.checked-in,
+#checkin .classes a:nth-child(4).checked-in
+{
+    background-position: -200px -300px;
+}
+
+#plan .class4 .mini-checkin .class.checked-in,
+#checkin .classes .class4.checked-in,
+#checkin .classes a:nth-child(5).checked-in
+{
+    background-position: -200px -400px;
+}
+
+#plan .class5 .mini-checkin .class.checked-in,
+#checkin .classes .class5.checked-in,
+#checkin .classes a:nth-child(6).checked-in
+{
+    background-position: -200px -500px;
+}
+
+#plan .class6 .mini-checkin .class.checked-in,
+#checkin .classes .class6.checked-in,
+#checkin .classes a:nth-child(7).checked-in
+{
+    background-position: -200px -600px;
+}
+
+#plan .class7 .mini-checkin .class.checked-in,
+#checkin .classes .class7.checked-in,
+#checkin .classes a:nth-child(8).checked-in
+{
+    background-position: -200px -700px;
+}
+
+#plan .class8 .mini-checkin .class.checked-in,
+#checkin .classes .class8.checked-in,
+#checkin .classes a:nth-child(9).checked-in
+{
+    background-position: -200px -800px;
+}
+
+
+#plan .class0 .mini-checkin .class:active,
+#checkin .classes .class0:active,
+#checkin .classes a:active
+{
+    background-position: -100px 0;
+}
+
+#plan .class1 .mini-checkin .class:active,
+#checkin .classes .class1:active,
+#checkin .classes a:active:nth-child(2)
+{
+    background-position: -100px -100px;
+}
+
+#plan .class2 .mini-checkin .class:active,
+#checkin .classes .class2:active,
+#checkin .classes a:active:nth-child(3)
+{
+    background-position: -100px -200px;
+}
+
+#plan .class3 .mini-checkin .class:active,
+#checkin .classes .class3:active,
+#checkin .classes a:active:nth-child(4)
+{
+    background-position: -100px -300px;
+}
+
+#plan .class4 .mini-checkin .class:active,
+#checkin .classes .class4:active,
+#checkin .classes a:active:nth-child(5)
+{
+    background-position: -100px -400px;
+}
+
+#plan .class5 .mini-checkin .class:active,
+#checkin .classes .class5:active,
+#checkin .classes a:active:nth-child(6)
+{
+    background-position: -100px -500px;
+}
+
+#plan .class6 .mini-checkin .class:active,
+#checkin .classes .class6:active,
+#checkin .classes a:active:nth-child(7)
+{
+    background-position: -100px -600px;
+}
+
+#plan .class7 .mini-checkin .class:active,
+#checkin .classes .class7:active,
+#checkin .classes a:active:nth-child(8)
+{
+    background-position: -100px -700px;
+}
+
+#plan .class8 .mini-checkin .class:active,
+#checkin .classes .class8:active,
+#checkin .classes a:active:nth-child(9)
+{
+    background-position: -100px -800px;
+}
+
+#checklist ol,
+#checklist li
+{
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+
+#checklist .checkbox
+{
+    padding-left:40px;
+    display:block;
+    position:relative;
+}
+
+#checklist .checkbox i {
+    margin-left: -40px;
+    margin-right: 20px;
+}

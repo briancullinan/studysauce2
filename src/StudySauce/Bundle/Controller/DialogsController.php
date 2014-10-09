@@ -53,6 +53,38 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function sdsmessagesAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:sds-messages.html.php', ['id' => 'sds-messages']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function timerexpireAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:timer-expire.html.php', ['id' => 'timer-expire']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function mozartAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:mozart.html.php', ['id' => 'mozart-effect']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function checklistAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:checklist.html.php', ['id' => 'checklist']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function metricsemptyAction()
     {
         return $this->render('StudySauceBundle:Dialogs:metrics-empty.html.php', ['id' => 'metrics-empty']);

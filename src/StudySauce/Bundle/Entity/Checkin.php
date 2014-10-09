@@ -33,6 +33,16 @@ class Checkin
      */
     protected $utc_checkin;
 
+    /**
+     * @ORM\Column(type="datetime", name="checkout", options={"default" = 0})
+     */
+    protected $checkout;
+
+    /**
+     * @ORM\Column(type="datetime", name="utc_checkout", options={"default" = 0})
+     */
+    protected $utc_checkout;
+
 
     /**
      * Get id
@@ -111,5 +121,51 @@ class Checkin
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set checkout
+     *
+     * @param \DateTime $checkout
+     * @return Checkin
+     */
+    public function setCheckout($checkout)
+    {
+        $this->checkout = $checkout;
+
+        return $this;
+    }
+
+    /**
+     * Get checkout
+     *
+     * @return \DateTime 
+     */
+    public function getCheckout()
+    {
+        return $this->checkout;
+    }
+
+    /**
+     * Set utc_checkout
+     *
+     * @param \DateTime $utcCheckout
+     * @return Checkin
+     */
+    public function setUtcCheckout($utcCheckout)
+    {
+        $this->utc_checkout = $utcCheckout;
+
+        return $this;
+    }
+
+    /**
+     * Get utc_checkout
+     *
+     * @return \DateTime 
+     */
+    public function getUtcCheckout()
+    {
+        return $this->utc_checkout;
     }
 }

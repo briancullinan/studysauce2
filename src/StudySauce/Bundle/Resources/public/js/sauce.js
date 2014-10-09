@@ -92,26 +92,29 @@ $(document).ready(function () {
 
             // download the panel
             if(panel.length == 0) {
-                loadingAnimation(item);
+                if($(this).is('a'))
+                    item = item.add($(this));
+                item.each(function (i, obj) { loadingAnimation($(obj)); });
                 $.ajax({
                     url: window.callbackPaths[window.callbackKeys[i]],
                     type: 'GET',
                     dataType: 'text',
                     success: function (tab) {
                         var content = $(tab),
-                            panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane'));
+                            panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
+                            styles = ssMergeStyles(content),
+                            scripts = ssMergeScripts(content);
 
-                        ssMergeStyles(content);
-
-                        ssMergeScripts(content);
-
+                        // don't ever add panes that are already on the page, this is to help with debugging, but should never really happen
                         if (panelIds.length > 0)
                             panes = panes.not('#' + panelIds.join(', #'));
+
                         if (panes.length > 0) {
-                            panes.hide().insertBefore(body.find('.footer'));
-                            var newPane = panes.filter('#' + window.callbackKeys[i]);
+                            content.filter('.panel-pane').hide().insertBefore(body.find('.footer'));
+                            content.not(panes).not(styles).not(scripts).insertBefore(body.find('.footer'));
+                            var newPane = content.filter('#' + window.callbackKeys[i]);
                             if (newPane.length == 0) {
-                                newPane = panes.first();
+                                newPane = content.filter('.panel-pane').first();
                             }
                             body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
                             setTimeout(function () {
@@ -158,11 +161,11 @@ $(document).ready(function () {
         }
     });
 
-    // capture all callback links
-    body.filter('.dashboard-home').on('click', 'a[href]', function (evt) {
+    var handleLink = function (evt) {
         var parent = $(this).parents('#left-panel, #right-panel');
         if(parent.length > 0 && parent.width() < 150) {
-            evt.preventDefault(); // cancel navigation is we are uncollapsing
+            // cancel navigation is we are uncollapsing instead
+            evt.preventDefault();
             body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
             parent.removeClass('collapsed').addClass('expanded');
             return;
@@ -179,22 +182,33 @@ $(document).ready(function () {
         else
         {
             evt.preventDefault();
-            activateMenu(path);
+            activateMenu.apply(this, [path]);
         }
-    });
+    };
+
+    // capture all callback links
+    body.filter('.dashboard-home').on('click', 'a[href]', handleLink);
+    body.filter('.dashboard-home').on('dblclick', 'a[href]', handleLink);
+    body.filter('.dashboard-home').on('dragstart', 'a[href]', handleLink);
+
     if(window.callbackUri.indexOf(window.location.pathname) > -1)
         activateMenu(window.location.pathname);
 
     window.onpopstate = function(e){
-        if(typeof window.callbackPaths[e.state || window.location.pathname] != 'undefined') {
-            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state || window.location.pathname)], true);
+        if(window.callbackKeys.indexOf(e.state) > -1) {
+            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state)], true);
+        }
+        else if (window.callbackUri.indexOf(window.location.pathname) > -1) {
+            activateMenu(window.location.pathname, true);
         }
     };
 
     window.onpushstate = function(e){
-        if(typeof window.callbackPaths[e.state || window.location.pathname] != 'undefined')
-        {
-            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state || window.location.pathname)], true);
+        if(window.callbackKeys.indexOf(e.state) > -1) {
+            activateMenu(window.callbackUri[window.callbackKeys.indexOf(e.state)], true);
+        }
+        else if (window.callbackUri.indexOf(window.location.pathname) > -1) {
+            activateMenu(window.location.pathname, true);
         }
     };
 

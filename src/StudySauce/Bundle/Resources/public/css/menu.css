@@ -85,8 +85,8 @@
     z-index:10;
 }
 
-#left-panel .loading,
-#right-panel .loading {
+.loading,
+.loading {
     background-color: #0099BB;
     bottom: 0;
     display: inline-block;

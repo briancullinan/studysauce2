@@ -116,6 +116,21 @@ $collection->add(
 );
 
 $collection->add(
+    'checkin_update',
+    new Route(
+        '/checkin/update', [
+            '_controller' => 'StudySauceBundle:Checkin:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'metrics',
     new Route(
         '/metrics/{_format}', [
