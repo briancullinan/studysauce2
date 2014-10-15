@@ -6,8 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="visit",uniqueConstraints={
- *     @ORM\UniqueConstraint(name="session_idx", columns={"session_id", "user_id"})})
+ * @ORM\Table(name="visit",indexes={
+ *     @ORM\Index(name="session_idx", columns={"session_id", "user_id"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class Visit
