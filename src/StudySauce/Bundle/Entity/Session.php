@@ -17,12 +17,6 @@ class Session
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="sessions")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    protected $user;
-
-    /**
      * @ORM\Column(type="text", name="session_value")
      */
     protected $value;
@@ -31,6 +25,12 @@ class Session
      * @ORM\Column(type="integer", name="session_time")
      */
     protected $time;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Visit", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $visits;
 
 
     /**
@@ -123,5 +123,45 @@ class Session
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add visits
+     *
+     * @param \StudySauce\Bundle\Entity\Visit $visits
+     * @return Session
+     */
+    public function addVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    {
+        $this->visits[] = $visits;
+
+        return $this;
+    }
+
+    /**
+     * Remove visits
+     *
+     * @param \StudySauce\Bundle\Entity\Visit $visits
+     */
+    public function removeVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    {
+        $this->visits->removeElement($visits);
+    }
+
+    /**
+     * Get visits
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVisits()
+    {
+        return $this->visits;
     }
 }

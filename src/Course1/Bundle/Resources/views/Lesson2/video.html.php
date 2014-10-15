@@ -2,7 +2,7 @@
 <?php $view->extend('Course1Bundle:Lesson1:layout.html.php');
 
  $view['slots']->start('body'); ?>
-<div class="panel-pane course1" id="lesson2-step1">
+<div class="panel-pane course1 step1" id="lesson2-step1">
 
     <div class="pane-content">
 

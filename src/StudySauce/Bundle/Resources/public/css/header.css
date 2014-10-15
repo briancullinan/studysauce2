@@ -63,10 +63,14 @@
     vertical-align: middle;
 }
 
+#partner-message > *
+{
+    display:inline-block;
+    vertical-align: middle;
+}
+
 #partner-message img
 {
-    margin-top:-24px;
-    display:inline-block;
     background-color: #EEEEEE;
     border-radius: 100%;
 }

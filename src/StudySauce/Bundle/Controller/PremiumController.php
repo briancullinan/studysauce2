@@ -11,10 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class PremiumController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
         return $this->render('StudySauceBundle:Premium:tab.html.php');
     }

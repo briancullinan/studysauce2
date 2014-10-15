@@ -149,7 +149,7 @@
     position: relative;
 }
 
-#lesson2-step2 label.input span
+.course1.step2 label.input span
 {
     position:absolute;
     left:0;
@@ -210,16 +210,11 @@
     vertical-align: middle;
 }
 
-#lesson1 .tab-tracker li:first-child,
-#lesson1-step1 .tab-tracker li:nth-child(2),
-#lesson1-step2 .tab-tracker li:nth-child(3),
-#lesson1-step3 .tab-tracker li:nth-child(4),
-#lesson1-step4 .tab-tracker li:nth-child(5),
-#lesson2 .tab-tracker li:first-child,
-#lesson2-step1 .tab-tracker li:nth-child(2),
-#lesson2-step2 .tab-tracker li:nth-child(3),
-#lesson2-step3 .tab-tracker li:nth-child(4),
-#lesson2-step4 .tab-tracker li:nth-child(5)
+.course1.step0 .tab-tracker li:first-child,
+.course1.step1 .tab-tracker li:nth-child(2),
+.course1.step2 .tab-tracker li:nth-child(3),
+.course1.step3 .tab-tracker li:nth-child(4),
+.course1.step4 .tab-tracker li:nth-child(5)
 {
     font-size: 60px;
     color: #0099BB;

@@ -10,6 +10,11 @@
     padding: 0 240px 20px 240px;
 }
 
+.dashboard-home a
+{
+    position: relative;
+}
+
 .panel-pane
 {
     display:none;
@@ -20,7 +25,8 @@
     box-sizing: border-box;
 }
 
-aside + .panel-pane
+aside + .panel-pane,
+.dashboard-home.funnel .header-wrapper + .panel-pane
 {
     display:block;
 }

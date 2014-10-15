@@ -1,11 +1,13 @@
 <?php
 
-/** @var $router \Symfony\Component\Routing\Router */
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Router;
 
+/** @var Router $router */
 $router = $this->container->get('router');
 
-/** @var $collection \Symfony\Component\Routing\RouteCollection */
+/** @var RouteCollection $collection */
 $collection = $router->getRouteCollection();
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');

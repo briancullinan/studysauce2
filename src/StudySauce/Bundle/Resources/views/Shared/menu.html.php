@@ -8,6 +8,7 @@
         <a href="#collapse">Hide</a>
         <ul class="main-menu">
             <li><h3>Study Tools</h3></li>
+            <li><a href="<?php print $view['router']->generate('home'); ?>"><span>&nbsp;</span>Home</a></li>
             <li><a href="<?php print $view['router']->generate('goals'); ?>"><span>&nbsp;</span>Goals</a></li>
             <li><a href="<?php print $view['router']->generate('schedule'); ?>"><span>&nbsp;</span>Class schedule</a></li>
             <li><a href="<?php print $view['router']->generate('checkin'); ?>"><span>&nbsp;</span>Check in</a></li>

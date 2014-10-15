@@ -33,10 +33,13 @@ class DeadlinesController extends Controller
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->toArray();
         $schedule = $user->getSchedules()->first();
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        if(!empty($courses))
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        else
+            $courses = [];
 
         $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('update_deadlines')
             : null;
 
         return $this->render('StudySauceBundle:Deadlines:tab.html.php', [
@@ -120,7 +123,7 @@ class DeadlinesController extends Controller
                 /** @var $deadline Deadline */
                 $deadline = $user->getDeadlines()->filter(function (Deadline $x) use($d) {return $x->getId() == $d['eid'];})->first();
                 // figure out what changed
-                if ($deadline->getDueDate()->format('Y-m-d') != date_timestamp_set(new \DateTime(),  strtotime($d['due']))->format('Y-m-d')) {
+                if ($deadline->getDueDate()->format('Y-m-d') != (new \DateTime($d['due']))->format('Y-m-d')) {
                     // reset the sent reminders if the date changes
                     $deadline->setReminderSent('');
                 }
@@ -129,7 +132,7 @@ class DeadlinesController extends Controller
             $deadline->setName($d['className']);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder($d['reminders']);
-            $deadline->setDueDate(date_timestamp_set(new \DateTime(),  strtotime($d['due'])));
+            $deadline->setDueDate(new \DateTime($d['due']));
             $deadline->setPercent($d['percent']);
 
             if(empty($d['eid']))

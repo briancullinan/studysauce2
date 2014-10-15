@@ -15,7 +15,7 @@ class Lesson2Controller extends Controller
      * @param $_format
      * @param $_step
      */
-    public function wizardAction($_format = 'index', $_step = 0)
+    public function wizardAction($_step = 0)
     {
         switch($_step)
         {

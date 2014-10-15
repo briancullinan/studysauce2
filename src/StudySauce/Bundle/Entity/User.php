@@ -31,6 +31,12 @@ class User extends BaseUser
     protected $sessions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Visit", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $visits;
+
+    /**
      * @ORM\OneToMany(targetEntity="Goal", mappedBy="user")
      * @ORM\OrderBy({"created" = "DESC"})
      */
@@ -43,9 +49,44 @@ class User extends BaseUser
     protected $deadlines;
 
     /**
-     * @ORM\Column(type="datetime", name="created", options={"default" = 0})
+     * @ORM\OneToMany(targetEntity="Partner", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $partners;
+
+    /**
+     * @ORM\OneToMany(targetEntity="File", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $files;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Mail", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $emails;
+
+    /**
+     * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="first")
+     */
+    protected $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="last")
+     */
+    protected $lastName;
+
+    /**
+     * @ORM\OneToOne(targetEntity="File")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id", nullable = true)
+     */
+    protected $photo;
+
 
     /**
      * Constructor
@@ -222,5 +263,206 @@ class User extends BaseUser
     public function getDeadlines()
     {
         return $this->deadlines;
+    }
+
+    /**
+     * Set firstName
+     *
+     * @param string $firstName
+     * @return User
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Get firstName
+     *
+     * @return string 
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set lastName
+     *
+     * @param string $lastName
+     * @return User
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get lastName
+     *
+     * @return string 
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Add partners
+     *
+     * @param \StudySauce\Bundle\Entity\Partner $partners
+     * @return User
+     */
+    public function addPartner(\StudySauce\Bundle\Entity\Partner $partners)
+    {
+        $this->partners[] = $partners;
+
+        return $this;
+    }
+
+    /**
+     * Remove partners
+     *
+     * @param \StudySauce\Bundle\Entity\Partner $partners
+     */
+    public function removePartner(\StudySauce\Bundle\Entity\Partner $partners)
+    {
+        $this->partners->removeElement($partners);
+    }
+
+    /**
+     * Get partners
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPartners()
+    {
+        return $this->partners;
+    }
+
+    /**
+     * Add files
+     *
+     * @param \StudySauce\Bundle\Entity\File $files
+     * @return User
+     */
+    public function addFile(\StudySauce\Bundle\Entity\File $files)
+    {
+        $this->files[] = $files;
+
+        return $this;
+    }
+
+    /**
+     * Remove files
+     *
+     * @param \StudySauce\Bundle\Entity\File $files
+     */
+    public function removeFile(\StudySauce\Bundle\Entity\File $files)
+    {
+        $this->files->removeElement($files);
+    }
+
+    /**
+     * Get files
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param \StudySauce\Bundle\Entity\File $photo
+     * @return User
+     */
+    public function setPhoto(\StudySauce\Bundle\Entity\File $photo = null)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return \StudySauce\Bundle\Entity\File 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * Add emails
+     *
+     * @param \StudySauce\Bundle\Entity\Mail $emails
+     * @return User
+     */
+    public function addEmail(\StudySauce\Bundle\Entity\Mail $emails)
+    {
+        $this->emails[] = $emails;
+
+        return $this;
+    }
+
+    /**
+     * Remove emails
+     *
+     * @param \StudySauce\Bundle\Entity\Mail $emails
+     */
+    public function removeEmail(\StudySauce\Bundle\Entity\Mail $emails)
+    {
+        $this->emails->removeElement($emails);
+    }
+
+    /**
+     * Get emails
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEmails()
+    {
+        return $this->emails;
+    }
+
+    /**
+     * Add visits
+     *
+     * @param \StudySauce\Bundle\Entity\Visit $visits
+     * @return User
+     */
+    public function addVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    {
+        $this->visits[] = $visits;
+
+        return $this;
+    }
+
+    /**
+     * Remove visits
+     *
+     * @param \StudySauce\Bundle\Entity\Visit $visits
+     */
+    public function removeVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    {
+        $this->visits->removeElement($visits);
+    }
+
+    /**
+     * Get visits
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVisits()
+    {
+        return $this->visits;
     }
 }

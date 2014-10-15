@@ -11,10 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class CourseController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
         return $this->render('StudySauceBundle:Course:tab.html.php');
     }

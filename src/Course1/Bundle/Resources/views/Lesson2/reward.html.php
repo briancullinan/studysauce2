@@ -7,7 +7,7 @@
         <div>
             <span class="badge setup-hours">&nbsp;</span>
             <div class="description">
-                <h3>You have been awarded the <strong>Goal Setting Badge</strong> badge.</h3>
+                <h3>You have been awarded the <strong>Goal Setting</strong> badge.</h3>
                 <p>Congratulations on learning how to set effective goals! You will be amazed at the power that simple goal setting will have on your academic performance.</p>
             </div>
             <div class="highlighted-link">

@@ -1,6 +1,7 @@
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
+<?php
+use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 
-/** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
+/** @var TimedPhpEngine $view */
  $view->extend('Course1Bundle:Lesson1:layout.html.php');
 
  $view['slots']->start('body'); ?>

@@ -248,3 +248,43 @@
     margin-left: -40px;
     margin-right: 20px;
 }
+
+#checkin .minplayer-default-big-play {
+    display: block;
+    height: 256px;
+    width: 170px;
+    margin: 0 auto;
+    background: url(../images/mozart.png) no-repeat 0 0 transparent;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    position: relative;
+    border: none;
+}
+
+#checkin .minplayer-default-play {
+    position: absolute;
+    margin-top: -32px;
+    top: 50%;
+    left: -64px;
+    background: url(../images/menu_icons_64.png) no-repeat 0 -2432px transparent;
+    height: 64px;
+    width: 64px;
+    border: 0;
+    transition: none;
+    cursor: pointer;
+}
+
+#checkin .minplayer-default-pause {
+    position: absolute;
+    margin-top: -32px;
+    top: 50%;
+    left: -64px;
+    background: url(../images/menu_icons_64.png) no-repeat 0 -2368px transparent;
+    height: 64px;
+    width: 64px;
+    border: 0;
+    transition: none;
+    cursor: pointer;
+    display: none;
+}

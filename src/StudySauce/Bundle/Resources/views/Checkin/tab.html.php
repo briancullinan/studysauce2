@@ -59,6 +59,7 @@ $view['slots']->start('body'); ?>
             <h4 style="text-align:center;"><a href="#mozart-effect" data-toggle="modal">The Mozart Effect®</a></h4>
         </div>
 
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div><a href="<?php print $view['router']->generate('schedule'); ?>"><span>Edit schedule</span></a></div>
     </div>
 </div>

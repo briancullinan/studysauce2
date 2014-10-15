@@ -42,10 +42,10 @@ $view['slots']->stop();
 <div class="university">
     <label class="input">
         School name
-        <input type="text" placeholder="Enter the full name" data-data="<?php print (isset($schedule)
+        <input type="text" placeholder="Enter the full name" data-data="<?php print (!empty($schedule)
             ? htmlentities(json_encode(ScheduleController::getInstitutions($schedule->getUniversity())->first()), ENT_QUOTES)
             : ''); ?>"
-               value="<?php print (isset($schedule) ? $schedule->getUniversity() : ''); ?>" autocomplete="off">
+               value="<?php print (!empty($schedule) ? $schedule->getUniversity() : ''); ?>" autocomplete="off">
     </label>
 </div>
 
@@ -66,7 +66,7 @@ $view['slots']->stop();
 <div class="schedule clearfix">
     <?php
     $isDemo = false; // || $app->getUser()->hasRole('ROLE_GUEST');
-    if(empty($courses)) {
+    if(empty($courses) || $app->getUser()->hasRole('ROLE_GUEST')) {
         $isDemo = true;
         $courses = $demoCourses;
     }
@@ -75,7 +75,7 @@ $view['slots']->stop();
         if($isDemo && $i > 5)
             break;
         /** @var $c Course */
-        $daysOfTheWeek = explode(',', $c->getDotw());
+        $daysOfTheWeek = $c->getDotw();
         $startDate = null;
         $endDate = null;
         if(!empty($c->getStartTime()))
@@ -83,7 +83,7 @@ $view['slots']->stop();
         if(!empty($c->getEndTime()))
             $endDate = strtotime($c->getEndTime()->format('Y/m/d H:i:s'));
         ?>
-        <div class="class-row valid clearfix <?php print ($isDemo ? 'edit' : 'read-only'); ?>"
+        <div class="class-row clearfix <?php print ($isDemo ? 'edit valid blank' : 'read-only'); ?>"
              id="eid-<?php print $c->getId(); ?>">
             <div class="class-name">
                 <label class="input">
@@ -175,7 +175,7 @@ $view['slots']->stop();
 </header>
 <div class="schedule other">
     <?php
-    if(empty($courses)) {
+    if(empty($others) || $app->getUser()->hasRole('ROLE_GUEST')) {
         $isDemo = true;
         $others = $demoOthers;
     }
@@ -184,7 +184,7 @@ $view['slots']->stop();
         if($isDemo && $i > 0)
             break;
         /** @var $c Course */
-        $daysOfTheWeek = explode(',', $c->getDotw());
+        $daysOfTheWeek = $c->getDotw();
         $startDate = null;
         $endDate = null;
         if(!empty($c->getStartTime()))
@@ -192,7 +192,7 @@ $view['slots']->stop();
         if(!empty($c->getEndTime()))
             $endDate = strtotime($c->getEndTime()->format('Y/m/d H:i:s'));
         ?>
-        <div class="class-row valid clearfix read-only <?php print ($isDemo ? 'edit' : 'read-only'); ?>"
+        <div class="class-row clearfix <?php print ($isDemo ? 'edit valid blank' : 'read-only'); ?>"
              id="eid-<?php print ($isDemo ? '' : $c->getId()); ?>">
             <div class="class-name">
                 <label class="input">
@@ -215,7 +215,7 @@ $view['slots']->stop();
 
                 <div class="recurring">
                     <label class="checkbox">Recurring<input type="checkbox" value="Weekly"
-                            <?php print (!$isDemo && in_array('Weekly', $daysOfTheWeek) ? 'checked="checked"' : ''); ?>><i></i>Weekly</label>
+                            <?php print ($isDemo || in_array('Weekly', $daysOfTheWeek) ? 'checked="checked"' : ''); ?>><i></i>Weekly</label>
                 </div>
             </div>
             <div class="start-time">

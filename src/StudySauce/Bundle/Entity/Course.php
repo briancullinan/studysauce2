@@ -28,9 +28,9 @@ class Course
     protected $type;
 
     /**
-     * @ORM\Column(type="string", length=256, name="dotw")
+     * @ORM\Column(type="simple_array", length=256, name="dotw")
      */
-    protected $dotw;
+    protected $dotw = [];
 
     /**
      * @ORM\Column(type="datetime", name="start_time")
@@ -54,9 +54,14 @@ class Course
     protected $schedule;
 
     /**
-     * @ORM\Column(type="datetime", name="created", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
+
+    /**
+     * @ORM\Column(type="boolean", name="deleted")
+     */
+    protected $deleted = false;
 
     /**
      * Constructor
@@ -268,5 +273,28 @@ class Course
     public function getSchedule()
     {
         return $this->schedule;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param boolean $deleted
+     * @return Course
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return boolean 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }

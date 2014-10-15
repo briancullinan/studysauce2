@@ -3,3 +3,4 @@
 /app/cache/prod
 /web/bundles
 Thumbs.db
+/src/StudySauce/Bundle/Entity/*.php~

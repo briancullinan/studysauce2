@@ -6,10 +6,10 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Schedule;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class CheckinController
@@ -32,11 +32,16 @@ class CheckinController extends Controller
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
+
+        /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        if(!empty($schedule))
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        else
+            $courses = [];
 
         $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
             : null;
 
         return $this->render('StudySauceBundle:Checkin:tab.html.php', [
@@ -79,14 +84,15 @@ class CheckinController extends Controller
             $c->setCourse($course);
             $c->setCheckin(new \DateTime($request->get('date')));
             $c->setUtcCheckin(new \DateTime());
-            $d = date_timestamp_set(new \DateTime(), 0);
-            $c->setCheckout($d);
-            $c->setUtcCheckout($d);
             $orm->persist($c);
         }
         $orm->flush();
 
-        return new JsonResponse(['cid' => $cid]);
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
+            : null;
+
+        return new JsonResponse(['cid' => $cid, 'csrf_token' => $csrfToken]);
     }
 }
 

@@ -29,42 +29,42 @@ class Schedule
     protected $courses;
 
     /**
-     * @ORM\Column(type="string", name="university")
+     * @ORM\Column(type="string", length=256, name="university", nullable = true)
      */
     protected $university;
 
     /**
-     * @ORM\Column(type="string", length=10, name="grades")
+     * @ORM\Column(type="string", length=10, name="grades", nullable = true)
      */
     protected $grades;
 
     /**
-     * @ORM\Column(type="string", length=10, name="weekends")
+     * @ORM\Column(type="string", length=10, name="weekends", nullable = true)
      */
     protected $weekends;
 
     /**
-     * @ORM\Column(type="integer", length=10, name="sharp6am11am")
+     * @ORM\Column(type="integer", length=10, name="sharp6am11am", nullable = true)
      */
     protected $sharp6am11am;
 
     /**
-     * @ORM\Column(type="integer", length=10, name="sharp11am4pm")
+     * @ORM\Column(type="integer", length=10, name="sharp11am4pm", nullable = true)
      */
     protected $sharp11am4pm;
 
     /**
-     * @ORM\Column(type="integer", length=10, name="sharp4pm9pm")
+     * @ORM\Column(type="integer", length=10, name="sharp4pm9pm", nullable = true)
      */
     protected $sharp4pm9pm;
 
     /**
-     * @ORM\Column(type="integer", length=10, name="sharp9pm2am")
+     * @ORM\Column(type="integer", length=10, name="sharp9pm2am", nullable = true)
      */
     protected $sharp9pm2am;
 
     /**
-     * @ORM\Column(type="datetime", name="created", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
 

@@ -2,7 +2,12 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class PartnerController
@@ -11,12 +16,79 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class PartnerController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
-        return $this->render('StudySauceBundle:Partner:tab.html.php');
+        /** @var $user User */
+        $user = $this->getUser();
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
+            : null;
+
+        return $this->render('StudySauceBundle:Partner:tab.html.php', [
+                'partner' => $user->getPartners()->first(),
+                'csrf_token' => $csrfToken
+            ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function updateAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        /** @var $current Partner */
+        $current = $user->getPartners()->first();
+        if($current->getEmail() == $request->get('email'))
+        {
+            // update the partner
+            $partner = $current;
+        }
+        else
+        {
+            // check if they every invited this partner
+            $current = $user->getPartners()->filter(function (Partner $x) use ($request) {return $x->getEmail() == $request->get('email');})->first();
+            if($current != null) {
+                // update created time so they become the current partner
+                $partner = $current;
+                $partner->setCreated(new \DateTime());
+                $user->removePartner($partner);
+                $user->addPartner($partner);
+            }
+        }
+
+        $isNew = false;
+        if(empty($partner)) {
+            $isNew = true;
+            $partner = new Partner();
+            $partner->setUser($user);
+            $partner->setCode(md5(microtime(true)));
+            $partner->setEmail($request->get('email'));
+            $user->addPartner($partner);
+        }
+
+        $partner->setFirst($request->get('first'));
+        $partner->setLast($request->get('last'));
+        $partner->setPermissions(explode(',', $request->get('permissions')));
+
+        // save the entity
+        if($isNew)
+            $orm->persist($partner);
+        else
+            $orm->merge($partner);
+        $orm->flush();
+
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
+            : null;
+        return new JsonResponse(['csrf_token' => $csrfToken]);
     }
 }
 

@@ -61,10 +61,12 @@ $(document).ready(function () {
                 date: new Date().toJSON(),
                 cid: cid,
                 checklist: checked.join(','),
-                location: lat + ',' + lng
+                location: lat + ',' + lng,
+                csrf_token: checkin.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
                 var that = checkin.find('#checkin-' + data.cid);
+                checkin.find('input[name="csrf_token"]').val(data.csrf_token);
 
                 // update clock
                 if (checkedIn) {

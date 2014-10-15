@@ -24,22 +24,22 @@ class Checkin
     protected $course;
 
     /**
-     * @ORM\Column(type="datetime", name="checkin", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="checkin")
      */
     protected $checkin;
 
     /**
-     * @ORM\Column(type="datetime", name="utc_checkin", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="utc_checkin")
      */
     protected $utc_checkin;
 
     /**
-     * @ORM\Column(type="datetime", name="checkout", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="checkout", nullable = true)
      */
     protected $checkout;
 
     /**
-     * @ORM\Column(type="datetime", name="utc_checkout", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="utc_checkout", nullable = true)
      */
     protected $utc_checkout;
 

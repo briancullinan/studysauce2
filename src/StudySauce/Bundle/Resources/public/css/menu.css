@@ -85,8 +85,8 @@
     z-index:10;
 }
 
-.loading,
-.loading {
+.squiggle,
+.squiggle {
     background-color: #0099BB;
     bottom: 0;
     display: inline-block;

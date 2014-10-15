@@ -33,4 +33,13 @@ $collection->add('lesson3', new Route('/course/1/lesson/3/step/{_step}/{_format}
             '_step' => '0|1|2|3|4'
         ]));
 
+$collection->add('lesson4', new Route('/course/1/lesson/4/step/{_step}/{_format}', [
+            '_controller' => 'Course1Bundle:Lesson4:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
 return $collection;

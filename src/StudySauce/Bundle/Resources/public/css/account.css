@@ -1,0 +1,10 @@
+#account label
+{
+    padding-left:50%;
+}
+
+#account label span {
+    margin-left: -100%;
+    width: 100%;
+    display: inline-block;
+}

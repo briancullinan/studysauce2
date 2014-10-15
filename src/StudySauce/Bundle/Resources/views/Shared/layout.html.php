@@ -60,7 +60,14 @@ $collection = $router->getRouteCollection();
             $controllerAction = explode(':', $defaults['_controller']);
             $controller = $controllerAction[0];
 
-            if (preg_match('/(^|\s)request.isXmlHttpRequest\(\)(\s+|$)/i', $condition)) {
+            if ($route == '_welcome')
+            {
+                $callbackPaths[$route] = dirname($router->generate($route)) . '/';
+                $callbackKeys[] = $route;
+                $callbackUri[] = $router->generate($route);
+            }
+
+            if(preg_match('/(^|\s)request.isXmlHttpRequest\(\)(\s+|$)/i', $condition)) {
                 $callbackPaths[$route] = $router->generate($route);
                 $callbackKeys[] = $route;
                 $callbackUri[] = $router->generate($route);
@@ -91,6 +98,16 @@ $collection = $router->getRouteCollection();
         window.callbackPaths = JSON.parse('<?php print json_encode($callbackPaths); ?>');
         window.callbackKeys = JSON.parse('<?php print json_encode($callbackKeys); ?>');
         window.callbackUri = JSON.parse('<?php print json_encode($callbackUri); ?>');
+        window.musicLinks = [
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_2_Bb_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_15_Bb_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/C_Major_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_17_G_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/musicNo_16_D_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_6_Bb_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_5_D_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_1_F_Andante.mp3'
+        ];
     </script>
 </head>
 <body class="<?php $view['slots']->output('classes') ?>">

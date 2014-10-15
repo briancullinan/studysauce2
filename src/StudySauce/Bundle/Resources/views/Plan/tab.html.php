@@ -62,8 +62,6 @@ $view['slots']->stop();
             <div class="completed">
                 <label class="checkbox"><input type="checkbox" name="plan-sort" value="class"><i></i></label>
             </div>
-            <input type="hidden" name="plan-path"
-                   value="/node/plup/plan?plupload_token=KcCulhvH6f9UXQPjQFtXsUXNX0oAaSDs_lgzD-pT7U8">
         </div>
 
         <a class="return-to-top" href="#return-to-top">Top</a>

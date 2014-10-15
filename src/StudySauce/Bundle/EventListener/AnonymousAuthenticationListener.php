@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
@@ -33,7 +32,6 @@ class AnonymousAuthenticationListener implements ListenerInterface
     /** @var $context \Symfony\Component\Security\Core\SecurityContext */
     private $context;
 
-    private $key;
     private $logger;
     private $email;
 
@@ -51,7 +49,6 @@ class AnonymousAuthenticationListener implements ListenerInterface
 
     /**
      * @param SecurityContextInterface $context
-     * @param $key
      * @param LoggerInterface $logger
      * @param UserManager $userManager
      * @param $email
@@ -62,8 +59,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
     public function __construct(
         SecurityContextInterface $context,
         $key,
-        LoggerInterface
-        $logger = null,
+        LoggerInterface $logger = null,
         UserManager $userManager,
         $email,
         EntityManager $orm,
@@ -71,7 +67,6 @@ class AnonymousAuthenticationListener implements ListenerInterface
         AuthenticationProviderManager $authenticationManager)
     {
         $this->context          = $context;
-        $this->key              = $key;
         $this->email            = $email;
         $this->logger           = $logger;
         $this->userManager      = $userManager;
@@ -110,15 +105,15 @@ class AnonymousAuthenticationListener implements ListenerInterface
             $user->setCreated(new \DateTime());
             $user->addRole('ROLE_GUEST');
             $user->setEnabled(true);
+            $user->setFirstName('Guest');
+            $user->setLastName('Account');
             $this->orm->persist($user);
             $this->orm->flush();
         }
 
-        $this->context->setToken(new AnonymousToken($this->key, 'anon.', []));
-
         $encoder = $this->encoder->getEncoder($user);
         $password = $encoder->encodePassword('guest', $user->getSalt());
-        $this->context->setToken(new UsernamePasswordToken($user, $password, $this->key, ['ROLE_GUEST']));
+        $this->context->setToken(new UsernamePasswordToken($user, $password, 'main', ['ROLE_GUEST']));
 
         if (null !== $this->logger) {
             $this->logger->info('Populated SecurityContext with an anonymous Token');

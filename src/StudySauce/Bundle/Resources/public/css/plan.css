@@ -327,8 +327,7 @@
     margin-top:30px;
 }
 
-#plan .strategy-teach iframe,
-#plan .plupload
+#plan .strategy-teach iframe
 {
     display: inline-block;
     width: 33%;
@@ -450,136 +449,6 @@
     margin-left:0;
 }
 
-#plan .plupload .plup-filelist
-{
-    border-top:0;
-}
-
-#plan .plupload .plup-list
-{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    display: block;
-    text-align: center;
-}
-
-#plan .plupload .plup-list img
-{
-    margin:0 auto;
-}
-
-#plan .plupload .plup-list li
-{
-    display:none;
-    padding:0;
-    margin:0;
-    border:0;
-}
-
-#plan .plupload .plup-list li:last-child
-{
-    display:block;
-}
-
-#plan .plupload .plup-thumb-wrapper
-{
-    text-align: center;
-}
-
-#plan .plupload .plup-thumb-wrapper img
-{
-    margin:0 auto;
-}
-
-#plan .plupload .plup-select
-{
-    position:absolute;
-    top:0;
-    height:100%;
-    width:100%;
-    left:0;
-    line-height: 0;
-    color:transparent;
-    font-size: 0;
-}
-
-#plan .plupload.uploaded .plup-select
-{
-    height:40px;
-}
-
-body.page-dashboard.file-drag  #plan .plupload .plup-filelist
-{
-    z-index: 2000;
-}
-
-#plan .plupload .plup-remove-file,
-#plan .plupload .plup-remove-item
-{
-    z-index: 100;
-}
-
-#plan .plupload .drag-main
-{
-    position:absolute;
-    top:50%;
-    left:0;
-    width:100%;
-    padding:0;
-    margin-top:-10px;
-    color:#333333;
-    text-shadow: 0 1px 4px rgba(255,255,255,1);
-    text-align: center;
-}
-
-#plan .plupload .drag-more,
-#plan .plupload .plup-filelist-size,
-#plan .plupload .plup-filelist-message,
-#plan .plupload .plup-filelist-remove,
-#plan .plupload .plup-select div
-{
-    display:none;
-}
-
-#plan .plupload .plup-bar .plup-upload
-{
-    display:none !important;
-}
-
-#plan .plupload .plupload,
-#plan .plupload .plupload-container
-{
-    min-height:200px;
-}
-
-#plan .plupload .plup-filelist-file
-{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-#plan .plupload .plup-filelist,
-#plan .plupload .plupload.html5
-{
-    height: 100% !important;
-    width: 100% !important;
-    top:0 !important;
-    left:0 !important;
-    position:absolute !important;
-    background:none;
-    max-height: none !important;
-}
-
-#plan .plupload.uploaded .plup-filelist,
-#plan .plupload.uploaded .plupload.html5
-{
-    height: 40px !important;
-}
-
 #plan .strategy-spaced-notes textarea,
 #plan .strategy-notes textarea
 {
@@ -677,16 +546,6 @@ body.page-dashboard.file-drag  #plan .plupload .plup-filelist
     text-align: center;
     width: 100%;
     margin-left:-10px;
-}
-
-#plan .plupload .drag-main
-{
-    top:15px;
-}
-
-#plan .plupload:hover .drag-main
-{
-    color:#02CEE8;
 }
 
 #plan .field-select-strategy label

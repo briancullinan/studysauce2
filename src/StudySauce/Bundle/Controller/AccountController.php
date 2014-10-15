@@ -2,7 +2,17 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
+use FOS\UserBundle\Security\LoginManager;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Class AccountController
@@ -11,12 +21,163 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AccountController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
-        return $this->render('StudySauceBundle:Account:tab.html.php');
+        $user = $this->getUser();
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
+            : null;
+
+        return $this->render('StudySauceBundle:Account:tab.html.php', [
+                'user' => $user,
+                'csrf_token' => $csrfToken
+            ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function updateAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        $user->setFirstName($request->get('first'));
+        $user->setLastName($request->get('last'));
+        if(!empty($request->get('email')))
+        {
+            // check password
+            $encoder_service = $this->get('security.encoder_factory');
+            $encoder = $encoder_service->getEncoder($user);
+            /** @var $encoder PasswordEncoderInterface */
+            $encoded_pass = $encoder->encodePassword($request->get('pass'), $user->getSalt());
+            if($user->getPassword() == $encoded_pass)
+            {
+                if(!empty($request->get('newPass')))
+                {
+                    $password = $encoder->encodePassword($request->get('newPass'), $user->getSalt());
+                    $user->setPassword($password);
+                }
+                $user->setEmail($request->get('email'));
+                $orm->merge($user);
+                $orm->flush();
+            }
+        }
+
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
+            : null;
+        return new JsonResponse(['csrf_token' => $csrfToken]);
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function removeAction(Request $request)
+    {
+
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deniedAction()
+    {
+        return $this->render('StudySauceBundle:Exception:error403.html.php');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function loginAction(Request $request)
+    {
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('account_login')
+            : null;
+        return $this->render('StudySauceBundle:Account:login.html.php', [
+                'email' => $request->get('email'),
+                'csrf_token' => $csrfToken
+            ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function registerAction(Request $request)
+    {
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
+            : null;
+        return $this->render('StudySauceBundle:Account:register.html.php', [
+                'email' => $request->get('email'),
+                'first' => $request->get('first'),
+                'last' => $request->get('last'),
+                'csrf_token' => $csrfToken
+            ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function createAction(Request $request)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        $user = $userManager->findUserByUsername($request->get('email'));
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
+            : null;
+        if($user == null)
+        {
+            // generate a new guest user in the database
+            /** @var $user User */
+            $user = $userManager->createUser();
+            $user->setUsername($request->get('email'));
+            $user->setUsernameCanonical($request->get('email'));
+            $encoder_service = $this->get('security.encoder_factory');
+            /** @var $encoder PasswordEncoderInterface */
+            $encoder = $encoder_service->getEncoder($user);
+            $password = $encoder->encodePassword($request->get('pass'), $user->getSalt());
+            $user->setPassword($password);
+            $user->setEmail($request->get('email'));
+            $user->setCreated(new \DateTime());
+            $user->addRole('ROLE_USER');
+            $user->setEnabled(true);
+            $user->setFirstName($request->get('first'));
+            $user->setLastName($request->get('last'));
+            $orm->persist($user);
+            $orm->flush();
+
+            $context = $this->get('security.context');
+            $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
+            $context->setToken($token);
+            $session = $request->getSession();
+            $session->set('_security_main', serialize($token));
+            $response = new JsonResponse(['csrf_token' => $csrfToken]);
+
+            $loginManager = $this->get('fos_user.security.login_manager');
+            $loginManager->loginUser('main', $user, $response);
+
+            // send welcome email
+            $email = $this->forward('StudySauce:Emails:welcomestudent');
+
+            return $response;
+        }
+        else
+        {
+            return new JsonResponse(['error' => true, 'csrf_token' => $csrfToken]);
+        }
     }
 }
 

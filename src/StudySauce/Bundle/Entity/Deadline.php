@@ -34,34 +34,39 @@ class Deadline
     protected $assignment;
 
     /**
-     * @ORM\Column(type="string", length=256, name="reminder")
+     * @ORM\Column(type="simple_array", length=256, name="reminder")
      */
     protected $reminder;
 
     /**
-     * @ORM\Column(type="datetime", name="due_date", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="due_date")
      */
     protected $dueDate;
 
     /**
-     * @ORM\Column(type="integer", name="percent", options={"default" = 0})
+     * @ORM\Column(type="integer", name="percent")
      */
-    protected $percent;
+    protected $percent = 0;
 
     /**
-     * @ORM\Column(type="boolean", name="completed", options={"default" = 0})
+     * @ORM\Column(type="boolean", name="completed")
      */
-    protected $completed;
+    protected $completed = false;
 
     /**
-     * @ORM\Column(type="string", length=256, name="reminder_sent")
+     * @ORM\Column(type="simple_array", length=256, name="reminder_sent")
      */
-    protected $reminderSent;
+    protected $reminderSent = [];
     
     /**
-     * @ORM\Column(type="datetime", name="created", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
+
+    /**
+     * @ORM\Column(type="boolean", name="deleted")
+     */
+    protected $deleted = false;
 
 
     /**
@@ -279,5 +284,28 @@ class Deadline
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param boolean $deleted
+     * @return Deadline
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return boolean 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }

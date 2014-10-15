@@ -8,193 +8,61 @@
     background-color: #cccccc;
 }
 
-#partner-plupload {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    position: relative;
-    display: inline-block;
-    max-width: 32%;
-    border-radius: 5px;
-}
-
 #partner-invite
 {
     width: 32%;
     display: inline-block;
     vertical-align: top;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     overflow: visible;
     padding:80px 10px;
 }
 
-#partner-permissions {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
+#partner .permissions {
     position: relative;
     display: inline-block;
     width: 32%;
     vertical-align: top;
 }
 
-#partner-permissions label
+#partner .plupload {
+    position: relative;
+    display: inline-block;
+    width: 32%;
+    vertical-align: top;
+    overflow: hidden;
+    text-align: center;
+}
+
+#partner .plupload img
+{
+    margin: 0 auto;
+    display:block;
+}
+
+#partner .plupload input
+{
+    font-size: 999px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    color:transparent;
+    background:transparent;
+    top:0;
+    left:0;
+}
+
+.permissions label
 {
     display:block;
     margin-bottom:10px;
 }
 
-#partner-permissions ul {
+.permissions ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
     text-align: left;
-}
-
-
-#partner-plupload
-{
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    position: relative;
-    display: inline-block;
-    width: 49%;
-    border-radius: 5px;
-}
-
-#partner-plupload .drag-more,
-#partner-plupload .plup-filelist-size,
-#partner-plupload .plup-filelist-message,
-#partner-plupload .plup-filelist-remove,
-#partner-plupload .plup-select div
-{
-    display: none;
-}
-
-#partner-plupload .plup-list li
-{
-    display:none;
-}
-
-#partner-plupload .plup-list li:last-child
-{
-    display:block;
-}
-
-#partner-plupload .plup-thumb-wrapper
-{
-    text-align: center;
-}
-
-#partner-plupload .plup-thumb-wrapper img
-{
-    margin:0 auto;
-}
-
-#partner-plupload .plup-select
-{
-    position:absolute;
-    height:100%;
-    width:100%;
-    left:0;
-    line-height: 0;
-    color:transparent;
-    font-size: 0;
-    top:-50px;
-    padding-top:50px;
-}
-
-body.file-drag #partner-plupload .plup-filelist
-{
-    z-index: 2000;
-}
-
-#partner-plupload .plup-remove-file,
-#partner-plupload .plup-remove-item
-{
-    z-index: 100;
-}
-
-#partner-plupload .drag-main
-{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 0;
-    margin-top: -10px;
-    margin-bottom:70px;
-    text-align: center;
-    color: #ffffff;
-}
-
-#partner-plupload:hover .drag-main
-{
-    color:#02CEE8;
-}
-
-#partner-plupload .plup-filelist
-{
-    border-top:0;
-}
-
-#partner-plupload .plup-list
-{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display:block;
-}
-
-#partner-plupload .plup-list li
-{
-    padding:0;
-    margin:0;
-    border:0;
-    background:none;
-}
-
-#partner-plupload .plup-bar
-{
-    padding:0;
-    height:auto;
-    background:none;
-}
-#partner-plupload img
-{
-    width: 100%;
-    height:auto;
-    border: 3px solid #555;
-    border-radius: 5px;
-}
-
-#partner-plupload .plup-bar .plup-upload
-{
-    display:none !important;
-}
-
-#partner-plupload .plupload,
-#partner-plupload .plupload-container
-{
-    min-height:200px;
-}
-
-#partner-plupload .plup-filelist-file
-{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-#partner-plupload .plup-filelist,
-#partner-plupload .plupload.html5
-{
-    height: 100% !important;
-    width: 100% !important;
-    top:0 !important;
-    left:0 !important;
-    position:absolute !important;
-    background:none;
-    max-height: none !important;
 }
 
 #partner .partner-faqs h3 {

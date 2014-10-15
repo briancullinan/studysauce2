@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class ScheduleController
@@ -39,8 +38,23 @@ class ScheduleController extends Controller
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
 
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-        $others = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'o';})->toArray();
+        if(!empty($schedule)) {
+            $courses = $schedule->getCourses()->filter(
+                function (Course $b) {
+                    return $b->getType() == 'c';
+                }
+            )->toArray();
+            $others = $schedule->getCourses()->filter(
+                function (Course $b) {
+                    return $b->getType() == 'o';
+                }
+            )->toArray();
+        }
+        else
+        {
+            $courses = [];
+            $others = [];
+        }
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
@@ -111,9 +125,9 @@ class ScheduleController extends Controller
                 $course->setSchedule($schedule);
                 $course->setName(self::getRandomName());
                 $course->setType('c');
-                $course->setDotw('');
-                $course->setStartTime(date_timestamp_set(new \DateTime(), 0));
-                $course->setEndTime(date_timestamp_set(new \DateTime(), 0));
+                $course->setDotw([]);
+                $course->setStartTime(new \DateTime('@0'));
+                $course->setEndTime(new \DateTime('@0'));
 
                 $orm->persist($course);
                 $orm->flush();
@@ -153,9 +167,9 @@ class ScheduleController extends Controller
                 $course->setSchedule($schedule);
                 $course->setName(self::getRandomName());
                 $course->setType('o');
-                $course->setDotw('Weekly');
-                $course->setStartTime(date_timestamp_set(new \DateTime(), 0));
-                $course->setEndTime(date_timestamp_set(new \DateTime(), 0));
+                $course->setDotw(['Weekly']);
+                $course->setStartTime(new \DateTime('@0'));
+                $course->setEndTime(new \DateTime('@0'));
 
                 /** @var $orm EntityManager */
                 $orm = $this->get('doctrine')->getManager();
@@ -167,7 +181,7 @@ class ScheduleController extends Controller
             }
         }
 
-        return $others;
+        return array_values($others);
     }
 
     public static $examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'];
@@ -210,14 +224,6 @@ class ScheduleController extends Controller
             $schedule->setCreated(new \DateTime());
             if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
                 $schedule->setUniversity($request->get('university'));
-            else
-                $schedule->setUniversity('');
-            $schedule->setGrades('as-only');
-            $schedule->setWeekends('hit-hard');
-            $schedule->setSharp6am11am(2);
-            $schedule->setSharp11am4pm(3);
-            $schedule->setSharp4pm9pm(5);
-            $schedule->setSharp9pm2am(4);
             $user->addSchedule($schedule);
             $orm->persist($schedule);
             $orm->flush();
@@ -274,13 +280,13 @@ class ScheduleController extends Controller
             // select the first day between the two dates
             if($c['type'] == 'o' && !in_array('Weekly', $dotw))
             {
-                $classStart = date_timestamp_set(new DateTime(), strtotime($c['start']));
-                $classEnd = date_timestamp_set(new DateTime(), strtotime($c['end']));
+                $classStart = new \DateTime($c['start']);
+                $classEnd = new \DateTime($c['end']);
 
                 // add repeating other events
-                $startTerm = date_timestamp_set(new DateTime(), strtotime('this week', $classStart->getTimestamp()));
+                $startTerm = date_timestamp_set(new \DateTime(), strtotime('this week', $classStart->getTimestamp()));
                 $startTerm->setTime(0, 0, 0);
-                $endTerm = date_timestamp_set(new DateTime(), strtotime('this week', $classEnd->getTimestamp()) + 604800);
+                $endTerm = date_timestamp_set(new \DateTime(), strtotime('this week', $classEnd->getTimestamp()) + 604800);
                 $endTerm->setTime(0, 0, 0);
                 for ($w = $startTerm->getTimestamp(); $w < $endTerm->getTimestamp(); $w += 604800)
                 {
@@ -324,10 +330,10 @@ class ScheduleController extends Controller
             $dotw = array_unique($dotw);
             sort($dotw);
 
-            $course->setDotw(implode(',', $dotw));
+            $course->setDotw($dotw);
             $course->setType($c['type']);
-            $course->setStartTime(date_timestamp_set(new \DateTime(),  strtotime($c['start'])));
-            $course->setEndTime(date_timestamp_set(new \DateTime(),  strtotime($c['end'])));
+            $course->setStartTime(new \DateTime($c['start']));
+            $course->setEndTime(new \DateTime($c['end']));
 
             if (empty($c['cid'])) {
                 // save course
@@ -353,7 +359,7 @@ class ScheduleController extends Controller
     /**
      * @param Request $request
      */
-    private function removeAction(Request $request)
+    public function removeAction(Request $request)
     {
 
     }

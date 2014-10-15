@@ -52,10 +52,7 @@ echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:
 
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'), ['strategy' => 'sinclude']);
 
-echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Landing:testimony'),
-    ['strategy' => 'sinclude']
-);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'), ['strategy' => 'sinclude']);
 
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']);
 $view['slots']->stop();

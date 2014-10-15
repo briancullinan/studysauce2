@@ -25,11 +25,22 @@ services:
             - {name: "kernel.fragment_renderer"}
 
     security.authentication.listener.anonymous:
-            class: StudySauce\Bundle\EventListener\AnonymousAuthenticationListener
-            public: false
-            tags:
-                - { name: monolog.logger, channel: security }
-            arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager"]
+        class: StudySauce\Bundle\EventListener\AnonymousAuthenticationListener
+        public: false
+        tags:
+            - { name: monolog.logger, channel: security }
+        arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager"]
+
+    kernel.listener.redirect:
+        class: StudySauce\Bundle\EventListener\RedirectListener
+        tags:
+            - {name: kernel.event_subscriber}
+
+    kernel.listener.tracker:
+        class: StudySauce\Bundle\EventListener\PageTracker
+        tags:
+            - {name: kernel.event_subscriber}
+        arguments: ["@doctrine.orm.entity_manager", "@session", "@security.context"]
 
 framework:
     #esi:             ~
@@ -51,6 +62,7 @@ framework:
     session:
         # handler_id set to null will use default session handler from php.ini
         handler_id:  session.handler.pdo
+        cookie_lifetime:       3600
     fragments:       ~
     http_method_override: true
 #    fragments: { path: /_fragment }
@@ -97,10 +109,12 @@ doctrine:
 # Swiftmailer Configuration
 swiftmailer:
     transport: smtp
-    host:      127.0.0.1
-    username:  ~
-    password:  ~
-    spool:     { type: memory }
+    encryption: ssl
+    auth_mode: login
+    host:      smtp.gmail.com
+    username:  brian@studysauce.com
+    password:  Da1ddy23
+    spool:     { type: db }
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
@@ -108,3 +122,7 @@ fos_user:
     user_class: StudySauce\Bundle\Entity\User
 #    template:
 #        engine: php
+
+white_october_swift_mailer_db:
+    entity_class: StudySauce\Bundle\Entity\Mail
+    keep_sent_messages: true

@@ -56,14 +56,14 @@ $(document).ready(function () {
         deadlines.find('.highlighted-link').last().detach().insertAfter(row);
     });
 
-    function updateDeadlines(data)
+    function updateDeadlines(response)
     {
         // clear input form
         var invalids = deadlines.find('header').prevAll('.deadline-row.invalid').detach();
 
         // update key dates list
         deadlines.find('.sort-by').nextAll('.deadline-row,.head').remove();
-        $(data).find('.sort-by').nextAll('.deadline-row,.head').insertAfter(deadlines.find('header'));
+        response.find('.sort-by').nextAll('.deadline-row,.head').insertAfter(deadlines.find('header'));
 
         // remove valid rows after adding them to list
         if(invalids.length > 0)
@@ -110,7 +110,9 @@ $(document).ready(function () {
                 csrf_token: deadlines.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                updateDeadlines(data);
+                var response = $(data);
+                deadlines.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
+                updateDeadlines(response);
             },
             error: function () {
             }
@@ -148,10 +150,13 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'json',
             data: {
+                csrf_token: deadlines.find('input[name="csrf_token"]').val(),
                 remove: row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null
             },
             success: function (data) {
-                updateDeadlines(data);
+                var response = $(data);
+                deadlines.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
+                updateDeadlines(response);
             }
         });
     });

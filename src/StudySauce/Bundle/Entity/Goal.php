@@ -40,7 +40,7 @@ class Goal
     protected $reward;
 
     /**
-     * @ORM\Column(type="datetime", name="created", options={"default" = 0})
+     * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
 
