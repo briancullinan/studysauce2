@@ -28,7 +28,7 @@ class Course
     protected $type;
 
     /**
-     * @ORM\Column(type="simple_array", length=256, name="dotw")
+     * @ORM\Column(type="simple_array", length=256, name="dotw", nullable=true)
      */
     protected $dotw = [];
 
