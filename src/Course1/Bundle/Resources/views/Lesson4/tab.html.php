@@ -13,7 +13,7 @@
         </ol>
         <div class="player-divider">
             <div class="player-wrapper">
-                <iframe id="ytplayer" src="https://www.youtube.com/embed/fkF0jueJYDQ?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;playerapiid=ytplayer" frameborder="0"></iframe>
+                <iframe id="ytplayer" src="https://www.youtube.com/embed/fkF0jueJYDQ?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;playerapiid=ytplayer"></iframe>
             </div>
         </div>
 
