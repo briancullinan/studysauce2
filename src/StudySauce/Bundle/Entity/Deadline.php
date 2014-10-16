@@ -54,7 +54,7 @@ class Deadline
     protected $completed = false;
 
     /**
-     * @ORM\Column(type="simple_array", length=256, name="reminder_sent")
+     * @ORM\Column(type="simple_array", length=256, name="reminder_sent", nullable=true)
      */
     protected $reminderSent = [];
     

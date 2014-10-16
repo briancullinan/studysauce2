@@ -155,7 +155,7 @@ $view['slots']->start('body'); ?>
                             <option value="1.25" <?php print (!empty($outcome) && $outcome->getGoal() == '1.25' ? 'selected="selected"' : ''); ?>>1.25</option>
                             <option value="1" <?php print (!empty($outcome) && $outcome->getGoal() == '1' ? 'selected="selected"' : ''); ?>>1.00</option>
                         </select>
-                        Target GPA for the term
+                        target GPA for the term
                     </label>
                 </div>
                 <div class="reward">

@@ -21,8 +21,11 @@ if (!$courseIncluded) {
     $view['slots']->stop();
 
     $controller = $app->getRequest()->get('_controller');
-    if($app->getRequest()->get('_format') == 'index' && ($controller == 'Course1\Bundle\Controller\Lesson1Controller::wizardAction' ||
-            $controller == 'Course1\Bundle\Controller\Lesson2Controller::wizardAction' || $controller == 'Course1\Bundle\Controller\Lesson3Controller::wizardAction')) {
+    if($app->getRequest()->get('_format') == 'index' &&
+        ($controller == 'Course1\Bundle\Controller\Lesson1Controller::wizardAction' ||
+            $controller == 'Course1\Bundle\Controller\Lesson2Controller::wizardAction' ||
+            $controller == 'Course1\Bundle\Controller\Lesson3Controller::wizardAction' ||
+            $controller == 'Course1\Bundle\Controller\Lesson4Controller::wizardAction')) {
         $view['slots']->start('sincludes');
         // TODO: include courses from the index page
         if ($app->getRequest()->get('_step') != 3) {

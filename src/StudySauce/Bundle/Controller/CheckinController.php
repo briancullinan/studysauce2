@@ -52,6 +52,35 @@ class CheckinController extends Controller
     }
 
     /**
+     * @internal param string $_format
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function widgetAction()
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $demo = ScheduleController::getDemoSchedule($userManager, $orm);
+        $demoCourses = ScheduleController::getDemoCourses($demo, $orm);
+
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
+
+        /** @var $schedule Schedule */
+        $schedule = $user->getSchedules()->first();
+        if(!empty($schedule))
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        else
+            $courses = [];
+
+        return $this->render('StudySauceBundle:Checkin:widget.html.php', [
+                'demoCourses' => $demoCourses,
+                'courses' => $courses
+            ]);
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */

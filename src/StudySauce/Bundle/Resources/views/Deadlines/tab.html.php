@@ -93,12 +93,7 @@ $view['slots']->start('body'); ?>
                     print '<div class="head ' . implode(' ', $classes) . '">' . $headStr . '</div>';
                 }
                 if ($d->getReminder() != null) {
-                    $reminders = array_map(
-                        function ($x) {
-                            return intval($x);
-                        },
-                        explode(',', $d->getReminder())
-                    );
+                    $reminders = $d->getReminder();
                 } else {
                     $reminders = [];
                 }
@@ -174,7 +169,7 @@ $view['slots']->start('body'); ?>
             <div class="percent">
                 <label class="input">
                     <span>% of grade</span>
-                    <input type="text" value="<?php print (!$isDemo ? $d->getPercent() : ''); ?>" size="2"
+                    <input type="text" value="<?php print (!$isDemo && $d->getPercent() > 0 ? $d->getPercent() : ''); ?>" size="2"
                            maxlength="255">
                 </label>
             </div>

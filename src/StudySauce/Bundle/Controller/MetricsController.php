@@ -32,10 +32,60 @@ class MetricsController extends Controller
             $courses = [];
 
         list($checkins, $checkouts) = self::cleanCheckins($courses);
+        list($times, $total) = self::getTimes($checkins, $checkouts);
+
+        /** @var $goal Goal */
+        $goal = $user->getGoals()->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first();
+        return $this->render('StudySauceBundle:Metrics:tab.html.php', [
+                'hours' => !empty($goal) ? $goal->getGoal() : '',
+                'total' => $total,
+                'courses' => $courses,
+                'checkins' => $checkins,
+                'checkouts' => $checkouts,
+                'times' => $times
+            ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function widgetAction()
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+
+        /** @var $schedule Schedule */
+        $schedule = $user->getSchedules()->first();
+        if(!empty($schedule))
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        else
+            $courses = [];
+
+        list($checkins, $checkouts) = self::cleanCheckins($courses);
+        list($times, $total) = self::getTimes($checkins, $checkouts);
+
+        /** @var $goal Goal */
+        $goal = $user->getGoals()->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first();
+        return $this->render('StudySauceBundle:Metrics:widget.html.php', [
+                'hours' => !empty($goal) ? $goal->getGoal() : '',
+                'total' => $total,
+                'courses' => $courses,
+                'checkins' => $checkins,
+                'checkouts' => $checkouts,
+                'times' => $times
+            ]);
+    }
+
+    /**
+     * @param $checkins
+     * @param $checkouts
+     * @return array
+     */
+    public static function getTimes($checkins, $checkouts)
+    {
 
         $times = [];
         $timeGroups = [];
-        $rows = [];
         $total = 0;
         foreach($checkins as $t => $c)
         {
@@ -72,23 +122,9 @@ class MetricsController extends Controller
 
             $total += $length;
         }
-        krsort($rows);
-        $rowsOutput = '';
-        foreach($rows as $row)
-            $rowsOutput .= $row;
 
         $total = round($total / 3600, 1);
-
-        /** @var $goal Goal */
-        $goal = $user->getGoals()->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first();
-        return $this->render('StudySauceBundle:Metrics:tab.html.php', [
-                'hours' => !empty($goal) ? $goal->getGoal() : '',
-                'total' => $total,
-                'courses' => $courses,
-                'checkins' => $checkins,
-                'checkouts' => $checkouts,
-                'times' => $times
-            ]);
+        return [$times, $total];
     }
 
     /**

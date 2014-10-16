@@ -131,9 +131,8 @@ $view['slots']->start('body'); ?>
             }
             ?>
         </div>
-
     </div>
-
+</div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');

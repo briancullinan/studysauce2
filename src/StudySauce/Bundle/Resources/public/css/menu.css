@@ -230,6 +230,18 @@
     background: url(../images/menu_new.png) no-repeat left -705px transparent;
 }
 
+#right-panel .main-menu a[href*="/home"] span
+{
+    background-position: left -4905px;
+}
+
+#right-panel .main-menu a[href*="/home"]:hover span,
+#right-panel .main-menu a[href*="/home"]:focus span,
+#right-panel .main-menu a[href*="/home"]:active span,
+#right-panel .main-menu a[href*="/home"].active span {
+    background-position: left -5005px;
+}
+
 #right-panel .main-menu a[href*="/deadlines"] span
 {
     background-position: left -805px;

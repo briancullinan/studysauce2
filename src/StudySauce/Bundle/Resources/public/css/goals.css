@@ -59,6 +59,19 @@
     margin-left: -64px;
 }
 
+.goals-widget > div
+{
+    clear: both;
+    display: block;
+    vertical-align: top;
+    position: relative;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0) url("../images/menu_icons_48.png") no-repeat scroll left -576px;
+    padding: 12px 10px 14px 68px;
+    height: 48px;
+    margin-top:10px;
+}
+
 #goals header,
 #goals .goal-row
 {

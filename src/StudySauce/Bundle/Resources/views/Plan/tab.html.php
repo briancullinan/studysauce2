@@ -50,7 +50,6 @@ $view['slots']->stop();
         <div class="session-row  event-type-o  class cid default-other " id="eid-645283">
             <div class="class-name">
                 <span class="class">&nbsp;</span>
-
                 <div class="read-only">Work</div>
             </div>
             <div class="field-type-text field-name-field-assignment field-widget-text-textfield ">

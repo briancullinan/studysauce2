@@ -33,7 +33,7 @@ class DeadlinesController extends Controller
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->toArray();
         $schedule = $user->getSchedules()->first();
-        if(!empty($courses))
+        if(!empty($schedule))
             $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
         else
             $courses = [];
@@ -44,6 +44,36 @@ class DeadlinesController extends Controller
 
         return $this->render('StudySauceBundle:Deadlines:tab.html.php', [
                 'csrf_token' => $csrfToken,
+                'deadlines' => $deadlines,
+                'demoDeadlines' => $demoDeadlines,
+                'demoCourses' => $demoCourses,
+                'courses' => $courses
+            ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function widgetAction()
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $demo = ScheduleController::getDemoSchedule($userManager, $orm);
+        $demoCourses = ScheduleController::getDemoCourses($demo, $orm);
+        $demoDeadlines = $this->getDemoDeadlines();
+
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
+        $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return $d->getDueDate() > new \DateTime(); })->toArray();
+        $schedule = $user->getSchedules()->first();
+        if(!empty($schedule))
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        else
+            $courses = [];
+
+        return $this->render('StudySauceBundle:Deadlines:widget.html.php', [
                 'deadlines' => $deadlines,
                 'demoDeadlines' => $demoDeadlines,
                 'demoCourses' => $demoCourses,
@@ -116,7 +146,7 @@ class DeadlinesController extends Controller
                 $deadline->setCreated(new \DateTime());
                 $deadline->setUser($user);
                 $deadline->setCompleted(false);
-                $deadline->setReminderSent('');
+                $deadline->setReminderSent([]);
             }
             else
             {
@@ -131,7 +161,7 @@ class DeadlinesController extends Controller
 
             $deadline->setName($d['className']);
             $deadline->setAssignment($d['assignment']);
-            $deadline->setReminder($d['reminders']);
+            $deadline->setReminder(explode(',', $d['reminders']));
             $deadline->setDueDate(new \DateTime($d['due']));
             $deadline->setPercent($d['percent']);
 

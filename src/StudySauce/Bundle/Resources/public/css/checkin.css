@@ -12,6 +12,12 @@
     min-height: 400px;
 }
 
+.checkin-widget
+{
+    text-align: center;
+}
+
+.checkin-widget > a,
 #checkin .classes a {
     display: inline-block;
     height: 100px;
@@ -27,6 +33,7 @@
     /* color: #FF0D00; */
 }
 
+.checkin-widget > a span,
 #checkin .classes a span {
     display: block;
     width: 80px;
@@ -38,6 +45,7 @@
     white-space: nowrap;
 }
 
+.checkin-widget > .class1,
 #plan .class1 .mini-checkin .class,
 #checkin .classes .class1,
 #checkin .classes a:nth-child(2)
@@ -46,6 +54,7 @@
     /*    color:#FF9900; */
 }
 
+.checkin-widget > .class2,
 #plan .class2 .mini-checkin .class,
 #checkin .classes .class2,
 #checkin .classes a:nth-child(3)
@@ -54,6 +63,7 @@
     /*    color:#FFD700; */
 }
 
+.checkin-widget > .class3,
 #plan .class3 .mini-checkin .class,
 #checkin .classes .class3,
 #checkin .classes a:nth-child(4)
@@ -62,6 +72,7 @@
     /*    color:#BAF300; */
 }
 
+.checkin-widget > .class4,
 #plan .class4 .mini-checkin .class,
 #checkin .classes .class4,
 #checkin .classes a:nth-child(5)
@@ -70,6 +81,7 @@
     /*    color:#2DD700; */
 }
 
+.checkin-widget > .class5,
 #plan .class5 .mini-checkin .class,
 #checkin .classes .class5,
 #checkin .classes a:nth-child(6)
@@ -78,6 +90,7 @@
     /*    color:#009999; */
 }
 
+.checkin-widget > .class6,
 #plan .class6 .mini-checkin .class,
 #checkin .classes .class6,
 #checkin .classes a:nth-child(7)
@@ -86,6 +99,7 @@
     /*    color:#162EAE; */
 }
 
+.checkin-widget > .class7,
 #plan .class7 .mini-checkin .class,
 #checkin .classes .class7,
 #checkin .classes a:nth-child(8)
@@ -94,6 +108,7 @@
     /*    color:#6A0AAB; */
 }
 
+.checkin-widget > .class8,
 #plan .class8 .mini-checkin .class,
 #checkin .classes .class8,
 #checkin .classes a:nth-child(9)
@@ -102,6 +117,7 @@
     /*    color:#BE008A; */
 }
 
+.checkin-widget > .class0.checked-in,
 #plan .class0 .mini-checkin .checked-in,
 #checkin .classes .class0.checked-in,
 #checkin .classes a.checked-in
@@ -109,6 +125,7 @@
     background-position: -200px 0;
 }
 
+.checkin-widget > .class1.checked-in,
 #plan .class1 .mini-checkin .class.checked-in,
 #checkin .classes .class1.checked-in,
 #checkin .classes a:nth-child(2).checked-in
@@ -116,6 +133,7 @@
     background-position: -200px -100px;
 }
 
+.checkin-widget > .class2.checked-in,
 #plan .class2 .mini-checkin .class.checked-in,
 #checkin .classes .class2.checked-in,
 #checkin .classes a:nth-child(3).checked-in
@@ -123,6 +141,7 @@
     background-position: -200px -200px;
 }
 
+.checkin-widget > .class3.checked-in,
 #plan .class3 .mini-checkin .class.checked-in,
 #checkin .classes .class3.checked-in,
 #checkin .classes a:nth-child(4).checked-in
@@ -130,6 +149,7 @@
     background-position: -200px -300px;
 }
 
+.checkin-widget > .class4.checked-in,
 #plan .class4 .mini-checkin .class.checked-in,
 #checkin .classes .class4.checked-in,
 #checkin .classes a:nth-child(5).checked-in
@@ -137,6 +157,7 @@
     background-position: -200px -400px;
 }
 
+.checkin-widget > .class5.checked-in,
 #plan .class5 .mini-checkin .class.checked-in,
 #checkin .classes .class5.checked-in,
 #checkin .classes a:nth-child(6).checked-in
@@ -144,6 +165,7 @@
     background-position: -200px -500px;
 }
 
+.checkin-widget > .class6.checked-in,
 #plan .class6 .mini-checkin .class.checked-in,
 #checkin .classes .class6.checked-in,
 #checkin .classes a:nth-child(7).checked-in
@@ -151,6 +173,7 @@
     background-position: -200px -600px;
 }
 
+.checkin-widget > .class7.checked-in,
 #plan .class7 .mini-checkin .class.checked-in,
 #checkin .classes .class7.checked-in,
 #checkin .classes a:nth-child(8).checked-in
@@ -158,6 +181,7 @@
     background-position: -200px -700px;
 }
 
+.checkin-widget > .class8.checked-in,
 #plan .class8 .mini-checkin .class.checked-in,
 #checkin .classes .class8.checked-in,
 #checkin .classes a:nth-child(9).checked-in
@@ -166,6 +190,7 @@
 }
 
 
+.checkin-widget > .class0:active,
 #plan .class0 .mini-checkin .class:active,
 #checkin .classes .class0:active,
 #checkin .classes a:active
@@ -173,6 +198,7 @@
     background-position: -100px 0;
 }
 
+.checkin-widget > .class1:active,
 #plan .class1 .mini-checkin .class:active,
 #checkin .classes .class1:active,
 #checkin .classes a:active:nth-child(2)
@@ -180,6 +206,7 @@
     background-position: -100px -100px;
 }
 
+.checkin-widget > .class2:active,
 #plan .class2 .mini-checkin .class:active,
 #checkin .classes .class2:active,
 #checkin .classes a:active:nth-child(3)
@@ -187,6 +214,7 @@
     background-position: -100px -200px;
 }
 
+.checkin-widget > .class3:active,
 #plan .class3 .mini-checkin .class:active,
 #checkin .classes .class3:active,
 #checkin .classes a:active:nth-child(4)
@@ -194,6 +222,7 @@
     background-position: -100px -300px;
 }
 
+.checkin-widget > .class4:active,
 #plan .class4 .mini-checkin .class:active,
 #checkin .classes .class4:active,
 #checkin .classes a:active:nth-child(5)
@@ -201,6 +230,7 @@
     background-position: -100px -400px;
 }
 
+.checkin-widget > .class5:active,
 #plan .class5 .mini-checkin .class:active,
 #checkin .classes .class5:active,
 #checkin .classes a:active:nth-child(6)
@@ -208,6 +238,7 @@
     background-position: -100px -500px;
 }
 
+.checkin-widget > .class6:active,
 #plan .class6 .mini-checkin .class:active,
 #checkin .classes .class6:active,
 #checkin .classes a:active:nth-child(7)
@@ -215,6 +246,7 @@
     background-position: -100px -600px;
 }
 
+.checkin-widget > .class7:active,
 #plan .class7 .mini-checkin .class:active,
 #checkin .classes .class7:active,
 #checkin .classes a:active:nth-child(8)
@@ -222,6 +254,7 @@
     background-position: -100px -700px;
 }
 
+.checkin-widget > .class8:active,
 #plan .class8 .mini-checkin .class:active,
 #checkin .classes .class8:active,
 #checkin .classes a:active:nth-child(9)

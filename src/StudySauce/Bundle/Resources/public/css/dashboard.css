@@ -47,6 +47,7 @@ aside + .panel-pane,
     margin-top:0;
 }
 
+.deadlines-widget .deadline-row i,
 #metrics ol span,
 #metrics .checkin-row .class-name span,
 .class-row .class-name i,

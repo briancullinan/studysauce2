@@ -15,6 +15,14 @@
     top:0;
 }
 
+.deadlines-widget .deadline-row > *
+{
+    display:inline-block;
+    vertical-align: middle;
+    width:33%;
+    margin:0 -2px;
+}
+
 #deadlines header,
 #deadlines .deadline-row {
     padding-top:5px;

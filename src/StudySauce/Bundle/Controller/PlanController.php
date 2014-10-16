@@ -11,12 +11,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class PlanController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
         return $this->render('StudySauceBundle:Plan:tab.html.php');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function widgetAction()
+    {
+        return $this->render('StudySauceBundle:Plan:widget.html.php');
     }
 }
 

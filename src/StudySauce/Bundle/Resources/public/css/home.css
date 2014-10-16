@@ -1,0 +1,94 @@
+
+
+#home .widget-wrapper {
+    width: 50%;
+    padding:0 10px 20px 10px;
+    display:inline-block;
+    vertical-align: top;
+    margin: 0 -2px;
+}
+
+#home .widget-wrapper:nth-of-type(6)
+{
+    width:100%;
+    padding-bottom:0;
+}
+
+#home .widget-wrapper:nth-of-type(5),
+#home .widget-wrapper:nth-of-type(4),
+#home .widget-wrapper:nth-of-type(3)
+{
+    width:33%;
+}
+
+#home .widget-wrapper:nth-of-type(6),
+#home .widget-wrapper:nth-of-type(3),
+#home .widget-wrapper:nth-of-type(1)
+{
+    padding-left:0;
+}
+
+#home .widget-wrapper:nth-of-type(6),
+#home .widget-wrapper:nth-of-type(5),
+#home .widget-wrapper:nth-of-type(2)
+{
+    padding-right:0;
+}
+
+#home .widget
+{
+    border: 2px solid #555;
+    border-radius: 4px;
+    position: relative;
+    padding:10px;
+    min-height: 225px;
+}
+
+#home .widget > h3
+{
+    margin: -10px -10px 10px -10px;
+    background: #555;
+    color: #FFF;
+    padding:5px;
+}
+
+#home .course-widget > div
+{
+    display:inline-block;
+    margin:0 -2px;
+    width:50%;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#home .course-widget .percent
+{
+    position: relative;
+}
+
+#home .course-widget img
+{
+    position:relative;
+    z-index: 3;
+}
+
+#home .course-widget .percent-background,
+#home .course-widget .percent-bars
+{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    width:150px;
+    margin-left:-75px;
+    background:#0099BB;
+    z-index:2;
+    height: 15%;
+}
+
+#home .course-widget .percent-background
+{
+    background: #ffffff;
+    z-index: 1;
+    height: 100%;
+}
+

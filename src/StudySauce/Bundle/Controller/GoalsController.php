@@ -5,9 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Goal;
-use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -19,10 +17,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class GoalsController extends Controller
 {
     /**
-     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction()
     {
         $user = $this->getUser();
 
@@ -41,6 +38,22 @@ class GoalsController extends Controller
             ]);
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function widgetAction()
+    {
+        $user = $this->getUser();
+
+        /** @var  $goals ArrayCollection */
+        $goals = $user->getGoals();
+
+        return $this->render('StudySauceBundle:Goals:widget.html.php', [
+                'behavior' => $goals->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first(),
+                'outcome' => $goals->filter(function (Goal $x) {return $x->getType() == 'outcome';})->first(),
+                'milestone' => $goals->filter(function (Goal $x) {return $x->getType() == 'milestone';})->first(),
+            ]);
+    }
 
     /**
      * @param Request $request
