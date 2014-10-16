@@ -1,14 +1,14 @@
+
 .flip-clock-divider, .flip-clock-wrapper ul {
     float: none;
     display: inline-block;
-    max-width: 15%;
+    vertical-align: middle;
 }
 
 .flip-clock-wrapper ul {
     position: relative;
     display:inline-block;
     margin: 5px;
-    width: 60px;
     height: 90px;
     font-size: 80px;
     font-weight: bold;
@@ -53,10 +53,11 @@
 .flip-clock-wrapper ul li.active
 {
     visibility:visible;
+    position:relative;
+    vertical-align: middle;
 }
 
 .flip-clock-divider {
-    float: left;
     display: inline-block;
     position: relative;
     width: 20px;
@@ -81,10 +82,4 @@
     position: absolute;
     border-radius: 1000px;
     box-shadow: 0 0 5px rgba(0, 0, 0, .5);
-}
-
-.flip-clock-divider, .flip-clock-wrapper ul {
-    float: none;
-    display: inline-block;
-    max-width: 15%;
 }

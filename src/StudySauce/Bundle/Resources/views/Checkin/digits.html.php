@@ -1,5 +1,5 @@
 <ul class="flip">
-    <li data-digit="0">0</li>
+    <li data-digit="0" class="active">0</li>
     <li data-digit="1">1</li>
     <li data-digit="2">2</li>
     <li data-digit="3">3</li>
@@ -11,7 +11,7 @@
     <li data-digit="9">9</li>
 </ul>
 <ul class="flip">
-    <li data-digit="0">0</li>
+    <li data-digit="0" class="active">0</li>
     <li data-digit="1">1</li>
     <li data-digit="2">2</li>
     <li data-digit="3">3</li>
@@ -24,7 +24,7 @@
 </ul>
 <span class="flip-clock-divider minutes"><span class="flip-clock-dot top"></span><span class="flip-clock-dot bottom"></span></span>
 <ul class="flip">
-    <li data-digit="0">0</li>
+    <li data-digit="0" class="active">0</li>
     <li data-digit="1">1</li>
     <li data-digit="2">2</li>
     <li data-digit="3">3</li>
@@ -36,7 +36,7 @@
     <li data-digit="9">9</li>
 </ul>
 <ul class="flip">
-    <li data-digit="0">0</li>
+    <li data-digit="0" class="active">0</li>
     <li data-digit="1">1</li>
     <li data-digit="2">2</li>
     <li data-digit="3">3</li>
