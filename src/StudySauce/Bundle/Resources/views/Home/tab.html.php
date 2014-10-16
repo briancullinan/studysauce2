@@ -29,6 +29,8 @@ $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(
     [
         '@StudySauceBundle/Resources/public/js/home.js',
+        '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
+        '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
         '@StudySauceBundle/Resources/public/js/metrics.js'
     ],
     [],
@@ -61,10 +63,10 @@ $view['slots']->start('body'); ?>
     </div>
     
     <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Goals:widget')); ?>
+    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget')); ?>
     <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget')); ?>
     <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:widget')); ?>
     <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Plan:widget')); ?>
-    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget')); ?>
 </div>
 
 <?php $view['slots']->stop(); ?>

@@ -8,7 +8,7 @@
                 </div>
                 <div class="player-divider">
                     <div class="player-wrapper">
-                        <iframe id="ytplayer" src="https://www.youtube.com/embed/vJG9PDaXNaQ?rel=0&controls=0&modestbranding=1&showinfo=0&enablejsapi=1&playerapiid=ytplayer" frameborder="0"></iframe>
+                        <iframe id="ytplayer" src="https://www.youtube.com/embed/vJG9PDaXNaQ?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;playerapiid=ytplayer" frameborder="0"></iframe>
                     </div>
                 </div>
             </li>

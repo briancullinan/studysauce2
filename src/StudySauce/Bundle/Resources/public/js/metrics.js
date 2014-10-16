@@ -15,8 +15,8 @@ Date.prototype.getFirstDayOfWeek = function () {
 
 jQuery(document).ready(function () {
 
-    var timeline = jQuery('#timeline'),
-        piechart = jQuery('#pie-chart');
+    var timeline = jQuery('#timeline, .timeline'),
+        piechart = jQuery('#pie-chart, .pie-chart');
 
     var m = [30, 0, 50, 0],
         w = 475 - m[1] - m[3],
@@ -32,13 +32,13 @@ jQuery(document).ready(function () {
         xAxisLine2,
         xAxisTotals;
     var week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    var svg = d3.select("#timeline").append("svg")
+    var svg = d3.select("#timeline, .timeline").append("svg")
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])
         .append("g")
         .attr("transform", "translate(" + m[1] + "," + m[0] + ")");
 
-    var svg2 = d3.select("#pie-chart").append("svg")
+    var svg2 = d3.select("#pie-chart, .pie-chart").append("svg")
         .attr("width", w2 + m[1] + m[3])
         .attr("height", h2)
         .append("g");
@@ -57,10 +57,10 @@ jQuery(document).ready(function () {
                 w2 = piechart.width() - m[1] - m[3];
                 h = (timeline.width() * 12 / 16) - m[0] - m[2];
                 h2 = (piechart.width() * 12 / 16);
-                d3.select('#timeline svg')
+                d3.select('#timeline svg, .timeline svg')
                     .attr("width", w + m[1] + m[3])
                     .attr("height", h + m[0] + m[2]);
-                d3.select('#pie-chart svg')
+                d3.select('#pie-chart svg, .pie-chart svg')
                     .attr("width", w2 + m[1] + m[3])
                     .attr("height", h2);
                 setTimeout(redraw, 100);
