@@ -4,3 +4,4 @@
 /web/bundles
 Thumbs.db
 /src/StudySauce/Bundle/Entity/*.php~
+/app/logs
