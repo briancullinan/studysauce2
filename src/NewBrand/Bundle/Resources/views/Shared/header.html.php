@@ -18,9 +18,5 @@
         <div id="welcome-message"><strong>Brian</strong>
             <a href="/user/logout" title="Log out">logout</a>    </div>
         <div id="jquery_jplayer" style="width: 0px; height: 0px;"><audio id="jp_audio_0" preload="metadata"></audio></div>
-        <script type="text/javascript">
-            window.musicLinks = ["\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Concerto No.6 in B flat major - II. Andante un poco adagio.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Piano Concerto No. 15 in B flat major, K450 - II. Andante.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Piano Concerto no.2 in Bb [K. 39]-0-Mozart - Concerto No.2 in B flat major - II. Andante-2081-6966.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Concerto No.17 in G - II. Andante.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Concertone in C Major, K. 190 - II. Andante.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Concerto No.16 in D for piano - II. Andante.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Concerto No.1 in F major - II. Andante.mp3","\/sites\/studysauce.com\/themes\/successinc\/music\/Mozart - Concerto No.5 in D major - II. Andante ma un poco Adagio.mp3"];
-            window.musicIndex = 0;
-        </script>
     </div>
 </div>

@@ -50,6 +50,26 @@ function ssMergeScripts(content)
     return scripts;
 }
 
+$(document).ready(function () {
+    $('.sinclude').each(function () {
+        var that = $(this),
+            url = that.attr('data-src');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'text',
+            success: function (data)
+            {
+                var newStuff = $(data),
+                    styles = ssMergeStyles(newStuff),
+                    scripts = ssMergeScripts(newStuff);
+                newStuff = newStuff.not(styles).not(scripts);
+                newStuff.appendTo(that);
+            }
+        });
+    });
+});
+
 $(document).ajaxSuccess(function(event, jqXHR, ajaxOptions, data) {
     if(typeof(data.redirect) != 'undefined')
     {

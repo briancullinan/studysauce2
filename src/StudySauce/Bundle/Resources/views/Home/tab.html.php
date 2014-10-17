@@ -13,6 +13,7 @@ foreach ($view['assetic']->stylesheets(
         '@StudySauceBundle/Resources/public/css/checkin.css',
         '@StudySauceBundle/Resources/public/css/clock.css',
         '@StudySauceBundle/Resources/public/css/plan.css',
+        '@StudySauceBundle/Resources/public/css/tipsy.css',
         '@StudySauceBundle/Resources/public/css/metrics.css',
     ],
     [],
@@ -31,6 +32,7 @@ foreach ($view['assetic']->javascripts(
         '@StudySauceBundle/Resources/public/js/home.js',
         '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
         '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
+        '@StudySauceBundle/Resources/public/js/checkin.js',
         '@StudySauceBundle/Resources/public/js/metrics.js'
     ],
     [],
@@ -62,11 +64,21 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
     
-    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Goals:widget')); ?>
-    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget')); ?>
-    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget')); ?>
-    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:widget')); ?>
-    <?php print $view['actions']->render(new ControllerReference('StudySauceBundle:Plan:widget')); ?>
+    <?php
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Goals:widget'));
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget'));
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget'));
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:widget'));
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Plan:widget'));
+    ?>
 </div>
 
-<?php $view['slots']->stop(); ?>
+<?php $view['slots']->stop();
+
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsmessages'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinempty'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerexpire'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
+$view['slots']->stop();

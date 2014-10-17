@@ -106,12 +106,6 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
 }
 
 if($app->getRequest()->get('_format') == 'tab') {
-    // merge styles
-    /*?><script type="text/javascript">
-        ssMergeStyles($(<?php print json_encode($view['slots']->get('stylesheets')); ?>));
-    </script>
-<?php
-    */
     $view['slots']->output('stylesheets');
     $view['slots']->output('body');
     $view['slots']->output('javascripts');

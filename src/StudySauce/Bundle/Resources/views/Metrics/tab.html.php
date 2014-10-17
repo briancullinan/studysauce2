@@ -38,8 +38,12 @@ foreach ($view['assetic']->javascripts([
     ], [], ['output' => 'bundles/studysauce/js/*.js']
 ) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-$view['slots']->stop();
+<?php endforeach; ?>
+<script type="text/javascript">
+    window.initialHistory = JSON.parse('<?php print json_encode($times); ?>');
+    window.classNames = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getName();}, $courses)); ?>');
+</script>
+<?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
 
@@ -72,10 +76,6 @@ $view['slots']->start('body'); ?>
             </div>
         </div>
         <hr>
-        <script type="text/javascript">
-            window.initialHistory = JSON.parse('<?php print json_encode($times); ?>');
-            window.classNames = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getName();}, $courses)); ?>');
-        </script>
         <div id="checkins-list">
             <?php
             reset($checkouts);

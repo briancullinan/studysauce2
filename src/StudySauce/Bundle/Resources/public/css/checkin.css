@@ -33,6 +33,11 @@
     /* color: #FF0D00; */
 }
 
+.checkin-widget > a
+{
+    margin: 20px;
+}
+
 .checkin-widget > a span,
 #checkin .classes a span {
     display: block;

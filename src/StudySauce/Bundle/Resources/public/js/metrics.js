@@ -13,10 +13,7 @@ Date.prototype.getFirstDayOfWeek = function () {
     return new Date(d.setDate(diff));
 };
 
-jQuery(document).ready(function () {
-
-    var timeline = jQuery('#timeline, .timeline'),
-        piechart = jQuery('#pie-chart, .pie-chart');
+$(document).ready(function () {
 
     var m = [30, 0, 50, 0],
         w = 475 - m[1] - m[3],
@@ -30,65 +27,15 @@ jQuery(document).ready(function () {
         y,
         xAxis,
         xAxisLine2,
-        xAxisTotals;
-    var week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    var svg = d3.select("#timeline, .timeline").append("svg")
-        .attr("width", w + m[1] + m[3])
-        .attr("height", h + m[0] + m[2])
-        .append("g")
-        .attr("transform", "translate(" + m[1] + "," + m[0] + ")");
-
-    var svg2 = d3.select("#pie-chart, .pie-chart").append("svg")
-        .attr("width", w2 + m[1] + m[3])
-        .attr("height", h2)
-        .append("g");
-
-    var history,
+        xAxisTotals,
+        history,
         classes,
-        resizeTimeout = null;
-
-    jQuery(window).resize(function () {
-        if(resizeTimeout != null)
-            clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function () {
-            if (timeline.width() != timeline.find('svg').attr('width'))
-            {
-                w = timeline.width() - m[1] - m[3];
-                w2 = piechart.width() - m[1] - m[3];
-                h = (timeline.width() * 12 / 16) - m[0] - m[2];
-                h2 = (piechart.width() * 12 / 16);
-                d3.select('#timeline svg, .timeline svg')
-                    .attr("width", w + m[1] + m[3])
-                    .attr("height", h + m[0] + m[2]);
-                d3.select('#pie-chart svg, .pie-chart svg')
-                    .attr("width", w2 + m[1] + m[3])
-                    .attr("height", h2);
-                setTimeout(redraw, 100);
-            }
-        }, 100);
-    });
-    if(timeline.is(':visible'))
-        jQuery(window).trigger('resize');
-
-    jQuery.fn.updateMetrics = function (newHistory) {
-        updateHistory(newHistory);
-        if (timeline.width() != timeline.find('svg').width())
-            jQuery(window).trigger('resize');
-        else
-            setTimeout(redraw, 100);
-    };
-
-    jQuery('#metrics').on('show', function () {
-        jQuery(window).trigger('resize');
-    });
-
-    if (typeof window.initialHistory != 'undefined') {
-        updateHistory(window.initialHistory);
-        if (timeline.width() != timeline.find('svg').width())
-            jQuery(window).trigger('resize');
-    }
+        resizeTimeout = null,
+        arc = d3.svg.arc();
 
     function updateHistory(newHistory) {
+        var svg = d3.selectAll($('#timeline:visible, .timeline:visible').find('svg > g').toArray());
+        var svg2 = d3.selectAll($('#pie-chart:visible, .pie-chart:visible').find('svg > g').toArray());
         history = newHistory;
 
         classes = d3.nest()
@@ -102,8 +49,9 @@ jQuery(document).ready(function () {
                 d.time = new Date(+d.time * 1000).getFirstDayOfWeek();
                 d.length0 = +d.length0;
                 // add the groups length that came before this one
-                var g = d.time.getWeekNumber();
-                var prev = 0;
+
+                var g = d.time.getWeekNumber(),
+                    prev = 0;
                 classes.forEach(function (c, i) {
                     if (i < j && typeof c.bases[g] != 'undefined')
                         prev += c.bases[g];
@@ -134,9 +82,93 @@ jQuery(document).ready(function () {
         g2.exit().remove();
 
         color = color.domain(window.classNames);
+
+        redraw();
+    }
+
+    $('body').on('show', '#metrics,#home', function () {
+        var timeline = $(this).find('#timeline, .timeline'),
+            piechart = $(this).find('#pie-chart, .pie-chart');
+
+        if(timeline.find('svg').length == 0)
+            d3.selectAll(timeline.toArray()).append("svg")
+                .attr("width", w + m[1] + m[3])
+                .attr("height", h + m[0] + m[2])
+                .append("g")
+                .attr("transform", "translate(" + m[1] + "," + m[0] + ")");
+
+        if(piechart.find('svg').length == 0)
+            d3.selectAll(piechart.toArray()).append("svg")
+                .attr("width", w2 + m[1] + m[3])
+                .attr("height", h2)
+                .append("g");
+
+        if (typeof window.initialHistory != 'undefined') {
+            updateHistory(window.initialHistory);
+            if (timeline.width() != timeline.find('svg').width())
+                $(window).trigger('resize');
+        }
+    });
+
+    $('#metrics:visible, #home:visible').trigger('show');
+
+    function arcTween(d) {
+        var path = d3.select(this),
+            y0 = Math.min(h2, w2);
+
+        var r = y0 / 2,
+            a = Math.cos(Math.PI / 2),
+            xx = ((a) * w2 + (1 - a) * w2 / 2),
+            yy = ((a) * h2 + (1 - a) * h2 / 2),
+            f = {
+                innerRadius: r / 2, //Math.min($(window).width() / 480, 1) * 50, //r - 60 / (2 - a),
+                outerRadius: r,
+                startAngle: a * (Math.PI / 2 - y0 / r) + (1 - a) * d.startAngle,
+                endAngle: a * (Math.PI / 2) + (1 - a) * d.endAngle
+            };
+
+        path.attr("transform", "translate(" + xx + "," + yy + ")");
+        path.attr("d", arc(f));
+    }
+
+    function redrawPie() {
+        var piechart = $('#pie-chart:visible, .pie-chart:visible').find('svg'),
+            svg2 = d3.selectAll(piechart.toArray()),
+            g = svg2.selectAll(".symbol");
+
+        var pie = d3.layout.pie()
+            .value(function (d) { return d.sumLength; });
+
+        g.each(function () {
+            var e = d3.select(this);
+
+            if (e.select('path').empty())
+                e.append("path");
+            e.select('path')
+                .style("fill", function (d) { return color(d.key); })
+        });
+
+        g.select('path')
+            .style("fill", function (d) { return color(d.key); })
+            .data(function () { return pie(classes); })
+            .each(arcTween);
+
+        piechart.find('.symbol path').tipsy({
+                gravity: $.fn.tipsy.autoBounds(100, 'w'),
+                html: true,
+                title: function () {
+                    var total = d3.sum(classes, function (c) { return c.sumLength; }),
+                        d = this.__data__.data; //, c = color(d.key);
+                    return d.key + '<br />' + (Math.round(d.sumLength * 10 / 3600) / 10) + ' hrs' + '<br />' + (Math.round(d.sumLength / total * 1000) / 10) + '%';
+                }
+            })
+
     }
 
     function redraw() {
+        var timeline = $('#timeline:visible, .timeline:visible').find('svg'),
+            svg = d3.selectAll(timeline.toArray());
+
         if (classes.length == 0)
             return;
 
@@ -239,9 +271,8 @@ jQuery(document).ready(function () {
 
         });
 
-        jQuery("svg .symbol rect")
-            .tipsy({
-                gravity: jQuery.fn.tipsy.autoBounds(100, 'w'),
+        timeline.find('.symbol rect').tipsy({
+                gravity: $.fn.tipsy.autoBounds(100, 'w'),
                 html: true,
                 title: function () {
                     var d = this.__data__; //, c = color(d['class']);
@@ -263,79 +294,28 @@ jQuery(document).ready(function () {
         redrawPie();
     }
 
-    function redrawPie() {
-        var g = svg2.selectAll(".symbol");
+    $(window).resize(function () {
+        if(resizeTimeout != null)
+            clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+            var timeline = $('#timeline:visible, .timeline:visible'),
+                piechart = $('#pie-chart:visible, .pie-chart:visible');
+            if (timeline.width() != timeline.find('svg').attr('width'))
+            {
+                w = timeline.width() - m[1] - m[3];
+                w2 = piechart.width() - m[1] - m[3];
+                h = (timeline.width() * 12 / 16) - m[0] - m[2];
+                h2 = (piechart.width() * 12 / 16);
+                d3.select('#timeline svg, .timeline svg')
+                    .attr("width", w + m[1] + m[3])
+                    .attr("height", h + m[0] + m[2]);
+                d3.select('#pie-chart svg, .pie-chart svg')
+                    .attr("width", w2 + m[1] + m[3])
+                    .attr("height", h2);
+                setTimeout(redraw, 100);
+            }
+        }, 100);
+    });
 
-        var pie = d3.layout.pie()
-            .value(function (d) { return d.sumLength; });
-
-        var arc = d3.svg.arc();
-
-        g.each(function () {
-            var e = d3.select(this);
-
-            /*
-             if(e.select('text').empty())
-             e.append("text");
-             e.select('text')
-             .attr('text-anchor', 'middle')
-             .attr("x", 0)
-             .attr("dy", ".31em")
-             .text(p.key);
-             */
-
-            if (e.select('path').empty())
-                e.append("path");
-            e.select('path')
-                .style("fill", function (d) { return color(d.key); })
-        });
-
-        g.select('path')
-            .style("fill", function (d) { return color(d.key); })
-            .data(function () { return pie(classes); })
-//                .transition()
-//                .duration(100)
-            .each(arcTween);
-//                .tween("arc", arcTween);
-
-
-        function arcTween(d) {
-            var path = d3.select(this),
-            //    text = d3.select(this.parentNode).select('text'),
-            //    x0 = x(d.data.key),
-                extraHeight = Math.min(jQuery(window).width() / 600, 1) * 50,
-                y0 = Math.min(h2, w2);
-            //this.parentNode.appendChild(text[0][0]);
-
-            var r = y0 / 2,
-                a = Math.cos(Math.PI / 2),
-                xx = ((a) * w2 + (1 - a) * w2 / 2),
-                yy = ((a) * h2 + (1 - a) * h2 / 2),
-                f = {
-                    innerRadius: r / 2, //Math.min(jQuery(window).width() / 480, 1) * 50, //r - 60 / (2 - a),
-                    outerRadius: r,
-                    startAngle: a * (Math.PI / 2 - y0 / r) + (1 - a) * d.startAngle,
-                    endAngle: a * (Math.PI / 2) + (1 - a) * d.endAngle
-                };
-
-            path.attr("transform", "translate(" + xx + "," + yy + ")");
-            path.attr("d", arc(f));
-            //text.attr("transform", "translate(" + arc.centroid(f) + ")translate(" + xx + "," + yy + ")");
-            //text.attr("transform", "translate(" + arc.centroid(f) + ")translate(" + xx + "," + yy + ")rotate(" + ((f.startAngle + f.endAngle) / 2 + 3 * Math.PI / 2) * 180 / Math.PI + ")rotate(" + (100) + ")");
-            //text.attr("transform", "translate(" + xx + "," + yy + ")rotate(" + ((f.startAngle + f.endAngle) / 2 + 2 * Math.PI / 2) * 180 / Math.PI + ")");
-        }
-
-        jQuery("svg .symbol path")
-            .tipsy({
-                gravity: jQuery.fn.tipsy.autoBounds(100, 'w'),
-                html: true,
-                title: function () {
-                    var total = d3.sum(classes, function (c) { return c.sumLength; }),
-                        d = this.__data__.data; //, c = color(d.key);
-                    return d.key + '<br />' + (Math.round(d.sumLength * 10 / 3600) / 10) + ' hrs' + '<br />' + (Math.round(d.sumLength / total * 1000) / 10) + '%';
-                }
-            })
-
-    }
 });
 

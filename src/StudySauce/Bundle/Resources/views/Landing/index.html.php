@@ -36,7 +36,7 @@ foreach ($view['assetic']->javascripts(
     ['output' => 'bundles/studysauce/js/*.js']
 ) as $url):
     ?>
-    <script src="<?php echo $view->escape($url) ?>"></script>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 
 $view['slots']->stop();

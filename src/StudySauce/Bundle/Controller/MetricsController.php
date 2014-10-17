@@ -151,7 +151,7 @@ class MetricsController extends Controller
                     $checkins[$checkin->getCheckin()->getTimestamp()] = $checkin;
 
                     // add checkout times
-                    if ($checkin->getCheckout()->getTimestamp() > 0) {
+                    if (!empty($checkin->getCheckout())) {
                         $checkouts[$checkin->getCheckout()->getTimestamp()] = $checkin;
                     }
                     $checkouts[min(time(), $checkin->getCheckin()->getTimestamp() + 3600)] = $checkin;

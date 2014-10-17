@@ -5,7 +5,8 @@ $(document).ready(function () {
         minutes = -1,
         sessionStart = null,
         clock = null,
-        checkin = $('#checkin');
+        checkin = $('#checkin'),
+        body = $('body');
 
     function setClock() {
         var seconds = new Date().getTime() / 1000 - sessionStart + 59,
@@ -15,7 +16,7 @@ $(document).ready(function () {
             return;
         hours = tmpHours;
         minutes = tmpMinutes;
-        checkin.find('.clock').each(function () {
+        body.find('.clock').each(function () {
             var that = $(this);
             if (hours.length == 1) {
                 that.find('ul:first-of-type').find('li').removeClass('active')
@@ -45,10 +46,41 @@ $(document).ready(function () {
         });
     }
 
+    function startClock() {
+        if (clock != null) {
+            clearInterval(clock);
+            clock = null;
+        }
+        sessionStart = new Date().getTime() / 1000;
+        setClock();
+        clock = setInterval(function () {
+            setClock();
+            if (new Date().getTime() / 1000 - sessionStart >= TIMER_SECONDS - 59) {
+                clearInterval(clock);
+                clock = null;
+                sessionStart = new Date().getTime() / 1000;
+                setClock();
+                // show expire message
+                $('.minplayer-default-pause').trigger('click');
+                body.find('#checkin .classes a.checked-in, #home .checkin-widget a.checked-in').first().trigger('click');
+            }
+        }, 1000);
+    }
+
+    function stopClock() {
+        if (clock != null) {
+            clearInterval(clock);
+            clock = null;
+        }
+        $('.minplayer-default-pause').trigger('click');
+        sessionStart = new Date().getTime() / 1000;
+        setClock();
+    }
+
     function checkinCallback(pos, cid, checkedIn) {
         var checked = [],
             checklist = $('#checklist'),
-            sdsmessages = checkin.find('#sds-messages'),
+            sdsmessages = $('#sds-messages'),
             lat = pos != null && typeof pos.coords != 'undefined' ? pos.coords.latitude : '',
             lng = pos != null && typeof pos.coords != 'undefined' ? pos.coords.longitude : '';
         checklist.find('input:checked').each(function () { checked[checked.length] = $(this).attr('name'); });
@@ -65,7 +97,7 @@ $(document).ready(function () {
                 csrf_token: checkin.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                var that = checkin.find('#checkin-' + data.cid);
+                var that = body.find('#checkin-' + data.cid + ', #home-checkin-' + data.cid);
                 checkin.find('input[name="csrf_token"]').val(data.csrf_token);
 
                 // update clock
@@ -87,50 +119,50 @@ $(document).ready(function () {
         });
     }
 
+    function sessionBegin(evt, button, id) {
+        var checklist = $('#checklist'),
+            sdsmessages = $('#sds-messages');
+        evt.preventDefault();
+
+        // the default for timer expire is to go to metrics tab
+        $('#timer-expire').off('close').on('close', function (evt) {
+            evt.preventDefault();
+            $('#timer-expire').modal();
+            window.location = '#metrics';
+        });
+
+        if (sdsmessages.find('.show').length > 0)
+        {
+            sdsmessages.modal();
+        }
+        else
+        {
+            checklist.find('.checkboxes input').removeAttr('checked');
+            checklist.modal();
+        }
+
+        $.merge(checklist, sdsmessages).off('click', 'a[href="#study"]').on('click', 'a[href="#study"]', function (evt) {
+            evt.preventDefault();
+            if($(this).parent().is('.invalid'))
+                return;
+            $(this).parent().addClass('invalid');
+            $('.minplayer-default-play').trigger('click');
+            //if(typeof navigator.geolocation != 'undefined')
+            //{
+            //    locationTimeout = setTimeout(callback, 2000);
+            //    navigator.geolocation.getCurrentPosition(callback, callback, {maximumAge: 3600000, timeout:1000});
+            //}
+            //else
+            checkinCallback(null, id, false);
+            button.scrollintoview({padding: {top: 120, bottom: 200, left: 0, right: 0}});
+        });
+    }
+
     function checkinClick(evt)
     {
         evt.preventDefault();
-        var checklist = $('#checklist'),
-            sdsmessages = $('#sds-messages'),
-            that = $(this),
-            id = that.attr('id').substr(8);
-
-        var sessionBegin = function (evt) {
-            evt.preventDefault();
-
-            // the default for timer expire is to go to metrics tab
-            $('#timer-expire').off('close').on('close', function (evt) {
-                evt.preventDefault();
-                $('#timer-expire').modal();
-                window.location = '#metrics';
-            });
-
-            if (sdsmessages.find('.show').length > 0)
-            {
-                $('#sds-messages').modal();
-            }
-            else
-            {
-                checklist.find('.checkboxes input').removeAttr('checked');
-                $('#checklist').modal();
-            }
-
-            $.merge(checklist, sdsmessages).off('click', 'a[href="#study"]').on('click', 'a[href="#study"]', function (evt) {
-                evt.preventDefault();
-                if($(this).parent().is('.invalid'))
-                    return;
-                $(this).parent().addClass('invalid');
-                $('.minplayer-default-play').trigger('click');
-                //if(typeof navigator.geolocation != 'undefined')
-                //{
-                //    locationTimeout = setTimeout(callback, 2000);
-                //    navigator.geolocation.getCurrentPosition(callback, callback, {maximumAge: 3600000, timeout:1000});
-                //}
-                //else
-                checkinCallback(null, id, false);
-                that.scrollintoview({padding: {top: 120, bottom: 200, left: 0, right: 0}});
-            });
-        };
+        var that = $(this),
+            id = that.attr('id').replace('home-checkin-', '').replace('checkin-', '');
 
         // if it is in session always display timer expire
         if (that.is('.checked-in'))
@@ -143,7 +175,7 @@ $(document).ready(function () {
             $('#timer-expire').modal();
             checkinCallback(null, id, true);
         }
-        else if (checkin.find('.classes a.checked-in').length > 0)
+        else if (body.find('#checkin .classes a.checked-in, #home .checkin-widget a.checked-in').length > 0)
         {
             if(clock != null)
                 clearInterval(clock);
@@ -153,54 +185,26 @@ $(document).ready(function () {
 
             // switch off other checkin buttons
             var tmpThat = checkin.find('.classes a.checked-in').first();
-            checkinCallback(null, tmpThat.attr('id').substr(8), true);
+            checkinCallback(null, tmpThat.attr('id').replace('home-checkin-', '').replace('checkin-', ''), true);
 
             // show expire message
-            $('#timer-expire').off('close').on('close', sessionBegin).modal();
+            $('#timer-expire').off('close').on('close', function (evt) {
+                sessionBegin(evt, that, id);
+            }).modal();
         }
         else
-            sessionBegin(evt);
+            sessionBegin(evt, that, id);
     }
 
     // perform ajax call when clicked
-    checkin.on('click', '.classes a', checkinClick);
-    checkin.on('dragstart', '.classes a', checkinClick);
+    body.on('click', '#checkin .classes a, #home .checkin-widget a', checkinClick);
+    body.on('dragstart', '#checkin .classes a, #home .checkin-widget a', checkinClick);
 
     sessionStart = new Date().getTime() / 1000;
     setClock();
-    function startClock() {
-        if (clock != null) {
-            clearInterval(clock);
-            clock = null;
-        }
-        sessionStart = new Date().getTime() / 1000;
-        setClock();
-        clock = setInterval(function () {
-            setClock();
-            if (new Date().getTime() / 1000 - sessionStart >= TIMER_SECONDS - 59) {
-                clearInterval(clock);
-                clock = null;
-                sessionStart = new Date().getTime() / 1000;
-                setClock();
-                // show expire message
-                $('.minplayer-default-pause').trigger('click');
-                checkin.find('.classes a.checked-in').first().trigger('click');
-            }
-        }, 1000);
-    }
-
-    function stopClock() {
-        if (clock != null) {
-            clearInterval(clock);
-            clock = null;
-        }
-        $('.minplayer-default-pause').trigger('click');
-        sessionStart = new Date().getTime() / 1000;
-        setClock();
-    }
 
     $(window).unload(function () {
-        checkin.find('.classes a.checked-in').first().trigger('click');
+        body.find('#checkin .classes a.checked-in, #home .checkin-widget a.checked-in').first().trigger('click');
     });
 
 });
