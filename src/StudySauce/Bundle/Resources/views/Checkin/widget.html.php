@@ -6,7 +6,7 @@
             <?php echo $view->render('StudySauceBundle:Checkin:digits.html.php'); ?>
         </div>
         <?php foreach ($courses as $i => $c) {
-            ?><a href="#class<?php print $i; ?>" class="class<?php print $i; ?>" id="home-checkin-<?php print $c->getId(); ?>"><span><?php print $c->getName(); ?></span></a><?php
+            ?><a href="#class<?php print $i; ?>" class="checkin class<?php print $i; ?> cid<?php print $c->getId(); ?>"><span><?php print $c->getName(); ?></span></a><?php
         } ?>
     </div>
 </div>

@@ -3,6 +3,12 @@
     text-align: center;
 }
 
+#metrics-empty .btn-default,
+#metrics-empty .close
+{
+    display: none;
+}
+
 #metrics .centrify {
     margin: 0 auto;
 }

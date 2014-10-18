@@ -28,7 +28,6 @@ $(document).ready(function () {
         xAxis,
         xAxisLine2,
         xAxisTotals,
-        history,
         classes,
         resizeTimeout = null,
         arc = d3.svg.arc();
@@ -36,11 +35,10 @@ $(document).ready(function () {
     function updateHistory(newHistory) {
         var svg = d3.selectAll($('#timeline:visible, .timeline:visible').find('svg > g').toArray());
         var svg2 = d3.selectAll($('#pie-chart:visible, .pie-chart:visible').find('svg > g').toArray());
-        history = newHistory;
 
         classes = d3.nest()
             .key(function (d) { return d['class']; })
-            .entries(history);
+            .entries(newHistory);
 
         classes.forEach(function (s, j) {
             s.bases = {};
@@ -89,6 +87,13 @@ $(document).ready(function () {
     $('body').on('show', '#metrics,#home', function () {
         var timeline = $(this).find('#timeline, .timeline'),
             piechart = $(this).find('#pie-chart, .pie-chart');
+
+        if(window.initialHistory.length == 0 && $(this).is('#metrics'))
+            $('#metrics-empty').modal({
+                backdrop: 'static',
+                keyboard: false,
+                modalOverflow: true
+            });
 
         if(timeline.find('svg').length == 0)
             d3.selectAll(timeline.toArray()).append("svg")

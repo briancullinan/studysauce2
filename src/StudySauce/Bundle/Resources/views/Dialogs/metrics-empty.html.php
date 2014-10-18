@@ -1,14 +1,10 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
- $view['slots']->start('modal-header') ?>
-<a href="<?php print $view['router']->generate('schedule'); ?>">Check in to start tracking your study hours</a>
+$view['slots']->start('modal-header') ?>
+<a href="<?php print $view['router']->generate('checkin'); ?>">Check in to start tracking your study hours</a>
 <?php $view['slots']->stop();
 
- $view['slots']->start('modal-body');
-
- $view['slots']->stop();
-
- $view['slots']->start('modal-footer') ?>
-<a href="<?php print $view['router']->generate('schedule'); ?>" class="btn btn-primary">Checkin</a>
+$view['slots']->start('modal-footer') ?>
+<a href="<?php print $view['router']->generate('checkin'); ?>" class="btn btn-primary" data-dismiss="modal">Checkin</a>
 <?php $view['slots']->stop() ?>
 

@@ -1,4 +1,4 @@
-<?php $view->extend('Course1Bundle:Lesson1:layout.html.php');
+<?php $view->extend('Course1Bundle:Shared:layout.html.php');
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step0" id="lesson4">

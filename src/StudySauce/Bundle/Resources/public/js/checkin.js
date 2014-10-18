@@ -1,4 +1,6 @@
 const TIMER_SECONDS = 3600;
+const checkinBtn = '#checkin .classes a, #home .checkin-widget a';
+const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget a.checked-in';
 
 $(document).ready(function () {
     var hours = -1,
@@ -62,7 +64,7 @@ $(document).ready(function () {
                 setClock();
                 // show expire message
                 $('.minplayer-default-pause').trigger('click');
-                body.find('#checkin .classes a.checked-in, #home .checkin-widget a.checked-in').first().trigger('click');
+                body.find(checkedInBtn).first().trigger('click');
             }
         }, 1000);
     }
@@ -97,7 +99,7 @@ $(document).ready(function () {
                 csrf_token: checkin.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                var that = body.find('#checkin-' + data.cid + ', #home-checkin-' + data.cid);
+                var that = body.find('.checkin.cid' + data.cid);
                 checkin.find('input[name="csrf_token"]').val(data.csrf_token);
 
                 // update clock
@@ -162,7 +164,7 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var that = $(this),
-            id = that.attr('id').replace('home-checkin-', '').replace('checkin-', '');
+            id = (/cid([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1];
 
         // if it is in session always display timer expire
         if (that.is('.checked-in'))
@@ -175,7 +177,7 @@ $(document).ready(function () {
             $('#timer-expire').modal();
             checkinCallback(null, id, true);
         }
-        else if (body.find('#checkin .classes a.checked-in, #home .checkin-widget a.checked-in').length > 0)
+        else if (body.find(checkedInBtn).length > 0)
         {
             if(clock != null)
                 clearInterval(clock);
@@ -184,8 +186,8 @@ $(document).ready(function () {
             setClock();
 
             // switch off other checkin buttons
-            var tmpThat = checkin.find('.classes a.checked-in').first();
-            checkinCallback(null, tmpThat.attr('id').replace('home-checkin-', '').replace('checkin-', ''), true);
+            var tmpThat = body.find(checkedInBtn).first();
+            checkinCallback(null, (/cid([0-9]+)(\s|$)/ig).exec(tmpThat.attr('class'))[1], true);
 
             // show expire message
             $('#timer-expire').off('close').on('close', function (evt) {
@@ -197,14 +199,14 @@ $(document).ready(function () {
     }
 
     // perform ajax call when clicked
-    body.on('click', '#checkin .classes a, #home .checkin-widget a', checkinClick);
-    body.on('dragstart', '#checkin .classes a, #home .checkin-widget a', checkinClick);
+    body.on('click', checkinBtn, checkinClick);
+    body.on('dragstart', checkinBtn, checkinClick);
 
     sessionStart = new Date().getTime() / 1000;
     setClock();
 
     $(window).unload(function () {
-        body.find('#checkin .classes a.checked-in, #home .checkin-widget a.checked-in').first().trigger('click');
+        body.find(checkedInBtn).first().trigger('click');
     });
 
 });

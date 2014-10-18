@@ -1,6 +1,6 @@
 <?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
- $view->extend('Course1Bundle:Lesson1:layout.html.php');
+ $view->extend('Course1Bundle:Shared:layout.html.php');
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step2" id="lesson1-step2">
@@ -57,7 +57,8 @@
             <p>We will help you develop a plan to make sure that you are spending the right amount of time studying.</p>
         </div>
 
-        <div class="highlighted-link">
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+        <div class="highlighted-link invalid">
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('lesson1', ['_step' => 3]); ?>" class="more">Next</a>
         </div>

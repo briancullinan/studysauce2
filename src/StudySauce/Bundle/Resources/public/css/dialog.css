@@ -13,6 +13,11 @@
     color: #fff;
 }
 
+.modal .modal-header a
+{
+    color:#ffffff;
+}
+
 .close
 {
     color:#FFF;

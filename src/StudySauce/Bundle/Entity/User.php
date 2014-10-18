@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Course1\Bundle\Entity\Quiz1;
 
 /**
  * @ORM\Entity
@@ -65,6 +66,12 @@ class User extends BaseUser
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $emails;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz1", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $quiz1s;
 
     /**
      * @ORM\Column(type="datetime", name="created")
@@ -464,5 +471,38 @@ class User extends BaseUser
     public function getVisits()
     {
         return $this->visits;
+    }
+
+    /**
+     * Add quiz1s
+     *
+     * @param \StudySauce\Bundle\Entity\Quiz1 $quiz1s
+     * @return User
+     */
+    public function addQuiz1(\StudySauce\Bundle\Entity\Quiz1 $quiz1s)
+    {
+        $this->quiz1s[] = $quiz1s;
+
+        return $this;
+    }
+
+    /**
+     * Remove quiz1s
+     *
+     * @param \StudySauce\Bundle\Entity\Quiz1 $quiz1s
+     */
+    public function removeQuiz1(\StudySauce\Bundle\Entity\Quiz1 $quiz1s)
+    {
+        $this->quiz1s->removeElement($quiz1s);
+    }
+
+    /**
+     * Get quiz1s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getQuiz1s()
+    {
+        return $this->quiz1s;
     }
 }

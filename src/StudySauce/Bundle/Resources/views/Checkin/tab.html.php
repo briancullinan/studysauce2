@@ -37,7 +37,7 @@ $view['slots']->start('body'); ?>
             foreach($courses as $i => $c)
             {
                 /** @var $c Course */
-                ?><a href="#class<?php print $i; ?>" class="class<?php print $i; ?>" id="checkin-<?php print $c->getId(); ?>"><span><?php print $c->getName(); ?></span></a><?php
+                ?><a href="#class<?php print $i; ?>" class="checkin class<?php print $i; ?> cid<?php print $c->getId(); ?>"><span><?php print $c->getName(); ?></span></a><?php
             }
             ?>
         </p>

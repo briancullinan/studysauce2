@@ -5,3 +5,4 @@
 Thumbs.db
 /src/StudySauce/Bundle/Entity/*.php~
 /app/logs
+/src/Course1/Bundle/Entity/*.php~

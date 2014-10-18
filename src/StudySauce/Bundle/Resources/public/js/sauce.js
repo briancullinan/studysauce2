@@ -45,6 +45,16 @@ function ssMergeScripts(content)
             $.getScript(url.replace(/\?.*/ig, ''));
             console.log(url.replace(/\?.*/ig, ''));
         }
+        else {
+            try
+            {
+                eval($(this).text());
+            }
+            catch(e)
+            {
+
+            }
+        }
     });
 
     return scripts;

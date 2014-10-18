@@ -12,4 +12,9 @@ The Mozart Effect®
     <a href="http://lrs.ed.uiuc.edu/students/lerch1/edpsy/mozart_effect.html#The%20Mozart" target="_blank">Donna Lerch's article looking into several studies</a><br>
     <a href="https://musopen.org/" target="_blank">Music provided by MusOpen</a>
 </div>
+<?php $view['slots']->stop();
+
+$view['slots']->start('modal-footer') ?>
+
 <?php $view['slots']->stop() ?>
+

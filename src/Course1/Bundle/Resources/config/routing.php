@@ -15,6 +15,22 @@ $collection->add('lesson1', new Route('/course/1/lesson/1/step/{_step}/{_format}
             '_step' => '0|1|2|3|4'
         ]));
 
+$collection->add(
+    'lesson1_update',
+    new Route(
+        '/course/1/lesson/1/update',
+        [
+            '_controller' => 'Course1Bundle:Lesson1:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
 $collection->add('lesson2', new Route('/course/1/lesson/2/step/{_step}/{_format}', [
             '_controller' => 'Course1Bundle:Lesson2:wizard',
             '_step' => 0,

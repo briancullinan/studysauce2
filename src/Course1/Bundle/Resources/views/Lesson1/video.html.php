@@ -1,6 +1,6 @@
 <?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
- $view->extend('Course1Bundle:Lesson1:layout.html.php');
+ $view->extend('Course1Bundle:Shared:layout.html.php');
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step1" id="lesson1-step1">
