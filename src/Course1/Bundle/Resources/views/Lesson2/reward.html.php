@@ -10,10 +10,7 @@
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
         <?php endforeach; ?>
         <span class="badge setup-hours">&nbsp;</span>
-        <div class="description">
-            <h3>You have been awarded the <strong>Goal Setting</strong> badge.</h3>
-            <p>Congratulations on learning how to set effective goals! You will be amazed at the power that simple goal setting will have on your academic performance.</p>
-        </div>
+        <div class="description">&nbsp;</div>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('lesson2', ['_step' => 4]); ?>" class="more">Next</a>
         </div>

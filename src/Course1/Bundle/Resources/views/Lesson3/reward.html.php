@@ -10,10 +10,7 @@
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
         <?php endforeach; ?>
         <span class="badge setup-hours">&nbsp;</span>
-        <div class="description">
-            <h3>You have been awarded the <strong>Procrastination</strong> badge.</h3>
-            <p>Baby goat is tired of your procrastination excuses.</p>
-        </div>
+        <div class="description">&nbsp;</div>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('lesson3', ['_step' => 4]); ?>" class="more">Next</a>
         </div>
