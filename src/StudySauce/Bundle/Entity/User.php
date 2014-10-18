@@ -476,10 +476,10 @@ class User extends BaseUser
     /**
      * Add quiz1s
      *
-     * @param \StudySauce\Bundle\Entity\Quiz1 $quiz1s
+     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
      * @return User
      */
-    public function addQuiz1(\StudySauce\Bundle\Entity\Quiz1 $quiz1s)
+    public function addQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
     {
         $this->quiz1s[] = $quiz1s;
 
@@ -489,9 +489,9 @@ class User extends BaseUser
     /**
      * Remove quiz1s
      *
-     * @param \StudySauce\Bundle\Entity\Quiz1 $quiz1s
+     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
      */
-    public function removeQuiz1(\StudySauce\Bundle\Entity\Quiz1 $quiz1s)
+    public function removeQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
     {
         $this->quiz1s->removeElement($quiz1s);
     }
