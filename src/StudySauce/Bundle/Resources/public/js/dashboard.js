@@ -40,7 +40,7 @@ $(document).ready(function () {
 
             // download the panel
             if(panel.length == 0) {
-                if($(this).is('a'))
+                if($(this).is('a') && $(this).parents('.pane-content').length > 0)
                     item = item.add($(this));
                 item.each(function (i, obj) { loadingAnimation($(obj)); });
                 $.ajax({

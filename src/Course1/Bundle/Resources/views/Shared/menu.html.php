@@ -2,9 +2,9 @@
     <nav>
         <a href="#expand"><span class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span>
             <span class="icon-bar"></span></span></a>
-        <a href="#collapse">Hide</a>
+
         <ul id="course1-menu" class="main-menu accordion">
-            <li><h3><span>&nbsp;</span>Course</h3></li>
+            <li><a href="#collapse">Hide</a><h3><span>&nbsp;</span>Course</h3></li>
             <li class="accordion-group panel">
                 <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-target="#lesson1" data-parent="#course1-menu"><span>1</span>Level 1</a>

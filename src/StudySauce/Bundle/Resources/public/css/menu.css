@@ -11,7 +11,7 @@
     padding-bottom: 30px;
     transition: width ease-in-out .15s;
     box-sizing: border-box;
-    z-index: 900;
+    z-index: 1900;
 }
 
 #right-panel,
@@ -75,7 +75,7 @@
     height:45px;
     width:70px;
     left:0;
-    top:50px;
+    top:-8px;
     background:url(../images/menu_new.png) no-repeat left -102px transparent;
     font-size:14px;
     color:#555555;
@@ -83,6 +83,20 @@
     padding-top:12px;
     padding-left:35px;
     z-index:10;
+}
+
+#right-panel.expanded .main-menu a[href="#collapse"]:hover
+{
+    border:0;
+    background-color:transparent;
+    padding-left:0;
+}
+
+#left-panel.expanded .main-menu a[href="#collapse"]:hover
+{
+    border:0;
+    background-color:transparent;
+    padding-left: 35px;
 }
 
 .squiggle,
@@ -757,9 +771,9 @@
     background-color:#555555;
 }
 
-.navbar-toggle:hover .icon-bar
+#left-panel a[href="#expand"]:hover .icon-bar
 {
-    background-color:#0099BB;
+    background-color:#00CCEE;
 }
 
 #left-panel a[href="#expand"],
@@ -927,7 +941,75 @@
 }
 
 @media all and (max-width: 700px) {
-    #left-panel, #right-panel {
+
+
+    #right-panel.expanded, #left-panel.expanded
+    {
+        position:absolute;
+        height: auto;
+        min-height: 100%;
+    }
+
+    #left-panel nav,
+    #left-panel.expanded nav,
+    #left-panel:not(.collapsed) nav,
+    #right-panel nav,
+    #right-panel.expanded nav,
+    #right-panel:not(.collapsed) nav
+    {
+        overflow-y:visible;
+    }
+
+    #left-panel,
+    #right-panel,
+    #left-panel.collapsed,
+    #right-panel.collapsed
+    {
         width:0;
+        z-index: 2100;
+    }
+
+    #right-panel, #left-panel,
+    #right-panel.expanded, #left-panel.expanded
+    {
+        padding-top:0;
+        padding-bottom:0;
+    }
+
+    #left-panel a[href="#expand"],
+    #right-panel a[href="#expand"],
+    .navbar-toggle,
+    #right-panel .navbar-toggle
+    {
+        width:40px;
+        left:-5px;
+    }
+
+    #left-panel .navbar-toggle
+    {
+        margin-top:10px;
+    }
+
+    #right-panel a[href="#expand"],
+    #right-panel.collapsed a[href="#expand"],
+    #right-panel .navbar-toggle
+    {
+        left: auto;
+        right:-5px;
+    }
+
+    #right-panel .navbar-toggle
+    {
+        overflow:hidden;
+        color:transparent;
+        top:0;
+        transform: none;
+        margin-top: 0;
+        background-position: 50% -5100px;
+    }
+
+    #right-panel a[href="#expand"]:hover .navbar-toggle
+    {
+        background-position: 50% -5200px;
     }
 }

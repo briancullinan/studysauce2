@@ -67,9 +67,9 @@ $view['slots']->start('body'); ?>
     <?php
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Goals:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget'));
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Plan:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:widget'));
-    print $view['actions']->render(new ControllerReference('StudySauceBundle:Plan:widget'));
     ?>
 </div>
 
