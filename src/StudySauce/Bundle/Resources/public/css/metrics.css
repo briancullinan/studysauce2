@@ -131,7 +131,15 @@
     #metrics .checkin-row .class-date,
     #metrics .checkin-row .class-time
     {
-        width:31%;
+        width:33.33%;
+    }
+
+    #metrics #legend,
+    #metrics #timeline,
+    #metrics #pie-chart
+    {
+        width:auto;
+        display:block;
     }
 
 }

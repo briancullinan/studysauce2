@@ -8,16 +8,16 @@
 .flip-clock-wrapper ul {
     position: relative;
     display:inline-block;
-    margin: 5px;
-    height: 90px;
-    font-size: 80px;
+    padding: 5px;
+    margin: 10px 0;
     font-weight: bold;
-    line-height: 87px;
+    line-height: 110%;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .7);
     list-style: none;
     border: 1px solid #111111;
     background-color:#555555;
+    width:16%;
 }
 
 .flip-clock-wrapper * {

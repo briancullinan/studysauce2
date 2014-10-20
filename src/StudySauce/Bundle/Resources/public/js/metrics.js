@@ -15,6 +15,8 @@ Date.prototype.getFirstDayOfWeek = function () {
 
 $(document).ready(function () {
 
+    var body = $('body');
+
     var m = [30, 0, 50, 0],
         w = 475 - m[1] - m[3],
         w2 = 300 - m[1] - m[3],
@@ -84,7 +86,7 @@ $(document).ready(function () {
         redraw();
     }
 
-    $('body').on('show', '#metrics,#home', function () {
+    body.on('show', '#metrics,#home', function () {
         var timeline = $(this).find('#timeline, .timeline'),
             piechart = $(this).find('#pie-chart, .pie-chart');
 
@@ -113,6 +115,11 @@ $(document).ready(function () {
             if (timeline.width() != timeline.find('svg').width())
                 $(window).trigger('resize');
         }
+    });
+
+    body.on('hide', '#metrics,#home', function () {
+        if(window.initialHistory.length == 0 && $(this).is('#metrics'))
+            $('#metrics-empty').modal('hide');
     });
 
     $('#metrics:visible, #home:visible').trigger('show');

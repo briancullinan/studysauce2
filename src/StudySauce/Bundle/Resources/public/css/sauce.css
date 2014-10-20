@@ -21,6 +21,8 @@ html, body
     vertical-align: baseline;
     text-align: justify;
     position:relative;
+    height:auto;
+    width:auto;
 }
 
 html, body,

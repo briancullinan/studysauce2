@@ -321,6 +321,7 @@
     #goals .goal-row .highlighted-link
     {
         display:block;
+        width:auto;
     }
 
     #goals .form-actions a[href="/partner"]

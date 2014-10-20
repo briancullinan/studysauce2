@@ -2,7 +2,7 @@
 <div class="widget-wrapper">
     <div class="widget checkin-widget">
         <h3>Study now</h3>
-        <div class="flip-counter clock flip-clock-wrapper">
+        <div class="flip-counter flip-clock-wrapper">
             <?php echo $view->render('StudySauceBundle:Checkin:digits.html.php'); ?>
         </div>
         <?php foreach ($courses as $i => $c) {

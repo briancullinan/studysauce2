@@ -54,13 +54,18 @@
 
 .course1 .highlighted-link
 {
-    margin:40px 0 0 0;
+    margin:20px 0 0 0;
 }
 
 .course1.step0 .highlighted-link
 {
-    margin:40px 0 20px 50%;
+    margin:20px 0 20px 50%;
     text-align: center;
+}
+
+.course1.step0 h2
+{
+    padding-right:150px;
 }
 
 .course1.step0 ol li {
@@ -132,8 +137,10 @@
 
 .course1.step2 .results
 {
-    padding-left:20px;
+    padding:20px;
     display:none;
+    border-left:3px solid #0099BB;
+    background: url(../../studysauce/noise_white) repeat 0 0 #FFFFFF;
 }
 
 .course1.step2.right .answer,
@@ -201,6 +208,8 @@
     bottom:20px;
     left:20px;
     z-index: 9;
+    padding:0;
+    margin:0;
 }
 
 .course1 .tab-tracker li
@@ -521,4 +530,92 @@
 .page-dashboard .awards > a.awarded[href="#advanced-veni"] span
 {
     background-position:0 -4350px;
+}
+
+@media all and (max-width:1000px)
+{
+    .course1.step0 .player-divider,
+    .course1.step0 ol
+    {
+        width:auto;
+        display:block;
+        margin-right:0;
+        padding-right:0;
+    }
+
+    .course1.step0 h2
+    {
+        padding-right:0;
+    }
+
+    .course1 .time
+    {
+        position:static;
+        float:right;
+    }
+
+    .course1.step0 .highlighted-link,
+    .course1.step1 .highlighted-link,
+    .course1.step2 .highlighted-link,
+    .course1.step3 .highlighted-link,
+    .course1.step4 .highlighted-link
+    {
+        margin-left:0;
+        margin-right:0;
+        padding-left:0;
+        padding-right:0;
+        margin-bottom:20px;
+        padding-bottom:0;
+    }
+
+    .course1 .tab-tracker
+    {
+        position:static;
+        width:auto;
+        display:block;
+        text-align: center;
+    }
+
+    .course1.step4 .grid_6
+    {
+        padding-right:10px;
+        width:75%;
+    }
+
+    .course1.step4 .grid_6 + .grid_6
+    {
+        width:25%;
+    }
+}
+
+@media all and (max-width:700px)
+{
+
+    .course1.step2.right .results,
+    .course1.step2 .questions
+    {
+        width:auto;
+        display:block;
+        padding-left:0;
+        padding-right:0;
+    }
+
+    .course1.step2.right .results
+    {
+        border:3px solid #0099BB;
+        padding:5px;
+        border-radius: 5px;
+    }
+
+    .course1.step4 .grid_6
+    {
+        width:auto;
+        display:block;
+        padding-right:0;
+    }
+
+    .course1.step4 .grid_6 + .grid_6
+    {
+        display:none;
+    }
 }

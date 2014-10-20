@@ -74,7 +74,7 @@ $(document).ready(function () {
                     styles = ssMergeStyles(newStuff),
                     scripts = ssMergeScripts(newStuff);
                 newStuff = newStuff.not(styles).not(scripts);
-                newStuff.appendTo(that);
+                that.replaceWith(newStuff);
             }
         });
     });

@@ -103,7 +103,7 @@ $collection = $router->getRouteCollection();
             window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_15_Bb_Andante.mp3',
             window.callbackPaths['_welcome'] + 'bundles/studysauce/music/C_Major_Andante.mp3',
             window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_17_G_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/musicNo_16_D_Andante.mp3',
+            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_16_D_Andante.mp3',
             window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_6_Bb_Andante.mp3',
             window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_5_D_Andante.mp3',
             window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_1_F_Andante.mp3'

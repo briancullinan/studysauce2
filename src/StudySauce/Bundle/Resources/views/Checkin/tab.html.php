@@ -16,7 +16,8 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
  $view['slots']->start('javascripts');
  foreach ($view['assetic']->javascripts([
-        '@StudySauceBundle/Resources/public/js/checkin.js'
+        '@StudySauceBundle/Resources/public/js/checkin.js',
+         '@StudySauceBundle/Resources/public/js/jquery.fittext.js'
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
@@ -42,7 +43,7 @@ $view['slots']->start('body'); ?>
             ?>
         </p>
 
-        <div class="flip-counter clock flip-clock-wrapper">
+        <div class="flip-counter flip-clock-wrapper">
             <h3>Take a 10 minute break in 1 hour</h3>
             <?php echo $view->render('StudySauceBundle:Checkin:digits.html.php'); ?>
             <input name="touchedMusic" type="hidden" value="0">

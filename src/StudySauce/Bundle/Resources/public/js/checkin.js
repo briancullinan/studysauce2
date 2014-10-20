@@ -6,46 +6,49 @@ $(document).ready(function () {
     var hours = -1,
         minutes = -1,
         sessionStart = null,
+        sessionCurrent = 0,
         clock = null,
         checkin = $('#checkin'),
         body = $('body');
 
     function setClock() {
-        var seconds = new Date().getTime() / 1000 - sessionStart + 59,
+        var seconds = sessionCurrent - sessionStart + 59,
             tmpHours = '' + Math.floor(seconds / 60 / 60),
             tmpMinutes = '' + Math.floor(seconds / 60 % 60);
-        if (tmpHours == hours && tmpMinutes == minutes)
-            return;
         hours = tmpHours;
         minutes = tmpMinutes;
-        body.find('.clock').each(function () {
-            var that = $(this);
+        body.find('.clock:visible').each(function () {
+            var that = $(this).fitText(1/2);
             if (hours.length == 1) {
-                that.find('ul:first-of-type').find('li').removeClass('active')
-                    .eq(0).addClass('active');
-                that.find('ul:nth-of-type(2)').find('li').removeClass('active')
-                    .eq(parseInt(hours)).addClass('active');
+                that.find('ul:first-of-type').find('li').removeClass('active').eq(0).addClass('active');
+                that.find('ul:nth-of-type(2)').find('li').removeClass('active').eq(parseInt(hours)).addClass('active');
             }
             else {
-                that.find('ul:first-of-type').find('li').removeClass('active')
-                    .eq(parseInt(hours.substring(0, 1))).addClass('active');
-                that.find('ul:nth-of-type(2)').find('li').removeClass('active')
-                    .eq(parseInt(hours.substring(1))).addClass('active');
+                that.find('ul:first-of-type').find('li').removeClass('active').eq(parseInt(hours.substring(0, 1))).addClass('active');
+                that.find('ul:nth-of-type(2)').find('li').removeClass('active').eq(parseInt(hours.substring(1))).addClass('active');
             }
 
             if (minutes.length == 1) {
-                that.find('ul:nth-of-type(3)').find('li').removeClass('active')
-                    .eq(0).addClass('active');
-                that.find('ul:nth-of-type(4)').find('li').removeClass('active')
-                    .eq(parseInt(minutes)).addClass('active');
+                that.find('ul:nth-of-type(3)').find('li').removeClass('active').eq(0).addClass('active');
+                that.find('ul:nth-of-type(4)').find('li').removeClass('active').eq(parseInt(minutes)).addClass('active');
             }
             else {
-                that.find('ul:nth-of-type(3)').find('li').removeClass('active')
-                    .eq(parseInt(minutes.substring(0, 1))).addClass('active');
-                that.find('ul:nth-of-type(4)').find('li').removeClass('active')
-                    .eq(parseInt(minutes.substring(1))).addClass('active');
+                that.find('ul:nth-of-type(3)').find('li').removeClass('active').eq(parseInt(minutes.substring(0, 1))).addClass('active');
+                that.find('ul:nth-of-type(4)').find('li').removeClass('active').eq(parseInt(minutes.substring(1))).addClass('active');
             }
         });
+    }
+
+    body.on('show', '#checkin,#home', function () {
+        setTimeout(function () {setClock();}, 100);
+    });
+
+    $('#checkin:visible, #home:visible').trigger('show');
+
+    function resetClock()
+    {
+        sessionCurrent = sessionStart = new Date().getTime() / 1000;
+        setClock();
     }
 
     function startClock() {
@@ -53,15 +56,14 @@ $(document).ready(function () {
             clearInterval(clock);
             clock = null;
         }
-        sessionStart = new Date().getTime() / 1000;
-        setClock();
+        resetClock();
         clock = setInterval(function () {
+            sessionCurrent = new Date().getTime() / 1000;
             setClock();
-            if (new Date().getTime() / 1000 - sessionStart >= TIMER_SECONDS - 59) {
+            if (sessionCurrent - sessionStart >= TIMER_SECONDS - 59) {
                 clearInterval(clock);
                 clock = null;
-                sessionStart = new Date().getTime() / 1000;
-                setClock();
+                resetClock();
                 // show expire message
                 $('.minplayer-default-pause').trigger('click');
                 body.find(checkedInBtn).first().trigger('click');
@@ -75,8 +77,7 @@ $(document).ready(function () {
             clock = null;
         }
         $('.minplayer-default-pause').trigger('click');
-        sessionStart = new Date().getTime() / 1000;
-        setClock();
+        resetClock();
     }
 
     function checkinCallback(pos, cid, checkedIn) {
@@ -172,8 +173,7 @@ $(document).ready(function () {
             if(clock != null)
                 clearInterval(clock);
             clock = null;
-            sessionStart = new Date().getTime() / 1000;
-            setClock();
+            resetClock();
             $('#timer-expire').modal();
             checkinCallback(null, id, true);
         }
@@ -182,8 +182,7 @@ $(document).ready(function () {
             if(clock != null)
                 clearInterval(clock);
             clock = null;
-            sessionStart = new Date().getTime() / 1000;
-            setClock();
+            resetClock();
 
             // switch off other checkin buttons
             var tmpThat = body.find(checkedInBtn).first();
@@ -202,8 +201,7 @@ $(document).ready(function () {
     body.on('click', checkinBtn, checkinClick);
     body.on('dragstart', checkinBtn, checkinClick);
 
-    sessionStart = new Date().getTime() / 1000;
-    setClock();
+    resetClock();
 
     $(window).unload(function () {
         body.find(checkedInBtn).first().trigger('click');

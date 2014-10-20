@@ -8,7 +8,8 @@
 .modal
 {
     height: 100%;
-    width:100%;
+    width: 100%;
+    display:none;
 }
 
 .modal-dialog
@@ -86,20 +87,28 @@ a[href="#close"]
     position: absolute;
 }
 
-@media all and (max-width:700px), all and (max-height:700px) {
-    .modal.in .modal-dialog {
-        top: auto;
-        margin-top: 70px;
-        transform:none;
+@media all and (max-width:1000px)
+{
+    body.modal-open
+    {
+        padding: 0 !important;
     }
 }
 
-@media all and (max-width:700px)
-{
+@media all and (max-width:700px), all and (max-height:700px) {
     html, body,
     body.modal-open
     {
         height: 100%;
+        overflow: visible;
+    }
+
+    .modal-open .modal
+    {
+        overflow-y:visible;
+        height: auto;
+        position:absolute;
+        bottom:auto;
     }
 
     body.modal-open .footer
@@ -113,6 +122,16 @@ a[href="#close"]
         max-height: 100%;
         overflow:hidden;
     }
+
+    .modal.in .modal-dialog {
+        top: auto;
+        margin-top: 70px;
+        transform:none;
+    }
+}
+
+@media all and (max-width:700px)
+{
 
     .modal.in .modal-dialog
     {

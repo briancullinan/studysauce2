@@ -940,14 +940,51 @@
     }
 }
 
-@media all and (max-width: 700px) {
+@media all and (max-width:700px), all and (max-height:700px) {
 
+    body.right-menu .pane-content,
+    body.right-menu .panel-pane,
+    body.left-menu .pane-content,
+    body.left-menu .panel-pane {
+        max-height: 100%;
+        overflow: hidden;
+    }
 
-    #right-panel.expanded, #left-panel.expanded
+    body.right-menu .footer,
+    body.left-menu .footer {
+        display: none;
+    }
+
+    body.right-menu:before,
+    body.left-menu:before {
+        position: absolute;
+        content: " ";
+        display: block;
+        width: 100%;
+        top: 100%;
+        margin-top:-20px;
+        background: url(../images/menu_new.png) repeat-x 0 -5300px transparent;
+        z-index: 1000;
+        height:20px;
+    }
+
+    body.right-menu .modal-backdrop,
+    body.left-menu .modal-backdrop
     {
-        position:absolute;
-        height: auto;
-        min-height: 100%;
+        display:none;
+    }
+
+    body.right-menu:after,
+    body.left-menu:after {
+        position: fixed;
+        content: " ";
+        display: block;
+        width: 100%;
+        top: 0;
+        background: #000000;
+        opacity: .5;
+        z-index: 1000;
+        height:100%;
     }
 
     #left-panel nav,
@@ -955,10 +992,20 @@
     #left-panel:not(.collapsed) nav,
     #right-panel nav,
     #right-panel.expanded nav,
-    #right-panel:not(.collapsed) nav
-    {
-        overflow-y:visible;
+    #right-panel:not(.collapsed) nav {
+        overflow-y: visible;
     }
+
+    #right-panel.expanded, #left-panel.expanded
+    {
+        position:absolute;
+        height: auto;
+        min-height: 100%;
+    }
+}
+
+@media all and (max-width: 700px) {
+
 
     #left-panel,
     #right-panel,

@@ -1,15 +1,18 @@
 
 #tips ul
 {
-    position:absolute;
+    float:right;
     right:0;
     top:0;
     z-index: 10;
     max-width: 100%;
+    margin-top:-20px;
+    margin-right:-20px;
+    border-bottom:0;
 }
 
 #tips .grid_6 {
-    width: 49%;
+    width: 50%;
     margin: 0 -2px;
     padding: 0;
     display:inline-block;
@@ -54,7 +57,9 @@
 .nav-tabs>li
 {
     border: none;
+    float:right;
 }
+
 .nav-tabs>li>a
 {
     background: #ffffff none;
@@ -202,4 +207,24 @@
     background-position: left -3196px;
 }
 
+@media all and (max-width:1000px)
+{
+    #tips .grid_6 {
+        width: auto;
+        display:block;
+    }
+}
 
+@media all and (max-width:700px)
+{
+    #tips ul
+    {
+        margin-top:-10px;
+        margin-right:-10px;
+    }
+
+    .nav-tabs>li
+    {
+        margin-bottom:2px;
+    }
+}

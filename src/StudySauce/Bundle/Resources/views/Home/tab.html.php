@@ -3,6 +3,10 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
+$view['slots']->start('checkin');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:index', ['_format' => 'tab']));
+$view['slots']->stop();
+
 $view['slots']->start('stylesheets');
 
 foreach ($view['assetic']->stylesheets(
@@ -10,8 +14,6 @@ foreach ($view['assetic']->stylesheets(
         '@StudySauceBundle/Resources/public/css/home.css',
         '@StudySauceBundle/Resources/public/css/deadlines.css',
         '@StudySauceBundle/Resources/public/css/goals.css',
-        '@StudySauceBundle/Resources/public/css/checkin.css',
-        '@StudySauceBundle/Resources/public/css/clock.css',
         '@StudySauceBundle/Resources/public/css/plan.css',
         '@StudySauceBundle/Resources/public/css/tipsy.css',
         '@StudySauceBundle/Resources/public/css/metrics.css',
@@ -32,7 +34,6 @@ foreach ($view['assetic']->javascripts(
         '@StudySauceBundle/Resources/public/js/home.js',
         '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
         '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
-        '@StudySauceBundle/Resources/public/js/checkin.js',
         '@StudySauceBundle/Resources/public/js/metrics.js'
     ],
     [],
@@ -76,9 +77,5 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsmessages'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinempty'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerexpire'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
+$view['slots']->output('checkin');
 $view['slots']->stop();

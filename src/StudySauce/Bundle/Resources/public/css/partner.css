@@ -8,27 +8,28 @@
     background-color: #cccccc;
 }
 
+#partner-invite,
+#partner .plupload,
+#partner .permissions
+{
+    position: relative;
+    display: inline-block;
+    width: 33.33%;
+    vertical-align: top;
+    margin:0 -2px;
+    padding:0 2px;
+}
+
 #partner-invite
 {
-    width: 32%;
-    display: inline-block;
-    vertical-align: top;
     overflow: visible;
     padding:80px 10px;
 }
 
 #partner .permissions {
-    position: relative;
-    display: inline-block;
-    width: 32%;
-    vertical-align: top;
 }
 
 #partner .plupload {
-    position: relative;
-    display: inline-block;
-    width: 32%;
-    vertical-align: top;
     overflow: hidden;
     text-align: center;
 }
@@ -67,4 +68,32 @@
 
 #partner .partner-faqs h3 {
     margin-top: 0;
+}
+
+@media all and (max-width:1000px)
+{
+    #partner-invite,
+    #partner .plupload,
+    #partner .permissions
+    {
+        width:50%;
+    }
+}
+
+
+@media all and (max-width:1000px)
+{
+    #partner-invite,
+    #partner .plupload,
+    #partner .permissions
+    {
+        width:auto;
+        display:block;
+        margin:20px 0;
+    }
+
+    #partner-invite
+    {
+        padding: 0;
+    }
 }

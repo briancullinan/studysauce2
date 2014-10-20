@@ -2,7 +2,7 @@
 #checkin .classes {
 }
 
-#checkin .clock,
+#checkin .flip-clock-wrapper,
 #checkin .classes {
     width: 50%;
     display: inline-block;
@@ -325,4 +325,20 @@
     transition: none;
     cursor: pointer;
     display: none;
+}
+
+@media all and (max-width:800px)
+{
+    .checkin-widget > a, #checkin .classes a
+    {
+        margin: 10px;
+    }
+
+    #checkin .flip-clock-wrapper, #checkin .classes
+    {
+        width: auto;
+        display:block;
+        min-height: 0;
+        margin:20px -10px;
+    }
 }
