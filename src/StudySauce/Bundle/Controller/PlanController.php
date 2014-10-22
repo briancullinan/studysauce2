@@ -10,6 +10,7 @@ use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\Week;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Class PlanController
@@ -17,6 +18,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class PlanController extends Controller
 {
+    const OVERLAP_INCREMENT = 600;
+
     private static $weekConversion = [
         'M' => 86400,
         'Tu' => 172800,
@@ -77,8 +80,6 @@ class PlanController extends Controller
             $userManager = $this->get('fos_user.user_manager');
 
             $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-            ScheduleController::getDemoCourses($demo, $orm);
-            ScheduleController::getDemoOthers($demo, $orm);
 
             $events = self::rebuildSchedule($demo, $demo->getCourses(), strtotime('last Sunday'), $orm);
         }
@@ -104,8 +105,8 @@ class PlanController extends Controller
 
         $buckets = new \stdClass();
         $buckets->buckets = [];
-        $buckets->studyTotals = [];
-        $buckets->classTotals = [];
+        $buckets->studyTotals = 0;
+        $buckets->classTotals = 0;
         $buckets->timeSlots = [
             16 => ($schedule->getSharp4pm9pm() ?: 2) / 5.0 * 4,
             21 => ($schedule->getSharp11am4pm() ?: 2) / 5.0 * 4,
@@ -124,9 +125,10 @@ class PlanController extends Controller
                 return $c->getType() == 'c';
             }
         )->toArray();
+        $reoccurring = [];
         foreach ($classes as $i => $course) {
             /** @var Course $course */
-            $events = array_merge($events, self::getReoccurring($course, $week, $buckets));
+            $reoccurring = array_merge($reoccurring, self::getReoccurring($course, $week));
         }
         $others = $courses->filter(
             function (Course $c) {
@@ -135,11 +137,12 @@ class PlanController extends Controller
         )->toArray();
         foreach ($others as $i => $other) {
             /** @var Course $other */
-            $events = array_merge($events, self::getReoccurring($other, $week, $buckets));
+            $reoccurring = array_merge($reoccurring, self::getReoccurring($other, $week));
         }
 
         // add meals just for proper spacing
-        $events = array_merge($events, self::getMeals($week, $buckets));
+        self::bucketEvents($reoccurring, $buckets);
+        $reoccurring = array_merge($reoccurring, self::getMeals($week, $buckets));
 
         // order classes by most days to least days
         $labsLast = [];
@@ -176,47 +179,62 @@ class PlanController extends Controller
             }
         );
 
+        $studySessions = [];
         foreach ($labsLast as $i => $count) {
             // set up pre-work
             if ($count[0] == 'p') {
                 /** @var Course $course */
                 $course = $count[1];
-                $events = array_merge($events, self::getPrework($course, $week));
+                $studySessions = array_merge($studySessions, self::getPrework($course, $week));
             } // set up sr-sessions
             elseif ($count[0] == 'sr') {
                 $course = $count[1];
-                $events = array_merge($events, self::getStudy($course, $week));
+                $studySessions = array_merge($studySessions, self::getStudy($course, $week));
             }
         }
 
+        // merge events
+        $events = array_merge($events, $reoccurring);
+        $events = array_merge($events, $studySessions);
 
         // get totals for events in current position
-        self::bucketEvents($events, $week, $buckets);
+        self::bucketEvents($studySessions, $buckets);
 
         // get free events
-        $events = array_merge($events, self::getFree($buckets, $schedule));
+        $studySessions = array_merge($studySessions, $freeStudy = self::getFree($buckets, $week, $schedule));
+        $events = array_merge($events, $freeStudy);
 
         // cache and compare list of events in their default positions
-        $weekHash = md5(implode('', array_map(function (Event $event) {return $event->getType() . $event->getName();}, $events)));
-        if(($eventWeek = $schedule->getWeeks()->filter(function (Week $w) use ($weekHash) {
-                return $w->getHash() == $weekHash;
-            })->first()) != null)
-        {
+        $weekHash = md5(serialize($events));
+        if (($eventWeek = $schedule->getWeeks()->filter(
+                function (Week $w) use ($weekHash, $events) {
+                    return $w->getHash() == $weekHash && $w->getEvents()->count() == count($events);
+                }
+            )->first()) != null
+        ) {
             /** @var Week $eventWeek */
             // if the event hash matches use final arrangement from week cache
-            $events = array_map(function (Event $e, Event $_) {
+            $matchingEvents = $eventWeek->getEvents()->toArray();
+            $events = array_map(
+                function (Event $e, Event $_) {
                     $e->setStart($_->getStart());
                     $e->setEnd($_->getEnd());
+
                     return $e;
-                }, $events, $eventWeek->getEvents()->toArray());
+                },
+                $events,
+                $matchingEvents
+            );
         }
 
         // get the current week
-        if(($currentWeek = $schedule->getWeeks()->filter(function (Week $week) use ($weekHash, $w) {
-                return $week->getWeek() == $w->format('W') &&
-                $week->getYear() == $w->format('Y');
-            })->first()) == null)
-        {
+        if (($currentWeek = $schedule->getWeeks()->filter(
+                function (Week $week) use ($weekHash, $w) {
+                    return $week->getWeek() == $w->format('W') &&
+                    $week->getYear() == $w->format('Y');
+                }
+            )->first()) == null
+        ) {
             // create a new week entity to cache the events
             $currentWeek = new Week();
             $currentWeek->setStart($w);
@@ -227,25 +245,366 @@ class PlanController extends Controller
             $schedule->addWeek($currentWeek);
             $orm->persist($currentWeek);
             $orm->flush();
-        }
-        else
-        {
+        } else {
             $currentWeek->setHash($weekHash);
             $orm->merge($currentWeek);
             $orm->flush();
         }
 
-        if($eventWeek == null)
-        {
+        if ($eventWeek == null) {
+            self::sortEvents($reoccurring);
+            self::sortEvents($studySessions);
             // TODO: remove overlaps on all events
+            foreach($studySessions as $i => $event)
+            {
 
+                list($notBefore, $notAfter) = self::getBoundaries($event, isset($workingEvents) ? $workingEvents : $reoccurring);
+                $workingEvents = self::getWorkingEvents($reoccurring, $i, $notBefore, $notAfter);
+                self::removeOverlaps($workingEvents, $event, $buckets);
+                self::bucketEvents([$event], $buckets);
+            }
+
+            self::sortEvents($events);
         }
 
-        self::mergeSaved($schedule, $currentWeek, $events, $orm);
+        return self::mergeSaved($schedule, $currentWeek, $events, $orm);
+    }
 
-        $orm->flush();
+    /**
+     * @param $events
+     */
+    private static function sortEvents(&$events)
+    {
+        uasort($events, function (Event $a, Event $b) use ($events) {
+                return $a->getStart()->getTimestamp() - $b->getStart()->getTimestamp();
+            });
+    }
 
-        return $events;
+    /**
+     * @param Event $event
+     * @return array
+     */
+    private static function getMealBoundaries(Event $event)
+    {
+        switch($event->getName())
+        {
+            case 'Breakfast':
+                return [$event->getStart()->getTimestamp() - 3600 * 3, $event->getStart()->getTimestamp() + 3600 * 2];
+                break;
+            case 'Lunch':
+                return [$event->getStart()->getTimestamp() - 3600 * 2, $event->getStart()->getTimestamp() + 3600 * 3];
+                break;
+            case 'Dinner':
+                return [$event->getStart()->getTimestamp() - 3600 * 2.5, $event->getStart()->getTimestamp() + 3600 * 5.5];
+                break;
+        }
+        throw new Exception('Un-recognized meal');
+    }
+
+    /**
+     * @param Event $event
+     * @param $workingEvents
+     * @return array
+     */
+    private static function getBoundaries(Event $event, $workingEvents)
+    {
+        switch($event->getType())
+        {
+            case 'p':
+                return self::getPreworkBoundaries($event, $workingEvents);
+                break;
+            case 'm':
+                return self::getMealBoundaries($event);
+                break;
+            case 'sr':
+                return self::getStudyBoundaries($event, $workingEvents);
+                break;
+            case 'z':
+                return self::getSleepBoundaries($event);
+            default:
+        }
+        throw new Exception('Unrecognized event type');
+    }
+
+    /**
+     * @param Event $event
+     * @param $workingEvents
+     * @return array
+     */
+    private static function getPreworkBoundaries(Event $event, $workingEvents)
+    {
+        // the boundary for prework is the previous and next class
+        $i = array_search($event, $workingEvents);
+        // count backwards to matching type
+        for($j = $i-1; $j >= 0; $j--)
+        {
+            /** @var Event $e */
+            $e = $workingEvents[$j];
+            if($e->getName() == $event->getName())
+                return [$e->getEnd()->getTimestamp(), $event->getStart()->getTimestamp()];
+        }
+        return [$event->getStart()->getTimestamp() - 86400 * 2, $event->getStart()->getTimestamp()];
+    }
+
+    /**
+     * @param Event $event
+     * @param $workingEvents
+     * @return array
+     */
+    private static function getStudyBoundaries(Event $event, $workingEvents)
+    {
+        // the boundary for prework is the previous and next class
+        $i = array_search($event, $workingEvents);
+        // count backwards to matching type
+        for($j = $i; $j < count($workingEvents); $j++)
+        {
+            /** @var Event $e */
+            $e = $workingEvents[$j];
+            if($e->getName() == $event->getName())
+                return [$event->getStart()->getTimestamp(), $e->getStart()->getTimestamp()];
+        }
+        return [$event->getStart()->getTimestamp(), $event->getStart()->getTimestamp() + 86400 * 2];
+    }
+
+    /**
+     * @param Event $event
+     * @return array
+     */
+    private static function getSleepBoundaries(Event $event)
+    {
+        $length = $event->getEnd()->getTimestamp() - $event->getStart()->getTimestamp();
+        $mealTimestamp = $event->getStart()->getTimestamp();
+        $notBefore = $mealTimestamp - 3600 * ($length / 3600 + 2);
+        $notAfter = $mealTimestamp + 3600 * (2 + ($length / 3600 - 6)); // allow 8 AM start time on weekends
+        return [$notBefore, $notAfter];
+    }
+
+    /**
+     * @param $events
+     * @param $index
+     * @param \DateTime $notBefore
+     * @param \DateTime $notAfter
+     * @return array
+     */
+    private static function getWorkingEvents($events, $index, $notBefore, $notAfter)
+    {
+        // get a list of events within a 24 hour time range to work with, we should never move more than that
+        $beforeDistances = [];
+        $afterDistances = [];
+        foreach ($events as $i => $event)
+        {
+            /** @var Event $event */
+            if($i == $index ||
+                // ignore all day events
+                $event->getType() == 'd' || $event->getType() == 'h' ||
+                $event->getType() == 'r')
+                continue;
+
+            $startDistance = $event->getStart()->getTimestamp() - $notBefore;
+            $endDistance = $notAfter - $event->getEnd()->getTimestamp();
+            $beforeDistances[$i] = $startDistance;
+            $afterDistances[$i] = $endDistance;
+        }
+
+        // working events are made of intersection of keys from between before and after times
+        //  including 1 negative from both meaning occurs before and after
+        asort($beforeDistances);
+        asort($afterDistances);
+        $workingBefore = [];
+        $workingAfter = [];
+        $first = true;
+        unset($last);
+        foreach($beforeDistances as $i => $distance)
+        {
+            if($distance >= 0)
+            {
+                if($first)
+                {
+                    if(isset($last))
+                        $workingBefore[$last] = $events[$last];
+                    $first = false;
+                }
+                $workingBefore[$i] = $events[$i];
+            }
+            $last = $i;
+        }
+        $first = true;
+        unset($last);
+        foreach($afterDistances as $i => $distance)
+        {
+            if($distance >= 0)
+            {
+                if($first)
+                {
+                    if(isset($last))
+                        $workingAfter[$last] = $events[$last];
+                    $first = false;
+                }
+                $workingAfter[$i] = $events[$i];
+            }
+            $last = $i;
+        }
+
+        $workingEvents = array_intersect_key($workingBefore, $workingAfter);
+
+        return array_values($workingEvents);
+    }
+
+    /**
+     * @param $workingEvents
+     * @param Event $event
+     * @param $buckets
+     */
+    private static function removeOverlaps($workingEvents, Event $event, $buckets)
+    {
+        // find gaps
+        if(empty($workingEvents)) {
+            $workingEvents[] = $event;
+            return;
+        }
+        /** @var Event $start */
+        reset($workingEvents);
+        $start = current($workingEvents);
+        /** @var Event $end */
+        $end = end($workingEvents);
+        $length = $event->getEnd()->getTimestamp() - $event->getStart()->getTimestamp();
+        $notBefore = $start->getEnd();
+        $notAfter = $end->getStart();
+        $gapStart = clone $notBefore;
+        $last = $gapStart->getTimestamp();
+        $gaps = [];
+        foreach ($workingEvents as $c => $e) {
+            /** @var Event $e */
+            $gapEnd = $e->getStart();
+            $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter->getTimestamp()));
+            $gap = $gapEnd->getTimestamp() - $gapStart->getTimestamp();
+
+            // make sure gap is large enough for the event
+            if ($gap >= $length + 2 * self::OVERLAP_INCREMENT &&
+                $gapEnd->getTimestamp() > $notBefore->getTimestamp() &&
+                $gapStart->getTimestamp() < $notAfter->getTimestamp()
+            ) {
+                $gaps[$c] = clone $gapStart;
+            }
+
+            $gapStart = $e->getEnd();
+            $gapStart->setTimestamp(max($gapStart->getTimestamp(), $notBefore->getTimestamp()));
+            // fix situation where this is one already overlapping
+            $gapStart->setTimestamp(max($gapStart->getTimestamp(), $last));
+            $last = $gapStart->getTimestamp();
+        }
+
+        // get the closest opening to the original time
+        $closest = [];
+        foreach ($gaps as $c => $d) {
+            /** @var \DateTime $d */
+            // reset the time so we pick out the closest day,
+            //    this levels the playing field for all daily preferred times
+            $startDay = clone $event->getStart();
+            if (intval($startDay->format('H')) < 5) {
+                $startDay->sub(new \DateInterval('P1D'));
+            }
+            $startDay->setTime(0, 0, 0);
+
+            // compare start time of gap to preferred day
+            $gapStart = clone $d;
+            if (intval($gapStart->format('H')) < 5) {
+                $gapStart->sub(new \DateInterval('P1D'));
+            }
+            $gapStart->setTime(0, 0, 0);
+            $closest[$c] = abs($gapStart->getTimestamp() - $startDay->getTimestamp());
+
+            // check if ending of gap is closer to preferred day
+            /** @var Event $e */
+            $e = $workingEvents[$c];
+            $gapEnd = clone $e->getStart();
+            // if after midnight subtract 1 day
+            if (intval($gapEnd->format('H')) < 5) {
+                $gapEnd->sub(new \DateInterval('P1D'));
+            }
+            // reset the time so we pick out the closest day, this levels the playing field for all daily preferred times
+            $gapEnd->setTime(0,0,0);
+            $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter->getTimestamp()));
+            $end = abs($gapEnd->getTimestamp() - $startDay->getTimestamp());
+            if ($end < $closest[$c]) {
+                $closest[$c] = $end;
+            }
+        }
+
+
+        // find the closest time to the preferred time
+        $distance = [];
+        $ends = [];
+        foreach ($closest as $c => $d) {
+            // find the best bucket to put this event into
+            /** @var \DateTime $start */
+            $start = clone $gaps[$c];
+            /** @var \DateTime $bucket */
+            $bucket = clone $gaps[$c];
+            $bucket->setTime(0, 0, 0);
+            $b = $bucket->format('Y/m/d');
+            // if it starts before 6 AM put it in the previous nights bucket
+            if (intval($start->format('H')) < 6) {
+                $bucket->sub(new \DateInterval('P1D'));
+                $b = $bucket->format('Y/m/d');
+            }
+
+            // if we are dealing with a mean the preferred time is when the meal is originally set
+            // TODO: move this in to add_meals somehow?
+            if ($event->getType() == 'p') {
+                $preferred = clone $start;
+                $preferred->setTime(6, 0, 0);
+            } elseif ($event->getType() == 'm' ||
+                $event->getType() == 'z' || (isset($buckets->buckets[$b]) && array_sum(array_values($buckets->buckets[$b])) >= array_sum(
+                        array_values($buckets->timeslots)
+                    ))
+            ) {
+                $preferred = $event->getStart();
+            } else {
+                $diff = self::getPreferredTime($buckets, $start, $start->getTimestamp() - 86400, $start->getTimestamp() + 86400);
+                $preferred = clone $start;
+                $preferred->setTimestamp($start->getTimestamp() + $diff);
+            }
+
+            $distance[$c] = $closest[$c] + (abs($start->getTimestamp() - $preferred->getTimestamp()));
+            /** @var Event $e */
+            $e = $workingEvents[$c];
+            $gapEnd = clone $e->getStart();
+            $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter->getTimestamp()));
+            $end = $closest[$c] + (abs($gapEnd->getTimestamp() - $length - $preferred->getTimestamp()));
+            if ($end < $distance[$c]) {
+                $distance[$c] = $end;
+                $ends[] = $c;
+            }
+        }
+
+        array_multisort($closest, SORT_NUMERIC, SORT_ASC, $distance, SORT_NUMERIC, SORT_ASC);
+
+        reset($distance);
+        $top = key($distance);
+        if ($top) {
+            if (in_array($top, $ends)) {
+                /** @var Event $start */
+                $start = $workingEvents[$top];
+                $gapEnd = $start->getStart();
+                $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter));
+                $gapEnd->sub(new \DateInterval('PT' . ($length + self::OVERLAP_INCREMENT) . 'S'));
+                $event->setStart($gapEnd);
+                $event->setEnd(date_add(clone $gapEnd, new \DateInterval('PT' . $length . 'S')));
+            } else {
+                /** @var \DateTime $d */
+                $d = clone $gaps[$top];
+                $event->setStart($d);
+                $event->setEnd(date_add(clone $d, new \DateInterval('PT' . $length . 'S')));
+            }
+        }
+
+        // TODO: send assertion email when we fail to find a spot
+        if (!empty($workingEvents) && $event->getType() != 'm' && $event->getType() != 'z') {
+            $unresolved[] = $event;
+        }
+
+        $workingEvents[] = $event;
     }
 
     /**
@@ -253,93 +612,116 @@ class PlanController extends Controller
      * @param Week $week
      * @param array $events
      * @param EntityManager $orm
+     * @return array
      */
     private static function mergeSaved(Schedule $schedule, Week $week, array $events, EntityManager $orm)
     {
         // find matching saved events
-        foreach($events as $i => $event)
-        {
+        $saved = $week->getEvents();
+        foreach ($events as $i => $event) {
             /** @var Event $event */
-
             // check if we have a saved event around the same time
             $lastEvent = null;
-            $lastDistance = 172800;
+            if (!($event->getType() == 'm' || $event->getType() == 'z' ||
+                $event->getType() == 'c' || $event->getType() == 'd' || $event->getType() == 'h')
+            ) {
+                $lastDistance = 172800;
 
-            foreach ($week->getEvents()->filter(function (Event $e) use ($event) {
-                    return $e->getType() == $event->getType();
-                }) as $j => $e) {
-                /** @var Event $e */
-                // if saved is 24 hours before current event, skip and never go back because we are ordered by time
-                $distance = abs($event->getStart()->getTimestamp() - $e->getStart()->getTimestamp());
-                if ($distance < $lastDistance) {
-                    $lastEvent = $e;
-                    $lastDistance = $distance;
-                } elseif (!empty($lastEvent))
-                    break;
+                foreach ($saved->filter(
+                    function (Event $e) use ($event) {
+                        return $e->getType() == $event->getType() && $e->getName() == $event->getName();
+                    }
+                )->toArray() as $j => $e) {
+                    /** @var Event $e */
+                    // if saved is 24 hours before current event, skip and never go back because we are ordered by time
+                    $distance = abs($event->getStart()->getTimestamp() - $e->getStart()->getTimestamp());
+                    if ($distance < $lastDistance) {
+                        $lastEvent = $e;
+                        $lastDistance = $distance;
+                    } elseif (!empty($lastEvent)) {
+                        break;
+                    }
+                }
             }
 
             if ($lastEvent) {
                 $lastEvent->setStart($event->getStart());
                 $lastEvent->setEnd($event->getEnd());
                 $events[$i] = $lastEvent;
+                $saved->removeElement($lastEvent);
                 $orm->merge($lastEvent);
-            }
-            else {
+            } else {
                 $event->setSchedule($schedule);
                 $event->setWeek($week);
                 $schedule->addEvent($event);
                 $orm->persist($event);
             }
         }
+
+        // remove unused saved events
+        foreach ($saved->toArray() as $i => $event) {
+            // TODO: check if in strategies
+            $schedule->removeEvent($event);
+            $orm->remove($event);
+        }
+
+        $orm->flush();
+
+        return $events;
     }
 
     /**
      * @param $buckets
+     * @param $week
      * @param Schedule $schedule
      * @return array
      */
-    private static function getFree($buckets, Schedule $schedule)
+    private static function getFree($buckets, $week, Schedule $schedule)
     {
         $events = [];
         // add free study to every
-        foreach ($buckets->classTotals as $w => $totalLength) {
-            $studyLength = isset($studyTotals[$w]) ? $studyTotals[$w] : 0;
-            // use weekends setting to determine if the first free study should fall on a sunday
-            $weekends = ($schedule->getWeekends() == 'hit_hard');
+        $totalLength = $buckets->classTotals;
+        $studyLength = isset($buckets->studyTotals) ? $buckets->studyTotals : 0;
+        // use weekends setting to determine if the first free study should fall on a sunday
+        $weekends = ($schedule->getWeekends() == 'hit_hard');
 
-            // TODO: adjust study factor based on nothing but A's preference, only affect free time, can we do more?
-            $studyFactor = 2;
-            if ($schedule->getGrades() == 'as_only')
-                $studyFactor = 2.6;
+        // TODO: adjust study factor based on nothing but A's preference, only affect free time, can we do more?
+        $studyFactor = 2;
+        if ($schedule->getGrades() == 'as_only') {
+            $studyFactor = 2.6;
+        }
 
-            // there are 16 usable hours, 4 * (5 - 1) = 16 * 7 days = 112 usable hours in a week
-            $shouldStudy = min($totalLength * $studyFactor, ($weekends ? 112 : 80) * 3600 - $totalLength); // a student should study 3 [2.4] times outside of class
-            $remainingStudy = min(14 * 3600, // turns out filling up the entire week is too much
-                max($shouldStudy - $studyLength, 3600 * 5)); // subtract the hours already accounted for by schedules study sessions
-            $freeHours = floor($remainingStudy / 3600);
-            for ($j = 0; $j < $freeHours; $j++) {
+        // there are 16 usable hours, 4 * (5 - 1) = 16 * 7 days = 112 usable hours in a week
+        $shouldStudy = min(
+            $totalLength * $studyFactor,
+            ($weekends ? 112 : 80) * 3600 - $totalLength
+        ); // a student should study 3 [2.4] times outside of class
+        $remainingStudy = min(
+            14 * 3600, // turns out filling up the entire week is too much
+            max($shouldStudy - $studyLength, 3600 * 5)
+        ); // subtract the hours already accounted for by schedules study sessions
+        $freeHours = floor($remainingStudy / 3600);
+        for ($j = 0; $j < $freeHours; $j++) {
 
-                // get the buckets for each day this week and figure out which day have the least obligations
-                $bucketSums = [];
-                // if no weekends subtract 3 days, don't schedule free study on Fri-Sun, we know they won't study on Fridays
-                for ($i = ($weekends ? 0 : 1); $i < ($weekends ? 7 : 6); $i++)
-                {
-                    $d = date('Y/m/d', $w + $i * 86400);
-                    $bucketSums[$d] = isset($buckets[$d]) ? array_sum($buckets[$d]) : 0;
-                }
-                asort($bucketSums);
-
-                // get the day with the least obligations
-                $classT = new \DateTime(key($bucketSums));
-                $classT->setTime(12, 0, 0);
-
-                $event = new Event();
-                $event->setName('Free study');
-                $event->setType('f');
-                $event->setStart($classT);
-                $event->setEnd(date_add(clone $classT, new \DateInterval('PT3600S')));
-                $events[] = $event;
+            // get the buckets for each day this week and figure out which day have the least obligations
+            $bucketSums = [];
+            // if no weekends subtract 3 days, don't schedule free study on Fri-Sun, we know they won't study on Fridays
+            for ($i = ($weekends ? 0 : 1); $i < ($weekends ? 7 : 6); $i++) {
+                $d = date('Y/m/d', $week + $i * 86400);
+                $bucketSums[$d] = isset($buckets->buckets[$d]) ? array_sum($buckets->buckets[$d]) : 0;
             }
+            asort($bucketSums);
+
+            // get the day with the least obligations
+            $classT = new \DateTime(key($bucketSums));
+            $classT->setTime(12, 0, 0);
+
+            $event = new Event();
+            $event->setName('Free study');
+            $event->setType('f');
+            $event->setStart($classT);
+            $event->setEnd(date_add(clone $classT, new \DateInterval('PT3600S')));
+            $events[] = $event;
         }
         return $events;
     }
@@ -571,32 +953,6 @@ class PlanController extends Controller
             }
             $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
 
-            // check if we have a saved event around the same time
-            /* TODO: this later after the events are loaded, repair them
-            $lastEid = 0;
-            $lastDistance = 172800;
-            // TODO: use each so we save our location
-            foreach ($saved as $eid => $event) {
-                // if saved is 24 hours before current event, skip and never go back because we are ordered by time
-                $distance = abs(strtotime($event->field_time['und'][0]['value']) - $classT->getTimestamp());
-                if ($distance < $lastDistance) {
-                    $lastEid = $eid;
-                    $lastDistance = $distance;
-                } elseif ($lastEid > 0)
-                    break;
-            }
-
-            if ($lastEid) {
-                $events[$lastEid] = $saved[$lastEid];
-                unset($saved[$lastEid]);
-                $events[$lastEid]->field_time[LANGUAGE_NONE][0] = array(
-                    'value' => $classT->format('Y/m/d H:i:s'),
-                    'value2' => date_add($classT, new DateInterval('PT' . $length . 'S'))->format('Y/m/d H:i:s')
-                );
-
-                studysauce_bucket_event($node, $events, $lastEid);
-            } else {
-*/
             $event = new Event();
             $event->setName($course->getName());
             $event->setType($course->getType());
@@ -691,10 +1047,9 @@ class PlanController extends Controller
 
     /**
      * @param $events
-     * @param $week
      * @param \stdClass $buckets
      */
-    private static function bucketEvents($events, $week, \stdClass $buckets)
+    private static function bucketEvents($events, \stdClass $buckets)
     {
         foreach ($events as $i => $event) {
             /** @var Event $event */
@@ -730,6 +1085,7 @@ class PlanController extends Controller
 
             $s = $start->getTimestamp();
             $e = $end->getTimestamp();
+            $length = $e - $s;
             // initialize from start to finish plus
             $bucketStart = $bucket->getTimestamp();
             // iterate over buckets until length is used up
@@ -753,9 +1109,9 @@ class PlanController extends Controller
                 }
             }
             if ($event->getType() == 'c') {
-                $buckets->classTotals[$week] = ($buckets->classTotals[$week] ?: 0) + ($event->getEnd()->getTimestamp() - $event->getStart()->getTimestamp() + 600);
+                $buckets->classTotals = (isset($buckets->classTotals) ? $buckets->classTotals : 0) + ($length + 600);
             } elseif ($event->getType() == 'sr' || $event->getType() == 'p') {
-                $buckets->studyTotals[$week] = ($buckets->studyTotals[$week] ?: 0) + ($event->getEnd()->getTimestamp() - $event->getStart()->getTimestamp() + 600);
+                $buckets->studyTotals = (isset($buckets->studyTotals) ? $buckets->studyTotals : 0) + ($length + 600);
             }
         }
     }

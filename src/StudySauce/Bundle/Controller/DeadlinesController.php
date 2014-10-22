@@ -26,7 +26,7 @@ class DeadlinesController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = ScheduleController::getDemoCourses($demo, $orm);
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
         $demoDeadlines = $this->getDemoDeadlines();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
@@ -61,7 +61,7 @@ class DeadlinesController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = ScheduleController::getDemoCourses($demo, $orm);
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
         $demoDeadlines = $this->getDemoDeadlines();
 
         /** @var $user \StudySauce\Bundle\Entity\User */

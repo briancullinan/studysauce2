@@ -28,7 +28,7 @@ class CheckinController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = ScheduleController::getDemoCourses($demo, $orm);
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -62,7 +62,7 @@ class CheckinController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = ScheduleController::getDemoCourses($demo, $orm);
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();

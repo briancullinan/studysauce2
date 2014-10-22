@@ -100,6 +100,9 @@ class ScheduleController extends Controller
             $guest->addSchedule($schedule);
             $orm->persist($schedule);
             $orm->flush();
+
+            self::getDemoCourses($schedule, $orm);
+            self::getDemoOthers($schedule, $orm);
         }
 
         return $schedule;
@@ -110,7 +113,7 @@ class ScheduleController extends Controller
      * @param EntityManager $orm
      * @return array
      */
-    public static function getDemoCourses(Schedule $schedule, EntityManager $orm)
+    private static function getDemoCourses(Schedule $schedule, EntityManager $orm)
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
         $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
@@ -126,7 +129,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class1);
-            $course->setEndTime(date_add(clone $class1, new \DateInterval('P3WT50M')));
+            $course->setEndTime(date_add(clone $class1, new \DateInterval('P8WT50M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -142,7 +145,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class2);
-            $course->setEndTime(date_add(clone $class2, new \DateInterval('P3WT50M')));
+            $course->setEndTime(date_add(clone $class2, new \DateInterval('P8WT50M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -158,7 +161,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class3);
-            $course->setEndTime(date_add(clone $class3, new \DateInterval('P3WT50M')));
+            $course->setEndTime(date_add(clone $class3, new \DateInterval('P8WT50M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -174,7 +177,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class4);
-            $course->setEndTime(date_add(clone $class4, new \DateInterval('P3WT50M')));
+            $course->setEndTime(date_add(clone $class4, new \DateInterval('P8WT50M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -190,7 +193,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class5);
-            $course->setEndTime(date_add(clone $class5, new \DateInterval('P3WT50M')));
+            $course->setEndTime(date_add(clone $class5, new \DateInterval('P8WT50M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -206,7 +209,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['Tu', 'Th']);
             $course->setStartTime($class6);
-            $course->setEndTime(date_add(clone $class6, new \DateInterval('P3WT120M')));
+            $course->setEndTime(date_add(clone $class6, new \DateInterval('P8WT120M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -222,7 +225,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['Tu', 'Th']);
             $course->setStartTime($class7);
-            $course->setEndTime(date_add(clone $class7, new \DateInterval('P3WT90M')));
+            $course->setEndTime(date_add(clone $class7, new \DateInterval('P8WT90M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -238,7 +241,7 @@ class ScheduleController extends Controller
             $course->setType('c');
             $course->setDotw(['Tu', 'Th']);
             $course->setStartTime($class8);
-            $course->setEndTime(date_add(clone $class8, new \DateInterval('P3WT50M')));
+            $course->setEndTime(date_add(clone $class8, new \DateInterval('P8WT50M')));
 
             $orm->persist($course);
             $orm->flush();
@@ -252,9 +255,10 @@ class ScheduleController extends Controller
 
     /**
      * @param Schedule $schedule
+     * @param EntityManager $orm
      * @return array
      */
-    public static function getDemoOthers(Schedule $schedule, EntityManager $orm)
+    private static function getDemoOthers(Schedule $schedule, EntityManager $orm)
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
         /*
@@ -280,7 +284,7 @@ class ScheduleController extends Controller
             $course->setType('o');
             $course->setDotw(['M', 'Tu', 'W', 'Th', 'F', 'Weekly']);
             $course->setStartTime($classO);
-            $course->setEndTime(date_add(clone $classO, new \DateInterval('P3WT60M')));
+            $course->setEndTime(date_add(clone $classO, new \DateInterval('P8WT60M')));
 
             $orm->persist($course);
             $orm->flush();
