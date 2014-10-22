@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="deadline")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Deadline
 {
@@ -68,6 +69,14 @@ class Deadline
      */
     protected $deleted = false;
 
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
 
     /**
      * Get id

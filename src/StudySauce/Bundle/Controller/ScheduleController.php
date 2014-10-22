@@ -31,7 +31,7 @@ class ScheduleController extends Controller
         $userManager = $this->get('fos_user.user_manager');
         $demo = self::getDemoSchedule($userManager, $orm);
         $demoCourses = self::getDemoCourses($demo, $orm);
-        $demoOthers = $this->getDemoOthers($demo);
+        $demoOthers = self::getDemoOthers($demo, $orm);
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -89,7 +89,6 @@ class ScheduleController extends Controller
             // create new empty schedule for all guest users
             $schedule = new Schedule();
             $schedule->setUser($guest);
-            $schedule->setCreated(new \DateTime());
             $schedule->setUniversity('Enter the full name');
             $schedule->setGrades('as-only');
             $schedule->setWeekends('hit-hard');
@@ -118,22 +117,134 @@ class ScheduleController extends Controller
         if(empty($courses))
         {
             $courses = [];
-            for($i = 0; $i < 6; $i++)
-            {
-                $course = new Course();
-                $course->setCreated(new \DateTime());
-                $course->setSchedule($schedule);
-                $course->setName(self::getRandomName());
-                $course->setType('c');
-                $course->setDotw([]);
-                $course->setStartTime(new \DateTime('@0'));
-                $course->setEndTime(new \DateTime('@0'));
+            $class1 = new \DateTime('last Sunday');
+            $class1->setTime(8, 0, 0);
+            $class1->sub(new \DateInterval('P3W'));
+            $course = new Course();
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['M', 'W', 'F']);
+            $course->setStartTime($class1);
+            $course->setEndTime(date_add(clone $class1, new \DateInterval('P3WT50M')));
 
-                $orm->persist($course);
-                $orm->flush();
-                $courses[] = $course;
-                $schedule->addCourse($course);
-            }
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class2 = new \DateTime('last Sunday');
+            $class2->setTime(9, 0, 0);
+            $class2->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['M', 'W', 'F']);
+            $course->setStartTime($class2);
+            $course->setEndTime(date_add(clone $class2, new \DateInterval('P3WT50M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class3 = new \DateTime('last Sunday');
+            $class3->setTime(10, 0, 0);
+            $class3->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['M', 'W', 'F']);
+            $course->setStartTime($class3);
+            $course->setEndTime(date_add(clone $class3, new \DateInterval('P3WT50M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class4 = new \DateTime('last Sunday');
+            $class4->setTime(11, 0, 0);
+            $class4->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['M', 'W', 'F']);
+            $course->setStartTime($class4);
+            $course->setEndTime(date_add(clone $class4, new \DateInterval('P3WT50M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class5 = new \DateTime('last Sunday');
+            $class5->setTime(12, 0, 0);
+            $class5->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['M', 'W', 'F']);
+            $course->setStartTime($class5);
+            $course->setEndTime(date_add(clone $class5, new \DateInterval('P3WT50M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class6 = new \DateTime('last Sunday');
+            $class6->setTime(9, 0, 0);
+            $class6->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['Tu', 'Th']);
+            $course->setStartTime($class6);
+            $course->setEndTime(date_add(clone $class6, new \DateInterval('P3WT120M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class7 = new \DateTime('last Sunday');
+            $class7->setTime(11, 15, 0);
+            $class7->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['Tu', 'Th']);
+            $course->setStartTime($class7);
+            $course->setEndTime(date_add(clone $class7, new \DateInterval('P3WT90M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
+            $course = new Course();
+            $class8 = new \DateTime('last Sunday');
+            $class8->setTime(2, 50, 0);
+            $class8->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomName());
+            $course->setType('c');
+            $course->setDotw(['Tu', 'Th']);
+            $course->setStartTime($class8);
+            $course->setEndTime(date_add(clone $class8, new \DateInterval('P3WT50M')));
+
+            $orm->persist($course);
+            $orm->flush();
+            $courses[] = $course;
+            $schedule->addCourse($course);
+
         }
 
         return $courses;
@@ -143,7 +254,7 @@ class ScheduleController extends Controller
      * @param Schedule $schedule
      * @return array
      */
-    private function getDemoOthers(Schedule $schedule)
+    public static function getDemoOthers(Schedule $schedule, EntityManager $orm)
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
         /*
@@ -160,25 +271,21 @@ class ScheduleController extends Controller
         if(empty($others))
         {
             $others = [];
-            for($i = 0; $i < 1; $i++)
-            {
-                $course = new Course();
-                $course->setCreated(new \DateTime());
-                $course->setSchedule($schedule);
-                $course->setName(self::getRandomName());
-                $course->setType('o');
-                $course->setDotw(['Weekly']);
-                $course->setStartTime(new \DateTime('@0'));
-                $course->setEndTime(new \DateTime('@0'));
+            $course = new Course();
+            $classO = new \DateTime('last Sunday');
+            $classO->setTime(18, 0, 0);
+            $classO->sub(new \DateInterval('P3W'));
+            $course->setSchedule($schedule);
+            $course->setName(self::getRandomOther());
+            $course->setType('o');
+            $course->setDotw(['M', 'Tu', 'W', 'Th', 'F', 'Weekly']);
+            $course->setStartTime($classO);
+            $course->setEndTime(date_add(clone $classO, new \DateInterval('P3WT60M')));
 
-                /** @var $orm EntityManager */
-                $orm = $this->get('doctrine')->getManager();
-
-                $orm->persist($course);
-                $orm->flush();
-                $others[] = $course;
-                $schedule->addCourse($course);
-            }
+            $orm->persist($course);
+            $orm->flush();
+            $others[] = $course;
+            $schedule->addCourse($course);
         }
 
         return array_values($others);
@@ -221,7 +328,6 @@ class ScheduleController extends Controller
             $schedule = new Schedule();
             // set all default on new schedule
             $schedule->setUser($user);
-            $schedule->setCreated(new \DateTime());
             if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
                 $schedule->setUniversity($request->get('university'));
             $user->addSchedule($schedule);
@@ -261,7 +367,6 @@ class ScheduleController extends Controller
             if (empty($c['cid'])) {
                 $course = new Course();
                 $course->setSchedule($schedule);
-                $course->setCreated(new \DateTime());
                 $course->setName($c['className']);
             } else {
                 /** @var $course Course */

@@ -2,11 +2,13 @@
 
 namespace StudySauce\Bundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="schedule")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Schedule
 {
@@ -69,11 +71,31 @@ class Schedule
     protected $created;
 
     /**
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="schedule")
+     * @ORM\OrderBy({"start" = "DESC"})
+     */
+    protected $events;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Week", mappedBy="schedule")
+     * @ORM\OrderBy({"start" = "DESC"})
+     */
+    protected $weeks;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->courses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->courses = new ArrayCollection();
     }
 
     /**
@@ -273,10 +295,10 @@ class Schedule
     /**
      * Set user
      *
-     * @param \StudySauce\Bundle\Entity\User $user
+     * @param User $user
      * @return Schedule
      */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -286,7 +308,7 @@ class Schedule
     /**
      * Get user
      *
-     * @return \StudySauce\Bundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {
@@ -296,10 +318,10 @@ class Schedule
     /**
      * Add courses
      *
-     * @param \StudySauce\Bundle\Entity\Course $courses
+     * @param Course $courses
      * @return Schedule
      */
-    public function addCourse(\StudySauce\Bundle\Entity\Course $courses)
+    public function addCourse(Course $courses)
     {
         $this->courses[] = $courses;
 
@@ -309,9 +331,9 @@ class Schedule
     /**
      * Remove courses
      *
-     * @param \StudySauce\Bundle\Entity\Course $courses
+     * @param Course $courses
      */
-    public function removeCourse(\StudySauce\Bundle\Entity\Course $courses)
+    public function removeCourse(Course $courses)
     {
         $this->courses->removeElement($courses);
     }
@@ -324,5 +346,71 @@ class Schedule
     public function getCourses()
     {
         return $this->courses;
+    }
+
+    /**
+     * Add events
+     *
+     * @param \StudySauce\Bundle\Entity\Event $events
+     * @return Schedule
+     */
+    public function addEvent(\StudySauce\Bundle\Entity\Event $events)
+    {
+        $this->events[] = $events;
+
+        return $this;
+    }
+
+    /**
+     * Remove events
+     *
+     * @param \StudySauce\Bundle\Entity\Event $events
+     */
+    public function removeEvent(\StudySauce\Bundle\Entity\Event $events)
+    {
+        $this->events->removeElement($events);
+    }
+
+    /**
+     * Get events
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Add weeks
+     *
+     * @param \StudySauce\Bundle\Entity\Week $weeks
+     * @return Schedule
+     */
+    public function addWeek(\StudySauce\Bundle\Entity\Week $weeks)
+    {
+        $this->weeks[] = $weeks;
+
+        return $this;
+    }
+
+    /**
+     * Remove weeks
+     *
+     * @param \StudySauce\Bundle\Entity\Week $weeks
+     */
+    public function removeWeek(\StudySauce\Bundle\Entity\Week $weeks)
+    {
+        $this->weeks->removeElement($weeks);
+    }
+
+    /**
+     * Get weeks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWeeks()
+    {
+        return $this->weeks;
     }
 }

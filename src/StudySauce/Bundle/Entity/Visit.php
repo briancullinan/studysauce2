@@ -141,10 +141,10 @@ class Visit
     /**
      * Set session
      *
-     * @param \StudySauce\Bundle\Entity\Session $session
+     * @param Session $session
      * @return Visit
      */
-    public function setSession(\StudySauce\Bundle\Entity\Session $session = null)
+    public function setSession(Session $session = null)
     {
         $this->session = $session;
 
@@ -154,7 +154,7 @@ class Visit
     /**
      * Get session
      *
-     * @return \StudySauce\Bundle\Entity\Session 
+     * @return Session
      */
     public function getSession()
     {
@@ -164,10 +164,10 @@ class Visit
     /**
      * Set user
      *
-     * @param \StudySauce\Bundle\Entity\User $user
+     * @param User $user
      * @return Visit
      */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -177,7 +177,7 @@ class Visit
     /**
      * Get user
      *
-     * @return \StudySauce\Bundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {

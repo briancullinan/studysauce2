@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="goal",uniqueConstraints={
  *     @ORM\UniqueConstraint(name="type_idx", columns={"user_id", "type"})})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Goal
 {
@@ -43,6 +44,14 @@ class Goal
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
 
 
     /**

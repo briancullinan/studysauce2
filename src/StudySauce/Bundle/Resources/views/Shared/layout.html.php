@@ -116,7 +116,8 @@ $collection = $router->getRouteCollection();
 <?php foreach ($view['assetic']->javascripts([
         '@StudySauceBundle/Resources/public/js/jquery-2.1.1.min.js',
         '@StudySauceBundle/Resources/public/js/jquery-ui.min.js',
-        '@StudySauceBundle/Resources/public/js/bootstrap.min.js'
+        '@StudySauceBundle/Resources/public/js/bootstrap.min.js',
+        '@StudySauceBundle/Resources/public/js/underscore-min.js'
     ],
     [],
     ['output' => 'bundles/studysauce/js/*.js']

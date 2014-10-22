@@ -66,7 +66,7 @@ $view['slots']->stop();
 <div class="schedule clearfix">
     <?php
     $isDemo = false; // || $app->getUser()->hasRole('ROLE_GUEST');
-    if(empty($courses) || $app->getUser()->hasRole('ROLE_GUEST')) {
+    if(empty($courses)) {
         $isDemo = true;
         $courses = $demoCourses;
     }
@@ -175,7 +175,7 @@ $view['slots']->stop();
 </header>
 <div class="schedule other">
     <?php
-    if(empty($others) || $app->getUser()->hasRole('ROLE_GUEST')) {
+    if(empty($others)) {
         $isDemo = true;
         $others = $demoOthers;
     }

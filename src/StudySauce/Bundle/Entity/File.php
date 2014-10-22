@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="file")
+ * @ORM\HasLifecycleCallbacks()
  */
 class File
 {
@@ -43,6 +44,14 @@ class File
      */
     protected $created;
 
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
 
     /**
      * Get id
@@ -149,10 +158,10 @@ class File
     /**
      * Set user
      *
-     * @param \StudySauce\Bundle\Entity\User $user
+     * @param User $user
      * @return File
      */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -162,7 +171,7 @@ class File
     /**
      * Get user
      *
-     * @return \StudySauce\Bundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {

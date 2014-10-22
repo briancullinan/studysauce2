@@ -151,7 +151,6 @@ class AccountController extends Controller
             $password = $encoder->encodePassword($request->get('pass'), $user->getSalt());
             $user->setPassword($password);
             $user->setEmail($request->get('email'));
-            $user->setCreated(new \DateTime());
             $user->addRole('ROLE_USER');
             $user->setEnabled(true);
             $user->setFirstName($request->get('first'));

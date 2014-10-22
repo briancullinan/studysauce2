@@ -97,7 +97,6 @@ class DeadlinesController extends Controller
         {
             $deadline = new Deadline();
             $deadline->setUser($guest);
-            $deadline->setCreated(new \DateTime);
             $deadline->setAssignment('Paper, exam, project, etc.');
             $deadline->setDueDate(date_add(new \DateTime(), new \DateInterval('P7D')));
             $deadline->setPercent(0);
@@ -143,7 +142,6 @@ class DeadlinesController extends Controller
             if(empty($d['eid']))
             {
                 $deadline = new Deadline();
-                $deadline->setCreated(new \DateTime());
                 $deadline->setUser($user);
                 $deadline->setCompleted(false);
                 $deadline->setReminderSent([]);

@@ -102,7 +102,6 @@ class AnonymousAuthenticationListener implements ListenerInterface
             $password = $encoder->encodePassword($username, $user->getSalt());
             $user->setPassword($password);
             $user->setEmail($this->email);
-            $user->setCreated(new \DateTime());
             $user->addRole('ROLE_GUEST');
             $user->setEnabled(true);
             $user->setFirstName('Guest');

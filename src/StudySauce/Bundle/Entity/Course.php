@@ -2,11 +2,13 @@
 
 namespace StudySauce\Bundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="course")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Course
 {
@@ -26,6 +28,16 @@ class Course
      * @ORM\Column(type="string", length=1, name="type")
      */
     protected $type;
+
+    /**
+     * @ORM\Column(type="string", length=64, name="study_type", nullable=true)
+     */
+    protected $studyType;
+
+    /**
+     * @ORM\Column(type="string", length=64, name="study_difficulty", nullable=true)
+     */
+    protected $studyDifficulty;
 
     /**
      * @ORM\Column(type="simple_array", length=256, name="dotw", nullable=true)
@@ -64,11 +76,19 @@ class Course
     protected $deleted = false;
 
     /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->checkins = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->checkins = new ArrayCollection();
     }
 
     /**
@@ -143,7 +163,7 @@ class Course
     /**
      * Get dotw
      *
-     * @return string 
+     * @return array
      */
     public function getDotw()
     {
@@ -296,5 +316,51 @@ class Course
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set studyType
+     *
+     * @param string $studyType
+     * @return Course
+     */
+    public function setStudyType($studyType)
+    {
+        $this->studyType = $studyType;
+
+        return $this;
+    }
+
+    /**
+     * Get studyType
+     *
+     * @return string 
+     */
+    public function getStudyType()
+    {
+        return $this->studyType;
+    }
+
+    /**
+     * Set studyDifficulty
+     *
+     * @param string $studyDifficulty
+     * @return Course
+     */
+    public function setStudyDifficulty($studyDifficulty)
+    {
+        $this->studyDifficulty = $studyDifficulty;
+
+        return $this;
+    }
+
+    /**
+     * Get studyDifficulty
+     *
+     * @return string 
+     */
+    public function getStudyDifficulty()
+    {
+        return $this->studyDifficulty;
     }
 }

@@ -2,13 +2,13 @@
 
 namespace StudySauce\Bundle\Controller;
 
-use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Goal;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class MetricsController
@@ -17,9 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class MetricsController extends Controller
 {
     /**
+     * @param string $_format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction($_format = 'index')
     {
         /** @var $user User */
         $user = $this->getUser();
@@ -32,7 +33,7 @@ class MetricsController extends Controller
             $courses = [];
 
         list($checkins, $checkouts) = self::cleanCheckins($courses);
-        list($times, $total) = self::getTimes($checkins, $checkouts);
+        list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
 
         /** @var $goal Goal */
         $goal = $user->getGoals()->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first();
@@ -62,7 +63,7 @@ class MetricsController extends Controller
             $courses = [];
 
         list($checkins, $checkouts) = self::cleanCheckins($courses);
-        list($times, $total) = self::getTimes($checkins, $checkouts);
+        list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
 
         /** @var $goal Goal */
         $goal = $user->getGoals()->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first();
@@ -79,9 +80,10 @@ class MetricsController extends Controller
     /**
      * @param $checkins
      * @param $checkouts
+     * @param $courses
      * @return array
      */
-    public static function getTimes($checkins, $checkouts)
+    public static function getTimes($checkins, $checkouts, $courses)
     {
 
         $times = [];
@@ -97,12 +99,30 @@ class MetricsController extends Controller
                 $length = 60;
 
             // since we are already in order by time, sum up the other lengths on this day
+            $cid = $c->getCourse()->getId();
+
+            $times[] = [
+                'time' => $t,
+                'length' => $length,
+                'class' => $c->getCourse()->getName(),
+                'cid' => $cid
+            ];
+
+            $total += $length;
+        }
+
+        $total = round($total / 3600, 1);
+
+        self::sortByClassThenTime($times, array_map(function (Course $c) {return $c->getId(); }, $courses));
+
+        foreach($times as $i => $t)
+        {
+            $cid = $t['cid'];
             $date = new \DateTime();
-            $date->setTimestamp($t);
+            $date->setTimestamp($t['time']);
             $date->setTime(0, 0, 0);
             $date = $date->add(new \DateInterval('P1D'));
             $g = $date->format('W');
-            $cid = $c->getCourse()->getId();
             if(!isset($timeGroups[$g][$cid][0]))
             {
                 $length0 = 0;
@@ -111,20 +131,28 @@ class MetricsController extends Controller
             {
                 $length0 = array_sum($timeGroups[$g][$cid]);
             }
-            $timeGroups[$g][$cid][] = $length;
-
-            $times[] = [
-                'time' => $t,
-                'length' => $length,
-                'length0' => $length0,
-                'class' => $c->getCourse()->getName()
-            ];
-
-            $total += $length;
+            $timeGroups[$g][$cid][] = $t['length'];
+            $times[$i]['length0'] = $length0;
         }
 
-        $total = round($total / 3600, 1);
         return [$times, $total];
+    }
+
+    /**
+     * @param $times
+     * @param $ids
+     */
+    public static function sortByClassThenTime(&$times, $ids)
+    {
+        // sort by class then time
+        $classes = array_map(function ($x) use ($ids) {
+                return array_search($x['cid'], array_values($ids));
+            }, (array)$times);
+        $ts = array_map(function ($x) {
+                $x = (array)$x;
+                return $x['time'];
+            }, (array)$times);
+        array_multisort($classes, SORT_NUMERIC, SORT_ASC, $ts, SORT_NUMERIC, SORT_ASC, $times);
     }
 
     /**

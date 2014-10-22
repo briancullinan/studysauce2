@@ -12,11 +12,9 @@ $(document).ready(function () {
         body = $('body');
 
     function setClock() {
-        var seconds = sessionCurrent - sessionStart + 59,
-            tmpHours = '' + Math.floor(seconds / 60 / 60),
-            tmpMinutes = '' + Math.floor(seconds / 60 % 60);
-        hours = tmpHours;
-        minutes = tmpMinutes;
+        var seconds = sessionCurrent - sessionStart + 59;
+        hours = '' + Math.floor(seconds / 60 / 60);
+        minutes = '' + Math.floor(seconds / 60 % 60);
         body.find('.clock:visible').each(function () {
             var that = $(this).fitText(1/2);
             if (hours.length == 1) {
@@ -40,7 +38,7 @@ $(document).ready(function () {
     }
 
     body.on('show', '#checkin,#home', function () {
-        setTimeout(function () {setClock();}, 100);
+        setTimeout(function () {setClock();}, 200);
     });
 
     $('#checkin:visible, #home:visible').trigger('show');
@@ -100,7 +98,7 @@ $(document).ready(function () {
                 csrf_token: checkin.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                var that = body.find('.checkin.cid' + data.cid);
+                var that = body.trigger('checkin').find('.checkin.cid' + data.cid);
                 checkin.find('input[name="csrf_token"]').val(data.csrf_token);
 
                 // update clock
@@ -122,7 +120,7 @@ $(document).ready(function () {
         });
     }
 
-    function sessionBegin(evt, button, id) {
+    function sessionBegin(evt, button, cid) {
         var checklist = $('#checklist'),
             sdsmessages = $('#sds-messages');
         evt.preventDefault();
@@ -156,7 +154,7 @@ $(document).ready(function () {
             //    navigator.geolocation.getCurrentPosition(callback, callback, {maximumAge: 3600000, timeout:1000});
             //}
             //else
-            checkinCallback(null, id, false);
+            checkinCallback(null, cid, false);
             button.scrollintoview({padding: {top: 120, bottom: 200, left: 0, right: 0}});
         });
     }
@@ -165,7 +163,7 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var that = $(this),
-            id = (/cid([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1];
+            cid = (/cid([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1];
 
         // if it is in session always display timer expire
         if (that.is('.checked-in'))
@@ -175,7 +173,7 @@ $(document).ready(function () {
             clock = null;
             resetClock();
             $('#timer-expire').modal();
-            checkinCallback(null, id, true);
+            checkinCallback(null, cid, true);
         }
         else if (body.find(checkedInBtn).length > 0)
         {
@@ -190,11 +188,11 @@ $(document).ready(function () {
 
             // show expire message
             $('#timer-expire').off('close').on('close', function (evt) {
-                sessionBegin(evt, that, id);
+                sessionBegin(evt, that, cid);
             }).modal();
         }
         else
-            sessionBegin(evt, that, id);
+            sessionBegin(evt, that, cid);
     }
 
     // perform ajax call when clicked

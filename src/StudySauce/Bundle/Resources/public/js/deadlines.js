@@ -171,16 +171,18 @@ $(document).ready(function () {
     deadlines.on('change', '.sort-by input[type="radio"]', function (evt) {
         var headings = {},
             that = jQuery(this);
-        jQuery('#deadlines .head').each(function () {
+        deadlines.find('.head').each(function () {
             var head = jQuery(this);
             head.nextUntil('*:not(.deadline-row)').each(function () {
                 var row = jQuery(this),
+                    cid = (/cid([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1],
                     that = row.find('.field-name-field-class-name .read-only');
-                if(typeof headings[that.text().trim()] == 'undefined')
-                    headings[that.text().trim()] = row;
+                // TODO: fix this to not rely on name
+                if(typeof headings[cid] == 'undefined')
+                    headings[cid] = row;
                 else
-                    headings[that.text().trim()] = jQuery.merge(headings[that.text().trim()], row);
-                that.html(that.html().replace(that.text().trim(), head.text().trim()));
+                    headings[cid] = jQuery.merge(headings[cid], row);
+                that.html(that.html().replace(cid, head.text().trim()));
             });
         });
         var rows = [];
@@ -189,9 +191,9 @@ $(document).ready(function () {
         {
             var keys = [];
 
-            for(var i = 0; i < window.classNames.length; i++)
-                if(typeof headings[window.classNames[i]] != 'undefined')
-                    keys[keys.length] = window.classNames[i];
+            for(var i = 0; i < window.classIds.length; i++)
+                if(typeof headings[window.classIds[i]] != 'undefined')
+                    keys[keys.length] = window.classIds[i];
 
             for(var k in headings)
                 if(keys.indexOf(k) == -1)

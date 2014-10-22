@@ -48,7 +48,7 @@ $(document).ready(function () {
                         body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
                         setTimeout(function () {
                             item.find('.squiggle').stop().remove();
-                            body.find('.panel-pane:visible').trigger('hide').fadeOut(75);
+                            body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
                             newPane.delay(75).fadeIn(75).delay(75).trigger('show');
                         }, 100);
                         if (!noPush)
@@ -60,7 +60,7 @@ $(document).ready(function () {
         else if(!panel.is(':visible')) {
             body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
             setTimeout(function () {
-                body.find('.panel-pane:visible').trigger('hide').fadeOut(75);
+                body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
                 panel.delay(75).fadeIn(75).delay(75).trigger('show');
             }, 100);
             if(!noPush)

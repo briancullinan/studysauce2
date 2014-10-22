@@ -45,7 +45,7 @@ class GoalsController extends Controller
     {
         $user = $this->getUser();
 
-        /** @var  $goals ArrayCollection */
+        /** @var ArrayCollection $goals */
         $goals = $user->getGoals();
 
         return $this->render('StudySauceBundle:Goals:widget.html.php', [
@@ -80,7 +80,6 @@ class GoalsController extends Controller
                 $goal = new Goal();
                 $goal->setType($g['type']);
                 $goal->setUser($user);
-                $goal->setCreated(new \DateTime());
                 $new = true;
             }
             $goal->setGoal($g['value']);

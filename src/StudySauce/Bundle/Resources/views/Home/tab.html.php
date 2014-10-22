@@ -28,7 +28,6 @@ foreach ($view['assetic']->stylesheets(
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-
 foreach ($view['assetic']->javascripts(
     [
         '@StudySauceBundle/Resources/public/js/home.js',
@@ -67,9 +66,9 @@ $view['slots']->start('body'); ?>
     
     <?php
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Goals:widget'));
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Plan:widget'));
-    print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:widget'));
     ?>
 </div>

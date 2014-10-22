@@ -9,8 +9,23 @@
     display: none;
 }
 
+.metrics-widget .centrify
+{
+    margin: -37.5% auto 0;
+    padding-top: 50%;
+}
+
+#metrics text,
+.metrics-widget text,
+#metrics .axis path,
+.metrics-widget .axis path
+{
+    fill: #555555;
+}
+
 #metrics .centrify {
     margin: 0 auto;
+    display:inline-block;
 }
 
 #metrics #legend {
@@ -38,6 +53,11 @@
 #metrics ol li {
     margin: 5px 0;
     list-style: none;
+}
+
+.metrics-widget
+{
+    text-align: center;
 }
 
 .metrics-widget .timeline,
@@ -142,4 +162,20 @@
         display:block;
     }
 
+}
+
+@media all and (max-width:700px)
+{
+    .metrics-widget .centrify
+    {
+        margin: 0;
+        padding: 0;
+    }
+
+    .metrics-widget .timeline, .metrics-widget .pie-chart
+    {
+        display:block;
+        width:auto;
+        margin:0 auto;
+    }
 }

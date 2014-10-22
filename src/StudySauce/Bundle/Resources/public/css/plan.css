@@ -188,6 +188,41 @@
     display: none !important;
 }
 
+.plan-widget .session-row
+{
+    clear:both;
+}
+
+.plan-widget .session-row > *
+{
+    width:30%;
+    display:inline-block;
+    margin:0 -2px;
+    vertical-align: middle;
+    padding: 10px 0;
+}
+
+.plan-widget .session-row .class-name
+{
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.plan-widget .session-row .completed
+{
+    text-align: right;
+    width:auto;
+}
+
+.plan-widget .session-row .date
+{
+    text-align: center;
+    width:70%;
+    margin-right:-28px;
+    padding-right:28px;
+}
+
 #plan .session-row
 {
     padding-top:5px;

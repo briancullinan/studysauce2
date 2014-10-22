@@ -58,7 +58,6 @@ class PartnerController extends Controller
             if($current != null) {
                 // update created time so they become the current partner
                 $partner = $current;
-                $partner->setCreated(new \DateTime());
                 $user->removePartner($partner);
                 $user->addPartner($partner);
             }

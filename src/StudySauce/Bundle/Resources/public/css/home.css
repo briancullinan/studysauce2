@@ -10,12 +10,12 @@
 
 #home .widget-wrapper:nth-of-type(3)
 {
-    width:66.66%;
+    width:33.33%;
 }
 
 #home .widget-wrapper:nth-of-type(4)
 {
-    width:33.33%;
+    width:66.66%;
 }
 
 #home .widget-wrapper:nth-of-type(6),

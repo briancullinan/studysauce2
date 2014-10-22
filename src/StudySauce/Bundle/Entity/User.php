@@ -1,15 +1,16 @@
 <?php
-// src/Acme/UserBundle/Entity/User.php
 
 namespace StudySauce\Bundle\Entity;
 
+use Course1\Bundle\Entity\Quiz1;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-use Course1\Bundle\Entity\Quiz1;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="ss_user")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User extends BaseUser
 {
@@ -96,15 +97,23 @@ class User extends BaseUser
 
 
     /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         parent::__construct();
-        $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->sessions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->schedules = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+        $this->goals = new ArrayCollection();
+        $this->deadlines = new ArrayCollection();
     }
 
     /**
@@ -143,10 +152,10 @@ class User extends BaseUser
     /**
      * Add schedules
      *
-     * @param \StudySauce\Bundle\Entity\Schedule $schedules
+     * @param Schedule $schedules
      * @return User
      */
-    public function addSchedule(\StudySauce\Bundle\Entity\Schedule $schedules)
+    public function addSchedule(Schedule $schedules)
     {
         $this->schedules[] = $schedules;
 
@@ -156,9 +165,9 @@ class User extends BaseUser
     /**
      * Remove schedules
      *
-     * @param \StudySauce\Bundle\Entity\Schedule $schedules
+     * @param Schedule $schedules
      */
-    public function removeSchedule(\StudySauce\Bundle\Entity\Schedule $schedules)
+    public function removeSchedule(Schedule $schedules)
     {
         $this->schedules->removeElement($schedules);
     }
@@ -176,10 +185,10 @@ class User extends BaseUser
     /**
      * Add sessions
      *
-     * @param \StudySauce\Bundle\Entity\Session $sessions
+     * @param Session $sessions
      * @return User
      */
-    public function addSession(\StudySauce\Bundle\Entity\Session $sessions)
+    public function addSession(Session $sessions)
     {
         $this->sessions[] = $sessions;
 
@@ -189,9 +198,9 @@ class User extends BaseUser
     /**
      * Remove sessions
      *
-     * @param \StudySauce\Bundle\Entity\Session $sessions
+     * @param Session $sessions
      */
-    public function removeSession(\StudySauce\Bundle\Entity\Session $sessions)
+    public function removeSession(Session $sessions)
     {
         $this->sessions->removeElement($sessions);
     }
@@ -209,10 +218,10 @@ class User extends BaseUser
     /**
      * Add goals
      *
-     * @param \StudySauce\Bundle\Entity\Goal $goals
+     * @param Goal $goals
      * @return User
      */
-    public function addGoal(\StudySauce\Bundle\Entity\Goal $goals)
+    public function addGoal(Goal $goals)
     {
         $this->goals[] = $goals;
 
@@ -222,9 +231,9 @@ class User extends BaseUser
     /**
      * Remove goals
      *
-     * @param \StudySauce\Bundle\Entity\Goal $goals
+     * @param Goal $goals
      */
-    public function removeGoal(\StudySauce\Bundle\Entity\Goal $goals)
+    public function removeGoal(Goal $goals)
     {
         $this->goals->removeElement($goals);
     }
@@ -242,10 +251,10 @@ class User extends BaseUser
     /**
      * Add deadlines
      *
-     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     * @param Deadline $deadlines
      * @return User
      */
-    public function addDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    public function addDeadline(Deadline $deadlines)
     {
         $this->deadlines[] = $deadlines;
 
@@ -255,9 +264,9 @@ class User extends BaseUser
     /**
      * Remove deadlines
      *
-     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     * @param Deadline $deadlines
      */
-    public function removeDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    public function removeDeadline(Deadline $deadlines)
     {
         $this->deadlines->removeElement($deadlines);
     }
@@ -321,10 +330,10 @@ class User extends BaseUser
     /**
      * Add partners
      *
-     * @param \StudySauce\Bundle\Entity\Partner $partners
+     * @param Partner $partners
      * @return User
      */
-    public function addPartner(\StudySauce\Bundle\Entity\Partner $partners)
+    public function addPartner(Partner $partners)
     {
         $this->partners[] = $partners;
 
@@ -334,9 +343,9 @@ class User extends BaseUser
     /**
      * Remove partners
      *
-     * @param \StudySauce\Bundle\Entity\Partner $partners
+     * @param Partner $partners
      */
-    public function removePartner(\StudySauce\Bundle\Entity\Partner $partners)
+    public function removePartner(Partner $partners)
     {
         $this->partners->removeElement($partners);
     }
@@ -354,10 +363,10 @@ class User extends BaseUser
     /**
      * Add files
      *
-     * @param \StudySauce\Bundle\Entity\File $files
+     * @param File $files
      * @return User
      */
-    public function addFile(\StudySauce\Bundle\Entity\File $files)
+    public function addFile(File $files)
     {
         $this->files[] = $files;
 
@@ -367,9 +376,9 @@ class User extends BaseUser
     /**
      * Remove files
      *
-     * @param \StudySauce\Bundle\Entity\File $files
+     * @param File $files
      */
-    public function removeFile(\StudySauce\Bundle\Entity\File $files)
+    public function removeFile(File $files)
     {
         $this->files->removeElement($files);
     }
@@ -387,10 +396,10 @@ class User extends BaseUser
     /**
      * Set photo
      *
-     * @param \StudySauce\Bundle\Entity\File $photo
+     * @param File $photo
      * @return User
      */
-    public function setPhoto(\StudySauce\Bundle\Entity\File $photo = null)
+    public function setPhoto(File $photo = null)
     {
         $this->photo = $photo;
 
@@ -400,7 +409,7 @@ class User extends BaseUser
     /**
      * Get photo
      *
-     * @return \StudySauce\Bundle\Entity\File 
+     * @return File
      */
     public function getPhoto()
     {
@@ -410,10 +419,10 @@ class User extends BaseUser
     /**
      * Add emails
      *
-     * @param \StudySauce\Bundle\Entity\Mail $emails
+     * @param Mail $emails
      * @return User
      */
-    public function addEmail(\StudySauce\Bundle\Entity\Mail $emails)
+    public function addEmail(Mail $emails)
     {
         $this->emails[] = $emails;
 
@@ -423,9 +432,9 @@ class User extends BaseUser
     /**
      * Remove emails
      *
-     * @param \StudySauce\Bundle\Entity\Mail $emails
+     * @param Mail $emails
      */
-    public function removeEmail(\StudySauce\Bundle\Entity\Mail $emails)
+    public function removeEmail(Mail $emails)
     {
         $this->emails->removeElement($emails);
     }
@@ -443,10 +452,10 @@ class User extends BaseUser
     /**
      * Add visits
      *
-     * @param \StudySauce\Bundle\Entity\Visit $visits
+     * @param Visit $visits
      * @return User
      */
-    public function addVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    public function addVisit(Visit $visits)
     {
         $this->visits[] = $visits;
 
@@ -456,9 +465,9 @@ class User extends BaseUser
     /**
      * Remove visits
      *
-     * @param \StudySauce\Bundle\Entity\Visit $visits
+     * @param Visit $visits
      */
-    public function removeVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    public function removeVisit(Visit $visits)
     {
         $this->visits->removeElement($visits);
     }
@@ -476,10 +485,10 @@ class User extends BaseUser
     /**
      * Add quiz1s
      *
-     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
+     * @param Quiz1 $quiz1s
      * @return User
      */
-    public function addQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
+    public function addQuiz1(Quiz1 $quiz1s)
     {
         $this->quiz1s[] = $quiz1s;
 
@@ -489,9 +498,9 @@ class User extends BaseUser
     /**
      * Remove quiz1s
      *
-     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
+     * @param Quiz1 $quiz1s
      */
-    public function removeQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
+    public function removeQuiz1(Quiz1 $quiz1s)
     {
         $this->quiz1s->removeElement($quiz1s);
     }

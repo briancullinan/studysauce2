@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="partner")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Partner
 {
@@ -69,6 +70,13 @@ class Partner
      */
     protected $reminder;
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->created = new \DateTime();
+    }
 
     /**
      * Get id

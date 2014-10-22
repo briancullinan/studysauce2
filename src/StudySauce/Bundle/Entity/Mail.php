@@ -128,10 +128,10 @@ class Mail implements EmailInterface
     /**
      * Set user
      *
-     * @param \StudySauce\Bundle\Entity\User $user
+     * @param User $user
      * @return Mail
      */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -141,7 +141,7 @@ class Mail implements EmailInterface
     /**
      * Get user
      *
-     * @return \StudySauce\Bundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {

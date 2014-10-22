@@ -117,9 +117,16 @@
     padding-right:5px;
 }
 
+.schedule .start-date,
 .schedule .end-date
 {
-    padding-right: 0;
+    padding-right:0;
+}
+
+.schedule .start-time,
+.schedule .end-time
+{
+    padding-right:15px;
 }
 
 .schedule .start-time .input.mobile-only,
@@ -129,10 +136,32 @@
 }
 
 .schedule .end-time,
-.schedule .start-date,
-.schedule .end-date
+.schedule .start-date
 {
-    margin-left:-8px;
+    margin-left:-15px;
+}
+
+.schedule .read-only .start-time,
+.schedule .read-only .end-time
+{
+    padding-right:25px;
+}
+
+.schedule .read-only .start-date,
+.schedule .read-only .end-date
+{
+    padding-left:0;
+}
+
+.schedule .read-only .end-time,
+.schedule .read-only .start-date
+{
+    margin-left:-25px;
+}
+
+.schedule .read-only .end-date
+{
+    margin-left:-15px;
 }
 
 a[href="#add-class"], a[href="#add-other"] {
@@ -254,6 +283,17 @@ a[href="#add-class"] span, a[href="#add-other"] span {
     {
         width: 25%;
         margin: 0 -2px;
+        padding:0 2px;
+    }
+
+    .schedule .start-time
+    {
+        padding-left:0;
+    }
+
+    .schedule .end-date
+    {
+        padding-right:0;
     }
 }
 
@@ -285,9 +325,13 @@ a[href="#add-class"] span, a[href="#add-other"] span {
         clear:left;
     }
 
-    .schedule .start-date
+    .schedule .start-date,
+    .schedule .read-only .start-date,
+    .schedule .end-date,
+    .schedule .read-only .end-date
     {
         margin-left:0;
+        margin-right:-30px;
     }
 
     .schedule .start-time,
@@ -298,13 +342,13 @@ a[href="#add-class"] span, a[href="#add-other"] span {
         width: 50%;
         margin:0 -2px;
         padding-left:2px;
-        padding-right:4px;
+        padding-right:5px;
     }
 
     .schedule .end-time,
     .schedule .end-date
     {
-        padding-left:4px;
+        padding-left:5px;
         padding-right:0;
     }
 }

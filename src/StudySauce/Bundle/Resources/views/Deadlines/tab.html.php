@@ -75,6 +75,8 @@ $view['slots']->start('body'); ?>
 
         <?php if(!$isDemo) $view['slots']->output('deadlines-heading');
         $headStr = '';
+        $classNames = array_map(function (Course $c) { return $c->getName(); }, $isDemo ? $demoCourses : $courses);
+        $classIds = array_map(function (Course $c) { return $c->getId(); }, $isDemo ? $demoCourses : $courses);
         foreach ($deadlines as $i => $d) {
             if ($isDemo && $i > 1) {
                 break;
@@ -99,10 +101,10 @@ $view['slots']->start('body'); ?>
                 }
             }
 
-            $classI = array_search($d->getName(), array_values($courses));
+            $classI = array_search($d->getName(), $classNames);
 
             ?>
-            <div class="deadline-row first valid <?php print ($isDemo ? 'edit' : 'read-only'); ?>"
+            <div class="deadline-row first valid <?php print ($isDemo ? 'edit' : 'read-only'); ?>  cid<?php print $classIds[$classI]; ?>"
                  id="eid-<?php print ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">
