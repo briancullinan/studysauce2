@@ -23,6 +23,20 @@
     line-height: 100%;
 }
 
+#plan .fc-time-grid-container
+{
+    transition: max-height ease-in-out .4s, min-height ease-in-out .4s;
+    max-height:2000px;
+    min-height:100%;
+}
+
+#plan .fc-time-grid-container.fc-scroller
+{
+    overflow-x:auto;
+    max-height:375px;
+    min-height:375px;
+}
+
 #plan .sort-by {
     vertical-align: top;
     position: relative;

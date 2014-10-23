@@ -51,7 +51,7 @@ $(document).ready(function () {
                     editable: true,
                     draggable: true,
                     aspectRatio: 1.9,
-                    height:500,
+                    height:'auto',
                     timezone: 'local',
                     timeslotsPerHour: 4,
                     slotEventOverlap: false,
@@ -192,6 +192,9 @@ $(document).ready(function () {
     $('body').on('show', '#plan', function () {
         setTimeout(function () {
             initialize();
+            setTimeout(function () {
+                $('#calendar').fullCalendar('option', 'height', 500);
+            }, 200);
             if($('#calendar:visible').length > 0)
                 $('#calendar').fullCalendar('refetchEvents');
         }, 200);

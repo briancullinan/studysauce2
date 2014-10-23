@@ -109,6 +109,7 @@ class User extends BaseUser
      */
     public function __construct()
     {
+        parent::__construct();
         $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sessions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
