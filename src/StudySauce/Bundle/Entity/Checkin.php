@@ -44,6 +44,7 @@ class Checkin
     protected $utc_checkout;
 
 
+
     /**
      * Get id
      *
@@ -101,29 +102,6 @@ class Checkin
     }
 
     /**
-     * Set course
-     *
-     * @param \StudySauce\Bundle\Entity\Course $course
-     * @return Checkin
-     */
-    public function setCourse(\StudySauce\Bundle\Entity\Course $course = null)
-    {
-        $this->course = $course;
-
-        return $this;
-    }
-
-    /**
-     * Get course
-     *
-     * @return \StudySauce\Bundle\Entity\Course 
-     */
-    public function getCourse()
-    {
-        return $this->course;
-    }
-
-    /**
      * Set checkout
      *
      * @param \DateTime $checkout
@@ -167,5 +145,28 @@ class Checkin
     public function getUtcCheckout()
     {
         return $this->utc_checkout;
+    }
+
+    /**
+     * Set course
+     *
+     * @param \StudySauce\Bundle\Entity\Course $course
+     * @return Checkin
+     */
+    public function setCourse(\StudySauce\Bundle\Entity\Course $course = null)
+    {
+        $this->course = $course;
+
+        return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return \StudySauce\Bundle\Entity\Course 
+     */
+    public function getCourse()
+    {
+        return $this->course;
     }
 }

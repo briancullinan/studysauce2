@@ -59,6 +59,7 @@ class Visit
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *
@@ -90,6 +91,29 @@ class Visit
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Set query
+     *
+     * @param string $query
+     * @return Visit
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+
+        return $this;
+    }
+
+    /**
+     * Get query
+     *
+     * @return string 
+     */
+    public function getQuery()
+    {
+        return $this->query;
     }
 
     /**
@@ -141,10 +165,10 @@ class Visit
     /**
      * Set session
      *
-     * @param Session $session
+     * @param \StudySauce\Bundle\Entity\Session $session
      * @return Visit
      */
-    public function setSession(Session $session = null)
+    public function setSession(\StudySauce\Bundle\Entity\Session $session = null)
     {
         $this->session = $session;
 
@@ -154,7 +178,7 @@ class Visit
     /**
      * Get session
      *
-     * @return Session
+     * @return \StudySauce\Bundle\Entity\Session 
      */
     public function getSession()
     {
@@ -164,10 +188,10 @@ class Visit
     /**
      * Set user
      *
-     * @param User $user
+     * @param \StudySauce\Bundle\Entity\User $user
      * @return Visit
      */
-    public function setUser(User $user = null)
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -177,33 +201,10 @@ class Visit
     /**
      * Get user
      *
-     * @return User
+     * @return \StudySauce\Bundle\Entity\User 
      */
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set query
-     *
-     * @param string $query
-     * @return Visit
-     */
-    public function setQuery($query)
-    {
-        $this->query = $query;
-
-        return $this;
-    }
-
-    /**
-     * Get query
-     *
-     * @return string 
-     */
-    public function getQuery()
-    {
-        return $this->query;
     }
 }

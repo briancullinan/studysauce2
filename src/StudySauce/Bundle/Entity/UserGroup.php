@@ -43,6 +43,7 @@ class UserGroup
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *

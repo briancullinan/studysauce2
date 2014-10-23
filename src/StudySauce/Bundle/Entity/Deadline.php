@@ -78,6 +78,7 @@ class Deadline
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *
@@ -137,7 +138,7 @@ class Deadline
     /**
      * Set reminder
      *
-     * @param string $reminder
+     * @param array $reminder
      * @return Deadline
      */
     public function setReminder($reminder)
@@ -150,7 +151,7 @@ class Deadline
     /**
      * Get reminder
      *
-     * @return string 
+     * @return array 
      */
     public function getReminder()
     {
@@ -229,7 +230,7 @@ class Deadline
     /**
      * Set reminderSent
      *
-     * @param string $reminderSent
+     * @param array $reminderSent
      * @return Deadline
      */
     public function setReminderSent($reminderSent)
@@ -242,7 +243,7 @@ class Deadline
     /**
      * Get reminderSent
      *
-     * @return string 
+     * @return array 
      */
     public function getReminderSent()
     {
@@ -273,29 +274,6 @@ class Deadline
     }
 
     /**
-     * Set user
-     *
-     * @param \StudySauce\Bundle\Entity\User $user
-     * @return Deadline
-     */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \StudySauce\Bundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set deleted
      *
      * @param boolean $deleted
@@ -316,5 +294,28 @@ class Deadline
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \StudySauce\Bundle\Entity\User $user
+     * @return Deadline
+     */
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \StudySauce\Bundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

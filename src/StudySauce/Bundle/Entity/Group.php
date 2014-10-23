@@ -37,6 +37,7 @@ class Group extends BaseGroup
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *

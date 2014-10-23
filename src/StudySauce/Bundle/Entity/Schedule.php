@@ -95,7 +95,9 @@ class Schedule
      */
     public function __construct()
     {
-        $this->courses = new ArrayCollection();
+        $this->courses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->weeks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -295,10 +297,10 @@ class Schedule
     /**
      * Set user
      *
-     * @param User $user
+     * @param \StudySauce\Bundle\Entity\User $user
      * @return Schedule
      */
-    public function setUser(User $user = null)
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -308,7 +310,7 @@ class Schedule
     /**
      * Get user
      *
-     * @return User
+     * @return \StudySauce\Bundle\Entity\User 
      */
     public function getUser()
     {
@@ -318,10 +320,10 @@ class Schedule
     /**
      * Add courses
      *
-     * @param Course $courses
+     * @param \StudySauce\Bundle\Entity\Course $courses
      * @return Schedule
      */
-    public function addCourse(Course $courses)
+    public function addCourse(\StudySauce\Bundle\Entity\Course $courses)
     {
         $this->courses[] = $courses;
 
@@ -331,9 +333,9 @@ class Schedule
     /**
      * Remove courses
      *
-     * @param Course $courses
+     * @param \StudySauce\Bundle\Entity\Course $courses
      */
-    public function removeCourse(Course $courses)
+    public function removeCourse(\StudySauce\Bundle\Entity\Course $courses)
     {
         $this->courses->removeElement($courses);
     }

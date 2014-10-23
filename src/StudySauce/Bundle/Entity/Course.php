@@ -88,7 +88,7 @@ class Course
      */
     public function __construct()
     {
-        $this->checkins = new ArrayCollection();
+        $this->checkins = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -148,9 +148,55 @@ class Course
     }
 
     /**
+     * Set studyType
+     *
+     * @param string $studyType
+     * @return Course
+     */
+    public function setStudyType($studyType)
+    {
+        $this->studyType = $studyType;
+
+        return $this;
+    }
+
+    /**
+     * Get studyType
+     *
+     * @return string 
+     */
+    public function getStudyType()
+    {
+        return $this->studyType;
+    }
+
+    /**
+     * Set studyDifficulty
+     *
+     * @param string $studyDifficulty
+     * @return Course
+     */
+    public function setStudyDifficulty($studyDifficulty)
+    {
+        $this->studyDifficulty = $studyDifficulty;
+
+        return $this;
+    }
+
+    /**
+     * Get studyDifficulty
+     *
+     * @return string 
+     */
+    public function getStudyDifficulty()
+    {
+        return $this->studyDifficulty;
+    }
+
+    /**
      * Set dotw
      *
-     * @param string $dotw
+     * @param array $dotw
      * @return Course
      */
     public function setDotw($dotw)
@@ -163,7 +209,7 @@ class Course
     /**
      * Get dotw
      *
-     * @return array
+     * @return array 
      */
     public function getDotw()
     {
@@ -240,6 +286,29 @@ class Course
     }
 
     /**
+     * Set deleted
+     *
+     * @param boolean $deleted
+     * @return Course
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return boolean 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
      * Add checkins
      *
      * @param \StudySauce\Bundle\Entity\Checkin $checkins
@@ -293,74 +362,5 @@ class Course
     public function getSchedule()
     {
         return $this->schedule;
-    }
-
-    /**
-     * Set deleted
-     *
-     * @param boolean $deleted
-     * @return Course
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return boolean 
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * Set studyType
-     *
-     * @param string $studyType
-     * @return Course
-     */
-    public function setStudyType($studyType)
-    {
-        $this->studyType = $studyType;
-
-        return $this;
-    }
-
-    /**
-     * Get studyType
-     *
-     * @return string 
-     */
-    public function getStudyType()
-    {
-        return $this->studyType;
-    }
-
-    /**
-     * Set studyDifficulty
-     *
-     * @param string $studyDifficulty
-     * @return Course
-     */
-    public function setStudyDifficulty($studyDifficulty)
-    {
-        $this->studyDifficulty = $studyDifficulty;
-
-        return $this;
-    }
-
-    /**
-     * Get studyDifficulty
-     *
-     * @return string 
-     */
-    public function getStudyDifficulty()
-    {
-        return $this->studyDifficulty;
     }
 }

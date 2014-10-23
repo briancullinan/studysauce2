@@ -53,6 +53,7 @@ class Mail implements EmailInterface
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *
@@ -77,6 +78,16 @@ class Mail implements EmailInterface
     }
 
     /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Set message
      *
      * @param string $message
@@ -90,6 +101,16 @@ class Mail implements EmailInterface
     }
 
     /**
+     * Get message
+     *
+     * @return string 
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
      * Set environment
      *
      * @param string $environment
@@ -100,6 +121,16 @@ class Mail implements EmailInterface
         $this->environment = $environment;
 
         return $this;
+    }
+
+    /**
+     * Get environment
+     *
+     * @return string 
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
     }
 
     /**
@@ -128,10 +159,10 @@ class Mail implements EmailInterface
     /**
      * Set user
      *
-     * @param User $user
+     * @param \StudySauce\Bundle\Entity\User $user
      * @return Mail
      */
-    public function setUser(User $user = null)
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -141,40 +172,10 @@ class Mail implements EmailInterface
     /**
      * Get user
      *
-     * @return User
+     * @return \StudySauce\Bundle\Entity\User 
      */
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Get status
-     *
-     * @return integer 
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Get message
-     *
-     * @return string 
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * Get environment
-     *
-     * @return string 
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
     }
 }

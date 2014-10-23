@@ -109,11 +109,15 @@ class User extends BaseUser
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->schedules = new ArrayCollection();
-        $this->sessions = new ArrayCollection();
-        $this->goals = new ArrayCollection();
-        $this->deadlines = new ArrayCollection();
+        $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sessions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->partners = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz1s = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -147,138 +151,6 @@ class User extends BaseUser
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Add schedules
-     *
-     * @param Schedule $schedules
-     * @return User
-     */
-    public function addSchedule(Schedule $schedules)
-    {
-        $this->schedules[] = $schedules;
-
-        return $this;
-    }
-
-    /**
-     * Remove schedules
-     *
-     * @param Schedule $schedules
-     */
-    public function removeSchedule(Schedule $schedules)
-    {
-        $this->schedules->removeElement($schedules);
-    }
-
-    /**
-     * Get schedules
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSchedules()
-    {
-        return $this->schedules;
-    }
-
-    /**
-     * Add sessions
-     *
-     * @param Session $sessions
-     * @return User
-     */
-    public function addSession(Session $sessions)
-    {
-        $this->sessions[] = $sessions;
-
-        return $this;
-    }
-
-    /**
-     * Remove sessions
-     *
-     * @param Session $sessions
-     */
-    public function removeSession(Session $sessions)
-    {
-        $this->sessions->removeElement($sessions);
-    }
-
-    /**
-     * Get sessions
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSessions()
-    {
-        return $this->sessions;
-    }
-
-    /**
-     * Add goals
-     *
-     * @param Goal $goals
-     * @return User
-     */
-    public function addGoal(Goal $goals)
-    {
-        $this->goals[] = $goals;
-
-        return $this;
-    }
-
-    /**
-     * Remove goals
-     *
-     * @param Goal $goals
-     */
-    public function removeGoal(Goal $goals)
-    {
-        $this->goals->removeElement($goals);
-    }
-
-    /**
-     * Get goals
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getGoals()
-    {
-        return $this->goals;
-    }
-
-    /**
-     * Add deadlines
-     *
-     * @param Deadline $deadlines
-     * @return User
-     */
-    public function addDeadline(Deadline $deadlines)
-    {
-        $this->deadlines[] = $deadlines;
-
-        return $this;
-    }
-
-    /**
-     * Remove deadlines
-     *
-     * @param Deadline $deadlines
-     */
-    public function removeDeadline(Deadline $deadlines)
-    {
-        $this->deadlines->removeElement($deadlines);
-    }
-
-    /**
-     * Get deadlines
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getDeadlines()
-    {
-        return $this->deadlines;
     }
 
     /**
@@ -328,12 +200,177 @@ class User extends BaseUser
     }
 
     /**
-     * Add partners
+     * Add schedules
      *
-     * @param Partner $partners
+     * @param \StudySauce\Bundle\Entity\Schedule $schedules
      * @return User
      */
-    public function addPartner(Partner $partners)
+    public function addSchedule(\StudySauce\Bundle\Entity\Schedule $schedules)
+    {
+        $this->schedules[] = $schedules;
+
+        return $this;
+    }
+
+    /**
+     * Remove schedules
+     *
+     * @param \StudySauce\Bundle\Entity\Schedule $schedules
+     */
+    public function removeSchedule(\StudySauce\Bundle\Entity\Schedule $schedules)
+    {
+        $this->schedules->removeElement($schedules);
+    }
+
+    /**
+     * Get schedules
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
+    }
+
+    /**
+     * Add sessions
+     *
+     * @param \StudySauce\Bundle\Entity\Session $sessions
+     * @return User
+     */
+    public function addSession(\StudySauce\Bundle\Entity\Session $sessions)
+    {
+        $this->sessions[] = $sessions;
+
+        return $this;
+    }
+
+    /**
+     * Remove sessions
+     *
+     * @param \StudySauce\Bundle\Entity\Session $sessions
+     */
+    public function removeSession(\StudySauce\Bundle\Entity\Session $sessions)
+    {
+        $this->sessions->removeElement($sessions);
+    }
+
+    /**
+     * Get sessions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSessions()
+    {
+        return $this->sessions;
+    }
+
+    /**
+     * Add visits
+     *
+     * @param \StudySauce\Bundle\Entity\Visit $visits
+     * @return User
+     */
+    public function addVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    {
+        $this->visits[] = $visits;
+
+        return $this;
+    }
+
+    /**
+     * Remove visits
+     *
+     * @param \StudySauce\Bundle\Entity\Visit $visits
+     */
+    public function removeVisit(\StudySauce\Bundle\Entity\Visit $visits)
+    {
+        $this->visits->removeElement($visits);
+    }
+
+    /**
+     * Get visits
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVisits()
+    {
+        return $this->visits;
+    }
+
+    /**
+     * Add goals
+     *
+     * @param \StudySauce\Bundle\Entity\Goal $goals
+     * @return User
+     */
+    public function addGoal(\StudySauce\Bundle\Entity\Goal $goals)
+    {
+        $this->goals[] = $goals;
+
+        return $this;
+    }
+
+    /**
+     * Remove goals
+     *
+     * @param \StudySauce\Bundle\Entity\Goal $goals
+     */
+    public function removeGoal(\StudySauce\Bundle\Entity\Goal $goals)
+    {
+        $this->goals->removeElement($goals);
+    }
+
+    /**
+     * Get goals
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGoals()
+    {
+        return $this->goals;
+    }
+
+    /**
+     * Add deadlines
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     * @return User
+     */
+    public function addDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    {
+        $this->deadlines[] = $deadlines;
+
+        return $this;
+    }
+
+    /**
+     * Remove deadlines
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     */
+    public function removeDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    {
+        $this->deadlines->removeElement($deadlines);
+    }
+
+    /**
+     * Get deadlines
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDeadlines()
+    {
+        return $this->deadlines;
+    }
+
+    /**
+     * Add partners
+     *
+     * @param \StudySauce\Bundle\Entity\Partner $partners
+     * @return User
+     */
+    public function addPartner(\StudySauce\Bundle\Entity\Partner $partners)
     {
         $this->partners[] = $partners;
 
@@ -343,9 +380,9 @@ class User extends BaseUser
     /**
      * Remove partners
      *
-     * @param Partner $partners
+     * @param \StudySauce\Bundle\Entity\Partner $partners
      */
-    public function removePartner(Partner $partners)
+    public function removePartner(\StudySauce\Bundle\Entity\Partner $partners)
     {
         $this->partners->removeElement($partners);
     }
@@ -363,10 +400,10 @@ class User extends BaseUser
     /**
      * Add files
      *
-     * @param File $files
+     * @param \StudySauce\Bundle\Entity\File $files
      * @return User
      */
-    public function addFile(File $files)
+    public function addFile(\StudySauce\Bundle\Entity\File $files)
     {
         $this->files[] = $files;
 
@@ -376,9 +413,9 @@ class User extends BaseUser
     /**
      * Remove files
      *
-     * @param File $files
+     * @param \StudySauce\Bundle\Entity\File $files
      */
-    public function removeFile(File $files)
+    public function removeFile(\StudySauce\Bundle\Entity\File $files)
     {
         $this->files->removeElement($files);
     }
@@ -394,35 +431,12 @@ class User extends BaseUser
     }
 
     /**
-     * Set photo
-     *
-     * @param File $photo
-     * @return User
-     */
-    public function setPhoto(File $photo = null)
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
-
-    /**
-     * Get photo
-     *
-     * @return File
-     */
-    public function getPhoto()
-    {
-        return $this->photo;
-    }
-
-    /**
      * Add emails
      *
-     * @param Mail $emails
+     * @param \StudySauce\Bundle\Entity\Mail $emails
      * @return User
      */
-    public function addEmail(Mail $emails)
+    public function addEmail(\StudySauce\Bundle\Entity\Mail $emails)
     {
         $this->emails[] = $emails;
 
@@ -432,9 +446,9 @@ class User extends BaseUser
     /**
      * Remove emails
      *
-     * @param Mail $emails
+     * @param \StudySauce\Bundle\Entity\Mail $emails
      */
-    public function removeEmail(Mail $emails)
+    public function removeEmail(\StudySauce\Bundle\Entity\Mail $emails)
     {
         $this->emails->removeElement($emails);
     }
@@ -450,45 +464,12 @@ class User extends BaseUser
     }
 
     /**
-     * Add visits
-     *
-     * @param Visit $visits
-     * @return User
-     */
-    public function addVisit(Visit $visits)
-    {
-        $this->visits[] = $visits;
-
-        return $this;
-    }
-
-    /**
-     * Remove visits
-     *
-     * @param Visit $visits
-     */
-    public function removeVisit(Visit $visits)
-    {
-        $this->visits->removeElement($visits);
-    }
-
-    /**
-     * Get visits
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getVisits()
-    {
-        return $this->visits;
-    }
-
-    /**
      * Add quiz1s
      *
-     * @param Quiz1 $quiz1s
+     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
      * @return User
      */
-    public function addQuiz1(Quiz1 $quiz1s)
+    public function addQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
     {
         $this->quiz1s[] = $quiz1s;
 
@@ -498,9 +479,9 @@ class User extends BaseUser
     /**
      * Remove quiz1s
      *
-     * @param Quiz1 $quiz1s
+     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
      */
-    public function removeQuiz1(Quiz1 $quiz1s)
+    public function removeQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
     {
         $this->quiz1s->removeElement($quiz1s);
     }
@@ -513,5 +494,28 @@ class User extends BaseUser
     public function getQuiz1s()
     {
         return $this->quiz1s;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param \StudySauce\Bundle\Entity\File $photo
+     * @return User
+     */
+    public function setPhoto(\StudySauce\Bundle\Entity\File $photo = null)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return \StudySauce\Bundle\Entity\File 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
     }
 }

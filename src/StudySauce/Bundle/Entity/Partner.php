@@ -78,6 +78,7 @@ class Partner
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *

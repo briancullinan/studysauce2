@@ -92,18 +92,19 @@ class ScheduleController extends Controller
             $schedule->setUniversity('Enter the full name');
             $schedule->setGrades('as-only');
             $schedule->setWeekends('hit-hard');
-            $schedule->setSharp6am11am(2);
+            $schedule->setSharp6am11am(5);
             $schedule->setSharp11am4pm(3);
-            $schedule->setSharp4pm9pm(5);
+            $schedule->setSharp4pm9pm(4);
             $schedule->setSharp9pm2am(4);
 
             $guest->addSchedule($schedule);
             $orm->persist($schedule);
             $orm->flush();
 
-            self::getDemoCourses($schedule, $orm);
-            self::getDemoOthers($schedule, $orm);
         }
+
+        self::getDemoCourses($schedule, $orm);
+        self::getDemoOthers($schedule, $orm);
 
         return $schedule;
     }
@@ -130,6 +131,8 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class1);
             $course->setEndTime(date_add(clone $class1, new \DateInterval('P8WT50M')));
+            $course->setStudyDifficulty('easy');
+            $course->setStudyType('memorization');
 
             $orm->persist($course);
             $orm->flush();
@@ -146,6 +149,8 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class2);
             $course->setEndTime(date_add(clone $class2, new \DateInterval('P8WT50M')));
+            $course->setStudyDifficulty('easy');
+            $course->setStudyType('memorization');
 
             $orm->persist($course);
             $orm->flush();
@@ -162,6 +167,8 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class3);
             $course->setEndTime(date_add(clone $class3, new \DateInterval('P8WT50M')));
+            $course->setStudyDifficulty('medium');
+            $course->setStudyType('conceptual');
 
             $orm->persist($course);
             $orm->flush();
@@ -178,6 +185,8 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class4);
             $course->setEndTime(date_add(clone $class4, new \DateInterval('P8WT50M')));
+            $course->setStudyDifficulty('medium');
+            $course->setStudyType('conceptual');
 
             $orm->persist($course);
             $orm->flush();
@@ -194,6 +203,8 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class5);
             $course->setEndTime(date_add(clone $class5, new \DateInterval('P8WT50M')));
+            $course->setStudyDifficulty('tough');
+            $course->setStudyType('reading');
 
             $orm->persist($course);
             $orm->flush();
@@ -210,6 +221,8 @@ class ScheduleController extends Controller
             $course->setDotw(['Tu', 'Th']);
             $course->setStartTime($class6);
             $course->setEndTime(date_add(clone $class6, new \DateInterval('P8WT120M')));
+            $course->setStudyDifficulty('easy');
+            $course->setStudyType('reading');
 
             $orm->persist($course);
             $orm->flush();
@@ -226,6 +239,8 @@ class ScheduleController extends Controller
             $course->setDotw(['Tu', 'Th']);
             $course->setStartTime($class7);
             $course->setEndTime(date_add(clone $class7, new \DateInterval('P8WT90M')));
+            $course->setStudyDifficulty('easy');
+            $course->setStudyType('conceptual');
 
             $orm->persist($course);
             $orm->flush();
@@ -234,7 +249,7 @@ class ScheduleController extends Controller
 
             $course = new Course();
             $class8 = new \DateTime('last Sunday');
-            $class8->setTime(2, 50, 0);
+            $class8->setTime(14, 50, 0);
             $class8->sub(new \DateInterval('P3W'));
             $course->setSchedule($schedule);
             $course->setName(self::getRandomName());
@@ -242,6 +257,8 @@ class ScheduleController extends Controller
             $course->setDotw(['Tu', 'Th']);
             $course->setStartTime($class8);
             $course->setEndTime(date_add(clone $class8, new \DateInterval('P8WT50M')));
+            $course->setStudyDifficulty('easy');
+            $course->setStudyType('memorization');
 
             $orm->persist($course);
             $orm->flush();
@@ -295,11 +312,15 @@ class ScheduleController extends Controller
         return array_values($others);
     }
 
-    public static $examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'];
+    public static $examples = ['HIST 10', 'CALC 12', 'MAT 20', 'PHY 11', 'BUS 30', 'ANT 35', 'GEO 40', 'BIO 25', 'CHM 18', 'PHIL 10', 'ENG 10'];
+    public static $counter = 0;
 
+    /**
+     * @return string
+     */
     public static function getRandomName()
     {
-        return self::$examples[array_rand(self::$examples, 1)];
+        return self::$examples[array_rand(self::$examples, 1)] . ++self::$counter;
     }
 
     public static $otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'];

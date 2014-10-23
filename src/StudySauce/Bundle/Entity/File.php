@@ -53,6 +53,7 @@ class File
         $this->created = new \DateTime();
     }
 
+
     /**
      * Get id
      *
@@ -158,10 +159,10 @@ class File
     /**
      * Set user
      *
-     * @param User $user
+     * @param \StudySauce\Bundle\Entity\User $user
      * @return File
      */
-    public function setUser(User $user = null)
+    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -171,33 +172,10 @@ class File
     /**
      * Get user
      *
-     * @return User
+     * @return \StudySauce\Bundle\Entity\User 
      */
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set file
-     *
-     * @param \StudySauce\Bundle\Entity\File $file
-     * @return File
-     */
-    public function setFile(\StudySauce\Bundle\Entity\File $file = null)
-    {
-        $this->file = $file;
-
-        return $this;
-    }
-
-    /**
-     * Get file
-     *
-     * @return \StudySauce\Bundle\Entity\File 
-     */
-    public function getFile()
-    {
-        return $this->file;
     }
 }

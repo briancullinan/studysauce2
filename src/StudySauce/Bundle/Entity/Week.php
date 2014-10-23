@@ -49,7 +49,7 @@ class Week
 
     /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="week")
-     * @ORM\OrderBy({"start" = "DESC"})
+     * @ORM\OrderBy({"start" = "ASC"})
      */
     protected $events;
 
@@ -64,6 +64,14 @@ class Week
     public function setCreatedValue()
     {
         $this->created = new \DateTime();
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -194,10 +202,10 @@ class Week
     /**
      * Set schedule
      *
-     * @param Schedule $schedule
+     * @param \StudySauce\Bundle\Entity\Schedule $schedule
      * @return Week
      */
-    public function setSchedule(Schedule $schedule = null)
+    public function setSchedule(\StudySauce\Bundle\Entity\Schedule $schedule = null)
     {
         $this->schedule = $schedule;
 
@@ -207,18 +215,11 @@ class Week
     /**
      * Get schedule
      *
-     * @return Schedule
+     * @return \StudySauce\Bundle\Entity\Schedule 
      */
     public function getSchedule()
     {
         return $this->schedule;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

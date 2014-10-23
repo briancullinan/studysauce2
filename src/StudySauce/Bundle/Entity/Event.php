@@ -81,6 +81,7 @@ class Event
     }
 
 
+
     /**
      * Get id
      *
@@ -115,52 +116,6 @@ class Event
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Event
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set schedule
-     *
-     * @param \StudySauce\Bundle\Entity\Schedule $schedule
-     * @return Event
-     */
-    public function setSchedule(\StudySauce\Bundle\Entity\Schedule $schedule = null)
-    {
-        $this->schedule = $schedule;
-
-        return $this;
-    }
-
-    /**
-     * Get schedule
-     *
-     * @return \StudySauce\Bundle\Entity\Schedule 
-     */
-    public function getSchedule()
-    {
-        return $this->schedule;
-    }
-
-    /**
      * Set type
      *
      * @param string $type
@@ -181,6 +136,52 @@ class Event
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set start
+     *
+     * @param \DateTime $start
+     * @return Event
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+
+        return $this;
+    }
+
+    /**
+     * Get start
+     *
+     * @return \DateTime 
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * Set end
+     *
+     * @param \DateTime $end
+     * @return Event
+     */
+    public function setEnd($end)
+    {
+        $this->end = $end;
+
+        return $this;
+    }
+
+    /**
+     * Get end
+     *
+     * @return \DateTime 
+     */
+    public function getEnd()
+    {
+        return $this->end;
     }
 
     /**
@@ -253,12 +254,58 @@ class Event
     }
 
     /**
-     * Set week
+     * Set created
      *
-     * @param string $week
+     * @param \DateTime $created
      * @return Event
      */
-    public function setWeek($week)
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set schedule
+     *
+     * @param \StudySauce\Bundle\Entity\Schedule $schedule
+     * @return Event
+     */
+    public function setSchedule(\StudySauce\Bundle\Entity\Schedule $schedule = null)
+    {
+        $this->schedule = $schedule;
+
+        return $this;
+    }
+
+    /**
+     * Get schedule
+     *
+     * @return \StudySauce\Bundle\Entity\Schedule 
+     */
+    public function getSchedule()
+    {
+        return $this->schedule;
+    }
+
+    /**
+     * Set week
+     *
+     * @param \StudySauce\Bundle\Entity\Week $week
+     * @return Event
+     */
+    public function setWeek(\StudySauce\Bundle\Entity\Week $week = null)
     {
         $this->week = $week;
 
@@ -268,56 +315,10 @@ class Event
     /**
      * Get week
      *
-     * @return string 
+     * @return \StudySauce\Bundle\Entity\Week 
      */
     public function getWeek()
     {
         return $this->week;
-    }
-
-    /**
-     * Set start
-     *
-     * @param \DateTime $start
-     * @return Event
-     */
-    public function setStart($start)
-    {
-        $this->start = $start;
-
-        return $this;
-    }
-
-    /**
-     * Get start
-     *
-     * @return \DateTime 
-     */
-    public function getStart()
-    {
-        return $this->start;
-    }
-
-    /**
-     * Set end
-     *
-     * @param \DateTime $end
-     * @return Event
-     */
-    public function setEnd($end)
-    {
-        $this->end = $end;
-
-        return $this;
-    }
-
-    /**
-     * Get end
-     *
-     * @return \DateTime 
-     */
-    public function getEnd()
-    {
-        return $this->end;
     }
 }

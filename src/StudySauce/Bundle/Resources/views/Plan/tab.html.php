@@ -1,34 +1,53 @@
-
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
+<?php
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
- $view['slots']->start('stylesheets');
+$view['slots']->start('stylesheets');
 
- foreach ($view['assetic']->stylesheets([
+foreach ($view['assetic']->stylesheets(
+    [
         '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.css'
-    ], [], ['output' => 'bundles/studysauce/js/fullcalendar/*.css']) as $url):
-    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+    ],
+    [],
+    ['output' => 'bundles/studysauce/js/fullcalendar/*.css']
+) as $url):
+    ?>
+    <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
 
- foreach ($view['assetic']->stylesheets([
+foreach ($view['assetic']->stylesheets(
+    [
         '@StudySauceBundle/Resources/public/css/plan.css'
-    ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
-    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+    ],
+    [],
+    ['output' => 'bundles/studysauce/css/*.css']
+) as $url):
+    ?>
+    <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
 $view['slots']->stop();
 
- $view['slots']->start('javascripts');
- foreach ($view['assetic']->javascripts([
+$view['slots']->start('javascripts');
+foreach ($view['assetic']->javascripts(
+    [
         '@StudySauceBundle/Resources/public/js/plan.js',
         '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
         '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.js'
-    ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
-    ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
- $view['slots']->stop();
+    ],
+    [],
+    ['output' => 'bundles/studysauce/js/*.js']
+) as $url):
+    ?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach; ?>
+    <script type="text/javascript">
+        window.planEvents = JSON.parse('<?php print json_encode(array_values($events)); ?>'); // convert events array to object to keep track of keys better
+        // TODO: insert strategies
+    </script>
+<?php $view['slots']->stop();
 
- $view['slots']->start('body'); ?>
+$view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="plan">
 
@@ -50,6 +69,7 @@ $view['slots']->stop();
         <div class="session-row  event-type-o  class cid default-other " id="eid-645283">
             <div class="class-name">
                 <span class="class">&nbsp;</span>
+
                 <div class="read-only">Work</div>
             </div>
             <div class="field-type-text field-name-field-assignment field-widget-text-textfield ">
@@ -71,11 +91,20 @@ $view['slots']->stop();
 
 <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planintro1'));
 
- $view['slots']->stop();
+$view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planintro2'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planintro3'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planintro4'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(
+    new ControllerReference('StudySauceBundle:Dialogs:planintro2'),
+    ['strategy' => 'sinclude']
+);
+echo $view['actions']->render(
+    new ControllerReference('StudySauceBundle:Dialogs:planintro3'),
+    ['strategy' => 'sinclude']
+);
+echo $view['actions']->render(
+    new ControllerReference('StudySauceBundle:Dialogs:planintro4'),
+    ['strategy' => 'sinclude']
+);
 $view['slots']->stop();
 

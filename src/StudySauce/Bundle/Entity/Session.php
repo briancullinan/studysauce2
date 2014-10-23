@@ -34,6 +34,14 @@ class Session
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Set id
      *
      * @param string $id
@@ -100,36 +108,6 @@ class Session
     public function getTime()
     {
         return $this->time;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \StudySauce\Bundle\Entity\User $user
-     * @return Session
-     */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \StudySauce\Bundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
