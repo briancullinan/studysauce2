@@ -158,3 +158,13 @@ hwi_oauth:
             client_id:           648236823314.apps.googleusercontent.com
             client_secret:       ViH13EFLjELlf3vUCeSY81G8
             scope:               "email profile"
+
+    http_client:
+        timeout:       10 # Time in seconds, after library will shutdown request, by default: 5
+        verify_peer:   false # Setting allowing you to turn off SSL verification, by default: true
+        ignore_errors: false # Setting allowing you to easier debug request errors, by default: true
+        max_redirects: 1 # Number of HTTP redirection request after which library will shutdown request,
+
+
+
+
