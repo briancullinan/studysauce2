@@ -57,7 +57,7 @@ class PageTracker implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterResponseEvent $event
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -72,7 +72,8 @@ class PageTracker implements EventSubscriberInterface
             $session = $this->orm->getRepository('StudySauceBundle:Session')->find($id);
             $visit->setSession($session);
             $user = $this->context->getToken()->getUser();
-            $visit->setUser($user);
+            if($user != 'anon.')
+                $visit->setUser($user);
             $visit->setQuery(serialize($request->query->all()));
             $this->orm->persist($visit);
             $this->orm->flush();

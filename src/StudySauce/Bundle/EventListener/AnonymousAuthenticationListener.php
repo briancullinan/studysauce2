@@ -13,9 +13,12 @@ namespace StudySauce\Bundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -82,11 +85,20 @@ class AnonymousAuthenticationListener implements ListenerInterface
      */
     public function handle(GetResponseEvent $event)
     {
-        /** @var $user \StudySauce\Bundle\Entity\User */
-        /** @var $encoder \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder */
+        /** @var User $user */
+        /** @var MessageDigestPasswordEncoder $encoder */
+
+        $request = $event->getRequest();
+        $controller = $request->get('_controller');
 
         // only handle anonymous users with no context
         if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated()) {
+            // reset Guest User for oauth connections
+            if($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction' &&
+                ($user = $token->getUser()) !== null && $user->hasRole('ROLE_GUEST'))
+            {
+                $this->context->setToken(new AnonymousToken('main', 'anon.', []));
+            }
             return;
         }
 
