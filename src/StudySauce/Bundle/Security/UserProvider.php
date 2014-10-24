@@ -2,8 +2,12 @@
 
 namespace StudySauce\Bundle\Security;
 
+use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Model\UserManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
+use StudySauce\Bundle\Entity\User;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -12,6 +16,30 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserProvider extends BaseClass
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface
+     */
+    protected $encoderFactory;
+
+    /**
+     * Constructor
+     *
+     * @param UserManagerInterface $userManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface $encoderFactory
+     * @param array $properties
+     */
+    public function __construct(UserManagerInterface $userManager, EntityManager $entityManager, EncoderFactoryInterface $encoderFactory, array $properties)
+    {
+        $this->entityManager = $entityManager;
+        $this->encoderFactory = $encoderFactory;
+        parent::__construct($userManager, $properties);
+    }
 
     /**
      * {@inheritDoc}
@@ -63,7 +91,8 @@ class UserProvider extends BaseClass
             //modify here with relevant data
             $user->setUsername($username);
             $user->setEmail($username);
-            $user->setPassword($username);
+            $factory = $this->encoderFactory->getEncoder($user);
+            $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
             $user->setEnabled(true);
             $this->userManager->updateUser($user);
             return $user;

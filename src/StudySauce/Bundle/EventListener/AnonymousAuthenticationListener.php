@@ -14,6 +14,8 @@ namespace StudySauce\Bundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\User;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -22,7 +24,6 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * AnonymousAuthenticationListener automatically adds a Token if none is
@@ -30,7 +31,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class AnonymousAuthenticationListener implements ListenerInterface
+class AnonymousAuthenticationListener implements EventSubscriberInterface
 {
     /** @var $context \Symfony\Component\Security\Core\SecurityContext */
     private $context;
@@ -83,7 +84,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
      *
      * @param GetResponseEvent $event A GetResponseEvent instance
      */
-    public function handle(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         /** @var User $user */
         /** @var MessageDigestPasswordEncoder $encoder */
@@ -129,5 +130,15 @@ class AnonymousAuthenticationListener implements ListenerInterface
         if (null !== $this->logger) {
             $this->logger->info('Populated SecurityContext with an anonymous Token');
         }
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest', -128]
+        ];
     }
 }
