@@ -30,6 +30,11 @@ class Group extends BaseGroup
     protected $created;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Group", mappedBy="groups")
+     */
+    protected $users;
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()
@@ -92,5 +97,45 @@ class Group extends BaseGroup
     public function getCreated()
     {
         return $this->created;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add users
+     *
+     * @param \StudySauce\Bundle\Entity\User $users
+     * @return Group
+     */
+    public function addUser(\StudySauce\Bundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \StudySauce\Bundle\Entity\User $users
+     */
+    public function removeUser(\StudySauce\Bundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }
