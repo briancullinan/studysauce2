@@ -53,7 +53,7 @@ $view['slots']->start('body'); ?>
 
     <div class="pane-content">
 
-        <h2>Personalized study plan for <?php ; ?></h2>
+        <h2>Personalized study plan for <?php $user->getFirstName(); ?></h2>
 
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
         <div class="sort-by clearfix">

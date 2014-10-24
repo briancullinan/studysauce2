@@ -77,7 +77,8 @@ class PlanController extends Controller
         return $this->render('StudySauceBundle:Plan:tab.html.php', [
                 'events' =>  self::getJsonEvents($events, $schedule->getCourses()->filter(function (Course $c) {
                             return $c->getType() == 'c';
-                        })->toArray())
+                        })->toArray()),
+                'user' => $user
             ]);
     }
 
@@ -109,6 +110,7 @@ class PlanController extends Controller
             'StudySauceBundle:Plan:widget.html.php',
             [
                 'events' => $events,
+                'user' => $user,
                 'classes' => array_map(function (Course $c) {return $c->getName();},
                     $schedule->getCourses()->filter(function (Course $c) {
                             return $c->getType() == 'c';

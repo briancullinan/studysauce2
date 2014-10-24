@@ -329,7 +329,9 @@ $collection->add(
     )
 );
 
-$collection->add('account_logout', new Route('/account/logout'));
+$collection->add('facebook_login', new Route('/login/facebook'));
+
+$collection->add('google_login', new Route('/login/google'));
 
 $collection->add(
     'account_auth',

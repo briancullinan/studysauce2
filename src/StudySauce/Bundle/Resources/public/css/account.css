@@ -8,3 +8,36 @@
     width: 100%;
     display: inline-block;
 }
+
+a[href$="/redirect/google"]
+{
+    width:150px;
+    border-bottom-color:#771100;
+    color: #ffffff;
+    background:url("../images/menu_new.png") no-repeat left -5500px #DD4433;
+    padding-left:30px;
+}
+
+a[href$="/redirect/google"]:hover,
+a[href$="/redirect/google"]:active,
+a[href$="/redirect/google"]:focus {
+    background-color: #771100;
+    border-bottom-color: #771100;
+}
+
+a[href$="/redirect/facebook"]
+{
+    width:150px;
+    border-bottom-color:#224477;
+    color: #ffffff;
+    background:url("../images/menu_new.png") no-repeat left -5400px #5577AA;
+    padding-left:30px;
+}
+
+a[href$="/redirect/facebook"]:hover,
+a[href$="/redirect/facebook"]:active,
+a[href$="/redirect/facebook"]:focus
+{
+    background-color:#446699;
+    border-bottom-color: #224477;
+}

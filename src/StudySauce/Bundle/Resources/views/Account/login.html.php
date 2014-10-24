@@ -29,6 +29,12 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane" id="account">
     <div class="pane-content">
         <h2>Welcome back!</h2>
+        <div class="highlighted-link social"></div>
+        <?php
+        foreach($services as $o => $url)
+        {
+            ?><a href="<?php print $url; ?>" class="more">Sign in</a> <?php
+        }?>
         <div class="email">
             <label class="input"><span>E-mail address</span><input type="text" placeholder="Email" value="<?php print (isset($username) ? $username : ''); ?>"></label>
         </div>

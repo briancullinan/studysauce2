@@ -42,6 +42,11 @@ services:
             - {name: kernel.event_subscriber}
         arguments: ["@doctrine.orm.entity_manager", "@session", "@security.context"]
 
+    my_user_provider:
+        class: StudySauce\Bundle\Security\UserProvider
+        #this is the place where the properties are passed to the UserProvider - see config.yml
+        arguments: [@fos_user.user_manager,{facebook: facebook_id, google: google_id}]
+
 framework:
     #esi:             ~
     #translator:      { fallback: "%locale%" }
@@ -129,3 +134,27 @@ fos_user:
 white_october_swift_mailer_db:
     entity_class: StudySauce\Bundle\Entity\Mail
     keep_sent_messages: true
+
+hwi_oauth:
+    firewall_name: main
+    connect:
+        account_connector: my_user_provider
+    fosub:
+        username_iterations: 30
+        properties:
+            # these properties will be used/redefined later in the custom FOSUBUserProvider service.
+            facebook: facebook_id
+            google: google_id
+    resource_owners:
+        facebook:
+            type:                facebook
+            client_id:           210014889174404
+            client_secret:       ef5a650eb52cbcea0d8b8e03d2877b9d
+            scope:               email,read_stream
+            options:
+                display: popup #dialog is optimized for popup window
+        google:
+            type:                google
+            client_id:           648236823314.apps.googleusercontent.com
+            client_secret:       ViH13EFLjELlf3vUCeSY81G8
+            scope:               "email profile"

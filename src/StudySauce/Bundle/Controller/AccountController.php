@@ -4,7 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
-use FOS\UserBundle\Security\LoginManager;
+use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -97,12 +97,21 @@ class AccountController extends Controller
      */
     public function loginAction(Request $request)
     {
+        // list oauth services
+        $services = [];
+        /** @var OAuthHelper $oauth */
+        $oauth = $this->get('hwi_oauth.templating.helper.oauth');
+        foreach($oauth->getResourceOwners() as $o) {
+            $services[$o] = $oauth->getLoginUrl($o);
+        }
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_login')
             : null;
         return $this->render('StudySauceBundle:Account:login.html.php', [
                 'email' => $request->get('email'),
-                'csrf_token' => $csrfToken
+                'csrf_token' => $csrfToken,
+                'services' => $services
             ]);
     }
 
