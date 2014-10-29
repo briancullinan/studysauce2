@@ -25,17 +25,22 @@ class File
     protected $user;
 
     /**
+     * @ORM\Column(type="string", length=256, name="filename")
+     */
+    protected $filename;
+
+    /**
      * @ORM\Column(type="string", length=256, name="upload_id")
      */
     protected $uploadId;
 
     /**
-     * @ORM\Column(type="string", length=256, name="url")
+     * @ORM\Column(type="string", length=256, name="url", nullable=true)
      */
     protected $url;
 
     /**
-     * @ORM\Column(type="text", name="parts")
+     * @ORM\Column(type="array", name="parts", nullable=true)
      */
     protected $parts;
 
@@ -177,5 +182,28 @@ class File
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set filename
+     *
+     * @param string $filename
+     * @return File
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * Get filename
+     *
+     * @return string 
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 }

@@ -42,16 +42,17 @@ security:
                 resource_owners:
                     facebook:           "/login/facebook"
                     google:             "/login/google"
-                login_path:        /login
+                login_path:        /account/login
                 use_forward:       false
-                failure_path:      /login
+                failure_path:      /account/login
+                default_target_path: /home
 
                 oauth_user_provider:
                     service: my_user_provider
 
     access_control:
-        - { path: ^/account/login$, role: ROLE_GUEST }
-        - { path: ^/account/register$, role: ROLE_GUEST }
+        - { path: ^/account/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/account/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/account/reset$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

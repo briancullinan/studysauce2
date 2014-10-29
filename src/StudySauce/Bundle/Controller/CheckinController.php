@@ -113,6 +113,7 @@ class CheckinController extends Controller
             $c->setCourse($course);
             $c->setCheckin(new \DateTime($request->get('date')));
             $c->setUtcCheckin(new \DateTime());
+            $course->addCheckin($c);
             $orm->persist($c);
         }
         $orm->flush();

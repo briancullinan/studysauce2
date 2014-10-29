@@ -37,15 +37,15 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnerinviteAction()
+    public function partnerInviteAction()
     {
-        return $this->render('StudySauceBundle:Dialogs:partnerinvite.html.php', ['id' => 'invite-sent']);
+        return $this->render('StudySauceBundle:Dialogs:partner-invite.html.php', ['id' => 'invite-sent']);
     }
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function checkinemptyAction()
+    public function checkinEmptyAction()
     {
         return $this->render('StudySauceBundle:Dialogs:checkin-empty.html.php', ['id' => 'checkin-empty']);
     }
@@ -53,7 +53,7 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sdsmessagesAction()
+    public function sdsMessagesAction()
     {
         return $this->render('StudySauceBundle:Dialogs:sds-messages.html.php', ['id' => 'sds-messages']);
     }
@@ -61,7 +61,7 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function timerexpireAction()
+    public function timerExpireAction()
     {
         return $this->render('StudySauceBundle:Dialogs:timer-expire.html.php', ['id' => 'timer-expire']);
     }
@@ -85,7 +85,7 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function metricsemptyAction()
+    public function metricsEmptyAction()
     {
         return $this->render('StudySauceBundle:Dialogs:metrics-empty.html.php', ['id' => 'metrics-empty']);
     }
@@ -93,7 +93,7 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function planintro1Action()
+    public function planIntro1Action()
     {
         return $this->render('StudySauceBundle:Dialogs:plan-intro-1.html.php', ['id' => 'plan-intro-1']);
     }
@@ -101,7 +101,7 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function planintro2Action()
+    public function planIntro2Action()
     {
         return $this->render('StudySauceBundle:Dialogs:plan-intro-2.html.php', ['id' => 'plan-intro-2']);
     }
@@ -109,7 +109,7 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function planintro3Action()
+    public function planIntro3Action()
     {
         return $this->render('StudySauceBundle:Dialogs:plan-intro-3.html.php', ['id' => 'plan-intro-3']);
     }
@@ -117,8 +117,40 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function planintro4Action()
+    public function planIntro4Action()
     {
         return $this->render('StudySauceBundle:Dialogs:plan-intro-4.html.php', ['id' => 'plan-intro-4']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function scheduleDemoAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:schedule-demo.html.php', ['id' => 'schedule-demo']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function billParents1Action()
+    {
+        return $this->render('StudySauceBundle:Dialogs:bill-parents.html.php', ['id' => 'bill-parents']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function billParents2Action()
+    {
+        return $this->render('StudySauceBundle:Dialogs:bill-parents-confirm.html.php', ['id' => 'bill-parents-confirm']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ccvInfoAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:ccv-info.html.php', ['id' => 'ccv-info']);
     }
 }

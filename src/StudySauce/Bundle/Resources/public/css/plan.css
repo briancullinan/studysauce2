@@ -207,6 +207,21 @@
     clear:both;
 }
 
+#plan .session-row:hover:not(.selected) {
+    box-shadow: 0 1px 4px rgba(255,255,255,.25);
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background-color: rgba(255,255,255,.50);
+}
+
+#plan .session-row:hover:not(.selected) .assignment,
+#plan .session-row:hover:not(.selected) .class-name,
+#plan .session-row:hover:not(.selected) .percent,
+#plan .session-row:hover:not(.selected) .completed {
+    color: #00CCEE;
+    cursor: pointer;
+}
+
 .plan-widget .session-row > *
 {
     width:30%;
@@ -272,29 +287,6 @@
     display:block;
 }
 
-#plan .mini-checkin .flip-clock-wrapper
-{
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    width: auto;
-}
-
-#plan .mini-checkin
-{
-    float:right;
-    text-align: center;
-    display:none;
-}
-
-#plan .selected .mini-checkin
-{
-    display: block;
-    position: absolute;
-    left: 50%;
-    margin-left: 235px;
-    width:165px;
-}
-
 #plan .return-to-top
 {
     display: none;
@@ -343,53 +335,6 @@
     left:2px;
 }
 
-#plan .strategy-prework,
-#plan .strategy-teach,
-#plan .strategy-active,
-#plan .strategy-spaced,
-#plan .strategy-other,
-#plan .field-select-strategy
-{
-    margin:0 auto;
-    max-width: 800px;
-    display:none;
-    padding-right: 165px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    white-space: normal !important;
-}
-
-#plan .selected .strategy-other
-{
-    display:block;
-}
-
-#plan .selected .field-select-strategy > div
-{
-    border-bottom:3px solid #555555;
-    padding-bottom: 10px;
-}
-
-#plan .selected .field-select-strategy
-{
-    display:block;
-    margin-top:30px;
-}
-
-#plan .strategy-teach iframe
-{
-    display: inline-block;
-    width: 33%;
-    box-sizing: border-box;
-    vertical-align: top;
-    padding:10px;
-    position: relative;
-    border-radius: 5px;
-    border:3px solid #555555;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
-
 #plan a[href="#expand"]
 {
     float:left;
@@ -404,15 +349,6 @@
 #plan .session-row.expanded a[href="#expand"]
 {
     background: url(../images/menu_icons_32.png) no-repeat 0 -1376px transparent;
-}
-
-#plan .session-row.expanded .strategy-prework,
-#plan .session-row.expanded .strategy-teach,
-#plan .session-row.expanded .strategy-active,
-#plan .session-row.expanded .strategy-spaced,
-#plan .session-row.expanded .strategy-other
-{
-    max-width: none;
 }
 
 #plan .session-row textarea
@@ -434,7 +370,6 @@
     padding: 5px 0;
     vertical-align: top;
     margin: 0;
-    cursor: pointer;
 }
 
 #plan .session-row .class-name
@@ -491,11 +426,87 @@
     clear: both;
 }
 
+#plan .mini-checkin .flip-clock-wrapper
+{
+    width: auto;
+}
+
+#plan .mini-checkin
+{
+    float:right;
+    text-align: center;
+    display:none;
+}
+
+#plan .selected .mini-checkin
+{
+    display: block;
+    position: absolute;
+    left: 50%;
+    margin-left: 235px;
+    width:165px;
+}
+
 #plan .selected.expanded .mini-checkin
 {
     left:auto;
     right:0;
     margin-left:0;
+}
+
+#plan .session-row.expanded .strategy-prework,
+#plan .session-row.expanded .strategy-teach,
+#plan .session-row.expanded .strategy-active,
+#plan .session-row.expanded .strategy-spaced,
+#plan .session-row.expanded .strategy-other
+{
+    max-width: none;
+}
+
+#plan .strategy-prework,
+#plan .strategy-teach,
+#plan .strategy-active,
+#plan .strategy-spaced,
+#plan .strategy-other,
+#plan .field-select-strategy
+{
+    margin:0 auto;
+    max-width: 800px;
+    display:none;
+    padding-right: 165px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    white-space: normal !important;
+}
+
+#plan .selected .strategy-other
+{
+    padding-right: 0;
+    display:block;
+}
+
+#plan .selected .field-select-strategy > div
+{
+    border-bottom:3px solid #555555;
+    padding-bottom: 10px;
+}
+
+#plan .selected .field-select-strategy
+{
+    display:block;
+    margin-top:30px;
+}
+
+#plan .strategy-teach iframe
+{
+    display: inline-block;
+    width: 33%;
+    box-sizing: border-box;
+    vertical-align: top;
+    padding:10px;
+    position: relative;
+    border-radius: 5px;
+    border:3px solid #555555;
 }
 
 #plan .strategy-spaced-notes textarea,
@@ -507,16 +518,12 @@
 #plan .strategy-notes input
 {
     width: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 #plan .strategy-notes
 {
     display: inline-block;
     width: 66%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     vertical-align: top;
 }
 
@@ -524,8 +531,6 @@
 {
     display: inline-block;
     width: 66%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     vertical-align: top;
 }
 
@@ -533,8 +538,6 @@
 {
     display: inline-block;
     width: 33%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     vertical-align: top;
 }
 

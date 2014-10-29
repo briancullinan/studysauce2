@@ -25,9 +25,10 @@ class Deadline
     protected $user;
 
     /**
-     * @ORM\Column(type="string", length=256, name="name")
+     * @ORM\ManyToOne(targetEntity="Course", inversedBy="deadlines")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id", nullable=true)
      */
-    protected $name;
+    protected $course;
 
     /**
      * @ORM\Column(type="string", length=256, name="assignment")
@@ -317,5 +318,28 @@ class Deadline
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set course
+     *
+     * @param \StudySauce\Bundle\Entity\Course $course
+     * @return Deadline
+     */
+    public function setCourse(\StudySauce\Bundle\Entity\Course $course = null)
+    {
+        $this->course = $course;
+
+        return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return \StudySauce\Bundle\Entity\Course 
+     */
+    public function getCourse()
+    {
+        return $this->course;
     }
 }

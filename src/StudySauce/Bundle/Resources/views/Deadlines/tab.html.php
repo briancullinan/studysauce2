@@ -119,13 +119,11 @@ $view['slots']->start('body'); ?>
                             $found = true;
                             /** @var $c Course */
                             ?>
-                            <option value="<?php print $c->getName(); ?>" <?php print (!$isDemo && strcmp(
-                                strtolower($d->getName()),
-                                strtolower($c->getName())
-                            ) == 0 ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
+                            <option value="<?php print $c->getName(); ?>" <?php print (!$isDemo &&
+                                $d->getCourse() == $c ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
                         <?php endforeach; ?>
-                        <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getName(
-                        )) && !$found ? 'selected="selected"' : ''); ?>>Nonacademic
+                        <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getAssignment())
+                            ? 'selected="selected"' : ''); ?>>Nonacademic
                         </option>
                     </select>
                 </label>

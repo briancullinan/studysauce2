@@ -17,6 +17,15 @@ $collection->add(
 );
 
 $collection->add(
+    'partner_welcome',
+    new Route(
+        '/partners/{_code}', [
+            '_controller' => 'StudySauceBundle:Landing:partners',
+        ]
+    )
+);
+
+$collection->add(
     'home',
     new Route(
         '/home/{_format}', [
@@ -106,6 +115,21 @@ $collection->add(
         '/goals/update',
         [
             '_controller' => 'StudySauceBundle:Goals:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'claim_goals',
+    new Route(
+        '/goals/claim', [
+            '_controller' => 'StudySauceBundle:Goals:notifyClaim'
         ],
         [],
         [],
@@ -236,6 +260,22 @@ $collection->add(
         ], [
             '_format' => DASHBOARD_VIEWS,
         ]
+    )
+);
+
+$collection->add(
+    'plan_strategy',
+    new Route(
+        '/plan/strategy',
+        [
+            '_controller' => 'StudySauceBundle:Plan:updateStrategy'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 
@@ -399,6 +439,32 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'file_create',
+    new Route(
+        '/file/create', [
+            '_controller' => 'StudySauceBundle:File:create'
+        ],
+        [],
+        [],
+        '',
+        [],
+        ['POST'],
+        'request.isXmlHttpRequest() || request.getMethod() == "POST"'
+    )
+);
+
+$collection->add(
+    'cart_checkout',
+    new Route(
+        '/cart/checkout', [
+            '_controller' => 'StudySauceBundle:Buy:checkout',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
 /*
 $collection->add('course', new Route('/course/{_course}/{_format}', array(
             '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',

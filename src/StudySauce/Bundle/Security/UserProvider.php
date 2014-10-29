@@ -46,6 +46,8 @@ class UserProvider extends BaseClass
      */
     public function connect(UserInterface $user, UserResponseInterface $response)
     {
+        /** @var User $user */
+        /** @var PathUserResponse $response */
         $property = $this->getProperty($response);
         $username = $response->getUsername();
 
@@ -60,6 +62,8 @@ class UserProvider extends BaseClass
         if (null !== $previousUser = $this->userManager->findUserBy([$property => $username])) {
             $previousUser->$setter_id(null);
             $previousUser->$setter_token(null);
+            $user->setFirstName($response->getFirstName());
+            $user->setLastName($response->getLastName());
             $this->userManager->updateUser($previousUser);
         }
 
@@ -75,6 +79,7 @@ class UserProvider extends BaseClass
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
+        /** @var PathUserResponse $response */
         $username = $response->getUsername();
         $user = $this->userManager->findUserBy([$this->getProperty($response) => $username]);
         //when the user is registrating
@@ -84,16 +89,19 @@ class UserProvider extends BaseClass
             $setter_id = $setter.'Id';
             $setter_token = $setter.'AccessToken';
             // create new user here
+            /** @var User $user */
             $user = $this->userManager->createUser();
             $user->$setter_id($username);
             $user->$setter_token($response->getAccessToken());
             //I have set all requested data with the user's username
             //modify here with relevant data
-            $user->setUsername($username);
-            $user->setEmail($username);
+            $user->setUsername($service.'.'.$username);
+            $user->setEmail($response->getEmail());
             $factory = $this->encoderFactory->getEncoder($user);
             $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
             $user->setEnabled(true);
+            $user->setFirstName($response->getFirstName());
+            $user->setLastName($response->getLastName());
             $this->userManager->updateUser($user);
             return $user;
         }

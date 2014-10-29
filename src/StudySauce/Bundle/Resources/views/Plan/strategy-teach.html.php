@@ -1,11 +1,23 @@
 <div class="strategy-teach invalid">
     <h3>Teach - Upload a 1 min video explaining your assignment</h3>
-    <div class="plupload"></div>
+    <div class="plupload">
+        <a href="#teach-select" class="plup-select" id="teach-{eid}-select">Click here to select an image</a>
+        <div class="plup-filelist" id="teach-{eid}-filelist">
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/upload.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+            <?php endforeach; ?>
+        </div>
+        <input type="hidden" name="teach-{eid}-plupload">
+    </div>
     <div class="strategy-notes">
-        <label>Title:</label>
-        <input type="text" class="form-text" name="strategy-title">
-        <label>Notes:</label>
-        <textarea type="text" name="strategy-notes"></textarea>
+        <label class="input">
+            <span>Title:</span>
+            <input type="text" name="strategy-title">
+        </label>
+        <label class="input">
+            <span>Notes:</span>
+            <textarea type="text" name="strategy-notes"></textarea>
+        </label>
     </div>
     <div class="highlighted-link"><a href="#expand">Expand</a><a class="more" href="#save-strategy">Save</a></div>
 </div>

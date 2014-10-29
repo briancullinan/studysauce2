@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
+use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,8 @@ class DeadlinesController extends Controller
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->toArray();
+
+        /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
             $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
@@ -119,6 +122,9 @@ class DeadlinesController extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        /** @var Schedule $schedule */
+        $schedule = $user->getSchedules()->first();
+
         // save class
         $dates = $request->get('dates');
         if(empty($dates))
@@ -157,7 +163,9 @@ class DeadlinesController extends Controller
                 }
             }
 
-            $deadline->setName($d['className']);
+            $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
+                    return $c->getId() == $d['cid'];})->first();
+            $deadline->setCourse($course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));
             $deadline->setDueDate(new \DateTime($d['due']));

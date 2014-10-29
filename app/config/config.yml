@@ -28,7 +28,7 @@ services:
         class: StudySauce\Bundle\EventListener\AnonymousAuthenticationListener
         tags:
             - {name: kernel.event_subscriber}
-        arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager"]
+        arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager", "@router"]
 
     kernel.listener.redirect:
         class: StudySauce\Bundle\EventListener\RedirectListener
@@ -151,13 +151,23 @@ hwi_oauth:
             client_id:           210014889174404
             client_secret:       ef5a650eb52cbcea0d8b8e03d2877b9d
             scope:               email,read_stream
+            user_response_class: StudySauce\Bundle\Security\PathUserResponse
             options:
                 display: popup #dialog is optimized for popup window
+            paths:
+                realname:  ["first_name", "last_name"]
+                lastName: last_name
+                firstName: first_name
         google:
             type:                google
             client_id:           648236823314.apps.googleusercontent.com
             client_secret:       ViH13EFLjELlf3vUCeSY81G8
             scope:               "email profile"
+            user_response_class: StudySauce\Bundle\Security\PathUserResponse
+            paths:
+                realname:  ["given_name", "family_name"]
+                lastName: family_name
+                firstName: given_name
 
     http_client:
         timeout:       10 # Time in seconds, after library will shutdown request, by default: 5

@@ -46,6 +46,7 @@ class PartnerController extends Controller
 
         /** @var $current Partner */
         $current = $user->getPartners()->first();
+        $shouldSend = false;
         if($current->getEmail() == $request->get('email'))
         {
             // update the partner
@@ -58,13 +59,16 @@ class PartnerController extends Controller
             if($current != null) {
                 // update created time so they become the current partner
                 $partner = $current;
+                $partner->setCreated(new \DateTime()); // reset created date if they change back to an existing invite
                 $user->removePartner($partner);
                 $user->addPartner($partner);
+                $shouldSend = true;
             }
         }
 
         $isNew = false;
         if(empty($partner)) {
+            $shouldSend = true;
             $isNew = true;
             $partner = new Partner();
             $partner->setUser($user);
@@ -76,6 +80,13 @@ class PartnerController extends Controller
         $partner->setFirst($request->get('first'));
         $partner->setLast($request->get('last'));
         $partner->setPermissions(explode(',', $request->get('permissions')));
+
+        if($shouldSend)
+        {
+            $email = new EmailsController();
+            $email->setContainer($this->container);
+            $email->partnerInviteAction($user, $partner);
+        }
 
         // save the entity
         if($isNew)

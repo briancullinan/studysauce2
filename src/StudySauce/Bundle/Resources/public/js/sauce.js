@@ -1,3 +1,5 @@
+window.sincluding = false;
+
 function onYouTubeIframeAPIReady(playerId) {
     player = new YT.Player('ytplayer', {
         events: {
@@ -64,6 +66,7 @@ $(document).ready(function () {
     $('.sinclude').each(function () {
         var that = $(this),
             url = that.attr('data-src');
+        window.sincluding = true;
         $.ajax({
             url: url,
             type: 'GET',
@@ -75,6 +78,10 @@ $(document).ready(function () {
                     scripts = ssMergeScripts(newStuff);
                 newStuff = newStuff.not(styles).not(scripts);
                 that.replaceWith(newStuff);
+                window.sincluding = false;
+            },
+            error: function () {
+                window.sincluding = false;
             }
         });
     });

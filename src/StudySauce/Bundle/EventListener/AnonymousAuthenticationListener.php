@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -51,6 +53,9 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
     /** @var $encoder \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager */
     private $authenticationManager;
 
+    /** @var  $router */
+    private $router;
+
     /**
      * @param SecurityContextInterface $context
      * @param LoggerInterface $logger
@@ -68,7 +73,8 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
         $email,
         EntityManager $orm,
         EncoderFactory $encoder,
-        AuthenticationProviderManager $authenticationManager)
+        AuthenticationProviderManager $authenticationManager,
+        $router)
     {
         $this->context          = $context;
         $this->email            = $email;
@@ -77,6 +83,7 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
         $this->orm              = $orm;
         $this->encoder          = $encoder;
         $this->authenticationManager = $authenticationManager;
+        $this->router = $router;
     }
 
     /**
@@ -93,9 +100,12 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
         $controller = $request->get('_controller');
 
         // only handle anonymous users with no context
-        if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated()) {
+        if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() && $token->getUser() != 'anon.') {
             // reset Guest User for oauth connections
-            if($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction' &&
+            if(($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction' ||
+                    $controller == 'StudySauce\Bundle\Controller\AccountController::login' ||
+                    $controller == 'StudySauce\Bundle\Controller\AccountController::register' ||
+                    $controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::redirectToServiceAction')&&
                 ($user = $token->getUser()) !== null && $user->hasRole('ROLE_GUEST'))
             {
                 $this->context->setToken(new AnonymousToken('main', 'anon.', []));
@@ -125,20 +135,42 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
 
         $encoder = $this->encoder->getEncoder($user);
         $password = $encoder->encodePassword('guest', $user->getSalt());
-        $this->context->setToken(new UsernamePasswordToken($user, $password, 'main', ['ROLE_GUEST']));
+        $this->context->setToken(new UsernamePasswordToken($user, $password, 'main', ['ROLE_GUEST', 'IS_AUTHENTICATED_ANONYMOUSLY']));
 
         if (null !== $this->logger) {
             $this->logger->info('Populated SecurityContext with an anonymous Token');
         }
     }
-    
+
     /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', -128]
+            KernelEvents::REQUEST => ['onKernelRequest', -128],
+            KernelEvents::RESPONSE => ['onKernelResponse', -128]
         ];
     }
+
+    /**
+     * @param FilterResponseEvent $event
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        $controller = $request->get('_controller');
+        if($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction')
+        {
+            if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() && $token->getUser() != 'anon.') {
+                $url = $this->router->generate('home');
+            }
+            else {
+                $url = $this->router->generate('account_login');
+            }
+            $event->setResponse(new RedirectResponse($url));
+        }
+
+    }
+
 }

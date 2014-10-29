@@ -39,6 +39,8 @@ class ResettingController extends ContainerAware
 
     /**
      * Request reset user password: submit form and send email
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function sendEmailAction(Request $request)
     {

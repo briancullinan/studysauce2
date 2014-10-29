@@ -75,7 +75,8 @@ $view['slots']->start('body'); ?>
                 <label>Reward</label>
             </header>
 
-            <div class="goal-row valid <?php print (empty($behavior) ? 'edit' : 'read-only'); ?>">
+            <div class="goal-row valid <?php print (empty($behavior) ? 'edit' : 'read-only');
+            print (empty($behavior) ? '' : (' gid' . $behavior->getId())); ?>">
                 <div class="type"><strong>Study Hours</strong></div>
                 <div class="behavior">
                     <label class="select">
@@ -104,7 +105,8 @@ $view['slots']->start('body'); ?>
                 </div>
             </div>
             <div class="goal-row valid <?php print (empty($behavior) ? ' hide' : '');
-            print (empty($milestone) ? ' edit' : 'read-only'); ?>">
+            print (empty($milestone) ? ' edit' : 'read-only');
+            print (empty($milestone) ? '' : (' gid' . $milestone->getId())); ?>">
                 <div class="type"><strong>Study Milestone</strong></div>
                 <div class="milestone">
                     <label class="select">
@@ -134,7 +136,8 @@ $view['slots']->start('body'); ?>
                 </div>
             </div>
             <div class="goal-row valid <?php print (empty($milestone) ? ' hide' : '');
-            print (empty($outcome) ? ' edit' : 'read-only'); ?>">
+            print (empty($outcome) ? ' edit' : 'read-only');
+            print (empty($outcome) ? '' : (' gid' . $outcome->getId())); ?>">
                 <div class="type"><strong>Study Outcome</strong></div>
                 <div class="outcome">
                     <label class="select">
@@ -175,10 +178,7 @@ $view['slots']->start('body'); ?>
             </p>
 
             <div id="achievements" class="clearfix">
-                <div class="grid_6"><strong>July 17th, 2014</strong><img
-                        src="https://www.studysauce.com/sites/studysauce.com/files/styles/achievement/public/Exam%20grade%20picture.jpg?itok=5siJ9c4h">
-
-                    <p>A on my test!!!</p></div>
+                <?php echo $view->render('StudySauceBundle:Goals:claims.html.php', ['claims' => $claims]); ?>
             </div>
 
             <!--

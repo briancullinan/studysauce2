@@ -83,12 +83,12 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=256, name="first")
      */
-    protected $firstName;
+    protected $firstName = '';
 
     /**
      * @ORM\Column(type="string", length=256, name="last")
      */
-    protected $lastName;
+    protected $lastName = '';
 
     /**
      * @ORM\OneToOne(targetEntity="File")

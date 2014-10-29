@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -10,14 +11,20 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\SecurityContext;
-
+use StudySauce\Bundle\Entity\Session as UserSession;
 /**
  * Class RedirectListener
  */
 class PageTracker implements EventSubscriberInterface
 {
+    /** @var EntityManager $orm */
     private $orm;
+
+    /** @var Session $session */
     private $session;
+
+    /** @var SecurityContext $context */
+    private $context;
 
     /**
      *
@@ -69,12 +76,19 @@ class PageTracker implements EventSubscriberInterface
             $visit->setHash('');
             $this->session->start();
             $id = $this->session->getId();
+            /** @var UserSession $session */
             $session = $this->orm->getRepository('StudySauceBundle:Session')->find($id);
             $visit->setSession($session);
+
+            /** @var User $user */
             $user = $this->context->getToken()->getUser();
-            if($user != 'anon.')
+            if($user != 'anon.') {
+                $user->addVisit($visit);
                 $visit->setUser($user);
+            }
             $visit->setQuery(serialize($request->query->all()));
+            if(!empty($session))
+                $session->addVisit($visit);
             $this->orm->persist($visit);
             $this->orm->flush();
         }

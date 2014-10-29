@@ -100,7 +100,8 @@
 }
 
 .squiggle,
-.squiggle {
+.squiggle
+{
     background-color: #0099BB;
     bottom: 0;
     display: inline-block;
@@ -108,7 +109,7 @@
     left: 0;
     line-height: 1px;
     position: absolute;
-    width: 50px;
+    width: 2px;
 }
 
 #left-panel a[href="#collapse"]
@@ -955,6 +956,7 @@
         display: none;
     }
 
+    body.modal-open:before,
     body.right-menu:before,
     body.left-menu:before {
         position: absolute;
@@ -1023,8 +1025,6 @@
         padding-bottom:0;
     }
 
-    #left-panel a[href="#expand"],
-    #right-panel a[href="#expand"],
     .navbar-toggle,
     #right-panel .navbar-toggle
     {
@@ -1042,7 +1042,7 @@
     #right-panel .navbar-toggle
     {
         left: auto;
-        right:-5px;
+        right:17px;
     }
 
     #right-panel .navbar-toggle

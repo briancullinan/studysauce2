@@ -4,11 +4,17 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\Claim;
+use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Goal;
+use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class GoalsController
@@ -30,10 +36,23 @@ class GoalsController extends Controller
         /** @var  $goals ArrayCollection */
         $goals = $user->getGoals();
 
+        $claims = [];
+        foreach($goals->toArray() as $g)
+        {
+            /** @var Goal $g */
+            foreach($g->getClaims() as $c)
+            {
+                /** @var Claim $c */
+                $claims[$c->getCreated()->getTimestamp()] = $c;
+            }
+        }
+        ksort($claims);
+
         return $this->render('StudySauceBundle:Goals:tab.html.php', [
                 'behavior' => $goals->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first(),
                 'outcome' => $goals->filter(function (Goal $x) {return $x->getType() == 'outcome';})->first(),
                 'milestone' => $goals->filter(function (Goal $x) {return $x->getType() == 'milestone';})->first(),
+                'claims' => $claims,
                 'csrf_token' => $csrfToken
             ]);
     }
@@ -67,6 +86,7 @@ class GoalsController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
+        /** @var User $user */
         $user = $this->getUser();
 
         $goals = $request->get('goals');
@@ -84,10 +104,9 @@ class GoalsController extends Controller
             }
             $goal->setGoal($g['value']);
             $goal->setReward(($g['reward']));
-
-            $user->addGoal($goal);
             if($new)
             {
+                $user->addGoal($goal);
                 $orm->persist($goal);
             }
             else
@@ -101,4 +120,61 @@ class GoalsController extends Controller
         return $this->forward('StudySauceBundle:Goals:index', ['_format' => 'tab']);
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function notifyClaimAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Goal $goal */
+        $goal = $user->getGoals()->filter(function (Goal $g) use($request) {return $g->getId() == $request->get('id');})->first();
+
+        /** @var File $photo */
+        $photo = $user->getFiles()->filter(function (File $g) use($request) {return $g->getId() == $request->get('photo');})->first();
+        if(!empty($goal))
+        {
+            // create claim entity
+            $claim = new Claim();
+            $claim->setPhoto($photo ?: null);
+            $claim->setMessage($request->get('message'));
+            $claim->setGoal($goal);
+            $claim->setCode(md5(microtime(true)));
+            $goal->addClaim($claim);
+            $orm->persist($claim);
+            $orm->flush();
+
+            // send partner email
+            $partner = $user->getPartners()->filter(function (Partner $p) {return $p->getActivated();})->first();
+            if($partner)
+            {
+                $email = new EmailsController();
+                $email->setContainer($this->container);
+                $email->achievementAction($user, $partner);
+            }
+        }
+
+        $claims = [];
+        $goals = $user->getGoals()->toArray();
+        foreach($goals as $g)
+        {
+            /** @var Goal $g */
+            foreach($g->getClaims() as $c)
+            {
+                /** @var Claim $c */
+                $claims[$c->getCreated()->getTimestamp()] = $c;
+            }
+        }
+        ksort($claims);
+
+        // update achievement list
+        return new JsonResponse(['achievements' => $this->render('StudySauceBundle:Goals:claims.html.php', [
+                    'claims' => $claims
+                ])->getContent()]);
+    }
 }

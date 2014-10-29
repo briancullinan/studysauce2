@@ -169,6 +169,7 @@ class AccountController extends Controller
 
             $context = $this->get('security.context');
             $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
+            $token->setAuthenticated(true);
             $context->setToken($token);
             $session = $request->getSession();
             $session->set('_security_main', serialize($token));
@@ -178,7 +179,9 @@ class AccountController extends Controller
             $loginManager->loginUser('main', $user, $response);
 
             // send welcome email
-            $email = $this->forward('StudySauce:Emails:welcomestudent');
+            $email = new EmailsController();
+            $email->setContainer($this->container);
+            $email->welcomeStudentAction($user);
 
             return $response;
         }

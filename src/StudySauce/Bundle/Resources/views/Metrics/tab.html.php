@@ -137,7 +137,7 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:metricsempty'), empty($times)
+    new ControllerReference('StudySauceBundle:Dialogs:metricsEmpty'), empty($times)
         ? []
         : ['strategy' => 'sinclude']
 );

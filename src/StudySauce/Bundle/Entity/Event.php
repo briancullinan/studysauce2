@@ -47,6 +47,20 @@ class Event
     protected $end;
 
     /**
+     * Used for sr,p,c,o event types
+     * @ORM\ManyToOne(targetEntity="Course", inversedBy="events")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id", nullable=true)
+     */
+    protected $course;
+
+    /**
+     * Used for d,r event types
+     * @ORM\ManyToOne(targetEntity="Deadline", inversedBy="events")
+     * @ORM\JoinColumn(name="deadline_id", referencedColumnName="id", nullable=true)
+     */
+    protected $deadline;
+
+    /**
      * @ORM\Column(type="boolean", name="completed")
      */
     protected $completed = false;
@@ -65,6 +79,36 @@ class Event
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
+
+    /**
+     * @ORM\OneToOne(targetEntity="ActiveStrategy", inversedBy="event")
+     * @ORM\JoinColumn(name="active_id", referencedColumnName="id", nullable=true)
+     */
+    protected $active;
+
+    /**
+     * @ORM\OneToOne(targetEntity="PreworkStrategy", inversedBy="event")
+     * @ORM\JoinColumn(name="prework_id", referencedColumnName="id", nullable=true)
+     */
+    protected $prework;
+
+    /**
+     * @ORM\OneToOne(targetEntity="OtherStrategy", inversedBy="event")
+     * @ORM\JoinColumn(name="other_id", referencedColumnName="id", nullable=true)
+     */
+    protected $other;
+
+    /**
+     * @ORM\OneToOne(targetEntity="SpacedStrategy", inversedBy="event")
+     * @ORM\JoinColumn(name="spaced_id", referencedColumnName="id", nullable=true)
+     */
+    protected $spaced;
+
+    /**
+     * @ORM\OneToOne(targetEntity="TeachStrategy", inversedBy="event")
+     * @ORM\JoinColumn(name="teach_id", referencedColumnName="id", nullable=true)
+     */
+    protected $teach;
 
     /**
      * @ORM\ManyToOne(targetEntity="Week", inversedBy="events")
@@ -320,5 +364,166 @@ class Event
     public function getWeek()
     {
         return $this->week;
+    }
+
+    /**
+     * Set course
+     *
+     * @param \StudySauce\Bundle\Entity\Course $course
+     * @return Event
+     */
+    public function setCourse(\StudySauce\Bundle\Entity\Course $course = null)
+    {
+        $this->course = $course;
+
+        return $this;
+    }
+
+    /**
+     * Get course
+     *
+     * @return \StudySauce\Bundle\Entity\Course 
+     */
+    public function getCourse()
+    {
+        return $this->course;
+    }
+
+    /**
+     * Set deadline
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadline
+     * @return Event
+     */
+    public function setDeadline(\StudySauce\Bundle\Entity\Deadline $deadline = null)
+    {
+        $this->deadline = $deadline;
+
+        return $this;
+    }
+
+    /**
+     * Get deadline
+     *
+     * @return \StudySauce\Bundle\Entity\Deadline 
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * Set active
+     *
+     * @param \StudySauce\Bundle\Entity\ActiveStrategy $active
+     * @return Event
+     */
+    public function setActive(\StudySauce\Bundle\Entity\ActiveStrategy $active = null)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return \StudySauce\Bundle\Entity\ActiveStrategy 
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Set prework
+     *
+     * @param \StudySauce\Bundle\Entity\PreworkStrategy $prework
+     * @return Event
+     */
+    public function setPrework(\StudySauce\Bundle\Entity\PreworkStrategy $prework = null)
+    {
+        $this->prework = $prework;
+
+        return $this;
+    }
+
+    /**
+     * Get prework
+     *
+     * @return \StudySauce\Bundle\Entity\PreworkStrategy 
+     */
+    public function getPrework()
+    {
+        return $this->prework;
+    }
+
+    /**
+     * Set other
+     *
+     * @param \StudySauce\Bundle\Entity\OtherStrategy $other
+     * @return Event
+     */
+    public function setOther(\StudySauce\Bundle\Entity\OtherStrategy $other = null)
+    {
+        $this->other = $other;
+
+        return $this;
+    }
+
+    /**
+     * Get other
+     *
+     * @return \StudySauce\Bundle\Entity\OtherStrategy 
+     */
+    public function getOther()
+    {
+        return $this->other;
+    }
+
+    /**
+     * Set spaced
+     *
+     * @param \StudySauce\Bundle\Entity\SpacedStrategy $spaced
+     * @return Event
+     */
+    public function setSpaced(\StudySauce\Bundle\Entity\SpacedStrategy $spaced = null)
+    {
+        $this->spaced = $spaced;
+
+        return $this;
+    }
+
+    /**
+     * Get spaced
+     *
+     * @return \StudySauce\Bundle\Entity\SpacedStrategy 
+     */
+    public function getSpaced()
+    {
+        return $this->spaced;
+    }
+
+    /**
+     * Set teach
+     *
+     * @param \StudySauce\Bundle\Entity\TeachStrategy $teach
+     * @return Event
+     */
+    public function setTeach(\StudySauce\Bundle\Entity\TeachStrategy $teach = null)
+    {
+        $this->teach = $teach;
+
+        return $this;
+    }
+
+    /**
+     * Get teach
+     *
+     * @return \StudySauce\Bundle\Entity\TeachStrategy 
+     */
+    public function getTeach()
+    {
+        return $this->teach;
     }
 }

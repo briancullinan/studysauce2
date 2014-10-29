@@ -1,0 +1,430 @@
+
+#premium h1,
+#premium > div > h2,
+#premium #headline-inner > h2,
+#premium .plans-chart h2
+{
+    font-size: 32px;
+    vertical-align: middle;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+#premium .did-you-know h1
+{
+    text-align: center;
+    padding-left:165px;
+}
+
+#premium .plans h2
+{
+    text-align: center;
+    color: #555;
+}
+
+#premium .plans .premium h2,
+#premium table.plans th.highlight h2
+{
+    color: #FFF;
+}
+
+#premium table.plans .highlighted-link
+{
+    text-align: center;
+}
+
+#premium table.plans th p
+{
+    margin:0;
+}
+
+#premium table.plans tr th.pick-text
+{
+    background:transparent;
+    border-top: none;
+}
+
+#premium table.plans tr th
+{
+    text-align: center;
+    padding: 12px 10px;
+    border-top: #555555 solid 1px;
+    border-right: #555555 solid 1px;
+    border-bottom: #555555 solid 1px;
+    background: #ffffff;
+    color:inherit;
+}
+
+#premium .plans .price
+{
+    font-size:22px;
+    margin:20px 0;
+    display:inline-block;
+    font-weight: bold;
+}
+
+#premium div.plans > div
+{
+    border: #555555 solid 1px;
+    border-radius: 10px;
+    background: #ffffff;
+    margin-bottom: 30px;
+}
+
+#premium div.plans p
+{
+    padding:10px;
+    border-bottom: #555555 solid 1px;
+    margin:0;
+}
+
+#premium div.plans .premium p
+{
+    border-bottom: #EEEEEE solid 1px;
+}
+
+#premium div.plans .premium p:last-of-type,
+#premium div.plans p:last-of-type
+{
+    border-bottom: none;
+}
+
+#premium div.plans p img
+{
+    float:right;
+}
+
+#premium table.plans tr td.feature
+{
+    font-weight: bold;
+}
+
+#premium table.plans tr td
+{
+    border-right: #555555 solid 1px;
+    border-bottom: #555555 solid 1px;
+    padding: 7px 10px;
+    background: url("../images/noise_white.png") repeat scroll 0 0 #ffffff;
+    text-align: center;
+    font-size: 16px;
+}
+
+#premium table.plans tr td.blank
+{
+    background: transparent;
+    border: none;
+}
+
+#premium table.plans tr th.highlight
+{
+    background: #555555;
+    border-top: #EEEEEE solid 1px;
+    border-right: #555555 solid 1px;
+    border-bottom: #EEEEEE solid 1px;
+    color: #fff;
+}
+
+#premium table.plans tr td.best
+{
+    background: #555555;
+    border-radius: 10px 10px 0 0;
+    border-right: none;
+}
+
+#premium table.plans tr td.highlight
+{
+    background: #555555;
+    border-top: #EEEEEE solid 1px;
+    border-right: #555555 solid 1px;
+    border-bottom: #EEEEEE solid 1px;
+}
+
+#premium .plans .premium
+{
+    background: #555555;
+    color: #ffffff;
+}
+
+#premium table.plans tr td.feature,
+#premium table.plans tr th.feature
+{
+    background: #eeeeee;
+    border-left: 0;
+    border-top: 0;
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: #555555 solid 1px;
+    font-size: 14px;
+}
+
+#premium img.money-back-stamp
+{
+    position:absolute;
+    right:30px;
+    top:30px;
+}
+
+#premium h2 span
+{
+    font-size: 60px;
+    vertical-align: middle;
+    color: #0089BE;
+    display: block;
+    margin: 15px 0;
+}
+
+#premium .did-you-know
+{
+    background: #ffffff;
+    padding:50px 0;
+    margin: 75px -20px 65px -20px;
+    text-align: center;
+}
+
+#premium .did-you-know-container
+{
+    display:inline-block;
+    margin:0 auto;
+    max-width: 760px;
+    width:100%;
+}
+
+#premium .did-you-know-container img
+{
+    float:left;
+}
+
+#premium .one
+{
+    padding-left:165px;
+    vertical-align: top;
+    text-align: center;
+}
+
+#premium .one h3
+{
+    padding-left:50px;
+    position: relative;
+    text-align: left;
+}
+
+#premium .one h3 span
+{
+    position: absolute;
+    top:0;
+    left:0;
+    font-size: 56px;
+}
+
+#premium .three-step-process li,
+#premium .three-step-process ol
+{
+    list-style: none;
+    padding:0;
+    margin:0;
+    vertical-align: top;
+}
+
+#premium .three-step-process ol
+{
+    margin: 0 auto;
+}
+
+#premium .three-step-process li
+{
+    width:33%;
+    display: inline-block;
+    padding:30px;
+    position:relative;
+    min-height: 300px;
+}
+
+#premium .three-step-process li h3
+{
+    margin-top: 0;
+    text-align: center;
+    font-size: 24px;
+}
+
+#premium .three-step-process li p
+{
+    font-size: 20px;
+}
+
+#premium .three-step-process li p:last-child
+{
+    margin-bottom: 0;
+}
+
+#premium .pane-content
+{
+    overflow: hidden;
+}
+
+#premium .three-step-process li:before
+{
+    content: "";
+    display:block;
+    position:absolute;
+    top:20px;
+    left:20px;
+    bottom:20px;
+    right:20px;
+    z-index: 0;
+    border-radius: 10px;
+    background: url(../images/noise_gray.png) repeat 0 0 #EEEEEE;
+    opacity: .75;
+}
+
+#premium .three-step-process li > *
+{
+    z-index: 1;
+    position:relative;
+}
+
+#premium .three-step-process li:nth-child(2):before
+{
+    background: url(../images/noise_white.png) repeat 0 0 #FFFFFF;
+}
+
+#premium .three-step-process li strong
+{
+    font-size: 40px;
+    text-align: center;
+    display: block;
+    line-height: 35px;
+    margin: 20px auto;
+    border: 5px solid #555555;
+    border-radius: 100%;
+    color: #FF9900;
+    background-color: #555555;
+    padding: 5px;
+    height: 50px;
+    width: 50px;
+}
+
+
+#premium .img-wrapper
+{
+    border: 0 solid transparent;
+    display: block;
+    overflow: hidden;
+    margin: 0 auto 0 auto;
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    width: 100%;
+    top: 0;
+    bottom: 58%;
+    min-height: 380px;
+    max-width: none;
+}
+
+#premium .img-wrapper img
+{
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+    top: auto;
+    min-height: 100%;
+    margin-bottom: -10%;
+}
+
+#premium .img-wrapper ~ *
+{
+    position:relative;
+    z-index: 1;
+}
+
+#premium div.plans
+{
+    display:none;
+}
+
+@media all and (min-width: 1420px)
+{
+    #premium .img-wrapper img
+    {
+        margin-bottom: -15%;
+    }
+}
+
+@media all and (max-width: 980px)
+{
+
+    #premium .did-you-know img
+    {
+        float:none !important;
+    }
+
+    #premium .did-you-know h1
+    {
+        padding-left:0;
+    }
+
+    #premium .one
+    {
+        padding-left: 0;
+    }
+
+    #premium .did-you-know
+    {
+        padding: 20px 0;
+    }
+
+    #premium table.plans
+    {
+        display:none;
+    }
+
+    #premium div.plans
+    {
+        display:block;
+    }
+
+    #premium h2
+    {
+        font-size:24px;
+    }
+
+    #premium .three-step-process li
+    {
+        padding:5px;
+        display:block;
+        width:auto;
+        min-height: 0;
+        margin:40px 0;
+    }
+
+    #premium .three-step-process li:before
+    {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    #premium .plans-chart ol
+    {
+        margin-top:100px;
+    }
+
+    #premium .img-wrapper
+    {
+        bottom:75%;
+        top:0;
+        min-height: 300px;
+    }
+
+    #premium .img-wrapper img
+    {
+        margin-bottom:0;
+    }
+}
+
+
+
+
+

@@ -214,4 +214,51 @@ $(document).ready(function () {
             $('#calendar').fullCalendar('option', 'height', 'auto');
         }
     });
+
+    plans.on('change', '.sort-by input[type="radio"]', function () {
+        var headings = {},
+            that = jQuery(this);
+        plans.find('.head').each(function () {
+            var head = jQuery(this);
+            head.nextUntil('.head,p:last-of-type').each(function () {
+                var row = jQuery(this),
+                    that = row.find('.class-name');
+                if(typeof headings[that.text().trim()] == 'undefined')
+                    headings[that.text().trim()] = row;
+                else
+                    headings[that.text().trim()] = jQuery.merge(headings[that.text().trim()], row);
+                that.text(head.text().trim());
+            });
+        });
+        var rows = [];
+        if(that.val() == 'class')
+        {
+            var keys = [];
+
+            for(var i = 0; i < window.classNames.length; i++)
+                if(typeof headings[window.classNames[i]] != 'undefined')
+                    keys[keys.length] = window.classNames[i];
+
+            for(var k in headings)
+                if(headings.hasOwnProperty(k) && keys.indexOf(k) == -1)
+                    keys[keys.length] = k;
+
+            for(var j = 0; j < keys.length; j++)
+            {
+                var h1 = headings[keys[j]].filter('.row:not(.hide)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h1 ? 'hide' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
+            }
+        }
+        else
+        {
+            for(var h in headings)
+            {
+                if(!headings.hasOwnProperty(h))
+                    continue;
+                var h2 = headings[h].filter('.row:not(.hide)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h2 ? 'hide' : '') + '">' + h + '</div>'), headings[h].detach()));
+            }
+        }
+        plans.find('.head, .row').replaceWith(rows);
+    });
 });

@@ -184,7 +184,11 @@
 
 #achievements .grid_6,
 #achievements .grid_3 {
-    margin:0 -3px;
+    margin: 0 -2px;
+    display: inline-block;
+    padding: 0 2px;
+    text-align: center;
+    vertical-align: top;
 }
 
 #achievements .grid_6 strong,
@@ -195,13 +199,15 @@
 
 #achievements .grid_6 img,
 #achievements .grid_3 img {
-    float: left;
     margin: 0 auto;
     display: inline-block;
 }
 
 #achievements .grid_3 img,
-#achievements .grid_3 p,
+#achievements .grid_3 p
+{
+    width:100%;
+}
 #achievements .grid_6 img,
 #achievements .grid_6 p {
     width:49%;
@@ -214,14 +220,10 @@
     float: left;
     display: inline-block;
     margin: 0 auto;
-    padding-bottom: 100%;
+    padding: 5px 5px 100% 5px;
     position: relative;
     height: 0;
-}
-
-#achievements .grid_6 img
-{
-    margin-right:.5%;
+    text-align: left;
 }
 
 #achievements .grid_6 p
@@ -231,12 +233,13 @@
 }
 
 #achievements .grid_6 {
-    width: 49%;
-    margin: 0;
-    display: inline-block;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
+    width: 50%;
     max-width: 400px;
+}
+
+#achievements .grid_3 {
+    width: 25%;
+    max-width: 200px;
 }
 
 #goals .goal-row.edit .read-only

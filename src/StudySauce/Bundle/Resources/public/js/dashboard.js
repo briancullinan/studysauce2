@@ -9,6 +9,12 @@ $(document).ready(function () {
     };
 
     function activateMenu(path, noPush) {
+        if(window.sincluding) {
+            setTimeout(function () {
+                activateMenu(path, noPush);
+            }, 1000);
+            return;
+        }
         var i = window.callbackUri.indexOf(path);
         var panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
             panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
@@ -24,6 +30,7 @@ $(document).ready(function () {
             if($(this).is('a') && $(this).parents('.pane-content').length > 0)
                 item = item.add($(this));
             item.each(function (i, obj) { loadingAnimation($(obj)); });
+            window.sincluding = true;
             $.ajax({
                 url: window.callbackPaths[window.callbackKeys[i]],
                 type: 'GET',
@@ -53,7 +60,13 @@ $(document).ready(function () {
                         }, 100);
                         if (!noPush)
                             window.history.pushState(window.callbackKeys[i], "", path);
+
+                        window.sincluding = false;
                     }
+                },
+                error:function () {
+                    window.sincluding = false;
+                    item.find('.squiggle').stop().remove();
                 }
             });
         }

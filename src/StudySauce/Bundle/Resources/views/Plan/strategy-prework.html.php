@@ -1,5 +1,5 @@
 <div class="strategy-prework invalid">
-    <h3>Prework - Get prepared for your class tomorsession-row.</h3>
+    <h3>Prework - Get prepared for your class tomorrow.</h3>
     <div style="margin-left:30px; text-align: left;">
         <input type="checkbox" name="strategy-topics" id="strategy-topics" value="topics">
         <label for="strategy-topics"><span>Look at your syllabus to see what topics will be covered.</span></label><br>

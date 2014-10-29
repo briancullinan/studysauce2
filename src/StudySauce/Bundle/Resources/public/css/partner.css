@@ -26,10 +26,12 @@
     padding:80px 10px;
 }
 
-#partner .permissions {
+#partner .permissions
+{
 }
 
-#partner .plupload {
+#partner .plupload
+{
     overflow: hidden;
     text-align: center;
 }

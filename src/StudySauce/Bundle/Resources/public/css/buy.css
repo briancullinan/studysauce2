@@ -1,0 +1,166 @@
+
+
+#cart_checkout #payment-pane,
+#cart_checkout #billing-pane,
+#cart_checkout #coupon-pane
+{
+    width:50%;
+    margin:0 -2px;
+    display:inline-block;
+    vertical-align: top;
+    padding-right:10px;
+}
+
+.page-cart-checkout form
+{
+    padding-left:10px;
+}
+
+.page-cart-checkout fieldset
+{
+    display:inline-block;
+    width:50%;
+    vertical-align: top;
+    margin: 0 -1px 5px -10px;
+}
+
+#cart_checkout #payment-pane
+{
+    padding-right:0;
+    padding-left:10px;
+}
+
+#payment-pane .fieldset-description a
+{
+    display: block;
+    padding-left: 30px;
+    background: url('../images/menu_icons_128.png') no-repeat -54px -2851px transparent;
+    line-height: 26px;
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+#payment-pane .fieldset-description div
+{
+    margin-right: -110px;
+    padding-right: 100px;
+    width: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#payment-pane .fieldset-description img
+{
+    vertical-align: middle;
+}
+
+#payment-pane .fieldset-description sup
+{
+    margin: -10px 0;
+    line-height: 0;
+    color: #FF0000;
+    font-size: 10px;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 1px 3px;
+    border: 1px solid #FF0000;
+    border-radius: 5px;
+}
+
+#coupon-pane .coupon-code
+{
+    display:inline-block;
+    width:100%;
+    padding-right:200px;
+    margin-right: -190px;
+    vertical-align: middle;
+}
+
+#coupon-pane a[href="#coupon-apply"]
+{
+    margin-left:auto;
+    margin-right:0;
+    vertical-align: middle;
+}
+
+#cart_checkout .form-actions,
+#payment-pane .cc-year,
+#payment-pane .cc-month,
+#billing-pane .first-name,
+#billing-pane .last-name,
+#billing-pane .city,
+#billing-pane .zip
+{
+    width: 50%;
+    margin: 0 -2px;
+    padding:0 2px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+#payment-pane .cc-number
+{
+    position: relative;
+}
+
+#payment-pane .cc-number .cards
+{
+    display: inline-block;
+    vertical-align: bottom;
+    height: 28px;
+    padding: 3px 5px;
+    border-radius: 2px;
+    width: 160px;
+    opacity: .5;
+    position:absolute;
+    right:0;
+    bottom:0;
+    pointer-events:none;
+}
+
+#payment-pane .cc-number input:focus ~ .cards {
+    opacity: .9;
+}
+
+#payment-pane .cc-number img
+{
+    float:right;
+    border-radius: 1px;
+}
+
+#payment-pane .cc-number input
+{
+    padding-right: 160px;
+}
+
+@media all and (max-width:700px)
+{
+    #coupon-pane .coupon-code
+    {
+        margin-right: 0;
+        padding-right: 0;
+        display: block;
+    }
+
+    .page-cart-checkout #payment-pane
+    {
+        margin-left:-10px;
+        margin-right:-1px;
+    }
+
+    #cart_checkout #payment-pane,
+    #cart_checkout #billing-pane,
+    #cart_checkout #coupon-pane
+    {
+        width: auto;
+        display:block;
+        float:none;
+        clear:both;
+    }
+}
+
+
+
+

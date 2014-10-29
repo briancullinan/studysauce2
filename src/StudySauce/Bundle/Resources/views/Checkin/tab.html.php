@@ -16,7 +16,7 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
  $view['slots']->start('javascripts');
  foreach ($view['assetic']->javascripts([
-        '@StudySauceBundle/Resources/public/js/checkin.js',
+         '@StudySauceBundle/Resources/public/js/checkin.js',
          '@StudySauceBundle/Resources/public/js/jquery.fittext.js'
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
@@ -67,9 +67,9 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsmessages'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinempty'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerexpire'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
 $view['slots']->stop();

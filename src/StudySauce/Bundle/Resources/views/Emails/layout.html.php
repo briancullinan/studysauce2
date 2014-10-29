@@ -12,9 +12,11 @@ $email_base = $view['assets']->getUrl('images');
             style="color:#FF9900;">Study</strong> Sauce</a>
 </div>
 <div style="margin: 0 auto; padding:15px; background: url(<?php print $email_base; ?>/images/noise_gray.png) #EEEEEE; width:100%; max-width:600px;">
+    <?php if(!empty($greeting)): ?>
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
-        <strong><?php print (isset($greeting) ? $greeting : ''); ?></strong>
+        <strong><?php print $greeting; ?></strong>
     </p>
+    <?php endif; ?>
 
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
         <?php $view['slots']->output('body') ?>

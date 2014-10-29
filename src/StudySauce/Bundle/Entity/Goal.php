@@ -46,6 +46,12 @@ class Goal
     protected $created;
 
     /**
+     * @ORM\OneToMany(targetEntity="Claim", mappedBy="goal")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $claims;
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()
@@ -178,5 +184,45 @@ class Goal
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->claims = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add claims
+     *
+     * @param \StudySauce\Bundle\Entity\Claim $claims
+     * @return Goal
+     */
+    public function addClaim(\StudySauce\Bundle\Entity\Claim $claims)
+    {
+        $this->claims[] = $claims;
+
+        return $this;
+    }
+
+    /**
+     * Remove claims
+     *
+     * @param \StudySauce\Bundle\Entity\Claim $claims
+     */
+    public function removeClaim(\StudySauce\Bundle\Entity\Claim $claims)
+    {
+        $this->claims->removeElement($claims);
+    }
+
+    /**
+     * Get claims
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getClaims()
+    {
+        return $this->claims;
     }
 }

@@ -5,12 +5,22 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Entity\ActiveStrategy;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Event;
+use StudySauce\Bundle\Entity\File;
+use StudySauce\Bundle\Entity\OtherStrategy;
+use StudySauce\Bundle\Entity\PreworkStrategy;
 use StudySauce\Bundle\Entity\Schedule;
+use StudySauce\Bundle\Entity\SpacedStrategy;
+use StudySauce\Bundle\Entity\TeachStrategy;
+use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Week;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class PlanController
@@ -72,13 +82,16 @@ class PlanController extends Controller
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
         }
 
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), strtotime('last Sunday'), $orm);
-
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), strtotime('last Sunday'), $orm);
+        $courses = $schedule->getCourses()->filter(function (Course $c) {
+                return $c->getType() == 'c';
+            });
         return $this->render('StudySauceBundle:Plan:tab.html.php', [
-                'events' =>  self::getJsonEvents($events, $schedule->getCourses()->filter(function (Course $c) {
-                            return $c->getType() == 'c';
-                        })->toArray()),
-                'user' => $user
+                'events' => $events,
+                'courses' => $courses,
+                'jsonEvents' =>  self::getJsonEvents($events, $courses->toArray()),
+                'user' => $user,
+                'strategies' => self::getStrategies($schedule)
             ]);
     }
 
@@ -95,16 +108,14 @@ class PlanController extends Controller
         $schedule = $user->getSchedules()->first();
 
         // get events for current week
-        if (!empty($schedule) && !empty($schedule->getCourses())) {
-            $events = self::rebuildSchedule($schedule, $schedule->getCourses(), strtotime('last Sunday'), $orm);
-        } else {
+        if (empty($schedule) || empty($schedule->getCourses())) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
 
-            $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-
-            $events = self::rebuildSchedule($demo, $demo->getCourses(), strtotime('last Sunday'), $orm);
+            $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
         }
+        // TODO: get demo Deadlines?
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), strtotime('last Sunday'), $orm);
 
         return $this->render(
             'StudySauceBundle:Plan:widget.html.php',
@@ -216,11 +227,12 @@ class PlanController extends Controller
     /**
      * @param Schedule $schedule
      * @param Collection $courses
+     * @param Collection $deadlines
      * @param $week
      * @param EntityManager $orm
      * @return array
      */
-    public static function rebuildSchedule(Schedule $schedule, Collection $courses, $week, EntityManager $orm)
+    public static function rebuildSchedule(Schedule $schedule, Collection $courses, Collection $deadlines, $week, EntityManager $orm)
     {
         $events = [];
 
@@ -420,7 +432,72 @@ class PlanController extends Controller
             }
         }
 
+        $events = array_merge($events, self::getAllDay($deadlines, $week));
+
+        self::sortEvents($events);
+
         self::mergeSaved($schedule, $currentWeek, $events, $orm);
+
+        return $events;
+    }
+
+    /**
+     * @param $deadlines
+     * @param $week
+     * @return array
+     */
+    private static function getAllDay($deadlines, $week)
+    {
+        $events = [];
+
+        // add deadlines and holidays
+        foreach ($deadlines as $did => $d) {
+            /** @var Deadline $d */
+            $classT = clone $d->getDueDate();
+            $classT->setTime(0, 0, 0);
+
+            if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
+                // create a new event
+                $deadline = new Event();
+                $deadline->setDeadline($d);
+                $deadline->setName($d->getName());
+                $deadline->setType('d');
+                $deadline->setStart($classT);
+                $deadline->setEnd(date_add(clone $classT, new \DateInterval('PT86399S')));
+                $events[] = $deadline;
+            }
+
+            if(empty($d->getReminder()))
+                continue;
+
+            foreach ($d->getReminder() as $i => $r) {
+                $classR = clone $classT;
+                $classR->sub(new \DateInterval('PT' . $r . 'S'));
+
+                if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
+                    $reminder = new Event();
+                    $reminder->setDeadline($d);
+                    $reminder->setName($d->getName());
+                    $reminder->setType('r');
+                    $reminder->setStart($classR);
+                    $reminder->setEnd(date_add(clone $classR, new \DateInterval('PT86399S')));
+                    $events[] = $reminder;
+                }
+            }
+        }
+
+        foreach (self::$holidays as $k => $h) {
+            $classT = new \DateTime($k);
+
+            if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
+                $holiday = new Event();
+                $holiday->setName($h);
+                $holiday->setType('h');
+                $holiday->setStart($classT);
+                $holiday->setEnd(date_add(clone $classT, new \DateInterval('PT86399S')));
+                $events[] = $holiday;
+            }
+        }
 
         return $events;
     }
@@ -972,6 +1049,7 @@ class PlanController extends Controller
             $classT->sub(new \DateInterval('P1D'));
 
             $event = new Event();
+            $event->setCourse($course);
             $event->setName($course->getName());
             $event->setType('p');
             $event->setStart($classT);
@@ -1030,6 +1108,7 @@ class PlanController extends Controller
             $classT->add(new \DateInterval('PT' . $fullLength . 'S'));
 
             $event = new Event();
+            $event->setCourse($course);
             $event->setName($course->getName());
             $event->setType('sr');
             $event->setStart($classT);
@@ -1156,6 +1235,7 @@ class PlanController extends Controller
             $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
 
             $event = new Event();
+            $event->setCourse($course);
             $event->setName($course->getName());
             $event->setType($course->getType());
             $event->setStart($classT);
@@ -1317,6 +1397,182 @@ class PlanController extends Controller
                 $buckets->studyTotals = (isset($buckets->studyTotals) ? $buckets->studyTotals : 0) + ($length + 600);
             }
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function updateStrategyAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Schedule $schedule */
+        $schedule = $user->getSchedules()->first();
+
+        $strategies = $request->get('strategies');
+        foreach($strategies as $i => $s)
+        {
+            /** @var Event $event */
+            $event = $schedule->getEvents()->filter(function (Event $e)use($s) {return $e->getId() == $s['eid'];})->first();
+            if(empty($event))
+                continue;
+
+            if($s['type'] == 'active')
+            {
+                $new = false;
+                if(($active = $event->getActive()) == null) {
+                    $active = new ActiveStrategy();
+                    $event->setActive($active);
+                    $active->setEvent($event);
+                    $active->setSchedule($schedule);
+                    $new = true;
+                }
+                $active->setIsDefault($request->get('default') == 'active');
+                $active->setSkim($s['skim']);
+                $active->setWhy($s['why']);
+                $active->setSummarize($s['summarize']);
+                $active->setQuestions($s['questions']);
+                $active->setExam($s['exam']);
+                if($new)
+                    $orm->persist($active);
+                else
+                    $orm->merge($active);
+            }
+            elseif($s['type'] == 'prework')
+            {
+                $new = false;
+                if(($prework = $event->getPrework()) == null) {
+                    $prework = new PreworkStrategy();
+                    $event->setPrework($prework);
+                    $prework->setEvent($event);
+                    $prework->setSchedule($schedule);
+                    $new = true;
+                }
+                $prework->setIsDefault($request->get('default') == 'prework');
+                $prework->setNotes($s['notes']);
+                $prework->setPrepared(explode(',', $s['prepared']));
+                if($new)
+                    $orm->persist($prework);
+                else
+                    $orm->merge($prework);
+            }
+            elseif($s['type'] == 'teach')
+            {
+                $new = false;
+                if(($teach = $event->getTeach()) == null) {
+                    $teach = new TeachStrategy();
+                    $event->setTeach($teach);
+                    $teach->setEvent($event);
+                    $teach->setSchedule($schedule);
+                    $new = true;
+                }
+                $teach->setIsDefault($request->get('default') == 'teach');
+                $teach->setNotes($s['notes']);
+                $teach->setTitle($s['title']);
+                $teach->setTeaching($user->getFiles()->filter(function (File $f)use($s) {return $f->getId() == $s['fid'];})->first());
+                if($new)
+                    $orm->persist($teach);
+                else
+                    $orm->merge($teach);
+            }
+            elseif($s['type'] == 'other')
+            {
+                $new = false;
+                if(($other = $event->getOther()) == null) {
+                    $other = new OtherStrategy();
+                    $event->setOther($other);
+                    $other->setEvent($event);
+                    $other->setSchedule($schedule);
+                    $new = true;
+                }
+                $other->setIsDefault($request->get('default') == 'other');
+                $other->setNotes($s['notes']);
+                if($new)
+                    $orm->persist($other);
+                else
+                    $orm->merge($other);
+            }
+            elseif($s['type'] == 'spaced')
+            {
+                $new = false;
+                if(($spaced = $event->getSpaced()) == null) {
+                    $spaced = new SpacedStrategy();
+                    $event->setSpaced($spaced);
+                    $spaced->setEvent($event);
+                    $spaced->setSchedule($schedule);
+                    $new = true;
+                }
+                $spaced->setIsDefault($request->get('default') == 'spaced');
+                $spaced->setNotes($s['notes']);
+                $spaced->setReview(explode(',', $s['review']));
+                if($new)
+                    $orm->persist($spaced);
+                else
+                    $orm->merge($spaced);
+            }
+            $orm->merge($event);
+        }
+        $orm->flush();
+        return new JsonResponse(true);
+    }
+
+    /**
+     * @param Schedule $schedule
+     * @return array
+     */
+    private static function getStrategies(Schedule $schedule)
+    {
+        $result = [];
+        foreach($schedule->getActive()->toArray() as $active)
+        {
+            /** @var ActiveStrategy $active */
+            $eid = $active->getEvent()->getId();
+            $result[$eid]['active']['default'] = $active->getIsDefault();
+            $result[$eid]['active']['skim'] = $active->getSkim();
+            $result[$eid]['active']['why'] = $active->getWhy();
+            $result[$eid]['active']['questions'] = $active->getQuestions();
+            $result[$eid]['active']['summarize'] = $active->getSummarize();
+            $result[$eid]['active']['exam'] = $active->getExam();
+        }
+        foreach($schedule->getOther()->toArray() as $other)
+        {
+            /** @var OtherStrategy $other */
+            $eid = $other->getEvent()->getId();
+            $result[$eid]['other']['default'] = $other->getIsDefault();
+            $result[$eid]['other']['notes'] = $other->getNotes();
+        }
+        foreach($schedule->getTeach()->toArray() as $teach)
+        {
+            /** @var TeachStrategy $teach */
+            $eid = $teach->getEvent()->getId();
+            $result[$eid]['teach']['default'] = $teach->getIsDefault();
+            $result[$eid]['teach']['title'] = $teach->getTitle();
+            $result[$eid]['teach']['notes'] = $teach->getNotes();
+            $result[$eid]['teach']['url'] = !empty($teach->getTeaching()) ? $teach->getTeaching()->getUrl() : null;
+            $result[$eid]['teach']['fid'] = !empty($teach->getTeaching()) ? $teach->getTeaching()->getId() : null;
+        }
+        foreach($schedule->getSpaced()->toArray() as $spaced)
+        {
+            /** @var SpacedStrategy $spaced */
+            $eid = $spaced->getEvent()->getId();
+            $result[$eid]['spaced']['default'] = $spaced->getIsDefault();
+            $result[$eid]['spaced']['notes'] = $spaced->getNotes();
+            $result[$eid]['spaced']['review'] = implode(',', $spaced->getReview());
+        }
+        foreach($schedule->getPrework()->toArray() as $prework)
+        {
+            /** @var PreworkStrategy $prework */
+            $eid = $prework->getEvent()->getId();
+            $result[$eid]['prework']['default'] = $prework->getIsDefault();
+            $result[$eid]['prework']['notes'] = $prework->getNotes();
+            $result[$eid]['prework']['prepared'] = implode(',', $prework->getPrepared());
+        }
+        return $result;
     }
 }
 
