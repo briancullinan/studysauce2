@@ -63,14 +63,17 @@ class PlanController extends Controller
     }
 
     /**
+     * @param User $user
+     * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(User $user = null, $template = ['Plan', 'tab'])
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
         /** @var $user \StudySauce\Bundle\Entity\User */
-        $user = $this->getUser();
+        if(empty($user))
+            $user = $this->getUser();
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
 
@@ -86,13 +89,28 @@ class PlanController extends Controller
         $courses = $schedule->getCourses()->filter(function (Course $c) {
                 return $c->getType() == 'c';
             });
-        return $this->render('StudySauceBundle:Plan:tab.html.php', [
+        return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
                 'courses' => $courses,
                 'jsonEvents' =>  self::getJsonEvents($events, $courses->toArray()),
                 'user' => $user,
                 'strategies' => self::getStrategies($schedule)
             ]);
+    }
+
+    /**
+     * @param $_user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAction($_user)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        return $this->indexAction($user, ['Partner', 'plan']);
     }
 
     /**

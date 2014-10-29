@@ -110,6 +110,19 @@ $collection->add(
 );
 
 $collection->add(
+    'goals_partner',
+    new Route(
+        '/goals/{_user}/{_format}', [
+            '_controller' => 'StudySauceBundle:Goals:partner',
+            '_format' => 'funnel',
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_user' => '[0-9]+'
+        ]
+    )
+);
+
+$collection->add(
     'update_goals',
     new Route(
         '/goals/update',
@@ -180,6 +193,19 @@ $collection->add(
 );
 
 $collection->add(
+    'metrics_partner',
+    new Route(
+        '/metrics/{_user}/{_format}', [
+            '_controller' => 'StudySauceBundle:Metrics:partner',
+            '_format' => 'funnel',
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_user' => '[0-9]+'
+        ]
+    )
+);
+
+$collection->add(
     'deadlines',
     new Route(
         '/deadlines/{_format}', [
@@ -187,6 +213,19 @@ $collection->add(
             '_format' => 'index',
         ], [
             '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
+$collection->add(
+    'deadlines_partner',
+    new Route(
+        '/deadlines/{_user}/{_format}', [
+            '_controller' => 'StudySauceBundle:Deadlines:partner',
+            '_format' => 'funnel',
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_user' => '[0-9]+'
         ]
     )
 );
@@ -259,6 +298,19 @@ $collection->add(
             '_format' => 'index',
         ], [
             '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
+$collection->add(
+    'plan_partner',
+    new Route(
+        '/plan/{_user}/{_format}', [
+            '_controller' => 'StudySauceBundle:Plan:partner',
+            '_format' => 'funnel',
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_user' => '[0-9]+'
         ]
     )
 );
@@ -455,9 +507,22 @@ $collection->add(
 );
 
 $collection->add(
+    'uploads_partner',
+    new Route(
+        '/file/{_user}/{_format}', [
+            '_controller' => 'StudySauceBundle:File:partner',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_user' => '[0-9]+'
+        ]
+    )
+);
+
+$collection->add(
     'cart_checkout',
     new Route(
-        '/cart/checkout', [
+        '/cart/checkout/{_format}', [
             '_controller' => 'StudySauceBundle:Buy:checkout',
             '_format' => 'funnel'
         ], [
@@ -465,6 +530,19 @@ $collection->add(
         ]
     )
 );
+
+$collection->add(
+    'userlist',
+    new Route(
+        '/userlist', [
+            '_controller' => 'StudySauceBundle:Partner:userlist',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
 /*
 $collection->add('course', new Route('/course/{_course}/{_format}', array(
             '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',

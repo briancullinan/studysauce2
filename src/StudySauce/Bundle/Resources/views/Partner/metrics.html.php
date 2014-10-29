@@ -1,7 +1,7 @@
 <?php
+
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $shortTimeIntervals = [
     'years' => 'yr',
@@ -39,17 +39,20 @@ foreach ($view['assetic']->javascripts([
 ) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
-<script type="text/javascript">
-    window.initialHistory = JSON.parse('<?php print json_encode($times); ?>');
-    window.classIds = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getId();}, $courses)); ?>');
-</script>
+    <script type="text/javascript">
+        window.initialHistory = JSON.parse('<?php print json_encode($times); ?>');
+        window.classIds = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getId();}, $courses)); ?>');
+    </script>
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-
 <div class="panel-pane" id="metrics">
     <div class="pane-content">
+        <?php echo $view->render('StudySauceBundle:Partner:partner-nav.html.php', ['user' => $user]); ?>
         <h2>Study metrics</h2>
+        <?php if(empty($times)) { ?>
+            <h3>Your student has not completed this section yet.</h3>
+        <?php } else { ?>
         <div class="centrify">
             <div id="legend">
                 <ol>
@@ -120,22 +123,16 @@ $view['slots']->start('body'); ?>
                         <span class="mobile-only"><?php print $c->getCheckin()->format('j M'); ?></span>
                     </div>
                     <div class="class-time"><span class="full-only"><?php print $lengthStr; ?></span>
-                        <span class="mobile-only"><?php print str_replace(array_keys($shortTimeIntervals),
-                                array_values($shortTimeIntervals),
-                                $lengthStr); ?></span></div>
+                    <span class="mobile-only"><?php print str_replace(array_keys($shortTimeIntervals),
+                            array_values($shortTimeIntervals),
+                            $lengthStr); ?></span></div>
                 </div>
             <?php
             }
             ?>
         </div>
+        <?php } ?>
     </div>
 </div>
 <?php $view['slots']->stop();
 
-$view['slots']->start('sincludes');
-echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:metricsEmpty'), empty($times)
-        ? []
-        : ['strategy' => 'sinclude']
-);
-$view['slots']->stop();

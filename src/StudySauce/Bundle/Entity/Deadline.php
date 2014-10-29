@@ -91,29 +91,6 @@ class Deadline
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Deadline
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Set assignment
      *
      * @param string $assignment

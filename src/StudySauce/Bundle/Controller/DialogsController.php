@@ -153,4 +153,36 @@ class DialogsController extends Controller
     {
         return $this->render('StudySauceBundle:Dialogs:ccv-info.html.php', ['id' => 'ccv-info']);
     }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAdvice1Action()
+    {
+        return $this->render('StudySauceBundle:Dialogs:partner-advice-1.html.php', ['id' => 'partner-advice-1']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAdvice2Action()
+    {
+        return $this->render('StudySauceBundle:Dialogs:partner-advice-2.html.php', ['id' => 'partner-advice-2']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAdvice3Action()
+    {
+        return $this->render('StudySauceBundle:Dialogs:partner-advice-3.html.php', ['id' => 'partner-advice-3']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAdvice4Action()
+    {
+        return $this->render('StudySauceBundle:Dialogs:partner-advice-4.html.php', ['id' => 'partner-advice-4']);
+    }
 }

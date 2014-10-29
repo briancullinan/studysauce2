@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Claim;
 use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Goal;
@@ -23,11 +24,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class GoalsController extends Controller
 {
     /**
+     * @param User $user
+     * @param array $template Helps partner actions work
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(User $user = null, $template = ['Goals', 'tab'])
     {
-        $user = $this->getUser();
+        if(empty($user))
+            $user = $this->getUser();
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
@@ -48,13 +52,29 @@ class GoalsController extends Controller
         }
         ksort($claims);
 
-        return $this->render('StudySauceBundle:Goals:tab.html.php', [
+        return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'behavior' => $goals->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first(),
                 'outcome' => $goals->filter(function (Goal $x) {return $x->getType() == 'outcome';})->first(),
                 'milestone' => $goals->filter(function (Goal $x) {return $x->getType() == 'milestone';})->first(),
                 'claims' => $claims,
-                'csrf_token' => $csrfToken
+                'csrf_token' => $csrfToken,
+                'user' => $user
             ]);
+    }
+
+    /**
+     * @param $_user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAction($_user)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        return $this->indexAction($user, ['Partner', 'goals']);
     }
 
     /**

@@ -18,9 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 class DeadlinesController extends Controller
 {
     /**
+     * @param User $user
+     * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(User $user = null, $template = ['Deadlines', 'tab'])
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
@@ -31,7 +33,8 @@ class DeadlinesController extends Controller
         $demoDeadlines = $this->getDemoDeadlines();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
-        $user = $this->getUser();
+        if(empty($user))
+            $user = $this->getUser();
         $deadlines = $user->getDeadlines()->toArray();
 
         /** @var Schedule $schedule */
@@ -45,13 +48,29 @@ class DeadlinesController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_deadlines')
             : null;
 
-        return $this->render('StudySauceBundle:Deadlines:tab.html.php', [
+        return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'csrf_token' => $csrfToken,
                 'deadlines' => $deadlines,
                 'demoDeadlines' => $demoDeadlines,
                 'demoCourses' => $demoCourses,
-                'courses' => $courses
+                'courses' => $courses,
+                'user' => $user
             ]);
+    }
+
+    /**
+     * @param $_user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAction($_user)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        return $this->indexAction($user, ['Partner', 'deadlines']);
     }
 
     /**

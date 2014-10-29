@@ -1,5 +1,6 @@
 <?php
 /** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /** @var $router \Symfony\Component\Routing\Router */
 $router = $this->container->get('router');
@@ -74,9 +75,13 @@ $collection = $router->getRouteCollection();
             }
 
             if (!empty($format) && strpos($format, 'tab') > -1) {
-                $callbackPaths[$route] = $router->generate($route, ['_format' => 'tab']);
-                $callbackKeys[] = $route;
-                $callbackUri[] = $router->generate($route);
+                try {
+                    $callbackPaths[$route] = $router->generate($route, ['_format' => 'tab']);
+                    $callbackKeys[] = $route;
+                    $callbackUri[] = $router->generate($route);
+                } catch(MissingMandatoryParametersException $ex) {
+                    // TODO: replace with defaults
+                }
             }
 
             if (!empty($step) && is_numeric(explode('|', $step)[0])) {

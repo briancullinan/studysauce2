@@ -4,7 +4,9 @@ namespace StudySauce\Bundle\Controller;
 
 use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\File;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,5 +194,21 @@ class FileController extends Controller
         $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate post-check=0, pre-check=0', true);
         $response->headers->set('Pragma', 'no-cache', true);
         return $response;
+    }
+
+    /**
+     * @param $_user
+     * @internal param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAction($_user)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        return $this->render('StudySauceBundle:Partner:uploads.html.php', ['user' => $user]);
     }
 }

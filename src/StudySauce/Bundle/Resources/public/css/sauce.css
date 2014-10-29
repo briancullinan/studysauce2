@@ -363,6 +363,7 @@ select,
 .ui-datepicker-title select
 {
     padding-top:3px;
+    padding-bottom:2px;
 }
 
 .ui-datepicker table
@@ -708,6 +709,44 @@ sup.premium
     text-decoration: none;
 }
 
+.nav-tabs {
+    float: right;
+    right: 0;
+    top: 0;
+    z-index: 10;
+    max-width: 100%;
+    margin-top: -20px;
+    margin-right: -20px;
+    border-bottom: 0;
+}
+
+.nav-tabs>li
+{
+    border: none;
+}
+
+.nav-tabs>li>a
+{
+    background: #ffffff none;
+    border: 1px solid #eeeeee;
+    border-top-width: 0;
+    border-bottom-width:3px;
+}
+
+.nav-tabs>li>a:hover
+{
+    border-color: #eee #eee #0099BB;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus
+{
+    border: 1px solid #eee;
+    border-top-width: 0;
+    border-bottom: 3px solid #FF9900;
+}
+
 @media all and (max-width: 1000px)
 {
 
@@ -715,5 +754,9 @@ sup.premium
     {
         text-align: center;
     }
+
+}
+
+@media all and (max-width: 1000px) {
 
 }

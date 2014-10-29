@@ -23,8 +23,6 @@ foreach ($view['assetic']->stylesheets(
 
 foreach ($view['assetic']->stylesheets(
     [
-        '@StudySauceBundle/Resources/public/css/clock.css',
-        '@StudySauceBundle/Resources/public/css/checkin.css',
         '@StudySauceBundle/Resources/public/css/plan.css'
     ],
     [],
@@ -38,8 +36,6 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(
     [
-        '@StudySauceBundle/Resources/public/js/checkin.js',
-        '@StudySauceBundle/Resources/public/js/jquery.fittext.js',
         '@StudySauceBundle/Resources/public/js/plan.js',
         '@StudySauceBundle/Resources/public/js/strategies.js',
         '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
@@ -62,7 +58,8 @@ foreach ($view['assetic']->javascripts(
 $view['slots']->start('body'); ?>
     <div class="panel-pane" id="plan">
         <div class="pane-content">
-            <h2>Personalized study plan for <?php print $user->getFirstName(); ?></h2>
+            <?php echo $view->render('StudySauceBundle:Partner:partner-nav.html.php', ['user' => $user]); ?>
+            <h2>Study schedule</h2>
 
             <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
             <div class="sort-by clearfix">
@@ -180,16 +177,4 @@ $view['slots']->start('body'); ?>
             <?php echo $view->render('StudySauceBundle:Plan:strategies.html.php'); ?>
         </div>
     </div>
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro1'));
-$view['slots']->stop();
-
-$view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro2'),['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro3'),['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro4'),['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
-$view['slots']->stop();
-
+<?php $view['slots']->stop();

@@ -100,5 +100,18 @@ class PartnerController extends Controller
             : null;
         return new JsonResponse(['csrf_token' => $csrfToken]);
     }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userlistAction()
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+
+        return $this->render('StudySauceBundle:Partner:userlist.html.php', [
+                'partner' => $user->getPartners()->first()
+            ]);
+    }
 }
 

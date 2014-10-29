@@ -239,6 +239,7 @@
     padding:30px;
     position:relative;
     min-height: 300px;
+    margin:0 -2px;
 }
 
 #premium .three-step-process li h3

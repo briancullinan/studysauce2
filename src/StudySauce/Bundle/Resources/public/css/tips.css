@@ -1,16 +1,4 @@
 
-#tips ul
-{
-    float:right;
-    right:0;
-    top:0;
-    z-index: 10;
-    max-width: 100%;
-    margin-top:-20px;
-    margin-right:-20px;
-    border-bottom:0;
-}
-
 #tips .grid_6 {
     width: 50%;
     margin: 0 -2px;
@@ -52,34 +40,6 @@
     margin-left: -72px;
     padding-left: 72px;
     background: url(../images/tips_icons_64.png) no-repeat left top transparent;
-}
-
-.nav-tabs>li
-{
-    border: none;
-    float:right;
-}
-
-.nav-tabs>li>a
-{
-    background: #ffffff none;
-    border: 1px solid #eeeeee;
-    border-top-width: 0;
-    border-bottom-width:3px;
-}
-
-.nav-tabs>li>a:hover
-{
-    border-color: #eee #eee #0099BB;
-}
-
-.nav-tabs>li.active>a,
-.nav-tabs>li.active>a:hover,
-.nav-tabs>li.active>a:focus
-{
-    border: 1px solid #eee;
-    border-top-width: 0;
-    border-bottom: 3px solid #FF9900;
 }
 
 #tips-time .grid_6:nth-of-type(1) div:nth-of-type(2) h4

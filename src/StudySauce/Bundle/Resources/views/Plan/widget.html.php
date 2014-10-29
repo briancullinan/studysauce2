@@ -23,8 +23,8 @@ use StudySauce\Bundle\Entity\Event;
                     <span class="class<?php print $classI; ?>">&nbsp;</span> <?php print $event->getName(); ?>
                 </div>
                 <div class="date">
-                    <div class="read-only"><?php print $event->getStart()->format('h:i:s') . '&nbsp;' . $event->getStart()->format('A'); ?> -
-                        <?php print $event->getEnd()->format('h:i:s') . '&nbsp;' . $event->getEnd()->format('A'); ?></div>
+                    <div class="read-only"><?php print $event->getStart()->format('g:i') . '&nbsp;' . $event->getStart()->format('A'); ?> -
+                        <?php print $event->getEnd()->format('g:i') . '&nbsp;' . $event->getEnd()->format('A'); ?></div>
                 </div>
                 <div class="completed">
                     <label class="checkbox"><input type="checkbox" name="plan-sort" value="class" <?php print ($event->getCompleted() ? 'checked="checked"' : ''); ?>><i></i></label>

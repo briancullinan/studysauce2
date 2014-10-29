@@ -2,13 +2,13 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Goal;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class MetricsController
@@ -17,13 +17,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class MetricsController extends Controller
 {
     /**
-     * @param string $_format
+     * @param User $user
+     * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($_format = 'index')
+    public function indexAction(User $user = null, $template = ['Metrics', 'tab'])
     {
         /** @var $user User */
-        $user = $this->getUser();
+        if(empty($user))
+            $user = $this->getUser();
 
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
@@ -37,14 +39,30 @@ class MetricsController extends Controller
 
         /** @var $goal Goal */
         $goal = $user->getGoals()->filter(function (Goal $x) {return $x->getType() == 'behavior';})->first();
-        return $this->render('StudySauceBundle:Metrics:tab.html.php', [
+        return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'hours' => !empty($goal) ? $goal->getGoal() : '',
                 'total' => $total,
                 'courses' => $courses,
                 'checkins' => $checkins,
                 'checkouts' => $checkouts,
-                'times' => $times
+                'times' => $times,
+                'user' => $user
             ]);
+    }
+
+    /**
+     * @param $_user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAction($_user)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        return $this->indexAction($user, ['Partner', 'metrics']);
     }
 
     /**

@@ -80,7 +80,7 @@ class ScheduleController extends Controller
     public static function getDemoSchedule(UserManager $userManager, EntityManager $orm)
     {
         /** @var $guest User */
-        $guest = $userManager->findUserByUsername("guest");
+        $guest = $userManager->findUserByUsername('guest');
 
         $schedule = $guest->getSchedules()->first();
         // TODO: generate valid schedules and courses
