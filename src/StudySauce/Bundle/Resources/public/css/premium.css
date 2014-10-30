@@ -24,6 +24,8 @@
     color: #555;
 }
 
+#premium .plans .premium span.price,
+#premium table.plans th.highlight span.price,
 #premium .plans .premium h2,
 #premium table.plans th.highlight h2
 {

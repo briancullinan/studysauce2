@@ -47,6 +47,11 @@ aside + .panel-pane,
     margin-top:0;
 }
 
+.pane-content h2
+{
+    margin-bottom:20px;
+}
+
 .deadlines-widget .deadline-row i,
 #metrics ol span,
 #metrics .checkin-row .class-name span,

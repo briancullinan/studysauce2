@@ -39,7 +39,7 @@ services:
         class: StudySauce\Bundle\EventListener\PageTracker
         tags:
             - {name: kernel.event_subscriber}
-        arguments: ["@doctrine.orm.entity_manager", "@session", "@security.context"]
+        arguments: ["@service_container", "@doctrine.orm.entity_manager", "@session", "@security.context"]
 
     my_user_provider:
         class: StudySauce\Bundle\Security\UserProvider

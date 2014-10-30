@@ -23,6 +23,12 @@ jQuery(document).ready(function() {
     account.data('state', getHash());
     accountFunc();
 
+    account.on('click', 'a[href="#sign-in-with-email"]', function (evt) {
+        evt.preventDefault();
+        $(this).remove();
+        account.find('.email,.password,.form-actions').show();
+    });
+
     account.on('change', '.email input, .password input', accountFunc);
     account.on('keyup', '.email input, .password input', accountFunc);
     account.on('keydown', '.email input, .password input', accountFunc);
@@ -50,7 +56,7 @@ jQuery(document).ready(function() {
             success: function (data) {
                 account.data('state', hash);
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
-                if(data.error)
+                if(typeof data.redirect != 'undefined' && (/\/login/i).test(data.redirect))
                 {
                     account.find('.password').addClass('passwordError');
                 }

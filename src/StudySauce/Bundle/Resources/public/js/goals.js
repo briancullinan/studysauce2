@@ -140,7 +140,7 @@ $(document).ready(function () {
 
     goalsFunc.apply(goals.find('.goal-row'));
 
-    $('body').on('click', '#claim button.btn-primary', function (evt) {
+    $('body').on('click', '#claim a[href="#submit-claim"]', function (evt) {
         evt.preventDefault();
         var claim = jQuery('#claim'),
             gid = (/gid([0-9]+)(\s|$)/ig).exec(claim.attr('class'))[1];

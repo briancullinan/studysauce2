@@ -1,6 +1,6 @@
-#account label
+#account .pane-content
 {
-    padding-left:50%;
+    text-align: center;
 }
 
 #account label span {
@@ -40,4 +40,55 @@ a[href$="/redirect/facebook"]:focus
 {
     background-color:#446699;
     border-bottom-color: #224477;
+}
+
+.signup-or {
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    margin-bottom: 20px;
+    clear: both;
+}
+
+.signup-or span {
+    background: url("../images/noise_darkgray.png") repeat scroll 0 0 #111111;
+    border-radius: 4px 4px 4px 4px;
+    color: #CCCCCC;
+    font-style: italic;
+    padding: 3px 20px;
+    position: relative;
+    text-transform: uppercase;
+    top: 12px;
+}
+
+a[href="#sign-in-with-email"]
+{
+    margin-top:10px;
+    display:inline-block;
+}
+
+#account .email,
+#account .password
+{
+    width: auto;
+    margin:10px auto;
+    max-width: 400px;
+    display:none;
+}
+
+#account .form-actions
+{
+    max-width: 400px;
+    margin:0 auto;
+    display:none;
+}
+
+#account .password small
+{
+    display: none;
+    color: #CC0000;
+}
+
+#account .password.passwordError small
+{
+    display: block;
 }

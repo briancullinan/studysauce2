@@ -21,14 +21,6 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function buildingAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:building.html.php', ['id' => 'building']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function achievementAction()
     {
         return $this->render('StudySauceBundle:Dialogs:achievement.html.php', ['id' => 'claim']);

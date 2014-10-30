@@ -280,6 +280,3 @@ $view['slots']->stop();
 
 <?php $view['slots']->stop();
 
-$view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:building'), ['strategy' => 'sinclude']);
-$view['slots']->stop();

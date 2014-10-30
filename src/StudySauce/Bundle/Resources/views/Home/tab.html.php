@@ -46,25 +46,8 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="home">
-    <div class="widget-wrapper">
-        <div class="widget course-widget">
-            <h3>15% of course complete</h3>
-            <div class="percent">
-                <?php foreach ($view['assetic']->image(
-                    ['@StudySauceBundle/Resources/public/images/logo_middle_transparent.png'],
-                    [],
-                    ['output' => 'bundles/studysauce/images/*']
-                ) as $url): ?>
-                    <img width="150" height="150" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
-                <?php endforeach; ?>
-                <div class="percent-background">&nbsp;</div>
-                <div class="percent-bars">&nbsp;</div>
-            </div>
-            <div class="highlighted-link"><a href="" class="more">Next module</a></div>
-        </div>
-    </div>
-    
     <?php
+    print $view['actions']->render(new ControllerReference('StudySauceBundle:Course:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Goals:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Deadlines:widget'));
     print $view['actions']->render(new ControllerReference('StudySauceBundle:Metrics:widget'));

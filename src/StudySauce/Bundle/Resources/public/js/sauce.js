@@ -1,4 +1,5 @@
 window.sincluding = false;
+window.visits = [];
 
 function onYouTubeIframeAPIReady(playerId) {
     player = new YT.Player('ytplayer', {
@@ -77,7 +78,14 @@ $(document).ready(function () {
                     styles = ssMergeStyles(newStuff),
                     scripts = ssMergeScripts(newStuff);
                 newStuff = newStuff.not(styles).not(scripts);
+                // do not merge top level items with IDs that already exist
+                newStuff.filter('[id]').each(function () {
+                    var id = $(this).attr('id');
+                    if($('#' + id).length > 0)
+                        newStuff = newStuff.not('#' + id);
+                });
                 that.replaceWith(newStuff);
+                setTimeout(function () {newStuff.trigger('loaded');}, 100);
                 window.sincluding = false;
             },
             error: function () {
@@ -87,9 +95,32 @@ $(document).ready(function () {
     });
 });
 
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+    // do not send data for POST/PUT/DELETE
+    if (originalOptions.type !== 'GET' || options.type !== 'GET') {
+        return;
+    }
+
+    var data = originalOptions.data;
+    if (originalOptions.data !== undefined) {
+        if (Object.prototype.toString.call(originalOptions.data) === '[object String]') {
+            data = $.deparam(originalOptions.data); // see http://benalman.com/code/projects/jquery-bbq/examples/deparam/
+        }
+    } else {
+        data = {};
+    }
+
+    var visits = window.visits;
+    window.visits = [];
+    options.data = $.param($.extend(data, { __visits: visits }));
+});
+
 $(document).ajaxSuccess(function(event, jqXHR, ajaxOptions, data) {
     if(typeof(data.redirect) != 'undefined')
     {
+        var a = document.createElement('a');
+        a.href = data.redirect;
+        if(window.location.pathname != a.pathname)
         window.location = data.redirect;
     }
 });

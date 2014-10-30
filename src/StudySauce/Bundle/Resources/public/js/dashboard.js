@@ -23,7 +23,17 @@ $(document).ready(function () {
         // activate the menu
         body.find('.main-menu .active').removeClass('active');
         body.find('.main-menu ul.collapse.in').removeClass('in');
-        item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+        if(item.length > 0) {
+            visits[visits.length] = {path: item[0].pathname, query: item[0].search, hash: item[0].hash, time: (new Date()).toJSON()};
+            item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+        }
+        else
+        {
+            // create a mock link to get the browser to parse pathname, query, and hash
+            var a = document.createElement('a');
+            a.href = path;
+            visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
+        }
 
         // download the panel
         if(panel.length == 0) {
@@ -105,6 +115,8 @@ $(document).ready(function () {
     {
         var parent = $(this).parents('#left-panel, #right-panel');
         if(parent.length > 0 && parent.width() < 150) {
+            // record this special case where its not a link, everything else is recorded automatically
+            visits[visits.length] = {path: window.location.pathname, query: window.location.search, hash: '#expand', time:(new Date()).toJSON()};
             // cancel navigation is we are uncollapsing instead
             evt.preventDefault();
             body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
@@ -118,8 +130,6 @@ $(document).ready(function () {
         return true;
     }
 
-    body.on('click', '#left-panel a[href="#expand"], #right-panel a[href="#expand"]', expandMenu);
-
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
         evt.preventDefault();
         var parent = $(this).parents('#left-panel, #right-panel');
@@ -127,17 +137,26 @@ $(document).ready(function () {
         parent.removeClass('expanded').addClass('collapsed');
     });
 
-    body.on('click', '.main-menu a:not([href])', expandMenu);
+    body.on('click', '.main-menu a:not([href])', function (evt) {
+        expandMenu.apply(this, [evt]);
+        if($($(this).attr('data-parent')).find($(this).attr('data-target')).is('.in')){
+            evt.stopPropagation();
+        }
+    });
 
     function handleLink(evt) {
 
-        var path = $(this).attr('href');
+        var that = $(this),
+            el = that[0],
+            path = $(this).attr('href');
         if(!expandMenu.apply(this, [evt]))
             return;
+
         // the path is not a callback so just return normally
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
             // check if there is a tab with the selected url
             window.callbackUri.indexOf(path) == -1) {
+            visits[visits.length] = {path: el.pathname, query: el.search, hash: el.hash, time:(new Date()).toJSON()};
             body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
         }
         // if the path clicked is a callback, use callback to load the new tab
@@ -153,8 +172,9 @@ $(document).ready(function () {
     body.filter('.dashboard-home').on('dblclick', 'a[href]', handleLink);
     body.filter('.dashboard-home').on('dragstart', 'a[href]', handleLink);
 
-    if(window.callbackUri.indexOf(window.location.pathname) > -1)
-        activateMenu(window.location.pathname);
+    // TODO: we no longer need this because our tabs are always first?
+    //if(window.callbackUri.indexOf(window.location.pathname) > -1)
+    //    activateMenu(window.location.pathname);
 
     window.onpopstate = function(e){
         if(window.callbackKeys.indexOf(e.state) > -1) {
@@ -214,6 +234,31 @@ $(document).ready(function () {
     }
     // -------------- END Player --------------- //
 
+    $(window).unload(function () {
+        if(typeof checkedInBtn != 'undefined' && body.find(checkedInBtn).length == 0 &&
+            window.visits.length > 0)
+        {
+            $.ajax({url: window.callbackPaths['_visit'] + '?close'});
+        }
+    });
 
-
+    var visiting = false;
+    setInterval(function () {
+        if(visiting)
+            return;
+        if(visits.length > 0) {
+            visiting = true;
+            $.ajax({
+                url: window.callbackPaths['_visit'] + '?sync',
+                type: 'GET',
+                data: {},
+                success: function () {
+                    visiting = false;
+                },
+                error: function () {
+                    visiting = false;
+                }
+            });
+        }
+    }, 10000);
 });

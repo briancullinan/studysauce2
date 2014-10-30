@@ -43,10 +43,20 @@ h1
     text-align: left;
 }
 
+h2
+{
+    font-size:35px;
+}
+
 h2, h3, h4, h5
 {
     text-align: left;
     font-family: 'Rufina',serif;
+}
+
+h3
+{
+    font-weight: bold;
 }
 
 h4, h2
@@ -119,6 +129,13 @@ button.more:hover,
 input[type="submit"].more:hover,
 input[type="reset"].more:hover,
 input[type="button"].more:hover
+.btn:focus,
+.btn-default:focus,
+a.more:focus,
+button.more:focus,
+input[type="submit"].more:focus,
+input[type="reset"].more:focus,
+input[type="button"].more:focus
 {
     -webkit-appearance: none;
     text-decoration: none;
@@ -127,35 +144,12 @@ input[type="button"].more:hover
     border-color: #004477;
 }
 
-.btn-primary:hover,
-.highlighted-link .more:hover
+.more.parents
 {
-    color: #222222;
-    background-color: #EE7700;
-    border-color: #993300;
+    background: url(../images/parent-portal.png) no-repeat right 50% #11BB00;
+    border-bottom: 3px solid #116600;
+    padding-right: 65px;
 }
-
-.btn:focus,
-a.more:focus,
-button.more:focus,
-input[type="submit"].more:focus,
-input[type="reset"].more:focus,
-input[type="button"].more:focus
-{
-    -webkit-appearance: none;
-    color: #ffffff;
-    background-color: #0088BB;
-    border-color: #004477;
-}
-
-.btn-primary:focus,
-.highlighted-link .more:focus
-{
-    color: #222222;
-    background-color: #EE7700;
-    border-color: #993300;
-}
-
 .btn:active,
 a.more:active,
 button.more:active,
@@ -171,12 +165,24 @@ input[type="button"].more:active
     border-color: #004477;
 }
 
+.btn-primary:hover,
+.highlighted-link .more:hover,
+.btn-primary:focus,
+.highlighted-link .more:focus,
 .btn-primary:active,
 .highlighted-link .more:active
 {
     color: #222222;
     background-color: #EE7700;
     border-color: #993300;
+}
+
+.more.parents:hover,
+.more.parents:focus,
+.more.parents:active
+{
+    background-color: #119900;
+    border-bottom-color: #116600;
 }
 
 .invalid .btn,
@@ -674,7 +680,7 @@ input[type=month][disabled]
     height: 24px;
     text-align: center;
     position: absolute;
-    background: url(../images/menu_new.png) no-repeat -13px -2914px transparent;
+    background: url(../images/menu_new.png) no-repeat -11px -2916px transparent;
     display:block;
     border-radius: 2px;
     opacity: 0;

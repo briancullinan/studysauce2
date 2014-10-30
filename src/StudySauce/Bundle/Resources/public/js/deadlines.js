@@ -68,12 +68,10 @@ $(document).ready(function () {
         // remove valid rows after adding them to list
         if(invalids.length > 0)
         {
-            deadlines.find('a[href="#add-deadline"]').hide();
             deadlines.find('.highlighted-link').last().detach().insertAfter(invalids.last());
         }
         else
         {
-            deadlines.find('a[href="#add-deadline"]').show();
             deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row').last());
         }
 
@@ -105,7 +103,6 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                // skip building the schedule if we are in the middle of the buy funnel
                 dates: dates,
                 csrf_token: deadlines.find('input[name="csrf_token"]').val()
             },
@@ -133,7 +130,6 @@ $(document).ready(function () {
 
     deadlines.on('click', 'a[href="#add-deadline"]', function (evt) {
         evt.preventDefault();
-        deadlines.find('a[href="#add-deadline"]').hide();
         var newDeadline = deadlines.find('.deadline-row').first().clone().removeAttr('id')
             .removeClass('read-only').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
         newDeadline.find('.class-name input, .assignment input').val('');

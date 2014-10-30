@@ -17,6 +17,21 @@ $collection->add(
 );
 
 $collection->add(
+    '_visit',
+    new Route(
+        '/_visit', [
+            '_controller' => 'StudySauceBundle:Landing:visit',
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'partner_welcome',
     new Route(
         '/partners/{_code}', [

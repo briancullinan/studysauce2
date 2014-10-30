@@ -122,7 +122,6 @@ class DeadlinesController extends Controller
             $deadline->setAssignment('Paper, exam, project, etc.');
             $deadline->setDueDate(date_add(new \DateTime(), new \DateInterval('P7D')));
             $deadline->setPercent(0);
-            $deadline->setName('');
             $deadline->setReminder('86400,345600,1209600');
         }
 
@@ -183,8 +182,8 @@ class DeadlinesController extends Controller
             }
 
             $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
-                    return $c->getId() == $d['cid'];})->first();
-            $deadline->setCourse($course);
+                    return $c->getId() == $d['eid'];})->first();
+            $deadline->setCourse(empty($course) ? null : $course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));
             $deadline->setDueDate(new \DateTime($d['due']));

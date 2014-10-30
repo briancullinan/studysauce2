@@ -55,8 +55,21 @@ a[href="#add-deadline"] {
     margin-top:5px;
 }
 
+a[href="#save-deadline"],
+#deadlines .deadline-row.edit + .form-actions a[href="#add-deadline"]
+{
+    visibility: hidden;
+}
+
+#deadlines .deadline-row.edit + .form-actions a[href="#save-deadline"]
+{
+    visibility: visible;
+}
+
 #deadlines a[href*="/schedule"] {
-    float: left;
+    position:absolute;
+    bottom:10px;
+    left:10px;
 }
 
 a[href="#add-deadline"] span {

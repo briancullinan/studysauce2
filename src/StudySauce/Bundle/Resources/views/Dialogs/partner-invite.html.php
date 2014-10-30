@@ -9,6 +9,6 @@ Thank you
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-footer') ?>
-<button type="button" class="btn btn-primary">Close</button>
+<a href="#close-dialog" class="btn btn-primary" data-dismiss="modal">Close</a>
 <?php $view['slots']->stop() ?>
 

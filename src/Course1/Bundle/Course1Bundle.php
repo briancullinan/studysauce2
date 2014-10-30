@@ -10,4 +10,5 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class Course1Bundle extends Bundle
 {
+
 }

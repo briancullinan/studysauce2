@@ -478,7 +478,8 @@ class PlanController extends Controller
                 // create a new event
                 $deadline = new Event();
                 $deadline->setDeadline($d);
-                $deadline->setName($d->getName());
+                $deadline->setCourse($d->getCourse());
+                $deadline->setName($d->getAssignment());
                 $deadline->setType('d');
                 $deadline->setStart($classT);
                 $deadline->setEnd(date_add(clone $classT, new \DateInterval('PT86399S')));
@@ -494,8 +495,9 @@ class PlanController extends Controller
 
                 if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
                     $reminder = new Event();
+                    $reminder->setCourse($d->getCourse());
                     $reminder->setDeadline($d);
-                    $reminder->setName($d->getName());
+                    $reminder->setName($d->getAssignment());
                     $reminder->setType('r');
                     $reminder->setStart($classR);
                     $reminder->setEnd(date_add(clone $classR, new \DateInterval('PT86399S')));

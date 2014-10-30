@@ -75,7 +75,7 @@
     height:45px;
     width:70px;
     left:0;
-    top:-8px;
+    top:-5px;
     background:url(../images/menu_new.png) no-repeat left -102px transparent;
     font-size:14px;
     color:#555555;
@@ -149,7 +149,7 @@
 #left-panel h3
 {
     border-bottom:3px solid #555555;
-    margin:10px 0 0;
+    margin:0;
     padding:5px;
 }
 
@@ -185,6 +185,11 @@
     border-radius: 0;
     border: none;
     box-shadow: none;
+}
+
+.main-menu li.coming
+{
+    padding-left:40px;
 }
 
 .main-menu li.like-us a

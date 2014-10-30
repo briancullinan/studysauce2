@@ -4,13 +4,14 @@ namespace StudySauce\Bundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\Group as BaseGroup;
+use FOS\UserBundle\Model\GroupInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="ss_group")
  * @ORM\HasLifecycleCallbacks()
  */
-class Group extends BaseGroup
+class Group extends BaseGroup implements GroupInterface
 {
     /**
      * @ORM\Column(type="integer", name="id")

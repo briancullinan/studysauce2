@@ -25,11 +25,20 @@
     border-radius: 10px 10px 0 0;
     border-bottom: none;
     color: #fff;
+    padding-right:30px;
+    font-family: 'Rufina',serif;
+    font-size: 18px;
 }
 
 .modal .modal-header a
 {
     color:#ffffff;
+}
+
+.modal-footer
+{
+    border:0;
+    padding-top:0;
 }
 
 .modal.in .modal-dialog {
@@ -41,11 +50,16 @@
     margin-top:-50%;
 }
 
-.close
+.modal-header .close
 {
     color:#FFF;
     opacity: .9;
-    font-size: 24px;
+    font-size: 40px;
+    line-height: 30px;
+    height: 30px;
+    position:relative;
+    top:-15px;
+    right:-25px;
 }
 
 .close:hover, .close:focus

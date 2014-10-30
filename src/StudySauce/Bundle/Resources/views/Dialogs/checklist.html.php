@@ -1,7 +1,7 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
  $view['slots']->start('modal-header') ?>
-Pilots run through a flight checklist to make sure they are focused and ready to go. We have built a study version for you below.
+Here is your study checklist before you get started.
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-body') ?>

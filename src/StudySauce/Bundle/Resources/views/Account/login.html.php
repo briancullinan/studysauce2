@@ -31,15 +31,23 @@ $view['slots']->start('body'); ?>
         <h2>Welcome back!</h2>
         <div class="highlighted-link social"></div>
         <?php
+        $first = true;
         foreach($services as $o => $url)
         {
-            ?><a href="<?php print $url; ?>" class="more">Sign in</a> <?php
+            if(!$first)
+            {
+                ?><div class="signup-or"><span>Or</span></div><?php
+            }
+            $first = false;
+            ?><a href="<?php print $url; ?>" class="more">Sign in</a><br /><?php
         }?>
+        <a href="#sign-in-with-email" class="cloak">Or sign in with <span class="reveal">email</span></a>
         <div class="email">
-            <label class="input"><span>E-mail address</span><input type="text" placeholder="Email" value="<?php print (isset($username) ? $username : ''); ?>"></label>
+            <label class="input"><input type="text" placeholder="Email" value="<?php print (isset($username) ? $username : ''); ?>"></label>
         </div>
         <div class="password">
-            <label class="input"><span>Current password</span><input type="password" placeholder="Enter password" value=""></label>
+            <label class="input"><input type="password" placeholder="Password" value=""></label>
+            <small>Invalid email or password.</small>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="form-actions highlighted-link invalid">

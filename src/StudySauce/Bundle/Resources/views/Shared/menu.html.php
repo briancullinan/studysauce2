@@ -18,7 +18,6 @@
             <li><a href="<?php print $view['router']->generate('plan'); ?>"><span>&nbsp;</span>Study plan <sup class="premium">Premium</sup></a></li>
             <li><a href="<?php print $view['router']->generate('profile'); ?>"><span>&nbsp;</span>Study profile <sup class="premium">Premium</sup></a></li>
             <li><a href="<?php print $view['router']->generate('premium'); ?>"><span>&nbsp;</span>Premium</a></li>
-            <li><a href="<?php print $view['router']->generate('tips'); ?>"><span>&nbsp;</span>Tips</a></li>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>
             <li><h3>Coming soon</h3></li>
             <li><a href="#midterm"><span>&nbsp;</span>Midterm/final planner</a></li>

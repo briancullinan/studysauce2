@@ -24,6 +24,6 @@ Contact us
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-footer') ?>
-<button type="button" class="btn btn-primary">Send</button>
+<a href="" type="button" class="more btn btn-primary">Send</a>
 <?php $view['slots']->stop() ?>
 

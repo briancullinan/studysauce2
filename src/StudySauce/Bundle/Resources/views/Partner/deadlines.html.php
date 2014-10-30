@@ -40,31 +40,6 @@ if (empty($deadlines) || empty($courses)) {
     $deadlines = $demoDeadlines;
 }
 
-$view['slots']->start('deadlines-heading'); ?>
-<div class="highlighted-link form-actions invalid">
-    <a href="#add-deadline" <?php print ($isDemo ? 'style="display:none;"' : ''); ?>>Add <span>+</span> class</a>
-    <a href="#save-deadline" class="more">Save</a>
-</div>
-
-<div class="sort-by">
-    <label>Sort by: </label>
-    <label class="radio"><input type="radio" name="deadlines-sort" value="date"
-                                checked="checked"/><i></i>Date</label>
-    <label class="radio"><input type="radio" name="deadlines-sort" value="class"><i></i>Class</label>
-    <label class="checkbox" title="Click here to see deadlines that have already passed."><input
-            type="checkbox"><i></i>Past deadlines</label>
-</div>
-
-<header>
-    <label>&nbsp;</label>
-    <label>Assignment</label>
-    <label>Reminders</label>
-    <label>Due date</label>
-    <label>% of grade</label>
-</header>
-<?php
-$view['slots']->stop();
-
 $view['slots']->start('body'); ?>
 <div class="panel-pane" id="deadlines">
     <div class="pane-content">
@@ -74,9 +49,22 @@ $view['slots']->start('body'); ?>
             ?><h3>Your student has not completed this section yet.</h3><?php
         }
         else { ?>
-            <?php if (!$isDemo) {
-                $view['slots']->output('deadlines-heading');
-            }
+            <div class="sort-by">
+                <label>Sort by: </label>
+                <label class="radio"><input type="radio" name="deadlines-sort" value="date"
+                                            checked="checked"/><i></i>Date</label>
+                <label class="radio"><input type="radio" name="deadlines-sort" value="class"><i></i>Class</label>
+                <label class="checkbox" title="Click here to see deadlines that have already passed."><input
+                        type="checkbox"><i></i>Past deadlines</label>
+            </div>
+            <header>
+                <label>&nbsp;</label>
+                <label>Assignment</label>
+                <label>Reminders</label>
+                <label>Due date</label>
+                <label>% of grade</label>
+            </header>
+            <?php
             $headStr = '';
             foreach ($deadlines as $i => $d) {
                 if ($isDemo && $i > 1) {
@@ -120,7 +108,7 @@ $view['slots']->start('body'); ?>
                                     $found = true;
                                     /** @var $c Course */
                                     ?>
-                                    <option value="<?php print $c->getName(); ?>" <?php print (!$isDemo &&
+                                    <option value="<?php print $c->getId(); ?>" <?php print (!$isDemo &&
                                     $d->getCourse() == $c ? 'selected="selected"' : ''); ?>><?php print $c->getName(
                                         ); ?></option>
                                 <?php endforeach; ?>
@@ -181,9 +169,6 @@ $view['slots']->start('body'); ?>
                     </div>
                 </div>
             <?php
-            }
-            if ($isDemo) {
-                $view['slots']->output('deadlines-heading');
             }
         } ?>
     </div>

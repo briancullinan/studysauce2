@@ -282,7 +282,6 @@ $(document).ready(function () {
     });
 
     schedule.on('click', 'a[href="#save-class"]', function (evt) {
-        var building = $('#building');
         evt.preventDefault();
         if(schedule.find('.university input').val().trim() == '')
             schedule.find('.university').addClass('error-empty');
@@ -319,7 +318,6 @@ $(document).ready(function () {
         if(window.location.pathname != '/schedule' &&
             window.location.pathname != '/schedule2')
         {
-            building.modal();
             schedule.find('.timer').pietimer('reset');
             schedule.find('.timer').pietimer({
                 timerSeconds: 60,
@@ -338,17 +336,14 @@ $(document).ready(function () {
             dataType: 'text',
             data: {
                 // skip building the schedule if we are in the middle of the buy funnel
-                skipBuild: (window.location.pathname == '/schedule' || window.location.pathname == '/schedule2'),
                 university: schedule.find('.university input').val(),
                 classes: classes,
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
                 updateSchedule(data);
-                building.modal('hide');
             },
             error: function () {
-                building.modal('hide');
             }
         });
     });

@@ -22,13 +22,13 @@ class Visit
 
     /**
      * @ORM\ManyToOne(targetEntity="Session", inversedBy="visits")
-     * @ORM\JoinColumn(name="session_id", referencedColumnName="session_id")
+     * @ORM\JoinColumn(name="session_id", referencedColumnName="session_id", nullable=true)
      */
     protected $session;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="visits")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;
 
@@ -38,7 +38,7 @@ class Visit
     protected $path;
 
     /**
-     * @ORM\Column(type="text", name="query")
+     * @ORM\Column(type="array", name="query", nullable=true)
      */
     protected $query;
 
@@ -97,7 +97,7 @@ class Visit
     /**
      * Set query
      *
-     * @param string $query
+     * @param array $query
      * @return Visit
      */
     public function setQuery($query)
@@ -110,7 +110,7 @@ class Visit
     /**
      * Get query
      *
-     * @return string 
+     * @return array
      */
     public function getQuery()
     {

@@ -20,10 +20,10 @@ class Quiz1
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StudySauce\Bundle\Entity\User", inversedBy="quiz1s")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Course1", inversedBy="quiz1s")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
      */
-    protected $user;
+    protected $course;
 
     /**
      * @ORM\Column(type="string", length=256, name="education", nullable=true)
@@ -212,25 +212,25 @@ class Quiz1
     }
 
     /**
-     * Set user
+     * Set course
      *
-     * @param User $user
+     * @param \Course1\Bundle\Entity\Course1 $course
      * @return Quiz1
      */
-    public function setUser(User $user = null)
+    public function setCourse(\Course1\Bundle\Entity\Course1 $course = null)
     {
-        $this->user = $user;
+        $this->course = $course;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get course
      *
-     * @return \Course1\Bundle\Entity\User 
+     * @return \Course1\Bundle\Entity\Course1 
      */
-    public function getUser()
+    public function getCourse()
     {
-        return $this->user;
+        return $this->course;
     }
 }
