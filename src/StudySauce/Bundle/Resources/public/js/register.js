@@ -1,6 +1,7 @@
 jQuery(document).ready(function() {
 
-    var account = jQuery('#account');
+    var body = $('body'),
+        account = jQuery('#register');
 
     function getHash()
     {
@@ -26,11 +27,11 @@ jQuery(document).ready(function() {
     account.data('state', getHash());
     accountFunc();
 
-    account.on('change', '.first-name input, .last-name input, .email input, .password input', accountFunc);
-    account.on('keyup', '.first-name input, .last-name input, .email input, .password input', accountFunc);
-    account.on('keydown', '.first-name input, .last-name input, .email input, .password input', accountFunc);
+    body.on('change', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
+    body.on('keyup', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
+    body.on('keydown', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
 
-    account.on('click', 'a[href="#user-register"]', function (evt) {
+    body.on('click', '#register a[href="#user-register"]', function (evt) {
         evt.preventDefault();
 
         if(account.find('.form-actions').is('.invalid'))

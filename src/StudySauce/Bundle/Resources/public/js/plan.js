@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    var plans = $('#plan'),
+    var body = $('body'),
+        plans = $('#plan'),
         date = new Date(),
         original,
         isInitialized = false,
@@ -70,26 +71,54 @@ $(document).ready(function () {
                     selectable: false,
                     events: function (start, end, timezone, callback) {
                         var events = [],
-                            s = (start.unix() - 86400) * 1000,
-                            e = (end.unix() + 86400) * 1000;
-                        for(var i = 0; i < window.planEvents.length; i++)
-                        {
-                            if(window.planEvents[i].start.getTime() > s && window.planEvents[i].end.getTime() < e)
-                            {
-                                events[events.length] = window.planEvents[i];
-                            }
+                            s = start.unix() * 1000,
+                            e = end.unix() * 1000,
+                            w = new Date(),
+                            filterEvents = function () {
+                                for (var i = 0; i < window.planEvents.length; i++) {
+                                    if (window.planEvents[i].start.getTime() > s - 86400 && window.planEvents[i].end.getTime() < e + 86400) {
+                                        events[events.length] = window.planEvents[i];
+                                    }
+                                }
+                                if (events.length == 0) {
+                                    plans.addClass('empty');
+                                    plans.find('#empty-week').dialog();
+                                }
+                                else {
+                                    plans.removeClass('empty');
+                                    plans.find('#empty-week').dialog('hide');
+                                }
+                                callback(events);
+                            };
+                        w.setTime(s);
+                        if(window.planLoaded.indexOf(w.getWeekNumber()) == -1) {
+                            $.ajax({
+                                url: window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
+                                type: 'GET',
+                                dataType: 'text',
+                                success: function (data) {
+                                    var tmpEvents = window.planEvents,
+                                        content = $(data);
+                                    window.planEvents = [];
+                                    // merge scripts
+                                    ssMergeScripts(content);
+                                    for(var i = 0; i < window.planEvents.length; i++)
+                                    {
+                                        window.planEvents[i].start = new Date(window.planEvents[i].start);
+                                        window.planEvents[i].end = new Date(window.planEvents[i].end);
+                                    }
+
+                                    // TODO: merge rows
+                                    if(w.getWeekNumber() == window.planLoaded[0] + 1)
+                                        content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                                    filterEvents();
+                                    window.planEvents = $.merge(window.planEvents, tmpEvents);
+                                }
+                            });
                         }
-                        if(events.length == 0)
-                        {
-                            plans.addClass('empty');
-                            plans.find('#empty-week').dialog();
+                        else {
+                            filterEvents();
                         }
-                        else
-                        {
-                            plans.removeClass('empty');
-                            plans.find('#empty-week').dialog('hide');
-                        }
-                        callback(events);
                     },
                     eventClick: function(calEvent) {
                         // var eid =  calEvent._id.substring(3);
@@ -170,6 +199,7 @@ $(document).ready(function () {
                             success: function (data) {
                                 // update calendar events
                                 window.planEvents = data.events;
+                                window.planLoaded = [event['start'].getWeekNumber()];
                                 for(var i = 0; i < window.planEvents.length; i++)
                                 {
                                     window.planEvents[i].start = new Date(window.planEvents[i].start);
@@ -189,12 +219,9 @@ $(document).ready(function () {
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
     //   we will activate the calendar only once, when the menu is clicked, this assumes #hash detection works, and
     //   it triggers the menu clicking
-    $('body').on('show', '#plan', function () {
+    body.on('show', '#plan', function () {
         setTimeout(function () {
             initialize();
-            setTimeout(function () {
-                $('#calendar').fullCalendar('option', 'height', 500);
-            }, 200);
             if($('#calendar:visible').length > 0)
                 $('#calendar').fullCalendar('refetchEvents');
         }, 200);
@@ -202,7 +229,7 @@ $(document).ready(function () {
 
     $('#plan:visible').trigger('show');
 
-    plans.on('click', '.sort-by a[href="#expand"]', function () {
+    body.on('click', '#plan .sort-by a[href="#expand"]', function () {
         if(plans.is('.fullcalendar'))
         {
             plans.removeClass('fullcalendar');
@@ -215,7 +242,7 @@ $(document).ready(function () {
         }
     });
 
-    plans.on('change', '.sort-by input[type="radio"]', function () {
+    body.on('change', '#plan .sort-by input[type="radio"]', function () {
         var headings = {},
             that = jQuery(this);
         plans.find('.head').each(function () {

@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    var deadlines = $('#deadlines');
+    var body = $('body'),
+        deadlines = $('#deadlines');
 
     var datesFunc = function () {
         jQuery(this).each(function () {
@@ -21,9 +22,9 @@ $(document).ready(function () {
                 that.removeClass('invalid').addClass('valid');
 
             if(that.find('.class-name select').val() == 'Nonacademic')
-                that.find('.percent').hide();
+                that.find('.percent').css('visibility', 'hidden');
             else
-                that.find('.percent').show();
+                that.find('.percent').css('visibility', 'visible');
 
             that.find('.due-date input').datepicker({
                 minDate: 0,
@@ -48,7 +49,7 @@ $(document).ready(function () {
 
     datesFunc.apply(deadlines.find('.deadline-row'));
 
-    deadlines.on('click', '.deadline-row a[href="#edit-deadline"]', function (evt) {
+    body.on('click', '#deadlines .deadline-row a[href="#edit-deadline"]', function (evt) {
         evt.preventDefault();
         var that = $(this),
             row = that.parents('.deadline-row');
@@ -77,7 +78,7 @@ $(document).ready(function () {
 
     }
 
-    deadlines.on('click', 'a[href="#save-deadline"]', function (evt) {
+    body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {
         evt.preventDefault();
 
         if(deadlines.find('.form-actions').is('.invalid'))
@@ -90,7 +91,7 @@ $(document).ready(function () {
                 reminders = row.find('.reminder input:checked').map(function (i, x) {return $(x).val();}).get();
             dates[dates.length] = {
                 eid: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
-                className: row.find('.class-name select').val(),
+                cid: row.find('.class-name select').val(),
                 assignment: row.find('.assignment input').val(),
                 reminders: reminders.join(','),
                 due: row.find('.due-date input').val(),
@@ -116,19 +117,19 @@ $(document).ready(function () {
         });
     });
 
-    deadlines.on('click', '.deadline-row:not(.edit) > div:not(.reminder)', function (evt) {
+    body.on('click', '#deadlines .deadline-row:not(.edit) > div:not(.reminder)', function () {
         jQuery(this).parents('.deadline-row').toggleClass('selected');
     });
 
-    deadlines.on('change', '.class-name select, .reminder input, .due-date input', function () {
+    body.on('change', '#deadlines .class-name select, #deadlines .reminder input, #deadlines .due-date input', function () {
         datesFunc.apply(jQuery(this).parents('.deadline-row'));
     });
 
-    deadlines.on('keyup', '.assignment input, .due-date input', function () {
+    body.on('keyup', '#deadlines .assignment input, #deadlines .due-date input', function () {
         datesFunc.apply(jQuery(this).parents('.deadline-row'));
     });
 
-    deadlines.on('click', 'a[href="#add-deadline"]', function (evt) {
+    body.on('click', '#deadlines a[href="#add-deadline"]', function (evt) {
         evt.preventDefault();
         var newDeadline = deadlines.find('.deadline-row').first().clone().removeAttr('id')
             .removeClass('read-only').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
@@ -138,7 +139,7 @@ $(document).ready(function () {
         datesFunc.apply(newDeadline);
     });
 
-    deadlines.on('click', 'a[href="#remove-reminder"]', function (evt) {
+    body.on('click', '#deadlines a[href="#remove-reminder"]', function (evt) {
         evt.preventDefault();
         var row = jQuery(this).parents('.deadline-row');
         $.ajax({
@@ -157,14 +158,14 @@ $(document).ready(function () {
         });
     });
 
-    deadlines.on('change', '#deadlines-historic', function () {
+    body.on('change', '#deadlines #deadlines-historic', function () {
         if(jQuery(this).is(':checked'))
             deadlines.addClass('show-historic');
         else
             deadlines.removeClass('show-historic');
     });
 
-    deadlines.on('change', '.sort-by input[type="radio"]', function (evt) {
+    body.on('change', '#deadlines .sort-by input[type="radio"]', function () {
         var headings = {},
             that = jQuery(this);
         deadlines.find('.head').each(function () {

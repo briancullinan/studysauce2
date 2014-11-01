@@ -1,3 +1,14 @@
+#partner .pane-content
+{
+    text-align: center;
+}
+
+#partner .partner-setup
+{
+    display: block;
+    margin: 0 auto;
+}
+
 #partner .partner-faqs {
     border: 3px solid #555555;
     border-radius: 5px;
@@ -6,6 +17,7 @@
     padding: 10px;
     overflow-y: auto;
     background-color: #cccccc;
+    text-align: justify;
 }
 
 #partner-invite,
@@ -14,26 +26,52 @@
 {
     position: relative;
     display: inline-block;
-    width: 33.33%;
     vertical-align: top;
     margin:0 -2px;
     padding:0 2px;
 }
 
+#partner .first-name,
+#partner .last-name
+{
+    width: 50%;
+    margin: 0 -2px;
+    padding-right:2px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+#partner .plupload .plup-select
+{
+    padding-top:230px;
+    color:#ffffff;
+}
+
+#partner .last-name
+{
+    padding-right:0;
+    padding-left:2px;
+}
+
 #partner-invite
 {
     overflow: visible;
-    padding:80px 10px;
+    padding: 80px 352px 80px 202px;
+    margin: 0 -352px 0 -202px;
+    width: 100%;
 }
 
 #partner .permissions
 {
+    width: 350px;
 }
 
 #partner .plupload
 {
     overflow: hidden;
     text-align: center;
+    width: 200px;
+    max-width: 200px;
 }
 
 #partner .plupload img
@@ -91,7 +129,7 @@
     {
         width:auto;
         display:block;
-        margin:20px 0;
+        margin:20px auto;
     }
 
     #partner-invite

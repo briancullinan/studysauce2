@@ -182,7 +182,7 @@ class DeadlinesController extends Controller
             }
 
             $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
-                    return $c->getId() == $d['eid'];})->first();
+                    return $c->getId() == $d['cid'];})->first();
             $deadline->setCourse(empty($course) ? null : $course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));

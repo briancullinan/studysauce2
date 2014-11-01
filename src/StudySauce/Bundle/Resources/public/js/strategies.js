@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    var plans = $('#plan');
+    var body = $('body'),
+        plans = $('#plan');
 
     /*
      function showFirst(type)
@@ -88,9 +89,9 @@ $(document).ready(function () {
                 if(typeof dates != 'undefined')
                 {
                     var dateStr = dates.map(function ($d, $i) {
-                        return '<input type="checkbox" name="strategy-from-' + (604800 * $i) + '-' + eid + '" id="strategy-from-' + (604800 * $i) + '-' + eid + '" value="' + (604800 * $i) + '">' +
-                        '<label for="strategy-from-' + (604800 * $i) + '-' + eid + '">' + $d + '</label>';
-                    }).join('<br />');
+                        return '<label class="checkbox"><input name="strategy-from-' + (604800 * $i) + '-' + eid + '"' +
+                            ' type="checkbox" value="' + (604800 * $i) + '" /><i></i><span>' + $d + '</span></label>';
+                    }).join('');
                     newStrategy.find('.strategy-review').append(dateStr);
                 }
                 if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
@@ -105,14 +106,6 @@ $(document).ready(function () {
             }
             if(strategy == 'prework')
             {
-                newStrategy.find('input[type="checkbox"], input[type="radio"]').each(function () {
-                    var that = jQuery(this),
-                        oldId = that.attr('id');
-                    that.attr('id', oldId + eid);
-                    if(that.is('[type="radio"]'))
-                        that.attr('name', that.attr('name') + eid);
-                    newStrategy.find('label[for="' + oldId + '"]').attr('for', oldId + eid);
-                });
                 if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
                     typeof window.strategies[eid]['prework'] != 'undefined')
                 {
@@ -196,19 +189,19 @@ $(document).ready(function () {
 
     }
 
-    plans.on('click', 'a[href="#expand"]', function (evt) {
+    body.on('click', '#plan a[href="#expand"]', function (evt) {
         evt.preventDefault();
         var row = jQuery(this).parents('.session-row');
         row.toggleClass('expanded').scrollintoview();
     });
 
-    plans.on('change', 'select[name="strategy-select"]', renderStrategies);
+    body.on('change', '#plan select[name="strategy-select"]', renderStrategies);
 
-    plans.on('click', '.assignment,.class-name,.percent', function () {
+    body.on('click', '#plan .assignment, #plans .class-name, #plans .percent', function () {
             var row = $(this).parents('.session-row'),
                 strategy = (/default-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
                 cid = ((/cid([0-9]+)(\s|$)/ig).exec(row.attr('class')) || ['', ''])[1],
-                classname = row.find('.class-name').text();
+                classname = row.find('.class-name').not('span').text().trim();
             row.toggleClass('selected');
 
             // add mini-checkin if class number is set
@@ -218,6 +211,7 @@ $(document).ready(function () {
                 var newMiniCheckin = plans.find('.mini-checkin').first().clone();
                 row.append(newMiniCheckin);
                 newMiniCheckin.html(newMiniCheckin.html().replace(/\{classname}/g, classname).replace(/\{cid}/g, cid));
+                setTimeout(function () {newMiniCheckin.setClock();}, 200);
             }
 
             // add the default strategy
@@ -239,14 +233,15 @@ $(document).ready(function () {
 
         });
 
-    plans.on('keyup', 'div[class^="strategy"] input[type="text"], div[class^="strategy"] textarea', function () {
+    body.on('keyup', '#plan div[class^="strategy"] input[type="text"], #plan div[class^="strategy"] textarea', function () {
         jQuery(this).parents('div[class^="strategy"]').removeClass('invalid').addClass('valid');
     });
-    plans.on('change', 'div[class^="strategy"] input[type="checkbox"], div[class^="strategy"] input[type="radio"], div[class^="strategy"] input[type="text"], div[class^="strategy"] textarea', function () {
+    body.on('change', '#plan div[class^="strategy"] input[type="checkbox"], #plan div[class^="strategy"] input[type="radio"], ' +
+    '#plan div[class^="strategy"] input[type="text"], #plan div[class^="strategy"] textarea', function () {
         jQuery(this).parents('div[class^="strategy"]').removeClass('invalid').addClass('valid');
     });
 
-    plans.on('click', 'a[href="#save-strategy"]', function (evt) {
+    body.on('click', '#plan a[href="#save-strategy"]', function (evt) {
         evt.preventDefault();
         var that = jQuery(this),
             row = that.parents('.session-row'),

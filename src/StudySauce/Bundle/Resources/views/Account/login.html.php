@@ -26,7 +26,7 @@ $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
 
-<div class="panel-pane" id="account">
+<div class="panel-pane" id="login">
     <div class="pane-content">
         <h2>Welcome back!</h2>
         <div class="highlighted-link social"></div>

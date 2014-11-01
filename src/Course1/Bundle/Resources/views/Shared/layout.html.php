@@ -64,6 +64,7 @@ if (!$courseIncluded) {
     $view['slots']->start('javascripts');
     foreach ($view['assetic']->javascripts(
         [
+            '@StudySauceBundle/Resources/public/js/jquery.textfill.min.js',
             '@Course1Bundle/Resources/public/js/course1.js'
         ],
         [],

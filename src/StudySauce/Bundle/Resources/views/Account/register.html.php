@@ -26,9 +26,9 @@ $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
 
-<div class="panel-pane" id="account">
+<div class="panel-pane" id="register">
     <div class="pane-content">
-        <h2>Welcome back!</h2>
+        <h2>Welcome, let's get started.</h2>
         <div class="first-name">
             <label class="input"><span>First name</span><input type="text" placeholder="First name" value="<?php print (isset($first) ? $first : ''); ?>"></label>
         </div>

@@ -127,7 +127,7 @@ $collection->add(
 $collection->add(
     'goals_partner',
     new Route(
-        '/goals/{_user}/{_format}', [
+        '/goals/{_format}/{_user}', [
             '_controller' => 'StudySauceBundle:Goals:partner',
             '_format' => 'funnel',
         ], [
@@ -210,7 +210,7 @@ $collection->add(
 $collection->add(
     'metrics_partner',
     new Route(
-        '/metrics/{_user}/{_format}', [
+        '/metrics/{_format}/{_user}', [
             '_controller' => 'StudySauceBundle:Metrics:partner',
             '_format' => 'funnel',
         ], [
@@ -235,7 +235,7 @@ $collection->add(
 $collection->add(
     'deadlines_partner',
     new Route(
-        '/deadlines/{_user}/{_format}', [
+        '/deadlines/{_format}/{_user}', [
             '_controller' => 'StudySauceBundle:Deadlines:partner',
             '_format' => 'funnel',
         ], [
@@ -318,9 +318,23 @@ $collection->add(
 );
 
 $collection->add(
+    'plan_week',
+    new Route(
+        '/plan/{_week}/{_format}', [
+            '_controller' => 'StudySauceBundle:Plan:index',
+            '_format' => 'index',
+            '_week' => ''
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_week' => '^$|[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z'
+        ]
+    )
+);
+
+$collection->add(
     'plan_partner',
     new Route(
-        '/plan/{_user}/{_format}', [
+        '/plan/{_week}/{_format}/{_user}', [
             '_controller' => 'StudySauceBundle:Plan:partner',
             '_format' => 'funnel',
         ], [
@@ -427,7 +441,7 @@ $collection->add(
 $collection->add(
     'account_login',
     new Route(
-        '/account/login', [
+        '/login', [
             '_controller' => 'StudySauceBundle:Account:login',
             '_format' => 'funnel'
         ], [
@@ -443,7 +457,7 @@ $collection->add('google_login', new Route('/login/google'));
 $collection->add(
     'account_auth',
     new Route(
-        '/account/authenticate', [
+        '/authenticate', [
             '_controller' => 'StudySauceBundle:Account:authenticate'
         ],
         [],
@@ -458,7 +472,7 @@ $collection->add(
 $collection->add(
     'account_register',
     new Route(
-        '/account/register', [
+        '/register', [
             '_controller' => 'StudySauceBundle:Account:register',
             '_format' => 'funnel'
         ], [
@@ -467,10 +481,12 @@ $collection->add(
     )
 );
 
+$collection->add('account_logout', new Route('/logout'));
+
 $collection->add(
     'account_denied',
     new Route(
-        '/account/denied', [
+        '/denied', [
             '_controller' => 'StudySauceBundle:Account:denied',
             '_format' => 'funnel'
         ], [
@@ -524,7 +540,7 @@ $collection->add(
 $collection->add(
     'uploads_partner',
     new Route(
-        '/file/{_user}/{_format}', [
+        '/file/{_format}/{_user}', [
             '_controller' => 'StudySauceBundle:File:partner',
             '_format' => 'funnel'
         ], [

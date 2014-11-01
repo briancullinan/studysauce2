@@ -49,7 +49,15 @@ foreach ($view['assetic']->javascripts(
 <?php endforeach; ?>
     <script type="text/javascript">
         // convert events array to object to keep track of keys better
-        window.planEvents = JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>');
+        if(typeof(window.planEvents) == 'undefined')
+            window.planEvents = [];
+        if(typeof(window.planLoaded) == 'undefined')
+            window.planLoaded = [];
+        debugger;
+        if(window.planLoaded.indexOf(<?php print date_timestamp_set(new \DateTime(), $week)->format('W'); ?>) == -1) {
+            window.planEvents = $.merge(window.planEvents, JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>'));
+            window.planLoaded = $.merge(window.planLoaded, [<?php print date_timestamp_set(new \DateTime(), $week)->format('W'); ?>]);
+        }
         // insert strategies
         window.strategies = JSON.parse('<?php print json_encode($strategies); ?>');
     </script>

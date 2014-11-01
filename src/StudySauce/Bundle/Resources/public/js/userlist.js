@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    var userlist = jQuery('#userlist'),
+    var body = $('body'),
+        userlist = jQuery('#userlist'),
         sortSelect = function (a, b) {
             if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date')
                 return -1;
@@ -57,7 +58,7 @@ $(document).ready(function () {
     advisers.sort(sortSelect);
     userlist.find('th:nth-child(5)').html('<select><option>' + advisers.join("</option><option>") + '</option></select>');
 
-    userlist.on('click', 'a[href="#change-status"]', function (evt) {
+    body.on('click', '#userlist a[href="#change-status"]', function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
         var row = jQuery(this).parents('tr'),
@@ -67,9 +68,7 @@ $(document).ready(function () {
             selectStatus.hide();
             return;
         }
-        selectStatus.css('top', row.position().top);
-        selectStatus.off();
-        selectStatus.on('click', 'a', function (evt) {
+        selectStatus.css('top', row.position().top).off().on('click', 'a', function (evt) {
             evt.preventDefault();
             var status = jQuery(this).attr('href').substring(1),
                 uid = (/uid([0-9]+)(\s|$)/ig).exec(row.attr('class'));
@@ -88,15 +87,14 @@ $(document).ready(function () {
                         .addClass('status_' + status);
                 }
             });
-        });
-        selectStatus.show();
+        }).show();
     });
 
-    userlist.on('click', function () {
+    body.on('click', function () {
         jQuery('#select-status').hide();
     });
 
-    userlist.on('change', 'select', function () {
+    body.on('change', '#userlist select', function () {
         jQuery('tr').show();
         userlist.find('select').each(function () {
             if(jQuery(this).val() == 'Ascending (A-Z)' || jQuery(this).val() == 'Descending (Z-A)' ||

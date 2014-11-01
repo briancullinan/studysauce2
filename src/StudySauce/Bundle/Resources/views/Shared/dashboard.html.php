@@ -68,7 +68,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
                 '@StudySauceBundle/Resources/public/js/jquery.pietimer.js',
                 '@StudySauceBundle/Resources/public/js/jquery.plugin.js',
                 '@StudySauceBundle/Resources/public/js/jquery.timeentry.js',
-                '@StudySauceBundle/Resources/public/js/jquery.jplayer.min.js',
+                '@StudySauceBundle/Resources/public/js/jquery.jplayer.js',
                 '@StudySauceBundle/Resources/public/js/plupload/js/plupload.full.min.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/moxie.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/plupload.dev.js',

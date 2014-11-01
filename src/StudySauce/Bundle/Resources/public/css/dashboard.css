@@ -52,9 +52,25 @@ aside + .panel-pane,
     margin-bottom:20px;
 }
 
-.deadlines-widget .deadline-row i,
+.session-row > *,
+#schedule header > *,
+.class-row > *,
+#deadlines header > *,
+.deadline-row > *
+{
+    vertical-align: top;
+    display:inline-block;
+    margin:0 -2px;
+    padding: 5px 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.deadline-row .class-name i,
+.deadlines-widget .class-name i,
 #metrics ol span,
-#metrics .checkin-row .class-name span,
+#metrics .class-name span,
 .class-row .class-name i,
 #plan .class-name span,
 .plan-widget .class-name span
@@ -70,6 +86,15 @@ aside + .panel-pane,
     line-height: 15px;
     margin: -5px 10px -5px 0;
     vertical-align: middle;
+}
+
+.class-row:hover:not(.selected):not(.edit),
+.session-row:hover:not(.selected),
+.deadline-row:hover:not(.selected):not(.edit) {
+    box-shadow: 0 1px 4px rgba(255,255,255,.25);
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background-color: rgba(255,255,255,.50);
 }
 
 a[href="#edit-class"],
@@ -155,6 +180,60 @@ a[href="#remove-deadline"]:hover
     background-color:#BB0088;
 }
 
+.plupload
+{
+    padding:0 2px;
+    margin:0 -2px;
+    display:inline-block;
+    vertical-align: top;
+    overflow: hidden;
+    text-align: center;
+    position:relative;
+}
+
+.plupload .plup-select
+{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    font-weight: bold;
+    color:#555555;
+    z-index: 10;
+    padding-top:150px;
+    text-shadow: 0 0 5px rgba(0, 144, 192, .75);
+}
+
+.plupload input
+{
+    font-size: 999px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    color:transparent;
+    background:transparent;
+    top:0;
+    left:0;
+}
+
+.plup-filelist
+{
+    padding-bottom:100%;
+    position:relative;
+}
+
+.plupload img
+{
+    margin: 0 auto;
+    display:block;
+    position:absolute;
+    min-width:100%;
+    max-width: none;
+    min-height: 100%;
+}
+
 @media all and (max-width: 1300px)
 {
     .panel-pane
@@ -204,7 +283,7 @@ a[href="#remove-deadline"]:hover
 @media all and (max-width: 700px)
 {
     .panel-pane {
-        padding: 60px 10px 40px 10px;
+        padding: 50px 0 40px 0;
         max-width: 900px;
     }
 
@@ -217,6 +296,7 @@ a[href="#remove-deadline"]:hover
 
     .pane-content
     {
-        padding:10px;
+        padding:10px 15px;
+        border-radius: 0;
     }
 }

@@ -40,15 +40,24 @@ $view['slots']->start('body'); ?>
             <div class="partner-setup">
                 <div class="plupload">
                     <h3>I am accountable to:</h3>
-                    <?php foreach ($view['assetic']->image(
-                        ['@StudySauceBundle/Resources/public/images/empty-photo.png'],
-                        [],
-                        ['output' => 'bundles/studysauce/images/*']
-                    ) as $url): ?>
-                        <img width="200" height="200" alt="Partner" src="<?php echo $view->escape($url) ?>"/>
-                    <?php endforeach; ?>
-                    <input type="file" accept="image/png,image/gif,image/jpeg,image/*" multiple="multiple">
+                    <a href="#partner-select" class="plup-select" id="partner-upload-select">Click here to select an image</a>
+                    <div class="plup-filelist" id="partner-filelist">
+                        <?php if(!empty($partner->getPhoto())) {
+                            ?><img width="200" height="200" src="<?php echo $view->escape($partner->getPhoto()->getUrl()) ?>" alt="LOGO" /><?php
+                        }
+                        else {
+                            foreach ($view['assetic']->image(
+                                ['@StudySauceBundle/Resources/public/images/empty-photo.png'],
+                                [],
+                                ['output' => 'bundles/studysauce/images/*']
+                            ) as $url): ?>
+                                <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
+                            <?php endforeach;
+                            } ?>
+                    </div>
+                    <input type="hidden" name="partner-plupload">
                 </div>
+
                 <div id="partner-invite">
                     <div class="first-name">
                         <label class="input">

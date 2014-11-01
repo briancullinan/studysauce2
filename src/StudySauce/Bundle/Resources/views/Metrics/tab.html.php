@@ -32,6 +32,7 @@ $view['slots']->stop();
 
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts([
+        '@StudySauceBundle/Resources/public/js/jquery.textfill.min.js',
         '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
         '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
         '@StudySauceBundle/Resources/public/js/metrics.js'
@@ -63,13 +64,12 @@ $view['slots']->start('body'); ?>
                 </ol>
             </div>
             <div id="timeline">
-                <h3>Study hours by week</h3>
-                <h4>Goal: <?php print $hours; ?> hour<?php print ($hours <> 1 ? 's' : ''); ?></h4>
+                <h3><span>Study hours by week<span></h3>
+                <h4><span>Goal: <?php print $hours; ?> hour<?php print ($hours <> 1 ? 's' : ''); ?><span></h4>
             </div>
             <div id="pie-chart">
-                <h3>Study hours by class</h3>
-                <h4>Total study hours: <strong id="study-total"><?php print $total; ?>
-                        hour<?php print ($total <> 1 ? 's' : ''); ?></strong></h4>
+                <h3><span>Study hours by class<span></h3>
+                <h4><span>Total study hours: <strong id="study-total"><?php print $total; ?></strong><span></h4>
             </div>
         </div>
         <hr>

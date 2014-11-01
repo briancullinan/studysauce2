@@ -73,7 +73,20 @@
     margin-top:10px;
 }
 
-#goals header,
+.goals-widget > div:nth-of-type(2) {
+    background-position: left -624px;
+}
+
+.goals-widget > div:nth-of-type(3) {
+    background-position: left -672px;
+}
+
+#goals header
+{
+    padding-top:20px;
+    white-space: nowrap;
+}
+
 #goals .goal-row
 {
     padding-top:5px;
@@ -116,8 +129,14 @@
     margin-top:-12px;
 }
 
-#goals .goal-row:nth-child(2) .type {
-    background-position: 10px -624px;
+#goals .goal-row + .goal-row .type
+{
+    background-position: left -624px;
+}
+
+#goals .goal-row + .goal-row + .goal-row .type
+{
+    background-position: left -672px;
 }
 
 #goals .form-actions
@@ -182,6 +201,11 @@
     display:none;
 }
 
+#achievements
+{
+    text-align: left;
+}
+
 #achievements .grid_6,
 #achievements .grid_3 {
     margin: 0 -2px;
@@ -197,20 +221,10 @@
     clear: both;
 }
 
-#achievements .grid_6 img,
-#achievements .grid_3 img {
-    margin: 0 auto;
-    display: inline-block;
-}
-
 #achievements .grid_3 img,
 #achievements .grid_3 p
 {
     width:100%;
-}
-#achievements .grid_6 img,
-#achievements .grid_6 p {
-    width:49%;
 }
 
 #achievements .grid_6 p,
@@ -219,17 +233,37 @@
     border-radius: 5px;
     float: left;
     display: inline-block;
-    margin: 0 auto;
     padding: 5px 5px 100% 5px;
     position: relative;
     height: 0;
     text-align: left;
 }
 
-#achievements .grid_6 p
+#achievements .grid_3 img,
+#achievements .grid_6 img
 {
-    margin-left:.5%;
-    padding-bottom: 49%;
+    position: absolute;
+    height: 100%;
+    min-width: 100%;
+    max-width: none;
+    top: 0;
+    left: 0;
+}
+
+#achievements .grid_3 .square,
+#achievements .grid_6 .square,
+#achievements .grid_6 p {
+    width: 50%;
+    margin: 0 -2px;
+    display: inline-block;
+    padding: 5px 5px 50%;
+    overflow: hidden;
+    position: relative;
+}
+
+#achievements .grid_3 .square
+{
+    padding-bottom:100%;
 }
 
 #achievements .grid_6 {
@@ -267,15 +301,22 @@
     }
 
     #goals .type {
-        background: url("../images/menu_icons_64.png") no-repeat scroll transparent;
+        background: url("../images/menu_icons_64.png") no-repeat 50% -736px transparent;
         text-align: center;
         padding: 0 0 48px 0;
         height: 96px;
-        background-position: 50% -736px;
         width: auto;
         display: block;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
+    }
+
+    #goals .goal-row + .goal-row .type
+    {
+        background-position: 50% -800px;
+    }
+
+    #goals .goal-row + .goal-row + .goal-row .type
+    {
+        background-position: 50% -864px;
     }
 
     #goals .goal-row {
@@ -301,6 +342,7 @@
         font-size: 28px;
         display: inline-block;
         white-space: nowrap;
+        height: 32px;
     }
 
     #goals .behavior,
@@ -338,6 +380,11 @@
         float:none;
     }
 
+    #achievements
+    {
+        text-align: center;
+    }
+
     #achievements .grid_6 {
         width:auto;
         text-align: center;
@@ -368,7 +415,6 @@
         position:absolute;
         right:100%;
         margin-right:-70px;
-
     }
 }
 

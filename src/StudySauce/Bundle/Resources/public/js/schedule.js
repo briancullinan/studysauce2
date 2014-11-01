@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    var schedule = $('#schedule');
+    var body = $('body'),
+        schedule = $('#schedule');
 
     var planFunc = function () {
         jQuery(this).each(function () {
@@ -29,7 +30,7 @@ $(document).ready(function () {
                     changeMonth: true,
                     changeYear: true,
                     closeAtTop: false,
-                    dateFormat: 'mm/dd/yy',
+                    dateFormat: 'mm/dd/y',
                     defaultDate:'0y',
                     firstDay:0,
                     fromTo:false,
@@ -185,7 +186,7 @@ $(document).ready(function () {
             schedule.removeClass('invalid-time');
     };
 
-    schedule.on('click', '.class-row a[href="#edit-class"]', function (evt) {
+    body.on('click', '#schedule a[href="#edit-class"]', function (evt) {
         evt.preventDefault();
         var that = $(this),
             row = that.parents('.class-row');
@@ -231,7 +232,7 @@ $(document).ready(function () {
         select[0].selectize.setValue(schedule.find('.university input').val());
     });
 
-    schedule.on('click', 'a[href="#remove-class"]', function (evt) {
+    body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
         evt.preventDefault();
         var row = jQuery(this).parents('.class-row');
         $.ajax({
@@ -263,7 +264,7 @@ $(document).ready(function () {
         planFunc.apply(schedule.find('.schedule .class-row'));
     }
 
-    schedule.on('click', 'a[href="#add-class"], a[href="#add-other"]', function (evt) {
+    body.on('click', '#schedule a[href="#add-class"], #schedule a[href="#add-other"]', function (evt) {
         evt.preventDefault();
         var isOther = jQuery(this).is('[href="#add-other"]'),
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
@@ -281,7 +282,7 @@ $(document).ready(function () {
         planFunc.apply(addClass);
     });
 
-    schedule.on('click', 'a[href="#save-class"]', function (evt) {
+    body.on('click', '#schedule a[href="#save-class"]', function (evt) {
         evt.preventDefault();
         if(schedule.find('.university input').val().trim() == '')
             schedule.find('.university').addClass('error-empty');
@@ -314,21 +315,6 @@ $(document).ready(function () {
                 type: row.find('input[name="event-type"]').val()
             };
         });
-
-        if(window.location.pathname != '/schedule' &&
-            window.location.pathname != '/schedule2')
-        {
-            schedule.find('.timer').pietimer('reset');
-            schedule.find('.timer').pietimer({
-                timerSeconds: 60,
-                color: '#09B',
-                fill: false,
-                showPercentage: true,
-                callback: function() {
-                }
-            });
-            schedule.find('.timer').pietimer('start');
-        }
 
         $.ajax({
             url: window.callbackPaths['update_schedule'],
@@ -364,9 +350,10 @@ $(document).ready(function () {
             row.find('.end-date input').val(first.find('.end-date input').val());
         }
     };
-    schedule.on('change', '.class-name input', autoFillDate);
-    schedule.on('keyup', '.class-name input', autoFillDate);
-    schedule.on('change', '.start-time input, .end-time input, .start-date input, .end-date input', function () {
+    body.on('change', '#schedule .class-name input', autoFillDate);
+    body.on('keyup', '#schedule .class-name input', autoFillDate);
+    body.on('change', '#schedule .start-time input, #schedule .end-time input, ' +
+        '#schedule .start-date input, #schedule .end-date input', function () {
         jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
             autoFillDate.apply(this);
         });
@@ -383,15 +370,18 @@ $(document).ready(function () {
                     : t.getMinutes()) + ':00');
         }
     });
-    schedule.on('keyup', '.start-time input, .end-time input, .start-date input, .end-date input', function () {
+    body.on('keyup', '#schedule .start-time input, #schedule .end-time input, ' +
+        '#schedule .start-date input, #schedule .end-date input', function () {
         jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
             autoFillDate.apply(this);
         });
     });
-    schedule.on('keyup', '.class-name input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
+    body.on('keyup', '#schedule .class-name input, #schedule .start-time input, #schedule .end-time input, ' +
+        '#schedule .start-date input, #schedule .end-date input, #schedule .university input', function () {
         planFunc.apply(jQuery(this).parents('.class-row'));
     });
-    schedule.on('change', '.class-name input, .day-of-the-week input, .start-time input, .end-time input, .start-date input, .end-date input, .university input', function () {
+    body.on('change', '#schedule .class-name input, #schedule .day-of-the-week input, #schedule .start-time input, ' +
+        '#schedule .end-time input, #schedule .start-date input, #schedule .end-date input, #schedule .university input', function () {
         planFunc.apply(jQuery(this).parents('.class-row'));
     });
 

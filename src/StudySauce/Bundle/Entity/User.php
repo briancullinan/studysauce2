@@ -136,6 +136,7 @@ class User extends BaseUser
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course1s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        parent::__construct();
     }
 
     /**

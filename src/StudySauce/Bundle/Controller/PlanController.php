@@ -64,10 +64,11 @@ class PlanController extends Controller
 
     /**
      * @param User $user
+     * @param null $_week
      * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(User $user = null, $template = ['Plan', 'tab'])
+    public function indexAction(User $user = null, $_week = null, $template = ['Plan', 'tab'])
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
@@ -85,7 +86,20 @@ class PlanController extends Controller
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
         }
 
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), strtotime('last Sunday'), $orm);
+        if($_week !== 0 && empty($_week)) {
+            $_week = strtotime('last Sunday');
+            if ($_week + 604800 == strtotime('today')) {
+                $_week += 604800;
+            }
+        }
+        elseif(is_numeric($_week)) {
+            $_week = (new \DateTime('January 1'))->getTimestamp() + intval($_week) * 604800;
+        }
+        elseif(is_string($_week)) {
+            $_week = strtotime('last Sunday', strtotime($_week)) + 604800;
+        }
+
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm);
         $courses = $schedule->getCourses()->filter(function (Course $c) {
                 return $c->getType() == 'c';
             });
@@ -94,15 +108,17 @@ class PlanController extends Controller
                 'courses' => $courses,
                 'jsonEvents' =>  self::getJsonEvents($events, $courses->toArray()),
                 'user' => $user,
-                'strategies' => self::getStrategies($schedule)
+                'strategies' => self::getStrategies($schedule),
+                'week' => $_week
             ]);
     }
 
     /**
      * @param $_user
+     * @param $_week
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnerAction($_user)
+    public function partnerAction($_user, $_week)
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -110,7 +126,7 @@ class PlanController extends Controller
         /** @var $user User */
         $user = $userManager->findUserBy(['id' => intval($_user)]);
 
-        return $this->indexAction($user, ['Partner', 'plan']);
+        return $this->indexAction($user, $_week, ['Partner', 'plan']);
     }
 
     /**
@@ -132,8 +148,14 @@ class PlanController extends Controller
 
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
         }
+
+        $week = strtotime('last Sunday');
+        if ($week + 604800 == strtotime('today')) {
+            $week += 604800;
+        }
+
         // TODO: get demo Deadlines?
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), strtotime('last Sunday'), $orm);
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $week, $orm);
 
         return $this->render(
             'StudySauceBundle:Plan:widget.html.php',
@@ -381,7 +403,7 @@ class PlanController extends Controller
         // get the current week
         if (($currentWeek = $schedule->getWeeks()->filter(
                 function (Week $week) use ($weekHash, $w) {
-                    return $week->getWeek() == $w->format('W') &&
+                    return $week->getWeek() == intval($w->format('W')) &&
                     $week->getYear() == $w->format('Y');
                 }
             )->first()) == null

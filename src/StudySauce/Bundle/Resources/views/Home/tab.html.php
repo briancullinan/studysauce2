@@ -30,6 +30,7 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(
     [
+        '@StudySauceBundle/Resources/public/js/jquery.textfill.min.js',
         '@StudySauceBundle/Resources/public/js/home.js',
         '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
         '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',

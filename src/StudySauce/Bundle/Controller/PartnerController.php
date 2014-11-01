@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -77,6 +78,8 @@ class PartnerController extends Controller
             $user->addPartner($partner);
         }
 
+        $photo = $user->getFiles()->filter(function (File $g) use($request) {return $g->getId() == $request->get('photo');})->first();
+        $partner->setPhoto(empty($photo) ? null : $photo);
         $partner->setFirst($request->get('first'));
         $partner->setLast($request->get('last'));
         $partner->setPermissions(explode(',', $request->get('permissions')));

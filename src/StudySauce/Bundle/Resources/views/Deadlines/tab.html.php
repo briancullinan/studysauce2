@@ -89,15 +89,18 @@ $view['slots']->start('body'); ?>
                 }
             }
 
+            $classI = array_search($d->getCourse(), $courses);
+
             ?>
-            <div class="deadline-row first valid <?php print ($isDemo ? 'edit' : 'read-only'); ?>  cid<?php print (!empty($d->getCourse()) ? $d->getCourse()->getId() : ''); ?>"
+            <div class="deadline-row first valid <?php
+            print ($isDemo ? 'edit' : 'read-only'); ?>  cid<?php
+            print (!empty($d->getCourse()) ? $d->getCourse()->getId() : ''); ?>"
                  id="eid-<?php print ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">
                     <span>Class name</span>
-                    <select>
-                        <option value="_none" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>- Select a class -
-                        </option>
+                    <i class="class<?php print $classI; ?>"></i><select>
+                        <option value="_none" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                         <?php
                         $found = false;
                         foreach ($isDemo ? $demoCourses : $courses as $c):
@@ -107,8 +110,8 @@ $view['slots']->start('body'); ?>
                             <option value="<?php print $c->getId(); ?>" <?php print (!$isDemo &&
                                 $d->getCourse() == $c ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
                         <?php endforeach; ?>
-                        <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getAssignment())
-                            ? 'selected="selected"' : ''); ?>>Nonacademic
+                        <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getAssignment()) &&
+                            empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Nonacademic
                         </option>
                     </select>
                 </label>
@@ -151,7 +154,8 @@ $view['slots']->start('body'); ?>
                            maxlength="255">
                 </label>
             </div>
-            <div class="percent">
+            <div class="percent" <?php print (!$isDemo && !empty($d->getAssignment()) &&
+                empty($d->getCourse()) ? 'style="visibility:hidden;"' : ''); ?>>
                 <label class="input">
                     <span>% of grade</span>
                     <input type="text" value="<?php print (!$isDemo && $d->getPercent() > 0 ? $d->getPercent() : ''); ?>" size="2"

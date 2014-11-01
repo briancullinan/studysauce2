@@ -9,7 +9,7 @@
     top: 0;
     left: 0;
     padding-bottom: 30px;
-    transition: width ease-in-out .15s;
+    transition: width linear .15s;
     box-sizing: border-box;
     z-index: 1900;
 }
@@ -75,7 +75,7 @@
     height:45px;
     width:70px;
     left:0;
-    top:-5px;
+    top:-6px;
     background:url(../images/menu_new.png) no-repeat left -102px transparent;
     font-size:14px;
     color:#555555;
@@ -948,52 +948,6 @@
 
 @media all and (max-width:700px), all and (max-height:700px) {
 
-    body.right-menu .pane-content,
-    body.right-menu .panel-pane,
-    body.left-menu .pane-content,
-    body.left-menu .panel-pane {
-        max-height: 100%;
-        overflow: hidden;
-    }
-
-    body.right-menu .footer,
-    body.left-menu .footer {
-        display: none;
-    }
-
-    body.modal-open:before,
-    body.right-menu:before,
-    body.left-menu:before {
-        position: absolute;
-        content: " ";
-        display: block;
-        width: 100%;
-        top: 100%;
-        margin-top:-20px;
-        background: url(../images/menu_new.png) repeat-x 0 -5300px transparent;
-        z-index: 1000;
-        height:20px;
-    }
-
-    body.right-menu .modal-backdrop,
-    body.left-menu .modal-backdrop
-    {
-        display:none;
-    }
-
-    body.right-menu:after,
-    body.left-menu:after {
-        position: fixed;
-        content: " ";
-        display: block;
-        width: 100%;
-        top: 0;
-        background: #000000;
-        opacity: .5;
-        z-index: 1000;
-        height:100%;
-    }
-
     #left-panel nav,
     #left-panel.expanded nav,
     #left-panel:not(.collapsed) nav,
@@ -1023,11 +977,23 @@
         z-index: 2100;
     }
 
-    #right-panel, #left-panel,
-    #right-panel.expanded, #left-panel.expanded
+    #left-panel,          #right-panel,
+    #left-panel.expanded, #right-panel.expanded
     {
         padding-top:0;
         padding-bottom:0;
+        background:transparent none;
+        color:#ffffff;
+    }
+
+    #left-panel.expanded
+    {
+        left: -220px;
+    }
+
+    #right-panel.expanded
+    {
+        right: -220px;
     }
 
     .navbar-toggle,

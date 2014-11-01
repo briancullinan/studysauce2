@@ -7,14 +7,19 @@ $isDashboard = strpos($view['slots']->get('classes'), 'dashboard-home') > -1;
             <a title="Home" href="<?php print $view['router']->generate($isDashboard ? 'home' : '_welcome'); ?>">
                 <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/logo_4_trans_2.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
-                <?php endforeach; ?><strong>Study</strong> Sauce</a>
-            <div id="site-slogan">Discover the secret sauce to studying</div>
+                <?php endforeach; ?><span><strong>Study</strong> Sauce</span></a>
         </div>
         <div id="partner-message">
-            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>" />
-            <?php endforeach; ?>
+            <?php if(!empty($partner = $app->getUser()->getPartners()->first()) && !empty($partner->getPhoto())) {
+                ?><img width="48" height="48" src="<?php echo $view->escape($partner->getPhoto()->getUrl()) ?>" alt="LOGO" />
+                <div>I am accountable to: <br><span><?php print $partner->getFirst(); ?> <?php print $partner->getLast(); ?></span></div>
+            <?php }
+            else {
+                foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>" />
+                <?php endforeach; ?>
             <div>I am accountable to: <br><a href="#partner">Click to set up</a></div>
+            <?php } ?>
         </div>
         <div id="welcome-message"><strong><?php print $app->getUser()->getFirstName(); ?></strong>
             <a href="/user/logout" title="Log out">logout</a>    </div>

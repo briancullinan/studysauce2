@@ -82,7 +82,7 @@ $view['slots']->start('body'); ?>
                     <label class="select">
                         <span>Goal</span>
                         <select>
-                            <option value="_none" <?php print (empty($behavior) || empty($behavior->getGoal()) ? 'selected="selected"' : ''); ?>>- None -</option>
+                            <option value="_none" <?php print (empty($behavior) || empty($behavior->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
                             <option value="30" <?php print (!empty($behavior) && $behavior->getGoal() == 30 ? 'selected="selected"' : ''); ?>>30</option>
                             <option value="25" <?php print (!empty($behavior) && $behavior->getGoal() == 25 ? 'selected="selected"' : ''); ?>>25</option>
                             <option value="20" <?php print (!empty($behavior) && $behavior->getGoal() == 20 ? 'selected="selected"' : ''); ?>>20</option>
@@ -112,7 +112,7 @@ $view['slots']->start('body'); ?>
                     <label class="select">
                         <span>Goal</span>
                         <select>
-                            <option value="_none" <?php print (empty($milestone) || empty($milestone->getGoal()) ? 'selected="selected"' : ''); ?>>- None -</option>
+                            <option value="_none" <?php print (empty($milestone) || empty($milestone->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
                             <option value="A" <?php print (!empty($milestone) && $milestone->getGoal() == 'A' ? 'selected="selected"' : ''); ?>>A</option>
                             <option value="A-" <?php print (!empty($milestone) && $milestone->getGoal() == 'A-' ? 'selected="selected"' : ''); ?>>A-</option>
                             <option value="B+" <?php print (!empty($milestone) && $milestone->getGoal() == 'B+' ? 'selected="selected"' : ''); ?>>B+</option>
@@ -143,7 +143,7 @@ $view['slots']->start('body'); ?>
                     <label class="select">
                         <span>Goal</span>
                         <select>
-                            <option value="_none" <?php print (empty($outcome) || empty($outcome->getGoal()) ? 'selected="selected"' : ''); ?>>- None -</option>
+                            <option value="_none" <?php print (empty($outcome) || empty($outcome->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
                             <option value="4" <?php print (!empty($outcome) && $outcome->getGoal() == '4' ? 'selected="selected"' : ''); ?>>4.00</option>
                             <option value="3.75" <?php print (!empty($outcome) && $outcome->getGoal() == '3.75' ? 'selected="selected"' : ''); ?>>3.75</option>
                             <option value="3.5" <?php print (!empty($outcome) && $outcome->getGoal() == '3.5' ? 'selected="selected"' : ''); ?>>3.50</option>

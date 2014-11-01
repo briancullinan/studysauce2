@@ -45,11 +45,17 @@
     display: block;
 }
 
+#site-name a > *
+{
+    vertical-align: top;
+}
+
 #site-name img
 {
-    float: left;
     width: 65px;
     margin: 0 5px;
+    max-height: 48px;
+    max-width: 48px;
 }
 
 #partner-message
@@ -97,12 +103,6 @@
     vertical-align: middle;
 }
 
-#site-slogan
-{
-    font-style: italic;
-    display: inline-block;
-}
-
 .header-wrapper a[href="/user/logout"] {
     display: inline-block;
     height: 32px;
@@ -110,17 +110,6 @@
     background: url(../images/menu_new.png) no-repeat -10px -2810px;
     overflow: hidden;
     color: transparent;
-}
-
-#site-slogan
-{
-    display:none;
-}
-
-#site-name img
-{
-    max-height: 48px;
-    max-width: 48px;
 }
 
 @media all and (max-width:1300px)
@@ -166,6 +155,9 @@
     {
         padding-left:40px;
         padding-right:40px;
+        width:auto;
+        display:block;
+        text-align: center;
     }
 
     #welcome-message
@@ -191,6 +183,18 @@
     .header-wrapper
     {
         height: 50px;
+        left:0;
+        transition: left linear .15s;
+    }
+
+    body.left-menu .header-wrapper
+    {
+        left:220px;
+    }
+
+    body.right-menu .header-wrapper
+    {
+        left:-220px;
     }
 }
 

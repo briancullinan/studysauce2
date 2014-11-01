@@ -1,6 +1,6 @@
 const TIMER_SECONDS = 3600;
-const checkinBtn = '#checkin .classes a, #home .checkin-widget a';
-const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget a.checked-in';
+const checkinBtn = '#checkin .classes a, #home .checkin-widget a, #plan .mini-checkin a';
+const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget a.checked-in, #plan .mini-checkin a.checked-in';
 
 $(document).ready(function () {
     var hours = -1,
@@ -36,8 +36,11 @@ $(document).ready(function () {
             }
         });
     }
+    $.fn.setClock = setClock;
 
     body.on('show', '#checkin,#home', function () {
+        if($(this).is('#checkin'))
+            $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#checkin');
         setTimeout(function () {setClock();}, 200);
     });
 

@@ -1,6 +1,11 @@
 $(document).ready(function () {
     var body = $('body');
 
+    body.find('.course1.step0 h3').textfill({widthOnly: true});
+    $(window).resize(function () {
+        body.find('.course1.step0 h3').textfill({widthOnly: true});
+    });
+
     body.on('change', '#lesson1-step4 textarea', function () {
         var actions = body.find('#lesson1-step4 .highlighted-link');
         if($(this).val().trim() != '')

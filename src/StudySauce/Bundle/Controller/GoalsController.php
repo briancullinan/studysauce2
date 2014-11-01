@@ -161,7 +161,7 @@ class GoalsController extends Controller
         {
             // create claim entity
             $claim = new Claim();
-            $claim->setPhoto($photo ?: null);
+            $claim->setPhoto(empty($photo) ? null : $photo);
             $claim->setMessage($request->get('message'));
             $claim->setGoal($goal);
             $claim->setCode(md5(microtime(true)));

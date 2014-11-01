@@ -488,10 +488,32 @@ class ScheduleController extends Controller
 
     /**
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
 
+        /** @var $user User */
+        $user = $this->getUser();
+
+        /** @var Schedule $schedule */
+        $schedule = $user->getSchedules()->first();
+
+        /** @var Course $course */
+        $course = $schedule->getCourses()
+            ->filter(function (Course $c) use($request) {return $c->getId() == $request->get('remove');})
+            ->first();
+
+        if(!empty($course))
+        {
+            $schedule->removeCourse($course);
+            $orm->remove($course);
+            $orm->flush();
+        }
+
+        return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
     }
 
     private static $institutions;

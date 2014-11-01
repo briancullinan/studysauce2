@@ -1,6 +1,7 @@
 jQuery(document).ready(function() {
 
-    var account = jQuery('#account');
+    var account = jQuery('#account'),
+        body = $('body');
 
     function getHash()
     {
@@ -26,11 +27,14 @@ jQuery(document).ready(function() {
     account.data('state', getHash());
     accountFunc();
 
-    account.on('change', '.first-name input, .last-name input, .email input, .password input, .new-password input', accountFunc);
-    account.on('keyup', '.first-name input, .last-name input, .email input, .password input, .new-password input', accountFunc);
-    account.on('keydown', '.first-name input, .last-name input, .email input, .password input, .new-password input', accountFunc);
+    body.on('change', '#account .first-name input, #account .last-name input, #account .email input, ' +
+        '#account .password input, #account .new-password input', accountFunc);
+    body.on('keyup', '#account .first-name input, #account .last-name input, #account .email input, ' +
+        '#account .password input, #account .new-password input', accountFunc);
+    body.on('keydown', '#account .first-name input, #account .last-name input, #account .email input, ' +
+        '#account .password input, #account .new-password input', accountFunc);
 
-    account.on('click', 'a[href="#cancel-account"]', function (evt) {
+    body.on('click', '#account a[href="#cancel-account"]', function (evt) {
         evt.preventDefault();
         jQuery.ajax({
             url: window.callbackPaths['account_remove'],
@@ -47,7 +51,7 @@ jQuery(document).ready(function() {
         })
     });
 
-    account.on('click', 'a[href="#save-account"]', function (evt) {
+    body.on('click', '#account a[href="#save-account"]', function (evt) {
         evt.preventDefault();
 
         if(account.find('.form-actions').is('.invalid'))

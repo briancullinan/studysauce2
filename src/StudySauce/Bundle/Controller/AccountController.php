@@ -169,7 +169,6 @@ class AccountController extends Controller
 
             $context = $this->get('security.context');
             $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
-            $token->setAuthenticated(true);
             $context->setToken($token);
             $session = $request->getSession();
             $session->set('_security_main', serialize($token));

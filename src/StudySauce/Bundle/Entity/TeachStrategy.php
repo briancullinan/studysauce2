@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Teach_strategy")
+ * @ORM\Table(name="teach_strategy")
  * @ORM\HasLifecycleCallbacks()
  */
 class TeachStrategy

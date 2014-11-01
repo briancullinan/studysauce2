@@ -105,48 +105,9 @@ a[href="#close"]
     position: absolute;
 }
 
-#claim .plupload
-{
-    padding:0 2px;
-    width:50%;
-    margin:0 -2px;
-    display:inline-block;
-    vertical-align: top;
-    overflow: hidden;
-    text-align: center;
-    position:relative;
-}
-
-#claim .plupload #goals-plupload-select
-{
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    left: 0;
-    font-weight: bold;
-    color:#555555;
-    z-index: 10;
-    padding-top:150px;
-    text-shadow: 0 0 5px rgba(0, 144, 192, .75);
-}
-
 #claim textarea
 {
     height: 12em;
-}
-
-#claim .plupload input
-{
-    font-size: 999px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    color:transparent;
-    background:transparent;
-    top:0;
-    left:0;
 }
 
 #claim label.input
@@ -158,19 +119,9 @@ a[href="#close"]
     vertical-align: top;
 }
 
-#claim .plup-filelist
+#claim .plupload
 {
-    padding-bottom:100%;
-}
-
-#claim .plupload img
-{
-    margin: 0 auto;
-    display:block;
-    position:absolute;
-    min-width:100%;
-    max-width: none;
-    min-height: 100%;
+    width:50%;
 }
 
 @media all and (max-width:1000px)

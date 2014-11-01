@@ -132,14 +132,14 @@ $view['slots']->stop();
                 <label class="input">
                     <span>Date</span>
                     <input type="text" placeholder="First class" title="What day does your academic term begin?"
-                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/Y', $startDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/y', $startDate)); ?>">
                 </label>
             </div>
             <div class="end-date">
                 <label class="input">
                     <span>&nbsp;</span>
                     <input type="text" placeholder="Last class" title="What day does your academic term end?"
-                           autocomplete="off" value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/Y', $endDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/y', $endDate)); ?>">
                 </label>
             </div>
             <input type="hidden" name="event-type" value="c">

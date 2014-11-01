@@ -2,6 +2,17 @@
 #checkin .classes {
 }
 
+#checkin .form-actions a[href*="/schedule"] {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#checkin .flip-clock-wrapper h4
+{
+    padding-top:20px;
+}
+
 #checkin .flip-clock-wrapper,
 #checkin .classes {
     width: 50%;
@@ -17,7 +28,7 @@
     text-align: center;
 }
 
-.checkin-widget > a,
+.checkin-widget > .checkin,
 #plan .mini-checkin .checkin,
 #checkin .classes a {
     display: inline-block;
@@ -28,7 +39,6 @@
     margin: 25px;
     vertical-align: bottom;
     background: url("../images/classes_textured.png") no-repeat scroll 0 0 transparent;
-    padding: 10px;
     color: #666666;
     text-align: center;
     /* color: #FF0D00; */
@@ -39,14 +49,13 @@
     margin: 20px;
 }
 
-.checkin-widget > a span,
+.checkin-widget > .checkin span,
 #plan .mini-checkin .checkin > span,
 #checkin .classes a span {
     display: block;
-    width: 80px;
     max-height: 30px;
     border-radius: 100%;
-    margin-top: 90px;
+    margin-top: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

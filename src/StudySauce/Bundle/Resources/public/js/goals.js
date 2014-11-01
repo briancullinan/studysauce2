@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    var goals = $('#goals');
+    var body = $('body'),
+        goals = $('#goals');
     var goalsFunc = function () {
         jQuery(this).each(function () {
             var row = $(this).closest('.goal-row'),
@@ -19,7 +20,7 @@ $(document).ready(function () {
             goals.find('.form-actions').removeClass('valid').addClass('invalid');
     };
 
-    goals.on('click', 'a[href="#claim"]', function (evt) {
+    body.on('click', '#goals a[href="#claim"]', function (evt) {
         evt.preventDefault();
         var row = jQuery(this).parents('.goal-row'),
             gid = (/gid([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
@@ -85,21 +86,21 @@ $(document).ready(function () {
         setTimeout(function () {upload.init();}, 200);
     });
 
-    goals.on('click', '.goal-row a[href="#goal-edit"]', function (evt) {
+    body.on('click', '#goals .goal-row a[href="#goal-edit"]', function (evt) {
         evt.preventDefault();
         var that = $(this),
             row = that.parents('.goal-row');
         goalsFunc.apply(row.removeClass('read-only').addClass('edit'));
     });
 
-    goals.on('change', '.goal-row select, .goal-row textarea', function () {
+    body.on('change', '#goals .goal-row select, #goals .goal-row textarea', function () {
         goalsFunc.apply(jQuery(this).parents('.goal-row'));
     });
-    goals.on('keyup', '.goal-row textarea', function () {
+    body.on('keyup', '#goals .goal-row textarea', function () {
         goalsFunc.apply(jQuery(this).parents('.goal-row'));
     });
 
-    goals.on('click', 'a[href="#save-goal"]', function (evt) {
+    body.on('click', '#goals a[href="#save-goal"]', function (evt) {
         evt.preventDefault();
         if(goals.find('.form-actions').is('.invalid'))
             return;
@@ -140,7 +141,7 @@ $(document).ready(function () {
 
     goalsFunc.apply(goals.find('.goal-row'));
 
-    $('body').on('click', '#claim a[href="#submit-claim"]', function (evt) {
+    body.on('click', '#claim a[href="#submit-claim"]', function (evt) {
         evt.preventDefault();
         var claim = jQuery('#claim'),
             gid = (/gid([0-9]+)(\s|$)/ig).exec(claim.attr('class'))[1];

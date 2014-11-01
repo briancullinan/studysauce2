@@ -13,6 +13,11 @@
     color: #FFFFFF;
 }
 
+a.fc-event:not([href])
+{
+    color: #FFFFFF;
+}
+
 #plan .fc-title
 {
     white-space: nowrap;
@@ -20,7 +25,7 @@
     text-overflow: ellipsis;
     display: block;
     padding-right:60px;
-    line-height: 100%;
+    line-height: 110%;
 }
 
 #plan .fc-time-grid-container
@@ -58,6 +63,16 @@
 #plan .event-type-p .fc-title
 {
     padding-right:80px;
+}
+
+#plan .fc-ltr .fc-time-grid .fc-event-container
+{
+    margin:2px 5px;
+}
+
+#plan .fc-ltr .fc-axis
+{
+    width: 65px !important;
 }
 
 #plan .fc-title h4
@@ -121,8 +136,18 @@
 #plan .fc-event.event-type-f,
 #plan .fc-event.event-type-o
 {
-    color:#ffffff;
     background-color: #555555;
+}
+
+#plan .fc-event.event-type-d
+{
+    border: 3px solid #555555;
+    color: #555555;
+}
+
+#plan .fc-event.event-type-d .fc-title h4
+{
+    color: #555555;
 }
 
 #plan .fc-event.event-type-o
@@ -158,24 +183,17 @@
 
 #plan .fc-button
 {
-    background-attachment: scroll;
     background-clip: border-box;
-    background-color: rgb(245, 245, 245);
-    background-image: linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230));
     background-origin: padding-box;
-    background-repeat: repeat-x;
+    background: rgb(245, 245, 245) linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230)) repeat-x scroll;
     background-size: auto;
 }
 
 #plan .fc-button:hover
 {
-    background-attachment: scroll;
     background-clip: border-box;
-    background-color: rgb(230, 230, 230);
-    background-image: linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230));
     background-origin: padding-box;
-    background-position: 0px -15px;
-    background-repeat: repeat-x;
+    background: rgb(230, 230, 230) linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230)) repeat-x scroll 0 -15px;
     background-size: auto;
 }
 
@@ -205,13 +223,8 @@
 .plan-widget .session-row
 {
     clear:both;
-}
-
-#plan .session-row:hover:not(.selected) {
-    box-shadow: 0 1px 4px rgba(255,255,255,.25);
-    border-top: 1px solid #DDDDDD;
-    border-bottom: 1px solid #DDDDDD;
-    background-color: rgba(255,255,255,.50);
+    border-top:1px solid transparent;
+    border-bottom:1px solid transparent;
 }
 
 #plan .session-row:hover:not(.selected) .assignment,
@@ -225,10 +238,6 @@
 .plan-widget .session-row > *
 {
     width:30%;
-    display:inline-block;
-    margin:0 -2px;
-    vertical-align: middle;
-    padding: 10px 0;
 }
 
 .plan-widget .session-row .class-name
@@ -248,13 +257,12 @@
 {
     text-align: center;
     width:70%;
-    margin-right:-28px;
-    padding-right:28px;
+    margin-right:-30px;
+    padding-right:30px;
 }
 
 #plan .session-row
 {
-    padding-top:5px;
     clear: both;
     display: block;
     vertical-align: top;
@@ -264,13 +272,7 @@
     border-bottom:1px solid transparent;
 }
 
-#plan .session-row > *
-{
-    white-space: nowrap;
-    vertical-align: top;
-}
-
-#plan .session-row.event-type-d .field-name-field-class-name
+#plan .session-row.event-type-d .class-name
 {
     background: url('../images/menu_icons_32.png') no-repeat left -1312px transparent;
 }
@@ -310,31 +312,6 @@
     display: block;
 }
 
-#plan .flip-clock-wrapper ul li a div div.inn
-{
-    font-size: 30px;
-}
-
-#plan .flip-clock-wrapper ul
-{
-    height: 40px;
-    width: 25px;
-    line-height: 40px;
-    margin: 2px;
-}
-
-#plan .flip-clock-divider
-{
-    height: 50px;
-    width: 15px;
-}
-
-#plan .flip-clock-dot.bottom,
-#plan .flip-clock-dot.top
-{
-    left:2px;
-}
-
 #plan a[href="#expand"]
 {
     float:left;
@@ -361,61 +338,27 @@
     min-height: 250px;
 }
 
-#plan .session-row > *
-{
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: inline-block;
-    padding: 5px 0;
-    vertical-align: top;
-    margin: 0;
-}
-
 #plan .session-row .class-name
 {
-    display: inline-block;
-    padding: 5px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    vertical-align: top;
-    width: 50%;
-    top: 0;
+    width: 40%;
     padding-left: 70px;
-    text-overflow: ellipsis;
+}
+
+#plan .session-row .assignment {
+    width: 40%;
 }
 
 #plan .session-row .percent {
-    min-width: 150px;
-    width: 15%;
-    position: absolute;
-    right: 10%;
-    left: auto;
-    top: 0;
+    width: 20%;
+    padding-right: 30px;
+    margin-right: -30px;
 }
 
 #plan .session-row .completed {
-    text-align: right;
-    min-width: 50px;
-    width: 10%;
-    position: absolute;
-    right: 0;
-    left: auto;
-    top: 0;
 }
 
 #plan .session-row .class-name span {
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    border: 3px solid #555555;
-    border-radius: 100%;
-    text-align: center;
-    font-size: 14px;
-    line-height: 15px;
-    margin: -3px 0 0 -35px;
-    vertical-align: top;
-    float: left;
+    margin-left:-40px;
 }
 
 #plan .head {
@@ -424,11 +367,6 @@
     margin-top: 30px;
     padding: 5px;
     clear: both;
-}
-
-#plan .mini-checkin .flip-clock-wrapper
-{
-    width: auto;
 }
 
 #plan .mini-checkin
@@ -474,8 +412,6 @@
     max-width: 800px;
     display:none;
     padding-right: 165px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     white-space: normal !important;
 }
 
@@ -520,11 +456,18 @@
     width: 100%;
 }
 
+#plan .plupload
+{
+    width:40%;
+}
+
 #plan .strategy-notes
 {
     display: inline-block;
-    width: 66%;
+    width: 60%;
     vertical-align: top;
+    margin:0 -2px;
+    padding: 0 2px;
 }
 
 #plan .strategy-spaced-notes
@@ -541,52 +484,19 @@
     vertical-align: top;
 }
 
-#plan .strategy-spaced-notes label:first-child,
-#plan .strategy-review label:first-child
+#plan .strategy-review label.checkbox
 {
-    font-size: 20px;
-    margin-top:20px;
-    margin-bottom:10px;
-    color: #555555;
-    text-align: left;
+    display: block;
 }
 
-#plan .strategy-review input[type="checkbox"]
+#plan .strategy-prework label.checkbox
 {
-    position: relative;
-    z-index: 1;
-    margin-left: 10px;
-    visibility: hidden;
+    padding-left:20px;
 }
 
-#plan .strategy-prework input
+#plan .strategy-prework label.checkbox i
 {
-    visibility: hidden;
-    margin: 0 0 0 -13px;
-}
-
-#plan .strategy-prework label,
-#plan .strategy-review label:not(:first-child)
-{
-    display: inline;
-    position: relative;
-    z-index: 10;
-    padding-left: 25px;
-    background: url('../images/menu_icons_128.png') no-repeat -54px -2848px transparent;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    cursor: pointer;
-}
-
-#plan .strategy-prework label
-{
-    margin-left:-30px;
-}
-
-#plan .strategy-prework input:checked + label,
-#plan .strategy-review input:checked + label
-{
-    background-position: -54px -2734px;
+    margin-left:-20px;
 }
 
 #plan a[href="#strategy-upload"] span
@@ -600,14 +510,13 @@
     margin-left:-10px;
 }
 
-#plan .field-select-strategy label
-{
-    display:inline;
-    font-size: 20px;
-}
-
 #plan .field-select-strategy select
 {
     float:right;
     width:auto;
+}
+
+#plan .field-select-strategy label
+{
+    display:inline;
 }

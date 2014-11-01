@@ -20,13 +20,15 @@
     width:16%;
 }
 
+.mini-checkin .flip-clock-wrapper ul
+{
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
 .flip-clock-wrapper * {
     margin: 0;
     padding: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 .flip-clock-wrapper h3

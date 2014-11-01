@@ -1,9 +1,9 @@
-#account .pane-content
+#login .pane-content
 {
     text-align: center;
 }
 
-#account label span {
+#login label span {
     margin-left: -100%;
     width: 100%;
     display: inline-block;
@@ -66,8 +66,17 @@ a[href="#sign-in-with-email"]
     display:inline-block;
 }
 
-#account .email,
-#account .password
+#register .first-name,
+#register .last-name
+{
+    margin: 0 -2px;
+    padding: 0 2px;
+    display: inline-block;
+    width: 50%;
+}
+
+#login .email,
+#login .password
 {
     width: auto;
     margin:10px auto;
@@ -75,14 +84,14 @@ a[href="#sign-in-with-email"]
     display:none;
 }
 
-#account .form-actions
+#login .form-actions
 {
     max-width: 400px;
     margin:0 auto;
     display:none;
 }
 
-#account .password small
+#login .password small
 {
     display: none;
     color: #CC0000;

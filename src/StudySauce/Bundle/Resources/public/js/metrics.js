@@ -1,17 +1,3 @@
-Date.prototype.getWeekNumber = function () {
-    var d = new Date(+this);
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-    return Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7);
-};
-
-Date.prototype.getFirstDayOfWeek = function () {
-    var d = new Date(+this);
-    d.setHours(0, 0, 0, 0);
-    var day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? 0:0); // adjust when day is sunday
-    return new Date(d.setDate(diff));
-};
 
 $(document).ready(function () {
 
@@ -29,6 +15,20 @@ $(document).ready(function () {
         classes,
         resizeTimeout = null,
         arc = d3.svg.arc();
+
+    body.on('show', '#metrics,#home', function () {
+        body.find('#metrics h3, #metrics h4, .metrics-widget h3, .metrics-widget h4').textfill({
+            widthOnly: true,
+            maxFontPixels: 30
+        });
+    });
+
+    $(window).resize(function () {
+        body.find('#metrics h3, #metrics h4, .metrics-widget h3, .metrics-widget h4').textfill({
+            widthOnly: true,
+            maxFontPixels: 30
+        });
+    });
 
     function updateHistory(newHistory) {
         var svg = d3.selectAll($('#timeline:visible, .timeline:visible').find('svg > g.bars').toArray());

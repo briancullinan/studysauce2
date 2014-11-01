@@ -1,5 +1,5 @@
 security:
-    access_denied_url: /account/denied
+    access_denied_url: /denied
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
         FOS\UserBundle\Model\UserInterface: sha512
@@ -23,12 +23,12 @@ security:
                 provider: fos_userbundle
                 csrf_provider: form.csrf_provider
                 remember_me: true
-                failure_path: "/account/login"
-                login_path: "/account/login"
-                check_path: "/account/authenticate"
+                failure_path: "/login"
+                login_path: "/login"
+                check_path: "/authenticate"
                 default_target_path: /home
             logout:
-                path: /account/logout
+                path: /logout
                 target: /
             anonymous:    true
             remember_me:
@@ -42,17 +42,17 @@ security:
                 resource_owners:
                     facebook:           "/login/facebook"
                     google:             "/login/google"
-                login_path:        /account/login
+                login_path:        /login
                 use_forward:       false
-                failure_path:      /account/login
+                failure_path:      /login
                 default_target_path: /home
 
                 oauth_user_provider:
                     service: my_user_provider
 
     access_control:
-        - { path: ^/account/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/account/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/account/reset$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

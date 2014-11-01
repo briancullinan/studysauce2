@@ -1,4 +1,9 @@
 
+#deadlines .pane-content
+{
+    padding-bottom:40px;
+}
+
 #deadlines .sort-by {
     vertical-align: top;
     position: relative;
@@ -24,7 +29,7 @@
 }
 
 #deadlines header,
-#deadlines .deadline-row {
+.deadline-row {
     padding-top:5px;
     clear: both;
     display: block;
@@ -33,13 +38,9 @@
     white-space: nowrap;
 }
 
-#deadlines header > *,
-.deadline-row > * {
-    vertical-align: top;
-    display:inline-block;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    white-space: normal;
+.deadline-row {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
 }
 
 a[href="#add-deadline"] {
@@ -66,7 +67,7 @@ a[href="#save-deadline"],
     visibility: visible;
 }
 
-#deadlines a[href*="/schedule"] {
+#deadlines .form-actions a[href*="/schedule"] {
     position:absolute;
     bottom:10px;
     left:10px;
@@ -88,7 +89,17 @@ a[href="#add-deadline"] span {
 #deadlines header label:first-child,
 .deadline-row .class-name
 {
-    width:15%;
+    width:20%;
+}
+
+.deadline-row .class-name
+{
+    padding-left: 40px;
+}
+
+.deadline-row .class-name i
+{
+    margin-left: -40px;
 }
 
 #deadlines header label:nth-child(2),
@@ -106,9 +117,11 @@ a[href="#add-deadline"] span {
 
 .deadline-row .reminder label.checkbox {
     display: inline-block;
-    width: 19%;
+    width: 20%;
     text-align: center;
     overflow: hidden;
+    margin: 0 -2px;
+    padding: 0 2px;
 }
 
 #deadlines header label:nth-child(4),
@@ -120,8 +133,19 @@ a[href="#add-deadline"] span {
 #deadlines header label:nth-child(5),
 .deadline-row .percent
 {
-    width:10%;
+    width:15%;
     white-space: nowrap;
+}
+
+.deadline-row .percent
+{
+    padding-right: 54px;
+    margin-right:-54px;
+}
+
+.deadline-row.edit .percent {
+    padding-right: 2px;
+    margin-right: -2px;
 }
 
 .deadline-row label span,
@@ -172,6 +196,11 @@ a[href="#add-deadline"] span {
     display:block;
 }
 
+#deadlines .highlighted-link:last-of-type
+{
+    margin-bottom:-20px;
+}
+
 @media all and (max-width:1000px)
 {
     #deadlines .deadline-row
@@ -196,15 +225,26 @@ a[href="#add-deadline"] span {
         width:30%;
     }
 
+    .deadline-row.selected .assignment,
     .deadline-row.edit .assignment
     {
-        width: 69%;
+        width: 70%;
+    }
+
+    .deadline-row:hover:not(.selected):not(.edit) .assignment input,
+    .deadline-row:hover:not(.selected):not(.edit) .class-name select,
+    .deadline-row:hover:not(.selected):not(.edit) .percent input,
+    .deadline-row:hover:not(.selected):not(.edit) .assignment,
+    .deadline-row:hover:not(.selected):not(.edit) .class-name,
+    .deadline-row:hover:not(.selected):not(.edit) .percent {
+        color: #00CCEE;
+        cursor: pointer;
     }
 
     .deadline-row .reminder
     {
         clear:left;
-        width:59%;
+        width:60%;
     }
 
     #deadlines header label:nth-child(4),
@@ -216,8 +256,7 @@ a[href="#add-deadline"] span {
     #deadlines header label:nth-child(5),
     .deadline-row .percent
     {
-        width:12%;
-        margin-right:-30px;
+        width:20%;
     }
 
     #deadlines header label:nth-child(3),

@@ -1,6 +1,7 @@
 jQuery(document).ready(function() {
 
-    var account = jQuery('#account');
+    var body = $('body'),
+        account = jQuery('#login');
 
     function getHash()
     {
@@ -23,17 +24,17 @@ jQuery(document).ready(function() {
     account.data('state', getHash());
     accountFunc();
 
-    account.on('click', 'a[href="#sign-in-with-email"]', function (evt) {
+    body.on('click', '#login a[href="#sign-in-with-email"]', function (evt) {
         evt.preventDefault();
         $(this).remove();
         account.find('.email,.password,.form-actions').show();
     });
 
-    account.on('change', '.email input, .password input', accountFunc);
-    account.on('keyup', '.email input, .password input', accountFunc);
-    account.on('keydown', '.email input, .password input', accountFunc);
+    body.on('change', '#login .email input, #login .password input', accountFunc);
+    body.on('keyup', '#login .email input, #login .password input', accountFunc);
+    body.on('keydown', '#login .email input, #login .password input', accountFunc);
 
-    account.on('click', 'a[href="#user-login"]', function (evt) {
+    body.on('click', '#login a[href="#user-login"]', function (evt) {
         evt.preventDefault();
 
         if(account.find('.form-actions').is('.invalid'))

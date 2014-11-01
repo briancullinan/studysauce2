@@ -31,17 +31,17 @@ if(empty($uploads)) {
             <h3>Active reading - Follow the guide below to better retain what you are reading.</h3>
             <h4>Before reading:</h4>
             <label>Take no more than 2 minutes to skim the reading. What is the topic?</label>
-            <textarea readonly="readonly" name="strategy-skim"><?php print htmlspecialchars($entity->getSkim(), ENT_QUOTES); ?></textarea>
+            <textarea readonly="readonly" name="strategy-skim"><?php print $view->escape($entity->getSkim()); ?></textarea>
             <label>Why am I being asked to read this at this point in the class?</label>
-            <textarea readonly="readonly" name="strategy-why"><?php print htmlspecialchars($entity->getWhy(), ENT_QUOTES); ?></textarea>
+            <textarea readonly="readonly" name="strategy-why"><?php print $view->escape($entity->getWhy()); ?></textarea>
             <h4>During reading:</h4>
             <label>What questions do I have as I am reading?</label>
-            <textarea readonly="readonly" name="strategy-questions"><?php print htmlspecialchars($entity->getQuestions(), ENT_QUOTES); ?></textarea>
+            <textarea readonly="readonly" name="strategy-questions"><?php print $view->escape($entity->getQuestions()); ?></textarea>
             <h4>After reading:</h4>
             <label>Please summarize the reading in a few paragraphs (less than 1 page).  What are the 1 or 2 most important ideas from the reading?</label>
-            <textarea readonly="readonly" name="strategy-summarize"><?php print htmlspecialchars($entity->getSummarize(), ENT_QUOTES); ?></textarea>
+            <textarea readonly="readonly" name="strategy-summarize"><?php print $view->escape($entity->getSummarize()); ?></textarea>
             <label>What possible exam questions will result from this reading?</label>
-            <textarea readonly="readonly" name="strategy-exam"><?php print htmlspecialchars($entity->getExam(), ENT_QUOTES); ?></textarea>
+            <textarea readonly="readonly" name="strategy-exam"><?php print $view->escape($entity->getExam()); ?></textarea>
         <?php
         }
         elseif($strategy == 'teach')
@@ -61,9 +61,9 @@ if(empty($uploads)) {
 
             <div class="strategy-notes">
                 <label>Title:</label>
-                <input type="text" class="form-text" name="strategy-title" value="<?php print htmlspecialchars($entity->getTitle(), ENT_QUOTES); ?>" />
+                <input type="text" class="form-text" name="strategy-title" value="<?php print $view->escape($entity->getTitle()); ?>" />
                 <label>Notes:</label>
-                <textarea type="text" name="strategy-notes"><?php print htmlspecialchars($entity->getNotes(), ENT_QUOTES); ?></textarea>
+                <textarea type="text" name="strategy-notes"><?php print $view->escape($entity->getNotes()); ?></textarea>
             </div>
         <?php
         }
@@ -72,7 +72,7 @@ if(empty($uploads)) {
             /** @var OtherStrategy $entity */
             ?>
             <h3>Notes:</h3>
-            <textarea name="strategy-notes"><?php print htmlspecialchars($entity->getNotes(), ENT_QUOTES); ?></textarea>
+            <textarea name="strategy-notes"><?php print $view->escape($entity->getNotes()); ?></textarea>
         <?php
         }
         elseif($strategy == 'spaced')
@@ -86,7 +86,7 @@ if(empty($uploads)) {
             </div>
             <div class="strategy-notes">
                 <label>Write down any notes below:</label>
-                <textarea type="text" name="strategy-notes"><?php print htmlspecialchars($entity->getNotes(), ENT_QUOTES); ?></textarea>
+                <textarea type="text" name="strategy-notes"><?php print $view->escape($entity->getNotes()); ?></textarea>
             </div>
         <?php
         }

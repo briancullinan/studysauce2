@@ -9,22 +9,19 @@ $(document).ready(function () {
     };
 
     function activateMenu(path, noPush) {
-        if(window.sincluding) {
-            setTimeout(function () {
-                activateMenu(path, noPush);
-            }, 1000);
-            return;
-        }
-        var i = window.callbackUri.indexOf(path);
-        var panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
+        var that = $(this);
+        var i = window.callbackUri.indexOf(path),
+            panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
             panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
             item = body.find('.main-menu a[href="' + path + '"]').first();
 
         // activate the menu
         body.find('.main-menu .active').removeClass('active');
-        body.find('.main-menu ul.collapse.in').removeClass('in');
         if(item.length > 0) {
             visits[visits.length] = {path: item[0].pathname, query: item[0].search, hash: item[0].hash, time: (new Date()).toJSON()};
+            if(item.parents('ul.collapse').length != 0 &&
+                item.parents('ul.collapse')[0] != body.find('.main-menu ul.collapse.in')[0])
+                body.find('.main-menu ul.collapse.in').removeClass('in');
             item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
         }
         else
@@ -37,9 +34,15 @@ $(document).ready(function () {
 
         // download the panel
         if(panel.length == 0) {
-            if($(this).is('a') && $(this).parents('.pane-content').length > 0)
-                item = item.add($(this));
+            if(that.is('a') && that.parents('.panel-pane').length > 0)
+                item = item.add(that);
             item.each(function (i, obj) { loadingAnimation($(obj)); });
+            if(window.sincluding) {
+                setTimeout(function () {
+                    activateMenu.apply(that, [path, noPush]);
+                }, 1000);
+                return;
+            }
             window.sincluding = true;
             $.ajax({
                 url: window.callbackPaths[window.callbackKeys[i]],
@@ -50,23 +53,31 @@ $(document).ready(function () {
                         panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
                         styles = ssMergeStyles(content),
                         scripts = ssMergeScripts(content);
+                    content = content.not(styles).not(scripts);
 
                     // don't ever add panes that are already on the page, this is to help with debugging, but should never really happen
                     if (panelIds.length > 0)
                         panes = panes.not('#' + panelIds.join(', #'));
 
                     if (panes.length > 0) {
+                        content.filter('[id]').each(function () {
+                            var id = $(this).attr('id');
+                            if($('#' + id).length > 0)
+                                content = content.not('#' + id);
+                        });
                         content.filter('.panel-pane').hide().insertBefore(body.find('.footer'));
-                        content.not(panes).not(styles).not(scripts).insertBefore(body.find('.footer'));
+                        content.not(panes).insertBefore(body.find('.footer'));
                         var newPane = content.filter('#' + window.callbackKeys[i]);
                         if (newPane.length == 0) {
                             newPane = content.filter('.panel-pane').first();
                         }
                         body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+                        body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
+                        newPane.delay(75).fadeIn(75);
                         setTimeout(function () {
+                            content.trigger('loaded');
                             item.find('.squiggle').stop().remove();
-                            body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-                            newPane.delay(75).fadeIn(75).delay(75).trigger('show');
+                            newPane.trigger('show');
                         }, 100);
                         if (!noPush)
                             window.history.pushState(window.callbackKeys[i], "", path);
@@ -80,11 +91,13 @@ $(document).ready(function () {
                 }
             });
         }
+        // collapse menus and show panel if it is not already visible
         else if(!panel.is(':visible')) {
             body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+            body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
+            panel.delay(75).fadeIn(75);
             setTimeout(function () {
-                body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-                panel.delay(75).fadeIn(75).delay(75).trigger('show');
+                panel.trigger('show');
             }, 100);
             if(!noPush)
                 window.history.pushState(window.callbackKeys[i], "", path);
@@ -120,6 +133,8 @@ $(document).ready(function () {
             // cancel navigation is we are uncollapsing instead
             evt.preventDefault();
             body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
+            // re-render visible panels
+            body.find('.panel-pane:visible').redraw();
             if(parent.is('#left-panel'))
                 body.removeClass('right-menu').addClass('left-menu');
             else
@@ -215,7 +230,7 @@ $(document).ready(function () {
             preload: 'metadata',
             volume: 0.8,
             muted: false,
-            cssSelectorAncestor: 'body',
+            cssSelectorAncestor: '',
             cssSelector: {
                 play: '.minplayer-default-play',
                 pause: '.minplayer-default-pause'

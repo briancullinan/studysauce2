@@ -11,8 +11,13 @@
 
 .metrics-widget .centrify
 {
-    margin: -37.5% auto 0;
-    padding-top: 50%;
+    padding-bottom: 50%;
+    position:relative;
+}
+
+.metrics-widget h3
+{
+    margin-top:0;
 }
 
 #metrics text,
@@ -26,18 +31,20 @@
 #metrics .centrify {
     margin: 0 auto;
     display:inline-block;
+    width: 100%;
+    max-width: 600px;
 }
 
 #metrics #legend {
     text-align: center;
-    width: 25%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    vertical-align: middle;
-    margin: 20px -10px 0 -10px;
+    width: 30%;
+    vertical-align: top;
+    margin: 20px -2px 0 -2px;
     padding: 0 10px;
     display: inline-block;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 #metrics ol {
@@ -63,21 +70,34 @@
 .metrics-widget .timeline,
 .metrics-widget .pie-chart
 {
-    display: inline-block;
     width: 50%;
     max-width: 400px;
     vertical-align: middle;
     margin:0 -2px;
+    position:absolute;
+    padding: 0 10px 0 2px;
+}
+
+.metrics-widget .pie-chart
+{
+    padding-right:2px;
+    padding-left:10px;
+}
+
+.metrics-widget .pie-chart
+{
+    left:50%;
 }
 
 #metrics #timeline {
-     display: inline-block;
-     width: 50%;
-     max-width: 600px;
-     margin: 0 -10px;
-     padding: 0 10px;
-     vertical-align: middle;
-     overflow: hidden;
+    display: inline-block;
+    width: 35%;
+    max-width: 600px;
+    margin: 0 -2px;
+    padding: 0 10px;
+    vertical-align: top;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #metrics #timeline svg {
@@ -86,11 +106,12 @@
 
 #metrics #pie-chart {
     display: inline-block;
-    width: 25%;
-    margin: 0 -10px;
+    width: 35%;
+    margin: 0 -2px;
     padding: 0 10px;
-    vertical-align: middle;
+    vertical-align: top;
     overflow: hidden;
+    white-space: nowrap;
 }
 
 #metrics .checkin-row {
@@ -102,36 +123,29 @@
     display:none;
 }
 
-#metrics .checkin-row .class-name {
+#metrics .checkin-row .class-name,
+#metrics .checkin-row .class-date,
+#metrics .checkin-row .class-time
+{
+    width:33.33%;
     display: inline-block;
-    width: 175px;
     padding: 5px 0;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    margin:0 -2px;
     vertical-align: top;
+}
+
+#metrics .checkin-row .class-name {
     text-align: left;
 }
 
 #metrics .checkin-row .class-date {
-    white-space: nowrap;
-    display: inline-block;
-    width: 175px;
-    padding: 5px 0;
-    vertical-align: top;
-    overflow: hidden;
-    text-overflow: ellipsis;
     text-align: center;
 }
 
 #metrics .checkin-row .class-time {
-    white-space: nowrap;
-    display: inline-block;
-    width: 175px;
-    padding: 5px 0;
-    vertical-align: top;
-    overflow: hidden;
-    text-overflow: ellipsis;
     text-align: right;
 }
 
@@ -177,5 +191,6 @@
         display:block;
         width:auto;
         margin:0 auto;
+        position:static;
     }
 }
