@@ -152,8 +152,6 @@ $(document).ready(function () {
         }, 1000);
     });
 
-    $('#metrics:visible, #home:visible').trigger('show');
-
     function arcTween(d) {
         var piechart = $('#pie-chart:visible, .pie-chart:visible'),
             h2 = piechart.width() * 12 / 16,

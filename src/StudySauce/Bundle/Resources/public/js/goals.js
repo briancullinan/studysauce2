@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     var body = $('body'),
         goals = $('#goals');
-    var goalsFunc = function () {
+    function goalsFunc() {
         jQuery(this).each(function () {
             var row = $(this).closest('.goal-row'),
                 valid = true;
@@ -18,7 +18,7 @@ $(document).ready(function () {
             goals.find('.form-actions').removeClass('invalid').addClass('valid');
         else
             goals.find('.form-actions').removeClass('valid').addClass('invalid');
-    };
+    }
 
     body.on('click', '#goals a[href="#claim"]', function (evt) {
         evt.preventDefault();

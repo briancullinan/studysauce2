@@ -1,4 +1,6 @@
-
+<?php
+$user = $app->getUser();
+?>
 <div class="footer">
     <?php
     if ($view['slots']->has('isBuyFunnel')) : ?>
@@ -26,12 +28,15 @@
             <!--<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.studysauce.com">Like us</a>
             <a href="https://plus.google.com/share?url=https://www.studysauce.com">Like us</a>-->
         </div>
-        <ul class="menu secondary-menu"><li class="menu-333 first"><a href="/terms">Terms of service</a></li>
-            <li class="menu-334"><a href="/privacy">Privacy policy</a></li>
-            <li class="menu-753"><a href="/about-us">About us</a></li>
-            <li class="menu-1324"><a href="/contact">Contact us</a></li>
-            <li class="menu-740"><a href="/refund">Refund policy</a></li>
-            <li class="menu-1812 last"><a href="/user/logout" title="">Logout</a></li>
+        <ul class="menu secondary-menu">
+            <li class="first"><a href="<?php print $view['router']->generate('terms'); ?>">Terms of service</a></li>
+            <li><a href="<?php print $view['router']->generate('privacy'); ?>">Privacy policy</a></li>
+            <li><a href="<?php print $view['router']->generate('about'); ?>">About us</a></li>
+            <li><a href="#contact-support" data-toggle="modal">Contact us</a></li>
+            <li><a href="<?php print $view['router']->generate('refund'); ?>">Refund policy</a></li>
+            <?php if($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) { ?>
+            <li class="last"><a href="<?php print $view['router']->generate('logout'); ?>">Logout</a></li>
+            <?php } ?>
         </ul>
         <span><?php print 'Copyright ' . date('Y'); ?></span>
 

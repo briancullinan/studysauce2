@@ -1,28 +1,29 @@
 $(document).ready(function () {
 
     var body = $('body'),
-        userlist = jQuery('#userlist'),
-        sortSelect = function (a, b) {
-            if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date')
-                return -1;
-            if(b == 'Student' || b == 'Status' || b == 'Adviser' || b == 'School' || b == 'Date')
-                return 1;
-            if(a == 'Ascending (A-Z)' && b == 'Descending (Z-A)')
-                return -1;
-            if(b == 'Ascending (A-Z)' && a == 'Descending (Z-A)')
-                return 1;
-            if(a == 'Ascending (A-Z)' || a == 'Descending (Z-A)')
-                return -1;
-            if(b == 'Ascending (A-Z)' || b == 'Descending (Z-A)')
-                return 1;
+        userlist = jQuery('#userlist');
 
-            if (a.toUpperCase() > b.toUpperCase())
-                return 1;
-            if (a.toUpperCase() < b.toUpperCase())
-                return -1;
-            // a must be equal to b
-            return 0;
-        };
+    function sortSelect(a, b) {
+        if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date')
+            return -1;
+        if(b == 'Student' || b == 'Status' || b == 'Adviser' || b == 'School' || b == 'Date')
+            return 1;
+        if(a == 'Ascending (A-Z)' && b == 'Descending (Z-A)')
+            return -1;
+        if(b == 'Ascending (A-Z)' && a == 'Descending (Z-A)')
+            return 1;
+        if(a == 'Ascending (A-Z)' || a == 'Descending (Z-A)')
+            return -1;
+        if(b == 'Ascending (A-Z)' || b == 'Descending (Z-A)')
+            return 1;
+
+        if (a.toUpperCase() > b.toUpperCase())
+            return 1;
+        if (a.toUpperCase() < b.toUpperCase())
+            return -1;
+        // a must be equal to b
+        return 0;
+    };
 
     var status = ['Status', 'Ascending', 'Descending', 'Red', 'Yellow', 'Green'];
     userlist.find('th:nth-child(1)').html('<select><option>' + status.join("</option><option>") + '</option></select>');

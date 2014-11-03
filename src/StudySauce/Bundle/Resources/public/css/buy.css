@@ -1,33 +1,33 @@
 
 
-#cart_checkout #payment-pane,
-#cart_checkout #billing-pane,
-#cart_checkout #coupon-pane
+#checkout #payment-pane,
+#checkout #billing-pane,
+#checkout #coupon-pane
 {
     width:50%;
-    margin:0 -2px;
     display:inline-block;
     vertical-align: top;
-    padding-right:10px;
+    padding:10px;
+    margin: 0 -4px 10px;
+    border: 1px solid #555555;
+    box-shadow: 0 0 2px rgba(0,0,0,.25);
+    border-radius: 5px;
 }
 
-.page-cart-checkout form
-{
-    padding-left:10px;
+#checkout #coupon-pane {
+    margin-bottom: 0;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
 }
 
-.page-cart-checkout fieldset
+#checkout .form-actions .error
 {
-    display:inline-block;
-    width:50%;
-    vertical-align: top;
-    margin: 0 -1px 5px -10px;
-}
-
-#cart_checkout #payment-pane
-{
-    padding-right:0;
-    padding-left:10px;
+    font-weight: bold;
+    color: #CC0000;
+    display:block;
+    text-align: center;
 }
 
 #payment-pane .fieldset-description a
@@ -85,20 +85,28 @@
     vertical-align: middle;
 }
 
-#cart_checkout .form-actions,
 #payment-pane .cc-year,
 #payment-pane .cc-month,
 #billing-pane .first-name,
 #billing-pane .last-name,
 #billing-pane .city,
-#billing-pane .zip
-{
+#billing-pane .zip {
     width: 50%;
     margin: 0 -2px;
-    padding:0 2px;
+    padding: 0 2px;
     display: inline-block;
     vertical-align: bottom;
 }
+
+#checkout .form-actions
+{
+    width: 50%;
+    margin: 0 -4px 0 2px;
+    padding:0;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
 
 #payment-pane .cc-number
 {
@@ -150,9 +158,9 @@
         margin-right:-1px;
     }
 
-    #cart_checkout #payment-pane,
-    #cart_checkout #billing-pane,
-    #cart_checkout #coupon-pane
+    #checkout #payment-pane,
+    #checkout #billing-pane,
+    #checkout #coupon-pane
     {
         width: auto;
         display:block;

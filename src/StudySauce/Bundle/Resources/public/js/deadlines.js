@@ -3,7 +3,7 @@ $(document).ready(function () {
     var body = $('body'),
         deadlines = $('#deadlines');
 
-    var datesFunc = function () {
+    function datesFunc() {
         jQuery(this).each(function () {
             var that = jQuery(this),
                 error = false;
@@ -45,7 +45,7 @@ $(document).ready(function () {
             deadlines.find('.form-actions').removeClass('valid').addClass('invalid');
         else
             deadlines.find('.form-actions').removeClass('invalid').addClass('valid');
-    };
+    }
 
     datesFunc.apply(deadlines.find('.deadline-row'));
 

@@ -46,7 +46,6 @@ security:
                 use_forward:       false
                 failure_path:      /login
                 default_target_path: /home
-
                 oauth_user_provider:
                     service: my_user_provider
 

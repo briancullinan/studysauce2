@@ -3,7 +3,7 @@ $(document).ready(function () {
     var body = $('body'),
         schedule = $('#schedule');
 
-    var planFunc = function () {
+    function planFunc() {
         jQuery(this).each(function () {
             var row = $(this).closest('.class-row');
             if(row.find('.class-name input').val().trim() == '' &&
@@ -184,7 +184,7 @@ $(document).ready(function () {
             schedule.addClass('invalid-time');
         else
             schedule.removeClass('invalid-time');
-    };
+    }
 
     body.on('click', '#schedule a[href="#edit-class"]', function (evt) {
         evt.preventDefault();

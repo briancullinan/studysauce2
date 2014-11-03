@@ -70,6 +70,7 @@ $complete = !empty($quiz->getGoalPerformance()) &&
             <p>The two types of motivation are intrinsic and extrinsic motivation.  Intrinsic motivation is motivation that comes from within.  Ex. studying because you want the satisfaction of learning something new.  Extrinsic motivation is a reward that comes externally.  Ex. studying in order to get a good grade.</p>
         </div>
         <?php } ?>
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="highlighted-link">
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('lesson2', ['_step' => 3]); ?>" class="more">Next</a>

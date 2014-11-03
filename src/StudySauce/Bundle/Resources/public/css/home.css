@@ -130,13 +130,21 @@
         width:auto;
         padding-left:0;
         padding-right:0;
-        padding-bottom:20px;
+        padding-bottom:10px;
         margin-left:0;
         margin-right:0;
     }
 
 }
 
+@media all and (max-width: 700px)
+{
+
+    #home .widget
+    {
+        border-radius: 0px;
+    }
+}
 
 @media all and (max-width: 400px)
 {

@@ -17,6 +17,54 @@ $collection->add(
 );
 
 $collection->add(
+    'terms',
+    new Route(
+        '/terms/{_format}', [
+            '_controller' => 'StudySauceBundle:Landing:terms',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
+$collection->add(
+    'privacy',
+    new Route(
+        '/privacy/{_format}', [
+            '_controller' => 'StudySauceBundle:Landing:privacy',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
+$collection->add(
+    'about',
+    new Route(
+        '/about/{_format}', [
+            '_controller' => 'StudySauceBundle:Landing:about',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
+$collection->add(
+    'refund',
+    new Route(
+        '/refund/{_format}', [
+            '_controller' => 'StudySauceBundle:Landing:refund',
+            '_format' => 'funnel'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+        ]
+    )
+);
+
+$collection->add(
     '_visit',
     new Route(
         '/_visit', [
@@ -439,7 +487,7 @@ $collection->add(
 );
 
 $collection->add(
-    'account_login',
+    'login',
     new Route(
         '/login', [
             '_controller' => 'StudySauceBundle:Account:login',
@@ -470,7 +518,7 @@ $collection->add(
 );
 
 $collection->add(
-    'account_register',
+    'register',
     new Route(
         '/register', [
             '_controller' => 'StudySauceBundle:Account:register',
@@ -481,7 +529,7 @@ $collection->add(
     )
 );
 
-$collection->add('account_logout', new Route('/logout'));
+$collection->add('logout', new Route('/logout'));
 
 $collection->add(
     'account_denied',
@@ -532,8 +580,8 @@ $collection->add(
         [],
         '',
         [],
-        ['POST'],
-        'request.isXmlHttpRequest() || request.getMethod() == "POST"'
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 
@@ -551,14 +599,29 @@ $collection->add(
 );
 
 $collection->add(
-    'cart_checkout',
+    'checkout',
     new Route(
-        '/cart/checkout/{_format}', [
+        '/checkout/{_format}', [
             '_controller' => 'StudySauceBundle:Buy:checkout',
             '_format' => 'funnel'
         ], [
             '_format' => DASHBOARD_VIEWS,
         ]
+    )
+);
+
+$collection->add(
+    'checkout_pay',
+    new Route(
+        '/checkout/pay', [
+            '_controller' => 'StudySauceBundle:Buy:pay'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 

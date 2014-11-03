@@ -28,7 +28,7 @@ $email_base = $view['assets']->getUrl('images');
                 <?php print $link; ?>
             <?php else: ?>
                 To access your account <a style="color:#FF9900;"
-                                          href="<?php print $view['router']->generate('account_login', [], true); ?>"
+                                          href="<?php print $view['router']->generate('login', [], true); ?>"
                                           target="_blank">click here.</a>
             <?php endif; ?>
         </p>
@@ -59,7 +59,7 @@ $email_base = $view['assets']->getUrl('images');
 <div
     style="text-align: center; margin: 0 auto; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px; color: #555555; width:100%; max-width:600px;">
     Copyright <?php print date('Y'); ?>. &nbsp;<a target="_blank"
-                                                  href="<?php print $view['router']->generate('account_login', [], true); ?>"
+                                                  href="<?php print $view['router']->generate('login', [], true); ?>"
                                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Privacy
         Policy</a>&nbsp;|&nbsp;<a target="_blank" href="%unsubscribe%"
                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Unsubscribe</a>

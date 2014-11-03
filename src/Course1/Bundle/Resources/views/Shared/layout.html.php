@@ -20,27 +20,45 @@ if (!$courseIncluded) {
     $view['slots']->output('body');
     $view['slots']->stop();
 
-    $controller = $app->getRequest()->get('_controller');
+    $request = $app->getRequest();
+    $controller = $request->get('_controller');
     $view['slots']->start('sincludes');
-    // TODO: include courses from the index page
-    if ($app->getRequest()->get('_step') != 3) {
-        echo $view['actions']->render(new ControllerReference($controller, ['_step' => 3, '_format' => 'tab']),['strategy' => 'sinclude']);
-    }
+    if($request->getMethod() == 'GET') {
+        // TODO: include courses from the index page
+        if ($app->getRequest()->get('_step') != 3) {
+            echo $view['actions']->render(
+                new ControllerReference($controller, ['_step' => 3, '_format' => 'tab']),
+                ['strategy' => 'sinclude']
+            );
+        }
 
-    if ($app->getRequest()->get('_step') != 2) {
-        echo $view['actions']->render(new ControllerReference($controller, ['_step' => 2, '_format' => 'tab']),['strategy' => 'sinclude']);
-    }
+        if ($app->getRequest()->get('_step') != 2) {
+            echo $view['actions']->render(
+                new ControllerReference($controller, ['_step' => 2, '_format' => 'tab']),
+                ['strategy' => 'sinclude']
+            );
+        }
 
-    if ($app->getRequest()->get('_step') != 1) {
-        echo $view['actions']->render(new ControllerReference($controller, ['_step' => 1, '_format' => 'tab']),['strategy' => 'sinclude']);
-    }
+        if ($app->getRequest()->get('_step') != 1) {
+            echo $view['actions']->render(
+                new ControllerReference($controller, ['_step' => 1, '_format' => 'tab']),
+                ['strategy' => 'sinclude']
+            );
+        }
 
-    if ($app->getRequest()->get('_step') != 0) {
-        echo $view['actions']->render(new ControllerReference($controller, ['_step' => 0, '_format' => 'tab']),['strategy' => 'sinclude']);
-    }
+        if ($app->getRequest()->get('_step') != 0) {
+            echo $view['actions']->render(
+                new ControllerReference($controller, ['_step' => 0, '_format' => 'tab']),
+                ['strategy' => 'sinclude']
+            );
+        }
 
-    if ($app->getRequest()->get('_step') != 4) {
-        echo $view['actions']->render(new ControllerReference($controller, ['_step' => 4, '_format' => 'tab']),['strategy' => 'sinclude']);
+        if ($app->getRequest()->get('_step') != 4) {
+            echo $view['actions']->render(
+                new ControllerReference($controller, ['_step' => 4, '_format' => 'tab']),
+                ['strategy' => 'sinclude']
+            );
+        }
     }
     $view['slots']->stop();
 

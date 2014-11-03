@@ -18,11 +18,11 @@ $isDashboard = strpos($view['slots']->get('classes'), 'dashboard-home') > -1;
                 foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>" />
                 <?php endforeach; ?>
-            <div>I am accountable to: <br><a href="#partner">Click to set up</a></div>
+            <div>I am accountable to: <br><a href="<?php print $view['router']->generate('partner'); ?>">Click to set up</a></div>
             <?php } ?>
         </div>
         <div id="welcome-message"><strong><?php print $app->getUser()->getFirstName(); ?></strong>
-            <a href="/user/logout" title="Log out">logout</a>    </div>
+            <a href="<?php print $view['router']->generate('logout'); ?>" title="Log out">logout</a></div>
         <div id="jquery_jplayer" style="width: 0; height: 0;"></div>
     </div>
 </div>

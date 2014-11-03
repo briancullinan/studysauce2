@@ -30,6 +30,38 @@ class LandingController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function termsAction()
+    {
+        return $this->render('StudySauceBundle:Landing:terms.html.php');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function privacyAction()
+    {
+        return $this->render('StudySauceBundle:Landing:privacy.html.php');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function aboutAction()
+    {
+        return $this->render('StudySauceBundle:Landing:about.html.php');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function refundAction()
+    {
+        return $this->render('StudySauceBundle:Landing:refund.html.php');
+    }
+
+    /**
      * Do nothing
      *
      * @param Request $request

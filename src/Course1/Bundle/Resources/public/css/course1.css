@@ -170,10 +170,13 @@
 
 .course1.step2 label.input span
 {
-    position:absolute;
-    left:20px;
-    top:50%;
-    margin-top:-12px;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    margin-top: -12px;
+    width: 20px;
+    text-align: center;
+    display: inline-block;
 }
 
 .course1.step2 label i

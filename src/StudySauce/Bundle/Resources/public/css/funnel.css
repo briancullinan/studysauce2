@@ -77,7 +77,7 @@
     background-position:-75px -75px;
 }
 
-.page-cart-checkout .guide li:nth-child(1) > span > span
+#checkout .guide li:nth-child(1) > span > span
 {
     background-position:-75px 0;
 }
@@ -204,7 +204,7 @@
         background-position:-275px -50px;
     }
 
-    .page-cart-checkout .guide li:nth-child(1) > span > span
+    #checkout .guide li:nth-child(1) > span > span
     {
         background-position:-275px 0;
     }

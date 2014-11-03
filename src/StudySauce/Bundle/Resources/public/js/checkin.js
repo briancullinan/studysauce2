@@ -44,8 +44,6 @@ $(document).ready(function () {
         setTimeout(function () {setClock();}, 200);
     });
 
-    $('#checkin:visible, #home:visible').trigger('show');
-
     function resetClock()
     {
         sessionCurrent = sessionStart = new Date().getTime() / 1000;

@@ -150,7 +150,7 @@
 {
     border-bottom:3px solid #555555;
     margin:0;
-    padding:5px;
+    padding:5px 15px;
 }
 
 #right-panel h3
@@ -189,7 +189,7 @@
 
 .main-menu li.coming
 {
-    padding-left:40px;
+    padding-left:45px;
 }
 
 .main-menu li.like-us a
@@ -232,7 +232,7 @@
 {
     text-align: center;
     color:#555555;
-    left:5px;
+    left:10px;
     font-size: 30px;
     width:30px;
 }
@@ -669,7 +669,7 @@
 #left-panel .main-menu a:active span,
 #left-panel .main-menu a.active span {
     color:#0099BB;
-    left:0;
+    left:5px;
 }
 
 #left-panel .main-menu a:hover:not([href]),
@@ -712,7 +712,7 @@
 #right-panel.collapsed,
 #left-panel.collapsed
 {
-    width:40px;
+    width:50px;
     white-space: nowrap;
     padding-top:100px;
 }
@@ -844,7 +844,7 @@
 #left-panel.collapsed .main-menu a:active span,
 #left-panel.collapsed .main-menu a.active span
 {
-    left:5px;
+    left:10px;
 }
 
 #left-panel.collapsed nav,
@@ -863,12 +863,17 @@
     padding-left:50px;
 }
 
-#left-panel.collapsed .main-menu a:hover:not([href]),
-#left-panel.collapsed .main-menu a:focus:not([href]),
-#left-panel.collapsed .main-menu a:active:not([href]),
-#left-panel.collapsed .main-menu a.active:not([href])
+#left-panel.collapsed .main-menu a:hover,
+#left-panel.collapsed .main-menu a:focus,
+#left-panel.collapsed .main-menu a:active,
+#left-panel.collapsed .main-menu a.active
 {
-    padding-left:45px;
+    padding-left:50px;
+}
+
+#left-panel.collapsed .main-menu li.coming
+{
+    padding-left:50px;
 }
 
 @media all and (max-width: 1300px), (max-height: 700px)
@@ -905,14 +910,10 @@
         display:block;
     }
 
-    #left-panel .main-menu a:not([href])
-    {
-        padding-left:50px;
-    }
-
+    #left-panel .main-menu a:not([href]),
     #left-panel .main-menu a:hover:not([href])
     {
-        padding-left:45px;
+        padding-left:50px;
     }
 
     #left-panel.expanded .main-menu a:hover:not([href]),

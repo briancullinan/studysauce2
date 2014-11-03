@@ -227,8 +227,6 @@ $(document).ready(function () {
         }, 200);
     });
 
-    $('#plan:visible').trigger('show');
-
     body.on('click', '#plan .sort-by a[href="#expand"]', function () {
         if(plans.is('.fullcalendar'))
         {

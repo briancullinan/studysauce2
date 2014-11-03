@@ -54,6 +54,16 @@ h2
     font-size:35px;
 }
 
+legend
+{
+    margin-bottom:10px;
+    border-bottom:0;
+    color: inherit;
+    width:auto;
+    display:inline-block;
+
+}
+
 h2, h3, h4, h5
 {
     text-align: left;

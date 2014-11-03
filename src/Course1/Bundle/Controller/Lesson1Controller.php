@@ -104,9 +104,7 @@ class Lesson1Controller extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('quiz1_update')
             : null;
 
-        return new JsonResponse([
-                'csrf_token' => $csrfToken
-            ]);
+        return $this->forward('Course1Bundle:Lesson1:wizard', ['_step' => 2, '_format' => 'tab']);
     }
 }
 

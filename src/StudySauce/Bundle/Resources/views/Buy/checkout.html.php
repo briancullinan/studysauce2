@@ -32,27 +32,27 @@ foreach ($view['assetic']->javascripts(
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-    <div class="panel-pane" id="cart_checkout">
-        <div class="pane-content">
+    <div class="panel-pane" id="checkout">
+        <div class="pane-content clearfix">
             <?php echo $view->render('StudySauceBundle:Buy:funnel.html.php'); ?>
             <fieldset id="billing-pane">
                 <legend>Billing information</legend>
                 <div class="first-name">
-                    <label class="input"><span>First name</span><input name="first-name" type="text" value=""></label>
+                    <label class="input"><span>First name</span><input name="first-name" type="text" value="Brian"></label>
                 </div>
                 <div class="last-name">
-                    <label class="input"><span>Last name</span><input name="last-name" type="text" value=""></label>
+                    <label class="input"><span>Last name</span><input name="last-name" type="text" value="Cullinan"></label>
                 </div>
-                <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
+                <label class="input"><span>Street address</span><input name="street1" type="text" value="6934 E Sandra Ter"></label>
                 <label class="input"><input name="street2" type="text" value=""></label>
                 <div class="city">
-                    <label class="input"><span>City</span><input name="city" type="text" value=""></label>
+                    <label class="input"><span>City</span><input name="city" type="text" value="Scottsdale"></label>
                 </div>
                 <div class="zip">
-                    <label class="input"><span>Postal code</span><input name="zip" type="text" value=""></label>
+                    <label class="input"><span>Postal code</span><input name="zip" type="text" value="85254"></label>
                 </div>
                 <label class="select"><span>State/Province</span><select name="state">
-                        <option value="0" selected="selected">- Select -</option>
+                        <option value="" selected="selected">- Select -</option>
                         <option value="1">Alabama</option>
                         <option value="2">Alaska</option>
                         <option value="3">American Samoa</option>
@@ -123,14 +123,13 @@ $view['slots']->start('body'); ?>
                         <option value="124">Canada</option>
                         <option value="840" selected="selected">United States</option>
                     </select></label>
-                <a href="#" onclick="jQuery('#coupon-pane').show(500); return false;">Have a coupon code? Click
-                    <span>here</span>.</a>
+                <a href="#show-coupon" class="cloak">Have a coupon code? Click <span class="reveal">here</span>.</a>
             </fieldset>
             <fieldset id="payment-pane">
                 <legend>Payment method</legend>
                 <div class="fieldset-description">
                     <div>
-                        <label class="radio"><input name="reoccurs" type="radio" value="monthly"><i></i><span>$9.99/mo</span></label><br />
+                        <label class="radio"><input name="reoccurs" type="radio" value="monthly" checked="checked"><i></i><span>$9.99/mo</span></label><br />
                         <label class="radio"><input name="reoccurs" type="radio" value="yearly"><i></i><span>$99/year <sup>Recommended</sup></span></label>
                     </div>
                     <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/money_back_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
@@ -139,7 +138,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="cc-number">
                     <label class="input">
-                        <span>Card number</span><input name="cc-number" type="text" value="">
+                        <span>Card number</span><input name="cc-number" type="text" value="4744880045591912">
                         <div class="cards">
                             <img alt="VISA" src="<?php echo $view->escape($view['assets']->getUrl('bundles/studysauce/images/visa.gif')) ?>" />
                             <img alt="MC" src="<?php echo $view->escape($view['assets']->getUrl('bundles/studysauce/images/mc.gif')) ?>" />
@@ -151,15 +150,15 @@ $view['slots']->start('body'); ?>
                 <div class="cc-month">
                     <label class="select"><span>Expiration date</span>
                         <select name="cc-month">
-                            <option value="1" selected="selected">01 - January</option>
-                            <option value="2">02 - February</option>
-                            <option value="3">03 - March</option>
-                            <option value="4">04 - April</option>
-                            <option value="5">05 - May</option>
-                            <option value="6">06 - June</option>
-                            <option value="7">07 - July</option>
-                            <option value="8">08 - August</option>
-                            <option value="9">09 - September</option>
+                            <option value="01" selected="selected">01 - January</option>
+                            <option value="02">02 - February</option>
+                            <option value="03">03 - March</option>
+                            <option value="04">04 - April</option>
+                            <option value="05">05 - May</option>
+                            <option value="06">06 - June</option>
+                            <option value="07">07 - July</option>
+                            <option value="08">08 - August</option>
+                            <option value="09">09 - September</option>
                             <option value="10">10 - October</option>
                             <option value="11">11 - November</option>
                             <option value="12">12 - December</option>
@@ -168,30 +167,15 @@ $view['slots']->start('body'); ?>
                 <div class="cc-year">
                     <label class="select"><span>Expiration year</span>
                         <select name="cc-year">
-                            <option value="2014" selected="selected">2014</option>
-                            <option value="2015">2015</option>
-                            <option value="2016">2016</option>
-                            <option value="2017">2017</option>
-                            <option value="2018">2018</option>
-                            <option value="2019">2019</option>
-                            <option value="2020">2020</option>
-                            <option value="2021">2021</option>
-                            <option value="2022">2022</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
-                            <option value="2031">2031</option>
-                            <option value="2032">2032</option>
-                            <option value="2033">2033</option>
-                            <option value="2034">2034</option>
-                        </select></label>
+                            <?php
+                            $first = true;
+                            for($y = 0; $y < 20; $y++)
+                            {
+                                ?><option value="<?php print intval(date('y')) + $y; ?>" <?php print ($first ? 'selected="selected"': ''); ?>><?php print intval(date('Y')) + $y; ?></option><?php
+                                $first = false;
+                            } ?></select></label>
                 </div>
-                <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value=""><br />
+                <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value="111">
                     <img src="https://www.studysauce.com/sites/all/modules/ubercart/payment/uc_credit/images/info.png" alt="">
                     <a href="#ccv-info" data-toggle="modal">What's the CVV?</a>
                 </label>
@@ -199,11 +183,11 @@ $view['slots']->start('body'); ?>
             <fieldset id="coupon-pane">
                 <legend>Coupon discount</legend>
                 <div class="coupon-code">
-                    <label class="input"><input name="coupon-code" type="text" value=""></label>
+                    <label class="input"><input name="coupon-code" type="text" placeholder="Enter code" value=""></label>
                 </div>
                 <a href="#coupon-apply" class="more">Apply to order</a>
             </fieldset>
-            <div class="form-actions highlighted-link"><a href="#submit-order" class="more">Complete order</a></div>
+            <div class="form-actions highlighted-link invalid"><a href="#submit-order" class="more">Complete order</a></div>
         </div>
     </div>
 <?php $view['slots']->stop();

@@ -1,6 +1,7 @@
 
 $(document).ready(function () {
 
+    // TODO: remove old unused tabs
     var body = $('body');
 
     Date.prototype.addHours= function(h){
@@ -65,7 +66,7 @@ $(document).ready(function () {
                             if($('#' + id).length > 0)
                                 content = content.not('#' + id);
                         });
-                        content.filter('.panel-pane').hide().insertBefore(body.find('.footer'));
+                        panes.hide().insertBefore(body.find('.footer'));
                         content.not(panes).insertBefore(body.find('.footer'));
                         var newPane = content.filter('#' + window.callbackKeys[i]);
                         if (newPane.length == 0) {
@@ -145,6 +146,10 @@ $(document).ready(function () {
         return true;
     }
 
+    setTimeout(function () {
+        body.find('.panel-pane:visible').trigger('show');
+    }, 100);
+
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
         evt.preventDefault();
         var parent = $(this).parents('#left-panel, #right-panel');
@@ -163,7 +168,8 @@ $(document).ready(function () {
 
         var that = $(this),
             el = that[0],
-            path = $(this).attr('href');
+            path = $(this).attr('href'),
+            callback = null;
         if(!expandMenu.apply(this, [evt]))
             return;
 
@@ -178,6 +184,8 @@ $(document).ready(function () {
         else
         {
             evt.preventDefault();
+            if(window.callbackKeys[callback] == '_welcome')
+                path = window.callbackUri[window.callbackKeys.indexOf('home')];
             activateMenu.apply(this, [path]);
         }
     }

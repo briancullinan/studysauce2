@@ -103,7 +103,7 @@
     vertical-align: middle;
 }
 
-.header-wrapper a[href="/user/logout"] {
+.header-wrapper a[href$="/logout"] {
     display: inline-block;
     height: 32px;
     width: 32px;

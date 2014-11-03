@@ -55,7 +55,7 @@ $view['slots']->start('body'); ?>
                             <span class="price">Free</span></p>
                     </th>
                     <th class="highlight"><h2>Premium</h2>
-                        <p class="highlighted-link"><a href="<?php print $view['router']->generate('cart_checkout'); ?>" class="more">Choose plan</a><br>
+                        <p class="highlighted-link"><a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Choose plan</a><br>
                             <span class="price">$10/month</span></p>
                     </th>
                     <th><h2>Enterprise</h2>
@@ -152,7 +152,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="premium">
                     <h2>Premium</h2>
-                    <p class="highlighted-link"><a href="<?php print $view['router']->generate('cart_checkout'); ?>" class="more">Choose plan</a><br>
+                    <p class="highlighted-link"><a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Choose plan</a><br>
                         <span class="price">$10/month</span></p>
 
                     <p>All of the above plus: <?php $view['slots']->output('check'); ?></p>

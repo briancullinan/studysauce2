@@ -7,6 +7,8 @@ use Course1\Bundle\Entity\Quiz2;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -64,6 +66,51 @@ class Lesson2Controller extends Controller
                 throw new NotFoundHttpException();
         }
 
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        // store quiz results
+        $quiz = new Quiz2();
+        $quiz->setCourse($user->getCourse1s()->first());
+        if(!empty($request->get('performance')))
+            $quiz->setGoalPerformance($request->get('performance'));
+
+        if(!empty($request->get('acronymS')))
+            $quiz->setSpecific($request->get('acronymS'));
+
+        if(!empty($request->get('acronymM')))
+            $quiz->setMeasurable($request->get('acronymM'));
+
+        if(!empty($request->get('acronymA')))
+            $quiz->setAchievable($request->get('acronymA'));
+
+        if(!empty($request->get('acronymR')))
+            $quiz->setRelevant($request->get('acronymR'));
+
+        if(!empty($request->get('acronymT')))
+            $quiz->setTimeBound($request->get('acronymT'));
+
+        if(!empty($request->get('motivationI')))
+            $quiz->setIntrinsic($request->get('motivationI'));
+
+        if(!empty($request->get('motivationE')))
+            $quiz->setExtrinsic($request->get('motivationE'));
+
+        $orm->persist($quiz);
+        $orm->flush();
+
+        return $this->forward('Course1Bundle:Lesson2:wizard', ['_step' => 2, '_format' => 'tab']);
     }
 }
 
