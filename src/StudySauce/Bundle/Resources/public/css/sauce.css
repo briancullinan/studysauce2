@@ -317,7 +317,7 @@ a:hover,
 a:active span.reveal,
 a:active
 {
-    color: #00CCEE;
+    color: #0099BB;
     text-decoration: none;
     outline:none;
 }
@@ -784,16 +784,6 @@ sup.premium
 }
 
 @media all and (max-width: 700px) {
-
-    body.left-menu
-    {
-        left:220px;
-    }
-
-    body.right-menu
-    {
-        left:-220px;
-    }
 
 }
 

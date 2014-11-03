@@ -215,7 +215,6 @@
 {
     line-height: 40px;
     text-align: center;
-    color: #555555;
     padding: 0;
     display: block;
     overflow: hidden;
@@ -231,7 +230,6 @@
 #left-panel .main-menu a span
 {
     text-align: center;
-    color:#555555;
     left:10px;
     font-size: 30px;
     width:30px;
@@ -779,7 +777,7 @@
 
 #left-panel a[href="#expand"]:hover .icon-bar
 {
-    background-color:#00CCEE;
+    background-color:#0099BB;
 }
 
 #left-panel a[href="#expand"],
@@ -968,6 +966,154 @@
 
 @media all and (max-width: 700px) {
 
+    body.left-menu
+    {
+        left:220px;
+        overflow-x:hidden;
+    }
+
+    body.right-menu
+    {
+        left:-220px;
+        overflow-x:hidden;
+    }
+
+    #left-panel .navbar-toggle .icon-bar
+    {
+        display:none;
+    }
+
+    #left-panel .navbar-toggle {
+        background: url("../images/menu_new.png") no-repeat 50% -5210px transparent;
+        padding: 2px 5px 12px 5px;
+        height: 40px;
+    }
+
+    body.left-menu #left-panel.expanded .navbar-toggle
+    {
+        left:220px;
+    }
+    body.right-menu #right-panel.expanded .navbar-toggle
+    {
+        right:25px;
+    }
+
+    body.right-menu #left-panel a[href="#expand"], body.left-menu #right-panel a[href="#expand"]
+    {
+        display:none;
+    }
+
+    body.left-menu #left-panel.expanded .navbar-toggle, body.right-menu #right-panel.expanded .navbar-toggle,
+    body.left-menu #left-panel a[href="#expand"], body.right-menu #right-panel a[href="#expand"]
+    {
+        display:block;
+    }
+
+    #right-panel .main-menu a[href*="/home"] span
+    {
+        background-position: left -5605px;
+    }
+
+    #right-panel .main-menu a[href*="/goals"] span
+    {
+        background-position: left -5705px;
+    }
+
+    #right-panel .main-menu a[href*="/schedule"] span
+    {
+        background-position: left -6605px;
+    }
+
+    #right-panel .main-menu a[href*="/checkin"] span
+    {
+        background-position: left -5905px;
+    }
+
+    #right-panel .main-menu a[href*="/metrics"] span
+    {
+        background-position: left -6005px;
+    }
+
+    #right-panel .main-menu a[href*="/deadlines"] span
+    {
+        background-position: left -5805px;
+    }
+
+    #right-panel .main-menu a[href*="/partner"] span
+    {
+        background-position: left -6205px;
+    }
+
+    #right-panel .main-menu a[href*="/plan"] span
+    {
+        background-position: left -6105px;
+    }
+
+    #right-panel .main-menu a[href*="/profile"] span
+    {
+        background-position: left -5205px;
+    }
+
+    #right-panel .main-menu a[href*="/premium"] span
+    {
+        background-position: left -6405px;
+    }
+
+    #right-panel .main-menu a[href*="/account"] span
+    {
+        background-position: left -6505px;
+    }
+
+    #right-panel .main-menu a[href*="#midterm"] span
+    {
+        background-position: left -6805px;
+    }
+
+    #right-panel .main-menu a[href*="#calculator"] span
+    {
+        background-position: left -6705px;
+    }
+
+    #right-panel .main-menu a[href*="#quizlet"] span
+    {
+        background-position: left -6905px;
+    }
+
+    #right-panel .main-menu a[href*="#drive"] span
+    {
+        background-position: left -7005px;
+    }
+
+    #right-panel .main-menu a[href*="#evernote"] span
+    {
+        background-position: left -7105px;
+    }
+
+    #right-panel .main-menu a[href*="#blackboard"] span
+    {
+        background-position: left -7205px;
+    }
+
+    #right-panel h3, #left-panel h3
+    {
+        border-bottom-color:#FFFFFF;
+    }
+
+    .main-menu a:hover,
+    .main-menu a:focus,
+    .main-menu a:active,
+    .main-menu a.active,
+    #left-panel.expanded .main-menu a:hover,
+    #left-panel.expanded .main-menu a:focus,
+    #left-panel.expanded .main-menu a:active,
+    #left-panel.expanded .main-menu a.active,
+    #right-panel.expanded .main-menu a:hover,
+    #right-panel.expanded .main-menu a:focus,
+    #right-panel.expanded .main-menu a:active,
+    #right-panel.expanded .main-menu a.active
+    {
+        background-color:#333333;
+    }
 
     #left-panel,
     #right-panel,
@@ -1024,7 +1170,7 @@
         top:0;
         transform: none;
         margin-top: 0;
-        background-position: 50% -5100px;
+        background-position: 50% -5200px;
     }
 
     #right-panel a[href="#expand"]:hover .navbar-toggle
