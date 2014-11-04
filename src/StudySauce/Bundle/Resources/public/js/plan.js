@@ -88,7 +88,6 @@ $(document).ready(function () {
                                     plans.removeClass('empty');
                                     plans.find('#empty-week').dialog('hide');
                                 }
-                                callback(events);
                             };
                         w.setTime(s);
                         if(window.planLoaded.indexOf(w.getWeekNumber()) == -1) {
@@ -101,23 +100,25 @@ $(document).ready(function () {
                                         content = $(data);
                                     window.planEvents = [];
                                     // merge scripts
-                                    ssMergeScripts(content);
+                                    ssMergeScripts(content.filter('script:not([src])'));
                                     for(var i = 0; i < window.planEvents.length; i++)
                                     {
                                         window.planEvents[i].start = new Date(window.planEvents[i].start);
                                         window.planEvents[i].end = new Date(window.planEvents[i].end);
                                     }
 
-                                    // TODO: merge rows
                                     if(w.getWeekNumber() == window.planLoaded[0] + 1)
                                         content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
                                     filterEvents();
+                                    // TODO: merge rows
                                     window.planEvents = $.merge(window.planEvents, tmpEvents);
+                                    callback(events);
                                 }
                             });
                         }
                         else {
                             filterEvents();
+                            callback(events);
                         }
                     },
                     eventClick: function(calEvent) {

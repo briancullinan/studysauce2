@@ -60,7 +60,9 @@ class Lesson1Controller extends Controller
                 return $this->render('Course1Bundle:Lesson1:reward.html.php');
                 break;
             case 4:
-                return $this->render('Course1Bundle:Lesson1:investment.html.php');
+                return $this->render('Course1Bundle:Lesson1:investment.html.php', [
+                        'course' => $course
+                    ]);
                 break;
             default:
                 throw new NotFoundHttpException();
@@ -79,9 +81,15 @@ class Lesson1Controller extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        /** @var Course1 $course */
+        $course = $user->getCourse1s()->first();
+
         // store quiz results
         $quiz = new Quiz1();
-        $quiz->setCourse($user->getCourse1s()->first());
+        $quiz->setCourse($course);
+        if(!empty($request->get('whyStudy')))
+            $course->setWhyStudy($request->get('whyStudy'));
+
         if(!empty($request->get('education')))
             $quiz->setEducation($request->get('education'));
 
@@ -99,10 +107,6 @@ class Lesson1Controller extends Controller
 
         $orm->persist($quiz);
         $orm->flush();
-
-        $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('quiz1_update')
-            : null;
 
         return $this->forward('Course1Bundle:Lesson1:wizard', ['_step' => 2, '_format' => 'tab']);
     }

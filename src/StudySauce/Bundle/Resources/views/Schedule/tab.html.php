@@ -60,8 +60,8 @@ $view['slots']->stop();
         <label>Sa</label>
         <label>Su</label>
     </div>
-    <label>Time</label>
-    <label>&nbsp;Date</label>
+    <label>Class Time</label>
+    <label>Class Date</label>
 </header>
 <div class="schedule clearfix">
     <?php
@@ -143,18 +143,17 @@ $view['slots']->stop();
                 </label>
             </div>
             <input type="hidden" name="event-type" value="c">
-
             <div class="read-only"><a href="#edit-class">&nbsp;</a><a href="#remove-class">&nbsp;</a></div>
-            <div class="invalid-times">Error - invalid class time</div>
-            <div class="overlaps-only">Error - classes cannot overlap</div>
-            <div class="invalid-only">Error - please make sure all class information is filled in</div>
         </div>
     <?php } ?>
 </div>
 
-<div class="form-actions highlighted-link invalid">
+<div class="form-actions highlighted-link clearfix invalid">
     <a href="#add-class">Add <span>+</span> class</a>
-    <a href="#save-class" class="more">Save</a>
+    <div class="invalid-times">Error - invalid class time</div>
+    <div class="overlaps-only">Error - classes cannot overlap</div>
+    <div class="invalid-only">Error - please make sure all class information is filled in</div>
+    <a href="#save-class" class="more" style="<?php print (!$isDemo ? 'visibility:hidden;' : ''); ?>">Save</a>
 </div>
 <hr/>
 <h2>Enter work or other recurring obligations here</h2>
@@ -214,8 +213,8 @@ $view['slots']->stop();
                 <label class="checkbox"><span>Su</span><input type="checkbox" value="Su" <?php print (!$isDemo && in_array('Su', $daysOfTheWeek) ? 'checked="checked"' : ''); ?>><i></i></label>
 
                 <div class="recurring">
-                    <label class="checkbox">Recurring<input type="checkbox" value="Weekly"
-                            <?php print ($isDemo || in_array('Weekly', $daysOfTheWeek) ? 'checked="checked"' : ''); ?>><i></i>Weekly</label>
+                    <label class="checkbox"><input type="checkbox" value="Weekly"
+                            <?php print ($isDemo || in_array('Weekly', $daysOfTheWeek) ? 'checked="checked"' : ''); ?>><span>Recurring</span><i></i><span>Weekly</span></label>
                 </div>
             </div>
             <div class="start-time">
@@ -248,29 +247,28 @@ $view['slots']->stop();
                 <label class="input">
                     <span>Date</span>
                     <input type="text" placeholder="Start"
-                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/Y', $startDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/y', $startDate)); ?>">
                 </label>
             </div>
             <div class="end-date">
                 <label class="input">
                     <span>&nbsp;</span>
                     <input type="text" placeholder="End"
-                           autocomplete="off" value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/Y', $endDate)); ?>">
+                           autocomplete="off" value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/y', $endDate)); ?>">
                 </label>
             </div>
-            <input type="hidden" name="event-type" value="o">
-
             <div class="read-only"><a href="#edit-class">&nbsp;</a><a href="#remove-class">&nbsp;</a></div>
-            <div class="invalid-times">Error - invalid class time</div>
-            <div class="overlaps-only">Error - classes cannot overlap</div>
-            <div class="invalid-only">Error - please make sure all class information is filled in</div>
+            <input type="hidden" name="event-type" value="o">
         </div>
     <?php } ?>
 </div>
 
-<div class="form-actions highlighted-link invalid">
+<div class="form-actions highlighted-link clearfix invalid">
     <a href="#add-other">Add <span>+</span> other event</a>
-    <a href="#save-class" class="more">Save</a>
+    <div class="invalid-times">Error - invalid class time</div>
+    <div class="overlaps-only">Error - classes cannot overlap</div>
+    <div class="invalid-only">Error - please make sure all class information is filled in</div>
+    <a href="#save-class" class="more" style="<?php print (!$isDemo ? 'visibility:hidden;' : ''); ?>">Save</a>
 </div>
 
 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>" />

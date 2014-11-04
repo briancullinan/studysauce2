@@ -301,13 +301,37 @@
 
 .course1.step3 img
 {
-    width:40%;
-    margin:0 5%;
-    box-shadow: 0 0 15px rgba(0,0,0,.75);
+    width: 40%;
+    margin: 0 5%;
+    display:inline-block;
+    position:relative;
     z-index: 3;
     vertical-align: middle;
     border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,1);
 }
+/*
+.course1.step3 .joke {
+    width: 40%;
+    margin: 0 5%;
+    display:inline-block;
+    position:relative;
+    box-shadow: 0 0 15px rgba(255,255,255,1);
+}
+
+.course1.step3 .joke:after
+{
+    position:absolute;
+    content: " ";
+    display:block;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    box-shadow: inset 0 0 15px rgba(0,0,0,.75);
+    border-radius: 5px;
+}
+*/
 
 .course1.step3 .highlighted-link
 {

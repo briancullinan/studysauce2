@@ -147,7 +147,7 @@ $(document).ready(function () {
     }
 
     setTimeout(function () {
-        body.find('.panel-pane:visible').trigger('show');
+        body.find('.panel-pane').trigger('loaded').filter(':visible').trigger('show');
     }, 100);
 
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {

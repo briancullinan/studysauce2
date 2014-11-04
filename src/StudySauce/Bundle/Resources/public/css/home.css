@@ -139,6 +139,10 @@
 
 @media all and (max-width: 700px)
 {
+    #home .widget > h3
+    {
+        border-radius: 0;
+    }
 
     #home .widget
     {

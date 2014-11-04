@@ -1,4 +1,3 @@
-
 <?php
 use Course1\Bundle\Entity\Quiz2;
 

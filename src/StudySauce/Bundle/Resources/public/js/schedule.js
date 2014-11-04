@@ -168,14 +168,13 @@ $(document).ready(function () {
             schedule.find('.university input').val().trim() != '' &&
             (schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 ||
             (schedule.find('.class-row.valid').not('.blank').length > 0 &&
-            schedule.find('.university input').val() !=
-            schedule.find('.university input').prop('defaultValue'))))
+            schedule.find('.university input').val().trim() !=
+            schedule.find('.university input').data('default'))))
             schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
             schedule.find('.form-actions').removeClass('valid').addClass('invalid');
 
-        if(schedule.find('.class-row.overlaps:visible').length > 0 ||
-            (window.location.pathname != '/schedule2' && schedule.find('.class-row.overlaps').length > 0))
+        if(schedule.find('.class-row.overlaps:visible').length > 1)
             schedule.addClass('overlaps');
         else
             schedule.removeClass('overlaps');
@@ -191,6 +190,7 @@ $(document).ready(function () {
         var that = $(this),
             row = that.parents('.class-row');
         planFunc.apply(row.removeClass('read-only').addClass('edit'));
+        that.parents('.schedule').next('.highlighted-link').find('a[href="#save-class"]').css('visibility', 'visible');
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
@@ -252,7 +252,9 @@ $(document).ready(function () {
     function updateSchedule(data)
     {
         var response = $(data);
+        schedule.find('.university input').data('default', schedule.find('.university input').val().trim())
         schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
+        schedule.closest('a[href="#save-class"]').css('visibility', 'hidden');
         // update class schedule
         $('.schedule .class-row').remove();
         response.find('.schedule:not(.other) .class-row')
@@ -279,6 +281,7 @@ $(document).ready(function () {
         addClass.find('.class-name input').attr('placeholder', isOther
                 ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
                 : examples[Math.floor(Math.random() * examples.length)]);
+        addClass.parents('.schedule').next('.highlighted-link').find('a[href="#save-class"]').css('visibility', 'visible');
         planFunc.apply(addClass);
     });
 
@@ -386,8 +389,13 @@ $(document).ready(function () {
     });
 
     // set default value for university name
-    if(schedule.find('.university input').val().trim() != '')
-        schedule.find('.university input').prop('defaultValue', schedule.find('.university input').val().trim());
+    body.on('focus', '#schedule .university input', function () {
+        schedule.find('a[href="#save-class"]').first().css('visibility', 'visible');
+    });
+    body.on('loaded', '#schedule', function () {
+        if(schedule.find('.university input').val().trim() != '')
+            schedule.find('.university input').data('default', schedule.find('.university input').val().trim());
+    });
 
     planFunc.apply(schedule.find('.schedule .class-row'));
 });

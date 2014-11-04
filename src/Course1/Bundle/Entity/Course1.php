@@ -38,6 +38,23 @@ class Course1
     protected $quiz2s;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz3", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $quiz3s;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz4", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $quiz4s;
+
+    /**
+     * @ORM\Column(type="string", name="why_study", nullable = true)
+     */
+    protected $whyStudy;
+
+    /**
      * @ORM\Column(type="integer", name="level")
      */
     protected $level = 0;
@@ -67,6 +84,8 @@ class Course1
     {
         $this->quiz1s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->quiz2s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz3s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz4s = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -235,5 +254,94 @@ class Course1
     public function getQuiz2s()
     {
         return $this->quiz2s;
+    }
+
+    /**
+     * Add quiz3s
+     *
+     * @param \Course1\Bundle\Entity\Quiz3 $quiz3s
+     * @return Course1
+     */
+    public function addQuiz3(\Course1\Bundle\Entity\Quiz3 $quiz3s)
+    {
+        $this->quiz3s[] = $quiz3s;
+
+        return $this;
+    }
+
+    /**
+     * Remove quiz3s
+     *
+     * @param \Course1\Bundle\Entity\Quiz3 $quiz3s
+     */
+    public function removeQuiz3(\Course1\Bundle\Entity\Quiz3 $quiz3s)
+    {
+        $this->quiz3s->removeElement($quiz3s);
+    }
+
+    /**
+     * Get quiz3s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getQuiz3s()
+    {
+        return $this->quiz3s;
+    }
+
+    /**
+     * Add quiz4s
+     *
+     * @param \Course1\Bundle\Entity\Quiz4 $quiz4s
+     * @return Course1
+     */
+    public function addQuiz4(\Course1\Bundle\Entity\Quiz4 $quiz4s)
+    {
+        $this->quiz4s[] = $quiz4s;
+
+        return $this;
+    }
+
+    /**
+     * Remove quiz4s
+     *
+     * @param \Course1\Bundle\Entity\Quiz4 $quiz4s
+     */
+    public function removeQuiz4(\Course1\Bundle\Entity\Quiz4 $quiz4s)
+    {
+        $this->quiz4s->removeElement($quiz4s);
+    }
+
+    /**
+     * Get quiz4s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getQuiz4s()
+    {
+        return $this->quiz4s;
+    }
+
+    /**
+     * Set whyStudy
+     *
+     * @param string $whyStudy
+     * @return Course1
+     */
+    public function setWhyStudy($whyStudy)
+    {
+        $this->whyStudy = $whyStudy;
+
+        return $this;
+    }
+
+    /**
+     * Get whyStudy
+     *
+     * @return string 
+     */
+    public function getWhyStudy()
+    {
+        return $this->whyStudy;
     }
 }

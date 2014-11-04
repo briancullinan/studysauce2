@@ -1,4 +1,8 @@
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
+<?php
+use Course1\Bundle\Entity\Course1;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+
+/** @var Course1 $course */
 
  $view->extend('Course1Bundle:Shared:layout.html.php');
 
@@ -13,7 +17,7 @@
             <br />
             <label class="input">
                 <span>Why do you want to become better at studying?</span>
-                <textarea placeholder="" cols="60" rows="2"></textarea>
+                <textarea placeholder="" cols="60" rows="2"><?php print $view->escape($course->getWhyStudy()); ?></textarea>
             </label>
         </div>
         <div class="grid_6">

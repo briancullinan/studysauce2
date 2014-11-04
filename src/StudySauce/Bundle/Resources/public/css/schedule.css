@@ -11,6 +11,11 @@
     white-space: nowrap;
 }
 
+#schedule header
+{
+    border-bottom: 1px solid #555555;
+}
+
 .schedule .class-row
 {
     border-top: 1px solid transparent;
@@ -94,6 +99,18 @@
     color:inherit;
     width:auto;
 }
+
+.schedule .class-row.read-only .recurring input:not(:checked) ~ *
+{
+    display:none;
+}
+
+.schedule .class-row.read-only .recurring input:checked ~ *,
+.schedule .class-row.edit .recurring input ~ *
+{
+    display:inline-block;
+}
+
 .schedule .class-row .recurring i
 {
     margin-left:5px;
@@ -126,6 +143,12 @@
     margin-right:-2px;
 }
 
+.schedule .overlaps .start-time input,
+.schedule .overlaps .end-time input
+{
+    border-bottom:3px solid #CC0000;
+}
+
 .schedule .start-time .input.mobile-only,
 .schedule .end-time .input.mobile-only
 {
@@ -142,7 +165,7 @@ a[href="#add-class"], a[href="#add-other"] {
     font-weight: 700;
     display: inline-block;
     float:left;
-    margin-top:5px;
+    margin-top:20px;
 }
 
 a[href="#add-class"] span, a[href="#add-other"] span {
@@ -158,19 +181,28 @@ a[href="#add-class"] span, a[href="#add-other"] span {
     vertical-align: middle;
 }
 
-.schedule .invalid-times,
-.schedule .invalid-only,
-.schedule .overlaps-only {
+#schedule .invalid-times,
+#schedule .invalid-only,
+#schedule .overlaps-only {
     display:none;
+    clear: both;
+    position: relative;
+    padding: 2px 3px;
+    border: 2px solid #CC0000;
+    color:#660000;
+    border-radius: 5px;
+
 }
 
-.schedule .class-row.overlaps .class-name,
-.schedule .invalid-times,
-.schedule .invalid-only,
-.schedule .overlaps-only {
-    clear: both;
-    padding-left: 35px;
-    position: relative;
+#schedule.invalid-time .invalid-times,
+#schedule.invalid-only .invalid-only,
+#schedule.overlaps .overlaps-only {
+    display:inline-block;
+}
+
+.schedule .class-row.overlaps .class-name i
+{
+    display: none;
 }
 
 .schedule .class-row.overlaps .class-name:before,
@@ -190,7 +222,7 @@ a[href="#add-class"] span, a[href="#add-other"] span {
     position: absolute;
 }
 
-.schedule .class-row.overlaps .class-name:before,
+#schedule.overlaps .class-name:before,
 #schedule.invalid-time .invalid-times:before,
 #schedule.invalid-only .invalid-only:before,
 #schedule.overlaps .overlaps-only:before {
@@ -205,6 +237,18 @@ a[href="#add-class"] span, a[href="#add-other"] span {
 .class-row.read-only .read-only
 {
     display:inline-block;
+}
+
+#schedule .selectize-control.single .selectize-input
+{
+    background-color: transparent;
+    border-color: transparent;
+}
+
+#schedule .selectize-control.single .selectize-input.focus
+{
+    background-color: #FFFFFF;
+    border-color: #0099BB;
 }
 
 @media all and (max-width: 1000px)
