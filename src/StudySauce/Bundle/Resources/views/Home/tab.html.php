@@ -3,10 +3,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
-$view['slots']->start('checkin');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:index', ['_format' => 'tab']));
-$view['slots']->stop();
-
 $view['slots']->start('stylesheets');
 
 foreach ($view['assetic']->stylesheets(
@@ -76,5 +72,5 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-$view['slots']->output('checkin');
+
 $view['slots']->stop();

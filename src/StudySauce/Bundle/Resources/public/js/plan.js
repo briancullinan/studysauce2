@@ -8,7 +8,7 @@ $(document).ready(function () {
         m = date.getMonth(),
         calendar;
 
-    function initialize() {
+    function TIMER_SECONDSinitialize() {
         var plans = $('#plan');
         if (!isInitialized)
         {
