@@ -121,6 +121,14 @@ class AccountController extends Controller
      */
     public function registerAction(Request $request)
     {
+        // list oauth services
+        $services = [];
+        /** @var OAuthHelper $oauth */
+        $oauth = $this->get('hwi_oauth.templating.helper.oauth');
+        foreach($oauth->getResourceOwners() as $o) {
+            $services[$o] = $oauth->getLoginUrl($o);
+        }
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
@@ -128,7 +136,8 @@ class AccountController extends Controller
                 'email' => $request->get('email'),
                 'first' => $request->get('first'),
                 'last' => $request->get('last'),
-                'csrf_token' => $csrfToken
+                'csrf_token' => $csrfToken,
+                'services' => $services
             ]);
     }
 

@@ -56,7 +56,7 @@ $collection->add(
     )
 );
 
-$collection->add('lesson3', new Route('/course/1/lesson/3/step/{_step}/{_format}', [
+$collection->add('lesson3', new Route('/course/1/lesson/4/step/{_step}/{_format}', [
             '_controller' => 'Course1Bundle:Lesson3:wizard',
             '_step' => 0,
             '_format'     => 'index'
@@ -68,7 +68,7 @@ $collection->add('lesson3', new Route('/course/1/lesson/3/step/{_step}/{_format}
 $collection->add(
     'lesson3_update',
     new Route(
-        '/course/1/lesson/3/update',
+        '/course/1/lesson/4/update',
         [
             '_controller' => 'Course1Bundle:Lesson3:update'
         ],
@@ -81,7 +81,7 @@ $collection->add(
     )
 );
 
-$collection->add('lesson4', new Route('/course/1/lesson/4/step/{_step}/{_format}', [
+$collection->add('lesson4', new Route('/course/1/lesson/3/step/{_step}/{_format}', [
             '_controller' => 'Course1Bundle:Lesson4:wizard',
             '_step' => 0,
             '_format'     => 'index'
@@ -93,7 +93,7 @@ $collection->add('lesson4', new Route('/course/1/lesson/4/step/{_step}/{_format}
 $collection->add(
     'lesson4_update',
     new Route(
-        '/course/1/lesson/4/update',
+        '/course/1/lesson/3/update',
         [
             '_controller' => 'Course1Bundle:Lesson4:update'
         ],

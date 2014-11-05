@@ -10,6 +10,17 @@
     padding: 0 240px 20px 240px;
 }
 
+.dashboard-home.adviser .pane-content .nav-tabs>li>a
+{
+    border-radius: 0;
+}
+
+.dashboard-home.adviser .pane-content .nav-tabs>li:last-child>a
+{
+    margin-right:0;
+    border-radius: 0 5px 0 0;
+}
+
 .dashboard-home a
 {
     position: relative;
@@ -26,7 +37,8 @@
 }
 
 aside + .panel-pane,
-.dashboard-home.funnel .header-wrapper + .panel-pane
+.dashboard-home.funnel .header-wrapper + .panel-pane,
+.dashboard-home.adviser .header-wrapper + .panel-pane
 {
     display:block;
 }

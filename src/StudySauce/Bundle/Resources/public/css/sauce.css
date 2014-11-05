@@ -753,15 +753,14 @@ sup.premium
 
 .nav-tabs>li>a
 {
-    background: #ffffff none;
-    border: 1px solid #eeeeee;
-    border-top-width: 0;
-    border-bottom-width:3px;
+    background: #eeeeee none;
+    border:0;
 }
 
 .nav-tabs>li>a:hover
 {
-    border-color: #eee #eee #0099BB;
+    border-bottom: 3px solid #0099BB;
+    background: #FFFFFF none;
 }
 
 .nav-tabs>li.active>a,

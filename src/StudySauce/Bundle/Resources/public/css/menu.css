@@ -260,6 +260,18 @@
     background-position: left -5005px;
 }
 
+#right-panel .main-menu a[href*="/userlist"] span
+{
+    background-position: left -4905px;
+}
+
+#right-panel .main-menu a[href*="/userlist"]:hover span,
+#right-panel .main-menu a[href*="/userlist"]:focus span,
+#right-panel .main-menu a[href*="/userlist"]:active span,
+#right-panel .main-menu a[href*="/userlist"].active span {
+    background-position: left -5005px;
+}
+
 #right-panel .main-menu a[href*="/deadlines"] span
 {
     background-position: left -805px;
@@ -317,6 +329,18 @@
 #right-panel .main-menu a[href*="/partner"]:focus span,
 #right-panel .main-menu a[href*="/partner"]:active span,
 #right-panel .main-menu a[href*="/partner"].active span {
+    background-position: left -1705px;
+}
+
+#right-panel .main-menu a[href*="/import"] span
+{
+    background-position: left -1605px;
+}
+
+#right-panel .main-menu a[href*="/import"]:hover span,
+#right-panel .main-menu a[href*="/import"]:focus span,
+#right-panel .main-menu a[href*="/import"]:active span,
+#right-panel .main-menu a[href*="/import"].active span {
     background-position: left -1705px;
 }
 

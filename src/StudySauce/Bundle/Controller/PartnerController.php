@@ -126,5 +126,10 @@ class PartnerController extends Controller
                 'users' => $users
             ]);
     }
+
+    public function importAction()
+    {
+        return $this->render('StudySauceBundle:Partner:import.html.php');
+    }
 }
 

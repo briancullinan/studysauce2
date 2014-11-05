@@ -71,6 +71,7 @@
     width: 25px;
     display: inline-block;
     line-height: 35px;
+    vertical-align: top;
 }
 
 .footer a[href*="google"]

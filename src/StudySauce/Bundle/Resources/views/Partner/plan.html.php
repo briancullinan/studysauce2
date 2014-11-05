@@ -53,7 +53,6 @@ foreach ($view['assetic']->javascripts(
             window.planEvents = [];
         if(typeof(window.planLoaded) == 'undefined')
             window.planLoaded = [];
-        debugger;
         if(window.planLoaded.indexOf(<?php print date_timestamp_set(new \DateTime(), $week)->format('W'); ?>) == -1) {
             window.planEvents = $.merge(window.planEvents, JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>'));
             window.planLoaded = $.merge(window.planLoaded, [<?php print date_timestamp_set(new \DateTime(), $week)->format('W'); ?>]);
@@ -167,7 +166,7 @@ $view['slots']->start('body'); ?>
                 print ($event->getCompleted() ? ' done' : ''); ?>" id="eid-<?php print $event->getId(); ?>">
                     <div class="class-name">
                         <span class="class<?php print $classI; ?>">&nbsp;</span>
-                        <div class="read-only"><?php print $event->getName(); ?></div>
+                        <?php print $event->getName(); ?>
                     </div>
                     <div class="assignment">
                         <div class="read-only"><?php print $title; ?></div>
@@ -182,7 +181,7 @@ $view['slots']->start('body'); ?>
                 </div>
             <?php } ?>
             <a class="return-to-top" href="#return-to-top">Top</a>
-            <?php echo $view->render('StudySauceBundle:Plan:strategies.html.php'); ?>
+            <?php echo $view->render('StudySauceBundle:Partner:strategies.html.php'); ?>
         </div>
     </div>
 <?php $view['slots']->stop();
