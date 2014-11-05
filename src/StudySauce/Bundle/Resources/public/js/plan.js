@@ -8,7 +8,7 @@ $(document).ready(function () {
         m = date.getMonth(),
         calendar;
 
-    function TIMER_SECONDSinitialize() {
+    function initialize() {
         var plans = $('#plan');
         if (!isInitialized)
         {
@@ -222,6 +222,7 @@ $(document).ready(function () {
     //   we will activate the calendar only once, when the menu is clicked, this assumes #hash detection works, and
     //   it triggers the menu clicking
     body.on('show', '#plan', function () {
+        debugger;
         setTimeout(function () {
             initialize();
             if($('#calendar:visible').length > 0)
