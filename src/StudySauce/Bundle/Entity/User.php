@@ -109,7 +109,10 @@ class User extends BaseUser
     protected $google_access_token;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="Group")
+     * @ORM\JoinTable(name="ss_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")})
      */
     protected $groups;
 
@@ -633,7 +636,7 @@ class User extends BaseUser
     /**
      * Add groups
      *
-     * @param \StudySauce\Bundle\Entity\Group $groups
+     * @param GroupInterface|Group $groups
      * @return User
      */
     public function addGroup(GroupInterface $groups)
@@ -646,7 +649,8 @@ class User extends BaseUser
     /**
      * Remove groups
      *
-     * @param \StudySauce\Bundle\Entity\Group $groups
+     * @param GroupInterface|Group $groups
+     * @return $this|void
      */
     public function removeGroup(GroupInterface $groups)
     {

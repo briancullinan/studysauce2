@@ -38,8 +38,16 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(
     [
-        '@StudySauceBundle/Resources/public/js/checkin.js',
-        '@StudySauceBundle/Resources/public/js/jquery.fittext.js',
+        '@checkin',
+    ],
+    [],
+    ['output' => 'bundles/studysauce/js/*.js']
+) as $url):
+    ?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach;
+    foreach ($view['assetic']->javascripts(
+    [
         '@StudySauceBundle/Resources/public/js/plan.js',
         '@StudySauceBundle/Resources/public/js/strategies.js',
         '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',

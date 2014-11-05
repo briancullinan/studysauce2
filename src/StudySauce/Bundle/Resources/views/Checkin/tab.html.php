@@ -16,8 +16,7 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
  $view['slots']->start('javascripts');
  foreach ($view['assetic']->javascripts([
-         '@StudySauceBundle/Resources/public/js/checkin.js',
-         '@StudySauceBundle/Resources/public/js/jquery.fittext.js'
+         '@checkin'
     ], [], ['output' => 'bundles/studysauce/js/*.js']) as $url):
     ?><script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;

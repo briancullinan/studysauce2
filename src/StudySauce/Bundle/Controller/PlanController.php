@@ -377,7 +377,7 @@ class PlanController extends Controller
         $events = array_merge($events, $freeStudy);
 
         // cache and compare list of events in their default positions
-        $weekHash = md5(serialize($events));
+        $weekHash = md5(serialize($events) /* TODO: add configuration used to build plan so it updates when that changes */ );
         if (($eventWeek = $schedule->getWeeks()->filter(
                 function (Week $w) use ($weekHash, $events) {
                     return $w->getHash() == $weekHash && $w->getEvents()->count() == count($events);

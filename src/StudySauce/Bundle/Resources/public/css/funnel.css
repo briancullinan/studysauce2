@@ -72,7 +72,7 @@
     text-align: center;
 }
 
-.page-path-profile .guide li:nth-child(3) > span > span
+#profile .guide li:nth-child(3) > span > span
 {
     background-position:-75px -75px;
 }
@@ -82,76 +82,57 @@
     background-position:-75px 0;
 }
 
-.page-path-schedule2 .guide li:nth-child(5) > span > span,
-.page-path-schedule .guide li:nth-child(5) > span > span
+#schedule .guide li:nth-child(5) > span > span
 {
     background-position:-75px -150px;
 }
 
-.page-path-customization2 .guide li:nth-child(5) > span > span,
-.page-path-customization .guide li:nth-child(5) > span > span
+#customization .guide li:nth-child(5) > span > span
 {
     background-position:-150px -150px;
 }
 
-.page-path-customization2 .guide li:nth-child(2),
-.page-path-customization2 .guide li:nth-child(4),
-.page-path-customization2 .guide li:nth-child(6),
-.page-path-customization .guide li:nth-child(2),
-.page-path-customization .guide li:nth-child(4),
-.page-path-customization .guide li:nth-child(6),
-.page-path-schedule2 .guide li:nth-child(4),
-.page-path-schedule .guide li:nth-child(4),
-.page-path-schedule2 .guide li:nth-child(2),
-.page-path-schedule .guide li:nth-child(2),
-.page-path-profile .guide li:nth-child(2)
+#customization .guide li:nth-child(2),
+#customization .guide li:nth-child(4),
+#customization .guide li:nth-child(6),
+#schedule .guide li:nth-child(4),
+#schedule .guide li:nth-child(2),
+#profile .guide li:nth-child(2)
 {
     border-bottom: 10px solid #22DD00;
 }
 
-.page-path-customization2 .guide li:nth-child(1) > span > span,
-.page-path-customization .guide li:nth-child(1) > span > span,
-.page-path-schedule2 .guide li:nth-child(1) > span > span,
-.page-path-schedule .guide li:nth-child(1) > span > span,
-.page-path-profile .guide li:nth-child(1) > span > span
+#customization .guide li:nth-child(1) > span > span,
+#schedule .guide li:nth-child(1) > span > span,
+#profile .guide li:nth-child(1) > span > span
 {
     background-position:-150px 0;
 }
 
-.page-path-customization2 .guide li:nth-child(3) > span > span,
-.page-path-customization .guide li:nth-child(3) > span > span,
-.page-path-schedule2 .guide li:nth-child(3) > span > span,
-.page-path-schedule .guide li:nth-child(3) > span > span
+#customization .guide li:nth-child(3) > span > span,
+#schedule .guide li:nth-child(3) > span > span
 {
     background-position:-150px -75px;
 }
 
-.page-path-customization2 .guide li:nth-child(7) > span > span,
-.page-path-customization .guide li:nth-child(7) > span > span
+#customization .guide li:nth-child(7) > span > span
 {
     background-position:-75px -225px;
 }
 
-.page-path-profile .guide li:nth-child(1) span,
-.page-path-schedule2 .guide li:nth-child(1) span,
-.page-path-schedule .guide li:nth-child(1) span,
-.page-path-schedule2 .guide li:nth-child(3) span,
-.page-path-schedule .guide li:nth-child(3) span,
-.page-path-customization .guide li:nth-child(1) span,
-.page-path-customization .guide li:nth-child(3) span,
-.page-path-customization .guide li:nth-child(5) span,
-.page-path-customization2 .guide li:nth-child(1) span,
-.page-path-customization2 .guide li:nth-child(3) span,
-.page-path-customization2 .guide li:nth-child(5) span
+#profile .guide li:nth-child(1) span,
+#schedule .guide li:nth-child(1) span,
+#schedule .guide li:nth-child(3) span,
+#customization .guide li:nth-child(1) span,
+#customization .guide li:nth-child(3) span,
+#customization .guide li:nth-child(5) span
 {
     text-decoration: line-through;
 }
 
-.page-path-profile .guide li:nth-child(3),
-.page-path-customization2 .guide li:nth-child(7),
-.page-path-customization .guide li:nth-child(7),
-.page-path-schedule2 .guide li:nth-child(5),
-.page-path-schedule .guide li:nth-child(5)
+#profile .guide li:nth-child(3),
+#customization .guide li:nth-child(7),
+#schedule .guide li:nth-child(5)
 {
     font-weight: bold;
 }

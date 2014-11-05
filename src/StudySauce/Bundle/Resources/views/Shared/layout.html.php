@@ -120,10 +120,7 @@ $collection = $router->getRouteCollection();
 <?php $view['slots']->output('body') ?>
 <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 <?php foreach ($view['assetic']->javascripts([
-        '@StudySauceBundle/Resources/public/js/jquery-2.1.1.min.js',
-        '@StudySauceBundle/Resources/public/js/jquery-ui.min.js',
-        '@StudySauceBundle/Resources/public/js/bootstrap.min.js',
-        '@StudySauceBundle/Resources/public/js/underscore-min.js'
+        '@layout'
     ],
     [],
     ['output' => 'bundles/studysauce/js/*.js']

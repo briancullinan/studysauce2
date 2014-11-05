@@ -109,6 +109,7 @@ $(document).ready(function () {
 
                                     if(w.getWeekNumber() == window.planLoaded[0] + 1)
                                         content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                                    // TODO: do this after merge if events aren't showing up
                                     filterEvents();
                                     // TODO: merge rows
                                     window.planEvents = $.merge(window.planEvents, tmpEvents);

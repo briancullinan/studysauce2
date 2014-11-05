@@ -11,6 +11,21 @@
     white-space: nowrap;
 }
 
+#schedule .highlighted-link a[href$="/customization"]
+{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+}
+
+#schedule .highlighted-link:last-of-type {
+    margin-bottom: -20px;
+}
+
+#schedule .pane-content {
+    padding-bottom: 40px;
+}
+
 #schedule header
 {
     border-bottom: 1px solid #555555;

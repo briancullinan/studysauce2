@@ -85,7 +85,7 @@ $(document).ready(function () {
                         newStuff = newStuff.not('#' + id);
                 });
                 that.replaceWith(newStuff);
-                setTimeout(function () {newStuff.trigger('loaded');}, 100);
+                setTimeout(function () {newStuff.filter('[id]').trigger('loaded');}, 100);
                 window.sincluding = false;
             },
             error: function () {
@@ -129,6 +129,8 @@ $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
 
 });
 
+// set some extra utility functions globally
+
 Date.prototype.getWeekNumber = function () {
 // Create a copy of this date object
     var target  = new Date(this.valueOf());
@@ -164,6 +166,11 @@ Date.prototype.getFirstDayOfWeek = function () {
     var day = d.getDay(),
         diff = d.getDate() - day + (day == 0 ? 0:0); // adjust when day is sunday
     return new Date(d.setDate(diff));
+};
+
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
 };
 
 $.fn.redraw = function(){

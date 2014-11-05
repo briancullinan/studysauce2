@@ -32,7 +32,7 @@
     margin: 0 auto;
     display:inline-block;
     width: 100%;
-    max-width: 600px;
+    max-width: 1000px;
 }
 
 #metrics #legend {
@@ -58,7 +58,7 @@
 }
 
 #metrics ol li {
-    margin: 5px 0;
+    padding: 5px 0;
     list-style: none;
 }
 

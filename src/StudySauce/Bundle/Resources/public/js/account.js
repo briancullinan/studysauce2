@@ -34,6 +34,19 @@ jQuery(document).ready(function() {
     body.on('keydown', '#account .first-name input, #account .last-name input, #account .email input, ' +
         '#account .password input, #account .new-password input', accountFunc);
 
+    body.on('click', '#account a[href="#edit-account"]', function (evt) {
+        evt.preventDefault();
+        account.find('.account-info').removeClass('read-only').addClass('edit');
+        account.find('.new-password').hide();
+        account.find('.pass-info').show();
+    });
+
+    body.on('click', '#account a[href="#edit-password"]', function (evt) {
+        evt.preventDefault();
+        account.find('.new-password').show();
+        account.find('.pass-info').show();
+    });
+
     body.on('click', '#account a[href="#cancel-account"]', function (evt) {
         evt.preventDefault();
         jQuery.ajax({

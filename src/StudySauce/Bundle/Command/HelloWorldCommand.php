@@ -22,6 +22,7 @@ class HelloWorldCommand extends Command
      */
     protected function configure()
     {
+        // TODO: use studysauce:cron to send reminder emails
         $this
             ->setName('acme:hello')
             ->setDescription('Hello World example command')

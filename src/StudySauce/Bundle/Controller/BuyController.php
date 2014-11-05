@@ -79,6 +79,7 @@ class BuyController extends Controller
             $sale->setField('card_code', $request->get('ccv'));
             $sale->setField('recurring_billing', true);
             $sale->setField('test_request', true);
+            $sale->setField('duplicate_window', 120);
             $sale->setSandbox(false);
             $response = $sale->authorizeOnly();
             if ($response->approved) {

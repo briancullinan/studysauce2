@@ -7,8 +7,7 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 $view['slots']->start('stylesheets');
 foreach ($view['assetic']->stylesheets(
     [
-        '@StudySauceBundle/Resources/public/css/buy.css',
-        '@StudySauceBundle/Resources/public/css/funnel.css'
+        '@StudySauceBundle/Resources/public/css/buy.css'
     ],
     [],
     ['output' => 'bundles/studysauce/css/*.css']

@@ -35,6 +35,7 @@ class ScheduleController extends Controller
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
+
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
 

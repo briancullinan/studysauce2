@@ -1,5 +1,6 @@
 <?php
 use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /** @var $partner Partner */
@@ -92,105 +93,112 @@ $view['slots']->start('body'); ?>
             </tr>
             </thead>
             <tbody>
+            <?php
+            foreach($users as $i => $u)
+            {
+                /** @var User $u */
+                ?>
+                <tr class="uid<?php print $u->getId(); ?> status_green">
+                <td><a href="#change-status"><span>&nbsp;</span></a></td>
+                <td data-actual="1414504085">28-Oct</td>
+                <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Rahim Karim</a></td>
+                <td>University of Texas at Austin</td>
+                </tr>
+            <?php } ?>
+
             <tr class="uid2288 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1414504085">28-Oct</td>
+                <td data-actual="1414385389">26-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Rahim Karim</a></td>
                 <td>University of Texas at Austin</td>
             </tr>
             <tr class="uid2288 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1414385389">26-Oct</td>
+                <td data-actual="1414295574">25-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Rahim Karim</a></td>
                 <td>University of Texas at Austin</td>
             </tr>
             <tr class="uid2288 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1414295574">25-Oct</td>
-                <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Rahim Karim</a></td>
-                <td>University of Texas at Austin</td>
-            </tr>
-            <tr class="uid2288 status_green">
-                <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413938606">21-Oct</td>
+                <td data-actual="1413938606">21-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Rahim Karim</a></td>
                 <td>University of Texas at Austin</td>
             </tr>
             <tr class="uid2289 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413651602">18-Oct</td>
+                <td data-actual="1413651602">18-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Denice Carpenter</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2289 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413419023">15-Oct</td>
+                <td data-actual="1413419023">15-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Denice Carpenter</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2289 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413415251">15-Oct</td>
+                <td data-actual="1413415251">15-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Denice Carpenter</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2290 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413319254">14-Oct</td>
+                <td data-actual="1413319254">14-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Uyen Tran</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2289 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413251544">13-Oct</td>
+                <td data-actual="1413251544">13-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Denice Carpenter</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2290 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1413094198">11-Oct</td>
+                <td data-actual="1413094198">11-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Uyen Tran</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2290 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412914709">09-Oct</td>
+                <td data-actual="1412914709">09-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Uyen Tran</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2290 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412816367">08-Oct</td>
+                <td data-actual="1412816367">08-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Uyen Tran</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2290 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412794154">08-Oct</td>
+                <td data-actual="1412794154">08-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Uyen Tran</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2289 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412726785">07-Oct</td>
+                <td data-actual="1412726785">07-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Denice Carpenter</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2290 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412694965">07-Oct</td>
+                <td data-actual="1412694965">07-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Uyen Tran</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2289 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412694955">07-Oct</td>
+                <td data-actual="1412694955">07-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Denice Carpenter</a></td>
                 <td>The University of Texas at Austin</td>
             </tr>
             <tr class="uid2288 status_green">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td actual="1412694862">07-Oct</td>
+                <td data-actual="1412694862">07-Oct</td>
                 <td><a href="<?php print $view['router']->generate('metrics_partner', ['_user' => 2]); ?>">Rahim Karim</a></td>
                 <td>University of Texas at Austin</td>
             </tr>

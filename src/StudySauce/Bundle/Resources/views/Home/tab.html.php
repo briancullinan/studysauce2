@@ -30,11 +30,27 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(
     [
-        '@StudySauceBundle/Resources/public/js/jquery.textfill.min.js',
         '@StudySauceBundle/Resources/public/js/home.js',
-        '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
-        '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
-        '@StudySauceBundle/Resources/public/js/metrics.js'
+    ],
+    [],
+    ['output' => 'bundles/studysauce/js/*.js']
+) as $url):
+    ?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach;
+foreach ($view['assetic']->javascripts(
+    [
+        '@metrics'
+    ],
+    [],
+    ['output' => 'bundles/studysauce/js/*.js']
+) as $url):
+    ?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach;
+foreach ($view['assetic']->javascripts(
+    [
+        '@checkin',
     ],
     [],
     ['output' => 'bundles/studysauce/js/*.js']

@@ -56,7 +56,7 @@ $view['slots']->start('body'); ?>
                     </th>
                     <th class="highlight"><h2>Premium</h2>
                         <p class="highlighted-link"><a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Choose plan</a><br>
-                            <span class="price">$10/month</span></p>
+                            <span class="price">$9.99/month</span></p>
                     </th>
                     <th><h2>Enterprise</h2>
                         <p class="highlighted-link"><a href="#schedule-demo" class="more" data-toggle="modal">Schedule a demo</a><br>
@@ -64,7 +64,7 @@ $view['slots']->start('body'); ?>
                     </th>
                 </tr>
                 <tr>
-                    <td class="feature">Deadline reminders</td>
+                    <td class="feature">Basic study course</td>
                     <td><?php $view['slots']->output('check'); ?></td>
                     <td class="highlight"><?php $view['slots']->output('check'); ?></td>
                     <td><?php $view['slots']->output('check'); ?></td>
@@ -76,7 +76,7 @@ $view['slots']->start('body'); ?>
                     <td><?php $view['slots']->output('check'); ?></td>
                 </tr>
                 <tr>
-                    <td class="feature">Personalized study tips</td>
+                    <td class="feature">Deadline reminders</td>
                     <td><?php $view['slots']->output('check'); ?></td>
                     <td class="highlight"><?php $view['slots']->output('check'); ?></td>
                     <td><?php $view['slots']->output('check'); ?></td>
@@ -100,13 +100,13 @@ $view['slots']->start('body'); ?>
                     <td><?php $view['slots']->output('check'); ?></td>
                 </tr>
                 <tr>
-                    <td class="feature">Customized study plan</td>
+                    <td class="feature">Advanced study course</td>
                     <td>&nbsp;</td>
                     <td class="highlight"><?php $view['slots']->output('check'); ?></td>
                     <td><?php $view['slots']->output('check'); ?></td>
                 </tr>
                 <tr>
-                    <td class="feature">Guided study sessions</td>
+                    <td class="feature">Customized study plan</td>
                     <td>&nbsp;</td>
                     <td class="highlight"><?php $view['slots']->output('check'); ?></td>
                     <td><?php $view['slots']->output('check'); ?></td>
@@ -153,7 +153,7 @@ $view['slots']->start('body'); ?>
                 <div class="premium">
                     <h2>Premium</h2>
                     <p class="highlighted-link"><a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Choose plan</a><br>
-                        <span class="price">$10/month</span></p>
+                        <span class="price">$9.99/month</span></p>
 
                     <p>All of the above plus: <?php $view['slots']->output('check'); ?></p>
                     <p>Customized study plan <?php $view['slots']->output('check'); ?></p>

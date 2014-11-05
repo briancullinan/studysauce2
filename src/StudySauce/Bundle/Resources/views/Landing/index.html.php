@@ -29,11 +29,7 @@ $view['slots']->start('javascripts');
 
 foreach ($view['assetic']->javascripts(
     [
-        '@StudySauceBundle/Resources/public/js/jquery.textfill.min.js',
-        //'@StudySauceBundle/Resources/public/js/jquery.fittext.js',
-        '@StudySauceBundle/Resources/public/js/landing.js',
-        '@StudySauceBundle/Resources/public/js/sauce.js',
-        '@StudySauceBundle/Resources/public/js/contact.js'
+        '@landing'
     ],
     [],
     ['output' => 'bundles/studysauce/js/*.js']

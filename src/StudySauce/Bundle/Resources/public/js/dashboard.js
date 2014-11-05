@@ -4,11 +4,6 @@ $(document).ready(function () {
     // TODO: remove old unused tabs
     var body = $('body');
 
-    Date.prototype.addHours= function(h){
-        this.setHours(this.getHours()+h);
-        return this;
-    };
-
     function activateMenu(path, noPush) {
         var that = $(this);
         var i = window.callbackUri.indexOf(path),
@@ -76,7 +71,7 @@ $(document).ready(function () {
                         body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
                         newPane.delay(75).fadeIn(75);
                         setTimeout(function () {
-                            content.trigger('loaded');
+                            content.filter('[id]').trigger('loaded');
                             item.find('.squiggle').stop().remove();
                             newPane.trigger('show');
                         }, 100);
@@ -147,7 +142,10 @@ $(document).ready(function () {
     }
 
     setTimeout(function () {
-        body.find('.panel-pane').trigger('loaded').filter(':visible').trigger('show');
+        // load the already loaded tabs
+        body.find('.panel-pane').filter('[id]').trigger('loaded')
+            // show the already visible tabs
+            .filter(':visible').trigger('show');
     }, 100);
 
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {

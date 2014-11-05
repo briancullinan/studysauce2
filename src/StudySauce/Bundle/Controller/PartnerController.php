@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\File;
+use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -112,8 +113,17 @@ class PartnerController extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        $groups = $user->getGroups()->toArray();
+        $users = [];
+        foreach($groups as $i => $g)
+        {
+            /** @var Group $g */
+            $users = array_merge($users, $g->getUsers()->toArray());
+        }
+
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
-                'partner' => $user->getPartners()->first()
+                'groups' => $groups,
+                'users' => $users
             ]);
     }
 }

@@ -31,6 +31,18 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
     <?php endforeach;
+    if($app->getRequest()->get('_format') == 'funnel') {
+        foreach ($view['assetic']->stylesheets(
+            [
+                '@StudySauceBundle/Resources/public/css/funnel.css'
+            ],
+            [],
+            ['output' => 'bundles/studysauce/css/*.css']
+        ) as $url):
+            ?>
+            <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+        <?php endforeach;
+    }
     $view['slots']->output('tmp-stylesheets');
     $view['slots']->stop();
 
@@ -63,18 +75,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->start('javascripts');
         foreach ($view['assetic']->javascripts(
             [
-                '@StudySauceBundle/Resources/public/js/selectize.min.js',
-                '@StudySauceBundle/Resources/public/js/jquery.scrollintoview.js',
-                '@StudySauceBundle/Resources/public/js/jquery.pietimer.js',
-                '@StudySauceBundle/Resources/public/js/jquery.plugin.js',
-                '@StudySauceBundle/Resources/public/js/jquery.timeentry.js',
-                '@StudySauceBundle/Resources/public/js/jquery.jplayer.js',
-                '@StudySauceBundle/Resources/public/js/plupload/js/plupload.full.min.js',
-                //'@StudySauceBundle/Resources/public/js/plupload/js/moxie.js',
-                //'@StudySauceBundle/Resources/public/js/plupload/js/plupload.dev.js',
-                '@StudySauceBundle/Resources/public/js/sauce.js',
-                '@StudySauceBundle/Resources/public/js/dashboard.js',
-                '@StudySauceBundle/Resources/public/js/contact.js'
+                '@dashboard',
             ],
             [],
             ['output' => 'bundles/studysauce/js/*.js']
@@ -93,9 +94,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->start('javascripts');
         foreach ($view['assetic']->javascripts(
             [
-                '@StudySauceBundle/Resources/public/js/jquery.scrollintoview.js',
-                '@StudySauceBundle/Resources/public/js/sauce.js',
-                '@StudySauceBundle/Resources/public/js/contact.js'
+                '@funnel',
             ],
             [],
             ['output' => 'bundles/studysauce/js/*.js']

@@ -66,6 +66,10 @@ a[href="#sign-in-with-email"]
     display:inline-block;
 }
 
+#account .password,
+#account .new-password,
+#account .first-name,
+#account .last-name,
 #register .first-name,
 #register .last-name
 {
@@ -97,7 +101,52 @@ a[href="#sign-in-with-email"]
     color: #CC0000;
 }
 
-#account .password.passwordError small
+#login .password.passwordError small
 {
     display: block;
+}
+
+#account .pass-info
+{
+    display:none;
+}
+
+#account .edit-icons
+{
+    text-align: center;
+    margin: 20px auto;
+}
+
+#account a[href="#edit-password"],
+#account a[href="#edit-account"]
+{
+    padding-top:50px;
+    display:inline-block;
+    margin:0 50px;
+    max-width: 100px;
+    vertical-align: top;
+}
+
+#account a[href="#edit-password"] span,
+#account a[href="#edit-account"] span
+{
+    position:absolute;
+    top:0;
+    left:50%;
+    width:80px;
+    height:80px;
+    margin-left:-40px;
+    background: url(../images/menu_new.png) no-repeat 50% -800px transparent;
+}
+
+#account a[href="#edit-password"] span
+{
+    background-position: 50% -7300px;
+}
+
+#account a[href="#cancel-account"]
+{
+    position:absolute;
+    bottom:10px;
+    left:10px;
 }

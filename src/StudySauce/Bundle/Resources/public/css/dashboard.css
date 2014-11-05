@@ -67,6 +67,8 @@ aside + .panel-pane,
     text-overflow: ellipsis;
 }
 
+#customization .study-types h4 span,
+#customization .study-difficulty h4 span,
 .deadline-row .class-name i,
 .deadlines-widget .class-name i,
 #metrics ol span,

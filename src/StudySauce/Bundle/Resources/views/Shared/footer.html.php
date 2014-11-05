@@ -3,11 +3,11 @@ $user = $app->getUser();
 ?>
 <div class="footer">
     <?php
-    if ($view['slots']->has('isBuyFunnel')) : ?>
+    if($app->getRequest()->get('_format') == 'funnel') { ?>
         <ul class="menu secondary-menu">
             <li class="menu-334"><a href="/privacy">Privacy policy</a></li>
         </ul>
-    <?php else: ?>
+    <?php } else { ?>
         <div style="display:inline-block;">
             <iframe class="facebook-like"
                     src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FStudy-Sauce%2F519825501425670%3Fref%3Dstream&amp;layout=button_count&amp;show_faces=false&amp;width=89&amp;action=like&amp;colorscheme=light&amp;height=35&amp;locale=en_US"></iframe>
@@ -34,15 +34,16 @@ $user = $app->getUser();
             <li><a href="<?php print $view['router']->generate('about'); ?>">About us</a></li>
             <li><a href="#contact-support" data-toggle="modal">Contact us</a></li>
             <li><a href="<?php print $view['router']->generate('refund'); ?>">Refund policy</a></li>
-            <?php if($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) { ?>
-            <li class="last"><a href="<?php print $view['router']->generate('logout'); ?>">Logout</a></li>
+            <?php if ($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) { ?>
+                <li class="last"><a href="<?php print $view['router']->generate('logout'); ?>">Logout</a></li>
             <?php } ?>
         </ul>
         <span><?php print 'Copyright ' . date('Y'); ?></span>
 
         <?php
         $request = $view['request'];
-        if($app->getRequest()->get('_route') == '/home'): ?>
+        if ($app->getRequest()->get('_route') == '/home') {
+            ?>
             <script type="text/javascript">
                 var fb_param = {};
                 fb_param.pixel_id = '6008770260529'; // Leads
@@ -59,7 +60,7 @@ $user = $app->getUser();
             <noscript><img height="1" width="1" alt="" style="display:none"
                            src="https://www.facebook.com/offsite_event.php?id=6008770262329&amp;value=0&amp;currency=USD"/>
             </noscript>
-        <?php endif;
-
- endif; ?>
+        <?php
+        }
+    } ?>
 </div>

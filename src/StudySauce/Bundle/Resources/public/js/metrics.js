@@ -88,6 +88,7 @@ $(document).ready(function () {
         var timeline = $(this).find('#timeline:visible, .timeline:visible'),
             piechart = $(this).find('#pie-chart:visible, .pie-chart:visible');
 
+        // show empty dialog
         if(window.initialHistory.length == 0 && $(this).is('#metrics'))
             $('#metrics-empty').modal({
                 backdrop: 'static',
@@ -121,6 +122,7 @@ $(document).ready(function () {
     });
 
     body.on('hide', '#metrics,#home', function () {
+        // hide empty dialog
         if(window.initialHistory.length == 0 && $(this).is('#metrics'))
             $('#metrics-empty').modal('hide');
     });
@@ -353,9 +355,9 @@ $(document).ready(function () {
                 d3.select('#pie-chart svg, .pie-chart svg')
                     .attr("width", piechart.width())
                     .attr("height", piechart.width() * 12 / 16);
-                setTimeout(redraw, 100);
+                redraw();
             }
-        }, 100);
+        }, 10);
     });
 
 });

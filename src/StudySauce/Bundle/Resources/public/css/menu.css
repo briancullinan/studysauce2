@@ -459,6 +459,7 @@
 .pane-content a[href*="/plan"]:not(.more),
 .pane-content a[href*="/partner"]:not(.more),
 .pane-content a[href*="/profile"]:not(.more),
+.pane-content a[href*="/customization"]:not(.more),
 .pane-content a[href*="/tips"]:not(.more),
 .pane-content a[href*="/premium"]:not(.more),
 .pane-content a[href*="/account"]:not(.more),
@@ -475,6 +476,7 @@
 .pane-content a[href*="/plan"]:not(.more):before,
 .pane-content a[href*="/partner"]:not(.more):before,
 .pane-content a[href*="/profile"]:not(.more):before,
+.pane-content a[href*="/customization"]:not(.more):before,
 .pane-content a[href*="/tips"]:not(.more):before,
 .pane-content a[href*="/premium"]:not(.more):before,
 .pane-content a[href*="/account"]:not(.more):before,
@@ -572,6 +574,18 @@
 .pane-content a[href*="/profile"]:not(.more):focus:before,
 .pane-content a[href*="/profile"]:not(.more):active:before,
 .pane-content a[href*="/profile"].active:not(.more):before {
+    background-position: left -952px;
+}
+
+.pane-content a[href*="/customization"]:not(.more):before
+{
+    background-position: left -902px;
+}
+
+.pane-content a[href*="/customization"]:not(.more):hover:before,
+.pane-content a[href*="/customization"]:not(.more):focus:before,
+.pane-content a[href*="/customization"]:not(.more):active:before,
+.pane-content a[href*="/customization"].active:not(.more):before {
     background-position: left -952px;
 }
 
