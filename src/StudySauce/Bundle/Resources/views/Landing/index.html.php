@@ -45,8 +45,8 @@ echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:scr'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:banner'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:scr'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:banner'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'));
 $view['slots']->stop();
