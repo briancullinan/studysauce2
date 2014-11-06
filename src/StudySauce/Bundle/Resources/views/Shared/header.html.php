@@ -26,7 +26,7 @@ $isAdviser = $app->getUser() != 'anon.' && $app->getUser()->hasRole('ROLE_ADVISE
             </div>
         <?php } ?>
         <?php if($app->getRequest()->get('_format') != 'funnel') { ?>
-            <div id="welcome-message"><strong><?php print $app->getUser()->getFirstName(); ?></strong>
+            <div id="welcome-message"><strong><?php print $app->getUser()->getFirst(); ?></strong>
                 <a href="<?php print $view['router']->generate('logout'); ?>" title="Log out">logout</a></div>
             <div id="jquery_jplayer" style="width: 0; height: 0;"></div>
         <?php } ?>

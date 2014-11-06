@@ -37,7 +37,6 @@ $(document).ready(function () {
 
     body.on('change', '#profile .grades input, #profile .weekends input, #profile .sharpness input', profileFunc);
     body.on('loaded', '#profile', profileFunc);
-
     body.on('change', '#customization .study-types input, #customization .study-difficulty input', customizationFunc);
     body.on('loaded', '#customization', customizationFunc);
 

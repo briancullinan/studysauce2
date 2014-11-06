@@ -180,7 +180,7 @@ class FileController extends Controller
                 return self::returnTemporaryResponse(new JsonResponse(['status' => 'transcoding', 'fid' => $file->getId()]));
             }
         }
-        return self::returnTemporaryResponse(new JsonResponse(true));
+        return self::returnTemporaryResponse(new JsonResponse(['fid' => $file->getId()]));
     }
 
     /**
@@ -218,7 +218,7 @@ class FileController extends Controller
      * @param $new_w
      * @param $new_h
      */
-    function createthumb($name,$filename,$new_w,$new_h){
+    function createThumb($name,$filename,$new_w,$new_h){
         $system=explode('.',$name);
         if (preg_match('/jpg|jpeg/',$system[1])){
             $src_img=imagecreatefromjpeg($name);

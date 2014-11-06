@@ -67,17 +67,9 @@ $(document).ready(function () {
                         if (newPane.length == 0) {
                             newPane = content.filter('.panel-pane').first();
                         }
-                        body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-                        body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-                        newPane.delay(75).fadeIn(75);
-                        setTimeout(function () {
-                            content.filter('[id]').trigger('loaded');
-                            item.find('.squiggle').stop().remove();
-                            newPane.trigger('show');
-                        }, 100);
-                        if (!noPush)
-                            window.history.pushState(window.callbackKeys[i], "", path);
-
+                        content.filter('[id]').trigger('loaded');
+                        item.find('.squiggle').stop().remove();
+                        activatePanel(newPane, i, noPush, path);
                         window.sincluding = false;
                     }
                 },
@@ -89,15 +81,21 @@ $(document).ready(function () {
         }
         // collapse menus and show panel if it is not already visible
         else if(!panel.is(':visible')) {
-            body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-            body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-            panel.delay(75).fadeIn(75);
-            setTimeout(function () {
-                panel.trigger('show');
-            }, 100);
-            if(!noPush)
-                window.history.pushState(window.callbackKeys[i], "", path);
+            activatePanel(panel, i, noPush, path);
         }
+    }
+
+    function activatePanel(panel, i, noPush, path)
+    {
+        body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+        body.find('.modal:visible').modal('hide');
+        body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
+        panel.delay(75).fadeIn(75);
+        setTimeout(function () {
+            panel.trigger('show');
+        }, 100);
+        if(!noPush)
+            window.history.pushState(window.callbackKeys[i], "", path);
     }
 
     function loadingAnimation(that)

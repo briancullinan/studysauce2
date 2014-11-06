@@ -132,12 +132,6 @@ $(document).ready(function () {
 
     body.on('loaded', '#metrics,#home', initializeGraphs);
 
-    body.on('hide', '#metrics,#home', function () {
-        // hide empty dialog
-        if(window.initialHistory.length == 0 && $(this).is('#metrics'))
-            $('#metrics-empty').modal('hide');
-    });
-
     // update metrics if checkin or checkout occurs
     body.on('checkin', function () {
         setTimeout(function () {
@@ -148,7 +142,7 @@ $(document).ready(function () {
                 success: function (data) {
                     var content = $(data),
                         metrics = $('#metrics');
-                    ssMergeScripts(content);
+                    ssMergeScripts(content.filter('script:not([src])'));
 
                     // update metrics
                     metrics.find('.checkin-row').remove();

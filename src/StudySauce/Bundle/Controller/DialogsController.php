@@ -2,9 +2,13 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use StudySauce\Bundle\Entity\ContactMessage;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Schedule;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class DialogsController
@@ -20,9 +24,27 @@ class DialogsController extends Controller
         return $this->render('StudySauceBundle:Dialogs:contact.html.php', ['id' => 'contact-support']);
     }
 
-    public function contactSendAction()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function contactSendAction(Request $request)
     {
-        // TODO: send the message
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
+
+        // save the invite
+        $contact = new ContactMessage();
+        $contact->setUser($user == 'anon.' || $user->hasRole('ROLE_GUEST') ? null : $user);
+        $contact->setName($request->get('name'));
+        $contact->setEmail($request->get('email'));
+        $contact->setMessage($request->get('message'));
+
+        $email = new EmailsController();
+        $email->setContainer($this->container);
+        $email->administratorAction($user, $contact);
+
+        return new JsonResponse(true);
     }
 
     /**
@@ -152,9 +174,28 @@ class DialogsController extends Controller
         return $this->render('StudySauceBundle:Dialogs:bill-parents.html.php', ['id' => 'bill-parents']);
     }
 
-    public function billParentsSendAction()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function billParentsSendAction(Request $request)
     {
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
 
+        // save the invite
+        $bill = new ParentInvite();
+        $bill->setUser($user);
+        $bill->setFirst($request->get('firstName'));
+        $bill->setLast($request->get('lastName'));
+        $bill->setEmail($request->get('email'));
+        $bill->setCode(md5(microtime(true)));
+
+        $email = new EmailsController();
+        $email->setContainer($this->container);
+        $email->parentPayAction($user, $bill);
+
+        return new JsonResponse(true);
     }
 
     /**

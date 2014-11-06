@@ -3,8 +3,8 @@ $(document).ready(function () {
     // TODO: bring back chat
     var body = $('body');
 
-    body.on('click', '#contact-support a[href="#submit-contact"]', function (evt) {
-        var contact = $('#contact-support');
+    body.on('click', '#contact-support a[href="#submit-contact"], #schedule-demo a[href="#submit-contact"]', function (evt) {
+        var contact = $('#contact-support:visible, #schedule-demo:visible');
         evt.preventDefault();
         if(contact.is('.invalid'))
             return;

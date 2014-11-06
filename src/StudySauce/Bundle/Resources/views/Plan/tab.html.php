@@ -1,10 +1,12 @@
 <?php
 use Doctrine\Common\Collections\ArrayCollection;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use StudySauce\Bundle\Entity\Event;
 
 /** @var ArrayCollection $courses */
+/** @var User $user */
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -77,7 +79,7 @@ foreach ($view['assetic']->javascripts(
 $view['slots']->start('body'); ?>
 <div class="panel-pane" id="plan">
     <div class="pane-content">
-        <h2>Personalized study plan for <?php print $user->getFirstName(); ?></h2>
+        <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
 
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
         <div class="sort-by clearfix">

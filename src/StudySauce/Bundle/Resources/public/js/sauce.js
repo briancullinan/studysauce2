@@ -45,8 +45,8 @@ function ssMergeScripts(content)
     $(scripts).each(function () {
         var url = $(this).attr('src');
         if (typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0) {
-            $.getScript(url.replace(/\?.*/ig, ''));
             console.log(url.replace(/\?.*/ig, ''));
+            $.getScript(url.replace(/\?.*/ig, ''));
         }
         else {
             try
@@ -55,7 +55,7 @@ function ssMergeScripts(content)
             }
             catch(e)
             {
-
+                console.log(e);
             }
         }
     });
@@ -97,7 +97,7 @@ $(document).ready(function () {
     });
 });
 
-$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+$.ajaxPrefilter(function (options, originalOptions) {
     // do not send data for POST/PUT/DELETE
     if (originalOptions.type !== 'GET' || options.type !== 'GET') {
         return;
@@ -170,7 +170,7 @@ Date.prototype.getFirstDayOfWeek = function () {
     return new Date(d.setDate(diff));
 };
 
-Date.prototype.addHours= function(h){
+Date.prototype.addHours = function(h){
     this.setHours(this.getHours()+h);
     return this;
 };

@@ -55,6 +55,10 @@ $collection->add(
     new Route('/partners/{_code}', ['_controller' => 'StudySauceBundle:Landing:partners',])
 );
 $collection->add(
+    'parent_welcome',
+    new Route('/parents/{_code}', ['_controller' => 'StudySauceBundle:Landing:parents',])
+);
+$collection->add(
     'home',
     new Route(
         '/home/{_format}',
@@ -438,7 +442,7 @@ $collection->add(
         '',
         [],
         [],
-        'request.isXmlHttpRequest()'
+        'request.isXmlHttpRequest() || request.isMethod("POST")'
     )
 );
 $collection->add(

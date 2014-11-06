@@ -31,10 +31,10 @@ $view['slots']->start('body'); ?>
         <h2>Account settings</h2>
         <div class="account-info read-only">
             <div class="first-name">
-                <label class="input"><span>First name</span><input type="text" placeholder="First name" value="<?php print $user->getFirstName(); ?>"></label>
+                <label class="input"><span>First name</span><input type="text" placeholder="First name" value="<?php print $user->getFirst(); ?>"></label>
             </div>
             <div class="last-name">
-                <label class="input"><span>Last name</span><input type="text" placeholder="Last name" value="<?php print $user->getLastName(); ?>"></label>
+                <label class="input"><span>Last name</span><input type="text" placeholder="Last name" value="<?php print $user->getLast(); ?>"></label>
             </div>
             <div class="email">
                 <label class="input"><span>E-mail address</span><input type="text" placeholder="Email" value="<?php print $user->getEmail(); ?>"></label>

@@ -83,12 +83,12 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=256, name="first")
      */
-    protected $firstName = '';
+    protected $first = '';
 
     /**
      * @ORM\Column(type="string", length=256, name="last")
      */
-    protected $lastName = '';
+    protected $last = '';
 
     /**
      * @ORM\OneToOne(targetEntity="File")
@@ -181,9 +181,9 @@ class User extends BaseUser
      * @param string $firstName
      * @return User
      */
-    public function setFirstName($firstName)
+    public function setFirst($firstName)
     {
-        $this->firstName = $firstName;
+        $this->first = $firstName;
 
         return $this;
     }
@@ -193,9 +193,9 @@ class User extends BaseUser
      *
      * @return string 
      */
-    public function getFirstName()
+    public function getFirst()
     {
-        return $this->firstName;
+        return $this->first;
     }
 
     /**
@@ -204,9 +204,9 @@ class User extends BaseUser
      * @param string $lastName
      * @return User
      */
-    public function setLastName($lastName)
+    public function setLast($lastName)
     {
-        $this->lastName = $lastName;
+        $this->last = $lastName;
 
         return $this;
     }
@@ -216,9 +216,9 @@ class User extends BaseUser
      *
      * @return string 
      */
-    public function getLastName()
+    public function getLast()
     {
-        return $this->lastName;
+        return $this->last;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\User;
 use Swift_Message;
@@ -31,7 +32,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:welcome-partner.html.php', [
                         'name' => $user,
-                        'greeting' => (empty($user->getFirstName()) ? 'Howdy partner' : ('Dear ' . $user->getFirstName())) . ','
+                        'greeting' => (empty($user->getFirst()) ? 'Howdy partner' : ('Dear ' . $user->getFirst())) . ','
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => ['welcome-partner']])));
@@ -57,7 +58,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:welcome-student.html.php', [
                         'name' => $user,
-                        'greeting' => 'Dear ' . ($user->getFirstName() ?: 'student') . ','
+                        'greeting' => 'Dear ' . ($user->getFirst() ?: 'student') . ','
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -87,19 +88,16 @@ class EmailsController extends Controller
             $logger->error('Achievement called with no partner.');
             return new Response();
         }
-        $codeUrl = $this->generateUrl('partner_welcome', [
-                '_code' => $partner->getCode()
-            ], UrlGeneratorInterface::ABSOLUTE_URL);
-        $userFirst = $user->getFirstName();
+        $codeUrl = $this->generateUrl('partner_welcome', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = Swift_Message::newInstance()
-            ->setSubject(($user->getFirstName() ?: 'Your student') . ' needs your help with school.')
+            ->setSubject(($user->getFirst() ?: 'Your student') . ' needs your help with school.')
             ->setFrom($user->getEmail())
             ->setTo($partner->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:partner-invite.html.php', [
                         'user' => $user,
                         'greeting' => 'Hello ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
-                        'link' => "<a href='$codeUrl'>If you are prepared to help $userFirst, click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>"
+                        'link' => '<a href="' . $codeUrl . '">If you are prepared to help ' . $user->getFirst() . ', click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -129,14 +127,16 @@ class EmailsController extends Controller
             $logger->error('Achievement called with no partner.');
             return new Response();
         }
+        $codeUrl = $this->generateUrl('goals', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = Swift_Message::newInstance()
-            ->setSubject(($user->getFirstName() ?: 'Your student') . ' has a study achievement and wanted you to know.')
+            ->setSubject(($user->getFirst() ?: 'Your student') . ' has a study achievement and wanted you to know.')
             ->setFrom($user->getEmail())
             ->setTo($partner->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:achievement.html.php', [
                         'name' => $user,
                         'greeting' => 'Dear ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -147,4 +147,49 @@ class EmailsController extends Controller
         return new Response();
     }
 
+    /**
+     * @param User $user
+     * @param ParentInvite $parent
+     * @return Response
+     */
+    public function parentPayAction(User $user = null, ParentInvite $parent = null)
+    {
+        $codeUrl = $this->generateUrl('parent_welcome', ['_code' => $parent->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject(($user->getFirst() ?: 'Your student') . ' has asked for your help with school.')
+            ->setFrom($user->getEmail())
+            ->setTo($parent->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:parent-invite.html.php', [
+                        'name' => $user,
+                        'greeting' => 'Dear ' . $parent->getFirst() . ' ' . $parent->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['sponsor-invite']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param $properties
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function administratorAction(User $user, $properties)
+    {
+        if(is_object($properties))
+        {
+            $class_vars = get_class_vars(get_class($properties));
+            foreach ($class_vars as $name => $value)
+            {
+
+            }
+        }
+
+        return new Response();
+    }
 }

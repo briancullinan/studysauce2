@@ -47,8 +47,8 @@ class AccountController extends Controller
 
         /** @var $user User */
         $user = $this->getUser();
-        $user->setFirstName($request->get('first'));
-        $user->setLastName($request->get('last'));
+        $user->setFirst($request->get('first'));
+        $user->setLast($request->get('last'));
         if(!empty($request->get('email')))
         {
             // check password
@@ -171,8 +171,8 @@ class AccountController extends Controller
             $user->setEmail($request->get('email'));
             $user->addRole('ROLE_USER');
             $user->setEnabled(true);
-            $user->setFirstName($request->get('first'));
-            $user->setLastName($request->get('last'));
+            $user->setFirst($request->get('first'));
+            $user->setLast($request->get('last'));
             $orm->persist($user);
             $orm->flush();
 

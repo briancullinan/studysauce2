@@ -127,8 +127,8 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
             $user->setEmail($this->email);
             $user->addRole('ROLE_GUEST');
             $user->setEnabled(true);
-            $user->setFirstName('Guest');
-            $user->setLastName('Account');
+            $user->setFirst('Guest');
+            $user->setLast('Account');
             $this->orm->persist($user);
             $this->orm->flush();
         }
