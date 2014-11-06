@@ -366,6 +366,8 @@ input[type=month],
     width: 100%;
     outline: none;
     border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
     border: 1px solid #555555;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -374,6 +376,11 @@ input[type=month],
     transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
     vertical-align: middle;
     margin:0;
+}
+
+.sinclude
+{
+    display:none;
 }
 
 textarea

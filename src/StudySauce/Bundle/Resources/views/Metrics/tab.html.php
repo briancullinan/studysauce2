@@ -21,11 +21,7 @@ $shortTimeIntervals = [
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets([
-        '@StudySauceBundle/Resources/public/css/tipsy.css',
-        '@StudySauceBundle/Resources/public/css/metrics.css'
-    ], [], ['output' => 'bundles/studysauce/css/*.css']
-) as $url): ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/metrics.css'], [], ['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();

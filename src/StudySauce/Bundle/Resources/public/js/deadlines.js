@@ -1,13 +1,13 @@
 $(document).ready(function () {
 
-    var body = $('body'),
-        deadlines = $('#deadlines');
+    var body = $('body');
 
     function datesFunc() {
+        var deadlines = $('#deadlines');
         jQuery(this).each(function () {
             var that = jQuery(this),
                 error = false;
-            if(that.find('select').val() == '_none')
+            if(that.find('select').val() == '')
                 error = true;
             if(that.find('.assignment input').val().trim() == '')
                 error = true;
@@ -47,9 +47,12 @@ $(document).ready(function () {
             deadlines.find('.form-actions').removeClass('invalid').addClass('valid');
     }
 
-    datesFunc.apply(deadlines.find('.deadline-row'));
+    body.on('loaded', '#deadlines', function () {
+        datesFunc.apply($(this).find('.deadline-row'));
+    });
 
     body.on('click', '#deadlines .deadline-row a[href="#edit-deadline"]', function (evt) {
+        var deadlines = $('#deadlines');
         evt.preventDefault();
         var that = $(this),
             row = that.parents('.deadline-row');
@@ -59,6 +62,7 @@ $(document).ready(function () {
 
     function updateDeadlines(response)
     {
+        var deadlines = $('#deadlines');
         // clear input form
         var invalids = deadlines.find('header').prevAll('.deadline-row.invalid').detach();
 
@@ -79,6 +83,7 @@ $(document).ready(function () {
     }
 
     body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {
+        var deadlines = $('#deadlines');
         evt.preventDefault();
 
         if(deadlines.find('.form-actions').is('.invalid'))
@@ -130,10 +135,11 @@ $(document).ready(function () {
     });
 
     body.on('click', '#deadlines a[href="#add-deadline"]', function (evt) {
+        var deadlines = $('#deadlines');
         evt.preventDefault();
         var newDeadline = deadlines.find('.deadline-row').first().clone().removeAttr('id')
-            .removeClass('read-only').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
-        newDeadline.find('.class-name input, .assignment input').val('');
+            .removeClass('read-only hide').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
+        newDeadline.find('.class-name select, .assignment input').val('');
         newDeadline.find('.due-date input').removeClass('hasDatepicker').val('');
         newDeadline.find('.reminder input').removeAttr('checked').prop('checked', false);
         datesFunc.apply(newDeadline);
@@ -158,7 +164,8 @@ $(document).ready(function () {
         });
     });
 
-    body.on('change', '#deadlines #deadlines-historic', function () {
+    body.on('change', '#deadlines .sort-by .checkbox input', function () {
+        var deadlines = $('#deadlines');
         if(jQuery(this).is(':checked'))
             deadlines.addClass('show-historic');
         else
@@ -167,7 +174,8 @@ $(document).ready(function () {
 
     body.on('change', '#deadlines .sort-by input[type="radio"]', function () {
         var headings = {},
-            that = jQuery(this);
+            that = jQuery(this),
+            deadlines = $('#deadlines');
         deadlines.find('.head').each(function () {
             var head = jQuery(this);
             head.nextUntil('*:not(.deadline-row)').each(function () {
@@ -187,7 +195,6 @@ $(document).ready(function () {
         if(that.val() == 'class')
         {
             var keys = [];
-
             for(var i = 0; i < window.classIds.length; i++)
                 if(typeof headings[window.classIds[i]] != 'undefined')
                     keys[keys.length] = window.classIds[i];
@@ -204,20 +211,20 @@ $(document).ready(function () {
         }
         else
         {
-            var keys = [];
-            for(var h in headings)
-                keys[keys.length] = Date.parse(h);
+            var keys2 = [];
+            for(var h2 in headings)
+                keys2[keys2.length] = Date.parse(h2);
 
-            keys.sort();
+            keys2.sort();
             var monthNames = [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ];
 
-            for(var j = 0; j < keys.length; j++)
+            for(var j2 = 0; j2 < keys2.length; j2++)
             {
-                var d = new Date(keys[j]),
+                var d = new Date(keys2[j2]),
                     h = d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
-                var hidden = headings[h].filter('.deadline-row:not(.hide)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden ? 'hide' : '') + '">' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' <span>' + d.getFullYear() + '</span></div>'), headings[h].detach()));
+                var hidden2 = headings[h].filter('.deadline-row:not(.hide)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden2 ? 'hide' : '') + '">' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' <span>' + d.getFullYear() + '</span></div>'), headings[h].detach()));
             }
         }
         jQuery('.sort-by').nextAll('.head').remove();

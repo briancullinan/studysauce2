@@ -25,8 +25,18 @@ $overall = round((($level - 1) * 5 + $step) / 20 * 100);
                 <img width="150" height="150" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
             <?php endforeach; ?>
             <div class="percent-background">&nbsp;</div>
-            <div class="percent-bars" style="height:<?php print $percent; ?>%;">&nbsp;</div>
+            <?php if($level > 4) { ?>
+                <div class="percent-bars" style="height:100%; background-color:#F90;">&nbsp;</div>
+            <?php } else { ?>
+                <div class="percent-bars" style="height:<?php print $percent; ?>%;">&nbsp;</div>
+            <?php } ?>
         </div>
-        <div class="highlighted-link"><a href="<?php print $view['router']->generate('lesson' . $level, ['_step' => $step]); ?>" class="more">Next module</a></div>
+        <div class="highlighted-link">
+            <?php if($level > 4) { ?>
+                <h4>Complete!</h4>
+            <?php } else { ?>
+                <a href="<?php print $view['router']->generate('lesson' . $level, ['_step' => $step]); ?>" class="more">Next module</a>
+            <?php } ?>
+        </div>
     </div>
 </div>

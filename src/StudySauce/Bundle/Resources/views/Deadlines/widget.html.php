@@ -6,6 +6,8 @@ use StudySauce\Bundle\Entity\Deadline;
 <div class="widget-wrapper">
     <div class="widget deadlines-widget">
         <h3>Upcoming deadlines</h3>
+        <div class="auto-height"></div>
+        <div class="the-list">
         <?php if(empty($deadlines)) { ?>
             <a href="<?php print $view['router']->generate('deadlines'); ?>" class="cloak">Nothing set up yet.  Click <span class="reveal">here</span> to set up deadlines.</a>
         <?php } else { ?>
@@ -19,6 +21,7 @@ use StudySauce\Bundle\Entity\Deadline;
                 </div><?php
             }
         } ?>
+        </div>
     </div>
 </div>
 

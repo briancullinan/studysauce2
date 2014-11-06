@@ -128,9 +128,7 @@ $(document).ready(function () {
                 study: step.find('input[name="quiz-study-much"]:checked').val()
             },
             success: function (data) {
-                debugger;
                 step.find('input[name="csrf_token"]').val(data.csrf_token);
-
                 step.addClass('right');
                 actions.removeClass('invalid').addClass('valid');
                 // TODO: update study plan

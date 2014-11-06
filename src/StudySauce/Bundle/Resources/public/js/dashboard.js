@@ -226,18 +226,8 @@ $(document).ready(function () {
 
     // -------------- Player --------------- //
     window.musicIndex = 0;
-    var jp = jQuery('#jquery_jplayer');
-    body.on('click', '.minplayer-default-play', function () {
-        var index = window.musicIndex++;
-        jp.jPlayer("setMedia", {
-            mp3: window.musicLinks[index],
-            m4a: window.musicLinks[index].substr(0, window.musicLinks[index].length - 4) + '.mp4',
-            oga: window.musicLinks[index].substr(0, window.musicLinks[index].length - 4) + '.ogg'
-        });
-        jp.jPlayer("play");
-    });
-
     if(typeof $.fn.jPlayer == 'function') {
+        var jp = jQuery('#jquery_jplayer');
         jp.jPlayer({
             swfPath: window.callbackPaths['_welcome'] + 'bundles/studysauce/js',
             solution: 'html,flash',
@@ -249,6 +239,14 @@ $(document).ready(function () {
             cssSelector: {
                 play: '.minplayer-default-play',
                 pause: '.minplayer-default-pause'
+            },
+            ready: function() {
+                var index = window.musicIndex++;
+                $(this).jPlayer( "setMedia", {
+                    mp3: window.musicLinks[index],
+                    m4a: window.musicLinks[index].substr(0, window.musicLinks[index].length - 4) + '.mp4',
+                    oga: window.musicLinks[index].substr(0, window.musicLinks[index].length - 4) + '.ogg'
+                });
             }
         });
 

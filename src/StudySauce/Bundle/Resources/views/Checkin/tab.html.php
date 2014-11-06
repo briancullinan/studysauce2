@@ -60,7 +60,7 @@ $view['slots']->start('body'); ?>
         </div>
 
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
-        <div><a href="<?php print $view['router']->generate('schedule'); ?>"><span>Edit schedule</span></a></div>
+        <a href="<?php print $view['router']->generate('schedule'); ?>"><span>Edit schedule</span></a>
     </div>
 </div>
 <?php $view['slots']->stop();

@@ -20,6 +20,23 @@
     top:0;
 }
 
+.deadlines-widget .auto-height
+{
+    padding-bottom:100%;
+    padding-top:15px;
+}
+
+.deadlines-widget .the-list
+{
+    position:absolute;
+    height:100%;
+    top:0;
+    left:0;
+    width:100%;
+    overflow: auto;
+    padding:42px 20px 20px 20px;
+}
+
 .deadlines-widget .deadline-row > *
 {
     display:inline-block;
@@ -97,9 +114,19 @@ a[href="#add-deadline"] span {
     padding-left: 40px;
 }
 
+.deadline-row.edit .class-name
+{
+    padding-left: 0;
+}
+
 .deadline-row .class-name i
 {
     margin-left: -40px;
+}
+
+.deadline-row.edit .class-name i
+{
+    display:none;
 }
 
 #deadlines header label:nth-child(2),

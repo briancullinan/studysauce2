@@ -78,14 +78,6 @@ class DeadlinesController extends Controller
      */
     public function widgetAction()
     {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-        $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-        $demoDeadlines = $this->getDemoDeadlines();
-
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return $d->getDueDate() > new \DateTime(); })->toArray();
@@ -97,8 +89,6 @@ class DeadlinesController extends Controller
 
         return $this->render('StudySauceBundle:Deadlines:widget.html.php', [
                 'deadlines' => $deadlines,
-                'demoDeadlines' => $demoDeadlines,
-                'demoCourses' => $demoCourses,
                 'courses' => $courses
             ]);
     }

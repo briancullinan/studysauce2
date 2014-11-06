@@ -1,10 +1,10 @@
 
 jQuery(document).ready(function($) {
-    var body = $('body'),
-        checkout = $('#checkout');
+    var body = $('body');
 
     function checkoutFunc()
     {
+        var checkout = $('#checkout');
         var valid = false;
         if(checkout.find('input[name="reoccurs"]:checked').val().trim() != '' &&
             checkout.find('.first-name input').val().trim() != '' &&
@@ -28,12 +28,15 @@ jQuery(document).ready(function($) {
         }
     }
 
-    checkoutFunc();
+    body.on('loaded', '#checkout', function () {
+        checkoutFunc();
+    });
 
     body.on('change', '#checkout input, #checkout select', checkoutFunc);
     body.on('keyup', '#checkout input[type="text"]', checkoutFunc);
 
     body.on('click', '#checkout a[href="#show-coupon"]', function (evt) {
+        var checkout = $('#checkout');
         evt.preventDefault();
         $(this).hide();
         checkout.find('#coupon-pane')
@@ -43,6 +46,7 @@ jQuery(document).ready(function($) {
     });
 
     body.on('click', '#checkout a[href="#submit-order"]', function (evt) {
+        var checkout = $('#checkout');
         evt.preventDefault();
         if(!checkout.find('.form-actions').is('.valid'))
             return;

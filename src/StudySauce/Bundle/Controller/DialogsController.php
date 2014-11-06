@@ -2,6 +2,8 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Schedule;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
@@ -16,6 +18,11 @@ class DialogsController extends Controller
     public function contactAction()
     {
         return $this->render('StudySauceBundle:Dialogs:contact.html.php', ['id' => 'contact-support']);
+    }
+
+    public function contactSendAction()
+    {
+        // TODO: send the message
     }
 
     /**
@@ -47,7 +54,22 @@ class DialogsController extends Controller
      */
     public function sdsMessagesAction()
     {
-        return $this->render('StudySauceBundle:Dialogs:sds-messages.html.php', ['id' => 'sds-messages']);
+        // get the total number of checkins
+
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
+
+        /** @var $schedule Schedule */
+        $schedule = $user->getSchedules()->first() ?: new Schedule();
+
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        $count = 0;
+        foreach($courses as $i => $c)
+        {
+            /** @var Course $c */
+            $count += $c->getCheckins()->count();
+        }
+        return $this->render('StudySauceBundle:Dialogs:sds-messages.html.php', ['id' => 'sds-messages', 'count' => $count]);
     }
 
     /**
@@ -128,6 +150,11 @@ class DialogsController extends Controller
     public function billParents1Action()
     {
         return $this->render('StudySauceBundle:Dialogs:bill-parents.html.php', ['id' => 'bill-parents']);
+    }
+
+    public function billParentsSendAction()
+    {
+
     }
 
     /**

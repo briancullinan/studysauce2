@@ -8,7 +8,6 @@ $(document).ready(function () {
         sessionStart = null,
         sessionCurrent = 0,
         clock = null,
-        checkin = $('#checkin'),
         body = $('body');
 
     function setClock() {
@@ -36,12 +35,13 @@ $(document).ready(function () {
             }
         });
     }
+    // used by mini-checkin
     $.fn.setClock = setClock;
 
     body.on('show', '#checkin,#home', function () {
         if($(this).is('#checkin'))
             $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#checkin');
-        setTimeout(function () {setClock();}, 200);
+        setClock()
     });
 
     function resetClock()
@@ -64,7 +64,7 @@ $(document).ready(function () {
                 clock = null;
                 resetClock();
                 // show expire message
-                $('.minplayer-default-pause').trigger('click');
+                $('#jquery_jplayer').jPlayer("pause");
                 body.find(checkedInBtn).first().trigger('click');
             }
         }, 1000);
@@ -75,12 +75,13 @@ $(document).ready(function () {
             clearInterval(clock);
             clock = null;
         }
-        $('.minplayer-default-pause').trigger('click');
+        $('#jquery_jplayer').jPlayer("pause");
         resetClock();
     }
 
     function checkinCallback(pos, cid, checkedIn) {
-        var checked = [],
+        var checkin = $('#checkin'),
+            checked = [],
             checklist = $('#checklist'),
             sdsmessages = $('#sds-messages'),
             lat = pos != null && typeof pos.coords != 'undefined' ? pos.coords.latitude : '',
@@ -148,7 +149,7 @@ $(document).ready(function () {
             if($(this).parent().is('.invalid'))
                 return;
             $(this).parent().addClass('invalid');
-            $('.minplayer-default-play').trigger('click');
+            $('#jquery_jplayer').jPlayer("play");
             //if(typeof navigator.geolocation != 'undefined')
             //{
             //    locationTimeout = setTimeout(callback, 2000);

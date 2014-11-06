@@ -1,15 +1,16 @@
 jQuery(document).ready(function() {
 
-    var account = jQuery('#account'),
-        body = $('body');
+    var body = $('body');
 
     function getHash()
     {
+        var account = jQuery('#account');
         return account.find('.first-name input').val().trim() + account.find('.last-name input').val().trim() +
             account.find('.email input').val().trim() + account.find('.new-password input').val();
     }
 
     function accountFunc() {
+        var account = jQuery('#account');
         var valid = true;
 
         if (getHash() == account.data('state') ||
@@ -24,8 +25,10 @@ jQuery(document).ready(function() {
         else
             account.find('.form-actions').removeClass('invalid').addClass('valid');
     }
-    account.data('state', getHash());
-    accountFunc();
+    body.on('loaded', '#account', function () {
+        $(this).data('state', getHash());
+        accountFunc();
+    });
 
     body.on('change', '#account .first-name input, #account .last-name input, #account .email input, ' +
         '#account .password input, #account .new-password input', accountFunc);
@@ -35,6 +38,7 @@ jQuery(document).ready(function() {
         '#account .password input, #account .new-password input', accountFunc);
 
     body.on('click', '#account a[href="#edit-account"]', function (evt) {
+        var account = jQuery('#account');
         evt.preventDefault();
         account.find('.account-info').removeClass('read-only').addClass('edit');
         account.find('.new-password').hide();
@@ -42,12 +46,14 @@ jQuery(document).ready(function() {
     });
 
     body.on('click', '#account a[href="#edit-password"]', function (evt) {
+        var account = jQuery('#account');
         evt.preventDefault();
         account.find('.new-password').show();
         account.find('.pass-info').show();
     });
 
     body.on('click', '#account a[href="#cancel-account"]', function (evt) {
+        var account = jQuery('#account');
         evt.preventDefault();
         jQuery.ajax({
             url: window.callbackPaths['account_remove'],
@@ -65,6 +71,7 @@ jQuery(document).ready(function() {
     });
 
     body.on('click', '#account a[href="#save-account"]', function (evt) {
+        var account = jQuery('#account');
         evt.preventDefault();
 
         if(account.find('.form-actions').is('.invalid'))

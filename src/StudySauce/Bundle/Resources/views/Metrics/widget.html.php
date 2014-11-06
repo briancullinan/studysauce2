@@ -10,7 +10,7 @@ use StudySauce\Bundle\Entity\Course;
                 window.initialHistory = [];
                 window.classIds = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getId();}, $courses)); ?>');
             </script>
-        <?php } else { ?>
+        <?php } ?>
         <div class="centrify">
             <div class="timeline">
                 <h3><span>Study hours by week<span></h3>
@@ -25,7 +25,6 @@ use StudySauce\Bundle\Entity\Course;
             window.initialHistory = JSON.parse('<?php print json_encode($times); ?>');
             window.classIds = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getId();}, $courses)); ?>');
         </script>
-        <?php } ?>
     </div>
 </div>
 

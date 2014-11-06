@@ -205,7 +205,7 @@ class MetricsController extends Controller
             }
         }
 
-        ksort($checkins);
+        krsort($checkins);
 
         // if the checkin time is before the last checkout time then change the checkout time to match checkin time,
         //    they switched classes in the middle of the session

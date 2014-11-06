@@ -18,6 +18,7 @@ if (!defined('ENT_SUBSTITUTE')) {
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
@@ -35,12 +36,14 @@ class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
     private $container;
     private $kernel;
     private $dispatcher;
+    private $signer;
 
     /**
      * {@inheritdoc}
      */
     public function __construct(ContainerInterface $container, UriSigner $signer = null, $globalDefaultTemplate = null, HttpKernelInterface $kernel, EventDispatcherInterface $dispatcher = null)
     {
+        $this->signer = $signer;
         $this->container = $container;
         $this->kernel = $kernel;
         $this->dispatcher = $dispatcher;
@@ -69,9 +72,8 @@ class SIncludeFragmentRenderer extends HIncludeFragmentRenderer
             $renderer = new InlineFragmentRenderer($this->kernel, $this->dispatcher);
             return $renderer->render($uri, $request, $options);
         }
-        $response = parent::render($uri, $request, $options);
-        $response->setContent(str_replace('</hx:include>', '</div>', str_replace('<hx:include src=', '<div class="sinclude" data-src=', $response->getContent())));
-        return $response;
+        $uri = substr($this->signer->sign($this->generateFragmentUri($uri, $request, true)), strlen($request->getSchemeAndHttpHost()));
+        return new Response('<div class="sinclude" data-src="' . htmlspecialchars($uri, ENT_QUOTES) . '"></div>');
     }
 
     public function getName()

@@ -20,6 +20,7 @@ $container->loadFromExtension('assetic', [
         'dashboard' => [
             'inputs' => [
                 '@funnel',
+                '@StudySauceBundle/Resources/public/css/tipsy.css',
                 '@StudySauceBundle/Resources/public/js/jquery.jplayer.js',
                 '@StudySauceBundle/Resources/public/js/plupload/js/plupload.full.min.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/moxie.js',

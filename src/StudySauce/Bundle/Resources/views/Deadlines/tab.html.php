@@ -72,12 +72,11 @@ $view['slots']->start('body'); ?>
 
             /** @var $d Deadline */
             if (!$isDemo) {
-                $time = $d->getDueDate();
-                $newHeadStr = $time->format('j F') . ' <span>' . $time->format('Y') . '</span>';
+                $newHeadStr = $d->getDueDate()->format('j F') . ' <span>' . $d->getDueDate()->format('Y') . '</span>';
                 if ($headStr != $newHeadStr) {
                     $headStr = $newHeadStr;
                     $classes = [];
-                    if ($time < date_add(new \Datetime(), new \DateInterval('P1D'))) {
+                    if ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D'))) {
                         $classes[] = 'hide';
                     }
                     print '<div class="head ' . implode(' ', $classes) . '">' . $headStr . '</div>';
@@ -93,14 +92,15 @@ $view['slots']->start('body'); ?>
 
             ?>
             <div class="deadline-row first valid <?php
-            print ($isDemo ? 'edit' : 'read-only'); ?>  cid<?php
-            print (!empty($d->getCourse()) ? $d->getCourse()->getId() : ''); ?>"
+            print ($isDemo ? 'edit' : 'read-only');
+            print (!empty($d->getCourse()) ? (' cid' . $d->getCourse()->getId()) : '');
+            print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : ''); ?>"
                  id="eid-<?php print ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">
                     <span>Class name</span>
                     <i class="class<?php print $classI; ?>"></i><select>
-                        <option value="_none" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
+                        <option value="" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                         <?php
                         $found = false;
                         foreach ($isDemo ? $demoCourses : $courses as $c):

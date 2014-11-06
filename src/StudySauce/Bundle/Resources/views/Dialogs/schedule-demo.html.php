@@ -5,12 +5,15 @@ Schedule a demo
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<label class="input"><span>Your name</span><input name="your-name" type="text" value=""></label>
-<label class="input"><span>Your email</span><input name="your-email" type="email" value=""></label>
-<label class="input">
-    <span>Message</span>
-    <textarea placeholder="" cols="60" rows="2"></textarea>
-</label>
+<div class="name">
+    <label class="input"><span>Your name</span><input name="your-name" type="text" value=""></label>
+</div>
+<div class="email">
+    <label class="input"><span>Your email</span><input name="your-email" type="email" value=""></label>
+</div>
+<div class="message">
+    <label class="input"><span>Message</span><textarea placeholder="" cols="60" rows="2"></textarea></label>
+</div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

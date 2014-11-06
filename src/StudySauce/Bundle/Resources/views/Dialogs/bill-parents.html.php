@@ -5,9 +5,15 @@ Send an email to have someone prepay for Study Sauce.  We will then alert you wh
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<label class="input"><span>Parent's first name</span><input name="parent-first" type="text" value=""></label>
-<label class="input"><span>Parent's last name</span><input name="parent-last" type="email" value=""></label>
-<label class="input"><span>Parent's email</span><input name="parent-email" type="email" value=""></label>
+<div class="first-name">
+    <label class="input"><span>Parent's first name</span><input name="parent-first" type="text" value=""></label>
+</div>
+<div class="last-name">
+    <label class="input"><span>Parent's last name</span><input name="parent-last" type="email" value=""></label>
+</div>
+<div class="email">
+    <label class="input"><span>Parent's email</span><input name="parent-email" type="email" value=""></label>
+</div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

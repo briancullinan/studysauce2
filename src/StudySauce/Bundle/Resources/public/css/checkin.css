@@ -2,7 +2,11 @@
 #checkin .classes {
 }
 
-#checkin .form-actions a[href*="/schedule"] {
+#checkin .pane-content {
+    padding-bottom: 40px;
+}
+
+#checkin a[href*="/schedule"] {
     position: absolute;
     bottom: 10px;
     left: 10px;
