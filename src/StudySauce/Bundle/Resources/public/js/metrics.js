@@ -28,6 +28,23 @@ $(document).ready(function () {
             widthOnly: true,
             maxFontPixels: 30
         });
+
+        if(resizeTimeout != null)
+            clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+            var timeline = $('#timeline:visible, .timeline:visible'),
+                piechart = $('#pie-chart:visible, .pie-chart:visible');
+            if (timeline.width() != timeline.find('svg').attr('width'))
+            {
+                d3.select('#timeline svg, .timeline svg')
+                    .attr("width", timeline.width())
+                    .attr("height", timeline.width() * 12 / 16);
+                d3.select('#pie-chart svg, .pie-chart svg')
+                    .attr("width", piechart.width())
+                    .attr("height", piechart.width() * 12 / 16);
+                redraw();
+            }
+        }, 100);
     });
 
     function updateHistory(newHistory) {
@@ -340,25 +357,6 @@ $(document).ready(function () {
 
         redrawPie();
     }
-
-    $(window).resize(function () {
-        if(resizeTimeout != null)
-            clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function () {
-            var timeline = $('#timeline:visible, .timeline:visible'),
-                piechart = $('#pie-chart:visible, .pie-chart:visible');
-            if (timeline.width() != timeline.find('svg').attr('width'))
-            {
-                d3.select('#timeline svg, .timeline svg')
-                    .attr("width", timeline.width())
-                    .attr("height", timeline.width() * 12 / 16);
-                d3.select('#pie-chart svg, .pie-chart svg')
-                    .attr("width", piechart.width())
-                    .attr("height", piechart.width() * 12 / 16);
-                redraw();
-            }
-        }, 10);
-    });
 
 });
 
