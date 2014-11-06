@@ -80,6 +80,7 @@ $(document).ready(function () {
     body.on('show', '.course1.step0', function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
     });
+    body.find('.course1.step0:visible').trigger('show');
     $(window).resize(function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
     });
@@ -87,6 +88,7 @@ $(document).ready(function () {
     body.on('change', '#lesson1-step4 textarea', lesson1Func);
     body.on('keyup', '#lesson1-step4 textarea', lesson1Func);
     body.on('show', '#lesson1-step4', lesson1Func);
+    body.find('#lesson1-step4:visible').trigger('show');
     body.on('click', '#lesson1-step4 .highlighted-link a', function (evt) {
         evt.preventDefault();
         var step = body.find('#lesson1-step4'),
@@ -109,6 +111,7 @@ $(document).ready(function () {
 
     body.on('change', '#lesson1-step2 input[type="radio"]', validateQuiz1);
     body.on('show', '#lesson1-step2', validateQuiz1);
+    body.find('#lesson1-step2:visible').trigger('show');
     body.on('click', '#lesson1-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#lesson1-step2'),
@@ -139,6 +142,7 @@ $(document).ready(function () {
     body.on('change', '#lesson2-step2 input', validateQuiz2);
     body.on('keyup', '#lesson2-step2 input[type="text"]', validateQuiz2);
     body.on('show', '#lesson2-step2', validateQuiz2);
+    body.find('#lesson2-step2:visible').trigger('show');
     body.on('click', '#lesson2-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#lesson2-step2'),
@@ -180,6 +184,7 @@ $(document).ready(function () {
     body.on('change', '#lesson3-step2 input', validateQuiz3);
     body.on('keyup', '#lesson3-step2 input[type="text"]', validateQuiz3);
     body.on('show', '#lesson3-step2', validateQuiz3);
+    body.find('#lesson3-step2:visible').trigger('show');
     body.on('click', '#lesson3-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#lesson3-step2'),
@@ -218,6 +223,7 @@ $(document).ready(function () {
 
     body.on('change', '#lesson4-step2 input', validateQuiz4);
     body.on('show', '#lesson4-step2', validateQuiz4);
+    body.find('#lesson4-step2:visible').trigger('show');
     body.on('click', '#lesson4-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#lesson4-step2'),

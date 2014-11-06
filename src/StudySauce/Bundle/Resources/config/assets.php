@@ -69,8 +69,8 @@ $container->loadFromExtension('assetic', [
         ],
         'checkin' => [
             'inputs' => [
-                '@StudySauceBundle/Resources/public/js/checkin.js',
-                '@StudySauceBundle/Resources/public/js/jquery.fittext.js'
+                '@StudySauceBundle/Resources/public/js/jquery.fittext.js',
+                '@StudySauceBundle/Resources/public/js/checkin.js'
             ],
             'filters' => [],
             'options' => [

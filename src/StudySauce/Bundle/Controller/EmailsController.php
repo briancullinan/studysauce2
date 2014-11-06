@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\User;
@@ -134,7 +135,7 @@ class EmailsController extends Controller
             ->setFrom($user->getEmail())
             ->setTo($partner->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:achievement.html.php', [
-                        'name' => $user,
+                        'user' => $user,
                         'greeting' => 'Dear ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
                         'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
                     ]), 'text/html');
@@ -161,7 +162,7 @@ class EmailsController extends Controller
             ->setFrom($user->getEmail())
             ->setTo($parent->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:parent-invite.html.php', [
-                        'name' => $user,
+                        'user' => $user,
                         'greeting' => 'Dear ' . $parent->getFirst() . ' ' . $parent->getLast() . ',',
                         'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
                     ]), 'text/html');
@@ -181,8 +182,12 @@ class EmailsController extends Controller
      */
     public function administratorAction(User $user, $properties)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         if(is_object($properties))
         {
+            $fields = $orm->getClassMetadata('StudySauce:Product')->getFieldNames();
+            $associations = $orm->getClassMetadata('StudySauce:Product')->getAssociationNames();
             $class_vars = get_class_vars(get_class($properties));
             foreach ($class_vars as $name => $value)
             {

@@ -25,10 +25,11 @@ jQuery(document).ready(function() {
         else
             account.find('.form-actions').removeClass('invalid').addClass('valid');
     }
-    body.on('loaded', '#account', function () {
+    body.on('show', '#account', function () {
         $(this).data('state', getHash());
         accountFunc();
     });
+    body.find('#account:visible').trigger('show');
 
     body.on('change', '#account .first-name input, #account .last-name input, #account .email input, ' +
         '#account .password input, #account .new-password input', accountFunc);

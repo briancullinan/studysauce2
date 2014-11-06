@@ -41,7 +41,16 @@ $(document).ready(function () {
         }, 100);
     }
 
-    body.on('show', '#metrics,#home', resizeComponents);
+    body.on('show', '#metrics,#home', function () {
+        if(($(this).is('#metrics') && !$(this).is('.loaded')) ||
+            ($(this).is('#home') && !$(this).find('.metrics-widget').is('.loaded')))
+        {
+            initializeGraphs.apply(this);
+            $('#metrics:visible,#home .metrics-widget:visible').addClass('loaded');
+        }
+        resizeComponents();
+    });
+    body.find('#metrics:visible,#home:visible').trigger('show');
     $(window).resize(resizeComponents);
 
     function updateHistory(newHistory) {
@@ -129,8 +138,6 @@ $(document).ready(function () {
                 $(window).trigger('resize');
         }
     }
-
-    body.on('loaded', '#metrics,#home', initializeGraphs);
 
     // update metrics if checkin or checkout occurs
     body.on('checkin', function () {

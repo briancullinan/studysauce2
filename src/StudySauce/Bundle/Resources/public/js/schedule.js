@@ -392,10 +392,12 @@ $(document).ready(function () {
     body.on('focus', '#schedule .university input', function () {
         schedule.find('a[href="#save-class"]').first().css('visibility', 'visible');
     });
-    body.on('loaded', '#schedule', function () {
-        if(schedule.find('.university input').val().trim() != '')
+    body.on('show', '#schedule', function () {
+        if(schedule.find('.university input').val().trim() != '' &&
+            schedule.find('.university input').data('default') == null)
             schedule.find('.university input').data('default', schedule.find('.university input').val().trim());
     });
+    body.find('#schedule:visible').trigger('show');
 
     planFunc.apply(schedule.find('.schedule .class-row'));
 });

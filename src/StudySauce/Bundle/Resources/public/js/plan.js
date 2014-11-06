@@ -222,12 +222,11 @@ $(document).ready(function () {
     //   we will activate the calendar only once, when the menu is clicked, this assumes #hash detection works, and
     //   it triggers the menu clicking
     body.on('show', '#plan', function () {
-        setTimeout(function () {
-            initialize();
-            if($('#calendar:visible').length > 0)
-                $('#calendar').fullCalendar('refetchEvents');
-        }, 200);
+        initialize();
+        if($('#calendar:visible').length > 0)
+            $('#calendar').fullCalendar('refetchEvents');
     });
+    body.find('#plan:visible').trigger('show');
 
     body.on('click', '#plan .sort-by a[href="#expand"]', function () {
         var plans = $('#plan');

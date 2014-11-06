@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('body').on('loaded', '.page-top', function () {
+    $('body').on('show', '.page-top', function () {
         $('.scr h3').textfill({widthOnly: true});
     });
 

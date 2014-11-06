@@ -43,6 +43,7 @@ $(document).ready(function () {
             $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#checkin');
         setClock()
     });
+    body.find('#checkin:visible,#home:visible').trigger('show');
 
     function resetClock()
     {

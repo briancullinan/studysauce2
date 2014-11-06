@@ -47,9 +47,10 @@ $(document).ready(function () {
             deadlines.find('.form-actions').removeClass('invalid').addClass('valid');
     }
 
-    body.on('loaded', '#deadlines', function () {
+    body.on('show', '#deadlines', function () {
         datesFunc.apply($(this).find('.deadline-row'));
     });
+    body.find('#deadlines:visible').trigger('show');
 
     body.on('click', '#deadlines .deadline-row a[href="#edit-deadline"]', function (evt) {
         var deadlines = $('#deadlines');

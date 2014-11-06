@@ -113,6 +113,11 @@
     padding-right:20px;
 }
 
+.course1.step0 .player-divider img
+{
+    position:absolute;
+}
+
 .course1.step2 .results,
 .course1.step2 .questions
 {
@@ -270,14 +275,14 @@
 
 .course1.step3 .award
 {
-    width: 40%;
     margin: 0 4%;
     display:inline-block;
     vertical-align: middle;
     border:5px solid #555;
     background: url(../../studysauce/images/noise_white.png) repeat #ffffff;
-    padding:40px 20px;
+    padding:10% 20px;
     border-radius: 5px;
+    width: 500px;
 }
 
 .course1.step3 .award h3
@@ -301,7 +306,7 @@
 
 .course1.step3 img
 {
-    width: 40%;
+    width: 400px;
     margin: 0 5%;
     display:inline-block;
     position:relative;

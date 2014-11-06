@@ -3,8 +3,6 @@
     width: 49%;
     margin: 0;
     display: inline-block;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 #goals .split-description {
@@ -102,9 +100,9 @@
 {
     vertical-align: top;
     display:inline-block;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     white-space: normal;
+    margin: 0 -2px;
+    padding: 0 2px;
 }
 
 #goals .type,
@@ -114,12 +112,12 @@
 #goals .milestone,
 #goals header label
 {
-    width: 29%;
+    width: 30%;
 }
 
-#goals .goal-row .highlighted-link
+#goals .reward
 {
-    width:11%;
+    width:40%;
 }
 
 #goals .type {
@@ -139,24 +137,26 @@
     background-position: left -672px;
 }
 
-#goals .form-actions
-{
-    text-align:center;
-}
-
-#goals .form-actions a[href="#save-goal"]
-{
-    float:right;
-}
-
 #goals .goal-row label .description
 {
     display:inline;
 }
 
+#goals .pane-content
+{
+    padding-bottom:40px;
+}
+
+#goals .form-actions
+{
+    margin-bottom: -20px;
+}
+
 #goals .form-actions a[href="/partner"]
 {
-    margin:0 auto;
+    position:absolute;
+    bottom:10px;
+    left:10px;
 }
 
 
@@ -184,16 +184,11 @@
     vertical-align: top;
 }
 
-#goals .goal-row .reward label
+#goals .goal-row.read-only .reward
 {
-    width: 100%;
+    padding-right: 120px;
+    margin-right: -120px;
     display: inline-block;
-}
-
-#goals .goal-row.read-only .reward label
-{
-    padding-right: 50px;
-    margin-right: -50px;
 }
 
 #goals .goal-row label span
@@ -282,11 +277,6 @@
     display:none;
 }
 
-#goals .goal-row.edit .reward
-{
-    width:39%;
-}
-
 @media all and (max-width:1000px) {
 
     #goals .split-description {
@@ -353,21 +343,16 @@
     {
         display: block;
         width: auto;
-        max-width: none;
+        max-width: 100%;
         clear: both;
         text-align: left;
-        padding-right: 0;
+        margin:0;
+        padding:0;
     }
 
     #goals .goal-row.edit .reward
     {
         width: auto;
-    }
-
-    #goals .goal-row .highlighted-link
-    {
-        display:block;
-        width:auto;
     }
 
     #goals .form-actions a[href="/partner"]

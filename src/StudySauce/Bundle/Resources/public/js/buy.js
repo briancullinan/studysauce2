@@ -28,10 +28,8 @@ jQuery(document).ready(function($) {
         }
     }
 
-    body.on('loaded', '#checkout', function () {
-        checkoutFunc();
-    });
-
+    body.on('show', '#checkout', checkoutFunc);
+    body.find('#checkout:visible').trigger('show');
     body.on('change', '#checkout input, #checkout select', checkoutFunc);
     body.on('keyup', '#checkout input[type="text"]', checkoutFunc);
 

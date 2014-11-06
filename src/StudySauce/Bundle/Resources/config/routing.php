@@ -494,7 +494,7 @@ $collection->add(
     'contact_send',
     new Route(
         '/contact/send',
-        ['_controller' => 'StudySauceBundle:Dialogs:billParentsSend'],
+        ['_controller' => 'StudySauceBundle:Dialogs:contactSend'],
         [],
         [],
         '',
@@ -507,7 +507,7 @@ $collection->add(
     'contact_parents',
     new Route(
         '/contact/parents',
-        ['_controller' => 'StudySauceBundle:Dialogs:contactSend'],
+        ['_controller' => 'StudySauceBundle:Dialogs:billParentsSend'],
         [],
         [],
         '',

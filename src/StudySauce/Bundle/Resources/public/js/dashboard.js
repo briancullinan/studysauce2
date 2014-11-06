@@ -67,7 +67,6 @@ $(document).ready(function () {
                         if (newPane.length == 0) {
                             newPane = content.filter('.panel-pane').first();
                         }
-                        content.filter('[id]').trigger('loaded');
                         item.find('.squiggle').stop().remove();
                         activatePanel(newPane, i, noPush, path);
                         window.sincluding = false;
@@ -91,9 +90,7 @@ $(document).ready(function () {
         body.find('.modal:visible').modal('hide');
         body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
         panel.delay(75).fadeIn(75);
-        setTimeout(function () {
-            panel.trigger('show');
-        }, 100);
+        setTimeout(function () { panel.trigger('show'); }, 100);
         if(!noPush)
             window.history.pushState(window.callbackKeys[i], "", path);
     }
@@ -140,10 +137,8 @@ $(document).ready(function () {
     }
 
     setTimeout(function () {
-        // load the already loaded tabs
-        body.find('.panel-pane').filter('[id]').trigger('loaded')
-            // show the already visible tabs
-            .filter(':visible').trigger('show');
+        // show the already visible tabs
+        body.find('.panel-pane:visible').trigger('show');
     }, 100);
 
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {

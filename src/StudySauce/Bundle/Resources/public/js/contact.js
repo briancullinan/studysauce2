@@ -20,8 +20,11 @@ $(document).ready(function () {
                 message: contact.find('.message textarea').val()
             },
             success: function () {
-                contact.modal('hide');
+                contact.removeClass('invalid').addClass('valid').modal('hide');
                 contact.find('.name input, .email input, .message textarea"]').val('');
+            },
+            error: function () {
+                contact.removeClass('invalid').addClass('valid');
             }
         });
     });
@@ -43,9 +46,12 @@ $(document).ready(function () {
                 email: contact.find('.email input').val()
             },
             success: function () {
-                contact.modal('hide');
-                contact.find('.first-name input, .last-name input, .email textarea"]').val('');
+                contact.removeClass('invalid').addClass('valid').modal('hide');
+                contact.find('.first-name input, .last-name input, .email input"]').val('');
                 $('#bill-parents-confirm').modal();
+            },
+            error: function () {
+                contact.removeClass('invalid').addClass('valid');
             }
         });
     });

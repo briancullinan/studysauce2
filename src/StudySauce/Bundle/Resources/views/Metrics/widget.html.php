@@ -6,10 +6,6 @@ use StudySauce\Bundle\Entity\Course;
         <h3>My progress</h3>
         <?php if(empty($courses) || empty($times)) { ?>
             <a href="<?php print $view['router']->generate('checkin'); ?>" class="cloak">Nothing set up yet.  Click <span class="reveal">here</span> to check in and start tracking your progress.</a>
-            <script type="text/javascript">
-                window.initialHistory = [];
-                window.classIds = JSON.parse('<?php print json_encode(array_map(function (Course $c) {return $c->getId();}, $courses)); ?>');
-            </script>
         <?php } ?>
         <div class="centrify">
             <div class="timeline">

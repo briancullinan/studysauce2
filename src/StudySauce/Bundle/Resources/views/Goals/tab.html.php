@@ -98,9 +98,9 @@ $view['slots']->start('body'); ?>
                         <span>Reward</span>
                         <textarea placeholder="Ex. $25 gift card" cols="60" rows="2"><?php print (empty($behavior) ? '' : $behavior->getReward()); ?></textarea>
                     </label>
-                    <a href="#goal-edit">&nbsp;</a>
                 </div>
                 <div class="highlighted-link read-only">
+                    <a href="#goal-edit">&nbsp;</a>
                     <a class="more" href="#claim">Brag</a>
                 </div>
             </div>
@@ -129,9 +129,9 @@ $view['slots']->start('body'); ?>
                         <span>Reward</span>
                         <textarea placeholder="Ex. $50 gift card" cols="60" rows="2"><?php print (empty($milestone) ? '' : $milestone->getReward()); ?></textarea>
                     </label>
-                    <a href="#goal-edit">&nbsp;</a>
                 </div>
                 <div class="highlighted-link read-only">
+                    <a href="#goal-edit">&nbsp;</a>
                     <a class="more" href="#claim">Brag</a>
                 </div>
             </div>
@@ -166,9 +166,9 @@ $view['slots']->start('body'); ?>
                         <span>Reward</span>
                         <textarea placeholder="Ex. Fancy dinner" cols="60" rows="2"><?php print (empty($outcome) ? '' : $outcome->getReward()); ?></textarea>
                     </label>
-                    <a href="#goal-edit">&nbsp;</a>
                 </div>
                 <div class="highlighted-link read-only">
+                    <a href="#goal-edit">&nbsp;</a>
                     <a class="more" href="#claim" data-target="#claim">Brag</a>
                 </div>
             </div>
