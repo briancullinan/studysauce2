@@ -3,12 +3,13 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
-$view['slots']->start('checkin');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Checkin:index', ['_format' => 'tab']));
-$view['slots']->stop();
-
 $view['slots']->start('stylesheets');
-
+foreach ($view['assetic']->stylesheets([
+        '@StudySauceBundle/Resources/public/css/clock.css',
+        '@StudySauceBundle/Resources/public/css/checkin.css'
+    ], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
+    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach;
 foreach ($view['assetic']->stylesheets(
     [
         '@StudySauceBundle/Resources/public/css/home.css',
@@ -76,5 +77,9 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-$view['slots']->output('checkin');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
 $view['slots']->stop();

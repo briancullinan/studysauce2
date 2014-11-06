@@ -197,7 +197,7 @@ $(document).ready(function () {
 
     body.on('change', '#plan select[name="strategy-select"]', renderStrategies);
 
-    body.on('click', '#plan .assignment, #plans .class-name, #plans .percent', function () {
+    body.on('click', '#plan .assignment, #plan .class-name, #plan .percent', function () {
             var row = $(this).parents('.session-row'),
                 strategy = (/default-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
                 cid = ((/cid([0-9]+)(\s|$)/ig).exec(row.attr('class')) || ['', ''])[1],

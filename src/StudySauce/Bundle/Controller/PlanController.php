@@ -118,7 +118,7 @@ class PlanController extends Controller
      * @param $_week
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnerAction($_user, $_week)
+    public function partnerAction($_user, $_week = null)
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');

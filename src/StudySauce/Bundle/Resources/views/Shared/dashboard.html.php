@@ -3,14 +3,18 @@
 /** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
 /** @var $app \Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables */
 
-if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_format') == 'funnel') {
+if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_format') == 'funnel' ||
+    $app->getRequest()->get('_format') == 'adviser') {
     $view->extend('StudySauceBundle:Shared:layout.html.php');
 
     if($app->getRequest()->get('_format') == 'index') {
         $view['slots']->start('classes'); ?>dashboard-home<?php $view['slots']->stop();
     }
-    else {
+    elseif($app->getRequest()->get('_format') == 'funnel') {
         $view['slots']->start('classes'); ?>dashboard-home funnel<?php $view['slots']->stop();
+    }
+    elseif($app->getRequest()->get('_format') == 'adviser') {
+        $view['slots']->start('classes'); ?>dashboard-home adviser<?php $view['slots']->stop();
     }
 
     $view['slots']->start('tmp-stylesheets');
@@ -47,7 +51,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
     $view['slots']->stop();
 
 
-    if($app->getRequest()->get('_format') != 'funnel') {
+    if($app->getRequest()->get('_format') == 'index') {
         $view['slots']->start('tmp-body');
         $view['slots']->output('body');
         $view['slots']->stop();
@@ -57,12 +61,22 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->output('tmp-body');
         $view['slots']->stop();
     }
-    else {
+    elseif($app->getRequest()->get('_format') == 'funnel') {
         $view['slots']->start('tmp-body');
         $view['slots']->output('body');
         $view['slots']->stop();
         $view['slots']->start('body');
-        echo $view->render('StudySauceBundle:Shared:guest-header.html.php');
+        echo $view->render('StudySauceBundle:Shared:header.html.php');
+        $view['slots']->output('tmp-body');
+        $view['slots']->stop();
+    }
+    elseif($app->getRequest()->get('_format') == 'adviser') {
+        $view['slots']->start('tmp-body');
+        $view['slots']->output('body');
+        $view['slots']->stop();
+        $view['slots']->start('body');
+        echo $view->render('StudySauceBundle:Shared:header.html.php');
+        echo $view->render('StudySauceBundle:Partner:menu.html.php');
         $view['slots']->output('tmp-body');
         $view['slots']->stop();
     }

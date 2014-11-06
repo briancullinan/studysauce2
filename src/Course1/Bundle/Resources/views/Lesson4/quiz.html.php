@@ -12,10 +12,10 @@ $complete = !empty($quiz->getMultitask()) &&
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
         <h3>True or False.  You are excellent at multitasking.<?php
-            if($complete)
+            /*if($complete)
                 print ($quiz->getMultitask() == '0'
                     ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+                    : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
             <label class="radio"><input name="quiz-multitask" type="radio" value="true" <?php print ($quiz->getMultitask() == 'true' ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
@@ -27,10 +27,10 @@ $complete = !empty($quiz->getMultitask()) &&
         </div>
         <?php } ?>
         <h3>Which of the following is <i style="text-decoration: underline">not</i> a downside of multitasking?<?php
-            if($complete)
+            /*if($complete)
                 print ($quiz->getDownside() == 'shorter'
                     ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+                    : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
             <label class="radio"><input name="quiz-downside" type="radio" value="tired" <?php print ($quiz->getDownside() == 'tired' ? 'checked="checked"' : ''); ?>><i></i><span>Get tired more easily</span></label>
@@ -44,10 +44,10 @@ $complete = !empty($quiz->getMultitask()) &&
         </div>
         <?php } ?>
         <h3>How much lower do students interrupted by technology score on tests (in research studies)?<?php
-            if($complete)
+            /*if($complete)
                 print ($quiz->getLowerScore() == '20'
                     ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+                    : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
             <label class="radio"><input name="quiz-lower-score" type="radio" value="10" <?php print ($quiz->getLowerScore() == '10' ? 'checked="checked"' : ''); ?>><i></i><span>10%</span></label>
@@ -61,10 +61,10 @@ $complete = !empty($quiz->getMultitask()) &&
         </div>
         <?php } ?>
         <h3>How long can a text message distract you from your optimal study state?<?php
-            if($complete)
+            /*if($complete)
                 print ($quiz->getDistraction() == '40'
                     ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+                    : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
             <label class="radio"><input name="quiz-distraction" type="radio" value="3" <?php print ($quiz->getDistraction() == '3' ? 'checked="checked"' : ''); ?>><i></i><span>1-3 minutes</span></label>

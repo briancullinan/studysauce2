@@ -1,4 +1,5 @@
-#login .pane-content
+#login .pane-content,
+#register .pane-content
 {
     text-align: center;
 }
@@ -62,8 +63,8 @@ a[href$="/redirect/facebook"]:focus
 
 a[href="#sign-in-with-email"]
 {
-    margin-top:10px;
-    display:inline-block;
+    display:block;
+    margin:10px auto;
 }
 
 #account .password,
@@ -79,18 +80,29 @@ a[href="#sign-in-with-email"]
     width: 50%;
 }
 
+#register .email,
+#register .password,
 #login .email,
 #login .password
 {
     width: auto;
-    margin:10px auto;
-    max-width: 400px;
+    margin: 0 auto;
+    max-width: 600px;
     display:none;
 }
 
+#register .last-name,
+#register .first-name
+{
+    max-width: 300px;
+    margin:0 auto;
+    display:none;
+}
+
+#register .form-actions,
 #login .form-actions
 {
-    max-width: 400px;
+    max-width: 600px;
     margin:0 auto;
     display:none;
 }

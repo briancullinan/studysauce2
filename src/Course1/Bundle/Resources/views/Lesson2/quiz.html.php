@@ -14,10 +14,10 @@ $complete = !empty($quiz->getGoalPerformance()) &&
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
         <h3>How much more likely are you to perform at a higher level if you set specific and challenging goals?<?php
-            if($complete)
-                print ($quiz->getGoalPerformance() == '90'
-                    ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+            //if($complete)
+            //    print ($quiz->getGoalPerformance() == '90'
+            //        ? '<span class="answer correct">Correct!</span>'
+            //        : '<span class="answer wrong">Wrong.</span>');
             ?></h3>
         <div class="questions">
             <label class="radio"><input name="quiz-goal-performance" type="radio" value="20" <?php print ($quiz->getGoalPerformance() == '20' ? 'checked="checked"' : ''); ?>><i></i><span>20%</span></label>
@@ -31,7 +31,7 @@ $complete = !empty($quiz->getGoalPerformance()) &&
         </div>
         <?php } ?>
         <h3>What does the SMART acronym stand for?<?php
-            if($complete)
+            /*if($complete)
                 print (strpos(strtolower($quiz->getSpecific()), 'specific') > -1 &&
                         strpos(strtolower($quiz->getMeasurable()), 'measurable') > -1 &&
                         strpos(strtolower($quiz->getAchievable()), 'achievable') > -1 &&
@@ -39,7 +39,7 @@ $complete = !empty($quiz->getGoalPerformance()) &&
                         strpos(strtolower($quiz->getTimeBound()), 'time') > -1 &&
                         strpos(strtolower($quiz->getTimeBound()), 'bound', strpos(strtolower($quiz->getTimeBound()), 'time') > -1) > -1
                     ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+                    : '<span class="answer wrong">Wrong.</span>'); */
             ?></h3>
         <div class="questions">
             <label class="input"><span>S</span><input name="quiz-smart-acronym-S" type="text" value="<?php print $view->escape($quiz->getSpecific()); ?>"></label>
@@ -54,11 +54,11 @@ $complete = !empty($quiz->getGoalPerformance()) &&
         </div>
         <?php } ?>
         <h3>What are the two types of motivation?<?php
-            if($complete)
+            /*if($complete)
                 print (strpos(strtolower($quiz->getIntrinsic()), 'intrinsic') > -1 &&
                         strpos(strtolower($quiz->getExtrinsic()), 'extrinsic') > -1
                     ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
+                    : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
             <label class="input"><span>1</span><input name="quiz-motivation-I" type="text" value="<?php print $view->escape($quiz->getIntrinsic()); ?>"></label>
@@ -66,7 +66,9 @@ $complete = !empty($quiz->getGoalPerformance()) &&
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>The two types of motivation are intrinsic and extrinsic motivation.  Intrinsic motivation is motivation that comes from within.  Ex. studying because you want the satisfaction of learning something new.  Extrinsic motivation is a reward that comes externally.  Ex. studying in order to get a good grade.</p>
+            <p>The two types of motivation are intrinsic and extrinsic motivation.</p>
+            <p>Intrinsic motivation is motivation that comes from within.  Ex. studying because you want the satisfaction of learning something new.</p>
+            <p>Extrinsic motivation is a reward that comes externally.  Ex. studying in order to get a good grade.</p>
         </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>

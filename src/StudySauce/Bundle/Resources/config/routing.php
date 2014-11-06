@@ -1,4 +1,4 @@
-<?php define('DASHBOARD_VIEWS', 'index|tab|json|funnel');
+<?php define('DASHBOARD_VIEWS', 'index|tab|json|funnel|adviser');
 // app/config/routing.php
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
@@ -121,7 +121,7 @@ $collection->add(
     'goals_partner',
     new Route(
         '/goals/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Goals:partner', '_format' => 'funnel',],
+        ['_controller' => 'StudySauceBundle:Goals:partner', '_format' => 'adviser'],
         ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
     )
 );
@@ -184,7 +184,7 @@ $collection->add(
     'metrics_partner',
     new Route(
         '/metrics/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Metrics:partner', '_format' => 'funnel',],
+        ['_controller' => 'StudySauceBundle:Metrics:partner', '_format' => 'adviser',],
         ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
     )
 );
@@ -200,7 +200,7 @@ $collection->add(
     'deadlines_partner',
     new Route(
         '/deadlines/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Deadlines:partner', '_format' => 'funnel',],
+        ['_controller' => 'StudySauceBundle:Deadlines:partner', '_format' => 'adviser',],
         ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
     )
 );
@@ -270,9 +270,9 @@ $collection->add(
 $collection->add(
     'plan_partner',
     new Route(
-        '/plan/{_week}/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Plan:partner', '_format' => 'funnel',],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
+        '/plan/{_format}/{_user}/{_week}',
+        ['_controller' => 'StudySauceBundle:Plan:partner', '_format' => 'adviser', '_week' => null],
+        ['_format' => DASHBOARD_VIEWS, '_week' => '^$|[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z', '_user' => '[0-9]+']
     )
 );
 $collection->add(
@@ -372,7 +372,7 @@ $collection->add(
     new Route(
         '/login',
         ['_controller' => 'StudySauceBundle:Account:login', '_format' => 'funnel'],
-        ['_format' => DASHBOARD_VIEWS,]
+        ['_format' => 'funnel']
     )
 );
 $collection->add('facebook_login', new Route('/login/facebook'));
@@ -395,7 +395,7 @@ $collection->add(
     new Route(
         '/register',
         ['_controller' => 'StudySauceBundle:Account:register', '_format' => 'funnel'],
-        ['_format' => DASHBOARD_VIEWS,]
+        ['_format' => 'funnel']
     )
 );
 $collection->add('logout', new Route('/logout'));
@@ -404,7 +404,7 @@ $collection->add(
     new Route(
         '/denied',
         ['_controller' => 'StudySauceBundle:Account:denied', '_format' => 'funnel'],
-        ['_format' => DASHBOARD_VIEWS,]
+        ['_format' => 'funnel']
     )
 );
 $collection->add(
@@ -445,7 +445,7 @@ $collection->add(
     'uploads_partner',
     new Route(
         '/file/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:File:partner', '_format' => 'funnel'],
+        ['_controller' => 'StudySauceBundle:File:partner', '_format' => 'adviser'],
         ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
     )
 );
@@ -454,7 +454,7 @@ $collection->add(
     new Route(
         '/checkout/{_format}',
         ['_controller' => 'StudySauceBundle:Buy:checkout', '_format' => 'funnel'],
-        ['_format' => 'index|funnel',]
+        ['_format' => 'funnel',]
     )
 );
 $collection->add(
@@ -473,9 +473,17 @@ $collection->add(
 $collection->add(
     'userlist',
     new Route(
-        '/userlist',
-        ['_controller' => 'StudySauceBundle:Partner:userlist', '_format' => 'funnel'],
-        ['_format' => DASHBOARD_VIEWS,]
+        '/userlist/{_format}',
+        ['_controller' => 'StudySauceBundle:Partner:userlist', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
+    )
+);
+$collection->add(
+    'import',
+    new Route(
+        '/import/{_format}',
+        ['_controller' => 'StudySauceBundle:Partner:import', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
     )
 );
 /*$collection->add('course', new Route('/course/{_course}/{_format}', array(            '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',            '_format'     => 'dashboard'        )));$collection->add('default', new Route('/{_controller}'));$acmeHello = $loader->import('@StudySauceBundle/Resources/public/images/', 'directory');$acmeHello->addPrefix('/bundles/studysauce/images/');$collection->addCollection($acmeHello);*/

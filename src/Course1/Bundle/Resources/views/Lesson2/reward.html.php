@@ -7,11 +7,11 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
 $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step3" id="lesson2-step3">
     <div class="pane-content">
-        <h2>Set goals like ninja!</h2>
+        <h2>Set goals like a ninja!</h2>
         <div class="award">
             <h3>Badge awarded:</h3>
             <span class="badge setup-hours">&nbsp;</span>
-            <strong>Setup Goals</strong>
+            <strong>Goal Setting</strong>
             <div class="description">Setting goals help you change your study behavior.</div>
         </div>
         <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward2.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>

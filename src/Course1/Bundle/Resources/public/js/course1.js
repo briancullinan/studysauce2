@@ -77,7 +77,9 @@ $(document).ready(function () {
     }
     // TODO: remove course 1 tabs when course 2 is selected
 
-    body.find('.course1.step0 h3').textfill({widthOnly: true});
+    body.on('show', '.course1.step0', function () {
+        body.find('.course1.step0 h3').textfill({widthOnly: true});
+    });
     $(window).resize(function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
     });
@@ -117,7 +119,7 @@ $(document).ready(function () {
         $.ajax({
             url: window.callbackPaths['lesson1_update'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 education: step.find('input[name="quiz-education"]:checked').val(),
                 mindset: step.find('input[name="quiz-mindset"]:checked').val(),
@@ -126,6 +128,7 @@ $(document).ready(function () {
                 study: step.find('input[name="quiz-study-much"]:checked').val()
             },
             success: function (data) {
+                debugger;
                 step.find('input[name="csrf_token"]').val(data.csrf_token);
 
                 step.addClass('right');

@@ -17,14 +17,14 @@ $(document).ready(function () {
         arc = d3.svg.arc();
 
     body.on('show', '#metrics,#home', function () {
-        body.find('#metrics h3, #metrics h4, .metrics-widget h3, .metrics-widget h4').textfill({
+        body.find('#metrics h3, #metrics h4').textfill({
             widthOnly: true,
             maxFontPixels: 30
         });
     });
 
     $(window).resize(function () {
-        body.find('#metrics h3, #metrics h4, .metrics-widget h3, .metrics-widget h4').textfill({
+        body.find('#metrics h3, #metrics h4').textfill({
             widthOnly: true,
             maxFontPixels: 30
         });

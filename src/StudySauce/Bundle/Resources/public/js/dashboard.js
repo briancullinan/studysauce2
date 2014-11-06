@@ -162,6 +162,15 @@ $(document).ready(function () {
         }
     });
 
+
+    body.on('click', ':not(#left-panel):not(#right-panel):not(#left-panel *):not(#right-panel *)', function () {
+        if(body.is('.left-menu') || body.is('.right-menu')) {
+            // collapse menus
+            body.removeClass('right-menu left-menu');
+            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+        }
+    });
+
     function handleLink(evt) {
 
         var that = $(this),

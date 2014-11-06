@@ -12,8 +12,8 @@
                 <ul id="level1" class="accordion-body collapse <?php print (empty($course) || $course->getLevel() < 5 ? 'in' : ''); ?>">
                     <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Introduction to Study Sauce</a></li>
                     <li><a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>"><span>&bullet;</span>Setting goals</a></li>
-                    <li><a href="<?php print $view['router']->generate('lesson3', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
                     <li><a href="<?php print $view['router']->generate('lesson4', ['_step' => 0]); ?>"><span>&bullet;</span>Distractions</a></li>
+                    <li><a href="<?php print $view['router']->generate('lesson3', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
                 </ul>
             </li>
             <li class="accordion-group panel">

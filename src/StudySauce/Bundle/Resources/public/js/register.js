@@ -31,6 +31,13 @@ jQuery(document).ready(function() {
     body.on('keyup', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
     body.on('keydown', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
 
+    body.on('click', '#register a[href="#sign-in-with-email"]', function (evt) {
+        evt.preventDefault();
+        $(this).remove();
+        account.find('.email,.password,.form-actions').show();
+        account.find('.first-name,.last-name').css('display', 'inline-block');
+    });
+
     body.on('click', '#register a[href="#user-register"]', function (evt) {
         evt.preventDefault();
 

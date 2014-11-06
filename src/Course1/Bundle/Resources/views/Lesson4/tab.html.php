@@ -15,7 +15,9 @@
         </div>
         <div class="player-divider">
             <div class="player-wrapper">
-                <iframe id="ytplayer" src="https://www.youtube.com/embed/fkF0jueJYDQ?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;playerapiid=ytplayer"></iframe>
+                <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/intro3.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+                <?php endforeach; ?>
             </div>
         </div>
         <div class="highlighted-link">

@@ -3,6 +3,13 @@ use Course1\Bundle\Entity\Course1;
 /** @var Course1 $course */
 $level = empty($course) || /* base 1 index */ empty($course->getLevel()) ? 1 : $course->getLevel();
 $step = empty($course) ? 0 : $course->getStep();
+// add one becuse we always go to the next step
+if($step == 4) {
+    $step = 0;
+    $level++;
+}
+else
+    $step++;
 $percent = empty($course) ? 0 : round($step/5.0*100);
 $overall = round((($level - 1) * 5 + $step) / 20 * 100);
 ?>

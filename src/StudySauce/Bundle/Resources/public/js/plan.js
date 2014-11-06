@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     var body = $('body'),
-        plans = $('#plan'),
         date = new Date(),
         original,
         isInitialized = false,
@@ -10,6 +9,7 @@ $(document).ready(function () {
         calendar;
 
     function initialize() {
+        var plans = $('#plan');
         if (!isInitialized)
         {
             // find min an max time
@@ -230,6 +230,7 @@ $(document).ready(function () {
     });
 
     body.on('click', '#plan .sort-by a[href="#expand"]', function () {
+        var plans = $('#plan');
         if(plans.is('.fullcalendar'))
         {
             plans.removeClass('fullcalendar');
@@ -243,6 +244,7 @@ $(document).ready(function () {
     });
 
     body.on('change', '#plan .sort-by input[type="radio"]', function () {
+        var plans = $('#plan');
         var headings = {},
             that = jQuery(this);
         plans.find('.head').each(function () {
