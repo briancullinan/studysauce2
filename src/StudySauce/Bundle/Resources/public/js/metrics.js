@@ -16,14 +16,8 @@ $(document).ready(function () {
         resizeTimeout = null,
         arc = d3.svg.arc();
 
-    body.on('show', '#metrics,#home', function () {
-        body.find('#metrics h3, #metrics h4').textfill({
-            widthOnly: true,
-            maxFontPixels: 30
-        });
-    });
-
-    $(window).resize(function () {
+    function resizeComponents()
+    {
         body.find('#metrics h3, #metrics h4').textfill({
             widthOnly: true,
             maxFontPixels: 30
@@ -36,16 +30,19 @@ $(document).ready(function () {
                 piechart = $('#pie-chart:visible, .pie-chart:visible');
             if (timeline.width() != timeline.find('svg').attr('width'))
             {
-                d3.select(timeline.find('svg').toArray())
+                d3.selectAll(timeline.find('svg').toArray())
                     .attr("width", timeline.width())
                     .attr("height", timeline.width() * 12 / 16);
-                d3.select(piechart.find('svg').toArray())
+                d3.selectAll(piechart.find('svg').toArray())
                     .attr("width", piechart.width())
                     .attr("height", piechart.width() * 12 / 16);
                 redraw();
             }
         }, 100);
-    });
+    }
+
+    body.on('show', '#metrics,#home', resizeComponents);
+    $(window).resize(resizeComponents);
 
     function updateHistory(newHistory) {
         var svg = d3.selectAll($('#timeline:visible, .timeline:visible').find('svg > g.bars').toArray());
@@ -133,10 +130,7 @@ $(document).ready(function () {
         }
     }
 
-    body.on('show', '#metrics,#home', function () {
-        var that = $(this);
-        setTimeout(function () {initializeGraphs.apply(that);}, 200);
-    });
+    body.on('loaded', '#metrics,#home', initializeGraphs);
 
     body.on('hide', '#metrics,#home', function () {
         // hide empty dialog

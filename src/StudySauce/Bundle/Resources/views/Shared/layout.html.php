@@ -64,7 +64,8 @@ $collection = $router->getRouteCollection();
 
             if ($route == '_welcome')
             {
-                $callbackPaths[$route] = empty($dir = dirname($router->generate($route))) ? '/' : $dir;
+                $dir = dirname($router->generate($route));
+                $callbackPaths[$route] = substr($dir, -1) == '/' ? $dir : ($dir . '/');
                 $callbackKeys[] = $route;
                 $callbackUri[] = $router->generate($route);
             }
