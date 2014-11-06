@@ -36,10 +36,10 @@ $(document).ready(function () {
                 piechart = $('#pie-chart:visible, .pie-chart:visible');
             if (timeline.width() != timeline.find('svg').attr('width'))
             {
-                d3.select('#timeline svg, .timeline svg')
+                d3.select(timeline.find('svg').toArray())
                     .attr("width", timeline.width())
                     .attr("height", timeline.width() * 12 / 16);
-                d3.select('#pie-chart svg, .pie-chart svg')
+                d3.select(piechart.find('svg').toArray())
                     .attr("width", piechart.width())
                     .attr("height", piechart.width() * 12 / 16);
                 redraw();
