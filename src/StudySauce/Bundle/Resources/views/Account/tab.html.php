@@ -1,6 +1,7 @@
 <?php
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /** @var $view TimedPhpEngine */
 /** @var $user User */
@@ -25,7 +26,6 @@ foreach ($view['assetic']->javascripts([
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-
 <div class="panel-pane" id="account">
     <div class="pane-content">
         <h2>Account settings</h2>
@@ -46,14 +46,20 @@ $view['slots']->start('body'); ?>
         <div class="new-password">
             <label class="input"><span>New password</span><input type="password" placeholder="No change &bullet; &bullet; &bullet; &bullet; &bullet; &bullet;" value=""></label>
         </div>
-        <div class="edit-icons form-actions highlighted-link invalid">
-            <a href="#edit-account"><span>&nbsp;</span>Edit information</a>
-            <a href="#edit-password"><span>&nbsp;</span>Change password</a>
-            <a href="#cancel-account"><span>&nbsp;</span>Cancel account</a>
+        <div class="form-actions highlighted-link invalid">
+            <div class="edit-icons">
+                <a href="#edit-account">Edit information</a>
+                <a href="#edit-password">Change password</a>
+                <a href="#cancel-confirm" data-toggle="modal">Cancel account</a>
+            </div>
             <a href="#save-account" class="more">Save</a>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
     </div>
 </div>
-
 <?php $view['slots']->stop(); ?>
+
+<?php $view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:cancelConfirm'), ['strategy' => 'sinclude']);
+$view['slots']->stop();
+

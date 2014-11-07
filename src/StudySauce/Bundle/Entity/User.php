@@ -28,6 +28,12 @@ class User extends BaseUser
     protected $schedules;
 
     /**
+     * @ORM\OneToMany(targetEntity="Payment", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $payments;
+
+    /**
      * @ORM\OneToMany(targetEntity="Session", mappedBy="user")
      * @ORM\OrderBy({"time" = "DESC"})
      */
@@ -665,5 +671,39 @@ class User extends BaseUser
     public function getGroups()
     {
         return $this->groups;
+    }
+
+
+    /**
+     * Add payments
+     *
+     * @param \StudySauce\Bundle\Entity\Payment $payments
+     * @return User
+     */
+    public function addPayment(\StudySauce\Bundle\Entity\Payment $payments)
+    {
+        $this->payments[] = $payments;
+
+        return $this;
+    }
+
+    /**
+     * Remove payments
+     *
+     * @param \StudySauce\Bundle\Entity\Payment $payments
+     */
+    public function removePayment(\StudySauce\Bundle\Entity\Payment $payments)
+    {
+        $this->payments->removeElement($payments);
+    }
+
+    /**
+     * Get payments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPayments()
+    {
+        return $this->payments;
     }
 }

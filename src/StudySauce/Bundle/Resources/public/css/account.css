@@ -142,35 +142,31 @@ a[href="#sign-in-with-email"]
     visibility:hidden;
 }
 
+#account .highlighted-link
+{
+    margin-top: 20px;
+}
+
 #account .edit-icons
 {
-    text-align: center;
-    margin: 20px auto;
+    display: inline-block;
+    text-align: left;
+    width:100%;
+    margin-left:-100px;
+    padding-left:80px;
+}
+
+#account .highlighted-link > *,
+#account .edit-icons > *
+{
+    vertical-align: bottom;
 }
 
 #account a[href="#edit-password"],
-#account a[href="#edit-account"]
+#account a[href="#edit-account"],
+#account a[href="#cancel-confirm"]
 {
-    padding-top:50px;
     display:inline-block;
-    margin:0 50px;
-    max-width: 100px;
-    vertical-align: top;
-}
-
-#account a[href="#edit-password"] span,
-#account a[href="#edit-account"] span
-{
-    position:absolute;
-    top:0;
-    left:50%;
-    width:80px;
-    height:80px;
-    margin-left:-40px;
-    background: url(../images/menu_new.png) no-repeat 50% -800px transparent;
-}
-
-#account a[href="#edit-password"] span
-{
-    background-position: 50% -7300px;
+    margin:0 20px;
+    text-align: center;
 }

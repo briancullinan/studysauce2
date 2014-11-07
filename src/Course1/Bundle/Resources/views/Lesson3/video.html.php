@@ -8,7 +8,7 @@
 
         <div class="player-wrapper">
             <?php /* &origin=http%3A%2F%2Flocalhost */ ?>
-            <iframe id="ytplayer" src="https://www.youtube.com/embed/Un_7_J0I0p8?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;playerapiid=ytplayer"></iframe>
+            <iframe id="lesson-3-player" src="https://www.youtube.com/embed/Un_7_J0I0p8?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1"></iframe>
         </div>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('lesson3', ['_step' => 2]); ?>" class="more">Next</a>

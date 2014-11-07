@@ -99,7 +99,7 @@ $view['slots']->start('body'); ?>
             }
             ?>
             <div class="class-row clearfix <?php print ($isDemo ? 'edit valid blank' : 'read-only'); ?>"
-                 id="eid-<?php print $c->getId(); ?>">
+                 id="eid-<?php print ($isDemo ? '' : $c->getId()); ?>">
                 <div class="class-name">
                     <label class="input">
                         <span>Class name</span>

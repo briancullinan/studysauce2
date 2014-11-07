@@ -52,9 +52,13 @@ jQuery(document).ready(function() {
         account.find('.password,.new-password').css('visibility', 'visible');
     });
 
-    body.on('click', '#account a[href="#cancel-account"]', function (evt) {
-        var account = jQuery('#account');
+    body.on('click', '#cancel-confirm a[href="#cancel-account"]', function (evt) {
+        var account = jQuery('#account'),
+            cancel = $('#cancel-confirm');
         evt.preventDefault();
+        if(cancel.is('invalid'))
+            return;
+        cancel.removeClass('valid').addClass('invalid');
         jQuery.ajax({
             url: window.callbackPaths['account_remove'],
             type: 'POST',
@@ -63,9 +67,12 @@ jQuery(document).ready(function() {
                 cancel: true,
                 csrf_token: account.find('input[name="csrf_token"]').val()
             },
-            success: function (data) {
-                account.find('input[name="csrf_token"]').val(data.csrf_token);
-                window.location = '/';
+            success: function () {
+                // redirected and logged out automatically by server
+                $('#cancel-confirm').modal('hide');
+            },
+            error: function () {
+                cancel.removeClass('invalid').addClass('valid');
             }
         })
     });

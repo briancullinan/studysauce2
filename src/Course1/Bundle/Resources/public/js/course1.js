@@ -84,7 +84,12 @@ $(document).ready(function () {
     $(window).resize(function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
     });
-
+    body.on('hide', '.course1.step1', function () {
+        $(window.players).each(function (z) {
+            if($(this.d).is('.course1.step1 iframe'))
+                this.pauseVideo();
+        });
+    });
     body.on('change', '#lesson1-step4 textarea', lesson1Func);
     body.on('keyup', '#lesson1-step4 textarea', lesson1Func);
     body.on('show', '#lesson1-step4', lesson1Func);

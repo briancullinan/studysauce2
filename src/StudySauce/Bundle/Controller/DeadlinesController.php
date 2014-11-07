@@ -9,6 +9,7 @@ use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -189,6 +190,27 @@ class DeadlinesController extends Controller
                 $orm->merge($deadline);
             }
 
+            $orm->flush();
+        }
+
+        return $this->forward('StudySauceBundle:Deadlines:index', ['_format' => 'tab']);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        $deadline = $user->getDeadlines()->filter(function (Deadline $d) use ($request) {return $d->getId() == $request->get('remove');})->first();
+        if(!empty($deadline)) {
+            $orm->remove($deadline);
             $orm->flush();
         }
 

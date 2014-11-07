@@ -4,9 +4,9 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Payment;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -54,6 +54,7 @@ class BuyController extends Controller
         $payment = new Payment();
         // TODO: create a user if anonymous
         $payment->setUser($user);
+        $user->addPayment($payment);
         $payment->setAmount($amount);
         $payment->setFirst($request->get('first'));
         $payment->setLast($request->get('last'));
@@ -115,21 +116,54 @@ class BuyController extends Controller
             $response = $request->createSubscription($subscription);
             if ($response->isOk()) {
                 $payment->setSubscription($response->getSubscriptionId());
-            } else {
+            }
+            else {
                 $error = $response->getMessageText();
             }
 
             if (isset($error)) {
                 return new JsonResponse(['error' => $error]);
-            } else // redirect to buy funnel
-            {
+            }
+            else {
+                // redirect to buy funnel
                 return $this->redirect($this->container->get('router')->generate('profile', ['_format' => 'funnel']));
             }
         } catch(\AuthorizeNetException $ex) {
             $this->get('logger')->error('Authorize.Net payment failed');
         }
+        finally {
+            $orm->persist($payment);
+            $orm->flush();
+        }
+        return new JsonResponse(['error' => 'Could not process payment, please try again later.']);
+    }
 
-        $orm->persist($payment);
-        $orm->flush();
+    /**
+     * @param User $user
+     * @param Payment $payment
+     */
+    public function cancelPaymentAction(User $user = null, Payment $payment = null)
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+
+        $payments = $user->getPayments()->toArray();
+        foreach($payments as $i => $p)
+        {
+            /** @var Payment $p */
+            try {
+                $request = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
+                $response = $request->cancelSubscription($p->getSubscription());
+                if ($response->isOk()) {
+                    $payment->setSubscription($response->getSubscriptionId());
+                }
+                else {
+                    throw new \Exception($response->getMessageText());
+                }
+            }
+            catch (\Exception $ex){
+                $this->get('logger')->error('Authorize.Net cancel failed: ' . $p->getSubscription());
+            }
+        }
     }
 }

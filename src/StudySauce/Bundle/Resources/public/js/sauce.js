@@ -1,14 +1,20 @@
 window.sincluding = false;
 window.visits = [];
-
-function onYouTubeIframeAPIReady(playerId) {
-    player = new YT.Player('ytplayer', {
-        events: {
-            'onStateChange': function (e) {
-                _gaq.push(['_trackPageview', location.pathname + location.search  + '#yt' + e.data]);
+window.players = [];
+function onYouTubeIframeAPIReady() {
+    var frames = $('iframe[src*="youtube.com/embed"]');
+    var players = [];
+    frames.each(function () {
+        players[players.length] = new YT.Player($(this).attr('id'), {
+            events: {
+                'onStateChange': function (e) {
+                    _gaq.push(['_trackPageview', location.pathname + location.search  + '#yt' + e.data]);
+                    visits[visits.length] = {path: window.location.pathname, query: window.location.search, hash: '#yt' + e.data, time:(new Date()).toJSON()};
+                }
             }
-        }
+        });
     });
+    window.players = $.merge(window.players, players);
 }
 
 function ssMergeStyles(content)

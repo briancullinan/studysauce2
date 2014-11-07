@@ -25,6 +25,14 @@ class DialogsController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cancelConfirmAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:cancel-confirm.html.php', ['id' => 'cancel-confirm']);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */

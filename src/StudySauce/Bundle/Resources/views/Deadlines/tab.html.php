@@ -41,7 +41,7 @@ $view['slots']->start('row-headings'); ?>
     <a href="#add-deadline">Add <span>+</span> class</a>
     <a href="#save-deadline" class="more">Save</a>
 </div>
-<div class="sort-by">
+<div class="sort-by" <?php print($isDemo ? 'style="display:none;"' : ''); ?>>
     <label>Sort by: </label>
     <label class="radio"><input type="radio" name="deadlines-sort" value="date"
                                 checked="checked"/><i></i>Date</label>
@@ -49,7 +49,7 @@ $view['slots']->start('row-headings'); ?>
     <label class="checkbox" title="Click here to see deadlines that have already passed."><input
             type="checkbox"><i></i>Past deadlines</label>
 </div>
-<header>
+<header <?php print($isDemo ? 'style="display:none;"' : ''); ?>>
     <label>&nbsp;</label>
     <label>Assignment</label>
     <label>Reminders</label>
@@ -95,8 +95,8 @@ $view['slots']->start('body'); ?>
             <div class="deadline-row first invalid <?php
             print ($isDemo ? 'edit' : 'read-only');
             print (!empty($d->getCourse()) ? (' cid' . $d->getCourse()->getId()) : '');
-            print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : ''); ?>"
-                 id="eid-<?php print ($isDemo ? '' : $d->getId()); ?>">
+            print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : '');
+            print (' deadline-id-' . $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">
                     <span>Class name</span>
@@ -150,7 +150,7 @@ $view['slots']->start('body'); ?>
             <div class="due-date">
                 <label class="input">
                     <span>Due date</span>
-                    <input placeholder="Enter date" type="text"
+                    <input placeholder="Enter due date" type="text"
                            value="<?php print (!$isDemo ? $d->getDueDate()->format('m/d/Y') : ''); ?>" size="5"
                            maxlength="255">
                 </label>
@@ -159,7 +159,7 @@ $view['slots']->start('body'); ?>
                 empty($d->getCourse()) ? 'style="visibility:hidden;"' : ''); ?>>
                 <label class="input">
                     <span>% of grade</span>
-                    <input type="text" value="<?php print (!$isDemo && $d->getPercent() > 0 ? $d->getPercent() : ''); ?>" size="2"
+                    <input type="text" placeholder="% of grade" value="<?php print (!$isDemo && $d->getPercent() > 0 ? $d->getPercent() : ''); ?>" size="2"
                            maxlength="255">
                 </label>
             </div>

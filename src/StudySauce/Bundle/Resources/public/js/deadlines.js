@@ -68,6 +68,10 @@ $(document).ready(function () {
         deadlines.find('.deadline-row,.head').remove();
         response.find('.deadline-row,.head').insertAfter(deadlines.find('header'));
         deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row').last());
+        if(deadlines.find('.deadline-row:not(.first):visible,.head:visible').length == 0) {
+            deadlines.find('.deadline-row.first').detach().insertBefore(deadlines.find('.form-actions').first());
+            deadlines.find('.sort-by,header').hide();
+        }
     }
 
     body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {
@@ -81,9 +85,10 @@ $(document).ready(function () {
         var dates = [];
         deadlines.find('.deadline-row.edit.valid, .deadline-row.valid.edit').each(function () {
             var row = $(this),
+                deadlineId = (/deadline-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
                 reminders = row.find('.reminder input:checked').map(function (i, x) {return $(x).val();}).get();
             dates[dates.length] = {
-                eid: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
+                eid: deadlineId,
                 cid: row.find('.class-name select').val(),
                 assignment: row.find('.assignment input').val(),
                 reminders: reminders.join(','),
@@ -125,24 +130,27 @@ $(document).ready(function () {
     body.on('click', '#deadlines a[href="#add-deadline"]', function (evt) {
         var deadlines = $('#deadlines');
         evt.preventDefault();
-        var newDeadline = deadlines.find('.deadline-row').first().clone().removeAttr('id')
+        var newDeadline = deadlines.find('.deadline-row').first().clone()
             .removeClass('read-only hide').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
+        newDeadline.attr('class', newDeadline.attr('class').replace(/deadline-id-([0-9]+)(\s|$)/ig), 'deadline-id-');
         newDeadline.find('.class-name select, .assignment input').val('');
         newDeadline.find('.due-date input').removeClass('hasDatepicker').val('');
         newDeadline.find('.reminder input').removeAttr('checked').prop('checked', false);
         datesFunc.apply(newDeadline);
     });
 
-    body.on('click', '#deadlines a[href="#remove-reminder"]', function (evt) {
+    body.on('click', '#deadlines a[href="#remove-deadline"]', function (evt) {
+        var deadlines = $('#deadlines');
         evt.preventDefault();
-        var row = jQuery(this).parents('.deadline-row');
+        var row = jQuery(this).parents('.deadline-row'),
+            deadlineId = (/deadline-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
         $.ajax({
             url: window.callbackPaths['remove_deadlines'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 csrf_token: deadlines.find('input[name="csrf_token"]').val(),
-                remove: row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null
+                remove: deadlineId
             },
             success: function (data) {
                 var response = $(data);

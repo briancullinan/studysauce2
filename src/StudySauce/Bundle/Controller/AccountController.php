@@ -2,17 +2,18 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Aws\CloudFront\Exception\Exception;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Class AccountController
@@ -77,10 +78,33 @@ class AccountController extends Controller
 
     /**
      * @param Request $request
+     * @return RedirectResponse
      */
     public function removeAction(Request $request)
     {
+        if(!$request->get('cancel'))
+            throw new Exception('Unconfirmed');
 
+        /** @var $user User */
+        $user = $this->getUser();
+
+        // set status to disabled
+        //$user->setEnabled(false);
+
+        /** @var $userManager UserManager */
+        //$userManager = $this->get('fos_user.user_manager');
+        //$userManager->updateUser($user);
+
+        // remove subscriptions
+        $buy = new BuyController();
+        $buy->setContainer($this->container);
+        $buy->cancelPaymentAction($user);
+
+        // kill session, log out user, and redirect
+        /** @var Session $session */
+        $session = $this->container->get('session');
+        $session->invalidate();
+        return new JsonResponse(true);
     }
 
     /**

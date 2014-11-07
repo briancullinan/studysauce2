@@ -92,19 +92,6 @@
     margin-bottom:0;
 }
 
-a[href="#close"]
-{
-    top: -10px;
-    right: -10px;
-    width: 30px;
-    height: 30px;
-    background: url("../images/menu_icons_48.png") no-repeat scroll -10px -730px rgba(0, 0, 0, 0);
-    cursor: pointer;
-    z-index: 1103;
-    display: block;
-    position: absolute;
-}
-
 #claim textarea
 {
     height: 12em;
