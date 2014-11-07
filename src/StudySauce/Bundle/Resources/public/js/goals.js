@@ -1,8 +1,9 @@
 $(document).ready(function () {
 
-    var body = $('body'),
-        goals = $('#goals');
+    var body = $('body');
+
     function goalsFunc() {
+        var goals = $('#goals');
         jQuery(this).each(function () {
             var row = $(this).closest('.goal-row'),
                 valid = true;
@@ -87,9 +88,9 @@ $(document).ready(function () {
     });
 
     body.on('click', '#goals .goal-row a[href="#goal-edit"]', function (evt) {
+        var goals = $('#goals');
         evt.preventDefault();
-        var that = $(this),
-            row = that.parents('.goal-row');
+        var row = $(this).parents('.goal-row');
         goalsFunc.apply(row.removeClass('read-only').addClass('edit'));
         goals.find('.form-actions').css('visibility', 'visible');
     });
@@ -102,6 +103,7 @@ $(document).ready(function () {
     });
 
     body.on('click', '#goals a[href="#save-goal"]', function (evt) {
+        var goals = $('#goals');
         evt.preventDefault();
         if(goals.find('.form-actions').is('.invalid'))
             return;

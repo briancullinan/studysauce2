@@ -1,9 +1,9 @@
 $(document).ready(function () {
 
-    var body = $('body'),
-        schedule = $('#schedule');
+    var body = $('body');
 
     function planFunc() {
+        var schedule = $('#schedule');
         jQuery(this).each(function () {
             var row = $(this).closest('.class-row');
             if(row.find('.class-name input').val().trim() == '' &&
@@ -169,7 +169,7 @@ $(document).ready(function () {
             (schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 ||
             (schedule.find('.class-row.valid').not('.blank').length > 0 &&
             schedule.find('.university input').val().trim() !=
-            schedule.find('.university input').data('default'))))
+            schedule.find('.university input').data('state'))))
             schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
             schedule.find('.form-actions').removeClass('valid').addClass('invalid');
@@ -194,45 +194,8 @@ $(document).ready(function () {
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
-    var select = schedule.find('.university input').selectize({
-        valueField: 'institution',
-        labelField: 'institution',
-        searchField: ['institution', 'link', 'state'],
-        maxItems: 1,
-        create: true,
-        options: [schedule.find('.university input').data('data')],
-        render: {
-            option: function(item) {
-                return '<div>' +
-                '<span class="title">' +
-                '<span class="name"><i class="icon source"></i>' + item.institution + '</span>' +
-                '<span class="by">' + item.state + '</span>' +
-                '</span>' +
-                '<span class="description">' + item.link + '</span>' +
-                '</div>';
-            }
-        },
-        load: function(query, callback) {
-            if (query.length < 2) return callback();
-            $.ajax({
-                url: window.callbackPaths['institutions'],
-                dataType:'json',
-                data: {
-                    q: query
-                },
-                error: function() {
-                    callback();
-                },
-                success: function(res) {
-                    callback(res.slice(0, 100));
-                }
-            });
-        }
-    }).ready(function () {
-        select[0].selectize.setValue(schedule.find('.university input').val());
-    });
-
     body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
+        var schedule = $('#schedule');
         evt.preventDefault();
         var row = jQuery(this).parents('.class-row');
         $.ajax({
@@ -251,8 +214,9 @@ $(document).ready(function () {
 
     function updateSchedule(data)
     {
+        var schedule = $('#schedule');
         var response = $(data);
-        schedule.find('.university input').data('default', schedule.find('.university input').val().trim())
+        schedule.find('.university input').data('state', schedule.find('.university input').val().trim())
         schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
         schedule.closest('a[href="#save-class"]').css('visibility', 'hidden');
         // update class schedule
@@ -267,6 +231,7 @@ $(document).ready(function () {
     }
 
     body.on('click', '#schedule a[href="#add-class"], #schedule a[href="#add-other"]', function (evt) {
+        var schedule = $('#schedule');
         evt.preventDefault();
         var isOther = jQuery(this).is('[href="#add-other"]'),
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
@@ -286,6 +251,7 @@ $(document).ready(function () {
     });
 
     body.on('click', '#schedule a[href="#save-class"]', function (evt) {
+        var schedule = $('#schedule');
         evt.preventDefault();
         if(schedule.find('.university input').val().trim() == '')
             schedule.find('.university').addClass('error-empty');
@@ -339,6 +305,7 @@ $(document).ready(function () {
 
 
     var autoFillDate = function () {
+        var schedule = $('#schedule');
         var row = jQuery(this).closest('.class-row'),
             first = schedule.find('.class-row').first();
         if(row.find('.class-name input').val() != '' &&
@@ -390,14 +357,52 @@ $(document).ready(function () {
 
     // set default value for university name
     body.on('focus', '#schedule .university input', function () {
+        var schedule = $('#schedule');
         schedule.find('a[href="#save-class"]').first().css('visibility', 'visible');
     });
     body.on('show', '#schedule', function () {
-        if(schedule.find('.university input').val().trim() != '' &&
-            schedule.find('.university input').data('default') == null)
-            schedule.find('.university input').data('default', schedule.find('.university input').val().trim());
+        var schedule = $('#schedule');
+        if(schedule.find('.university input').data('state') == null) {
+            schedule.find('.university input').data('state', schedule.find('.university input').val().trim());
+            var select = schedule.find('.university input').selectize({
+                valueField: 'institution',
+                labelField: 'institution',
+                searchField: ['institution', 'link', 'state'],
+                maxItems: 1,
+                create: true,
+                options: [schedule.find('.university input').data('data')],
+                render: {
+                    option: function(item) {
+                        return '<div>' +
+                        '<span class="title">' +
+                        '<span class="name"><i class="icon source"></i>' + item.institution + '</span>' +
+                        '<span class="by">' + item.state + '</span>' +
+                        '</span>' +
+                        '<span class="description">' + item.link + '</span>' +
+                        '</div>';
+                    }
+                },
+                load: function(query, callback) {
+                    if (query.length < 2) return callback();
+                    $.ajax({
+                        url: window.callbackPaths['institutions'],
+                        dataType:'json',
+                        data: {
+                            q: query
+                        },
+                        error: function() {
+                            callback();
+                        },
+                        success: function(res) {
+                            callback(res.slice(0, 100));
+                        }
+                    });
+                }
+            }).ready(function () {
+                select[0].selectize.setValue(schedule.find('.university input').val());
+            });
+        }
+        planFunc.apply(schedule.find('.schedule .class-row'));
     });
     body.find('#schedule:visible').trigger('show');
-
-    planFunc.apply(schedule.find('.schedule .class-row'));
 });

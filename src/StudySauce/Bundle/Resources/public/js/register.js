@@ -1,17 +1,17 @@
 jQuery(document).ready(function() {
 
-    var body = $('body'),
-        account = jQuery('#register');
+    var body = $('body');
 
     function getHash()
     {
+        var account = jQuery('#register');
         return account.find('.first-name input').val().trim() + account.find('.last-name input').val().trim() +
         account.find('.email input').val().trim();
     }
 
     function accountFunc() {
+        var account = jQuery('#register');
         var valid = true;
-
         if (getHash() == account.data('state') ||
             account.find('.first-name input').val() == '' ||
             account.find('.last-name input').val() == '' ||
@@ -24,14 +24,19 @@ jQuery(document).ready(function() {
         else
             account.find('.form-actions').removeClass('invalid').addClass('valid');
     }
-    account.data('state', getHash());
-    accountFunc();
+    body.on('show', '#register', function () {
+        if($(this).data('state') == null)
+            $(this).data('state', getHash());
+        accountFunc();
+    });
+    body.find('#register:visible').trigger('show');
 
     body.on('change', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
     body.on('keyup', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
     body.on('keydown', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
 
     body.on('click', '#register a[href="#sign-in-with-email"]', function (evt) {
+        var account = jQuery('#register');
         evt.preventDefault();
         $(this).remove();
         account.find('.email,.password,.form-actions').show();
@@ -39,6 +44,7 @@ jQuery(document).ready(function() {
     });
 
     body.on('click', '#register a[href="#user-register"]', function (evt) {
+        var account = jQuery('#register');
         evt.preventDefault();
 
         if(account.find('.form-actions').is('.invalid'))

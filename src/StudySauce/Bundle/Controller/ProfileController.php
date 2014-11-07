@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -102,10 +103,13 @@ class ProfileController extends Controller
                 return $b->getType() == 'c';
             }
         )->toArray();
-
+        $hasEmpties = false;
         foreach($courses as $i => $c)
         {
             /** @var Course $c */
+            if(empty($c->getStudyType()) || empty($c->getStudyDifficulty()))
+                $hasEmpties = true;
+
             if(!empty($request->get('profile-type-' . $c->getId()))) {
                 $params = $request->get('profile-type-' . $c->getId());
                 $c->setStudyType($params['type']);
@@ -115,7 +119,19 @@ class ProfileController extends Controller
         }
         $orm->flush();
 
-        return new RedirectResponse($this->generateUrl('schedule', ['_format' => 'funnel']));
+        // check if schedule is empty
+        if(strpos($request->headers->get('referer'), '/funnel') > -1) {
+            if (empty($courses)) {
+                return new RedirectResponse($this->generateUrl('schedule', ['_format' => 'funnel']));
+            } // check if study options are empty
+            elseif ($hasEmpties) {
+                return new RedirectResponse($this->generateUrl('customization', ['_format' => 'funnel']));
+            } // check if the referrer is funnel, we must redirect, so go to plan tab
+            else {
+                return new RedirectResponse($this->generateUrl('plan'));
+            }
+        }
+        return new JsonResponse(true);
     }
 }
 

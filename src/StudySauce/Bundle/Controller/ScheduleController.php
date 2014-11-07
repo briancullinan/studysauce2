@@ -11,6 +11,7 @@ use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\StudySauceBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -387,7 +388,6 @@ class ScheduleController extends Controller
 
         $added = [];
         $renamed = [];
-
         foreach ($classes as $j => $c) {
             // check if class entity already exists
             if (empty($c['cid'])) {
@@ -481,8 +481,12 @@ class ScheduleController extends Controller
             $orm->flush();
         }
 
-            //if ($isPaid && !$skipBuild)
-            //    TODO: studysauce_rebuild_schedule($node, $entities, $added, $renamed);
+        // redirect to customization page in buy funnel
+        $hasEmpties = $schedule->getCourses()->exists(function (Course $c) {
+                return empty($c->getStudyType()) || empty($c->getStudyDifficulty());
+            });
+        if(strpos($request->headers->get('referer'), '/funnel') > -1 && $hasEmpties)
+            return new RedirectResponse($this->generateUrl('customization', ['_format' => 'funnel']));
 
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
     }

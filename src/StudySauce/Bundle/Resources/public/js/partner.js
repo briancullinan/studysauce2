@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    var body = $('body'),
-        partner = jQuery('#partner');
+    var body = $('body');
 
     function getHash()
     {
+        var partner = jQuery('#partner');
         return partner.find('.first-name input').val().trim() + partner.find('.last-name input').val().trim() +
                 partner.find('.email input').val().trim() +
         $('#partner').find('.permissions input:checked').map(function (i, o) {return jQuery(o).val();}).toArray().join(',') +
@@ -11,6 +11,7 @@ $(document).ready(function () {
     }
 
     function partnerFunc() {
+        var partner = jQuery('#partner');
         var valid = true;
         if(getHash() == partner.data('state') ||
             partner.find('.first-name input').val().trim() == '' ||
@@ -30,10 +31,72 @@ $(document).ready(function () {
         partnerFunc();
         partner.find('a[href="#partner-save"]').first().trigger('click');
     });
-    partner.data('state', getHash());
-    partnerFunc();
+    body.on('show', '#partner', function () {
+        var partner = $(this);
+        if(partner.data('state') == null) {
+            partner.data('state', getHash());
+
+            var upload = new plupload.Uploader({
+                chunk_size: '5MB',
+                runtimes : 'html5,flash,silverlight,html4',
+                browse_button : 'partner-upload-select', // you can pass in id...
+                container: partner.find('.plupload')[0], // ... or DOM Element itself
+                url : window.callbackPaths['file_create'],
+                unique_names: true,
+                max_files: 1,
+                multipart: false,
+                multiple_queues: true,
+                urlstream_upload: false,
+                filters : {
+                    max_file_size : '1gb',
+                    mime_types: [
+                        {
+//                        title : "Video files",
+//                        extensions : "mov,avi,mpg,mpeg,wmv,mp4,webm,flv,m4v,mkv,ogv,ogg,rm,rmvb,m4v"
+                            title : "Image files",
+                            extensions : "jpg,jpeg,gif,png,bmp,tiff"
+                        }
+                    ]
+                },
+                flash_swf_url : window.callbackPaths['_welcome'] + 'bundles/studysauce/js/plupload/js/Moxie.swf',
+                silverlight_xap_url : window.callbackPaths['_welcome'] + 'bundles/studysauce/js/plupload/js/Moxie.xap',
+                init: {
+                    PostInit: function(up) {
+                        partner.find('.plupload').addClass('init');
+                        partner.find('#partner-upload-select').on('click', function () {
+                            up.splice();
+                        });
+                    },
+                    FilesAdded: function(up) {
+                        up.start();
+                    },
+                    UploadProgress: function(up) {
+                        var squiggle;
+                        if((squiggle = partner.find('.squiggle')).length == 0)
+                            squiggle = $('<small class="squiggle">&nbsp;</small>').appendTo(partner.find('.plup-filelist'));
+                        squiggle.stop().animate({width: up.total.percent + '%'}, 1000, 'swing');
+                    },
+                    FileUploaded: function(up, file, response) {
+                        var data = JSON.parse(response.response);
+                        partner.find('input[name="partner-plupload"]').val(data.fid);
+                        partner.find('.plup-filelist .squiggle').stop().remove();
+                        partner.find('.plupload img').attr('src', data.src);
+                        partnerFunc();
+                        partner.find('a[href="#partner-save"]').trigger('click');
+                    },
+                    Error: function(up, err) {
+                    }
+                }
+            });
+
+            setTimeout(function () {upload.init();}, 200);
+        }
+        partnerFunc();
+    });
+    body.find('#partner:visible').trigger('show');
 
     body.on('click', '#partner a[href="#partner-save"]', function (evt) {
+        var partner = jQuery('#partner');
         evt.preventDefault();
         if($(this).parent().is('.invalid'))
             return;
@@ -62,58 +125,4 @@ $(document).ready(function () {
 
     });
 
-    var upload = new plupload.Uploader({
-        chunk_size: '5MB',
-        runtimes : 'html5,flash,silverlight,html4',
-        browse_button : 'partner-upload-select', // you can pass in id...
-        container: partner.find('.plupload')[0], // ... or DOM Element itself
-        url : window.callbackPaths['file_create'],
-        unique_names: true,
-        max_files: 1,
-        multipart: false,
-        multiple_queues: true,
-        urlstream_upload: false,
-        filters : {
-            max_file_size : '1gb',
-            mime_types: [
-                {
-//                        title : "Video files",
-//                        extensions : "mov,avi,mpg,mpeg,wmv,mp4,webm,flv,m4v,mkv,ogv,ogg,rm,rmvb,m4v"
-                    title : "Image files",
-                    extensions : "jpg,jpeg,gif,png,bmp,tiff"
-                }
-            ]
-        },
-        flash_swf_url : window.callbackPaths['_welcome'] + 'bundles/studysauce/js/plupload/js/Moxie.swf',
-        silverlight_xap_url : window.callbackPaths['_welcome'] + 'bundles/studysauce/js/plupload/js/Moxie.xap',
-        init: {
-            PostInit: function(up) {
-                partner.find('.plupload').addClass('init');
-                partner.find('#partner-upload-select').on('click', function () {
-                    up.splice();
-                });
-            },
-            FilesAdded: function(up) {
-                up.start();
-            },
-            UploadProgress: function(up) {
-                var squiggle;
-                if((squiggle = partner.find('.squiggle')).length == 0)
-                    squiggle = $('<small class="squiggle">&nbsp;</small>').appendTo(partner.find('.plup-filelist'));
-                squiggle.stop().animate({width: up.total.percent + '%'}, 1000, 'swing');
-            },
-            FileUploaded: function(up, file, response) {
-                var data = JSON.parse(response.response);
-                partner.find('input[name="partner-plupload"]').val(data.fid);
-                partner.find('.plup-filelist .squiggle').stop().remove();
-                partner.find('.plupload img').attr('src', data.src);
-                partnerFunc();
-                partner.find('a[href="#partner-save"]').trigger('click');
-            },
-            Error: function(up, err) {
-            }
-        }
-    });
-
-    setTimeout(function () {upload.init();}, 200);
 });
