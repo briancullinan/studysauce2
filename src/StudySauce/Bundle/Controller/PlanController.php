@@ -177,7 +177,7 @@ class PlanController extends Controller
      */
     public static function getJsonEvents($events, $courses)
     {
-        $classes = array_map(function (Course $c) {return $c->getName();}, $courses);
+        $classes = array_map(function (Course $c) {return $c->getId();}, $courses);
         $jsEvents = [];
         foreach ($events as $i => $x) {
             /** @var Event $x */
@@ -186,12 +186,10 @@ class PlanController extends Controller
                 continue;
             }
 
-            $classI = array_search($x->getName(), $classes);
-            if ($classI === false)
-                $classI = '';
+            if (!empty($x->getCourse()))
+                $classI = array_search($x->getCourse()->getId(), $classes);
             else
-                /** @var Course $c */
-                $c = $courses[$classI];
+                $classI = '';
 
             $label = '';
             $skip = false;
@@ -233,9 +231,9 @@ class PlanController extends Controller
                 continue;
 
             // set up dates recurrence
-            if (isset($c) && $x->getType() == 'sr') {
-                $startDay = $c->getStartTime()->getTimestamp();
-                $endDay = $c->getEndTime()->getTimestamp();
+            if (!empty($x->getCourse()) && $x->getType() == 'sr') {
+                $startDay = $x->getCourse()->getStartTime()->getTimestamp();
+                $endDay = $x->getCourse()->getEndTime()->getTimestamp();
                 $t = $x->getStart()->getTimestamp();
                 $dates = [];
                 if ($t <= $endDay)
@@ -249,7 +247,7 @@ class PlanController extends Controller
             }
 
             $jsEvents[$i] = [
-                'cid' => $i,
+                'cid' => $x->getId(),
                 'title' => '<h4>' . $label . '</h4>' . $x->getName(),
                 'start' => $x->getStart()->format('r'),
                 'end' => $x->getEnd()->format('r'),

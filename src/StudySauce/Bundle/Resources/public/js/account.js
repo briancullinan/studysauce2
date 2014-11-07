@@ -42,15 +42,14 @@ jQuery(document).ready(function() {
         var account = jQuery('#account');
         evt.preventDefault();
         account.find('.account-info').removeClass('read-only').addClass('edit');
-        account.find('.new-password').hide();
-        account.find('.pass-info').show();
+        account.find('.password').css('visibility', 'visible');
+        account.find('.new-password').css('visibility', 'hidden');
     });
 
     body.on('click', '#account a[href="#edit-password"]', function (evt) {
         var account = jQuery('#account');
         evt.preventDefault();
-        account.find('.new-password').show();
-        account.find('.pass-info').show();
+        account.find('.password,.new-password').css('visibility', 'visible');
     });
 
     body.on('click', '#account a[href="#cancel-account"]', function (evt) {

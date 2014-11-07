@@ -87,7 +87,6 @@ $view['slots']->start('body'); ?>
             <label class="radio"><input type="radio" name="plan-sort" value="date"
                                         checked="checked"/><i></i>Date</label>
             <label class="radio"><input type="radio" name="plan-sort" value="class"><i></i>Class</label>
-            <a href="#expand">Expand</a>
             <label class="checkbox" title="Click here to see sessions that have already passed.">
                 <input type="checkbox"><i></i>Past session</label>
         </div>
@@ -127,7 +126,7 @@ $view['slots']->start('body'); ?>
             }
 
             $session = '';
-            if ($event->getType() == 'd' || empty($course)) {
+            if ($event->getType() == 'd' || empty($classI)) {
                 $session = 'other';
             } elseif ($event->getType() == 'p') {
                 $session = 'prework';

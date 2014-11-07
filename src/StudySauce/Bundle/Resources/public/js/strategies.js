@@ -85,7 +85,7 @@ $(document).ready(function () {
             }
             if(strategy == 'spaced')
             {
-                var dates = window.planEvents[row.attr('id').substring(4)]['dates'];
+                var dates = _.where(window.planEvents, {cid: row.attr('id').substr(4)})['dates'];
                 if(typeof dates != 'undefined')
                 {
                     var dateStr = dates.map(function ($d, $i) {

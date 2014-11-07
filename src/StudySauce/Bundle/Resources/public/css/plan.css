@@ -52,7 +52,6 @@ a.fc-event:not([href])
     cursor: pointer;
 }
 
-#plan .sort-by a[href="#expand"],
 #plan .sort-by label:last-child {
     float:right;
     vertical-align: middle;

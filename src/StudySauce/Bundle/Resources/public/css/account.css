@@ -67,10 +67,28 @@ a[href="#sign-in-with-email"]
     margin:10px auto;
 }
 
-#account .password,
-#account .new-password,
-#account .first-name,
-#account .last-name,
+#account .password label span,
+#account .new-password label span,
+#account .email label span,
+#account .first-name label span,
+#account .last-name label span
+{
+    width:100%;
+    display:inline-block;
+    margin-right:-50%;
+    padding-right:50%;
+}
+
+#account .password label input,
+#account .new-password label input,
+#account .email label input,
+#account .first-name label input,
+#account .last-name label input
+{
+    width:50%;
+    display:inline-block;
+}
+
 #register .first-name,
 #register .last-name
 {
@@ -118,9 +136,10 @@ a[href="#sign-in-with-email"]
     display: block;
 }
 
-#account .pass-info
+#account .password,
+#account .new-password
 {
-    display:none;
+    visibility:hidden;
 }
 
 #account .edit-icons
@@ -154,11 +173,4 @@ a[href="#sign-in-with-email"]
 #account a[href="#edit-password"] span
 {
     background-position: 50% -7300px;
-}
-
-#account a[href="#cancel-account"]
-{
-    position:absolute;
-    bottom:10px;
-    left:10px;
 }
