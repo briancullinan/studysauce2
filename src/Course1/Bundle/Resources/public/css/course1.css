@@ -346,7 +346,7 @@
 
 .course1.step3 .badge
 {
-    background:url("../images/awards_compressed.png") no-repeat scroll 0 -150px transparent;
+    background:url("../../studysauce/images/awards_compressed.png") no-repeat scroll 0 -150px transparent;
     width:150px;
     height:150px;
     z-index: 4;
@@ -541,6 +541,18 @@
 .page-dashboard .awards > a.awarded[href="#advanced-veni"] span
 {
     background-position:0 -4350px;
+}
+
+.course1.step3 .badge.beaver,
+.page-dashboard .awards > a.awarded[href="#squirrel"] span
+{
+    background-position:0 -4500px;
+}
+
+.course1.step3 .badge.squirrel,
+.page-dashboard .awards > a.awarded[href="#squirrel"] span
+{
+    background-position:0 -4650px;
 }
 
 @media all and (max-width:1000px)

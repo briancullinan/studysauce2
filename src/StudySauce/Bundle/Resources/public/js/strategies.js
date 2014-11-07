@@ -14,8 +14,8 @@ $(document).ready(function () {
      }
      */
 
-    function videoPoller(fid, eid) {
-        var row = plans.find('.session-row.eid' + eid);
+    function videoPoller(fid, eventId) {
+        var row = plans.find('.session-row.event-id-' + eventId);
         jQuery.ajax({
             url: '/aws/checkstatus',
             type: 'POST',
@@ -36,11 +36,11 @@ $(document).ready(function () {
                     row.find('.plup-list li').append('<div class="plup-thumb-wrapper">' + thumb + '</div>');
                     if(!row.find('video')[0].canPlayType('video/webm; codecs="vp8, vorbis"'))
                     {
-                        jQuery('<div><a href="https://tools.google.com/dlpage/webmmf/">Can\'t play the video? Click here to install.</a></div>').insertAfter(jQuery('#plan-' + eid + '-plupload').find('video'));
+                        jQuery('<div><a href="https://tools.google.com/dlpage/webmmf/">Can\'t play the video? Click here to install.</a></div>').insertAfter(jQuery('#teach-' + eventId + '-plupload').find('video'));
                     }
                 }
                 else
-                    setTimeout('videoPoller("' + fid + '", "' + eid + '");', 5000);
+                    setTimeout('videoPoller("' + fid + '", "' + eventId + '");', 5000);
             }
         });
     }
@@ -52,7 +52,7 @@ $(document).ready(function () {
             strategy = plans.find('.strategy-' + that.val()).length == 0 // make sure this type of strategy still exists
                 ? (/default-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1]
                 : that.val(),
-            eid = row.attr('id').substring(4),
+            eventId = (/event-id-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
             classname = row.find('.class-name').text();
 
         // add strategy if they haven't used it before
@@ -60,58 +60,58 @@ $(document).ready(function () {
         {
             var newStrategy = plans.find('.strategy-' + strategy).first().clone();
             row.append(newStrategy);
-            newStrategy.html(newStrategy.html().replace(/\{classname}/g, classname).replace(/\{eid}/g, eid));
+            newStrategy.html(newStrategy.html().replace(/\{classname}/g, classname).replace(/\{eventId}/g, eventId));
             if(strategy == 'active')
             {
                 // copy values back in to newly rendered fields
-                if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
-                    typeof window.strategies[eid]['active'] != 'undefined')
+                if(typeof window.strategies != 'undefined' && typeof window.strategies[eventId] != 'undefined' &&
+                    typeof window.strategies[eventId]['active'] != 'undefined')
                 {
-                    newStrategy.find('textarea[name="strategy-skim"]').val(window.strategies[eid]['active'].skim);
-                    newStrategy.find('textarea[name="strategy-why"]').val(window.strategies[eid]['active'].why);
-                    newStrategy.find('textarea[name="strategy-questions"]').val(window.strategies[eid]['active'].questions);
-                    newStrategy.find('textarea[name="strategy-summarize"]').val(window.strategies[eid]['active'].summarize);
-                    newStrategy.find('textarea[name="strategy-exam"]').val(window.strategies[eid]['active'].exam);
+                    newStrategy.find('textarea[name="strategy-skim"]').val(window.strategies[eventId]['active'].skim);
+                    newStrategy.find('textarea[name="strategy-why"]').val(window.strategies[eventId]['active'].why);
+                    newStrategy.find('textarea[name="strategy-questions"]').val(window.strategies[eventId]['active'].questions);
+                    newStrategy.find('textarea[name="strategy-summarize"]').val(window.strategies[eventId]['active'].summarize);
+                    newStrategy.find('textarea[name="strategy-exam"]').val(window.strategies[eventId]['active'].exam);
                 }
             }
             if(strategy == 'other')
             {
                 // copy values back in to newly rendered fields
-                if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
-                    typeof window.strategies[eid]['other'] != 'undefined')
+                if(typeof window.strategies != 'undefined' && typeof window.strategies[eventId] != 'undefined' &&
+                    typeof window.strategies[eventId]['other'] != 'undefined')
                 {
-                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eid]['other'].notes);
+                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eventId]['other'].notes);
                 }
             }
             if(strategy == 'spaced')
             {
-                var dates = _.where(window.planEvents, {cid: row.attr('id').substr(4)})['dates'];
+                var dates = _.where(window.planEvents, {eventId: row.attr('id').substr(4)})['dates'];
                 if(typeof dates != 'undefined')
                 {
                     var dateStr = dates.map(function ($d, $i) {
-                        return '<label class="checkbox"><input name="strategy-from-' + (604800 * $i) + '-' + eid + '"' +
+                        return '<label class="checkbox"><input name="strategy-from-' + (604800 * $i) + '-' + eventId + '"' +
                             ' type="checkbox" value="' + (604800 * $i) + '" /><i></i><span>' + $d + '</span></label>';
                     }).join('');
                     newStrategy.find('.strategy-review').append(dateStr);
                 }
-                if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
-                    typeof window.strategies[eid]['spaced'] != 'undefined')
+                if(typeof window.strategies != 'undefined' && typeof window.strategies[eventId] != 'undefined' &&
+                    typeof window.strategies[eventId]['spaced'] != 'undefined')
                 {
-                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eid]['spaced'].notes);
-                    if(window.strategies[eid]['spaced'].review != '')
-                        window.strategies[eid]['spaced'].review.split(',').forEach(function (x) {
+                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eventId]['spaced'].notes);
+                    if(window.strategies[eventId]['spaced'].review != '')
+                        window.strategies[eventId]['spaced'].review.split(',').forEach(function (x) {
                             newStrategy.find('input[value="' + x + '"]').prop('checked', true);
                         });
                 }
             }
             if(strategy == 'prework')
             {
-                if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
-                    typeof window.strategies[eid]['prework'] != 'undefined')
+                if(typeof window.strategies != 'undefined' && typeof window.strategies[eventId] != 'undefined' &&
+                    typeof window.strategies[eventId]['prework'] != 'undefined')
                 {
-                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eid]['prework'].notes);
-                    if(window.strategies[eid]['prework'].prepared != '')
-                        window.strategies[eid]['prework'].prepared.split(',').forEach(function (x) {
+                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eventId]['prework'].notes);
+                    if(window.strategies[eventId]['prework'].prepared != '')
+                        window.strategies[eventId]['prework'].prepared.split(',').forEach(function (x) {
                             newStrategy.find('input[value="' + x + '"]').prop('checked', true);
                         });
                 }
@@ -121,7 +121,7 @@ $(document).ready(function () {
                 var upload = new plupload.Uploader({
                     chunk_size: '5MB',
                     runtimes : 'html5,flash,silverlight,html4',
-                    browse_button : 'teach-' + eid + '-select', // you can pass in id...
+                    browse_button : 'teach-' + eventId + '-select', // you can pass in id...
                     container: newStrategy.find('.plupload')[0], // ... or DOM Element itself
                     url : window.callbackPaths['file_create'],
                     unique_names: true,
@@ -143,7 +143,7 @@ $(document).ready(function () {
                     init: {
                         PostInit: function(up) {
                             newStrategy.find('.plupload').addClass('init');
-                            newStrategy.find('#teach-' + eid + '-select').on('click', function () {
+                            newStrategy.find('#teach-' + eventId + '-select').on('click', function () {
                                 up.splice();
                             });
                         },
@@ -152,18 +152,18 @@ $(document).ready(function () {
                         },
                         UploadProgress: function(up) {
                             var squiggle;
-                            if((squiggle = claim.find('.squiggle')).length == 0)
-                                squiggle = $('<small class="squiggle">&nbsp;</small>').appendTo(claim.find('.plup-filelist'));
+                            if((squiggle = newStrategy.find('.squiggle')).length == 0)
+                                squiggle = $('<small class="squiggle">&nbsp;</small>').appendTo(newStrategy.find('.plup-filelist'));
                             squiggle.stop().animate({width: up.total.percent + '%'}, 1000, 'swing');
                         },
                         FileUploaded: function(up, file, response) {
                             var data = JSON.parse(response.response);
-                            newStrategy.find('input[name="teach-' + eid + '-plupload"]').val(data.fid);
+                            newStrategy.find('input[name="teach-' + eventId + '-plupload"]').val(data.fid);
                             newStrategy.find('.plup-filelist .squiggle').stop().remove();
                             newStrategy.find('.plupload img').attr('src', data.src);
                             newStrategy.removeClass('invalid').addClass('valid');
                             newStrategy.find('a[href="#save-strategy"]').first().trigger('click');
-                            setTimeout('videoPoller("' + fileSaved.fid + '", "' + eid + '");', 5000);
+                            setTimeout('videoPoller("' + fileSaved.fid + '", "' + eventId + '");', 5000);
                         },
                         Error: function(up, err) {
                         }
@@ -172,14 +172,14 @@ $(document).ready(function () {
 
                 setTimeout(function () {upload.init();}, 200);
 
-                if(typeof window.strategies != 'undefined' && typeof window.strategies[eid] != 'undefined' &&
-                    typeof window.strategies[eid]['teach'] != 'undefined')
+                if(typeof window.strategies != 'undefined' && typeof window.strategies[eventId] != 'undefined' &&
+                    typeof window.strategies[eventId]['teach'] != 'undefined')
                 {
-                    newStrategy.find('input[name="strategy-title"]').val(window.strategies[eid]['teach'].title);
-                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eid]['teach'].notes);
-                    newStrategy.find('.plupload img').attr('scr', window.strategies[eid]['teach'].uploads);
+                    newStrategy.find('input[name="strategy-title"]').val(window.strategies[eventId]['teach'].title);
+                    newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eventId]['teach'].notes);
+                    newStrategy.find('.plupload img').attr('scr', window.strategies[eventId]['teach'].uploads);
                     // TODO: load video
-                    //setTimeout('videoPoller("' + window.strategies[eid]['teach'].uploads[0].value + '", "' + eid + '");', 100);
+                    //setTimeout('videoPoller("' + window.strategies[eventId]['teach'].uploads[0].value + '", "' + eventId + '");', 100);
                 }
             }
         }
@@ -200,22 +200,22 @@ $(document).ready(function () {
     body.on('click', '#plan .assignment, #plan .class-name, #plan .percent', function () {
             var row = $(this).parents('.session-row'),
                 strategy = (/default-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
-                cid = ((/cid([0-9]+)(\s|$)/ig).exec(row.attr('class')) || ['', ''])[1],
+                courseId = ((/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class')) || ['', ''])[1],
                 classname = row.find('.class-name').not('span').text().trim();
             row.toggleClass('selected');
 
             // add mini-checkin if class number is set
-            if(cid != null && row.find('.mini-checkin').length == 0 && strategy != 'other' &&
+            if(courseId != null && row.find('.mini-checkin').length == 0 && strategy != 'other' &&
                 plans.find('.mini-checkin').length > 0)
             {
                 var newMiniCheckin = plans.find('.mini-checkin').first().clone();
                 row.append(newMiniCheckin);
-                newMiniCheckin.html(newMiniCheckin.html().replace(/\{classname}/g, classname).replace(/\{cid}/g, cid));
+                newMiniCheckin.html(newMiniCheckin.html().replace(/\{classname}/g, classname).replace(/\{courseId}/g, courseId));
                 setTimeout(function () {newMiniCheckin.setClock();}, 200);
             }
 
             // add the default strategy
-            if(cid != null && row.find('.strategy-' + strategy).length == 0 &&
+            if(courseId != null && row.find('.strategy-' + strategy).length == 0 &&
                 plans.find('.strategy-' + strategy).length > 0 && strategy != 'other' && strategy != 'prework')
             {
                 var newStrategySelect = plans.find('.field-select-strategy').first().clone();
@@ -245,7 +245,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var that = jQuery(this),
             row = that.parents('.session-row'),
-            eid = row.attr('id').substring(4),
+            eventId = (/event-id-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
             strategies = [];
         row.find('.strategy-active, .strategy-spaced, .strategy-teach, .strategy-other, .strategy-prework').each(function () {
             var that = jQuery(this);
@@ -253,7 +253,7 @@ $(document).ready(function () {
             {
                 var active = {
                     type: 'active',
-                    eid:      eid,
+                    eventId:      eventId,
                     skim:      that.find('textarea[name="strategy-skim"]').val() || '',
                     why:       that.find('textarea[name="strategy-why"]').val() || '',
                     questions: that.find('textarea[name="strategy-questions"]').val() || '',
@@ -267,7 +267,7 @@ $(document).ready(function () {
                     active.exam.trim() == '')
                     active = {
                         type: 'active',
-                        eid:eid,
+                        eventId:eventId,
                         remove:true
                     };
                 strategies[strategies.length] = active;
@@ -276,17 +276,17 @@ $(document).ready(function () {
             {
                 var teach = {
                     type: 'teach',
-                    eid:  eid,
+                    eventId:  eventId,
                     title: that.find('input[name="strategy-title"]').val() || '',
                     notes: that.find('textarea[name="strategy-notes"]').val() || '',
-                    fid: that.find('input[name="teach-' + eid + '-plupload"]').val() || ''
+                    fid: that.find('input[name="teach-' + eventId + '-plupload"]').val() || ''
                 };
                 if(teach.title.trim() == '' &&
                     teach.notes.trim() == '' &&
                     teach.fid.length == 0)
                     teach = {
                         type:   'teach',
-                        eid:   eid,
+                        eventId:   eventId,
                         remove: true
                     };
                 strategies[strategies.length] = teach;
@@ -295,7 +295,7 @@ $(document).ready(function () {
             {
                 var spaced = {
                     type:   'spaced',
-                    eid:   eid,
+                    eventId:   eventId,
                     notes:  that.find('textarea[name="strategy-notes"]').val() || '',
                     review: that.find('input[name^="strategy-from"]:checked').map(function () {
                         return jQuery(this).val();}).toArray().join(',')
@@ -304,7 +304,7 @@ $(document).ready(function () {
                     spaced.review.trim() == '')
                     spaced = {
                         type: 'spaced',
-                        eid:eid,
+                        eventId:eventId,
                         remove:true
                     };
                 strategies[strategies.length] = spaced;
@@ -313,13 +313,13 @@ $(document).ready(function () {
             {
                 var other = {
                     type:  'other',
-                    eid:  eid,
+                    eventId:  eventId,
                     notes: that.find('textarea[name="strategy-notes"]').val() || ''
                 };
                 if(other.notes.trim() == '')
                     other = {
                         type:   'other',
-                        eid:   eid,
+                        eventId:   eventId,
                         remove: true
                     };
                 strategies[strategies.length] = other;
@@ -328,7 +328,7 @@ $(document).ready(function () {
             {
                 var prework = {
                     type:   'prework',
-                    eid:    eid,
+                    eventId:    eventId,
                     notes:   that.find('textarea[name="strategy-notes"]').val() || '',
                     prepared: that.find('input[name^="strategy-"]:checked').map(function () {
                         return jQuery(this).val();
@@ -338,7 +338,7 @@ $(document).ready(function () {
                     prework.prepare.trim() == '')
                     prework = {
                         type:   'prework',
-                        eid:   eid,
+                        eventId:   eventId,
                         remove: true
                     };
                 strategies[strategies.length] = prework;

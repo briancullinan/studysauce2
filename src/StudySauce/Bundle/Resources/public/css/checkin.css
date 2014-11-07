@@ -1,3 +1,19 @@
+#sds-messages img
+{
+    display:block;
+    height: 128px;
+    width:128px;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    margin-top: -64px;
+    padding-left: 0;
+}
+
+#sds-messages .modal-body
+{
+    padding-left:148px;
+}
 
 #checkin .classes {
 }
@@ -342,8 +358,33 @@
     display: none;
 }
 
+#checkin .mobile-only
+{
+    display:none;
+}
+
 @media all and (max-width:800px)
 {
+    #checkin .full-only
+    {
+        display:none;
+    }
+
+    #checkin .mobile-only
+    {
+        display:inline;
+    }
+
+    #sds-messages .modal-body
+    {
+        padding-left:15px;
+    }
+
+    #sds-messages img
+    {
+        display:none;
+    }
+
     .checkin-widget > a, #checkin .classes a
     {
         margin: 10px;
@@ -354,6 +395,6 @@
         width: auto;
         display:block;
         min-height: 0;
-        margin:20px -10px;
+        margin:40px -10px;
     }
 }

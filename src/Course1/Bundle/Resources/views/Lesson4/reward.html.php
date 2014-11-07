@@ -10,9 +10,9 @@ $view['slots']->start('body'); ?>
         <h2>Don't let others from distract you...</h2>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="badge setup-outcome">&nbsp;</span>
-            <strong>Start Planning</strong>
-            <div class="description">Enter your schedule to start planning.</div>
+            <span class="badge squirrel">&nbsp;</span>
+            <strong>Master of focus</strong>
+            <div class="description">You are now impervious to distractions and can....oh look....a squirrel...</div>
         </div>
         <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward4.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />

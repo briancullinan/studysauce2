@@ -64,23 +64,10 @@ $(document).ready(function () {
     function updateDeadlines(response)
     {
         var deadlines = $('#deadlines');
-        // clear input form
-        var invalids = deadlines.find('header').prevAll('.deadline-row.invalid').detach();
-
         // update key dates list
-        deadlines.find('.sort-by').nextAll('.deadline-row,.head').remove();
-        response.find('.sort-by').nextAll('.deadline-row,.head').insertAfter(deadlines.find('header'));
-
-        // remove valid rows after adding them to list
-        if(invalids.length > 0)
-        {
-            deadlines.find('.highlighted-link').last().detach().insertAfter(invalids.last());
-        }
-        else
-        {
-            deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row').last());
-        }
-
+        deadlines.find('.deadline-row,.head').remove();
+        response.find('.deadline-row,.head').insertAfter(deadlines.find('header'));
+        deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row').last());
     }
 
     body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {
@@ -181,8 +168,8 @@ $(document).ready(function () {
             var head = jQuery(this);
             head.nextUntil('*:not(.deadline-row)').each(function () {
                 var row = jQuery(this),
-                    cid = (/cid([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1],
-                    that = row.find('.field-name-field-class-name .read-only');
+                    cid = (/cid([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1],
+                    that = row.find('.class-name .read-only');
                 // TODO: fix this to not rely on name
                 if(typeof headings[cid] == 'undefined')
                     headings[cid] = row;

@@ -3,7 +3,6 @@
 #schedule header,
 .schedule .class-row
 {
-    padding-top:5px;
     clear: both;
     display: block;
     vertical-align: top;
@@ -71,9 +70,19 @@
     padding-left:40px;
 }
 
+.class-row.edit .class-name
+{
+    padding-left: 0;
+}
+
 .class-row .class-name i
 {
-    margin-left:-40px;
+    margin-left: -40px;
+}
+
+.class-row.edit .class-name i
+{
+    display:none;
 }
 
 #schedule header .day-of-the-week,

@@ -219,11 +219,23 @@ a.fc-event:not([href])
     display: none !important;
 }
 
+#plan .session-row.done:after, .plan-widget .session-row.done:after
+{
+    display:block;
+    content: " ";
+    position:absolute;
+    top:50%;
+    width:100%;
+    left:0;
+    border-bottom: 1px solid #555555;
+}
+
 .plan-widget .session-row
 {
     clear:both;
     border-top:1px solid transparent;
     border-bottom:1px solid transparent;
+    position: relative;
 }
 
 #plan .session-row:hover:not(.selected) .assignment,
@@ -302,13 +314,6 @@ a.fc-event:not([href])
     z-index: 96;
     padding-bottom: 6px;
     color: #ffffff;
-}
-
-.page-dashboard.adviser-user #plan .return-to-top,
-.page-dashboard.partner-user #plan .return-to-top,
-.page-dashboard.paid-user #plan .return-to-top
-{
-    display: block;
 }
 
 #plan a[href="#expand"]

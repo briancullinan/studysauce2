@@ -335,6 +335,7 @@ label
 {
     text-align: left;
     display:block;
+    margin-bottom:0;
 }
 
 .selectize-input,
@@ -634,7 +635,7 @@ input[type=month][disabled]
     display: inline-block;
     min-height: 20px;
     margin-top:0;
-    margin-bottom: 5px;
+    margin-bottom: 0;
     cursor: pointer;
     color:#555555;
 }
@@ -681,7 +682,7 @@ input[type=month][disabled]
     outline: 0;
     border:2px solid #555555;
     background: #FFF;
-    margin:5px;
+    margin:2px 5px;
     border-radius: 2px;
     vertical-align: middle;
     transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;

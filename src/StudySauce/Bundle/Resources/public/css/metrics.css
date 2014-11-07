@@ -62,9 +62,24 @@
     list-style: none;
 }
 
-.metrics-widget
+.metrics-widget a[href*="/checkin"]
 {
-    text-align: center;
+    position:absolute;
+    top:42px;
+    left:10px;
+    right:10px;
+    bottom:auto;
+}
+
+.metrics-widget:not(.empty) a[href*="/checkin"]
+{
+    display: none;
+}
+
+.metrics-widget.empty .timeline,
+.metrics-widget.empty .pie-chart
+{
+    display: none;
 }
 
 .metrics-widget .timeline,

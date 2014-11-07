@@ -15,7 +15,7 @@
         </div>
         <div class="player-divider">
             <div class="player-wrapper">
-                <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/intro2.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/intro2.jpg'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
             </div>

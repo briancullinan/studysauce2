@@ -21,6 +21,6 @@ Let your sponsor know about your study achievement.
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-footer') ?>
-<a href="#submit-claim" class="more btn btn-primary" data-dismiss="modal">Save</a>
+<a href="#submit-claim" class="btn btn-primary" data-dismiss="modal">Save</a>
 <?php $view['slots']->stop() ?>
 

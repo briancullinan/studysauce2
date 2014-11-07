@@ -10,9 +10,9 @@ $view['slots']->start('body'); ?>
         <h2>Baby goat is tired of your procrastination excuses.</h2>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="badge setup-milestone">&nbsp;</span>
-            <strong>Stop Procrastinating</strong>
-            <div class="description">Setting deadlines is the first step to recovery.</div>
+            <span class="badge beaver">&nbsp;</span>
+            <strong>Eager Beaver</strong>
+            <p class="description">We know you don't want to waste another minute <i style="text-decoration: line-through;">not</i> studying. We have many more tools for you to help stop procrastinating.</p>
         </div>
         <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward3.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />

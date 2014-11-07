@@ -49,7 +49,7 @@ class PartnerController extends Controller
         /** @var $current Partner */
         $current = $user->getPartners()->first();
         $shouldSend = false;
-        if($current->getEmail() == $request->get('email'))
+        if(!empty($current) && $current->getEmail() == $request->get('email'))
         {
             // update the partner
             $partner = $current;
@@ -58,7 +58,7 @@ class PartnerController extends Controller
         {
             // check if they every invited this partner
             $current = $user->getPartners()->filter(function (Partner $x) use ($request) {return $x->getEmail() == $request->get('email');})->first();
-            if($current != null) {
+            if(!empty($current)) {
                 // update created time so they become the current partner
                 $partner = $current;
                 $partner->setCreated(new \DateTime()); // reset created date if they change back to an existing invite

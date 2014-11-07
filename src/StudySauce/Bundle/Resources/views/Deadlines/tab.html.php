@@ -36,34 +36,35 @@ if (empty($deadlines) || empty($courses)) {
     $deadlines = $demoDeadlines;
 }
 
-$view['slots']->start('body'); ?>
+$view['slots']->start('row-headings'); ?>
+<div class="highlighted-link form-actions invalid">
+    <a href="#add-deadline">Add <span>+</span> class</a>
+    <a href="#save-deadline" class="more">Save</a>
+</div>
+<div class="sort-by">
+    <label>Sort by: </label>
+    <label class="radio"><input type="radio" name="deadlines-sort" value="date"
+                                checked="checked"/><i></i>Date</label>
+    <label class="radio"><input type="radio" name="deadlines-sort" value="class"><i></i>Class</label>
+    <label class="checkbox" title="Click here to see deadlines that have already passed."><input
+            type="checkbox"><i></i>Past deadlines</label>
+</div>
+<header>
+    <label>&nbsp;</label>
+    <label>Assignment</label>
+    <label>Reminders</label>
+    <label>Due date</label>
+    <label>% of grade</label>
+</header>
+<?php $view['slots']->stop();
 
+$view['slots']->start('body'); ?>
 <div class="panel-pane" id="deadlines">
     <div class="pane-content">
         <h2>Enter important dates and we will send you email reminders</h2>
-        <div class="highlighted-link form-actions invalid">
-            <a href="#add-deadline" <?php print ($isDemo ? 'style="display:none;"' : ''); ?>>Add <span>+</span> class</a>
-            <a href="#save-deadline" class="more">Save</a>
-        </div>
-
-        <?php if(!$isDemo) { ?>
-        <div class="sort-by">
-            <label>Sort by: </label>
-            <label class="radio"><input type="radio" name="deadlines-sort" value="date"
-                                        checked="checked"/><i></i>Date</label>
-            <label class="radio"><input type="radio" name="deadlines-sort" value="class"><i></i>Class</label>
-            <label class="checkbox" title="Click here to see deadlines that have already passed."><input
-                    type="checkbox"><i></i>Past deadlines</label>
-        </div>
-        <?php } ?>
-        <header>
-            <label>&nbsp;</label>
-            <label>Assignment</label>
-            <label>Reminders</label>
-            <label>Due date</label>
-            <label>% of grade</label>
-        </header>
         <?php
+        if(!$isDemo)
+            $view['slots']->output('row-headings');
         $headStr = '';
         foreach ($deadlines as $i => $d) {
             if ($isDemo && $i > 1) {
@@ -91,7 +92,7 @@ $view['slots']->start('body'); ?>
             $classI = array_search($d->getCourse(), $courses);
 
             ?>
-            <div class="deadline-row first valid <?php
+            <div class="deadline-row first invalid <?php
             print ($isDemo ? 'edit' : 'read-only');
             print (!empty($d->getCourse()) ? (' cid' . $d->getCourse()->getId()) : '');
             print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : ''); ?>"
@@ -166,7 +167,10 @@ $view['slots']->start('body'); ?>
                 <a href="#edit-deadline">&nbsp;</a><a href="#remove-deadline">&nbsp;</a>
             </div>
             </div>
-        <?php } ?>
+        <?php }
+        if($isDemo)
+            $view['slots']->output('row-headings');
+        ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="highlighted-link form-actions invalid">
             <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a><a href="#save-deadline" class="more">Save</a>

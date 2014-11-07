@@ -25,7 +25,7 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
 <div class="panel-pane" id="checkin">
     <div class="pane-content">
-        <h2>Check in. &nbsp;Listen to Mozart. &nbsp;Track your progress.</h2>
+        <h2>Check in.<span class="full-only"> &nbsp;Listen to Mozart. &nbsp;Track your progress.</span></h2>
 
         <p class="classes">
             <?php

@@ -264,6 +264,19 @@ $collection->add(
     )
 );
 $collection->add(
+    'plan_complete',
+    new Route(
+        '/plan/complete',
+        ['_controller' => 'StudySauceBundle:Plan:complete'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
     'plan_week',
     new Route(
         '/plan/{_week}/{_format}',

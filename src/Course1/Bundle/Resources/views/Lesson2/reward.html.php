@@ -12,7 +12,7 @@ $view['slots']->start('body'); ?>
             <h3>Badge awarded:</h3>
             <span class="badge setup-hours">&nbsp;</span>
             <strong>Goal Setting</strong>
-            <div class="description">Setting goals help you change your study behavior.</div>
+            <p class="description">You now know how to set good goals and are pointed in the right direction. All that remains is that trivial detail of accomplishing those goals.</p><p>Not to worry, stick with us and we will help you get there.</p>
         </div>
         <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward2.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />

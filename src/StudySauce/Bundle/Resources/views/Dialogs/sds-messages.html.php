@@ -5,7 +5,9 @@
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-body') ?>
-<div class="icon">&nbsp;</div>
+<?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/Study_Sauce_Logo_Gray.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+    <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+<?php endforeach; ?>
 <div class="multiple-locations <?php print ($count == 0 ? 'show' : 'hide'); ?>">
     <h3>Use different study locations</h3>
     <p>Changing location has shown a significant improvement in memory retention in studies done by cognitive scientists.  According to the researchers, the brain associates the material being learned with the environment that the studier is in.  Varied environments allow the brain more opportunities to associate the material with something unique - which in turn increases the likelihood of retention.</p>

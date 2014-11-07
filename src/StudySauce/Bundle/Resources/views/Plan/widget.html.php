@@ -18,7 +18,10 @@ use StudySauce\Bundle\Entity\Event;
             if($event->getStart() > new \DateTime('today') && $event->getStart() < new \DateTime('tomorrow'))
             {
                 ?>
-            <div class="session-row  event-type-<?php print $event->getType(); ?>  cid default-other " id="eid-<?php print $event->getId(); ?>">
+            <div class="session-row <?php
+            print ' event-type-' . $event->getType();
+            print ' event-id-' . $event->getId();
+            print ($event->getCompleted() ? ' done' : ''); ?>">
                 <div class="class-name">
                     <span class="class<?php print $classI; ?>">&nbsp;</span> <?php print $event->getName(); ?>
                 </div>
@@ -27,7 +30,7 @@ use StudySauce\Bundle\Entity\Event;
                         <?php print $event->getEnd()->format('g:i') . '&nbsp;' . $event->getEnd()->format('A'); ?></div>
                 </div>
                 <div class="completed">
-                    <label class="checkbox"><input type="checkbox" name="plan-sort" value="class" <?php print ($event->getCompleted() ? 'checked="checked"' : ''); ?>><i></i></label>
+                    <label class="checkbox"><input type="checkbox" value="true" <?php print ($event->getCompleted() ? 'checked="checked"' : ''); ?>><i></i></label>
                 </div>
             </div><?php
             }

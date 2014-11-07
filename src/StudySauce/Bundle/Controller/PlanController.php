@@ -20,7 +20,9 @@ use StudySauce\Bundle\Entity\Week;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class PlanController
@@ -247,7 +249,7 @@ class PlanController extends Controller
             }
 
             $jsEvents[$i] = [
-                'cid' => $x->getId(),
+                'eventId' => $x->getId(),
                 'title' => '<h4>' . $label . '</h4>' . $x->getName(),
                 'start' => $x->getStart()->format('r'),
                 'end' => $x->getEnd()->format('r'),
@@ -387,6 +389,7 @@ class PlanController extends Controller
             $matchingEvents = $eventWeek->getEvents()->toArray();
             $events = array_map(
                 function (Event $e, Event $_) {
+                    $e->setCourse($_->getCourse());
                     $e->setType($_->getType());
                     $e->setName($_->getName());
                     $e->setStart(clone $_->getStart());
@@ -1458,7 +1461,7 @@ class PlanController extends Controller
         foreach($strategies as $i => $s)
         {
             /** @var Event $event */
-            $event = $schedule->getEvents()->filter(function (Event $e)use($s) {return $e->getId() == $s['eid'];})->first();
+            $event = $schedule->getEvents()->filter(function (Event $e)use($s) {return $e->getId() == $s['eventId'];})->first();
             if(empty($event))
                 continue;
 
@@ -1562,6 +1565,33 @@ class PlanController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function completeAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Schedule $schedule */
+        $schedule = $user->getSchedules()->first();
+
+        /** @var Event $event */
+        $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
+        if(empty($event))
+            throw new NotFoundHttpException();
+
+        $event->setCompleted($request->get('completed') == 'true');
+        $orm->merge($event);
+        $orm->flush();
+
+        return new JsonResponse(true);
+    }
+
+    /**
      * @param Schedule $schedule
      * @return array
      */
@@ -1571,46 +1601,46 @@ class PlanController extends Controller
         foreach($schedule->getActive()->toArray() as $active)
         {
             /** @var ActiveStrategy $active */
-            $eid = $active->getEvent()->getId();
-            $result[$eid]['active']['default'] = $active->getIsDefault();
-            $result[$eid]['active']['skim'] = $active->getSkim();
-            $result[$eid]['active']['why'] = $active->getWhy();
-            $result[$eid]['active']['questions'] = $active->getQuestions();
-            $result[$eid]['active']['summarize'] = $active->getSummarize();
-            $result[$eid]['active']['exam'] = $active->getExam();
+            $eventId = $active->getEvent()->getId();
+            $result[$eventId]['active']['default'] = $active->getIsDefault();
+            $result[$eventId]['active']['skim'] = $active->getSkim();
+            $result[$eventId]['active']['why'] = $active->getWhy();
+            $result[$eventId]['active']['questions'] = $active->getQuestions();
+            $result[$eventId]['active']['summarize'] = $active->getSummarize();
+            $result[$eventId]['active']['exam'] = $active->getExam();
         }
         foreach($schedule->getOther()->toArray() as $other)
         {
             /** @var OtherStrategy $other */
-            $eid = $other->getEvent()->getId();
-            $result[$eid]['other']['default'] = $other->getIsDefault();
-            $result[$eid]['other']['notes'] = $other->getNotes();
+            $eventId = $other->getEvent()->getId();
+            $result[$eventId]['other']['default'] = $other->getIsDefault();
+            $result[$eventId]['other']['notes'] = $other->getNotes();
         }
         foreach($schedule->getTeach()->toArray() as $teach)
         {
             /** @var TeachStrategy $teach */
-            $eid = $teach->getEvent()->getId();
-            $result[$eid]['teach']['default'] = $teach->getIsDefault();
-            $result[$eid]['teach']['title'] = $teach->getTitle();
-            $result[$eid]['teach']['notes'] = $teach->getNotes();
-            $result[$eid]['teach']['url'] = !empty($teach->getTeaching()) ? $teach->getTeaching()->getUrl() : null;
-            $result[$eid]['teach']['fid'] = !empty($teach->getTeaching()) ? $teach->getTeaching()->getId() : null;
+            $eventId = $teach->getEvent()->getId();
+            $result[$eventId]['teach']['default'] = $teach->getIsDefault();
+            $result[$eventId]['teach']['title'] = $teach->getTitle();
+            $result[$eventId]['teach']['notes'] = $teach->getNotes();
+            $result[$eventId]['teach']['url'] = !empty($teach->getTeaching()) ? $teach->getTeaching()->getUrl() : null;
+            $result[$eventId]['teach']['fid'] = !empty($teach->getTeaching()) ? $teach->getTeaching()->getId() : null;
         }
         foreach($schedule->getSpaced()->toArray() as $spaced)
         {
             /** @var SpacedStrategy $spaced */
-            $eid = $spaced->getEvent()->getId();
-            $result[$eid]['spaced']['default'] = $spaced->getIsDefault();
-            $result[$eid]['spaced']['notes'] = $spaced->getNotes();
-            $result[$eid]['spaced']['review'] = implode(',', $spaced->getReview());
+            $eventId = $spaced->getEvent()->getId();
+            $result[$eventId]['spaced']['default'] = $spaced->getIsDefault();
+            $result[$eventId]['spaced']['notes'] = $spaced->getNotes();
+            $result[$eventId]['spaced']['review'] = implode(',', $spaced->getReview());
         }
         foreach($schedule->getPrework()->toArray() as $prework)
         {
             /** @var PreworkStrategy $prework */
-            $eid = $prework->getEvent()->getId();
-            $result[$eid]['prework']['default'] = $prework->getIsDefault();
-            $result[$eid]['prework']['notes'] = $prework->getNotes();
-            $result[$eid]['prework']['prepared'] = implode(',', $prework->getPrepared());
+            $eventId = $prework->getEvent()->getId();
+            $result[$eventId]['prework']['default'] = $prework->getIsDefault();
+            $result[$eventId]['prework']['notes'] = $prework->getNotes();
+            $result[$eventId]['prework']['prepared'] = implode(',', $prework->getPrepared());
         }
         return $result;
     }

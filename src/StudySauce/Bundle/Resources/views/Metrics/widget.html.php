@@ -2,7 +2,7 @@
 use StudySauce\Bundle\Entity\Course;
 ?>
 <div class="widget-wrapper">
-    <div class="widget metrics-widget">
+    <div class="widget metrics-widget<?php print (empty($courses) || empty($times) ? ' empty' : ''); ?>">
         <h3>My progress</h3>
         <?php if(empty($courses) || empty($times)) { ?>
             <a href="<?php print $view['router']->generate('checkin'); ?>" class="cloak">Nothing set up yet.  Click <span class="reveal">here</span> to check in and start tracking your progress.</a>

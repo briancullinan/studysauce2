@@ -91,6 +91,7 @@ $(document).ready(function () {
         var that = $(this),
             row = that.parents('.goal-row');
         goalsFunc.apply(row.removeClass('read-only').addClass('edit'));
+        goals.find('.form-actions').css('visibility', 'visible');
     });
 
     body.on('change', '#goals .goal-row select, #goals .goal-row textarea', function () {
@@ -129,7 +130,10 @@ $(document).ready(function () {
                 goals.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
 
                 goals.find('.goal-row').remove();
-                $(response).find('.goal-row').insertAfter(goals.find('header'));
+                if($(response).find('.goal-row').insertAfter(goals.find('header')).length == 3)
+                    goals.find('.form-actions').css('visibility', 'hidden');
+                else
+                    goals.find('.form-actions').css('visibility', 'visible');
                 // TODO: make new rows fade in to place
 
                 goalsFunc.apply(goals.find('.goal-row'));

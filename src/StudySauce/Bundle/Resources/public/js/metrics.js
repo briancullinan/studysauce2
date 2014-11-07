@@ -18,10 +18,10 @@ $(document).ready(function () {
 
     function resizeComponents()
     {
-        body.find('#metrics h3, #metrics h4').textfill({
-            widthOnly: true,
-            maxFontPixels: 30
-        });
+        //body.find('#metrics h3, #metrics h4').textfill({
+        //    widthOnly: true,
+        //    maxFontPixels: 24
+        //});
 
         if(resizeTimeout != null)
             clearTimeout(resizeTimeout);
@@ -156,9 +156,13 @@ $(document).ready(function () {
                     jQuery('#checkins-list').append(content.find('.checkin-row'));
 
                     // update metrics key
-                    var mc = 0;
                     metrics.find('ol li').remove();
                     metrics.find('ol').append(content.find('ol li'));
+
+                    if(window.newHistory.length > 0)
+                        $('.metrics-widget').removeClass('empty');
+                    else
+                        $('.metrics-widget').addClass('empty');
 
                     updateHistory(window.initialHistory);
                 }

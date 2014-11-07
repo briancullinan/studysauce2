@@ -38,29 +38,22 @@ foreach ($view['assetic']->stylesheets(
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@checkin',
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@checkin',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
-    foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
-        '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.js',
-        '@StudySauceBundle/Resources/public/js/plan.js',
-        '@StudySauceBundle/Resources/public/js/strategies.js',
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts([
+    '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
+    '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.js',
+    '@StudySauceBundle/Resources/public/js/strategies.js',
+],
+[],
+['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach; ?>
+<?php endforeach;
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/plan.js',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach;
+?>
     <script type="text/javascript">
         // convert events array to object to keep track of keys better
         if(typeof(window.planEvents) == 'undefined')
@@ -148,7 +141,6 @@ $view['slots']->start('body'); ?>
             } elseif ($event->getType() == 'd') {
                 $title = 'Deadline';
             } elseif ($event->getType() == 'f') {
-                $cid = 'f';
                 $title = 'Any class needed';
             } elseif ($event->getType() == 'sr') {
                 $title = $session == 'active'
@@ -169,15 +161,16 @@ $view['slots']->start('body'); ?>
             print ' checkin' . $classI;
             print ($event->getStart() < $yesterday || $event->getDeleted() ? ' hide' : '');
             print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
-            print (!empty($course) ? (' cid' . $course->getId()) : '');
+            print (!empty($course) ? (' course-id-' . $course->getId()) : '');
             print (' default-' . $session);
-            print ($event->getCompleted() ? ' done' : ''); ?>" id="eid-<?php print $event->getId(); ?>">
+            print ($event->getCompleted() ? ' done' : '');
+            print (' event-id-' . $event->getId()); ?>">
                 <div class="class-name"><span class="class<?php print $classI; ?>">&nbsp;</span><?php print $event->getName(); ?></div>
                 <div class="assignment"><?php print $title; ?></div>
                 <div class="percent"><?php print (!empty($event->getDeadline())
                         ? ($event->getDeadline()->getPercent() . '%')
                         : '&nbsp;'); ?></div>
-                <div class="completed"><label class="checkbox"><input type="checkbox" name="plan-sort" value="class" <?php
+                <div class="completed"><label class="checkbox"><input type="checkbox" value="true" <?php
                         print ($event->getCompleted() ? 'checked="checked"' : ''); ?>><i></i></label></div>
             </div>
         <?php } ?>

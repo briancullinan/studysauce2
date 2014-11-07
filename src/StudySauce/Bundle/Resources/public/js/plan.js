@@ -123,13 +123,12 @@ $(document).ready(function () {
                         }
                     },
                     eventClick: function(calEvent) {
-                        // var eid =  calEvent._id.substring(3);
                         // change the border color just for fun
-                        if(plans.find('#eid-' + calEvent.cid).length > 0)
+                        if(plans.find('.event-id-' + calEvent.eventId).length > 0)
                         {
-                            if(!plans.find('#eid-' + calEvent.cid).is('.selected'))
-                                plans.find('#eid-' + calEvent.cid).find('.field-name-field-assignment').trigger('click');
-                            plans.find('#eid-' + calEvent.cid).scrollintoview({padding: {top:120,bottom:100,left:0,right:0}});
+                            if(!plans.find('.event-id-' + calEvent.eventId).is('.selected'))
+                                plans.find('.event-id-' + calEvent.eventId).find('.assignment').trigger('click');
+                            plans.find('.event-id-' + calEvent.eventId).scrollintoview({padding: {top:120,bottom:100,left:0,right:0}});
                         }
 
                     },
@@ -154,7 +153,7 @@ $(document).ready(function () {
                                 window.planEvents[i].className[0] != 'event-type-r' &&
                                 window.planEvents[i].className[0] != 'event-type-h' &&
                                 window.planEvents[i].className[0] != 'event-type-d' &&
-                                i != event.cid)
+                                i != event.eventId)
                             {
                                 // TODO: update this if classes are draggable
                                 if ((next == null || window.planEvents[i].start.getTime() < next.start.getTime()) &&
@@ -182,7 +181,7 @@ $(document).ready(function () {
                             type: 'POST',
                             dataType: 'json',
                             data: {
-                                cid: event['cid'],
+                                eventId: event['eventId'],
                                 start: event['start'].toJSON(),
                                 end: event['end'].toJSON(),
                                 type: event['className'].indexOf('event-type-p') != -1
@@ -240,6 +239,28 @@ $(document).ready(function () {
             plans.addClass('fullcalendar');
             $('#calendar').fullCalendar('option', 'height', 'auto');
         }
+    });
+
+    body.on('change', '#plan .completed input, .plan-widget .completed input', function () {
+        var that = jQuery(this),
+            row = that.parents('.session-row'),
+            eventId = (/event-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+
+        $.ajax({
+            url: window.callbackPaths['plan_complete'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                eventId: eventId,
+                completed: that.is(':checked')
+            },
+            success: function () {
+                if(that.is(':checked'))
+                    $('.session-row.event-id-' + eventId).addClass('done');
+                else
+                    $('.session-row.event-id-' + eventId).removeClass('done');
+            }
+        });
     });
 
     body.on('change', '#plan .sort-by input[type="radio"]', function () {

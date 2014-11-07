@@ -163,7 +163,8 @@ $view['slots']->start('body'); ?>
                 print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
                 print (!empty($course) ? (' cid' . $course->getId()) : '');
                 print (' default-' . $session);
-                print ($event->getCompleted() ? ' done' : ''); ?>" id="eid-<?php print $event->getId(); ?>">
+                print ($event->getCompleted() ? ' done' : '');
+                print ' event-id-' . $event->getId(); ?>">
                     <div class="class-name">
                         <span class="class<?php print $classI; ?>">&nbsp;</span>
                         <?php print $event->getName(); ?>
@@ -175,7 +176,7 @@ $view['slots']->start('body'); ?>
                         <div class="read-only"><?php print ($event->getType() == 'd' && $event->getDeadline()->getPercent() ?: '&nbsp;'); ?></div>
                     </div>
                     <div class="completed">
-                        <label class="checkbox"><input type="checkbox" name="plan-sort" value="class" <?php
+                        <label class="checkbox"><input type="checkbox" value="true" <?php
                             print ($event->getCompleted() ? 'checked="checked"' : ''); ?>><i></i></label>
                     </div>
                 </div>

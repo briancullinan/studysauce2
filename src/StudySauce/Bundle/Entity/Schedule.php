@@ -119,7 +119,6 @@ class Schedule
     {
         $this->created = new \DateTime();
     }
-
     /**
      * Constructor
      */
@@ -127,6 +126,11 @@ class Schedule
     {
         $this->courses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->active = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->other = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->prework = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->teach = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->spaced = new \Doctrine\Common\Collections\ArrayCollection();
         $this->weeks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -414,39 +418,6 @@ class Schedule
     }
 
     /**
-     * Add weeks
-     *
-     * @param \StudySauce\Bundle\Entity\Week $weeks
-     * @return Schedule
-     */
-    public function addWeek(\StudySauce\Bundle\Entity\Week $weeks)
-    {
-        $this->weeks[] = $weeks;
-
-        return $this;
-    }
-
-    /**
-     * Remove weeks
-     *
-     * @param \StudySauce\Bundle\Entity\Week $weeks
-     */
-    public function removeWeek(\StudySauce\Bundle\Entity\Week $weeks)
-    {
-        $this->weeks->removeElement($weeks);
-    }
-
-    /**
-     * Get weeks
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getWeeks()
-    {
-        return $this->weeks;
-    }
-
-    /**
      * Add active
      *
      * @param \StudySauce\Bundle\Entity\ActiveStrategy $active
@@ -609,5 +580,38 @@ class Schedule
     public function getSpaced()
     {
         return $this->spaced;
+    }
+
+    /**
+     * Add weeks
+     *
+     * @param \StudySauce\Bundle\Entity\Week $weeks
+     * @return Schedule
+     */
+    public function addWeek(\StudySauce\Bundle\Entity\Week $weeks)
+    {
+        $this->weeks[] = $weeks;
+
+        return $this;
+    }
+
+    /**
+     * Remove weeks
+     *
+     * @param \StudySauce\Bundle\Entity\Week $weeks
+     */
+    public function removeWeek(\StudySauce\Bundle\Entity\Week $weeks)
+    {
+        $this->weeks->removeElement($weeks);
+    }
+
+    /**
+     * Get weeks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWeeks()
+    {
+        return $this->weeks;
     }
 }

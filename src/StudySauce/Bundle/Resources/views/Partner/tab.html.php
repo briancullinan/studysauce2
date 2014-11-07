@@ -42,7 +42,7 @@ $view['slots']->start('body'); ?>
                     <h3>I am accountable to:</h3>
                     <a href="#partner-select" class="plup-select" id="partner-upload-select">Click here to select an image</a>
                     <div class="plup-filelist" id="partner-filelist">
-                        <?php if(!empty($partner->getPhoto())) {
+                        <?php if(!empty($partner) && !empty($partner->getPhoto())) {
                             ?><img width="200" height="200" src="<?php echo $view->escape($partner->getPhoto()->getUrl()) ?>" alt="LOGO" /><?php
                         }
                         else {

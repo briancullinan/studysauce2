@@ -173,7 +173,7 @@ $view['slots']->start('body'); ?>
                 </div>
             </div>
 
-            <p class="highlighted-link form-actions invalid">
+            <p class="highlighted-link form-actions invalid" <?php print (!empty($outcome) ? 'style="visibility:hidden;"' : ''); ?>>
                 <a href="#save-goal" class="more">Save</a>
             </p>
 

@@ -344,29 +344,6 @@ class Event
     }
 
     /**
-     * Set week
-     *
-     * @param \StudySauce\Bundle\Entity\Week $week
-     * @return Event
-     */
-    public function setWeek(\StudySauce\Bundle\Entity\Week $week = null)
-    {
-        $this->week = $week;
-
-        return $this;
-    }
-
-    /**
-     * Get week
-     *
-     * @return \StudySauce\Bundle\Entity\Week 
-     */
-    public function getWeek()
-    {
-        return $this->week;
-    }
-
-    /**
      * Set course
      *
      * @param \StudySauce\Bundle\Entity\Course $course
@@ -525,5 +502,28 @@ class Event
     public function getTeach()
     {
         return $this->teach;
+    }
+
+    /**
+     * Set week
+     *
+     * @param \StudySauce\Bundle\Entity\Week $week
+     * @return Event
+     */
+    public function setWeek(\StudySauce\Bundle\Entity\Week $week = null)
+    {
+        $this->week = $week;
+
+        return $this;
+    }
+
+    /**
+     * Get week
+     *
+     * @return \StudySauce\Bundle\Entity\Week 
+     */
+    public function getWeek()
+    {
+        return $this->week;
     }
 }
