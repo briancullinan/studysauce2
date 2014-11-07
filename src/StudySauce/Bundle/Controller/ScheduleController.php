@@ -482,11 +482,15 @@ class ScheduleController extends Controller
         }
 
         // redirect to customization page in buy funnel
-        $hasEmpties = $schedule->getCourses()->exists(function (Course $c) {
-                return empty($c->getStudyType()) || empty($c->getStudyDifficulty());
+        $hasEmpties = $schedule->getCourses()->exists(function ($i, Course $c) {
+                return $c->getType() == 'c' && (empty($c->getStudyType()) || empty($c->getStudyDifficulty()));
             });
-        if(strpos($request->headers->get('referer'), '/funnel') > -1 && $hasEmpties)
-            return new RedirectResponse($this->generateUrl('customization', ['_format' => 'funnel']));
+        if(strpos($request->headers->get('referer'), '/funnel') > -1) {
+            if($hasEmpties)
+                return new RedirectResponse($this->generateUrl('customization', ['_format' => 'funnel']));
+            else
+                return new RedirectResponse($this->generateUrl('plan'));
+        }
 
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
     }

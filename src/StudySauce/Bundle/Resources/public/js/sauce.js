@@ -123,18 +123,33 @@ $.ajaxPrefilter(function (options, originalOptions) {
     options.data = $.param($.extend(data, { __visits: visits }));
 });
 
-$(document).ajaxSuccess(function(event, jqXHR, ajaxOptions, data) {
-    if(typeof(data.redirect) != 'undefined')
-    {
-        var a = document.createElement('a');
-        a.href = data.redirect;
-        if(window.location.pathname != a.pathname)
-        window.location = data.redirect;
-    }
-});
+var jqAjax = $.ajax;
+$.ajax = function(settings){
+    var success = settings.success;
+    settings.success = function (data, textStatus, jqXHR) {
+        if (typeof data == 'string' && data.indexOf('{"redirect":') > -1) {
+            data = JSON.parse(data);
+        }
+        if (data != null && typeof data.redirect != 'undefined') {
+            var a = document.createElement('a');
+            a.href = data.redirect;
+            if (window.location.pathname != a.pathname) {
+                window.location = data.redirect;
+                return;
+            }
+        }
+        if(typeof success != 'undefined')
+            success(data, textStatus, jqXHR);
+    };
+    jqAjax(settings);
+};
 
 $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
 
+});
+
+$(document).ajaxStop(function () {
+    window.sincluding = false;
 });
 
 // set some extra utility functions globally

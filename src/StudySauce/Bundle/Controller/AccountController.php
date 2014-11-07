@@ -205,7 +205,7 @@ class AccountController extends Controller
             $context->setToken($token);
             $session = $request->getSession();
             $session->set('_security_main', serialize($token));
-            $response = new JsonResponse(['csrf_token' => $csrfToken]);
+            $response = $this->redirect($this->generateUrl('home'));
 
             $loginManager = $this->get('fos_user.security.login_manager');
             $loginManager->loginUser('main', $user, $response);

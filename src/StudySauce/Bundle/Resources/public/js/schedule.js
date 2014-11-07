@@ -398,7 +398,8 @@ $(document).ready(function () {
                         }
                     });
                 }
-            }).ready(function () {
+            });
+            select.ready(function () {
                 select[0].selectize.setValue(schedule.find('.university input').val());
             });
         }
