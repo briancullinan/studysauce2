@@ -140,7 +140,6 @@ $view['slots']->start('body'); ?>
                 } elseif ($event->getType() == 'd') {
                     $title = 'Deadline' . str_replace('Nonacademic', '', $event->getName());
                 } elseif ($event->getType() == 'f') {
-                    $cid = 'f';
                     $title = 'Any class needed';
                 } elseif ($event->getType() == 'sr') {
                     $title = $session == 'active'
@@ -161,7 +160,7 @@ $view['slots']->start('body'); ?>
                 print ' checkin' . $classI;
                 print ($event->getStart() < $yesterday || $event->getDeleted() ? ' hide' : '');
                 print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
-                print (!empty($course) ? (' cid' . $course->getId()) : '');
+                print (!empty($course) ? (' course-id-' . $course->getId()) : '');
                 print (' default-' . $session);
                 print ($event->getCompleted() ? ' done' : '');
                 print ' event-id-' . $event->getId(); ?>">

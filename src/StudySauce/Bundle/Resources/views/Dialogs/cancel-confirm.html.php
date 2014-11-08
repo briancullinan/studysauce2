@@ -5,7 +5,7 @@ Are you sure you want to cancel your account?
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<p>This will cancel all payment subscriptions and your data will not be recoverable.</p>
+<p>If you click yes, we will cancel your paid subscription.</p>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer'); ?>

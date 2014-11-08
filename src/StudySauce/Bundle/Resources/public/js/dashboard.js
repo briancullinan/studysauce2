@@ -1,119 +1,120 @@
+var body = null;
+
+function activateMenu(path, noPush) {
+    var that = $(this);
+    var i = window.callbackUri.indexOf(path),
+        panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
+        panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
+        item = body.find('.main-menu a[href="' + path + '"]').first();
+
+    // activate the menu
+    body.find('.main-menu .active').removeClass('active');
+    if(item.length > 0) {
+        visits[visits.length] = {path: item[0].pathname, query: item[0].search, hash: item[0].hash, time: (new Date()).toJSON()};
+        if(item.parents('ul.collapse').length != 0 &&
+            item.parents('ul.collapse')[0] != body.find('.main-menu ul.collapse.in')[0])
+            body.find('.main-menu ul.collapse.in').removeClass('in');
+        item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+    }
+    else
+    {
+        // create a mock link to get the browser to parse pathname, query, and hash
+        var a = document.createElement('a');
+        a.href = path;
+        visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
+    }
+
+    // download the panel
+    if(panel.length == 0) {
+        if(that.is('a') && that.parents('.panel-pane').length > 0)
+            item = item.add(that);
+        item.each(function (i, obj) { loadingAnimation($(obj)); });
+        if(window.sincluding) {
+            setTimeout(function () {
+                activateMenu.apply(that, [path, noPush]);
+            }, 1000);
+            return;
+        }
+        window.sincluding = true;
+        $.ajax({
+            url: window.callbackPaths[window.callbackKeys[i]],
+            type: 'GET',
+            dataType: 'text',
+            success: function (tab) {
+                var content = $(tab),
+                    panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
+                    styles = ssMergeStyles(content),
+                    scripts = ssMergeScripts(content);
+                content = content.not(styles).not(scripts);
+
+                // don't ever add panes that are already on the page, this is to help with debugging, but should never really happen
+                if (panelIds.length > 0)
+                    panes = panes.not('#' + panelIds.join(', #'));
+
+                if (panes.length > 0) {
+                    content.filter('[id]').each(function () {
+                        var id = $(this).attr('id');
+                        if($('#' + id).length > 0)
+                            content = content.not('#' + id);
+                    });
+                    panes.hide().insertBefore(body.find('.footer'));
+                    content.not(panes).insertBefore(body.find('.footer'));
+                    var newPane = content.filter('#' + window.callbackKeys[i]);
+                    if (newPane.length == 0) {
+                        newPane = content.filter('.panel-pane').first();
+                    }
+                    item.find('.squiggle').stop().remove();
+                    activatePanel(newPane, i, noPush, path);
+                    window.sincluding = false;
+                }
+            },
+            error:function () {
+                window.sincluding = false;
+                item.find('.squiggle').stop().remove();
+            }
+        });
+    }
+    // collapse menus and show panel if it is not already visible
+    else if(!panel.is(':visible')) {
+        activatePanel(panel, i, noPush, path);
+    }
+}
+
+function activatePanel(panel, i, noPush, path)
+{
+    body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+    body.find('.modal:visible').modal('hide');
+    body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
+    panel.delay(75).fadeIn(75);
+    setTimeout(function () { panel.trigger('show'); }, 100);
+    if(!noPush)
+        window.history.pushState(window.callbackKeys[i], "", path);
+}
+
+function loadingAnimation(that)
+{
+    if(typeof that != 'undefined' && that.length > 0 && that.find('.squiggle').length == 0)
+    {
+        return loadingAnimation.call($('<small class="squiggle">&nbsp;</small>').appendTo(that), that);
+    }
+    else if ($(this).is('.squiggle'))
+    {
+        var width = $(this).parent().outerWidth(true);
+        return $(this).css('width', 0).css('left', 0)
+            .animate({width: width}, 1000, 'swing', function () {
+                var width = $(this).parent().outerWidth(true);
+                $(this).css('width', width).css('left', 0)
+                    .animate({left: width, width: 0}, 1000, 'swing', loadingAnimation);
+            });
+    }
+    else if(typeof that != 'undefined')
+        return that.find('.squiggle');
+}
 
 $(document).ready(function () {
 
     // TODO: remove old unused tabs
-    var body = $('body');
-
-    function activateMenu(path, noPush) {
-        var that = $(this);
-        var i = window.callbackUri.indexOf(path),
-            panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
-            panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
-            item = body.find('.main-menu a[href="' + path + '"]').first();
-
-        // activate the menu
-        body.find('.main-menu .active').removeClass('active');
-        if(item.length > 0) {
-            visits[visits.length] = {path: item[0].pathname, query: item[0].search, hash: item[0].hash, time: (new Date()).toJSON()};
-            if(item.parents('ul.collapse').length != 0 &&
-                item.parents('ul.collapse')[0] != body.find('.main-menu ul.collapse.in')[0])
-                body.find('.main-menu ul.collapse.in').removeClass('in');
-            item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
-        }
-        else
-        {
-            // create a mock link to get the browser to parse pathname, query, and hash
-            var a = document.createElement('a');
-            a.href = path;
-            visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
-        }
-
-        // download the panel
-        if(panel.length == 0) {
-            if(that.is('a') && that.parents('.panel-pane').length > 0)
-                item = item.add(that);
-            item.each(function (i, obj) { loadingAnimation($(obj)); });
-            if(window.sincluding) {
-                setTimeout(function () {
-                    activateMenu.apply(that, [path, noPush]);
-                }, 1000);
-                return;
-            }
-            window.sincluding = true;
-            $.ajax({
-                url: window.callbackPaths[window.callbackKeys[i]],
-                type: 'GET',
-                dataType: 'text',
-                success: function (tab) {
-                    var content = $(tab),
-                        panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
-                        styles = ssMergeStyles(content),
-                        scripts = ssMergeScripts(content);
-                    content = content.not(styles).not(scripts);
-
-                    // don't ever add panes that are already on the page, this is to help with debugging, but should never really happen
-                    if (panelIds.length > 0)
-                        panes = panes.not('#' + panelIds.join(', #'));
-
-                    if (panes.length > 0) {
-                        content.filter('[id]').each(function () {
-                            var id = $(this).attr('id');
-                            if($('#' + id).length > 0)
-                                content = content.not('#' + id);
-                        });
-                        panes.hide().insertBefore(body.find('.footer'));
-                        content.not(panes).insertBefore(body.find('.footer'));
-                        var newPane = content.filter('#' + window.callbackKeys[i]);
-                        if (newPane.length == 0) {
-                            newPane = content.filter('.panel-pane').first();
-                        }
-                        item.find('.squiggle').stop().remove();
-                        activatePanel(newPane, i, noPush, path);
-                        window.sincluding = false;
-                    }
-                },
-                error:function () {
-                    window.sincluding = false;
-                    item.find('.squiggle').stop().remove();
-                }
-            });
-        }
-        // collapse menus and show panel if it is not already visible
-        else if(!panel.is(':visible')) {
-            activatePanel(panel, i, noPush, path);
-        }
-    }
-
-    function activatePanel(panel, i, noPush, path)
-    {
-        body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-        body.find('.modal:visible').modal('hide');
-        body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-        panel.delay(75).fadeIn(75);
-        setTimeout(function () { panel.trigger('show'); }, 100);
-        if(!noPush)
-            window.history.pushState(window.callbackKeys[i], "", path);
-    }
-
-    function loadingAnimation(that)
-    {
-        if(typeof that != 'undefined' && that.length > 0 && that.find('.squiggle').length == 0)
-        {
-            return loadingAnimation.call($('<small class="squiggle">&nbsp;</small>').appendTo(that), that);
-        }
-        else if ($(this).is('.squiggle'))
-        {
-            var width = $(this).parent().outerWidth(true);
-            return $(this).css('width', 0).css('left', 0)
-                .animate({width: width}, 1000, 'swing', function () {
-                    var width = $(this).parent().outerWidth(true);
-                    $(this).css('width', width).css('left', 0)
-                        .animate({left: width, width: 0}, 1000, 'swing', loadingAnimation);
-                });
-        }
-        else if(typeof that != 'undefined')
-            return that.find('.squiggle');
-    }
+    body = $('body');
 
     function expandMenu(evt)
     {

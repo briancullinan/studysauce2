@@ -38,9 +38,45 @@ $(document).ready(function () {
     // used by mini-checkin
     $.fn.setClock = setClock;
 
+    body.on('scheduled', function () {
+        // update classes
+        setTimeout(function () {
+            $.ajax({
+                url: window.callbackPaths['checkin'],
+                type: 'GET',
+                dataType: 'text',
+                success: function (data) {
+                    var content = $(data),
+                        checkin = $('#checkin');
+                    checkin.find('.classes').replaceWith(content.find('.classes'));
+                    if(content.filter('#checkin').is('.demo')) {
+                        checkin.addClass('demo');
+                        $('#checkin-empty').modal();
+                    }
+                    else
+                    {
+                        checkin.removeClass('demo');
+                        $('#checkin-empty').modal('hide');
+                    }
+                }
+            });
+        }, 100);
+    });
     body.on('show', '#checkin,#home', function () {
-        if($(this).is('#checkin'))
-            $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#checkin');
+        if($(this).is('#checkin')) {
+            if(!$(this).is('.loaded')) {
+                $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#checkin');
+                $(this).addClass('loaded');
+            }
+            if($(this).is('.demo'))
+                $('#checkin-empty').modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                    modalOverflow: true
+                });
+            else
+                $('#checkin-empty').modal('hide');
+        }
         setClock()
     });
     body.find('#checkin:visible,#home:visible').trigger('show');
@@ -80,7 +116,7 @@ $(document).ready(function () {
         resetClock();
     }
 
-    function checkinCallback(pos, cid, checkedIn) {
+    function checkinCallback(pos, courseId, checkedIn) {
         var checkin = $('#checkin'),
             checked = [],
             checklist = $('#checklist'),
@@ -95,13 +131,13 @@ $(document).ready(function () {
             data: {
                 checkedIn: checkedIn ? 1 : 0,
                 date: new Date().toJSON(),
-                cid: cid,
+                courseId: courseId,
                 checklist: checked.join(','),
                 location: lat + ',' + lng,
                 csrf_token: checkin.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                var that = body.trigger('checkin').find('.checkin.cid' + data.cid);
+                var that = body.find('.checkin.course-id-' + data.courseId);
                 checkin.find('input[name="csrf_token"]').val(data.csrf_token);
 
                 // update clock
@@ -111,28 +147,31 @@ $(document).ready(function () {
                 }
                 else {
                     that.addClass('checked-in');
-                    $.merge(checklist, sdsmessages).modal('hide').find('.modal-footer').removeClass('invalid');
+                    $.merge(checklist, sdsmessages).modal('hide').removeClass('invalid');
                     startClock();
                 }
 
                 // update SDS
-                sdsmessages.find('.show').removeClass('show');
+                sdsmessages.find('.show').removeClass('show').addClass('hide');
                 if (typeof data.lastSDS != 'undefined')
-                    $('#sds-messages .' + data.lastSDS).addClass('show');
+                    sdsmessages.find('.modal-body > div').eq(data.lastSDS).removeClass('hide').addClass('show');
+                body.trigger('checkin');
+            },
+            error: function () {
+                $.merge(checklist, sdsmessages).removeClass('invalid');
             }
         });
     }
 
-    function sessionBegin(evt, button, cid) {
+    function sessionBegin(evt, button, courseId) {
         var checklist = $('#checklist'),
             sdsmessages = $('#sds-messages');
         evt.preventDefault();
 
         // the default for timer expire is to go to metrics tab
-        $('#timer-expire').off('close').on('close', function (evt) {
+        $('#timer-expire').off('hidden.bs.modal').on('hidden.bs.modal', function (evt) {
             evt.preventDefault();
-            $('#timer-expire').modal();
-            window.location = '#metrics';
+            activateMenu.apply($('#right-panel').find('a[href*="/metrics"]').first(), [window.callbackUri[window.callbackKeys.indexOf('metrics')]]);
         });
 
         if (sdsmessages.find('.show').length > 0)
@@ -147,9 +186,9 @@ $(document).ready(function () {
 
         $.merge(checklist, sdsmessages).off('click', 'a[href="#study"]').on('click', 'a[href="#study"]', function (evt) {
             evt.preventDefault();
-            if($(this).parent().is('.invalid'))
+            if($.merge(checklist, sdsmessages).is('.invalid'))
                 return;
-            $(this).parent().addClass('invalid');
+            $.merge(checklist, sdsmessages).addClass('invalid');
             $('#jquery_jplayer').jPlayer("play");
             //if(typeof navigator.geolocation != 'undefined')
             //{
@@ -157,7 +196,7 @@ $(document).ready(function () {
             //    navigator.geolocation.getCurrentPosition(callback, callback, {maximumAge: 3600000, timeout:1000});
             //}
             //else
-            checkinCallback(null, cid, false);
+            checkinCallback(null, courseId, false);
             button.scrollintoview({padding: {top: 120, bottom: 200, left: 0, right: 0}});
         });
     }
@@ -166,7 +205,7 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var that = $(this),
-            cid = (/cid([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1];
+            courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(that.attr('class'))[1];
 
         // if it is in session always display timer expire
         if (that.is('.checked-in'))
@@ -176,7 +215,7 @@ $(document).ready(function () {
             clock = null;
             resetClock();
             $('#timer-expire').modal();
-            checkinCallback(null, cid, true);
+            checkinCallback(null, courseId, true);
         }
         else if (body.find(checkedInBtn).length > 0)
         {
@@ -187,15 +226,15 @@ $(document).ready(function () {
 
             // switch off other checkin buttons
             var tmpThat = body.find(checkedInBtn).first();
-            checkinCallback(null, (/cid([0-9]+)(\s|$)/ig).exec(tmpThat.attr('class'))[1], true);
+            checkinCallback(null, (/course-id-([0-9]+)(\s|$)/ig).exec(tmpThat.attr('class'))[1], true);
 
             // show expire message
-            $('#timer-expire').off('close').on('close', function (evt) {
-                sessionBegin(evt, that, cid);
+            $('#timer-expire').off('hidden.bs.modal').on('hidden.bs.modal', function (evt) {
+                sessionBegin(evt, that, courseId);
             }).modal();
         }
         else
-            sessionBegin(evt, that, cid);
+            sessionBegin(evt, that, courseId);
     }
 
     // perform ajax call when clicked

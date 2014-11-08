@@ -10,7 +10,7 @@
             </div>
             <?php foreach ($courses as $i => $c) {
                 ?><a href="#class<?php print $i; ?>"
-                     class="checkin class<?php print $i; ?> cid<?php print $c->getId(); ?>">
+                     class="checkin class<?php print $i; ?> course-id-<?php print $c->getId(); ?>">
                 <span><?php print $c->getName(); ?></span></a><?php
             }
         } ?>

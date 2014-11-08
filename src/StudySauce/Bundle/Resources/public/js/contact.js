@@ -21,7 +21,8 @@ $(document).ready(function () {
             },
             success: function () {
                 contact.removeClass('invalid').addClass('valid').modal('hide');
-                contact.find('.name input, .email input, .message textarea"]').val('');
+                contact.find('.message textarea').val('');
+                contact.modal('hide');
             },
             error: function () {
                 contact.removeClass('invalid').addClass('valid');
@@ -41,8 +42,8 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'json',
             data: {
-                firstName: contact.find('.first-name input').val(),
-                lastName: contact.find('.last-name input').val(),
+                first: contact.find('.first-name input').val(),
+                last: contact.find('.last-name input').val(),
                 email: contact.find('.email input').val()
             },
             success: function () {

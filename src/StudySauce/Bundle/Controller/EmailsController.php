@@ -180,19 +180,45 @@ class EmailsController extends Controller
      * @param $properties
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function administratorAction(User $user, $properties)
+    public function administratorAction(User $user = null, $properties)
     {
+        if($user == null)
+            $user = $this->getUser();
+
         /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
+        //$orm = $this->get('doctrine')->getManager();
+        //$fields = $orm->getClassMetadata(get_class($properties))->getFieldNames();
+        //$associations = $orm->getClassMetadata(get_class($properties))->getAssociationNames();
+
         if(is_object($properties))
         {
-            $fields = $orm->getClassMetadata('StudySauce:Product')->getFieldNames();
-            $associations = $orm->getClassMetadata('StudySauce:Product')->getAssociationNames();
-            $class_vars = get_class_vars(get_class($properties));
-            foreach ($class_vars as $name => $value)
-            {
+            $from = get_class($properties);
+            $properties = (array)$properties;
+        }
+        else
+            $from = $this->get('request')->get('_controller');
 
-            }
+        if(is_array($properties)) {
+            $message = Swift_Message::newInstance()
+                ->setSubject('Message from ' . $from)
+                ->setFrom($user->getEmail())
+                ->setTo('admin@studysauce.com')
+                ->setBody(
+                    $this->renderView(
+                        'StudySauceBundle:Emails:administrator.html.php',
+                        [
+                            'link' => '&nbsp;',
+                            'user' => $user,
+                            'properties' => $properties
+                        ]
+                    ),
+                    'text/html'
+                );
+            $headers = $message->getHeaders();
+            $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                            'category' => ['sponsor-invite']])));
+            $mailer = $this->get('mailer');
+            $mailer->send($message);
         }
 
         return new Response();

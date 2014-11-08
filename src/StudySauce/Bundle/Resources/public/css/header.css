@@ -74,8 +74,16 @@
 #partner-message img
 {
     background-color: #EEEEEE;
-    border-radius: 100%;
     min-height: 48px;
+}
+
+#partner-message > div:first-child
+{
+    border-radius: 100%;
+    overflow:hidden;
+    position:relative;
+    height:48px;
+    width:48px;
 }
 
 #partner-message a

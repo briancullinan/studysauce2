@@ -55,28 +55,28 @@ $view['slots']->start('body'); ?>
         <div class="sharpness">
             <h3>On a scale of 0-5 (5 being the best), rate how mentally sharp you feel during the following time periods: <span>Q: 3/3</span></h3>
             <h4>6 AM - 11 AM</h4>
-            <label class="radio"><input name="profile-11am" type="radio" value="0" <?php print ($schedule->getSharp6am11am() == 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
+            <label class="radio"><input name="profile-11am" type="radio" value="0" <?php print ($schedule->getSharp6am11am() === 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
             <label class="radio"><input name="profile-11am" type="radio" value="1" <?php print ($schedule->getSharp6am11am() == 1 ? 'checked="checked"' : ''); ?>><i></i><span>1</span></label>
             <label class="radio"><input name="profile-11am" type="radio" value="2" <?php print ($schedule->getSharp6am11am() == 2 ? 'checked="checked"' : ''); ?>><i></i><span>2</span></label>
             <label class="radio"><input name="profile-11am" type="radio" value="3" <?php print ($schedule->getSharp6am11am() == 3 ? 'checked="checked"' : ''); ?>><i></i><span>3</span></label>
             <label class="radio"><input name="profile-11am" type="radio" value="4" <?php print ($schedule->getSharp6am11am() == 4 ? 'checked="checked"' : ''); ?>><i></i><span>4</span></label>
             <label class="radio"><input name="profile-11am" type="radio" value="5" <?php print ($schedule->getSharp6am11am() == 5 ? 'checked="checked"' : ''); ?>><i></i><span>5</span></label>
             <h4>11 AM - 4 PM</h4>
-            <label class="radio"><input name="profile-4pm" type="radio" value="0" <?php print ($schedule->getSharp11am4pm() == 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
+            <label class="radio"><input name="profile-4pm" type="radio" value="0" <?php print ($schedule->getSharp11am4pm() === 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
             <label class="radio"><input name="profile-4pm" type="radio" value="1" <?php print ($schedule->getSharp11am4pm() == 1 ? 'checked="checked"' : ''); ?>><i></i><span>1</span></label>
             <label class="radio"><input name="profile-4pm" type="radio" value="2" <?php print ($schedule->getSharp11am4pm() == 2 ? 'checked="checked"' : ''); ?>><i></i><span>2</span></label>
             <label class="radio"><input name="profile-4pm" type="radio" value="3" <?php print ($schedule->getSharp11am4pm() == 3 ? 'checked="checked"' : ''); ?>><i></i><span>3</span></label>
             <label class="radio"><input name="profile-4pm" type="radio" value="4" <?php print ($schedule->getSharp11am4pm() == 4 ? 'checked="checked"' : ''); ?>><i></i><span>4</span></label>
             <label class="radio"><input name="profile-4pm" type="radio" value="5" <?php print ($schedule->getSharp11am4pm() == 5 ? 'checked="checked"' : ''); ?>><i></i><span>5</span></label>
             <h4>4 PM - 9 PM</h4>
-            <label class="radio"><input name="profile-9pm" type="radio" value="0" <?php print ($schedule->getSharp4pm9pm() == 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
+            <label class="radio"><input name="profile-9pm" type="radio" value="0" <?php print ($schedule->getSharp4pm9pm() === 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
             <label class="radio"><input name="profile-9pm" type="radio" value="1" <?php print ($schedule->getSharp4pm9pm() == 1 ? 'checked="checked"' : ''); ?>><i></i><span>1</span></label>
             <label class="radio"><input name="profile-9pm" type="radio" value="2" <?php print ($schedule->getSharp4pm9pm() == 2 ? 'checked="checked"' : ''); ?>><i></i><span>2</span></label>
             <label class="radio"><input name="profile-9pm" type="radio" value="3" <?php print ($schedule->getSharp4pm9pm() == 3 ? 'checked="checked"' : ''); ?>><i></i><span>3</span></label>
             <label class="radio"><input name="profile-9pm" type="radio" value="4" <?php print ($schedule->getSharp4pm9pm() == 4 ? 'checked="checked"' : ''); ?>><i></i><span>4</span></label>
             <label class="radio"><input name="profile-9pm" type="radio" value="5" <?php print ($schedule->getSharp4pm9pm() == 5 ? 'checked="checked"' : ''); ?>><i></i><span>5</span></label>
             <h4>9 PM - 2 AM</h4>
-            <label class="radio"><input name="profile-2am" type="radio" value="0" <?php print ($schedule->getSharp9pm2am() == 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
+            <label class="radio"><input name="profile-2am" type="radio" value="0" <?php print ($schedule->getSharp9pm2am() === 0 ? 'checked="checked"' : ''); ?>><i></i><span>0</span></label>
             <label class="radio"><input name="profile-2am" type="radio" value="1" <?php print ($schedule->getSharp9pm2am() == 1 ? 'checked="checked"' : ''); ?>><i></i><span>1</span></label>
             <label class="radio"><input name="profile-2am" type="radio" value="2" <?php print ($schedule->getSharp9pm2am() == 2 ? 'checked="checked"' : ''); ?>><i></i><span>2</span></label>
             <label class="radio"><input name="profile-2am" type="radio" value="3" <?php print ($schedule->getSharp9pm2am() == 3 ? 'checked="checked"' : ''); ?>><i></i><span>3</span></label>

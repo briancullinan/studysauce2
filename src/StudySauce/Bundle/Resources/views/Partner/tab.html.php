@@ -162,7 +162,7 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:partnerInvite'),
+    new ControllerReference('StudySauceBundle:Dialogs:partnerConfirm'),
     ['strategy' => 'sinclude']
 );
 $view['slots']->stop();

@@ -81,6 +81,7 @@ $(document).ready(function () {
                         partner.find('input[name="partner-plupload"]').val(data.fid);
                         partner.find('.plup-filelist .squiggle').stop().remove();
                         partner.find('.plupload img').attr('src', data.src);
+                        body.find('#partner-message img').attr('src', data.src);
                         partnerFunc();
                         partner.find('a[href="#partner-save"]').trigger('click');
                     },
@@ -117,7 +118,9 @@ $(document).ready(function () {
             },
             success: function () {
                 partner.data('state', hash);
-                $('#partner-sent').modal();
+                $('#partner-confirm').modal();
+                body.find('#partner-message > div > span').replaceWith('<span>' + partner.find('.first-name input').val() + ' ' + partner.find('.last-name input').val() + '</span>');
+
                 // update masthead
                 // update masthead picture
             }

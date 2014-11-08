@@ -58,7 +58,7 @@ $(document).ready(function () {
         var svg2 = d3.selectAll($('#pie-chart:visible, .pie-chart:visible').find('svg > g.slices').toArray());
 
         classes = d3.nest()
-            .key(function (d) { return d['cid']; })
+            .key(function (d) { return d['courseId']; })
             .entries(newHistory);
 
         classes.forEach(function (s, j) {
@@ -139,8 +139,8 @@ $(document).ready(function () {
         }
     }
 
-    // update metrics if checkin or checkout occurs
-    body.on('checkin', function () {
+    function updateMetrics()
+    {
         setTimeout(function () {
             $.ajax({
                 url: window.callbackPaths['metrics'],
@@ -167,8 +167,12 @@ $(document).ready(function () {
                     updateHistory(window.initialHistory);
                 }
             });
-        }, 1000);
-    });
+        }, 100);
+    }
+
+    // update metrics if checkin or checkout occurs
+    body.on('scheduled', updateMetrics);
+    body.on('checkin', updateMetrics);
 
     function arcTween(d) {
         var piechart = $('#pie-chart:visible, .pie-chart:visible'),

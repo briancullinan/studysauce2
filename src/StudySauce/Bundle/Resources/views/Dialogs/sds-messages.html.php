@@ -24,26 +24,26 @@
     <h3>Say no to cramming</h3>
     <p>The tragedy of cramming is that it works...sort of.  Cramming does tend to produce short term results, however, the brain has a tendency to immediately “dump” the information shortly after the test.  You will end up having to restudy the material to commit it to long term memory…which can be problematic for your Final Exams…  Not to mention the fact that the material you are studying will most likely need to be used again in a more advanced course.</p>
 </div>
-<div class="switching-location <?php print ($count == -4 ? 'show' : 'hide'); ?>">
+<?php /*<div class="switching-location <?php print ($count == -4 ? 'show' : 'hide'); ?>">
     <h3>Switching your study location</h3>
     <p>Well done!  We see that you have changed your study locations.  You are helping your brain retain the information that you are studying.  Keep it up!</p>
-</div>
+</div> */ ?>
 <div class="repeat-location <?php print ($count == 4 ? 'show' : 'hide'); ?>">
     <h3>Studying from the same location</h3>
     <p>Here is a study tip for you.  We see that you have been studying from the same location when you check in.  We highly recommend you alternate your study locations.  Changing location has shown a significant improvement in memory retention in studies done by cognitive scientists.  According to researchers, the brain associates the material being learned with the environment that the studier is in.  Varied environments allow the brain more opportunities to associate the material with something unique - which in turn increases the likelihood of retention.</p>
 </div>
-<div class="multiple-topics <?php print ($count == -5 ? 'show' : 'hide'); ?>">
+<?php /* <div class="multiple-topics <?php print ($count == -5 ? 'show' : 'hide'); ?>">
     <h3>Multiple topics in a study session</h3>
     <p>Good job!  We see that you have changed your study topics.  You are helping your brain retain the information that you are studying by activating different parts of your brain to solve different types of problems related to different subjects.</p>
-</div>
+</div>*/ ?>
 <div class="same-topics <?php print ($count == 5 ? 'show' : 'hide'); ?>">
     <h3>Study different subjects to maximize effectiveness</h3>
     <p>We have a study tip for you.  We see that you have checked in for the same class two times in a row.  We highly recommend switching up your study materials.  By doing so, you are helping your brain retain the information that you are studying.  This will activate different parts of your brain to solve different types of problems related to different subjects which will be very helpful to keep you fresh for longer study sessions.</p>
 </div>
-<div class="right-length <?php print ($count == 6 ? 'show' : 'hide'); ?>">
+<?php /*<div class="right-length <?php print ($count == -6 ? 'show' : 'hide'); ?>">
     <h3>Ideal study break length</h3>
     <p>Nicely done.  The ideal study break length can vary from person to person, but we encourage a 10-15 minute break.  Try that length break for a while to see if it improves your study performance.</p>
-</div>
+</div> */ ?>
 <div class="too-short <?php print ($count == 6 ? 'show' : 'hide'); ?>">
     <h3>Ideal study break length</h3>
     <p>The ideal study break length can vary from person to person, but we encourage a 10-15 minute break.  Try that length break for a while to see if it improves your study performance.</p>

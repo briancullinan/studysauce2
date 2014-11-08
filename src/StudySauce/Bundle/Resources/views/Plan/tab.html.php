@@ -5,6 +5,12 @@ use StudySauce\Bundle\Entity\User;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use StudySauce\Bundle\Entity\Event;
 
+$isDemo = false;
+if(empty($courses) || !$user->hasRole('ROLE_PAID'))
+{
+    $isDemo = true;
+}
+
 /** @var ArrayCollection $courses */
 /** @var User $user */
 
@@ -70,11 +76,12 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/p
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane" id="plan">
+<div class="panel-pane <?php print ($isDemo ? 'demo' : ''); ?>" id="plan">
     <div class="pane-content">
         <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
-
-        <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
+        <div id="calendar" class="full-only fc fc-ltr fc-unthemed">
+            <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planEmpty')); ?>
+        </div>
         <div class="sort-by clearfix">
             <label>Sort by: </label>
             <label class="radio"><input type="radio" name="plan-sort" value="date"
@@ -177,17 +184,19 @@ $view['slots']->start('body'); ?>
         <a class="return-to-top" href="#return-to-top">Top</a>
         <?php echo $view->render('StudySauceBundle:Plan:strategies.html.php'); ?>
     </div>
-</div>
-<?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro1'));
+</div><?php
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planUpgrade'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro1'));
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro2'),['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro3'),['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro4'),['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents1'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents2'), ['strategy' => 'sinclude']);
 $view['slots']->stop();
 

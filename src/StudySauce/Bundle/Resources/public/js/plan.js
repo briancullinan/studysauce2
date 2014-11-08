@@ -82,11 +82,11 @@ $(document).ready(function () {
                                 }
                                 if (events.length == 0) {
                                     plans.addClass('empty');
-                                    plans.find('#empty-week').dialog();
+                                    $('#plan-empty').modal({backdrop:false});
                                 }
                                 else {
                                     plans.removeClass('empty');
-                                    plans.find('#empty-week').dialog('hide');
+                                    $('#plan-empty').modal('hide');
                                 }
                             };
                         w.setTime(s);
@@ -224,6 +224,43 @@ $(document).ready(function () {
         initialize();
         if($('#calendar:visible').length > 0)
             $('#calendar').fullCalendar('refetchEvents');
+        // TODO: show unpaid dialog
+        if($(this).is('.demo'))
+            $('#plan-upgrade').modal({
+                backdrop: 'static',
+                keyboard: false,
+                modalOverflow: true
+            });
+        else
+            $('#plan-upgrade').modal('hide');
+    });
+
+    body.on('click', 'a[href="#bill-parents"]', function () {
+        $('#plan-upgrade').modal('hide');
+    });
+
+    body.on('hidden.bs.modal', '#bill-parents', function () {
+        if(!$('#plan').is(':visible'))
+            return;
+        $('#plan-upgrade').modal({
+            backdrop: 'static',
+            keyboard: false,
+            modalOverflow: true
+        });
+    });
+
+    body.on('scheduled', function () {
+        // update classes
+        setTimeout(function () {
+            $.ajax({
+                url: window.callbackPaths['plan'],
+                type: 'GET',
+                dataType: 'text',
+                success: function (data) {
+
+                }
+            });
+        }, 100);
     });
     body.find('#plan:visible').trigger('show');
 

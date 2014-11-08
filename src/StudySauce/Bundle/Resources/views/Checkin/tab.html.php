@@ -3,6 +3,13 @@
 use StudySauce\Bundle\Entity\Course;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
+$isDemo = false;
+if(empty($courses))
+{
+    $isDemo = true;
+    $courses = $demoCourses;
+}
+
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
  $view['slots']->start('stylesheets');
@@ -23,25 +30,18 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane" id="checkin">
+<div class="panel-pane <?php print ($isDemo ? 'demo' : ''); ?>" id="checkin">
     <div class="pane-content">
         <h2>Check in.<span class="full-only"> &nbsp;Listen to Mozart. &nbsp;Track your progress.</span></h2>
-
         <p class="classes">
             <?php
-            $isDemo = false;
-            if(empty($courses))
-            {
-                $courses = $demoCourses;
-            }
             foreach($courses as $i => $c)
             {
                 /** @var $c Course */
-                ?><a href="#class<?php print $i; ?>" class="checkin class<?php print $i; ?> cid<?php print $c->getId(); ?>"><span><?php print $c->getName(); ?></span></a><?php
+                ?><a href="#class<?php print $i; ?>" class="checkin class<?php print $i; ?> course-id-<?php print $c->getId(); ?>"><span><?php print $c->getName(); ?></span></a><?php
             }
             ?>
         </p>
-
         <div class="flip-counter flip-clock-wrapper">
             <h3>Take a 10 minute break in 1 hour</h3>
             <?php echo $view->render('StudySauceBundle:Checkin:digits.html.php'); ?>
@@ -66,9 +66,9 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'));
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
 $view['slots']->stop();

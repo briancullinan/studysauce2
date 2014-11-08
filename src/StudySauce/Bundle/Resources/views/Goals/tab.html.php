@@ -10,7 +10,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-
 foreach ($view['assetic']->stylesheets(
     [
         '@StudySauceBundle/Resources/public/css/goals.css'
@@ -21,38 +20,23 @@ foreach ($view['assetic']->stylesheets(
     ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
-
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/goals.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/goals.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-
     <div class="panel-pane" id="goals">
-
         <div class="pane-content">
-
             <h2>Set study goals for self-motivation</h2>
-
             <div class="split-description big-arrow">
                 <h3>The Science of Setting Goals</h3>
-
                 <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/science.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
-
                 <p>According to the Incentive Theory of motivation, using rewards increases the likelihood of repeating
                     the given activity. By incorporating this powerful psychological principle into study behavior,
                     students can incentivize optimal study practices. Studies show that the sooner the reward is given,
@@ -60,21 +44,17 @@ $view['slots']->start('body'); ?>
             </div>
             <div class="split-description">
                 <h3>The Application</h3>
-
                 <span class="site-name"><strong>Study</strong> Sauce</span>
-
                 <p>Study Sauce combines the best study practices with the incentive to change. Knowledge of the harm or
                     benefit of something doesn’t necessarily result in behavioral change (just ask someone that has
                     struggled to quit smoking). Creating meaningful study rewards dramatically increases the likelihood
                     that a student will adopt effective study habits.</p>
             </div>
-
             <header>
                 <label>&nbsp;</label>
                 <label>Goal</label>
                 <label>Reward</label>
             </header>
-
             <div class="goal-row valid <?php print (empty($behavior) ? 'edit' : 'read-only');
             print (empty($behavior) ? '' : (' gid' . $behavior->getId())); ?>">
                 <div class="type"><strong>Study Hours</strong></div>
@@ -90,7 +70,7 @@ $view['slots']->start('body'); ?>
                             <option value="10" <?php print (!empty($behavior) && $behavior->getGoal() == 10 ? 'selected="selected"' : ''); ?>>10</option>
                             <option value="5" <?php print (!empty($behavior) && $behavior->getGoal() == 5 ? 'selected="selected"' : ''); ?>>5</option>
                         </select>
-                        hours per week
+                        study hours per week
                     </label>
                 </div>
                 <div class="reward">
@@ -104,7 +84,7 @@ $view['slots']->start('body'); ?>
                     <a class="more" href="#claim">Brag</a>
                 </div>
             </div>
-            <div class="goal-row valid <?php print (empty($behavior) ? ' hide' : '');
+            <div class="goal-row valid <?php
             print (empty($milestone) ? ' edit' : 'read-only');
             print (empty($milestone) ? '' : (' gid' . $milestone->getId())); ?>">
                 <div class="type"><strong>Study Milestone</strong></div>
@@ -135,7 +115,7 @@ $view['slots']->start('body'); ?>
                     <a class="more" href="#claim">Brag</a>
                 </div>
             </div>
-            <div class="goal-row valid <?php print (empty($milestone) ? ' hide' : '');
+            <div class="goal-row valid <?php
             print (empty($outcome) ? ' edit' : 'read-only');
             print (empty($outcome) ? '' : (' gid' . $outcome->getId())); ?>">
                 <div class="type"><strong>Study Outcome</strong></div>
@@ -172,7 +152,6 @@ $view['slots']->start('body'); ?>
                     <a class="more" href="#claim" data-target="#claim">Brag</a>
                 </div>
             </div>
-
             <p class="highlighted-link form-actions invalid" <?php print (!empty($outcome) ? 'style="visibility:hidden;"' : ''); ?>>
                 <a href="#save-goal" class="more">Save</a>
             </p>
@@ -180,7 +159,6 @@ $view['slots']->start('body'); ?>
             <div id="achievements" class="clearfix">
                 <?php echo $view->render('StudySauceBundle:Goals:claims.html.php', ['claims' => $claims]); ?>
             </div>
-
             <!--
             <div id="read-more-incentives">
                 <img src="/sites/studysauce.com/themes/successinc/images/science.png">
@@ -189,12 +167,9 @@ $view['slots']->start('body'); ?>
                 <a href="#read-more">read more</a>
             </div>
             -->
-
             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         </div>
-
     </div>
-
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');

@@ -87,7 +87,7 @@ class CheckinController extends Controller
     public function updateAction(Request $request)
     {
         // record checkin time
-        $cid = $request->get('cid');
+        $courseId = $request->get('courseId');
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
@@ -96,8 +96,8 @@ class CheckinController extends Controller
         $schedule = $user->getSchedules()->first();
 
         /** @var $course Course */
-        $course = $schedule->getCourses()->filter(function (Course $b) use ($cid) {
-                return $b->getType() == 'c' && $b->getId() == $cid;
+        $course = $schedule->getCourses()->filter(function (Course $b) use ($courseId) {
+                return $b->getType() == 'c' && $b->getId() == $courseId;
             })->first();
         if($request->get('checkedIn'))
         {
@@ -122,7 +122,9 @@ class CheckinController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
             : null;
 
-        return new JsonResponse(['cid' => $cid, 'csrf_token' => $csrfToken]);
+        $count = array_sum(array_map(function (Course $c) {return $c->getCheckins()->count(); }, $schedule->getCourses()->toArray()));
+
+        return new JsonResponse(['courseId' => $courseId, 'lastSDS' => $count, 'csrf_token' => $csrfToken]);
     }
 }
 

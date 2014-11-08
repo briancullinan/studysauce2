@@ -85,19 +85,19 @@ class PartnerController extends Controller
         $partner->setLast($request->get('last'));
         $partner->setPermissions(explode(',', $request->get('permissions')));
 
-        if($shouldSend)
-        {
-            $email = new EmailsController();
-            $email->setContainer($this->container);
-            $email->partnerInviteAction($user, $partner);
-        }
-
         // save the entity
         if($isNew)
             $orm->persist($partner);
         else
             $orm->merge($partner);
         $orm->flush();
+
+        if($shouldSend)
+        {
+            $email = new EmailsController();
+            $email->setContainer($this->container);
+            $email->partnerInviteAction($user, $partner);
+        }
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')

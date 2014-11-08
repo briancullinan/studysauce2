@@ -12,6 +12,26 @@
     display:none;
 }
 
+#plan-empty
+{
+    position: relative;
+}
+
+#metrics-empty .close
+{
+    display: none;
+}
+
+#plan-upgrade .close
+{
+    display: none;
+}
+
+#checkin-empty .close
+{
+    display: none;
+}
+
 .modal-dialog
 {
     width:600px;

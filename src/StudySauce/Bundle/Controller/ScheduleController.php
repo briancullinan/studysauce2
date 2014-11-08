@@ -390,17 +390,17 @@ class ScheduleController extends Controller
         $renamed = [];
         foreach ($classes as $j => $c) {
             // check if class entity already exists
-            if (empty($c['cid'])) {
+            if (empty($c['courseId'])) {
                 $course = new Course();
                 $course->setSchedule($schedule);
                 $course->setName($c['className']);
             } else {
                 /** @var $course Course */
-                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {return $x->getId() == $c['cid'];})->first();
+                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {return $x->getId() == $c['courseId'];})->first();
                 // figure out what changed
                 if ($course->getName() != $c['className']) {
                     // remove old reoccurring events
-                    $renamed[$c['cid']] = $course->getName();
+                    $renamed[$c['courseId']] = $course->getName();
                     $course->setName($c['className']);
                 }
             }
@@ -466,7 +466,7 @@ class ScheduleController extends Controller
             $course->setStartTime(new \DateTime($c['start']));
             $course->setEndTime(new \DateTime($c['end']));
 
-            if (empty($c['cid'])) {
+            if (empty($c['courseId'])) {
                 // save course
                 $schedule->addCourse($course);
 

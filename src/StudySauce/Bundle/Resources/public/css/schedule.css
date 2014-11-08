@@ -103,11 +103,6 @@
     padding: 0 2px;
 }
 
-.schedule .day-of-the-week label
-{
-    margin: 5px -2px;
-}
-
 .schedule .class-row label span
 {
     display:none;

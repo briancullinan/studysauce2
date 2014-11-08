@@ -68,32 +68,13 @@ class ProfileController extends Controller
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first() ?: new Schedule();
 
-        if(!empty($request->get('grades')) || !empty($request->get('weekends')) || !empty($request->get('6-am-11-am')) ||
-            !empty($request->get('11-am-4-pm')) || !empty($request->get('4-pm-9-pm')) || !empty($request->get('9-pm-2-am'))) {
-            if (!empty($request->get('grades'))) {
-                $schedule->setGrades($request->get('grades'));
-            }
-
-            if (!empty($request->get('weekends'))) {
-                $schedule->setWeekends($request->get('weekends'));
-            }
-
-            if (!empty($request->get('6-am-11-am'))) {
-                $schedule->setSharp6am11am($request->get('6-am-11-am'));
-            }
-
-            if (!empty($request->get('11-am-4-pm'))) {
-                $schedule->setSharp11am4pm($request->get('11-am-4-pm'));
-            }
-
-            if (!empty($request->get('4-pm-9-pm'))) {
-                $schedule->setSharp4pm9pm($request->get('4-pm-9-pm'));
-            }
-
-            if (!empty($request->get('9-pm-2-am'))) {
-                $schedule->setSharp9pm2am($request->get('9-pm-2-am'));
-            }
-
+        if(!empty($request->get('grades')) && !empty($request->get('weekends'))) {
+            $schedule->setGrades($request->get('grades'));
+            $schedule->setWeekends($request->get('weekends'));
+            $schedule->setSharp6am11am($request->get('6-am-11-am'));
+            $schedule->setSharp11am4pm($request->get('11-am-4-pm'));
+            $schedule->setSharp4pm9pm($request->get('4-pm-9-pm'));
+            $schedule->setSharp9pm2am($request->get('9-pm-2-am'));
             $orm->merge($schedule);
             $orm->flush();
         }

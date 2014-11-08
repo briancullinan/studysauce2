@@ -73,10 +73,20 @@ aside + .panel-pane,
     vertical-align: top;
     display:inline-block;
     margin:0 -2px;
-    padding: 0 2px;
+    padding: 5px 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.session-row > * label,
+#schedule header > * label,
+.class-row > * label,
+#deadlines header > * label,
+.deadline-row > * label
+{
+    margin-top:0;
+    margin-bottom:0;
 }
 
 #customization .study-types h4 span,
@@ -216,7 +226,6 @@ a[href="#remove-deadline"]:hover
     color:#555555;
     z-index: 10;
     padding-top:150px;
-    text-shadow: 0 0 5px rgba(0, 144, 192, .75);
 }
 
 .plupload input

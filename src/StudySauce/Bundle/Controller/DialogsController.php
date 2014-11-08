@@ -66,9 +66,9 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnerInviteAction()
+    public function partnerConfirmAction()
     {
-        return $this->render('StudySauceBundle:Dialogs:partner-invite.html.php', ['id' => 'invite-sent']);
+        return $this->render('StudySauceBundle:Dialogs:partner-confirm.html.php', ['id' => 'partner-confirm']);
     }
 
     /**
@@ -137,6 +137,22 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function planEmptyAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function planUpgradeAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:plan-upgrade.html.php', ['id' => 'plan-upgrade']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function planIntro1Action()
     {
         return $this->render('StudySauceBundle:Dialogs:plan-intro-1.html.php', ['id' => 'plan-intro-1']);
@@ -194,8 +210,8 @@ class DialogsController extends Controller
         // save the invite
         $bill = new ParentInvite();
         $bill->setUser($user);
-        $bill->setFirst($request->get('firstName'));
-        $bill->setLast($request->get('lastName'));
+        $bill->setFirst($request->get('first'));
+        $bill->setLast($request->get('last'));
         $bill->setEmail($request->get('email'));
         $bill->setCode(md5(microtime(true)));
 

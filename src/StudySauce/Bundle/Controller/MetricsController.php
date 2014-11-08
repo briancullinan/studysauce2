@@ -117,13 +117,13 @@ class MetricsController extends Controller
                 $length = 60;
 
             // since we are already in order by time, sum up the other lengths on this day
-            $cid = $c->getCourse()->getId();
+            $courseId = $c->getCourse()->getId();
 
             $times[] = [
                 'time' => $t,
                 'length' => $length,
                 'class' => $c->getCourse()->getName(),
-                'cid' => $cid
+                'courseId' => $courseId
             ];
 
             $total += $length;
@@ -135,21 +135,21 @@ class MetricsController extends Controller
 
         foreach($times as $i => $t)
         {
-            $cid = $t['cid'];
+            $courseId = $t['courseId'];
             $date = new \DateTime();
             $date->setTimestamp($t['time']);
             $date->setTime(0, 0, 0);
             $date = $date->add(new \DateInterval('P1D'));
             $g = $date->format('W');
-            if(!isset($timeGroups[$g][$cid][0]))
+            if(!isset($timeGroups[$g][$courseId][0]))
             {
                 $length0 = 0;
             }
             else
             {
-                $length0 = array_sum($timeGroups[$g][$cid]);
+                $length0 = array_sum($timeGroups[$g][$courseId]);
             }
-            $timeGroups[$g][$cid][] = $t['length'];
+            $timeGroups[$g][$courseId][] = $t['length'];
             $times[$i]['length0'] = $length0;
         }
 
@@ -164,7 +164,7 @@ class MetricsController extends Controller
     {
         // sort by class then time
         $classes = array_map(function ($x) use ($ids) {
-                return array_search($x['cid'], array_values($ids));
+                return array_search($x['courseId'], array_values($ids));
             }, (array)$times);
         $ts = array_map(function ($x) {
                 $x = (array)$x;

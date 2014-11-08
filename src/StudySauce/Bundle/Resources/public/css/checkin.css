@@ -382,7 +382,9 @@
 
     #sds-messages img
     {
-        display:none;
+        left:50%;
+        opacity: .25;
+        margin-left:-64px;
     }
 
     .checkin-widget > a, #checkin .classes a

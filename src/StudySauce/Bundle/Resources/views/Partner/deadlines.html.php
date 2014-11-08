@@ -91,9 +91,9 @@ $view['slots']->start('body'); ?>
                 }
 
                 ?>
-                <div
-                    class="deadline-row first valid <?php print ($isDemo ? 'edit' : 'read-only'); ?>  cid<?php print (!empty($d->getCourse(
-                    )) ? $d->getCourse()->getId() : ''); ?>"
+                <div class="deadline-row first valid <?php
+                print ($isDemo ? ' edit' : ' read-only');
+                print (!empty($d->getCourse()) ? ('course-id-' . $d->getCourse()->getId()) : ''); ?>"
                     id="eid-<?php print ($isDemo ? '' : $d->getId()); ?>">
                     <div class="class-name">
                         <label class="select">

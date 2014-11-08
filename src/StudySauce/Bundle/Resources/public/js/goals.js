@@ -15,11 +15,16 @@ $(document).ready(function () {
             else
                 row.removeClass('invalid').addClass('valid');
         });
-        if(goals.find('.goal-row.valid.edit:visible, .goal-row.edit.valid:visible').length > 0)
+        if(goals.find('.goal-row:visible:not(.invalid)').length == 3)
             goals.find('.form-actions').removeClass('invalid').addClass('valid');
         else
             goals.find('.form-actions').removeClass('valid').addClass('invalid');
     }
+
+    body.on('show', '#goals', function () {
+        var goals = $('#goals');
+        goalsFunc.apply(goals.find('.goal-row:visible'));
+    });
 
     body.on('click', '#goals a[href="#claim"]', function (evt) {
         evt.preventDefault();
@@ -132,7 +137,8 @@ $(document).ready(function () {
                 goals.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
 
                 goals.find('.goal-row').remove();
-                if($(response).find('.goal-row').insertAfter(goals.find('header')).length == 3)
+                var rows = $(response).find('.goal-row').insertAfter(goals.find('header'));
+                if(rows.filter(':visible:not(.edit)').length == 3)
                     goals.find('.form-actions').css('visibility', 'hidden');
                 else
                     goals.find('.form-actions').css('visibility', 'visible');
@@ -144,8 +150,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    goalsFunc.apply(goals.find('.goal-row'));
 
     body.on('click', '#claim a[href="#submit-claim"]', function (evt) {
         evt.preventDefault();

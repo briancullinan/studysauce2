@@ -84,6 +84,13 @@ $(document).ready(function () {
     $(window).resize(function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
     });
+    body.on('show', '.course1.step1', function () {
+        if(!$(this).is('.loaded'))
+        {
+            $(this).addClass('loaded');
+            onYouTubeIframeAPIReady.apply(this);
+        }
+    });
     body.on('hide', '.course1.step1', function () {
         $(window.players).each(function (z) {
             if($(this.d).is('.course1.step1 iframe'))

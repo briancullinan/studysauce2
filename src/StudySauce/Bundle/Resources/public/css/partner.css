@@ -43,7 +43,7 @@
 
 #partner .plupload .plup-select
 {
-    padding-top:230px;
+    padding-top:100%;
     color:#ffffff;
 }
 
@@ -56,22 +56,21 @@
 #partner-invite
 {
     overflow: visible;
-    padding: 80px 352px 80px 202px;
-    margin: 0 -352px 0 -202px;
+    padding: 80px 302px 80px 252px;
+    margin: 0 -302px 0 -252px;
     width: 100%;
 }
 
 #partner .permissions
 {
-    width: 350px;
+    width: 300px;
 }
 
 #partner .plupload
 {
     overflow: hidden;
     text-align: center;
-    width: 200px;
-    max-width: 200px;
+    width: 250px;
 }
 
 #partner .plupload img

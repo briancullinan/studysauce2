@@ -94,7 +94,7 @@ $view['slots']->start('body'); ?>
             ?>
             <div class="deadline-row first invalid <?php
             print ($isDemo ? 'edit' : 'read-only');
-            print (!empty($d->getCourse()) ? (' cid' . $d->getCourse()->getId()) : '');
+            print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
             print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : '');
             print (' deadline-id-' . $d->getId()); ?>">
             <div class="class-name">

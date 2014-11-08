@@ -156,8 +156,8 @@ hwi_oauth:
                 display: popup #dialog is optimized for popup window
             paths:
                 realname:  ["first_name", "last_name"]
-                lastName: last_name
-                firstName: first_name
+                last: last_name
+                first: first_name
         google:
             type:                google
             client_id:           648236823314.apps.googleusercontent.com
@@ -166,8 +166,8 @@ hwi_oauth:
             user_response_class: StudySauce\Bundle\Security\PathUserResponse
             paths:
                 realname:  ["given_name", "family_name"]
-                lastName: family_name
-                firstName: given_name
+                last: family_name
+                first: given_name
 
     http_client:
         timeout:       10 # Time in seconds, after library will shutdown request, by default: 5

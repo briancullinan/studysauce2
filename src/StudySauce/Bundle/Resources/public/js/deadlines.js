@@ -89,7 +89,7 @@ $(document).ready(function () {
                 reminders = row.find('.reminder input:checked').map(function (i, x) {return $(x).val();}).get();
             dates[dates.length] = {
                 eid: deadlineId,
-                cid: row.find('.class-name select').val(),
+                courseId: row.find('.class-name select').val(),
                 assignment: row.find('.assignment input').val(),
                 reminders: reminders.join(','),
                 due: row.find('.due-date input').val(),
@@ -176,14 +176,14 @@ $(document).ready(function () {
             var head = jQuery(this);
             head.nextUntil('*:not(.deadline-row)').each(function () {
                 var row = jQuery(this),
-                    cid = (/cid([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1],
+                    courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1],
                     that = row.find('.class-name .read-only');
                 // TODO: fix this to not rely on name
-                if(typeof headings[cid] == 'undefined')
-                    headings[cid] = row;
+                if(typeof headings[courseId] == 'undefined')
+                    headings[courseId] = row;
                 else
-                    headings[cid] = jQuery.merge(headings[cid], row);
-                that.html(that.html().replace(cid, head.text().trim()));
+                    headings[courseId] = jQuery.merge(headings[courseId], row);
+                that.html(that.html().replace(courseId, head.text().trim()));
             });
         });
         var rows = [];

@@ -11,16 +11,16 @@ class PathUserResponse extends \HWI\Bundle\OAuthBundle\OAuth\Response\PathUserRe
     /**
      * @return null|string
      */
-    public function getFirstName()
+    public function getFirst()
     {
-        return $this->getValueForPath('firstName');
+        return $this->getValueForPath('first');
     }
 
     /**
      * @return null|string
      */
-    public function getLastName()
+    public function getLast()
     {
-        return $this->getValueForPath('lastName');
+        return $this->getValueForPath('last');
     }
 }

@@ -110,6 +110,8 @@ class BuyController extends Controller
             $subscription->billToCountry = $request->get('country');
             $subscription->totalOccurrences = 9999;
 
+            // TODO: if there is a duplicate subscription, increase the price
+
             // Create the subscription.
             $request = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
             $request->setSandbox(false);

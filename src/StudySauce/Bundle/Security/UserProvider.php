@@ -62,8 +62,8 @@ class UserProvider extends BaseClass
         if (null !== $previousUser = $this->userManager->findUserBy([$property => $username])) {
             $previousUser->$setter_id(null);
             $previousUser->$setter_token(null);
-            $user->setFirst($response->getFirstName());
-            $user->setLast($response->getLastName());
+            $user->setFirst($response->getFirst());
+            $user->setLast($response->getLast());
             $this->userManager->updateUser($previousUser);
         }
 
@@ -100,8 +100,8 @@ class UserProvider extends BaseClass
             $factory = $this->encoderFactory->getEncoder($user);
             $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
             $user->setEnabled(true);
-            $user->setFirst($response->getFirstName());
-            $user->setLast($response->getLastName());
+            $user->setFirst($response->getFirst());
+            $user->setLast($response->getLast());
             $this->userManager->updateUser($user);
             return $user;
         }

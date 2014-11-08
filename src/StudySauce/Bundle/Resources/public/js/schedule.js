@@ -228,6 +228,8 @@ $(document).ready(function () {
             .appendTo($('.schedule.other'));
 
         planFunc.apply(schedule.find('.schedule .class-row'));
+
+        body.trigger('scheduled');
     }
 
     body.on('click', '#schedule a[href="#add-class"], #schedule a[href="#add-other"]', function (evt) {
@@ -272,11 +274,11 @@ $(document).ready(function () {
         schedule.find('.form-actions').removeClass('valid').addClass('invalid');
 
         var classes = [];
-        schedule.find('.class-row.edit.valid:visible, .class-row.valid.edit:visible').each(function () {
+        schedule.find('.class-row.edit:visible:not(.invalid):not(.blank)').each(function () {
             var row = $(this),
                 dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
             classes[classes.length] = {
-                cid: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
+                courseId: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
                 className: row.find('.class-name input').val(),
                 dotw: dotw.join(','),
                 start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
@@ -402,6 +404,8 @@ $(document).ready(function () {
             select.ready(function () {
                 select[0].selectize.setValue(schedule.find('.university input').val());
             });
+            if(schedule.find('.university input').val().trim() == '')
+                select[0].selectize.focus();
         }
         planFunc.apply(schedule.find('.schedule .class-row'));
     });

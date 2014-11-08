@@ -143,11 +143,12 @@ class DeadlinesController extends Controller
             $request->get('due') && $request->get('percent')) {
             $dates[] = [
                 'eid' => isset($_POST['eid']) ? $_POST['eid'] : null,
-                'className' => $_POST['className'],
-                'assignment' => $_POST['assignment'],
-                'reminders' => $_POST['reminders'],
-                'due' => $_POST['due'],
-                'percent' => $_POST['percent']
+                'courseId' => $request->get('courseId'),
+                'className' => $request->get('className'),
+                'assignment' => $request->get('assignment'),
+                'reminders' => $request->get('reminders'),
+                'due' => $request->get('due'),
+                'percent' => $request->get('percent')
             ];
         }
 
@@ -173,7 +174,7 @@ class DeadlinesController extends Controller
             }
 
             $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
-                    return $c->getId() == $d['cid'];})->first();
+                    return $c->getId() == $d['courseId'];})->first();
             $deadline->setCourse(empty($course) ? null : $course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));

@@ -2,7 +2,7 @@ window.sincluding = false;
 window.visits = [];
 window.players = [];
 function onYouTubeIframeAPIReady() {
-    var frames = $('iframe[src*="youtube.com/embed"]');
+    var frames = $(this).find('iframe[src*="youtube.com/embed"]');
     var players = [];
     frames.each(function () {
         players[players.length] = new YT.Player($(this).attr('id'), {
