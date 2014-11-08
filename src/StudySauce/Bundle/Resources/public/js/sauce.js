@@ -70,36 +70,32 @@ function ssMergeScripts(content)
 }
 
 $(document).ready(function () {
+    window.sincluding = true;
     $('.sinclude').each(function () {
         var that = $(this),
             url = that.attr('data-src');
-        setTimeout(function () {
-            window.sincluding = true;
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'text',
-                success: function (data)
-                {
-                    var newStuff = $(data),
-                        styles = ssMergeStyles(newStuff),
-                        scripts = ssMergeScripts(newStuff);
-                    newStuff = newStuff.not(styles).not(scripts);
-                    // do not merge top level items with IDs that already exist
-                    newStuff.filter('[id]').each(function () {
-                        var id = $(this).attr('id');
-                        if($('#' + id).length > 0)
-                            newStuff = newStuff.not('#' + id);
-                    });
-                    that.replaceWith(newStuff);
-                    setTimeout(function () {newStuff.filter('[id]').trigger('loaded');}, 100);
-                    window.sincluding = false;
-                },
-                error: function () {
-                    window.sincluding = false;
-                }
-            });
-        }, 100);
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'text',
+            success: function (data)
+            {
+                var newStuff = $(data),
+                    styles = ssMergeStyles(newStuff),
+                    scripts = ssMergeScripts(newStuff);
+                newStuff = newStuff.not(styles).not(scripts);
+                // do not merge top level items with IDs that already exist
+                newStuff.filter('[id]').each(function () {
+                    var id = $(this).attr('id');
+                    if($('#' + id).length > 0)
+                        newStuff = newStuff.not('#' + id);
+                });
+                that.replaceWith(newStuff);
+                setTimeout(function () {newStuff.filter('[id]').trigger('loaded');}, 100);
+            },
+            error: function () {
+            }
+        });
     });
 });
 
