@@ -82,6 +82,14 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function deadlinesEmptyAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:deadlines-empty.html.php', ['id' => 'deadlines-empty']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function sdsMessagesAction()
     {
         // get the total number of checkins

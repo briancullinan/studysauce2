@@ -70,8 +70,9 @@ jQuery(document).ready(function($) {
             },
             success: function (data) {
                 // this should redirect anyways
-                if(typeof data.error != 'undefined')
+                if(typeof data.error != 'undefined') {
                     checkout.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
+                }
             }
         });
     });

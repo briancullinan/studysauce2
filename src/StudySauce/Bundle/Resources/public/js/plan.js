@@ -218,13 +218,12 @@ $(document).ready(function () {
     }
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
-    //   we will activate the calendar only once, when the menu is clicked, this assumes #hash detection works, and
-    //   it triggers the menu clicking
+    //   we will activate the calendar only once, when the menu is clicked
     body.on('show', '#plan', function () {
         initialize();
         if($('#calendar:visible').length > 0)
             $('#calendar').fullCalendar('refetchEvents');
-        // TODO: show unpaid dialog
+        // show unpaid dialog
         if($(this).is('.demo'))
             $('#plan-upgrade').modal({
                 backdrop: 'static',

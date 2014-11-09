@@ -1,11 +1,13 @@
 <?php use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
+/** @var @var User $user */
+$user = $app->getUser();
+
  echo $view['actions']->render(new ControllerReference('StudySauceBundle:Course:menu')); ?>
 
 <aside id="right-panel" class="collapsed">
     <nav>
         <a href="#expand"><span class="navbar-toggle">Study Tools</span></a>
-
         <ul class="main-menu">
             <li><a href="#collapse">Hide</a><h3>Study Tools</h3></li>
             <li><a href="<?php print $view['router']->generate('home'); ?>"><span>&nbsp;</span>Home</a></li>
@@ -16,8 +18,8 @@
             <li><a href="<?php print $view['router']->generate('metrics'); ?>"><span>&nbsp;</span>Study metrics</a></li>
             <li><a href="<?php print $view['router']->generate('partner'); ?>"><span>&nbsp;</span>Accountability partner</a></li>
             <li><a href="<?php print $view['router']->generate('premium'); ?>"><span>&nbsp;</span>Premium</a></li>
-            <li><a href="<?php print $view['router']->generate('plan'); ?>"><span>&nbsp;</span>Study plan <sup class="premium">Premium</sup></a></li>
-            <li><a href="<?php print $view['router']->generate('profile'); ?>"><span>&nbsp;</span>Study profile <sup class="premium">Premium</sup></a></li>
+            <li><a href="<?php print $view['router']->generate('plan'); ?>"><span>&nbsp;</span>Study plan<?php if(!$user->hasRole('ROLE_PAID')) { ?> <sup class="premium">Premium</sup><?php } ?></a></li>
+            <li><a href="<?php print $view['router']->generate('profile'); ?>"><span>&nbsp;</span>Study profile<?php if(!$user->hasRole('ROLE_PAID')) { ?> <sup class="premium">Premium</sup><?php } ?></a></li>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>
             <li><h3>Coming soon</h3></li>
             <li><a href="#midterm"><span>&nbsp;</span>Midterm/final planner</a></li>

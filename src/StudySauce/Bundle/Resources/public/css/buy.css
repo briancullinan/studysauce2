@@ -24,10 +24,12 @@
 
 #checkout .form-actions .error
 {
-    font-weight: bold;
-    color: #CC0000;
-    display:block;
-    text-align: center;
+    clear: both;
+    position: relative;
+    padding: 2px 3px;
+    border: 2px solid #CC0000;
+    color:#660000;
+    border-radius: 5px;
 }
 
 #payment-pane .fieldset-description a

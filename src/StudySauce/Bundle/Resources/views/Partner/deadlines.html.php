@@ -93,18 +93,19 @@ $view['slots']->start('body'); ?>
                 ?>
                 <div class="deadline-row first valid <?php
                 print ($isDemo ? ' edit' : ' read-only');
-                print (!empty($d->getCourse()) ? ('course-id-' . $d->getCourse()->getId()) : ''); ?>"
-                    id="eid-<?php print ($isDemo ? '' : $d->getId()); ?>">
+                print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
+                print 'deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
                     <div class="class-name">
                         <label class="select">
                             <span>Class name</span>
+                            <i class="class<?php print $classI; ?>"></i>
                             <select>
                                 <option value="_none" <?php print ($isDemo || empty($d->getCourse(
                                 )) ? 'selected="selected"' : ''); ?>>- Select a class -
                                 </option>
                                 <?php
                                 $found = false;
-                                foreach ($isDemo ? $demoCourses : $courses as $c):
+                                foreach (empty($courses) ? $demoCourses : $courses as $c):
                                     $found = true;
                                     /** @var $c Course */
                                     ?>

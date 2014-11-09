@@ -1169,6 +1169,7 @@
         padding-bottom:0;
         background:transparent none;
         color:#ffffff;
+        border-color:transparent;
     }
 
     #left-panel.expanded

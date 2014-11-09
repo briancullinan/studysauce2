@@ -1,6 +1,13 @@
 <?php
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+
+$isDemo = false;
+if (empty($deadlines) || empty($courses)) {
+    $isDemo = true;
+    $deadlines = $demoDeadlines;
+}
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -30,12 +37,6 @@ foreach ($view['assetic']->javascripts(
 <?php endforeach;
 $view['slots']->stop();
 
-$isDemo = false;
-if (empty($deadlines) || empty($courses)) {
-    $isDemo = true;
-    $deadlines = $demoDeadlines;
-}
-
 $view['slots']->start('row-headings'); ?>
 <div class="highlighted-link form-actions invalid">
     <a href="#add-deadline">Add <span>+</span> class</a>
@@ -59,7 +60,7 @@ $view['slots']->start('row-headings'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane" id="deadlines">
+<div class="panel-pane <?php print ($isDemo ? ' empty' : ''); ?>" id="deadlines">
     <div class="pane-content">
         <h2>Enter important dates and we will send you email reminders</h2>
         <?php
@@ -100,11 +101,12 @@ $view['slots']->start('body'); ?>
             <div class="class-name">
                 <label class="select">
                     <span>Class name</span>
-                    <i class="class<?php print $classI; ?>"></i><select>
+                    <i class="class<?php print $classI; ?>"></i>
+                    <select>
                         <option value="" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                         <?php
                         $found = false;
-                        foreach ($isDemo ? $demoCourses : $courses as $c):
+                        foreach ($courses as $c):
                             $found = true;
                             /** @var $c Course */
                             ?>
@@ -177,5 +179,8 @@ $view['slots']->start('body'); ?>
         </div>
     </div>
 </div>
+<?php $view['slots']->stop();
 
-<?php $view['slots']->stop(); ?>
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deadlinesEmpty'));
+$view['slots']->stop();

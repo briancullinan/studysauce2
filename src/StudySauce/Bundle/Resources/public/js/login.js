@@ -35,8 +35,6 @@ jQuery(document).ready(function() {
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
 
-        account.find('.password').removeClass('passwordError');
-
         jQuery.ajax({
             url:window.callbackPaths['account_auth'],
             type: 'POST',
@@ -51,7 +49,7 @@ jQuery(document).ready(function() {
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 if(typeof data.redirect != 'undefined' && (/\/login/i).test(data.redirect))
                 {
-                    account.find('.password').addClass('passwordError');
+                    account.find('.form-actions').prepend($('<span class="error">Invalid password</span>'));
                 }
                 account.find('.password input').val('');
             }

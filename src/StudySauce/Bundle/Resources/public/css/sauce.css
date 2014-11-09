@@ -21,7 +21,6 @@ html, body
     vertical-align: baseline;
     text-align: justify;
     position:relative;
-    height:auto;
     width:auto;
     left:0;
 }
@@ -29,6 +28,7 @@ html, body
 body
 {
     transition: left linear .15s;
+    height:auto;
 }
 
 html, body,

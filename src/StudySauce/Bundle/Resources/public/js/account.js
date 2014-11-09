@@ -6,7 +6,8 @@ jQuery(document).ready(function() {
     {
         var account = jQuery('#account');
         return account.find('.first-name input').val().trim() + account.find('.last-name input').val().trim() +
-            account.find('.email input').val().trim() + account.find('.new-password input').val();
+            account.find('.email input').val().trim() + account.find('.password input').val() +
+            account.find('.new-password input').val();
     }
 
     function accountFunc() {
@@ -14,6 +15,7 @@ jQuery(document).ready(function() {
         var valid = true;
 
         if (getHash() == account.data('state') ||
+            account.find('.password input').val() == '' ||
             account.find('.first-name input').val() == '' ||
             account.find('.last-name input').val() == '' ||
             account.find('.email input').val().trim() == '' ||
@@ -22,15 +24,16 @@ jQuery(document).ready(function() {
 
         if (!valid)
             account.find('.form-actions').removeClass('valid').addClass('invalid');
-        else
+        else {
             account.find('.form-actions').removeClass('invalid').addClass('valid');
+            account.find('.form-actions .error').remove();
+        }
     }
     body.on('show', '#account', function () {
         $(this).data('state', getHash());
         accountFunc();
     });
     body.find('#account:visible').trigger('show');
-
     body.on('change', '#account .first-name input, #account .last-name input, #account .email input, ' +
         '#account .password input, #account .new-password input', accountFunc);
     body.on('keyup', '#account .first-name input, #account .last-name input, #account .email input, ' +
@@ -44,12 +47,16 @@ jQuery(document).ready(function() {
         account.find('.account-info').removeClass('read-only').addClass('edit');
         account.find('.password').css('visibility', 'visible');
         account.find('.new-password').css('visibility', 'hidden');
+        account.find('.edit-icons').toggle();
+        account.find('a[href="#save-account"]').toggle();
     });
 
     body.on('click', '#account a[href="#edit-password"]', function (evt) {
         var account = jQuery('#account');
         evt.preventDefault();
         account.find('.password,.new-password').css('visibility', 'visible');
+        account.find('.edit-icons').toggle();
+        account.find('a[href="#save-account"]').toggle();
     });
 
     body.on('click', '#cancel-confirm a[href="#cancel-account"]', function (evt) {
@@ -84,8 +91,6 @@ jQuery(document).ready(function() {
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
-
-        account.find('.password').removeClass('passwordError');
         var hash = getHash();
 
         jQuery.ajax({
@@ -103,12 +108,16 @@ jQuery(document).ready(function() {
             success: function (data) {
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 account.data('state', hash);
-                if(data.password_error)
-                {
-                    account.find('.password').addClass('passwordError');
+                if(typeof data.error != 'undefined') {
+                    account.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
                 }
                 account.find('.password input').val('');
                 account.find('.new-password input').val('');
+                account.find('.edit-icons').toggle();
+                account.find('a[href="#save-account"]').toggle();
+                account.find('.account-info').removeClass('edit').addClass('read-only');
+                account.find('.password').css('visibility', 'hidden');
+                account.find('.new-password').css('visibility', 'hidden');
             }
         })
     });

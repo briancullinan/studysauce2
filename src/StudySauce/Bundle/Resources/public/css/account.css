@@ -67,6 +67,7 @@ a[href="#sign-in-with-email"]
     margin:10px auto;
 }
 
+#account .type label:first-of-type,
 #account .password label span,
 #account .new-password label span,
 #account .email label span,
@@ -125,17 +126,6 @@ a[href="#sign-in-with-email"]
     display:none;
 }
 
-#login .password small
-{
-    display: none;
-    color: #CC0000;
-}
-
-#login .password.passwordError small
-{
-    display: block;
-}
-
 #account .password,
 #account .new-password
 {
@@ -149,11 +139,7 @@ a[href="#sign-in-with-email"]
 
 #account .edit-icons
 {
-    display: inline-block;
     text-align: left;
-    width:100%;
-    margin-left:-100px;
-    padding-left:80px;
 }
 
 #account .highlighted-link > *,
@@ -170,3 +156,20 @@ a[href="#sign-in-with-email"]
     margin:0 20px;
     text-align: center;
 }
+
+#account a[href="#save-account"]
+{
+    display: none;
+}
+
+#account .form-actions .error
+{
+    clear: both;
+    position: relative;
+    padding: 2px 3px;
+    border: 2px solid #CC0000;
+    color:#660000;
+    border-radius: 5px;
+}
+
+

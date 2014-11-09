@@ -108,7 +108,7 @@
     display:none;
 }
 
-.schedule .class-name label span
+.schedule .read-only .class-name label span
 {
     margin-left:-40px;
 }
@@ -215,7 +215,6 @@ a[href="#add-class"] span, a[href="#add-other"] span {
     border: 2px solid #CC0000;
     color:#660000;
     border-radius: 5px;
-
 }
 
 #schedule.invalid-time .invalid-times,

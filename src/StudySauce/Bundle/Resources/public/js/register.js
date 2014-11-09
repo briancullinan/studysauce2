@@ -50,8 +50,6 @@ jQuery(document).ready(function() {
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
-
-        account.find('.password').removeClass('passwordError');
         var hash = getHash();
 
         jQuery.ajax({
@@ -69,9 +67,8 @@ jQuery(document).ready(function() {
             success: function (data) {
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 account.data('state', hash);
-                if(data.error)
-                {
-                    account.find('.password').addClass('passwordError');
+                if(typeof data.error != 'undefined') {
+                    account.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
                 }
                 account.find('.password input').val('');
             }

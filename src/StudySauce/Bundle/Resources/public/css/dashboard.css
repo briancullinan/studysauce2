@@ -51,6 +51,7 @@ aside + .panel-pane,
     background: url("../images/noise_gray.png") repeat scroll 0 0 #EEEEEE;
     position: relative;
     border-radius: 5px;
+    overflow: hidden;
 }
 
 .pane-content h4,

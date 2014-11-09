@@ -1,10 +1,13 @@
 <?php
+use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /** @var $view TimedPhpEngine */
 /** @var $user User */
+/** @var Payment $payment */
+$payment = $user->getPayments()->first();
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -29,6 +32,12 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane" id="account">
     <div class="pane-content">
         <h2>Account settings</h2>
+        <div class="type">
+            <label><span>Account type</span></label>
+            <label class="radio"><input name="account-type" type="radio" value="free" <?php print (empty($payment) ? 'checked="checked"' : ''); ?>><i></i><span>Free</span></label>
+            <label class="radio"><input name="account-type" type="radio" value="monthly" <?php print (!empty($payment) && $payment->getProduct() == 'monthly' ? 'checked="checked"' : ''); ?>><i></i><span>Monthly</span></label>
+            <label class="radio"><input name="account-type" type="radio" value="yearly" <?php print (!empty($payment) && $payment->getProduct() == 'yearly' ? 'checked="checked"' : ''); ?>><i></i><span>Yearly</span></label>
+        </div>
         <div class="account-info read-only">
             <div class="first-name">
                 <label class="input"><span>First name</span><input type="text" placeholder="First name" value="<?php print $user->getFirst(); ?>"></label>
@@ -50,7 +59,9 @@ $view['slots']->start('body'); ?>
             <div class="edit-icons">
                 <a href="#edit-account">Edit information</a>
                 <a href="#edit-password">Change password</a>
-                <a href="#cancel-confirm" data-toggle="modal">Cancel account</a>
+                <?php if($user->hasRole('ROLE_PAID')) { ?>
+                    <a href="#cancel-confirm" data-toggle="modal">Cancel account</a>
+                <?php } ?>
             </div>
             <a href="#save-account" class="more">Save</a>
         </div>

@@ -197,13 +197,14 @@ $(document).ready(function () {
     body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
         var schedule = $('#schedule');
         evt.preventDefault();
-        var row = jQuery(this).parents('.class-row');
+        var row = jQuery(this).parents('.class-row'),
+            courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
         $.ajax({
             url: window.callbackPaths['remove_schedule'],
             type: 'POST',
             dataType: 'text',
             data: {
-                remove: row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
+                remove: courseId,
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
@@ -276,9 +277,10 @@ $(document).ready(function () {
         var classes = [];
         schedule.find('.class-row.edit:visible:not(.invalid):not(.blank)').each(function () {
             var row = $(this),
+                courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
                 dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
             classes[classes.length] = {
-                courseId: typeof row.attr('id') != 'undefined' && row.attr('id').substr(0, 4) == 'eid-' ? row.attr('id').substring(4) : null,
+                courseId: courseId,
                 className: row.find('.class-name input').val(),
                 dotw: dotw.join(','),
                 start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),

@@ -29,7 +29,8 @@ class ProfileController extends Controller
         $schedule = $user->getSchedules()->first();
 
         return $this->render('StudySauceBundle:Profile:tab.html.php', [
-                'schedule' => $schedule ?: new Schedule()
+                'schedule' => $schedule ?: new Schedule(),
+                'user' => $user
             ]);
     }
 
@@ -49,7 +50,8 @@ class ProfileController extends Controller
                     function (Course $b) {
                         return $b->getType() == 'c';
                     }
-                )->toArray()
+                )->toArray(),
+                'user' => $user
             ]);
     }
 
@@ -88,15 +90,14 @@ class ProfileController extends Controller
         foreach($courses as $i => $c)
         {
             /** @var Course $c */
-            if(empty($c->getStudyType()) || empty($c->getStudyDifficulty()))
-                $hasEmpties = true;
-
             if(!empty($request->get('profile-type-' . $c->getId()))) {
                 $params = $request->get('profile-type-' . $c->getId());
                 $c->setStudyType($params['type']);
                 $c->setStudyDifficulty($params['difficulty']);
                 $orm->merge($c);
             }
+            if(empty($c->getStudyType()) || empty($c->getStudyDifficulty()))
+                $hasEmpties = true;
         }
         $orm->flush();
 

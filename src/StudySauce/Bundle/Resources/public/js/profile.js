@@ -36,7 +36,32 @@ $(document).ready(function () {
     }
 
     body.on('change', '#profile .grades input, #profile .weekends input, #profile .sharpness input', profileFunc);
-    body.on('show', '#profile', profileFunc);
+    body.on('show', '#profile', function () {
+        // TODO: update this if payment happens automatically from dashboard
+        // show unpaid dialog
+        if($(this).is('.demo'))
+            $('#plan-upgrade').modal({
+                backdrop: 'static',
+                keyboard: false,
+                modalOverflow: true
+            });
+        else {
+            $('#plan-upgrade').modal('hide');
+            profileFunc();
+        }
+    });
+    body.on('click', 'a[href="#bill-parents"]', function () {
+        $('#plan-upgrade').modal('hide');
+    });
+    body.on('hidden.bs.modal', '#bill-parents', function () {
+        if(!$('#profile').is(':visible'))
+            return;
+        $('#plan-upgrade').modal({
+            backdrop: 'static',
+            keyboard: false,
+            modalOverflow: true
+        });
+    });
     body.find('#profile:visible').trigger('show');
     body.on('change', '#customization .study-types input, #customization .study-difficulty input', customizationFunc);
     body.on('show', '#customization', customizationFunc);

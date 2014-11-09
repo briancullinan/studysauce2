@@ -126,8 +126,10 @@ class BuyController extends Controller
             if (isset($error)) {
                 return new JsonResponse(['error' => $error]);
             }
+            // success
             else {
                 // redirect to buy funnel
+                $user->addRole('ROLE_PAID');
                 return $this->redirect($this->container->get('router')->generate('profile', ['_format' => 'funnel']));
             }
         } catch(\AuthorizeNetException $ex) {

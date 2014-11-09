@@ -48,10 +48,19 @@ $(document).ready(function () {
     }
 
     body.on('show', '#deadlines', function () {
-        datesFunc.apply($(this).find('.deadline-row'));
+        // show empty
+        if($(this).is('.empty'))
+            $('#deadlines-empty').modal({
+                backdrop: 'static',
+                keyboard: false,
+                modalOverflow: true
+            });
+        else {
+            $('#deadlines-empty').modal('hide');
+            datesFunc.apply($(this).find('.deadline-row'));
+        }
     });
     body.find('#deadlines:visible').trigger('show');
-
     body.on('click', '#deadlines .deadline-row a[href="#edit-deadline"]', function (evt) {
         var deadlines = $('#deadlines');
         evt.preventDefault();
@@ -115,18 +124,28 @@ $(document).ready(function () {
         });
     });
 
+    body.on('scheduled', function () {
+        var deadlines = $('#deadlines'),
+            schedule = $('#schedule').find('.schedule:not(.other) .class-row'),
+            options = schedule.map(function () {
+                var row = $(this),
+                    courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
+                    className = row.find('.class-name input').val();
+                return '<option value="' + courseId + '">' + className + '</option>';
+            });
+        if(options.length == 0)
+            deadlines.addClass('empty');
+        deadlines.find('.class-name select').replaceWith('<select>' + options.join('') + '</select>');
+    });
     body.on('click', '#deadlines .deadline-row:not(.edit) > div:not(.reminder)', function () {
         jQuery(this).parents('.deadline-row').toggleClass('selected');
     });
-
     body.on('change', '#deadlines .class-name select, #deadlines .reminder input, #deadlines .due-date input', function () {
         datesFunc.apply(jQuery(this).parents('.deadline-row'));
     });
-
     body.on('keyup', '#deadlines .assignment input, #deadlines .due-date input', function () {
         datesFunc.apply(jQuery(this).parents('.deadline-row'));
     });
-
     body.on('click', '#deadlines a[href="#add-deadline"]', function (evt) {
         var deadlines = $('#deadlines');
         evt.preventDefault();

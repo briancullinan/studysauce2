@@ -80,11 +80,10 @@ class PlanController extends Controller
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
 
-        // get events for current week
-        if (empty($schedule) || empty($schedule->getCourses())) {
+        // get demo schedule instead
+        if (empty($schedule) || empty($schedule->getCourses()) || !$user->hasRole('ROLE_PAID')) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
-
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
         }
 
@@ -101,6 +100,7 @@ class PlanController extends Controller
             $_week = strtotime('last Sunday', strtotime($_week)) + 604800;
         }
 
+        // get events for current week
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm);
         $courses = $schedule->getCourses()->filter(function (Course $c) {
                 return $c->getType() == 'c';
@@ -377,7 +377,11 @@ class PlanController extends Controller
         $events = array_merge($events, $freeStudy);
 
         // cache and compare list of events in their default positions
-        $weekHash = md5(serialize($events) /* TODO: add configuration used to build plan so it updates when that changes */ );
+        $weekHash = md5(serialize($events) .
+            // add configuration used to build plan so it updates when that changes
+            $schedule->getGrades() . $schedule->getWeekends() . $schedule->getSharp11am4pm() .
+            $schedule->getSharp4pm9pm() . $schedule->getSharp9pm2am() . $schedule->getSharp6am11am() .
+            implode('', $courses->map(function (Course $c) {return $c->getStudyDifficulty() . $c->getStudyType();})->toArray()));
         if (($eventWeek = $schedule->getWeeks()->filter(
                 function (Week $w) use ($weekHash, $events) {
                     return $w->getHash() == $weekHash && $w->getEvents()->count() == count($events);

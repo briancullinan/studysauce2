@@ -98,16 +98,15 @@ $view['slots']->start('body'); ?>
                 $endDate = strtotime($c->getEndTime()->format('Y/m/d H:i:s'));
             }
             ?>
-            <div class="class-row clearfix <?php print ($isDemo ? 'edit valid blank' : 'read-only'); ?>"
-                 id="eid-<?php print ($isDemo ? '' : $c->getId()); ?>">
+            <div class="class-row clearfix<?php
+            print ($isDemo ? ' edit valid blank' : ' read-only');
+            print ' course-id-' . ($isDemo ? '' : $c->getId()); ?>">
                 <div class="class-name">
                     <label class="input">
                         <span>Class name</span>
-                        <i class="class<?php print $i; ?>"></i><input type="text"
-                                                                      value="<?php print (!$isDemo ? $c->getName(
-                                                                      ) : ''); ?>"
-                                                                      placeholder="<?php print ScheduleController::getRandomName(
-                                                                      ); ?>" autocomplete="off">
+                        <i class="class<?php print $i; ?>"></i>
+                        <input type="text" value="<?php print (!$isDemo ? $c->getName() : ''); ?>"
+                               placeholder="<?php print ScheduleController::getRandomName(); ?>" autocomplete="off">
                     </label>
                 </div>
                 <div class="day-of-the-week">
@@ -115,36 +114,30 @@ $view['slots']->start('body'); ?>
                         <input type="checkbox" value="M" <?php print (!$isDemo && in_array('M', $daysOfTheWeek)
                             ? 'checked="checked"'
                             : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Tu</span><input type="checkbox"
-                                                                  value="Tu" <?php print (!$isDemo && in_array(
-                            'Tu',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>W</span><input type="checkbox"
-                                                                 value="W" <?php print (!$isDemo && in_array(
-                            'W',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Th</span><input type="checkbox"
-                                                                  value="Th" <?php print (!$isDemo && in_array(
-                            'Th',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>F</span><input type="checkbox"
-                                                                 value="F" <?php print (!$isDemo && in_array(
-                            'F',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Sa</span><input type="checkbox"
-                                                                  value="Sa" <?php print (!$isDemo && in_array(
-                            'Sa',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Su</span><input type="checkbox"
-                                                                  value="Su" <?php print (!$isDemo && in_array(
-                            'Su',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Tu</span>
+                        <input type="checkbox" value="Tu" <?php print (!$isDemo && in_array('Tu',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>W</span>
+                        <input type="checkbox" value="W" <?php print (!$isDemo && in_array('W',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Th</span>
+                        <input type="checkbox" value="Th" <?php print (!$isDemo && in_array('Th',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>F</span>
+                        <input type="checkbox" value="F" <?php print (!$isDemo && in_array('F',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Sa</span>
+                        <input type="checkbox" value="Sa" <?php print (!$isDemo && in_array('Sa',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Su</span>
+                        <input type="checkbox" value="Su" <?php print (!$isDemo && in_array('Su',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
                 </div>
                 <div class="start-time">
                     <label class="input">
@@ -246,8 +239,9 @@ $view['slots']->start('body'); ?>
                 $endDate = strtotime($c->getEndTime()->format('Y/m/d H:i:s'));
             }
             ?>
-            <div class="class-row clearfix <?php print ($isDemo ? 'edit valid blank' : 'read-only'); ?>"
-                 id="eid-<?php print ($isDemo ? '' : $c->getId()); ?>">
+            <div class="class-row clearfix <?php
+            print ($isDemo ? ' edit valid blank' : ' read-only');
+            print ' course-id-' . ($isDemo ? '' : $c->getId()); ?>">
                 <div class="class-name">
                     <label class="input">
                         <span>Event title</span>
@@ -261,43 +255,36 @@ $view['slots']->start('body'); ?>
                         <input type="checkbox" value="M" <?php print (!$isDemo && in_array('M', $daysOfTheWeek)
                             ? 'checked="checked"'
                             : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Tu</span><input type="checkbox"
-                                                                  value="Tu" <?php print (!$isDemo && in_array(
-                            'Tu',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>W</span><input type="checkbox"
-                                                                 value="W" <?php print (!$isDemo && in_array(
-                            'W',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Th</span><input type="checkbox"
-                                                                  value="Th" <?php print (!$isDemo && in_array(
-                            'Th',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>F</span><input type="checkbox"
-                                                                 value="F" <?php print (!$isDemo && in_array(
-                            'F',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Sa</span><input type="checkbox"
-                                                                  value="Sa" <?php print (!$isDemo && in_array(
-                            'Sa',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
-                    <label class="checkbox"><span>Su</span><input type="checkbox"
-                                                                  value="Su" <?php print (!$isDemo && in_array(
-                            'Su',
-                            $daysOfTheWeek
-                        ) ? 'checked="checked"' : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Tu</span>
+                        <input type="checkbox" value="Tu" <?php print (!$isDemo && in_array('Tu',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>W</span>
+                        <input type="checkbox" value="W" <?php print (!$isDemo && in_array('W',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Th</span>
+                        <input type="checkbox" value="Th" <?php print (!$isDemo && in_array('Th',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>F</span>
+                        <input type="checkbox" value="F" <?php print (!$isDemo && in_array('F',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Sa</span>
+                        <input type="checkbox" value="Sa" <?php print (!$isDemo && in_array('Sa',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
+                    <label class="checkbox"><span>Su</span>
+                        <input type="checkbox" value="Su" <?php print (!$isDemo && in_array('Su',$daysOfTheWeek)
+                            ? 'checked="checked"'
+                            : ''); ?>><i></i></label>
 
                     <div class="recurring">
-                        <label class="checkbox"><input type="checkbox" value="Weekly"
-                                <?php print ($isDemo || in_array(
-                                    'Weekly',
-                                    $daysOfTheWeek
-                                ) ? 'checked="checked"' : ''); ?>><span>Recurring</span><i></i><span>Weekly</span></label>
+                        <label class="checkbox">
+                            <input type="checkbox" value="Weekly" <?php print ($isDemo || in_array('Weekly',$daysOfTheWeek)
+                                ? 'checked="checked"'
+                                : ''); ?>><span>Recurring</span><i></i><span>Weekly</span></label>
                     </div>
                 </div>
                 <div class="start-time">

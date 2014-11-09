@@ -76,7 +76,7 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/p
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane <?php print ($isDemo ? 'demo' : ''); ?>" id="plan">
+<div class="panel-pane <?php print ($isDemo ? ' demo' : ''); ?>" id="plan">
     <div class="pane-content">
         <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed">

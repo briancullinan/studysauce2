@@ -68,12 +68,17 @@ class AccountController extends Controller
                 $orm->merge($user);
                 $orm->flush();
             }
+            else
+                $error = 'Incorrect password';
         }
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
             : null;
-        return new JsonResponse(['csrf_token' => $csrfToken]);
+        $response = ['csrf_token' => $csrfToken];
+        if(isset($error))
+            $response['error'] = $error;
+        return new JsonResponse($response);
     }
 
     /**
