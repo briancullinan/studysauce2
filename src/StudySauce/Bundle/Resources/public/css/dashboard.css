@@ -10,6 +10,11 @@
     padding: 0 240px 20px 240px;
 }
 
+#error404 .pane-content
+{
+    text-align: center;
+}
+
 .dashboard-home.adviser .pane-content .nav-tabs>li>a
 {
     border-radius: 0;

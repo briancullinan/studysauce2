@@ -148,7 +148,7 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', -128],
+            KernelEvents::REQUEST => ['onKernelRequest', 128],
             KernelEvents::RESPONSE => ['onKernelResponse', -128]
         ];
     }
@@ -166,7 +166,7 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
                 $url = $this->router->generate('home');
             }
             else {
-                $url = $this->router->generate('account_login');
+                $url = $this->router->generate('login');
             }
             $event->setResponse(new RedirectResponse($url));
         }

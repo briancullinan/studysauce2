@@ -34,6 +34,7 @@ services:
         class: StudySauce\Bundle\EventListener\RedirectListener
         tags:
             - {name: kernel.event_subscriber}
+        arguments: [@templating, @kernel]
 
     kernel.listener.tracker:
         class: StudySauce\Bundle\EventListener\PageTracker

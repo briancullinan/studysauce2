@@ -417,7 +417,7 @@ $collection->add(
 );
 $collection->add('logout', new Route('/logout'));
 $collection->add(
-    'account_denied',
+    'error403',
     new Route(
         '/denied',
         ['_controller' => 'StudySauceBundle:Account:denied', '_format' => 'funnel'],
