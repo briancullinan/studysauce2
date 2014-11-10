@@ -148,7 +148,7 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 128],
+            KernelEvents::REQUEST => ['onKernelRequest', 0],
             KernelEvents::RESPONSE => ['onKernelResponse', -128]
         ];
     }

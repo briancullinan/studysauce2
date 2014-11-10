@@ -7,13 +7,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\GroupInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ss_user")
+ * @ORM\Table(name="ss_user",uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="email_idx", columns={"email"}),
+ *     @ORM\UniqueConstraint(name="username_idx", columns={"username"})})
  * @ORM\HasLifecycleCallbacks()
  */
-class User extends BaseUser
+class User extends BaseUser implements EncoderAwareInterface
 {
     /**
      * @ORM\Id
@@ -128,6 +131,18 @@ class User extends BaseUser
     public function setCreatedValue()
     {
         $this->created = new \DateTime();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getEncoderName() {
+
+        if($this->getSalt()[0] == '$' && $this->getSalt()[2] == '$') {
+            return 'drupal_encoder';
+        }
+
+        return NULL;
     }
 
     /**

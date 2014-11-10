@@ -46,7 +46,6 @@ $view['slots']->start('body'); ?>
         </div>
         <div class="password">
             <label class="input"><input type="password" placeholder="Password" value=""></label>
-            <small>Invalid email or password.</small>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="form-actions highlighted-link invalid">

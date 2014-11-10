@@ -127,6 +127,9 @@ class PartnerController extends Controller
             ]);
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function importAction()
     {
         return $this->render('StudySauceBundle:Partner:import.html.php');

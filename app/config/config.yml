@@ -36,6 +36,9 @@ services:
             - {name: kernel.event_subscriber}
         arguments: [@templating, @kernel]
 
+    studysauce.drupal_encoder:
+        class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
+
     kernel.listener.tracker:
         class: StudySauce\Bundle\EventListener\PageTracker
         tags:

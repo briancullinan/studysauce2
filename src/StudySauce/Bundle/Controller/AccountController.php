@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
@@ -53,9 +55,10 @@ class AccountController extends Controller
         if(!empty($request->get('email')))
         {
             // check password
+            /** @var EncoderFactory $encoder_service */
             $encoder_service = $this->get('security.encoder_factory');
+            /** @var MessageDigestPasswordEncoder $encoder */
             $encoder = $encoder_service->getEncoder($user);
-            /** @var $encoder PasswordEncoderInterface */
             $encoded_pass = $encoder->encodePassword($request->get('pass'), $user->getSalt());
             if($user->getPassword() == $encoded_pass)
             {

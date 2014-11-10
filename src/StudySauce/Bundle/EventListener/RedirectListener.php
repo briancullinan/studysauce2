@@ -81,6 +81,7 @@ class RedirectListener implements EventSubscriberInterface
             );
         }
         else {
+            return;
             $response->setContent(
             // create you custom template AcmeFooBundle:Exception:exception.html.twig
                 $this->templating->render(

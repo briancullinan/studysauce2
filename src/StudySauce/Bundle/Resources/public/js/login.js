@@ -12,8 +12,10 @@ jQuery(document).ready(function() {
 
         if (!valid)
             account.find('.form-actions').removeClass('valid').addClass('invalid');
-        else
+        else {
             account.find('.form-actions').removeClass('invalid').addClass('valid');
+            account.find('.form-actions .error').remove();
+        }
     }
 
     body.on('click', '#login a[href="#sign-in-with-email"]', function (evt) {
