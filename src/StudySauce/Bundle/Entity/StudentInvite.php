@@ -6,10 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="parent_invite")
+ * @ORM\Table(name="student_invite")
  * @ORM\HasLifecycleCallbacks()
  */
-class ParentInvite
+class StudentInvite
 {
     /**
      * @ORM\Column(type="integer", name="id")
@@ -19,16 +19,16 @@ class ParentInvite
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="parentInvites")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="studentInvites")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitedParents")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitedStudents")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
-    protected $parent;
+    protected $student;
 
     /**
      * @ORM\Column(type="string", length=256, name="first")
@@ -269,25 +269,25 @@ class ParentInvite
     }
 
     /**
-     * Set parent
+     * Set student
      *
-     * @param \StudySauce\Bundle\Entity\User $parent
-     * @return ParentInvite
+     * @param \StudySauce\Bundle\Entity\User $student
+     * @return StudentInvite
      */
-    public function setParent(\StudySauce\Bundle\Entity\User $parent = null)
+    public function setStudent(\StudySauce\Bundle\Entity\User $student = null)
     {
-        $this->parent = $parent;
+        $this->student = $student;
 
         return $this;
     }
 
     /**
-     * Get parent
+     * Get student
      *
      * @return \StudySauce\Bundle\Entity\User 
      */
-    public function getParent()
+    public function getStudent()
     {
-        return $this->parent;
+        return $this->student;
     }
 }

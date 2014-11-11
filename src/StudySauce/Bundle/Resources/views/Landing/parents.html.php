@@ -3,7 +3,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:layout.html.php');
 
-$view['slots']->start('classes') ?>landing-home<?php $view['slots']->stop();
+$view['slots']->start('classes') ?>landing-home parents<?php $view['slots']->stop();
 
 $view['slots']->start('stylesheets');
 
@@ -14,7 +14,8 @@ foreach ($view['assetic']->stylesheets(
         '@StudySauceBundle/Resources/public/css/banner.css',
         '@StudySauceBundle/Resources/public/css/features.css',
         '@StudySauceBundle/Resources/public/css/testimony.css',
-        '@StudySauceBundle/Resources/public/css/footer.css'
+        '@StudySauceBundle/Resources/public/css/footer.css',
+        '@StudySauceBundle/Resources/public/css/landing.css'
     ],
     [],
     ['output' => 'bundles/studysauce/css/*.css']
@@ -41,9 +42,14 @@ foreach ($view['assetic']->javascripts(
 $view['slots']->stop();
 
 $view['slots']->start('body');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:video'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:scr'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:banner'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'));
+echo $view->render('StudySauceBundle:Landing:parent-video.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-scr.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-banner.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-features.html.php');
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'));
+$view['slots']->stop();
+
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInvite'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInviteConfirm'));
 $view['slots']->stop();

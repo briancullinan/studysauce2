@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Course1\Bundle\Entity\Course1;
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -112,19 +113,55 @@ class LandingController extends Controller
      */
     public function partnersAction(Request $request)
     {
-        /*
-         * The action's view can be rendered using render() method
-         * or @Template annotation as demonstrated in DemoController.
-         *
-         */
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
-        $partner = $orm->getRepository('StudySauceBundle:Partner')->findOneBy(['code' => $request->get('_code')]);
-        $partner->setActivated(true);
-        $orm->merge($partner);
-        $orm->flush();
 
-        return $this->render('StudySauceBundle:Landing:index.html.php');
+        /** @var $user User */
+        $user = $this->getUser();
+
+        /** @var PartnerInvite $partner */
+        $partner = $orm->getRepository('StudySauceBundle:Partner')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($partner)) {
+            $partner->setActivated(true);
+            $orm->merge($partner);
+            $orm->flush();
+
+            if (empty($partner->getPartner()) || $partner->getPartner()->getId() != $user->getId()) {
+                $this->get('security.context')->setToken(null);
+                $this->get('request')->getSession()->invalidate();
+            }
+        }
+
+        return $this->render('StudySauceBundle:Landing:partners.html.php');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function parentsAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        /** @var Partner $partner */
+        $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($parent)) {
+            $parent->setActivated(true);
+            $orm->merge($parent);
+            $orm->flush();
+
+            if(empty($parent->getParent()) || $parent->getParent()->getId() !=  $user->getId())
+            {
+                $this->get('security.context')->setToken(null);
+                $this->get('request')->getSession()->invalidate();
+            }
+        }
+
+        return $this->render('StudySauceBundle:Landing:parents.html.php');
     }
 
     /**

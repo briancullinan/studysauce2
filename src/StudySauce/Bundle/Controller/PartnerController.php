@@ -2,10 +2,12 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Group;
-use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +31,7 @@ class PartnerController extends Controller
             : null;
 
         return $this->render('StudySauceBundle:Partner:tab.html.php', [
-                'partner' => $user->getPartners()->first(),
+                'partner' => $user->getPartnerInvites()->first(),
                 'csrf_token' => $csrfToken
             ]);
     }
@@ -46,8 +48,8 @@ class PartnerController extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
-        /** @var $current Partner */
-        $current = $user->getPartners()->first();
+        /** @var $current PartnerInvite */
+        $current = $user->getPartnerInvites()->first();
         $shouldSend = false;
         if(!empty($current) && $current->getEmail() == $request->get('email'))
         {
@@ -57,13 +59,13 @@ class PartnerController extends Controller
         else
         {
             // check if they every invited this partner
-            $current = $user->getPartners()->filter(function (Partner $x) use ($request) {return $x->getEmail() == $request->get('email');})->first();
+            $current = $user->getPartnerInvites()->filter(function (PartnerInvite $x) use ($request) {return $x->getEmail() == $request->get('email');})->first();
             if(!empty($current)) {
                 // update created time so they become the current partner
                 $partner = $current;
                 $partner->setCreated(new \DateTime()); // reset created date if they change back to an existing invite
-                $user->removePartner($partner);
-                $user->addPartner($partner);
+                $user->removePartnerInvite($partner);
+                $user->addPartnerInvite($partner);
                 $shouldSend = true;
             }
         }
@@ -72,11 +74,11 @@ class PartnerController extends Controller
         if(empty($partner)) {
             $shouldSend = true;
             $isNew = true;
-            $partner = new Partner();
+            $partner = new PartnerInvite();
             $partner->setUser($user);
             $partner->setCode(md5(microtime(true)));
             $partner->setEmail($request->get('email'));
-            $user->addPartner($partner);
+            $user->addPartnerInvite($partner);
         }
 
         $photo = $user->getFiles()->filter(function (File $g) use($request) {return $g->getId() == $request->get('photo');})->first();
@@ -121,10 +123,24 @@ class PartnerController extends Controller
             $users = array_merge($users, $g->getUsers()->toArray());
         }
 
+        // show sessions
+        /** @var ArrayCollection $visits */
+        /*
+        $visits = $u->getVisits();
+        $criteria = Criteria::create();
+        $sessions = $visits->matching($criteria)->;
+        $queryBuilder
+            ->select('DATE(last_login) as date', 'COUNT(id) AS users')
+            ->from('user')
+            ->groupBy('')
+            ->having('users > 10')
+        ;
+        */
+
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
-                'groups' => $groups,
-                'users' => $users
-            ]);
+            'groups' => $groups,
+            'users' => $users
+        ]);
     }
 
     /**
@@ -133,6 +149,50 @@ class PartnerController extends Controller
     public function importAction()
     {
         return $this->render('StudySauceBundle:Partner:import.html.php');
+    }
+
+    /**
+     * @param $_user
+     * @param $_tab
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function partnerAction($_user, $_tab)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        // TODO: check if partner and user is connected
+        // if()
+
+        return $this->render('StudySauceBundle:Partner:partner.html.php', [
+                'user' => $user,
+                'tab' => $_tab
+            ]);
+    }
+
+    /**
+     * @param $_user
+     * @param $_tab
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adviserAction($_user, $_tab)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($_user)]);
+
+        // TODO: check if partner and user is connected
+        // if()
+
+        return $this->render('StudySauceBundle:Partner:adviser.html.php', [
+                'user' => $user,
+                'tab' => $_tab
+            ]);
     }
 }
 

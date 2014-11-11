@@ -4,7 +4,8 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\ParentInvite;
-use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,7 +22,7 @@ class EmailsController extends Controller
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function welcomepartnerAction(User $user = null)
+    public function welcomePartnerAction(User $user = null)
     {
         /** @var $user User */
         if(empty($user))
@@ -72,17 +73,17 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
-     * @param Partner $partner
+     * @param PartnerInvite $partner
      * @return Response
      */
-    public function partnerInviteAction(User $user = null, Partner $partner = null)
+    public function partnerInviteAction(User $user = null, PartnerInvite $partner = null)
     {
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
 
         if($partner == null)
-            $partner = $user->getPartners()->filter(function (Partner $p) {return $p->getActivated();})->first();
+            $partner = $user->getPartnerInvites()->filter(function (PartnerInvite $p) {return $p->getActivated();})->first();
 
         if(empty($partner)) {
             $logger = $this->get('logger');
@@ -111,17 +112,110 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
-     * @param Partner $partner
+     * @param StudentInvite $student
      * @return Response
      */
-    public function achievementAction(User $user = null, Partner $partner = null)
+    public function studentInviteAction(User $user = null, StudentInvite $student = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $student->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject(($user->getFirst() ?: 'Your parent') . ' has asked for you to join Study Sauce')
+            ->setFrom($user->getEmail())
+            ->setTo($student->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:student-invite.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Hello ' . $student->getFirst() . ' ' . $student->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['student-invite']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param StudentInvite $student
+     * @return Response
+     */
+    public function parentPrepayAction(User $user = null, StudentInvite $student = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $student->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject(($user->getFirst() ?: 'Your parent') . ' has prepaid for your study plan')
+            ->setFrom($user->getEmail())
+            ->setTo($student->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:prepay.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Hello ' . $student->getFirst() . ' ' . $student->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['parent-prepay']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param StudentInvite $student
+     * @return Response
+     */
+    public function adviserInviteAction(User $user = null, StudentInvite $student = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('scholar_welcome', ['_code' => $student->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('Welcome to Study Sauce!')
+            ->setFrom($user->getEmail())
+            ->setTo($student->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:adviser-invite.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Hello ' . $student->getFirst() . ' ' . $student->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['adviser-invite']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param PartnerInvite $partner
+     * @return Response
+     */
+    public function achievementAction(User $user = null, PartnerInvite $partner = null)
     {
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
 
         if($partner == null)
-            $partner = $user->getPartners()->filter(function (Partner $p) {return $p->getActivated();})->first();
+            $partner = $user->getPartnerInvites()->filter(function (PartnerInvite $p) {return $p->getActivated();})->first();
 
         if(empty($partner)) {
             $logger = $this->get('logger');
@@ -168,7 +262,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['sponsor-invite']])));
+                        'category' => ['parent-invite']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 

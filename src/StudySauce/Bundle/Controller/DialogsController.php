@@ -6,6 +6,7 @@ use StudySauce\Bundle\Entity\ContactMessage;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Schedule;
+use StudySauce\Bundle\Entity\StudentInvite;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -236,6 +237,45 @@ class DialogsController extends Controller
     public function billParents2Action()
     {
         return $this->render('StudySauceBundle:Dialogs:bill-parents-confirm.html.php', ['id' => 'bill-parents-confirm']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function studentInviteAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:student-invite.html.php', ['id' => 'student-invite']);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function inviteStudentSendAction(Request $request)
+    {
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
+
+        // save the invite
+        $student = new StudentInvite();
+        $student->setUser($user);
+        $student->setFirst($request->get('first'));
+        $student->setLast($request->get('last'));
+        $student->setEmail($request->get('email'));
+        $student->setCode(md5(microtime(true)));
+
+        $email = new EmailsController();
+        $email->setContainer($this->container);
+        $email->studentInviteAction($user, $student);
+
+        return new JsonResponse(true);
+    }
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function studentInviteConfirmAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:student-invite-confirm.html.php', ['id' => 'student-invite-confirm']);
     }
 
     /**

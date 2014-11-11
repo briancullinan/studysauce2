@@ -59,6 +59,14 @@ $collection->add(
     new Route('/parents/{_code}', ['_controller' => 'StudySauceBundle:Landing:parents',])
 );
 $collection->add(
+    'student_welcome',
+    new Route('/students/{_code}', ['_controller' => 'StudySauceBundle:Landing:students',])
+);
+$collection->add(
+    'scholar_welcome',
+    new Route('/scholars/{_code}', ['_controller' => 'StudySauceBundle:Landing:scholars',])
+);
+$collection->add(
     'home',
     new Route(
         '/home/{_format}',
@@ -122,14 +130,6 @@ $collection->add(
     )
 );
 $collection->add(
-    'goals_partner',
-    new Route(
-        '/goals/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Goals:partner', '_format' => 'adviser'],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
-    )
-);
-$collection->add(
     'update_goals',
     new Route(
         '/goals/update',
@@ -185,27 +185,11 @@ $collection->add(
     )
 );
 $collection->add(
-    'metrics_partner',
-    new Route(
-        '/metrics/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Metrics:partner', '_format' => 'adviser',],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
-    )
-);
-$collection->add(
     'deadlines',
     new Route(
         '/deadlines/{_format}',
         ['_controller' => 'StudySauceBundle:Deadlines:index', '_format' => 'index',],
         ['_format' => DASHBOARD_VIEWS,]
-    )
-);
-$collection->add(
-    'deadlines_partner',
-    new Route(
-        '/deadlines/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:Deadlines:partner', '_format' => 'adviser',],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
     )
 );
 $collection->add(
@@ -243,19 +227,6 @@ $collection->add(
     )
 );
 $collection->add(
-    'update_partner',
-    new Route(
-        '/partner/update',
-        ['_controller' => 'StudySauceBundle:Partner:update'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
-    )
-);
-$collection->add(
     'plan',
     new Route(
         '/plan/{_format}',
@@ -282,14 +253,6 @@ $collection->add(
         '/plan/{_week}/{_format}',
         ['_controller' => 'StudySauceBundle:Plan:index', '_format' => 'index', '_week' => ''],
         ['_format' => DASHBOARD_VIEWS, '_week' => '^$|[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z']
-    )
-);
-$collection->add(
-    'plan_partner',
-    new Route(
-        '/plan/{_format}/{_user}/{_week}',
-        ['_controller' => 'StudySauceBundle:Plan:partner', '_format' => 'adviser', '_week' => null],
-        ['_format' => DASHBOARD_VIEWS, '_week' => '^$|[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z', '_user' => '[0-9]+']
     )
 );
 $collection->add(
@@ -459,14 +422,6 @@ $collection->add(
     )
 );
 $collection->add(
-    'uploads_partner',
-    new Route(
-        '/file/{_format}/{_user}',
-        ['_controller' => 'StudySauceBundle:File:partner', '_format' => 'adviser'],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
-    )
-);
-$collection->add(
     'checkout',
     new Route(
         '/checkout/{_format}',
@@ -496,6 +451,22 @@ $collection->add(
     )
 );
 $collection->add(
+    'adviser',
+    new Route(
+        '/adviser/{_user}/{_tab}/{_format}',
+        ['_controller' => 'StudySauceBundle:Partner:adviser', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
+    )
+);
+$collection->add(
+    'adviser_partner',
+    new Route(
+        '/partner/{_user}/{_tab}/{_format}',
+        ['_controller' => 'StudySauceBundle:Partner:partner', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
+    )
+);
+$collection->add(
     'import',
     new Route(
         '/import/{_format}',
@@ -521,6 +492,19 @@ $collection->add(
     new Route(
         '/contact/parents',
         ['_controller' => 'StudySauceBundle:Dialogs:billParentsSend'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'contact_students',
+    new Route(
+        '/contact/students',
+        ['_controller' => 'StudySauceBundle:Dialogs:inviteStudentSend'],
         [],
         [],
         '',

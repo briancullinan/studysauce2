@@ -221,7 +221,10 @@ class AccountController extends Controller
             // send welcome email
             $email = new EmailsController();
             $email->setContainer($this->container);
-            $email->welcomeStudentAction($user);
+            if($user->hasRole('ROLE_PARTNER'))
+                $email->welcomePartnerAction($user);
+            else
+                $email->welcomeStudentAction($user);
 
             return $response;
         }

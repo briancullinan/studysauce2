@@ -3,9 +3,11 @@ use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 /** @var GlobalVariables $app */
-$isDashboard = ($app->getUser() != 'anon.' && !$app->getUser()->hasRole('ROLE_GUEST')) ||
+/** @var User $user */
+$user = $app->getUser();
+$isDashboard = ($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) ||
     strpos($view['slots']->get('classes'), 'dashboard-home') > -1;
-$isAdviser = $app->getUser() != 'anon.' && $app->getUser()->hasRole('ROLE_ADVISER');
+$isAdviser = $user != 'anon.' && $user->hasRole('ROLE_ADVISER');
 
 $view['slots']->start('body'); ?>
     <div class="panel-pane" id="error404">

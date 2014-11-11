@@ -1,18 +1,18 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
-Send an email to have someone prepay for Study Sauce.  We will then alert you when your account has been activated.
+Invite your student to start using Study Sauce.
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
 <div class="first-name">
-    <label class="input"><span>Parent's first name</span><input type="text" value=""></label>
+    <label class="input"><span>Student's first name</span><input type="text" value=""></label>
 </div>
 <div class="last-name">
-    <label class="input"><span>Parent's last name</span><input type="text" value=""></label>
+    <label class="input"><span>Student's last name</span><input type="text" value=""></label>
 </div>
 <div class="email">
-    <label class="input"><span>Parent's email</span><input type="email" value=""></label>
+    <label class="input"><span>Student's email</span><input type="email" value=""></label>
 </div>
 <?php $view['slots']->stop();
 

@@ -1,7 +1,11 @@
 <?php
+use StudySauce\Bundle\Entity\PartnerInvite;
+
 $isDashboard = ($app->getUser() != 'anon.' && !$app->getUser()->hasRole('ROLE_GUEST')) ||
     strpos($view['slots']->get('classes'), 'dashboard-home') > -1;
 $isAdviser = $app->getUser() != 'anon.' && $app->getUser()->hasRole('ROLE_ADVISER');
+/** @var PartnerInvite $partner */
+$partner = $app->getUser()->getPartnerInvites()->first();
 ?>
 <div class="header-wrapper navbar navbar-inverse">
     <div class="header">
@@ -13,7 +17,7 @@ $isAdviser = $app->getUser() != 'anon.' && $app->getUser()->hasRole('ROLE_ADVISE
         </div>
         <?php if($app->getRequest()->get('_format') == 'index' && $isDashboard) { ?>
             <div id="partner-message">
-                <?php if(!empty($partner = $app->getUser()->getPartners()->first())) { ?>
+                <?php if(!empty($partner)) { ?>
                     <div>
                     <?php if (empty($partner->getPhoto())) {
                         foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>

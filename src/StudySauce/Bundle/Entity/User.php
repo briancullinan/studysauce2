@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Entity;
 
 use Course1\Bundle\Entity\Quiz1;
 use Doctrine\Common\Collections\ArrayCollection;
+use FOS\UserBundle\Model\GroupableInterface;
 use FOS\UserBundle\Model\GroupInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -61,10 +62,22 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $deadlines;
 
     /**
-     * @ORM\OneToMany(targetEntity="Partner", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="PartnerInvite", mappedBy="user")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $partners;
+    protected $partnerInvites;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ParentInvite", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $parentInvites;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ParentInvite", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $studentInvites;
 
     /**
      * @ORM\OneToMany(targetEntity="File", mappedBy="user")
@@ -125,6 +138,9 @@ class User extends BaseUser implements EncoderAwareInterface
      */
     protected $groups;
 
+    /** @ORM\Column(name="adviser_status", type="string", length=4096, nullable=true) */
+    protected $adviserStatus;
+
     /**
      * @ORM\PrePersist
      */
@@ -155,11 +171,13 @@ class User extends BaseUser implements EncoderAwareInterface
         $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
         $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
         $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->partners = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->partnerInvites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course1s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->parentInvites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->studentInvites = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct();
     }
 
@@ -197,20 +215,20 @@ class User extends BaseUser implements EncoderAwareInterface
     }
 
     /**
-     * Set firstName
+     * Set first
      *
-     * @param string $firstName
+     * @param string $first
      * @return User
      */
-    public function setFirst($firstName)
+    public function setFirst($first)
     {
-        $this->first = $firstName;
+        $this->first = $first;
 
         return $this;
     }
 
     /**
-     * Get firstName
+     * Get first
      *
      * @return string 
      */
@@ -220,20 +238,20 @@ class User extends BaseUser implements EncoderAwareInterface
     }
 
     /**
-     * Set lastName
+     * Set last
      *
-     * @param string $lastName
+     * @param string $last
      * @return User
      */
-    public function setLast($lastName)
+    public function setLast($last)
     {
-        $this->last = $lastName;
+        $this->last = $last;
 
         return $this;
     }
 
     /**
-     * Get lastName
+     * Get last
      *
      * @return string 
      */
@@ -335,6 +353,29 @@ class User extends BaseUser implements EncoderAwareInterface
     }
 
     /**
+     * Set adviserStatus
+     *
+     * @param string $adviserStatus
+     * @return User
+     */
+    public function setAdviserStatus($adviserStatus)
+    {
+        $this->adviserStatus = $adviserStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get adviserStatus
+     *
+     * @return string 
+     */
+    public function getAdviserStatus()
+    {
+        return $this->adviserStatus;
+    }
+
+    /**
      * Add schedules
      *
      * @param \StudySauce\Bundle\Entity\Schedule $schedules
@@ -365,6 +406,39 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getSchedules()
     {
         return $this->schedules;
+    }
+
+    /**
+     * Add payments
+     *
+     * @param \StudySauce\Bundle\Entity\Payment $payments
+     * @return User
+     */
+    public function addPayment(\StudySauce\Bundle\Entity\Payment $payments)
+    {
+        $this->payments[] = $payments;
+
+        return $this;
+    }
+
+    /**
+     * Remove payments
+     *
+     * @param \StudySauce\Bundle\Entity\Payment $payments
+     */
+    public function removePayment(\StudySauce\Bundle\Entity\Payment $payments)
+    {
+        $this->payments->removeElement($payments);
+    }
+
+    /**
+     * Get payments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPayments()
+    {
+        return $this->payments;
     }
 
     /**
@@ -500,36 +574,102 @@ class User extends BaseUser implements EncoderAwareInterface
     }
 
     /**
-     * Add partners
+     * Add partnerInvites
      *
-     * @param \StudySauce\Bundle\Entity\Partner $partners
+     * @param \StudySauce\Bundle\Entity\PartnerInvite $partnerInvites
      * @return User
      */
-    public function addPartner(\StudySauce\Bundle\Entity\Partner $partners)
+    public function addPartnerInvite(\StudySauce\Bundle\Entity\PartnerInvite $partnerInvites)
     {
-        $this->partners[] = $partners;
+        $this->partnerInvites[] = $partnerInvites;
 
         return $this;
     }
 
     /**
-     * Remove partners
+     * Remove partnerInvites
      *
-     * @param \StudySauce\Bundle\Entity\Partner $partners
+     * @param \StudySauce\Bundle\Entity\PartnerInvite $partnerInvites
      */
-    public function removePartner(\StudySauce\Bundle\Entity\Partner $partners)
+    public function removePartnerInvite(\StudySauce\Bundle\Entity\PartnerInvite $partnerInvites)
     {
-        $this->partners->removeElement($partners);
+        $this->partnerInvites->removeElement($partnerInvites);
     }
 
     /**
-     * Get partners
+     * Get partnerInvites
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getPartners()
+    public function getPartnerInvites()
     {
-        return $this->partners;
+        return $this->partnerInvites;
+    }
+
+    /**
+     * Add parentInvites
+     *
+     * @param \StudySauce\Bundle\Entity\ParentInvite $parentInvites
+     * @return User
+     */
+    public function addParentInvite(\StudySauce\Bundle\Entity\ParentInvite $parentInvites)
+    {
+        $this->parentInvites[] = $parentInvites;
+
+        return $this;
+    }
+
+    /**
+     * Remove parentInvites
+     *
+     * @param \StudySauce\Bundle\Entity\ParentInvite $parentInvites
+     */
+    public function removeParentInvite(\StudySauce\Bundle\Entity\ParentInvite $parentInvites)
+    {
+        $this->parentInvites->removeElement($parentInvites);
+    }
+
+    /**
+     * Get parentInvites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getParentInvites()
+    {
+        return $this->parentInvites;
+    }
+
+    /**
+     * Add studentInvites
+     *
+     * @param \StudySauce\Bundle\Entity\ParentInvite $studentInvites
+     * @return User
+     */
+    public function addStudentInvite(\StudySauce\Bundle\Entity\ParentInvite $studentInvites)
+    {
+        $this->studentInvites[] = $studentInvites;
+
+        return $this;
+    }
+
+    /**
+     * Remove studentInvites
+     *
+     * @param \StudySauce\Bundle\Entity\ParentInvite $studentInvites
+     */
+    public function removeStudentInvite(\StudySauce\Bundle\Entity\ParentInvite $studentInvites)
+    {
+        $this->studentInvites->removeElement($studentInvites);
+    }
+
+    /**
+     * Get studentInvites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStudentInvites()
+    {
+        return $this->studentInvites;
     }
 
     /**
@@ -657,7 +797,7 @@ class User extends BaseUser implements EncoderAwareInterface
     /**
      * Add groups
      *
-     * @param GroupInterface|Group $groups
+     * @param \StudySauce\Bundle\Entity\Group $groups
      * @return User
      */
     public function addGroup(GroupInterface $groups)
@@ -670,8 +810,7 @@ class User extends BaseUser implements EncoderAwareInterface
     /**
      * Remove groups
      *
-     * @param GroupInterface|Group $groups
-     * @return $this|void
+     * @param \StudySauce\Bundle\Entity\Group $groups
      */
     public function removeGroup(GroupInterface $groups)
     {
@@ -686,39 +825,5 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getGroups()
     {
         return $this->groups;
-    }
-
-
-    /**
-     * Add payments
-     *
-     * @param \StudySauce\Bundle\Entity\Payment $payments
-     * @return User
-     */
-    public function addPayment(\StudySauce\Bundle\Entity\Payment $payments)
-    {
-        $this->payments[] = $payments;
-
-        return $this;
-    }
-
-    /**
-     * Remove payments
-     *
-     * @param \StudySauce\Bundle\Entity\Payment $payments
-     */
-    public function removePayment(\StudySauce\Bundle\Entity\Payment $payments)
-    {
-        $this->payments->removeElement($payments);
-    }
-
-    /**
-     * Get payments
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPayments()
-    {
-        return $this->payments;
     }
 }

@@ -8,14 +8,13 @@ use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Claim;
 use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Goal;
-use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class GoalsController
@@ -170,7 +169,7 @@ class GoalsController extends Controller
             $orm->flush();
 
             // send partner email
-            $partner = $user->getPartners()->filter(function (Partner $p) {return $p->getActivated();})->first();
+            $partner = $user->getPartnerInvites()->filter(function (PartnerInvite $p) {return $p->getActivated();})->first();
             if($partner)
             {
                 $email = new EmailsController();

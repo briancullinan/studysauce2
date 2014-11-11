@@ -130,8 +130,8 @@ $collection = $router->getRouteCollection();
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->output('javascripts');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']);
 $view['slots']->output('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']);
 echo $view->render('StudySauceBundle:Shared:footer.html.php');
 ?>
 <script>

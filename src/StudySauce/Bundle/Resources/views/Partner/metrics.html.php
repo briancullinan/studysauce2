@@ -2,6 +2,7 @@
 
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $shortTimeIntervals = [
     'years' => 'yr',

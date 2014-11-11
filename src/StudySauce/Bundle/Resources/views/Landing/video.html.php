@@ -4,7 +4,7 @@
         <ul class="slides clearfix">
             <li class="clone">
                 <div class="highlighted-link">
-                    <p><a class="more" href="<?php print $view['router']->generate('register'); ?>">Sign up for free</a><br /><span style="color:#ffffff;">or </span><a href="<?php print $view['router']->generate('login'); ?>" style="font-weight:bold;padding:8px 25px 8px 10px">Sign in</a></p>
+                    <p><a class="more" href="<?php print $view['router']->generate('register'); ?>">Sign up for free</a><br /><span>or </span><a href="<?php print $view['router']->generate('login'); ?>">Sign in</a></p>
                 </div>
                 <div class="player-divider">
                     <div class="player-wrapper">

@@ -1,7 +1,4 @@
-<?php use Symfony\Component\HttpKernel\Controller\ControllerReference; ?>
-
 <div class="features clearfix">
-
     <div class="two-column-guide">
         <h2>Study Sauce features</h2>
         <div class="grid_6">

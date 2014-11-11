@@ -1,3 +1,5 @@
+
+/* copy users */
 select name as username,
        name as username_canonical,
        mail as email,
@@ -42,3 +44,10 @@ from studysauce3.users
   LEFT JOIN studysauce3.field_data_field_last_name ln
     on ln.entity_id = uid and ln.entity_type = 'user';
 
+/* copy groups */
+select mail,title
+from studysauce3.og_membership
+  LEFT join studysauce3.users
+    on uid = etid and entity_type = 'user'
+  left join studysauce3.node
+    on nid = gid and group_type = 'node'

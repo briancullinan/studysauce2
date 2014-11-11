@@ -5,6 +5,11 @@
     background: #555555;
 }
 
+.dashboard-home.adviser .panel-pane .panel-pane
+{
+    display:block;
+}
+
 .dashboard-home .footer
 {
     padding: 0 240px 20px 240px;
@@ -42,6 +47,7 @@
 }
 
 aside + .panel-pane,
+aside ~ .panel-pane:nth-of-type(2),
 .dashboard-home.funnel .header-wrapper + .panel-pane,
 .dashboard-home.adviser .header-wrapper + .panel-pane
 {

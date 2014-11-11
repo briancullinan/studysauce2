@@ -6,10 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="partner")
+ * @ORM\Table(name="partner_invite")
  * @ORM\HasLifecycleCallbacks()
  */
-class Partner
+class PartnerInvite
 {
     /**
      * @ORM\Column(type="integer", name="id")
@@ -19,10 +19,16 @@ class Partner
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="partners")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="partnerInvites")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitedPartners")
+     * @ORM\JoinColumn(name="partner_id", referencedColumnName="id", nullable=true)
+     */
+    protected $partner;
 
     /**
      * @ORM\Column(type="string", length=256, name="first")
@@ -93,7 +99,7 @@ class Partner
      * Set first
      *
      * @param string $first
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setFirst($first)
     {
@@ -116,7 +122,7 @@ class Partner
      * Set last
      *
      * @param string $last
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setLast($last)
     {
@@ -139,7 +145,7 @@ class Partner
      * Set email
      *
      * @param string $email
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setEmail($email)
     {
@@ -162,7 +168,7 @@ class Partner
      * Set permissions
      *
      * @param array $permissions
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setPermissions($permissions)
     {
@@ -185,7 +191,7 @@ class Partner
      * Set activated
      *
      * @param boolean $activated
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setActivated($activated)
     {
@@ -208,7 +214,7 @@ class Partner
      * Set code
      *
      * @param string $code
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setCode($code)
     {
@@ -231,7 +237,7 @@ class Partner
      * Set created
      *
      * @param \DateTime $created
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setCreated($created)
     {
@@ -254,7 +260,7 @@ class Partner
      * Set reminder
      *
      * @param \DateTime $reminder
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setReminder($reminder)
     {
@@ -277,7 +283,7 @@ class Partner
      * Set user
      *
      * @param \StudySauce\Bundle\Entity\User $user
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
@@ -297,10 +303,33 @@ class Partner
     }
 
     /**
+     * Set partner
+     *
+     * @param \StudySauce\Bundle\Entity\User $partner
+     * @return PartnerInvite
+     */
+    public function setPartner(\StudySauce\Bundle\Entity\User $partner = null)
+    {
+        $this->partner = $partner;
+
+        return $this;
+    }
+
+    /**
+     * Get partner
+     *
+     * @return \StudySauce\Bundle\Entity\User 
+     */
+    public function getPartner()
+    {
+        return $this->partner;
+    }
+
+    /**
      * Set photo
      *
      * @param \StudySauce\Bundle\Entity\File $photo
-     * @return Partner
+     * @return PartnerInvite
      */
     public function setPhoto(\StudySauce\Bundle\Entity\File $photo = null)
     {
