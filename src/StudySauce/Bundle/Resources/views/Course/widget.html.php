@@ -10,7 +10,7 @@ if($step == 4) {
 }
 else
     $step++;
-$percent = empty($course) ? 0 : round($step/5.0*100);
+//$percent = empty($course) ? 0 : round($step/5.0*100);
 $overall = round(($level - 1) / 4 * 100);
 ?>
 <div class="widget-wrapper">
@@ -28,7 +28,7 @@ $overall = round(($level - 1) / 4 * 100);
             <?php if($level > 4) { ?>
                 <div class="percent-bars" style="height:100%; background-color:#F90;">&nbsp;</div>
             <?php } else { ?>
-                <div class="percent-bars" style="height:<?php print $percent; ?>%;">&nbsp;</div>
+                <div class="percent-bars" style="height:<?php print $overall; ?>%;">&nbsp;</div>
             <?php } ?>
         </div>
         <div class="highlighted-link">
