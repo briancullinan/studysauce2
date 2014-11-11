@@ -1,12 +1,12 @@
 <?php
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 /** @var GlobalVariables $app */
 /** @var User $user */
 $user = $app->getUser();
-$isDashboard = ($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) ||
-    strpos($view['slots']->get('classes'), 'dashboard-home') > -1;
+$isDashboard = $user != 'anon.' && !$user->hasRole('ROLE_GUEST');
 $isAdviser = $user != 'anon.' && $user->hasRole('ROLE_ADVISER');
 
 $view['slots']->start('body'); ?>

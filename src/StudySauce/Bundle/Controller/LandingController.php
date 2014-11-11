@@ -21,11 +21,10 @@ class LandingController extends Controller
      */
     public function indexAction()
     {
-        /*
-         * The action's view can be rendered using render() method
-         * or @Template annotation as demonstrated in DemoController.
-         *
-         */
+        /** @var User $user */
+        $user = $this->getUser();
+        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST'))
+            return $this->redirect($this->generateUrl('home'));
 
         return $this->render('StudySauceBundle:Landing:index.html.php');
     }
