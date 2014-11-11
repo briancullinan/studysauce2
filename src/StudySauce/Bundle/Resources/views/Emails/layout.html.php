@@ -19,7 +19,7 @@ $email_base = $view['assets']->getUrl('images');
     <?php endif; ?>
 
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
-        <?php $view['slots']->output('body') ?>
+        <?php $view['slots']->output('message') ?>
     </p>
 
     <?php if(!isset($link) || $link !== false): ?>

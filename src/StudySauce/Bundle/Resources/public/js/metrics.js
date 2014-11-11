@@ -1,6 +1,5 @@
 
 $(document).ready(function () {
-
     var body = $('body');
 
     var margins = [25, 0, 45, 0];
@@ -112,7 +111,7 @@ $(document).ready(function () {
             piechart = $(this).find('#pie-chart:visible, .pie-chart:visible');
 
         // show empty dialog
-        if(window.initialHistory.length == 0 && $(this).is('#metrics'))
+        if($(this).is('#metrics') && $(this).is('.demo'))
             $('#metrics-empty').modal({
                 backdrop: 'static',
                 keyboard: false,
@@ -150,7 +149,10 @@ $(document).ready(function () {
                     var content = $(data),
                         metrics = $('#metrics');
                     ssMergeScripts(content.filter('script:not([src])'));
-
+                    if(content.find('#metrics').is('.demo'))
+                        metrics.addClass('demo');
+                    else
+                        metrics.removeClass('demo');
                     // update metrics
                     metrics.find('.checkin-row').remove();
                     jQuery('#checkins-list').append(content.find('.checkin-row'));

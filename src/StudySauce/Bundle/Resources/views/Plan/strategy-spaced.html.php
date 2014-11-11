@@ -5,8 +5,9 @@
         <label>Review material from:</label>
     </div>
     <div class="strategy-notes">
-        <label>Write down any notes below:</label>
-        <textarea type="text" name="strategy-notes"></textarea>
+        <label class="input"><span>Write down any notes below:</span>
+            <textarea name="strategy-notes"></textarea>
+        </label>
     </div>
     <div class="highlighted-link"><a href="#expand">Expand</a><a class="more" href="#save-strategy">Save</a></div>
 </div>

@@ -47,9 +47,8 @@
 }
 
 aside + .panel-pane,
-aside ~ .panel-pane:nth-of-type(2),
-.dashboard-home.funnel .header-wrapper + .panel-pane,
-.dashboard-home.adviser .header-wrapper + .panel-pane
+.header-wrapper ~ .panel-pane:nth-of-type(2),
+.tipsy ~ .panel-pane:nth-of-type(3)
 {
     display:block;
 }

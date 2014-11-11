@@ -53,7 +53,7 @@ $(document).ready(function () {
             strategy = plans.find('.strategy-' + that.val()).length == 0 // make sure this type of strategy still exists
                 ? (/default-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1]
                 : that.val(),
-            eventId = (/event-id-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
+            eventId = (/event-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
             classname = row.find('.class-name').text();
 
         // add strategy if they haven't used it before
@@ -86,7 +86,7 @@ $(document).ready(function () {
             }
             if(strategy == 'spaced')
             {
-                var dates = _.where(window.planEvents, {eventId: row.attr('id').substr(4)})['dates'];
+                var dates = _.where(window.planEvents, {eventId: eventId})['dates'];
                 if(typeof dates != 'undefined')
                 {
                     var dateStr = dates.map(function ($d, $i) {
@@ -247,7 +247,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var that = jQuery(this),
             row = that.parents('.session-row'),
-            eventId = (/event-id-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
+            eventId = (/event-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
             strategies = [];
         row.find('.strategy-active, .strategy-spaced, .strategy-teach, .strategy-other, .strategy-prework').each(function () {
             var that = jQuery(this);

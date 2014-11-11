@@ -5,7 +5,7 @@ $view->extend('StudySauceBundle:Emails:layout.html.php');
 
 /** @var User $user */
 
-$view['slots']->start('body'); ?>
+$view['slots']->start('message'); ?>
 <?php $user->getFirst(); ?> wants to invite you to become an accountability partner.<br />
 <br />
 Research shows that simply writing down goals makes them more likely to be achieved. Having an accountability partner greatly increases the probability of achievement. All students have ups and downs in school and finding someone to help motivate and challenge them along the way can be invaluable.<br />

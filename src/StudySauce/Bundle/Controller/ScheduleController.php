@@ -28,8 +28,10 @@ class ScheduleController extends Controller
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
+
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
+
         $demo = self::getDemoSchedule($userManager, $orm);
         $demoCourses = self::getDemoCourses($demo, $orm);
         $demoOthers = self::getDemoOthers($demo, $orm);

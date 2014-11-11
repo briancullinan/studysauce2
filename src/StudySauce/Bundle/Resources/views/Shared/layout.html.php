@@ -131,6 +131,10 @@ $collection = $router->getRouteCollection();
 <?php endforeach;
 $view['slots']->output('javascripts');
 $view['slots']->output('sincludes');
+// show error dialogs in debug environment
+if($app->getEnvironment() == 'dev') {
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:error'));
+}
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']);
 echo $view->render('StudySauceBundle:Shared:footer.html.php');
 ?>

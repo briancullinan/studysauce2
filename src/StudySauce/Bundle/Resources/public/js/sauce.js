@@ -124,7 +124,11 @@ $.ajax = function(settings){
     var success = settings.success;
     settings.success = function (data, textStatus, jqXHR) {
         if (typeof data == 'string' && data.indexOf('{"redirect":') > -1) {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data.substr(0, 4096)); // no way a redirect would be longer than that
+            } catch (ignore) {
+
+            }
         }
         if (data != null && typeof data.redirect != 'undefined') {
             var a = document.createElement('a');
@@ -141,7 +145,21 @@ $.ajax = function(settings){
 };
 
 $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
-
+    var dialog = $('#error-dialog');
+    if(dialog.length > 0)
+    {
+        var error = '';
+        try {
+            console.log(thrownError.stack);
+            var content = $(jqXHR.responseText);
+            if(content.filter('#error'))
+                error = content.filter('#error').find('.pane-content').html();
+        } catch(ex) {
+            error = jqXHR.responseText;
+        }
+        dialog.find('.modal-body').html(error);
+        dialog.modal();
+    }
 });
 
 $(document).ajaxStop(function () {

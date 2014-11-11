@@ -19,6 +19,14 @@ $view['slots']->start('body');
 
 $view['slots']->stop();
 
+$view['slots']->start('stylesheets');
+
+$view['slots']->stop();
+
+$view['slots']->start('javascripts');
+
+$view['slots']->stop();
+
 $view['slots']->start('sincludes');
 $view['slots']->output('userBody');
 $view['slots']->stop();

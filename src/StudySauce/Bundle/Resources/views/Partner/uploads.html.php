@@ -8,10 +8,10 @@ use StudySauce\Bundle\Entity\TeachStrategy;
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane" id="Uploads">
+<div class="panel-pane" id="uploads">
     <div class="pane-content">
         <?php echo $view->render('StudySauceBundle:Partner:partner-nav.html.php', ['user' => $user]); ?>
-        <h2>Upcoming deadlines</h2>
+        <h2>Uploads</h2>
         <?php
 if(empty($uploads)) {
     ?>

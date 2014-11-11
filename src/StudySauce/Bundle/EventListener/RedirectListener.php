@@ -2,8 +2,10 @@
 
 namespace StudySauce\Bundle\EventListener;
 
+use StudySauce\Bundle\Controller\EmailsController;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -63,32 +65,45 @@ class RedirectListener implements EventSubscriberInterface
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         // provide the better way to display a enhanced error page only in prod environment, if you want
-        //if ('prod' == $this->kernel->getEnvironment()) {
         // exception object
         $exception = $event->getException();
+        try
+        {
+            // try to notify admin
+            $email = new EmailsController();
+            $email->setContainer($this->kernel->getContainer());
+            $email->administratorAction(null, $exception);
+        }
+        catch(\Exception $x)
+        {
+            // nothing more we can do here, hope it gets logged.
+            $ex = $x;
+        }
 
         // new Response object
         $response = new Response();
 
+        /** @var Request $request */
+        $request = $event->getRequest();
+
         // set response content
+        if(empty($request->get('_format')) || $request->get('_format') == 'index')
+            $request->attributes->set('_format', 'funnel');
         if ($exception instanceof NotFoundHttpException) {
-            $event->getRequest()->request->set('_format', 'funnel');
             $response->setContent(
-            // create you custom template AcmeFooBundle:Exception:exception.html.twig
                 $this->templating->render(
                     'StudySauceBundle:Exception:error404.html.php'
                 )
             );
         }
         else {
-            return;
             $response->setContent(
-            // create you custom template AcmeFooBundle:Exception:exception.html.twig
                 $this->templating->render(
                     'StudySauceBundle:Exception:error.html.php'
                 )
             );
         }
+
         // HttpExceptionInterface is a special type of exception
         // that holds status code and header details
         if ($exception instanceof HttpExceptionInterface) {
@@ -100,7 +115,6 @@ class RedirectListener implements EventSubscriberInterface
 
         // set the new $response object to the $event
         $event->setResponse($response);
-        //}
     }
 
     /**

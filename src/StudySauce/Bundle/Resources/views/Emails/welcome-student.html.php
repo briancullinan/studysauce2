@@ -1,7 +1,7 @@
 <?php
 $view->extend('StudySauceBundle:Emails:layout.html.php');
 
-$view['slots']->start('body'); ?>
+$view['slots']->start('message'); ?>
 Congratulations on taking the first step to improving your study effectiveness!  To get the most out of Study Sauce, we recommend a few key things to do.<br />
 <br />
 1. Enter your important deadlines and we will send you reminders to stay on track.<br />

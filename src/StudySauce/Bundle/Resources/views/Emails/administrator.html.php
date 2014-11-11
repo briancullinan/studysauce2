@@ -1,11 +1,17 @@
 <?php
 $view->extend('StudySauceBundle:Emails:layout.html.php');
 
-$view['slots']->start('body'); ?>
+$view['slots']->start('message'); ?>
 <p><?php
 foreach($properties as $i => $prop)
 {
-    print $i . ' = ' . $prop . '<br />';
+    try {
+        print $i . ' = ' . $prop . '<br />';
+    }
+    catch(\Exception $x)
+    {
+
+    }
 }
 ?></p>
 <?php $view['slots']->stop(); ?>

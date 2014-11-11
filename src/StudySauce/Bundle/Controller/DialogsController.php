@@ -75,6 +75,14 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function errorAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:error-dialog.html.php', ['id' => 'error-dialog']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function checkinEmptyAction()
     {
         return $this->render('StudySauceBundle:Dialogs:checkin-empty.html.php', ['id' => 'checkin-empty']);

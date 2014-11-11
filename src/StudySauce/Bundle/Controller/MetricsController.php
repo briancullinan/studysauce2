@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
@@ -23,6 +24,12 @@ class MetricsController extends Controller
      */
     public function indexAction(User $user = null, $template = ['Metrics', 'tab'])
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
@@ -31,8 +38,14 @@ class MetricsController extends Controller
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
             $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-        else
-            $courses = [];
+
+        $isDemo = false;
+        if(empty($schedule) || empty($courses)) {
+            $isDemo = true;
+            $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            self::demoCheckins($courses, $orm);
+        }
 
         list($checkins, $checkouts) = self::cleanCheckins($courses);
         list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
@@ -46,7 +59,8 @@ class MetricsController extends Controller
                 'checkins' => $checkins,
                 'checkouts' => $checkouts,
                 'times' => $times,
-                'user' => $user
+                'user' => $user,
+                'isDemo' => $isDemo
             ]);
     }
 
@@ -171,6 +185,54 @@ class MetricsController extends Controller
                 return $x['time'];
             }, (array)$times);
         array_multisort($classes, SORT_NUMERIC, SORT_ASC, $ts, SORT_NUMERIC, SORT_ASC, $times);
+    }
+
+    private static $randomLengths = [30,45,50,60];
+
+    /**
+     * @param $courses
+     * @param EntityManager $orm
+     */
+    public static function demoCheckins($courses, EntityManager $orm)
+    {
+        $_week = strtotime('last Sunday');
+        if ($_week + 604800 == strtotime('today')) {
+            $_week += 604800;
+        }
+
+        // automatically generate 10 checkins per day
+        for($d = 0; $d < 7; $d++)
+        {
+            $dailyCount = 0;
+            foreach ($courses as $i => $c) {
+                /** @var Course $c */
+                $dailyCount += $c->getCheckins()->filter(function (Checkin $ch) use($_week, $d) {
+                        return $ch->getCheckin()->getTimestamp() > ($_week + 86400 * $d) &&
+                            $ch->getCheckin()->getTimestamp() < ($_week + 86400 * $d + 86400);
+                    })->count();
+            }
+            if($dailyCount == 0)
+            {
+                for($j = 0; $j < 10; $j++)
+                {
+                    // choose course at random
+                    $c = $courses[array_rand($courses, 1)];
+                    $l = self::$randomLengths[array_rand(self::$randomLengths, 1)];
+                    $checkin = new Checkin();
+                    $checkin->setCourse($c);
+                    $c->addCheckin($checkin);
+                    $t = clone $c->getEndTime();
+                    $t->setTimestamp($_week + 86400 * $d);
+                    $t->setTime(intval($c->getEndTime()->format('H')), 0, 0);
+                    $checkin->setCheckin($t);
+                    $checkin->setUtcCheckin(new \DateTime());
+                    $checkin->setCheckout(date_add(clone $t, new \DateInterval('PT' . $l . 'M')));
+                    $checkin->setUtcCheckout(new \DateTime());
+                    $orm->persist($checkin);
+                }
+            }
+        }
+        $orm->flush();
     }
 
     /**

@@ -48,15 +48,10 @@ foreach ($view['assetic']->javascripts(['@checkin',],[],['output' => 'bundles/st
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 foreach ($view['assetic']->javascripts([
-    '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
-    '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.js',
-    '@StudySauceBundle/Resources/public/js/strategies.js',
+    '@plan',
 ],
 [],
 ['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
-    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/plan.js',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 ?>

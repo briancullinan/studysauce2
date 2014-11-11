@@ -40,8 +40,7 @@ foreach ($view['assetic']->javascripts([
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-
-<div class="panel-pane" id="metrics">
+<div class="panel-pane <?php print ($isDemo ? ' demo' : ''); ?>" id="metrics">
     <div class="pane-content">
         <h2>Study metrics</h2>
         <div class="centrify">

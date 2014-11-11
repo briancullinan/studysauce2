@@ -36,10 +36,7 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(
     [
-        '@StudySauceBundle/Resources/public/js/plan.js',
-        '@StudySauceBundle/Resources/public/js/strategies.js',
-        '@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
-        '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.js'
+        '@plan'
     ],
     [],
     ['output' => 'bundles/studysauce/js/*.js']
@@ -74,7 +71,6 @@ $view['slots']->start('body'); ?>
                 <label class="radio"><input type="radio" name="plan-sort" value="date"
                                             checked="checked"/><i></i>Date</label>
                 <label class="radio"><input type="radio" name="plan-sort" value="class"><i></i>Class</label>
-                <a href="#expand">Expand</a>
                 <label class="checkbox" title="Click here to see sessions that have already passed.">
                     <input type="checkbox"><i></i>Past session</label>
             </div>

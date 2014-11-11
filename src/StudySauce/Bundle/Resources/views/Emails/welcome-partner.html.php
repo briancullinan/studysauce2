@@ -1,7 +1,7 @@
 <?php
 $view->extend('StudySauceBundle:Emails:layout.html.php');
 
-$view['slots']->start('body'); ?>
+$view['slots']->start('message'); ?>
 Thank you for joining Study Sauce on behalf of your student.  To get the most out of our service, we recommend a few key things to get started.<br />
 <br />
 1. Set up regular check in meetings with your student to discuss the highs and lows of school.  We recommend weekly meetings.<br />
