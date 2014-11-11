@@ -82,8 +82,23 @@ $(document).ready(function () {
                         partner.find('.plup-filelist .squiggle').stop().remove();
                         partner.find('.plupload img').attr('src', data.src);
                         body.find('#partner-message img').attr('src', data.src);
-                        partnerFunc();
-                        partner.find('a[href="#partner-save"]').trigger('click');
+                        jQuery.ajax({
+                            url: window.callbackPaths['update_partner'],
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                photo: partner.find('input[name="partner-plupload"]').val(),
+                                first: partner.find('.first-name input').val(),
+                                last: partner.find('.last-name input').val(),
+                                email: partner.find('.email input').val(),
+                                permissions: $('#partner').find('.permissions input:checked').map(function (i, o) {
+                                    return jQuery(o).val();
+                                }).toArray().join(',')
+                            },
+                            success: function () {
+
+                            }
+                        });
                     },
                     Error: function(up, err) {
                     }
@@ -119,7 +134,8 @@ $(document).ready(function () {
             success: function () {
                 partner.data('state', hash);
                 $('#partner-confirm').modal();
-                body.find('#partner-message > div > span').replaceWith('<span>' + partner.find('.first-name input').val() + ' ' + partner.find('.last-name input').val() + '</span>');
+                body.find('#partner-message > div > span, #partner-message > div > a')
+                    .first().replaceWith('<span>' + partner.find('.first-name input').val() + ' ' + partner.find('.last-name input').val() + '</span>');
 
                 // update masthead
                 // update masthead picture

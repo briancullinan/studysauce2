@@ -1,21 +1,18 @@
 <?php
 use StudySauce\Bundle\Entity\PartnerInvite;
 
-$isDashboard = ($app->getUser() != 'anon.' && !$app->getUser()->hasRole('ROLE_GUEST')) ||
-    strpos($view['slots']->get('classes'), 'dashboard-home') > -1;
-$isAdviser = $app->getUser() != 'anon.' && $app->getUser()->hasRole('ROLE_ADVISER');
 /** @var PartnerInvite $partner */
-$partner = $app->getUser()->getPartnerInvites()->first();
+$partner = !empty($app->getUser()) ? $app->getUser()->getPartnerInvites()->first() : null;
 ?>
 <div class="header-wrapper navbar navbar-inverse">
     <div class="header">
         <div id="site-name" class="container navbar-header">
-            <a title="Home" href="<?php print $view['router']->generate($isAdviser ? 'userlist' : ($isDashboard ? 'home' : '_welcome')); ?>">
+            <a title="Home" href="<?php print $view['router']->generate('home'); ?>">
                 <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/logo_4_trans_2.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?><span><strong>Study</strong> Sauce</span></a>
         </div>
-        <?php if($app->getRequest()->get('_format') == 'index' && $isDashboard) { ?>
+        <?php if($app->getRequest()->get('_format') == 'index') { ?>
             <div id="partner-message">
                 <?php if(!empty($partner)) { ?>
                     <div>

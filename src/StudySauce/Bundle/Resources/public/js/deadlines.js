@@ -135,6 +135,8 @@ $(document).ready(function () {
             });
         if(options.length == 0)
             deadlines.addClass('empty');
+        else
+            deadlines.removeClass('empty');
         deadlines.find('.class-name select').replaceWith('<select>' + options.join('') + '</select>');
     });
     body.on('click', '#deadlines .deadline-row:not(.edit) > div:not(.reminder)', function () {
@@ -151,8 +153,8 @@ $(document).ready(function () {
         evt.preventDefault();
         var newDeadline = deadlines.find('.deadline-row').first().clone()
             .removeClass('read-only hide').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
-        newDeadline.attr('class', newDeadline.attr('class').replace(/deadline-id-([0-9]+)(\s|$)/ig), 'deadline-id-');
-        newDeadline.find('.class-name select, .assignment input').val('');
+        newDeadline.attr('class', newDeadline.attr('class').replace(/deadline-id-([0-9]*)(\s|$)/ig, ' deadline-id- '));
+        newDeadline.find('.class-name select, .assignment input, .percent input').val('');
         newDeadline.find('.due-date input').removeClass('hasDatepicker').val('');
         newDeadline.find('.reminder input').removeAttr('checked').prop('checked', false);
         datesFunc.apply(newDeadline);

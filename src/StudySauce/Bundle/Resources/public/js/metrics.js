@@ -84,6 +84,8 @@ $(document).ready(function () {
             s.maxLength = d3.max(s.values, function (d) { return d.length; });
             s.sumLength = d3.sum(s.values, function (d) { return d.length; });
             s.minTime = d3.min(s.values, function (d) { return d.time; });
+            if(typeof s.values[0] != 'undefined')
+                s.class = s.values[0]['class'];
         });
 
         var g = svg.selectAll("g.symbol")
@@ -226,7 +228,7 @@ $(document).ready(function () {
                 title: function () {
                     var total = d3.sum(classes, function (c) { return c.sumLength; }),
                         d = this.__data__.data; //, c = color(d.key);
-                    return d.key + '<br />' + (Math.round(d.sumLength * 10 / 3600) / 10) + ' hrs' + '<br />' + (Math.round(d.sumLength / total * 1000) / 10) + '%';
+                    return d['class'] + '<br />' + (Math.round(d.sumLength * 10 / 3600) / 10) + ' hrs' + '<br />' + (Math.round(d.sumLength / total * 1000) / 10) + '%';
                 }
             })
 

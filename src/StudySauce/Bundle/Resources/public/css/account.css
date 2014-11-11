@@ -148,6 +148,11 @@ a[href="#sign-in-with-email"]
     vertical-align: bottom;
 }
 
+#account .edit-icons a:first-child
+{
+    margin-left:0;
+}
+
 #account a[href="#edit-password"],
 #account a[href="#edit-account"],
 #account a[href="#cancel-confirm"]

@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * AnonymousAuthenticationListener automatically adds a Token if none is
@@ -33,7 +34,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class AnonymousAuthenticationListener implements EventSubscriberInterface
+class AnonymousAuthenticationListener implements ListenerInterface
 {
     /** @var $context \Symfony\Component\Security\Core\SecurityContext */
     private $context;
@@ -91,7 +92,7 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
      *
      * @param GetResponseEvent $event A GetResponseEvent instance
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function handle(GetResponseEvent $event)
     {
         /** @var User $user */
         /** @var MessageDigestPasswordEncoder $encoder */
@@ -142,9 +143,11 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
         }
     }
 
+
     /**
      * @return array
      */
+    /*
     public static function getSubscribedEvents()
     {
         return [
@@ -152,10 +155,11 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
             KernelEvents::RESPONSE => ['onKernelResponse', -128]
         ];
     }
-
+*/
     /**
      * @param FilterResponseEvent $event
      */
+    /*
     public function onKernelResponse(FilterResponseEvent $event)
     {
         $request = $event->getRequest();
@@ -172,5 +176,5 @@ class AnonymousAuthenticationListener implements EventSubscriberInterface
         }
 
     }
-
+*/
 }

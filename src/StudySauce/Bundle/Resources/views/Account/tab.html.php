@@ -33,10 +33,13 @@ $view['slots']->start('body'); ?>
     <div class="pane-content">
         <h2>Account settings</h2>
         <div class="type">
-            <label><span>Account type</span></label>
-            <label class="radio"><input name="account-type" type="radio" value="free" <?php print (empty($payment) ? 'checked="checked"' : ''); ?>><i></i><span>Free</span></label>
-            <label class="radio"><input name="account-type" type="radio" value="monthly" <?php print (!empty($payment) && $payment->getProduct() == 'monthly' ? 'checked="checked"' : ''); ?>><i></i><span>Monthly</span></label>
-            <label class="radio"><input name="account-type" type="radio" value="yearly" <?php print (!empty($payment) && $payment->getProduct() == 'yearly' ? 'checked="checked"' : ''); ?>><i></i><span>Yearly</span></label>
+            <label><span>Account type</span></label><?php if(!$user->hasRole('ROLE_PAID')) {
+                print 'Free';
+            } elseif(!empty($payment) && $payment->getProduct() == 'monthly') {
+                print 'Monthly';
+            } else {
+                print 'Yearly';
+            } ?>
         </div>
         <div class="account-info read-only">
             <div class="first-name">
@@ -61,7 +64,9 @@ $view['slots']->start('body'); ?>
                 <a href="#edit-password">Change password</a>
                 <?php if($user->hasRole('ROLE_PAID')) { ?>
                     <a href="#cancel-confirm" data-toggle="modal">Cancel account</a>
-                <?php } ?>
+                <?php } else {
+                    ?><a href="<?php print $view['router']->generate('premium'); ?>" class="more">Upgrade</a><?php
+                }?>
             </div>
             <a href="#save-account" class="more">Save</a>
         </div>

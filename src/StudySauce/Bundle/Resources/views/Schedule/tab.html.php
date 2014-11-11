@@ -197,7 +197,6 @@ $view['slots']->start('body'); ?>
             <a href="#save-class" class="more">Next</a>
         <?php } else { ?>
             <a href="#save-class" class="more" style="<?php print (!$isDemo ? 'visibility:hidden;' : ''); ?>">Save</a>
-            <a href="<?php print $view['router']->generate('customization'); ?>">Customize courses</a>
         <?php } ?>
     </div>
     <hr/>

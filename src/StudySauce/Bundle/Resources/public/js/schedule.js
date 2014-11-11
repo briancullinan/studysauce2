@@ -243,6 +243,7 @@ $(document).ready(function () {
             addClass = list.find('.class-row').first().clone().removeAttr('id')
                 .removeClass('read-only').addClass('edit').appendTo(list);
         // reset fields for the new entry
+        addClass.attr('class', addClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
             .removeClass('is-timeEntry hasDatepicker').val('');
         addClass.find('.day-of-the-week input').removeAttr('checked').prop('checked', false);

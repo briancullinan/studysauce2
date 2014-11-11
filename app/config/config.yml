@@ -24,10 +24,10 @@ services:
         tags:
             - {name: "kernel.fragment_renderer"}
 
-    kernel.listener.anonymous:
+    security.authentication.listener.anonymous:
         class: StudySauce\Bundle\EventListener\AnonymousAuthenticationListener
         tags:
-            - {name: kernel.event_subscriber}
+            - {name: monolog.logger, channel: security}
         arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager", "@router"]
 
     kernel.listener.redirect:

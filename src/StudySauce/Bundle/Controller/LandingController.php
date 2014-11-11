@@ -119,7 +119,7 @@ class LandingController extends Controller
         $user = $this->getUser();
 
         /** @var PartnerInvite $partner */
-        $partner = $orm->getRepository('StudySauceBundle:Partner')->findOneBy(['code' => $request->get('_code')]);
+        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->get('_code')]);
         if(!empty($partner)) {
             $partner->setActivated(true);
             $orm->merge($partner);

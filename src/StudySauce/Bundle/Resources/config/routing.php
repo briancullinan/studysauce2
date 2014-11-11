@@ -222,8 +222,21 @@ $collection->add(
     'partner',
     new Route(
         '/partner/{_format}',
-        ['_controller' => 'StudySauceBundle:Partner:index', '_format' => 'index',],
+        ['_controller' => 'StudySauceBundle:Partner:index', '_format' => 'index'],
         ['_format' => DASHBOARD_VIEWS,]
+    )
+);
+$collection->add(
+    'update_partner',
+    new Route(
+        '/partner/update',
+        ['_controller' => 'StudySauceBundle:Partner:update'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 $collection->add(

@@ -295,7 +295,7 @@ class EmailsController extends Controller
         if(is_array($properties)) {
             $message = Swift_Message::newInstance()
                 ->setSubject('Message from ' . $from)
-                ->setFrom($user->getEmail())
+                ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
                 ->setTo('admin@studysauce.com')
                 ->setBody(
                     $this->renderView(
