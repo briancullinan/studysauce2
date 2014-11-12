@@ -2,16 +2,14 @@
 
 namespace StudySauce\Bundle\Controller;
 
-use Aws\CloudFront\Exception\Exception;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -85,37 +83,6 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function removeAction(Request $request)
-    {
-        if(!$request->get('cancel'))
-            throw new Exception('Unconfirmed');
-
-        /** @var $user User */
-        $user = $this->getUser();
-
-        // set status to disabled
-        //$user->setEnabled(false);
-
-        /** @var $userManager UserManager */
-        //$userManager = $this->get('fos_user.user_manager');
-        //$userManager->updateUser($user);
-
-        // remove subscriptions
-        $buy = new BuyController();
-        $buy->setContainer($this->container);
-        $buy->cancelPaymentAction($user);
-
-        // kill session, log out user, and redirect
-        /** @var Session $session */
-        $session = $this->container->get('session');
-        $session->invalidate();
-        return new JsonResponse(true);
-    }
-
-    /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deniedAction()
@@ -153,6 +120,9 @@ class AccountController extends Controller
      */
     public function registerAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
         // list oauth services
         $services = [];
         /** @var OAuthHelper $oauth */
@@ -164,6 +134,19 @@ class AccountController extends Controller
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
+
+        if(!empty($request->getSession()->get('partner'))) {
+            /** @var PartnerInvite $partner */
+            $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
+            return $this->render('StudySauceBundle:Account:register.html.php', [
+                    'email' => $partner->getEmail(),
+                    'first' => $partner->getFirst(),
+                    'last' => $partner->getLast(),
+                    'csrf_token' => $csrfToken,
+                    'services' => $services
+                ]);
+        }
+
         return $this->render('StudySauceBundle:Account:register.html.php', [
                 'email' => $request->get('email'),
                 'first' => $request->get('first'),
@@ -184,7 +167,7 @@ class AccountController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        $user = $userManager->findUserByUsername($request->get('email'));
+        $user = $userManager->findUserByEmail($request->get('email'));
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
@@ -202,6 +185,14 @@ class AccountController extends Controller
             $user->setPassword($password);
             $user->setEmail($request->get('email'));
             $user->addRole('ROLE_USER');
+            // assign user to partner
+            if(!empty($request->getSession()->get('partner'))) {
+                $user->addRole('ROLE_PARTNER');
+                /** @var PartnerInvite $partner */
+                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
+                $partner->setPartner($user);
+                $orm->merge($partner);
+            }
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));
             $user->setLast($request->get('last'));
@@ -213,7 +204,10 @@ class AccountController extends Controller
             $context->setToken($token);
             $session = $request->getSession();
             $session->set('_security_main', serialize($token));
-            $response = $this->redirect($this->generateUrl('home'));
+            if($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
+                $response = $this->redirect($this->generateUrl('userlist'));
+            else
+                $response = $this->redirect($this->generateUrl('home'));
 
             $loginManager = $this->get('fos_user.security.login_manager');
             $loginManager->loginUser('main', $user, $response);

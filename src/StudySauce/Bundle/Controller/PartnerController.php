@@ -112,6 +112,9 @@ class PartnerController extends Controller
      */
     public function userlistAction()
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
         /** @var $user User */
         $user = $this->getUser();
 
@@ -123,6 +126,13 @@ class PartnerController extends Controller
             $users = array_merge($users, $g->getUsers()->toArray());
         }
 
+        /** @var PartnerInvite $partner */
+        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findBy(['partner' => $user->getId()]);
+        foreach($partner as $j => $p)
+        {
+            /** @var PartnerInvite $p */
+            $users[] = $p->getUser();
+        }
         // show sessions
         /** @var ArrayCollection $visits */
         /*

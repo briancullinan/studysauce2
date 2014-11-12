@@ -102,13 +102,11 @@ class PlanController extends Controller
 
         // get events for current week
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm);
-        $courses = $schedule->getCourses()->filter(function (Course $c) {
-                return $c->getType() == 'c';
-            });
+        $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
-                'courses' => $courses,
-                'jsonEvents' =>  self::getJsonEvents($events, $courses->toArray()),
+                'courses' => array_values($courses),
+                'jsonEvents' =>  self::getJsonEvents($events, array_values($courses)),
                 'user' => $user,
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week
@@ -159,15 +157,13 @@ class PlanController extends Controller
         // TODO: get demo Deadlines?
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $week, $orm);
 
+        $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         return $this->render(
             'StudySauceBundle:Plan:widget.html.php',
             [
                 'events' => $events,
                 'user' => $user,
-                'classes' => array_map(function (Course $c) {return $c->getName();},
-                    $schedule->getCourses()->filter(function (Course $c) {
-                            return $c->getType() == 'c';
-                        })->toArray())
+                'classes' => array_map(function (Course $c) {return $c->getName();}, array_values($courses))
             ]
         );
     }
@@ -294,11 +290,7 @@ class PlanController extends Controller
         // TODO: get holidays and deadlines
 
         // add reoccurring events
-        $classes = $courses->filter(
-            function (Course $c) {
-                return $c->getType() == 'c';
-            }
-        )->toArray();
+        $classes = $courses->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         $reoccurring = [];
         foreach ($classes as $i => $course) {
             /** @var Course $course */

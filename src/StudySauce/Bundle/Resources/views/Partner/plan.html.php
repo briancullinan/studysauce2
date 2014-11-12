@@ -4,8 +4,6 @@ use StudySauce\Bundle\Entity\Course;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use StudySauce\Bundle\Entity\Event;
 
-/** @var ArrayCollection $courses */
-
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
@@ -104,7 +102,7 @@ $view['slots']->start('body'); ?>
 
                 /** @var Course $course */
                 $course = $event->getCourse();
-                $classI = array_search($course, $courses->toArray());
+                $classI = array_search($course, $courses);
                 if ($classI === false) {
                     $classI = '';
                 }

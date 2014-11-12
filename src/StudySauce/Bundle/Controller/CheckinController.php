@@ -46,8 +46,8 @@ class CheckinController extends Controller
 
         return $this->render('StudySauceBundle:Checkin:tab.html.php', [
                 'csrf_token' => $csrfToken,
-                'demoCourses' => $demoCourses,
-                'courses' => $courses
+                'demoCourses' => array_values($demoCourses),
+                'courses' => array_values($courses)
             ]);
     }
 
@@ -75,8 +75,8 @@ class CheckinController extends Controller
             $courses = [];
 
         return $this->render('StudySauceBundle:Checkin:widget.html.php', [
-                'demoCourses' => $demoCourses,
-                'courses' => $courses
+                'demoCourses' => array_values($demoCourses),
+                'courses' => array_values($courses)
             ]);
     }
 

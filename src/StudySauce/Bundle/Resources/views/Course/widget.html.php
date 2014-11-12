@@ -1,9 +1,9 @@
 <?php
 use Course1\Bundle\Entity\Course1;
 /** @var Course1 $course */
-$level = empty($course) || /* base 1 index */ empty($course->getLevel()) ? 1 : $course->getLevel();
+$level = empty($course) ? 0 : $course->getLevel();
 $step = empty($course) ? 0 : $course->getStep();
-// add one becuse we always go to the next step
+// add one because we always go to the next step
 if($step == 4) {
     $step = 0;
     $level++;
@@ -11,7 +11,7 @@ if($step == 4) {
 else
     $step++;
 //$percent = empty($course) ? 0 : round($step/5.0*100);
-$overall = round(($level - 1) / 4 * 100);
+$overall = round($level / 4.0 * 100);
 ?>
 <div class="widget-wrapper">
     <div class="widget course-widget">
@@ -35,7 +35,7 @@ $overall = round(($level - 1) / 4 * 100);
             <?php if($level > 4) { ?>
                 <h4>Complete!</h4>
             <?php } else { ?>
-                <a href="<?php print $view['router']->generate('lesson' . $level, ['_step' => $step]); ?>" class="more">Next module</a>
+                <a href="<?php print $view['router']->generate('lesson' . (empty($level) ? 1 : $level), ['_step' => $step]); ?>" class="more">Next module</a>
             <?php } ?>
         </div>
     </div>

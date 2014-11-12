@@ -30,14 +30,14 @@ $view['slots']->start('body'); ?>
     <div class="pane-content">
         <h2>Welcome, let's get started.</h2>
         <?php
-        $first = true;
+        $isFirst = true;
         foreach($services as $o => $url)
         {
-            if(!$first)
+            if(!$isFirst)
             {
                 ?><div class="signup-or"><span>Or</span></div><?php
             }
-            $first = false;
+            $isFirst = false;
             ?><a href="<?php print $url; ?>" class="more">Sign in</a><br /><?php
         }?>
         <a href="#sign-in-with-email" class="cloak">Or register in with <span class="reveal">email</span></a>
@@ -48,7 +48,7 @@ $view['slots']->start('body'); ?>
             <label class="input"><input type="text" placeholder="Last name" value="<?php print (isset($last) ? $last : ''); ?>"></label>
         </div>
         <div class="email">
-            <label class="input"><input type="text" placeholder="Email" value="<?php print (isset($username) ? $username : ''); ?>"></label>
+            <label class="input"><input type="text" placeholder="Email" value="<?php print (isset($email) ? $email : ''); ?>"></label>
         </div>
         <div class="password">
             <label class="input"><input type="password" placeholder="Enter password" value=""></label>

@@ -67,7 +67,7 @@ a[href="#sign-in-with-email"]
     margin:10px auto;
 }
 
-#account .type label:first-of-type,
+#account .type label span,
 #account .password label span,
 #account .new-password label span,
 #account .email label span,

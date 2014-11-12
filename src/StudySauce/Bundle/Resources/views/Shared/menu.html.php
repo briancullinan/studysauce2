@@ -17,7 +17,9 @@ $user = $app->getUser();
             <li><a href="<?php print $view['router']->generate('checkin'); ?>"><span>&nbsp;</span>Check in</a></li>
             <li><a href="<?php print $view['router']->generate('metrics'); ?>"><span>&nbsp;</span>Study metrics</a></li>
             <li><a href="<?php print $view['router']->generate('partner'); ?>"><span>&nbsp;</span>Accountability partner</a></li>
-            <li><a href="<?php print $view['router']->generate('premium'); ?>"><span>&nbsp;</span>Premium</a></li>
+            <?php if(!$user->hasRole('ROLE_PAID')) { ?>
+                <li><a href="<?php print $view['router']->generate('premium'); ?>"><span>&nbsp;</span>Premium</a></li>
+            <?php } ?>
             <li><a href="<?php print $view['router']->generate('plan'); ?>"><span>&nbsp;</span>Study plan<?php if(!$user->hasRole('ROLE_PAID')) { ?> <sup class="premium">Premium</sup><?php } ?></a></li>
             <li><a href="<?php print $view['router']->generate('profile'); ?>"><span>&nbsp;</span>Study profile<?php if(!$user->hasRole('ROLE_PAID')) { ?> <sup class="premium">Premium</sup><?php } ?></a></li>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>

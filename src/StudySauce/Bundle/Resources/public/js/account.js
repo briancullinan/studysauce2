@@ -67,7 +67,7 @@ jQuery(document).ready(function() {
             return;
         cancel.removeClass('valid').addClass('invalid');
         jQuery.ajax({
-            url: window.callbackPaths['account_remove'],
+            url: window.callbackPaths['cancel_payment'],
             type: 'POST',
             dataType: 'json',
             data: {
@@ -77,6 +77,7 @@ jQuery(document).ready(function() {
             success: function () {
                 // redirected and logged out automatically by server
                 $('#cancel-confirm').modal('hide');
+                account.find('.type label').replaceWith('<label><span>Account type</span>Free</label>');
             },
             error: function () {
                 cancel.removeClass('invalid').addClass('valid');

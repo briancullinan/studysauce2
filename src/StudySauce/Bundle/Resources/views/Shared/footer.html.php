@@ -34,7 +34,7 @@ $user = $app->getUser();
             <li><a href="<?php print $view['router']->generate('about'); ?>">About us</a></li>
             <li><a href="#contact-support" data-toggle="modal">Contact us</a></li>
             <li><a href="<?php print $view['router']->generate('refund'); ?>">Refund policy</a></li>
-            <?php if ($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) { ?>
+            <?php if (!empty($user) && is_object($user) && !$user->hasRole('ROLE_GUEST')) { ?>
                 <li class="last"><a href="<?php print $view['router']->generate('logout'); ?>">Logout</a></li>
             <?php } ?>
         </ul>

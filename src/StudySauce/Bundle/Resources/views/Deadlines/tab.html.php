@@ -4,7 +4,7 @@ use StudySauce\Bundle\Entity\Deadline;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $isDemo = false;
-if (empty($deadlines) || empty($courses)) {
+if (empty($deadlines)) {
     $isDemo = true;
     $deadlines = $demoDeadlines;
 }
@@ -60,7 +60,9 @@ $view['slots']->start('row-headings'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane <?php print ($isDemo ? ' empty' : ''); ?>" id="deadlines">
+<div class="panel-pane <?php
+    print ($isDemo ? ' demo' : '');
+    print (empty($courses) ? ' empty' : ''); ?>" id="deadlines">
     <div class="pane-content">
         <h2>Enter important dates and we will send you email reminders</h2>
         <?php
@@ -83,7 +85,7 @@ $view['slots']->start('body'); ?>
                     }
                     print '<div class="head ' . implode(' ', $classes) . '">' . $headStr . '</div>';
                 }
-                if ($d->getReminder() != null) {
+                if (!empty($d->getReminder())) {
                     $reminders = $d->getReminder();
                 } else {
                     $reminders = [];

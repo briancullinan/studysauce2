@@ -12,7 +12,7 @@ $view['slots']->start('body'); ?>
             <h3>Badge awarded:</h3>
             <span class="badge beaver">&nbsp;</span>
             <strong>Eager Beaver</strong>
-            <p class="description">We know you don't want to waste another minute <i style="text-decoration: line-through;">not</i> studying. We have many more tools for you to help stop procrastinating.</p>
+            <p class="description">We know you don't want to waste another minute <i style="text-decoration: underline;">not</i> studying. We have many more tools for you to help stop procrastinating.</p>
         </div>
         <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward3.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />

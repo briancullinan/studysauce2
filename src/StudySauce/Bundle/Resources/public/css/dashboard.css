@@ -8,6 +8,7 @@
 .dashboard-home.adviser .panel-pane .panel-pane
 {
     display:block;
+    padding:0;
 }
 
 .dashboard-home .footer

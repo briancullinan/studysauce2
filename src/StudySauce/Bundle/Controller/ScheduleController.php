@@ -69,7 +69,7 @@ class ScheduleController extends Controller
                 'demo' => $demo,
                 'classes' => $schedule != null ? $schedule->getCourses()->toArray() : [],
                 'csrf_token' => $csrfToken,
-                'courses' => $courses,
+                'courses' => array_values($courses),
                 'demoCourses' => $demoCourses,
                 'others' => $others,
                 'demoOthers' => $demoOthers

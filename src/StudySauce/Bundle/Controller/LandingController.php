@@ -108,9 +108,10 @@ class LandingController extends Controller
 
     /**
      * @param Request $request
+     * @param $_code
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnersAction(Request $request)
+    public function partnersAction(Request $request, $_code)
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
@@ -119,7 +120,7 @@ class LandingController extends Controller
         $user = $this->getUser();
 
         /** @var PartnerInvite $partner */
-        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->get('_code')]);
+        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $_code]);
         if(!empty($partner)) {
             $partner->setActivated(true);
             $orm->merge($partner);
@@ -127,7 +128,9 @@ class LandingController extends Controller
 
             if (empty($partner->getPartner()) || $partner->getPartner()->getId() != $user->getId()) {
                 $this->get('security.context')->setToken(null);
-                $this->get('request')->getSession()->invalidate();
+                $session = $request->getSession();
+                $session->invalidate();
+                $session->set('partner', $_code);
             }
         }
 
@@ -146,7 +149,7 @@ class LandingController extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
-        /** @var Partner $partner */
+        /** @var PartnerInvite $partner */
         $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
         if(!empty($parent)) {
             $parent->setActivated(true);

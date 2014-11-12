@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
     {
         var account = jQuery('#register');
         return account.find('.first-name input').val().trim() + account.find('.last-name input').val().trim() +
-        account.find('.email input').val().trim();
+                account.find('.email input').val().trim() + account.find('.password input').val().trim();
     }
 
     function accountFunc() {
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 account.data('state', hash);
                 if(typeof data.error != 'undefined') {
-                    account.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
+                    account.find('.form-actions').prepend($('<span class="error">E-mail already registered.</span>'));
                 }
                 account.find('.password input').val('');
             }

@@ -3,7 +3,9 @@
 namespace StudySauce\Bundle\EventListener;
 
 use StudySauce\Bundle\Controller\EmailsController;
+use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Templating\Helper\SlotsHelper;
 
 /**
  * Class RedirectListener
@@ -82,25 +85,32 @@ class RedirectListener implements EventSubscriberInterface
 
         // new Response object
         $response = new Response();
+        $oldResponse = $event->getResponse();
+        $container = $this->kernel->getContainer();
 
         /** @var Request $request */
         $request = $event->getRequest();
 
+        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+
+        /** @var TimedPhpEngine $engine */
+        $engine = $container->get('debug.templating.engine.php');
+
+        /** @var SlotsHelper $slots */
+        $engine->set(new SlotsHelper());
+
         // set response content
         if(empty($request->get('_format')) || $request->get('_format') == 'index')
             $request->attributes->set('_format', 'funnel');
+
         if ($exception instanceof NotFoundHttpException) {
             $response->setContent(
-                $this->templating->render(
-                    'StudySauceBundle:Exception:error404.html.php'
-                )
+                $this->templating->render('StudySauceBundle:Exception:error404.html.php', ['exception' => $exception])
             );
         }
         else {
             $response->setContent(
-                $this->templating->render(
-                    'StudySauceBundle:Exception:error.html.php'
-                )
+                $this->templating->render('StudySauceBundle:Exception:error.html.php', ['exception' => $exception])
             );
         }
 
@@ -118,12 +128,30 @@ class RedirectListener implements EventSubscriberInterface
     }
 
     /**
+     * @param int     $startObLevel
+     *
+     * @return string
+     */
+    private static function getAndCleanOutputBuffering($startObLevel)
+    {
+        if (ob_get_level() <= $startObLevel) {
+            return '';
+        }
+
+        Response::closeOutputBuffers($startObLevel + 1, true);
+
+        return ob_get_clean();
+    }
+
+    /**
      * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
         $request = $event->getRequest();
+
+        // TODO: add social login redirect here
 
         if ($request->isXmlHttpRequest() && $response->isRedirect()) {
             $response->setContent(json_encode(['redirect' => $response->headers->get('Location')]));

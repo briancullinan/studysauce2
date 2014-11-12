@@ -33,13 +33,14 @@ $view['slots']->start('body'); ?>
     <div class="pane-content">
         <h2>Account settings</h2>
         <div class="type">
-            <label><span>Account type</span></label><?php if(!$user->hasRole('ROLE_PAID')) {
+            <label><span>Account type</span><?php if(!$user->hasRole('ROLE_PAID')) {
                 print 'Free';
             } elseif(!empty($payment) && $payment->getProduct() == 'monthly') {
                 print 'Monthly';
             } else {
                 print 'Yearly';
             } ?>
+            </label>
         </div>
         <div class="account-info read-only">
             <div class="first-name">

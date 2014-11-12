@@ -44,13 +44,14 @@ class ProfileController extends Controller
 
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first() ?: new Schedule();
+        $courses = $schedule->getCourses()->filter(
+            function (Course $b) {
+                return $b->getType() == 'c';
+            }
+        )->toArray();
 
         return $this->render('StudySauceBundle:Profile:customize.html.php', [
-                'courses' => $schedule->getCourses()->filter(
-                    function (Course $b) {
-                        return $b->getType() == 'c';
-                    }
-                )->toArray(),
+                'courses' => array_values($courses),
                 'user' => $user
             ]);
     }

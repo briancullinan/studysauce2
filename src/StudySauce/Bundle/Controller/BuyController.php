@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -130,6 +131,9 @@ class BuyController extends Controller
             else {
                 // redirect to buy funnel
                 $user->addRole('ROLE_PAID');
+                /** @var $userManager UserManager */
+                $userManager = $this->get('fos_user.user_manager');
+                $userManager->updateUser($user, false);
                 return $this->redirect($this->container->get('router')->generate('profile', ['_format' => 'funnel']));
             }
         } catch(\AuthorizeNetException $ex) {
@@ -149,7 +153,8 @@ class BuyController extends Controller
     public function cancelPaymentAction(User $user = null, Payment $payment = null)
     {
         /** @var $user User */
-        $user = $this->getUser();
+        if(empty($user))
+            $user = $this->getUser();
 
         $payments = $user->getPayments()->toArray();
         foreach($payments as $i => $p)
@@ -169,5 +174,11 @@ class BuyController extends Controller
                 $this->get('logger')->error('Authorize.Net cancel failed: ' . $p->getSubscription());
             }
         }
+
+        $user->removeRole('ROLE_PAID');
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+        return new JsonResponse(true);
     }
 }

@@ -347,19 +347,7 @@ $collection->add(
         'request.isXmlHttpRequest()'
     )
 );
-$collection->add(
-    'account_remove',
-    new Route(
-        '/account/remove',
-        ['_controller' => 'StudySauceBundle:Account:remove'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
-    )
-);
+
 $collection->add(
     'login',
     new Route(
@@ -447,6 +435,19 @@ $collection->add(
     new Route(
         '/checkout/pay',
         ['_controller' => 'StudySauceBundle:Buy:pay'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'cancel_payment',
+    new Route(
+        '/account/cancel',
+        ['_controller' => 'StudySauceBundle:Buy:cancelPayment'],
         [],
         [],
         '',

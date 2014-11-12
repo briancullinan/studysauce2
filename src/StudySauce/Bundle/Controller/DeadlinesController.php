@@ -53,8 +53,8 @@ class DeadlinesController extends Controller
                 'csrf_token' => $csrfToken,
                 'deadlines' => $deadlines,
                 'demoDeadlines' => $demoDeadlines,
-                'demoCourses' => $demoCourses,
-                'courses' => $courses,
+                'demoCourses' => array_values($demoCourses),
+                'courses' => array_values($courses),
                 'user' => $user
             ]);
     }
@@ -113,7 +113,7 @@ class DeadlinesController extends Controller
             $deadline->setAssignment('Paper, exam, project, etc.');
             $deadline->setDueDate(date_add(new \DateTime(), new \DateInterval('P7D')));
             $deadline->setPercent(0);
-            $deadline->setReminder('86400,345600,1209600');
+            $deadline->setReminder([86400,345600,1209600]);
         }
 
         return [$deadline];
