@@ -356,8 +356,8 @@ $collection->add(
         ['_format' => 'funnel']
     )
 );
-$collection->add('facebook_login', new Route('/login/facebook'));
-$collection->add('google_login', new Route('/login/google'));
+$collection->add('facebook_login', new Route('/login/facebook/'));
+$collection->add('google_login', new Route('/login/google/'));
 $collection->add(
     'account_auth',
     new Route(

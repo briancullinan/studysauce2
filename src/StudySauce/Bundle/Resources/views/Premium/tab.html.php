@@ -140,7 +140,7 @@ $view['slots']->start('body'); ?>
             <div class="plans">
                 <div class="basic">
                     <h2>Basic</h2>
-                    <p class="highlighted-link"><a href="#home" class="more">Go home</a><br>
+                    <p class="highlighted-link"><a href="<?php print $view['router']->generate('home'); ?>" class="more">Go home</a><br>
                         <span class="price">Free</span></p>
 
                     <p>Basic study course <?php $view['slots']->output('check'); ?></p>

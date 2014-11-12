@@ -81,40 +81,36 @@ class UserProvider extends BaseClass
     {
         /** @var PathUserResponse $response */
         $username = $response->getUsername();
-        $user = $this->userManager->findUserBy([$this->getProperty($response) => $username]);
-        //when the user is registrating
+        /** @var User $user */
+        $prop = $this->getProperty($response);
+        $user = $this->userManager->findUserBy([$prop => $username]);
+        // allow user with same email address to connect because we trust facebook and google auth
+        if(empty($user))
+            $user = $this->userManager->findUserBy(['email' => $response->getEmail()]);
+
+        $service = $response->getResourceOwner()->getName();
+        $setter = 'set'.ucfirst($service);
+
+        // create new user here
         if (null === $user) {
-            $service = $response->getResourceOwner()->getName();
-            $setter = 'set'.ucfirst($service);
-            $setter_id = $setter.'Id';
-            $setter_token = $setter.'AccessToken';
-            // create new user here
-            /** @var User $user */
-            $user = $this->userManager->createUser();
-            $user->$setter_id($username);
-            $user->$setter_token($response->getAccessToken());
             //I have set all requested data with the user's username
             //modify here with relevant data
+            $user = $this->userManager->createUser();
             $user->setUsername($service.'.'.$username);
-            $user->setEmail($response->getEmail());
             $factory = $this->encoderFactory->getEncoder($user);
             $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
             $user->setEnabled(true);
-            $user->setFirst($response->getFirst());
-            $user->setLast($response->getLast());
-            $this->userManager->updateUser($user);
-            return $user;
         }
 
-        //if user exists - go with the HWIOAuth way
-        $user = parent::loadUserByOAuthUserResponse($response);
-
-        $serviceName = $response->getResourceOwner()->getName();
-        $setter = 'set' . ucfirst($serviceName) . 'AccessToken';
-
-        //update access token
-        $user->$setter($response->getAccessToken());
-
+        // these fields can always be updates and sync from the service
+        $setter_id = $setter.'Id';
+        $user->$setter_id($username);
+        $setter_token = $setter.'AccessToken';
+        $user->$setter_token($response->getAccessToken());
+        $user->setEmail($response->getEmail());
+        $user->setFirst($response->getFirst());
+        $user->setLast($response->getLast());
+        $this->userManager->updateUser($user);
         return $user;
     }
 
