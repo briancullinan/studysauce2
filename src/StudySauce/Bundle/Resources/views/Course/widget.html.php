@@ -35,7 +35,7 @@ $overall = round((empty($level) ? 0 : ($level - 1)) / 4.0 * 100);
             <?php if($level > 4) { ?>
                 <h4>Complete!</h4>
             <?php } else { ?>
-                <a href="<?php print $view['router']->generate('lesson' . (empty($level) ? 1 : $level), ['_step' => $step]); ?>" class="more">Next module</a>
+                <a href="<?php print $view['router']->generate('_welcome'); ?>course/1/lesson/<?php print (empty($level) ? 1 : $level); ?>/step/<?php print $step; ?>" class="more">Next module</a>
             <?php } ?>
         </div>
     </div>

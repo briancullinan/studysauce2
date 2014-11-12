@@ -121,7 +121,7 @@ $view['slots']->start('body'); ?>
             }
 
             $session = '';
-            if ($event->getType() == 'd' || $classI == '') {
+            if ($event->getType() == 'd' || $classI === '') {
                 $session = 'other';
             } elseif ($event->getType() == 'p') {
                 $session = 'prework';
