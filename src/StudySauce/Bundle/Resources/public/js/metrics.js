@@ -163,7 +163,7 @@ $(document).ready(function () {
                     metrics.find('ol li').remove();
                     metrics.find('ol').append(content.find('ol li'));
 
-                    if(window.newHistory.length > 0)
+                    if(window.initialHistory.length > 0)
                         $('.metrics-widget').removeClass('empty');
                     else
                         $('.metrics-widget').addClass('empty');

@@ -431,6 +431,14 @@ $collection->add(
     )
 );
 $collection->add(
+    'thanks',
+    new Route(
+        '/thanks/{_format}',
+        ['_controller' => 'StudySauceBundle:Buy:thanks', '_format' => 'funnel'],
+        ['_format' => 'funnel',]
+    )
+);
+$collection->add(
     'checkout_pay',
     new Route(
         '/checkout/pay',

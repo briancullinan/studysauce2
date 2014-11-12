@@ -145,6 +145,15 @@
     padding-right: 160px;
 }
 
+#thanks h1
+{
+    font-size: 72px;
+    color: #FF9900;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
 @media all and (max-width:700px)
 {
     #coupon-pane .coupon-code

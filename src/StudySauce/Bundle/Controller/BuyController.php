@@ -94,8 +94,8 @@ class BuyController extends Controller
             $subscription->name = 'Study Sauce ' . ($request->get(
                     'reoccurs'
                 ) == 'yearly' ? 'Monthly' : 'Yearly') . ' Plan';
-            $subscription->intervalLength = '1';
-            $subscription->intervalUnit = $request->get('reoccurs') == 'yearly' ? 'years' : 'months';
+            $subscription->intervalLength = $request->get('reoccurs') == 'yearly' ? '12': '1';
+            $subscription->intervalUnit = 'months';
             $subscription->startDate = date('Y-m-d');
             $subscription->amount = $amount;
             $subscription->creditCardCardNumber = $request->get('number');
@@ -134,7 +134,10 @@ class BuyController extends Controller
                 /** @var $userManager UserManager */
                 $userManager = $this->get('fos_user.user_manager');
                 $userManager->updateUser($user, false);
-                return $this->redirect($this->container->get('router')->generate('profile', ['_format' => 'funnel']));
+                if($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
+                    return $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
+                else
+                    return $this->redirect($this->generateUrl('profile', ['_format' => 'funnel']));
             }
         } catch(\AuthorizeNetException $ex) {
             $this->get('logger')->error('Authorize.Net payment failed');
@@ -144,6 +147,14 @@ class BuyController extends Controller
             $orm->flush();
         }
         return new JsonResponse(['error' => 'Could not process payment, please try again later.']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function thanksAction()
+    {
+        return $this->render('StudySauceBundle:Buy:thanks.html.php');
     }
 
     /**
