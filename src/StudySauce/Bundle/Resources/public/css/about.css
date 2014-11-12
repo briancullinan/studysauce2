@@ -35,3 +35,42 @@
     max-width: none;
     left: auto;
 }
+
+#about .rightify
+{
+    padding-left:50%;
+}
+
+#about .rightify > *
+{
+    text-align: center;
+}
+
+#about .rightify > p
+{
+    text-align: left;
+}
+
+@media all and (min-width:1600px)
+{
+    #about img
+    {
+        left:0;
+    }
+}
+
+@media all and (max-width:900px)
+{
+    #about img
+    {
+        display:none;
+    }
+
+    #about .rightify
+    {
+        display:block;
+        width:auto;
+        padding-left:0;
+
+    }
+}

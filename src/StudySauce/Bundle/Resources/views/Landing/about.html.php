@@ -34,7 +34,7 @@ $view['slots']->start('body'); ?>
         ) as $url): ?>
             <img src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
         <?php endforeach; ?>
-        <div style="position:relative; z-index:1; text-align: center;">
+        <div class="rightify">
             <h2>Our Mantra</h2>
 
             <h3>We teach students how to study<br>...because no one else does</h3>
@@ -50,10 +50,12 @@ $view['slots']->start('body'); ?>
                 would love to hear from you!</p>
 
             <h2>Our contact info</h2>
-            <a target="_blank" href="https://www.facebook.com/pages/Study-Sauce/519825501425670?ref=stream">&nbsp;</a>
-            <a href="https://plus.google.com/115129369224575413617/about">&nbsp;</a>
-            <a href="https://twitter.com/StudySauce">&nbsp;</a>
-            <a href="<?php print $view['router']->generate('privacy'); ?>">&nbsp;</a>
+            <div>
+                <a target="_blank" href="https://www.facebook.com/pages/Study-Sauce/519825501425670?ref=stream">&nbsp;</a>
+                <a href="https://plus.google.com/115129369224575413617/about">&nbsp;</a>
+                <a href="https://twitter.com/StudySauce">&nbsp;</a>
+                <a href="<?php print $view['router']->generate('privacy'); ?>">&nbsp;</a>
+            </div>
         </div>
     </div>
 </div>
