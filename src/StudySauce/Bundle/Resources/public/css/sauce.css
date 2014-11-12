@@ -109,6 +109,8 @@ input[type="button"].more
     font-size: 20px;
     line-height: inherit;
     -webkit-appearance: none;
+    -moz-appearance:none;
+    appearance: none;
     margin: 0;
     text-align: center;
     padding: 15px 20px;
@@ -156,6 +158,8 @@ input[type="reset"].more:focus,
 input[type="button"].more:focus
 {
     -webkit-appearance: none;
+    -moz-appearance:none;
+    appearance: none;
     text-decoration: none;
     color: #ffffff;
     background-color: #0088BB;
@@ -176,6 +180,8 @@ input[type="reset"].more:active,
 input[type="button"].more:active
 {
     -webkit-appearance: none;
+    -moz-appearance:none;
+    appearance: none;
     border-bottom-width: 1px;
     margin-top: 2px;
     color: #ffffff;
@@ -574,7 +580,7 @@ input[type=month][disabled]
     border-color:transparent;
     background: transparent;
     -webkit-appearance:none;
-    -moz-appearance:button;
+    -moz-appearance:none;
     appearance: none;
     overflow:hidden;
     display:inline;

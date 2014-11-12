@@ -8,7 +8,16 @@ use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-
+foreach ($view['assetic']->stylesheets(
+    [
+        '@StudySauceBundle/Resources/public/css/about.css'
+    ],
+    [],
+    ['output' => 'bundles/studysauce/css/*.css']
+) as $url):
+    ?>
+    <link rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');

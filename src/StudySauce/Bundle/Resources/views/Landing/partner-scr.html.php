@@ -24,7 +24,7 @@
                         <li>Create a safe forum for discussion</li>
                         <li>Challenge your student</li>
                     </ul>
-                    <a class="features-cta" href="/user/register">Sign up to help - it's free</a>
+                    <a class="features-cta" href="<?php print $view['router']->generate('register'); ?>">Sign up to help - it's free</a>
                 </div>
             </div>
             <div class="feature-block third-block">
