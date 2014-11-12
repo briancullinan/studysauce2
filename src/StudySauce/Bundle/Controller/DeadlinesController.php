@@ -81,7 +81,7 @@ class DeadlinesController extends Controller
     {
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
-        $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return $d->getDueDate() > new \DateTime(); })->toArray();
+        $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
             $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
@@ -173,8 +173,9 @@ class DeadlinesController extends Controller
                 }
             }
 
-            $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
-                    return $c->getId() == $d['courseId'];})->first();
+            if(!empty($d['courseId']) && $d['courseId'] != 'Nonacademic')
+                $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
+                        return $c->getId() == $d['courseId'];})->first();
             $deadline->setCourse(empty($course) ? null : $course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));

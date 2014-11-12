@@ -333,12 +333,12 @@ $(document).ready(function () {
             autoFillDate.apply(this);
         });
         if(jQuery(this).is('[type="time"]'))
-            jQuery(this).parent().find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
+            jQuery(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
         if(jQuery(this).is('.is-timeEntry[type="text"]'))
         {
             var t = jQuery(this).timeEntry('getTime');
             if(typeof t != 'undefined' && t != null)
-                jQuery(this).parent().find('input[type="time"]').val((t.getHours() < 10
+                jQuery(this).parents('.start-time, .end-time').find('input[type="time"]').val((t.getHours() < 10
                     ? ('0' + t.getHours())
                     : t.getHours()) + ':' + (t.getMinutes() < 10
                     ? ('0' + t.getMinutes())

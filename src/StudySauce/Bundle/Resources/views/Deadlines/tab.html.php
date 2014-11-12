@@ -39,7 +39,7 @@ $view['slots']->stop();
 
 $view['slots']->start('row-headings'); ?>
 <div class="highlighted-link form-actions invalid">
-    <a href="#add-deadline">Add <span>+</span> class</a>
+    <a href="#add-deadline">Add <span>+</span> deadline</a>
     <a href="#save-deadline" class="more">Save</a>
 </div>
 <div class="sort-by" <?php print($isDemo ? 'style="display:none;"' : ''); ?>>
@@ -80,8 +80,8 @@ $view['slots']->start('body'); ?>
                 if ($headStr != $newHeadStr) {
                     $headStr = $newHeadStr;
                     $classes = [];
-                    if ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D'))) {
-                        $classes[] = 'hide';
+                    if ($d->getDueDate() < date_sub(new \Datetime(), new \DateInterval('P1D'))) {
+                        $classes[] = 'historic';
                     }
                     print '<div class="head ' . implode(' ', $classes) . '">' . $headStr . '</div>';
                 }
@@ -98,7 +98,7 @@ $view['slots']->start('body'); ?>
             <div class="deadline-row first invalid <?php
             print ($isDemo ? 'edit' : 'read-only');
             print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
-            print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : '');
+            print ($d->getDueDate() < date_sub(new \Datetime(), new \DateInterval('P1D')) ? ' historic' : '');
             print ' deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">

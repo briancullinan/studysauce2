@@ -5,7 +5,7 @@ use StudySauce\Bundle\Entity\Event;
     <div class="widget plan-widget">
         <h3>Today's study plan</h3>
         <?php
-        if(empty($courses) || !$user->hasRole('ROLE_PAID')) {
+        if(empty($classes) || !$user->hasRole('ROLE_PAID')) {
             ?>
             <a href="<?php print $view['router']->generate('premium'); ?>" class="cloak">Nothing set up yet.  Click <span class="reveal">here</span> to go premium.</a>
             <?php

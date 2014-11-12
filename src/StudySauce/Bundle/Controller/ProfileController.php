@@ -92,9 +92,11 @@ class ProfileController extends Controller
         {
             /** @var Course $c */
             if(!empty($request->get('profile-type-' . $c->getId()))) {
-                $params = $request->get('profile-type-' . $c->getId());
-                $c->setStudyType($params['type']);
-                $c->setStudyDifficulty($params['difficulty']);
+                $c->setStudyType($request->get('profile-type-' . $c->getId()));
+                $orm->merge($c);
+            }
+            if(!empty($request->get('profile-difficulty-' . $c->getId()))) {
+                $c->setStudyDifficulty($request->get('profile-difficulty-' . $c->getId()));
                 $orm->merge($c);
             }
             if(empty($c->getStudyType()) || empty($c->getStudyDifficulty()))

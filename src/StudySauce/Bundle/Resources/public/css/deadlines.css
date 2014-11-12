@@ -216,14 +216,14 @@ a[href="#add-deadline"] span {
     display:none;
 }
 
-#deadlines .head.hide,
-#deadlines .deadline-row.hide
+#deadlines .head.historic,
+#deadlines .deadline-row.historic
 {
     display:none;
 }
 
-#deadlines.show-historic .head.hide,
-#deadlines.show-historic .deadline-row.hide
+#deadlines.show-historic .head.historic,
+#deadlines.show-historic .deadline-row.historic
 {
     display:block;
 }

@@ -110,12 +110,10 @@ $(document).ready(function () {
 
         var scheduleData = { };
         customization.find('.study-types input:checked').each(function () {
-            scheduleData[$(this).attr('name')] = {
-                type: $(this).val()
-            };
+            scheduleData[$(this).attr('name')] = $(this).val();
         });
-        customization.find('.study-types input:checked').each(function () {
-            scheduleData[$(this).attr('name')].difficulty = $(this).val();
+        customization.find('.study-difficulty input:checked').each(function () {
+            scheduleData[$(this).attr('name')] = $(this).val();
         });
 
         $.ajax({

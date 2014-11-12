@@ -81,6 +81,9 @@ $(document).ready(function () {
             deadlines.find('.deadline-row.first').detach().insertBefore(deadlines.find('.form-actions').first());
             deadlines.find('.sort-by,header').hide();
         }
+        else {
+            deadlines.find('.sort-by,header').show();
+        }
     }
 
     body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {
