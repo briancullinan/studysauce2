@@ -24,7 +24,7 @@ a.fc-event:not([href])
     overflow:hidden;
     text-overflow: ellipsis;
     display: block;
-    padding-right:60px;
+    padding-right:20px;
     line-height: 110%;
 }
 
@@ -55,13 +55,6 @@ a.fc-event:not([href])
 #plan .sort-by label:last-child {
     float:right;
     vertical-align: middle;
-}
-
-#plan .event-type-d .fc-title,
-#plan .event-type-h .fc-title,
-#plan .event-type-p .fc-title
-{
-    padding-right:80px;
 }
 
 #plan .fc-ltr .fc-time-grid .fc-event-container
@@ -523,4 +516,12 @@ a.fc-event:not([href])
 #plan .field-select-strategy label
 {
     display:inline;
+}
+
+@media all and (max-width:700px)
+{
+    #plan #calendar
+    {
+        display: none;
+    }
 }

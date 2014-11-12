@@ -617,6 +617,11 @@
 
 @media all and (max-width:700px)
 {
+    .course1.step2 h3
+    {
+        padding-right:0;
+    }
+
     .course1.step3 .award
     {
         margin: 10px auto;

@@ -11,7 +11,7 @@ if(empty($courses) || !$user->hasRole('ROLE_PAID'))
     $isDemo = true;
 }
 
-/** @var ArrayCollection $courses */
+/** @var array $courses */
 /** @var User $user */
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
@@ -115,13 +115,13 @@ $view['slots']->start('body'); ?>
 
             /** @var Course $course */
             $course = $event->getCourse();
-            $classI = array_search($course, $courses->toArray());
+            $classI = array_search($course, $courses);
             if ($classI === false) {
                 $classI = '';
             }
 
             $session = '';
-            if ($event->getType() == 'd' || empty($classI)) {
+            if ($event->getType() == 'd' || $classI == '') {
                 $session = 'other';
             } elseif ($event->getType() == 'p') {
                 $session = 'prework';

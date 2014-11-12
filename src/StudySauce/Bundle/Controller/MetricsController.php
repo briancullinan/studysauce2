@@ -200,20 +200,20 @@ class MetricsController extends Controller
             $_week += 604800;
         }
 
-        // automatically generate 10 checkins per day
-        for($d = 0; $d < 7; $d++)
+        // automatically generate 20 checkins per week, for the last 5 weeks
+        for($w = -4; $w < 1; $w++)
         {
             $dailyCount = 0;
             foreach ($courses as $i => $c) {
                 /** @var Course $c */
-                $dailyCount += $c->getCheckins()->filter(function (Checkin $ch) use($_week, $d) {
-                        return $ch->getCheckin()->getTimestamp() > ($_week + 86400 * $d) &&
-                            $ch->getCheckin()->getTimestamp() < ($_week + 86400 * $d + 86400);
+                $dailyCount += $c->getCheckins()->filter(function (Checkin $ch) use ($_week, $w) {
+                        return $ch->getCheckin()->getTimestamp() > ($_week + 604800 * $w) &&
+                            $ch->getCheckin()->getTimestamp() < ($_week + 604800 * $w + 604800);
                     })->count();
             }
             if($dailyCount == 0)
             {
-                for($j = 0; $j < 10; $j++)
+                for($j = 0; $j < 20; $j++)
                 {
                     // choose course at random
                     $c = $courses[array_rand($courses, 1)];
@@ -222,7 +222,7 @@ class MetricsController extends Controller
                     $checkin->setCourse($c);
                     $c->addCheckin($checkin);
                     $t = clone $c->getEndTime();
-                    $t->setTimestamp($_week + 86400 * $d);
+                    $t->setTimestamp($_week + 604800 * $w);
                     $t->setTime(intval($c->getEndTime()->format('H')), 0, 0);
                     $checkin->setCheckin($t);
                     $checkin->setUtcCheckin(new \DateTime());

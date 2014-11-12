@@ -52,9 +52,9 @@ $view['slots']->start('body'); ?>
                 /** @var Course $c */
                 ?>
                 <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
-                <label class="radio"><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'checked="checked"' : ''); ?>><i></i><span>Memorization</span></label>
-                <label class="radio"><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="reading" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>><i></i><span>Reading/<br/>writing</span></label>
-                <label class="radio"><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>><i></i><span>Conceptual<br/>application</span></label>
+                <label class="radio"><span>Memorization</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Reading/<br/>writing</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="reading" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Conceptual<br/>application</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>
         </div>
         <div class="study-difficulty">
@@ -70,9 +70,9 @@ $view['slots']->start('body'); ?>
                 /** @var Course $c */
                 ?>
                 <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
-                <label class="radio"><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="easy" <?php print ($c->getStudyDifficulty() == 'easy' ? 'checked="checked"' : ''); ?>><i></i><span>Easy</span></label>
-                <label class="radio"><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'medium' ? 'checked="checked"' : ''); ?>><i></i><span>Average</span></label>
-                <label class="radio"><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="tough" <?php print ($c->getStudyDifficulty() == 'tough' ? 'checked="checked"' : ''); ?>><i></i><span>Tough</span></label>
+                <label class="radio"><span>Easy</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="easy" <?php print ($c->getStudyDifficulty() == 'easy' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'medium' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Tough</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="tough" <?php print ($c->getStudyDifficulty() == 'tough' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>
         </div>
         <div class="form-actions highlighted-link">

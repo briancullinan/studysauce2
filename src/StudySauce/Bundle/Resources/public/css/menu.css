@@ -1212,6 +1212,16 @@
         color:transparent;
         top:0;
         transform: none;
+        -webkit-transform: none;
+        -moz-transform: none;
+        -ms-transform: none;
+        -o-transform: none;
+        filter: none;
+        transform-origin: left bottom;
+        -webkit-transform-origin: left bottom;
+        -moz-transform-origin: left bottom;
+        -ms-transform-origin: left bottom;
+        -o-transform-origin: left bottom;
         margin-top: 0;
         background-position: 50% -5200px;
     }

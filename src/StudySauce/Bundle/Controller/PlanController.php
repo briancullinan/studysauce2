@@ -193,23 +193,23 @@ class PlanController extends Controller
             $skip = false;
             switch($x->getType()) {
                 case 'c':
-                    $label = 'CLASS';
+                    $label = 'C';
                     break;
                 case 'sr':
                 case 'f':
-                    $label = 'STUDY';
+                    $label = 'S';
                     break;
                 case 'p':
-                    $label = 'PRE-WORK';
+                    $label = 'P';
                     break;
                 case 'o':
-                    $label = 'OTHER';
+                    $label = 'O';
                     break;
                 case 'd':
-                    $label = 'DEADLINE';
+                    $label = 'D';
                     break;
                 case 'h':
-                    $label = 'HOLIDAY';
+                    $label = 'H';
                     break;
                 /*
             case 'r':
