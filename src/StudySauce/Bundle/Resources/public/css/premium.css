@@ -85,6 +85,7 @@
 #premium div.plans .premium p
 {
     border-bottom: #EEEEEE solid 1px;
+    color:#FFFFFF;
 }
 
 #premium div.plans .premium p:last-of-type,

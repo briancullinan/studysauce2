@@ -53,7 +53,10 @@ $(document).ready(function () {
     body.on('click', 'a[href="#bill-parents"]', function () {
         $('#plan-upgrade').modal('hide');
     });
-    body.on('hidden.bs.modal', '#bill-parents', function () {
+    body.on('shown.bs.modal', '#bill-parents, #bill-parents-confirm', function () {
+        $('#plan-upgrade').modal('hide');
+    });
+    body.on('hidden.bs.modal', '#bill-parents, #bill-parents-confirm', function () {
         if(!$('#profile').is(':visible'))
             return;
         $('#plan-upgrade').modal({

@@ -123,6 +123,7 @@ swiftmailer:
     username:  brian@studysauce.com
     password:  Da1ddy23
     spool:     { type: db }
+    from_mail: admin@studysauce.com
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
@@ -154,10 +155,10 @@ hwi_oauth:
             type:                facebook
             client_id:           210014889174404
             client_secret:       ef5a650eb52cbcea0d8b8e03d2877b9d
-            scope:               email,read_stream
+            scope:               email,public_profile
             user_response_class: StudySauce\Bundle\Security\PathUserResponse
-            options:
-                display: popup #dialog is optimized for popup window
+            # options:
+            #    display: popup #dialog is optimized for popup window
             paths:
                 realname:  ["first_name", "last_name"]
                 last: last_name

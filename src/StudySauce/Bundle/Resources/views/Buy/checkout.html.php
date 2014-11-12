@@ -37,18 +37,18 @@ $view['slots']->start('body'); ?>
             <fieldset id="billing-pane">
                 <legend>Billing information</legend>
                 <div class="first-name">
-                    <label class="input"><span>First name</span><input name="first-name" type="text" value="Brian"></label>
+                    <label class="input"><span>First name</span><input name="first-name" type="text" value=""></label>
                 </div>
                 <div class="last-name">
-                    <label class="input"><span>Last name</span><input name="last-name" type="text" value="Cullinan"></label>
+                    <label class="input"><span>Last name</span><input name="last-name" type="text" value=""></label>
                 </div>
-                <label class="input"><span>Street address</span><input name="street1" type="text" value="6934 E Sandra Ter"></label>
+                <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
                 <label class="input"><input name="street2" type="text" value=""></label>
                 <div class="city">
-                    <label class="input"><span>City</span><input name="city" type="text" value="Scottsdale"></label>
+                    <label class="input"><span>City</span><input name="city" type="text" value=""></label>
                 </div>
                 <div class="zip">
-                    <label class="input"><span>Postal code</span><input name="zip" type="text" value="85254"></label>
+                    <label class="input"><span>Postal code</span><input name="zip" type="text" value=""></label>
                 </div>
                 <label class="select"><span>State/Province</span><select name="state">
                         <option value="" selected="selected">- Select -</option>
@@ -137,7 +137,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="cc-number">
                     <label class="input">
-                        <span>Card number</span><input name="cc-number" type="text" value="4744880045591912">
+                        <span>Card number</span><input name="cc-number" type="text" value="">
                         <div class="cards">
                             <img alt="VISA" src="<?php echo $view->escape($view['assets']->getUrl('bundles/studysauce/images/visa.gif')) ?>" />
                             <img alt="MC" src="<?php echo $view->escape($view['assets']->getUrl('bundles/studysauce/images/mc.gif')) ?>" />
@@ -174,7 +174,7 @@ $view['slots']->start('body'); ?>
                                 $first = false;
                             } ?></select></label>
                 </div>
-                <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value="111">
+                <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value="">
                     <img src="https://www.studysauce.com/sites/all/modules/ubercart/payment/uc_credit/images/info.png" alt="">
                     <a href="#ccv-info" data-toggle="modal">What's the CVV?</a>
                 </label>

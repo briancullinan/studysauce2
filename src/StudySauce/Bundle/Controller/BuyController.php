@@ -149,6 +149,7 @@ class BuyController extends Controller
     /**
      * @param User $user
      * @param Payment $payment
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function cancelPaymentAction(User $user = null, Payment $payment = null)
     {

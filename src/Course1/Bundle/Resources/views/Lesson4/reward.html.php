@@ -7,7 +7,7 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
 $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step3" id="lesson4-step3">
     <div class="pane-content">
-        <h2>Don't let others from distract you...</h2>
+        <h2>Don't let others distract you...</h2>
         <div class="award">
             <h3>Badge awarded:</h3>
             <span class="badge squirrel">&nbsp;</span>

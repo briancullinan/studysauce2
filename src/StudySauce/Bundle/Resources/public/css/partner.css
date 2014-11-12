@@ -129,6 +129,7 @@
         width:auto;
         display:block;
         margin:20px auto;
+        max-width: 300px;
     }
 
     #partner-invite

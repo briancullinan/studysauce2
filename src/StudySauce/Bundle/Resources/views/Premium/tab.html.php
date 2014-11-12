@@ -143,9 +143,9 @@ $view['slots']->start('body'); ?>
                     <p class="highlighted-link"><a href="#home" class="more">Go home</a><br>
                         <span class="price">Free</span></p>
 
-                    <p>Deadline reminders <?php $view['slots']->output('check'); ?></p>
+                    <p>Basic study course <?php $view['slots']->output('check'); ?></p>
                     <p>Streaming classical music <?php $view['slots']->output('check'); ?></p>
-                    <p>Personalized study tips <?php $view['slots']->output('check'); ?></p>
+                    <p>Deadline reminders <?php $view['slots']->output('check'); ?></p>
                     <p>Study metrics <?php $view['slots']->output('check'); ?></p>
                     <p>Study goals <?php $view['slots']->output('check'); ?></p>
                     <p>Accountability partner <?php $view['slots']->output('check'); ?></p>
@@ -156,8 +156,8 @@ $view['slots']->start('body'); ?>
                         <span class="price">$9.99/month</span></p>
 
                     <p>All of the above plus: <?php $view['slots']->output('check'); ?></p>
+                    <p>Advanced study course <?php $view['slots']->output('check'); ?></p>
                     <p>Customized study plan <?php $view['slots']->output('check'); ?></p>
-                    <p>Guided study sessions <?php $view['slots']->output('check'); ?></p>
                     <p>Personal study profile <?php $view['slots']->output('check'); ?></p>
                 </div>
                 <div class="enterprise">

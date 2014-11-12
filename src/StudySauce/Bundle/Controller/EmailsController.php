@@ -249,6 +249,10 @@ class EmailsController extends Controller
      */
     public function parentPayAction(User $user = null, ParentInvite $parent = null)
     {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
         $codeUrl = $this->generateUrl('parent_welcome', ['_code' => $parent->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = Swift_Message::newInstance()
