@@ -99,7 +99,7 @@ $view['slots']->start('body'); ?>
             print ($isDemo ? 'edit' : 'read-only');
             print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
             print ($d->getDueDate() < date_add(new \Datetime(), new \DateInterval('P1D')) ? ' hide' : '');
-            print (' deadline-id-' . $d->getId()); ?>">
+            print ' deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">
                     <span>Class name</span>
