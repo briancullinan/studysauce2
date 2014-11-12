@@ -1026,7 +1026,7 @@
     }
 
     #left-panel .navbar-toggle {
-        background: url("../images/menu_new.png") no-repeat 50% -5210px transparent;
+        background: url("../images/menu_new.png") no-repeat 50% -7412px transparent;
         padding: 2px 5px 12px 5px;
         height: 40px;
     }
@@ -1223,11 +1223,11 @@
         -ms-transform-origin: left bottom;
         -o-transform-origin: left bottom;
         margin-top: 0;
-        background-position: 50% -5200px;
+        background-position: 50% -7500px;
     }
 
     #right-panel a[href="#expand"]:hover .navbar-toggle
     {
-        background-position: 50% -5200px;
+        background-position: 50% -7500px;
     }
 }

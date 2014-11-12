@@ -11,7 +11,7 @@ if($step == 4) {
 else
     $step++;
 //$percent = empty($course) ? 0 : round($step/5.0*100);
-$overall = round(($level - 1) / 4.0 * 100);
+$overall = round((empty($level) ? 0 : ($level - 1)) / 4.0 * 100);
 ?>
 <div class="widget-wrapper">
     <div class="widget course-widget">

@@ -166,18 +166,17 @@ $(document).ready(function () {
     });
 
     function handleLink(evt) {
-
         var that = $(this),
             el = that[0],
             path = $(this).attr('href'),
-            callback = null;
+            callback = window.callbackUri.indexOf(path);
         if(!expandMenu.apply(this, [evt]))
             return;
 
         // the path is not a callback so just return normally
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||
             // check if there is a tab with the selected url
-            window.callbackUri.indexOf(path) == -1) {
+            callback == -1) {
             visits[visits.length] = {path: el.pathname, query: el.search, hash: el.hash, time:(new Date()).toJSON()};
             body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
         }
