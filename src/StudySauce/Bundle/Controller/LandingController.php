@@ -23,9 +23,12 @@ class LandingController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST'))
-            return $this->redirect($this->generateUrl('home'));
-
+        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) {
+            if ($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
+                return $this->redirect($this->generateUrl('userlist'));
+            else
+                return $this->redirect($this->generateUrl('home'));
+        }
         return $this->render('StudySauceBundle:Landing:index.html.php');
     }
 
