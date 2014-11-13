@@ -145,7 +145,10 @@ class BuyController extends Controller
                     // send student email
                     /** @var ParentInvite $partner */
                     $partner = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(['parent' => $user->getId()]);
-                    $emails->parentPrepayAction($user, $partner->getUser());
+                    $student = $partner->getUser();
+                    $student->addRole('ROLE_PAID');
+                    $userManager->updateUser($student, false);
+                    $emails->parentPrepayAction($user, $student);
                     return $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
                 }
                 // redirect to buy funnel
