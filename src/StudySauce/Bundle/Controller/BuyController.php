@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -129,15 +130,28 @@ class BuyController extends Controller
             }
             // success
             else {
-                // redirect to buy funnel
+                // update paid status
                 $user->addRole('ROLE_PAID');
                 /** @var $userManager UserManager */
                 $userManager = $this->get('fos_user.user_manager');
                 $userManager->updateUser($user, false);
-                if($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
+
+                // send receipt
+                $emails = new EmailsController();
+                $emails->setContainer($this->container);
+                $emails->invoiceAction($user, $payment);
+
+                if($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
+                    // send student email
+                    /** @var ParentInvite $partner */
+                    $partner = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(['parent' => $user->getId()]);
+                    $emails->parentPrepayAction($user, $partner->getUser());
                     return $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
+                }
+                // redirect to buy funnel
                 else
                     return $this->redirect($this->generateUrl('profile', ['_format' => 'funnel']));
+
             }
         } catch(\AuthorizeNetException $ex) {
             $this->get('logger')->error('Authorize.Net payment failed');

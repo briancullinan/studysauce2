@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Message;
@@ -141,12 +142,39 @@ class EmailsController extends Controller
         return new Response();
     }
 
+    public function invoiceAction(User $user = null, Payment $payment)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('Thank you for your purchase!')
+            ->setFrom($user->getEmail())
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:invoice.html.php', [
+                        'user' => $user,
+                        'payment' => $payment,
+                        'greeting' => 'Hello ' . $user->getFirst() . ' ' . $user->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['invoice-receipt']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
     /**
      * @param User $user
-     * @param StudentInvite $student
+     * @param User $student
      * @return Response
      */
-    public function parentPrepayAction(User $user = null, StudentInvite $student = null)
+    public function parentPrepayAction(User $user = null, User $student = null)
     {
         /** @var $user User */
         if(empty($user))
