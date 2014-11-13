@@ -71,7 +71,7 @@ $view['slots']->start('body'); ?>
                 ?>
                 <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
                 <label class="radio"><span>Easy</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="easy" <?php print ($c->getStudyDifficulty() == 'easy' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'medium' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'average' ? 'checked="checked"' : ''); ?>><i></i></label>
                 <label class="radio"><span>Tough</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="tough" <?php print ($c->getStudyDifficulty() == 'tough' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>
         </div>

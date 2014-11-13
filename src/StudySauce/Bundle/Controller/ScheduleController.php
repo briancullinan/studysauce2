@@ -171,7 +171,7 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class3);
             $course->setEndTime(date_add(clone $class3, new \DateInterval('P8WT50M')));
-            $course->setStudyDifficulty('medium');
+            $course->setStudyDifficulty('average');
             $course->setStudyType('conceptual');
 
             $orm->persist($course);
@@ -189,7 +189,7 @@ class ScheduleController extends Controller
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class4);
             $course->setEndTime(date_add(clone $class4, new \DateInterval('P8WT50M')));
-            $course->setStudyDifficulty('medium');
+            $course->setStudyDifficulty('average');
             $course->setStudyType('conceptual');
 
             $orm->persist($course);

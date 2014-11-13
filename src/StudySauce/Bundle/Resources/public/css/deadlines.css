@@ -144,6 +144,7 @@ a[href="#add-deadline"] span {
 {
     width:30%;
     white-space: nowrap;
+    text-overflow: clip;
 }
 
 .deadline-row .reminder label.checkbox {

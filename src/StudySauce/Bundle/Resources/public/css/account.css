@@ -141,17 +141,12 @@ a[href="#sign-in-with-email"]
     vertical-align: bottom;
 }
 
-#account .edit-icons a:first-child
-{
-    margin-left:0;
-}
-
 #account a[href="#edit-password"],
 #account a[href="#edit-account"],
 #account a[href="#cancel-confirm"]
 {
     display:inline-block;
-    margin:0 20px;
+    margin-right:40px;
     text-align: center;
 }
 
@@ -178,6 +173,25 @@ a[href="#sign-in-with-email"]
         width:100%;
         padding:0;
         max-width: none;
+    }
+
+    #account .password label span,
+    #account .new-password label span,
+    #account .email label span,
+    #account .first-name label span,
+    #account .last-name label span
+    {
+        display:block;
+        width:auto;
+    }
+
+    #account .password label input,
+    #account .new-password label input,
+    #account .email label input,
+    #account .first-name label input,
+    #account .last-name label input
+    {
+        width:100%;
     }
 }
 
