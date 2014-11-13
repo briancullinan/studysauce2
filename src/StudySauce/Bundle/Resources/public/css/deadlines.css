@@ -120,7 +120,7 @@ a[href="#add-deadline"] span {
 
 .deadline-row.edit .class-name
 {
-    padding-left: 0;
+    padding-left: 2px;
 }
 
 .deadline-row .class-name i
