@@ -52,19 +52,19 @@ $collection->add(
 );
 $collection->add(
     'partner_welcome',
-    new Route('/partners/{_code}', ['_controller' => 'StudySauceBundle:Landing:partners',])
+    new Route('/partners/{_code}', ['_controller' => 'StudySauceBundle:Landing:partners','_code' => ''])
 );
 $collection->add(
     'parent_welcome',
-    new Route('/parents/{_code}', ['_controller' => 'StudySauceBundle:Landing:parents',])
+    new Route('/parents/{_code}', ['_controller' => 'StudySauceBundle:Landing:parents','_code' => ''])
 );
 $collection->add(
     'student_welcome',
-    new Route('/students/{_code}', ['_controller' => 'StudySauceBundle:Landing:students',])
+    new Route('/students/{_code}', ['_controller' => 'StudySauceBundle:Landing:students','_code' => ''])
 );
 $collection->add(
     'scholar_welcome',
-    new Route('/scholars/{_code}', ['_controller' => 'StudySauceBundle:Landing:scholars',])
+    new Route('/scholars/{_code}', ['_controller' => 'StudySauceBundle:Landing:scholars','_code' => ''])
 );
 $collection->add(
     'home',

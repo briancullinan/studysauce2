@@ -167,6 +167,35 @@ class LandingController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function studentsAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        /** @var PartnerInvite $partner */
+        $parent = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($parent)) {
+            $parent->setActivated(true);
+            $orm->merge($parent);
+            $orm->flush();
+
+            if(empty($parent->getParent()) || $parent->getParent()->getId() !=  $user->getId())
+            {
+                $this->get('security.context')->setToken(null);
+                $this->get('request')->getSession()->invalidate();
+            }
+        }
+
+        return $this->render('StudySauceBundle:Landing:students.html.php');
+    }
+
+    /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function scrAction()

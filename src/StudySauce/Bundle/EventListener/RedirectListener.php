@@ -2,10 +2,11 @@
 
 namespace StudySauce\Bundle\EventListener;
 
+use AppKernel;
 use StudySauce\Bundle\Controller\EmailsController;
-use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +23,13 @@ use Symfony\Component\Templating\Helper\SlotsHelper;
 class RedirectListener implements EventSubscriberInterface
 {
     protected $templating;
+
+    /** @var  AppKernel $kernel */
     protected $kernel;
+
     /**
-     *
+     * @param EngineInterface $templating
+     * @param $kernel
      */
     public function __construct(EngineInterface $templating, $kernel)
     {
@@ -80,21 +85,24 @@ class RedirectListener implements EventSubscriberInterface
         catch(\Exception $x)
         {
             // nothing more we can do here, hope it gets logged.
-            $ex = $x;
         }
 
         // new Response object
         $response = new Response();
-        $oldResponse = $event->getResponse();
+        //$oldResponse = $event->getResponse();
+        /** @var Container $container */
         $container = $this->kernel->getContainer();
 
         /** @var Request $request */
         $request = $event->getRequest();
 
-        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+        $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         /** @var TimedPhpEngine $engine */
-        $engine = $container->get('debug.templating.engine.php');
+        if($this->kernel->getEnvironment() == 'prod')
+            $engine = $container->get('templating.engine.php');
+        else
+            $engine = $container->get('debug.templating.engine.php');
 
         /** @var SlotsHelper $slots */
         $engine->set(new SlotsHelper());
@@ -154,7 +162,15 @@ class RedirectListener implements EventSubscriberInterface
         // TODO: add social login redirect here
 
         if ($request->isXmlHttpRequest() && $response->isRedirect()) {
-            $response->setContent(json_encode(['redirect' => $response->headers->get('Location')]));
+            $options = ['redirect' => $response->headers->get('Location')];
+            if(strpos($response->headers->get('Location'), '/login'))
+            {
+                $csrfToken = $this->kernel->getContainer()->has('form.csrf_provider')
+                    ? $this->kernel->getContainer()->get('form.csrf_provider')->generateCsrfToken('account_login')
+                    : null;
+                $options['csrf_token'] = $csrfToken;
+            }
+            $response->setContent(json_encode($options));
             $response->setStatusCode(200);
             $response->headers->remove('Location');
         }

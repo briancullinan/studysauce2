@@ -46,6 +46,8 @@ class BuyController extends Controller
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -132,23 +134,8 @@ class BuyController extends Controller
             else {
                 // update paid status
                 $user->addRole('ROLE_PAID');
-                /** @var $userManager UserManager */
-                $userManager = $this->get('fos_user.user_manager');
                 $userManager->updateUser($user, false);
-
-                // send receipt
-                $emails = new EmailsController();
-                $emails->setContainer($this->container);
-                $emails->invoiceAction($user, $payment);
-
                 if($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
-                    // send student email
-                    /** @var ParentInvite $partner */
-                    $partner = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(['parent' => $user->getId()]);
-                    $student = $partner->getUser();
-                    $student->addRole('ROLE_PAID');
-                    $userManager->updateUser($student, false);
-                    $emails->parentPrepayAction($user, $student);
                     return $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
                 }
                 // redirect to buy funnel
@@ -162,6 +149,25 @@ class BuyController extends Controller
         finally {
             $orm->persist($payment);
             $orm->flush();
+
+            if(!empty($payment->getPayment())) {
+                // send receipt
+                $emails = new EmailsController();
+                $emails->setContainer($this->container);
+                $emails->invoiceAction($user, $payment);
+
+                if ($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
+                    // send student email
+                    /** @var ParentInvite $partner */
+                    $partner = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
+                        ['parent' => $user->getId()]
+                    );
+                    $student = $partner->getUser();
+                    $student->addRole('ROLE_PAID');
+                    $userManager->updateUser($student, false);
+                    $emails->parentPrepayAction($user, $student);
+                }
+            }
         }
         return new JsonResponse(['error' => 'Could not process payment, please try again later.']);
     }

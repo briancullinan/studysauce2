@@ -42,6 +42,7 @@ class PlanController extends Controller
         'Su' => 0
     ];
     private static $holidays;
+    private static $unresolved;
 
     /**
      *
@@ -101,7 +102,20 @@ class PlanController extends Controller
         }
 
         // get events for current week
+        self::$unresolved = [];
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm);
+        if(!empty($unresolved))
+        {
+            $unresolvedEmail = ['student' => $user->getEmail()];
+            foreach($unresolved as $i => $e)
+            {
+                $unresolvedEmail[$e->field_time['und'][0]['value'] . ' ' . $e->field_class_name['und'][0]['value']] = $e->field_event_type['und'][0]['value'];
+            }
+
+            $emails = new EmailsController();
+            $emails->setContainer($this->container);
+            $emails->administratorAction(null, $unresolvedEmail);
+        }
         $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
@@ -909,9 +923,9 @@ class PlanController extends Controller
             }
         }
 
-        // TODO: send assertion email when we fail to find a spot
+        // send assertion email when we fail to find a spot
         if (!empty($workingEvents) && $event->getType() != 'm' && $event->getType() != 'z') {
-            $unresolved[] = $event;
+            self::$unresolved[] = $event;
         }
     }
 
