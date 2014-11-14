@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -57,6 +58,32 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param User $user
+     * @return bool|string
+     */
+    public static function getFunnelState(User $user)
+    {
+        /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
+        $schedule = $user->getSchedules()->first() ?: new Schedule();
+
+        if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
+            return 'profile';
+
+        if (empty($courses)) {
+            return 'schedule';
+        }
+
+        if($schedule->getCourses()->exists(function ($i, Course $c) {
+                return $c->getType() == 'c' && (empty($c->getStudyType()) || empty($c->getStudyDifficulty()));
+            }))
+        {
+            return 'customization';
+        }
+
+        return false;
+    }
+
+    /**
      * @param Request $request
      * @return RedirectResponse
      */
@@ -106,12 +133,9 @@ class ProfileController extends Controller
 
         // check if schedule is empty
         if(strpos($request->headers->get('referer'), '/funnel') > -1) {
-            if (empty($courses)) {
-                return new RedirectResponse($this->generateUrl('schedule', ['_format' => 'funnel']));
-            } // check if study options are empty
-            elseif ($hasEmpties) {
-                return new RedirectResponse($this->generateUrl('customization', ['_format' => 'funnel']));
-            } // check if the referrer is funnel, we must redirect, so go to plan tab
+            if (($step = self::getFunnelState($user))) {
+                return new RedirectResponse($this->generateUrl($step, ['_format' => 'funnel']));
+            }
             else {
                 return new RedirectResponse($this->generateUrl('plan'));
             }

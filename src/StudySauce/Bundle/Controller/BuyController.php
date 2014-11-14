@@ -198,10 +198,7 @@ class BuyController extends Controller
             $this->get('logger')->error('Authorize.Net payment failed');
         }
         finally {
-            $orm->persist($payment);
-            $orm->flush();
-
-            if(!empty($payment->getPayment())) {
+            if($payment->getPayment() !== null) {
                 // send receipt
                 $emails = new EmailsController();
                 $emails->setContainer($this->container);
@@ -209,11 +206,11 @@ class BuyController extends Controller
 
                 if ($user->hasRole('ROLE_PARENT')) {
                     // send student email
-                    /** @var ParentInvite $partner */
-                    $partner = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
+                    /** @var ParentInvite $parent */
+                    $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
                         ['parent' => $user->getId()]
                     );
-                    $student = $partner->getUser();
+                    $student = $parent->getUser();
                     $student->addRole('ROLE_PAID');
                     $userManager->updateUser($student, false);
                     $emails->parentPrepayAction($user, $student);
@@ -230,6 +227,8 @@ class BuyController extends Controller
                     $emails->parentPrepayAction($user, $student);
                 }
             }
+            $orm->persist($payment);
+            $orm->flush();
         }
         return new JsonResponse(['error' => 'Could not process payment, please try again later.']);
     }

@@ -34,7 +34,7 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane" id="thanks">
     <div class="pane-content clearfix">
         <h1>Thank you for your purchase</h1>
-        <h2>Please feel free to contact us if you have any questions.<br />
+        <h2>We have notified your student of the purchase. Please feel free to contact us if you have any questions. Thank you.<br />
             <br />- The Study Sauce Team</h2>
     </div>
 </div>
