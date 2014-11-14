@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -192,6 +193,13 @@ class AccountController extends Controller
                 $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
                 $partner->setPartner($user);
                 $orm->merge($partner);
+            }
+            if(!empty($request->getSession()->get('parent'))) {
+                $user->addRole('ROLE_PARENT');
+                /** @var ParentInvite $partner */
+                $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+                $parent->setParent($user);
+                $orm->merge($parent);
             }
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));

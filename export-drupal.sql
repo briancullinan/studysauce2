@@ -195,9 +195,9 @@ SELECT concat(
            'SELECT course.id from ss_user,schedule,course where ss_user.id = schedule.user_id ',
            ' and email = ', quote(if(title IS NULL, '', title)),
            ' and course.schedule_id = schedule.id and course.name = ',
-           quote(course), '),\'', if(checkin IS NULL, '', checkin), '\',\'', if(utc_checkin IS NULL, '', utc_checkin),
+           quote(course), '),\'', if(checkin IS NULL, 'null', checkin), '\',\'', if(utc_checkin IS NULL, 'null', utc_checkin),
            '\',\'',
-           if(checkout IS NULL, '', checkout), '\',\'', if(utc_checkout IS NULL, '', utc_checkout), '\');') AS ins
+           if(checkout IS NULL, 'null', checkout), '\',\'', if(utc_checkout IS NULL, 'null', utc_checkout), '\');') AS ins
 FROM (
        SELECT
          title,
@@ -215,6 +215,7 @@ FROM (
            ON field_data_field_class_name.entity_id = field_classes_value
        WHERE field_class_name_value IS NOT NULL
      ) AS checkins
+where checkin is not null
 
 UNION
 /* copy goals */

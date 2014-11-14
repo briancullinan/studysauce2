@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\ParentInvite;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -156,11 +157,22 @@ class BuyController extends Controller
                 $emails->setContainer($this->container);
                 $emails->invoiceAction($user, $payment);
 
-                if ($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
+                if ($user->hasRole('ROLE_PARENT')) {
                     // send student email
                     /** @var ParentInvite $partner */
                     $partner = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
                         ['parent' => $user->getId()]
+                    );
+                    $student = $partner->getUser();
+                    $student->addRole('ROLE_PAID');
+                    $userManager->updateUser($student, false);
+                    $emails->parentPrepayAction($user, $student);
+                }
+                if($user->hasRole('ROLE_PARTNER')) {
+                    // send student email
+                    /** @var PartnerInvite $partner */
+                    $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findBy(
+                        ['partner' => $user->getId()]
                     );
                     $student = $partner->getUser();
                     $student->addRole('ROLE_PAID');

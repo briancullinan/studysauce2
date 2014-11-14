@@ -94,10 +94,16 @@ a[href="#sign-in-with-email"]
 #register .last-name
 {
     margin: 0 -2px;
-    padding: 0 2px;
+    padding-right: 2px;
     display:none;
     width: 50%;
     max-width: 300px;
+}
+
+#register .last-name
+{
+    padding-right:0;
+    padding-left:2px;
 }
 
 #register .email,

@@ -144,7 +144,7 @@ class LandingController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function parentsAction(Request $request)
+    public function parentsAction(Request $request, $_code)
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
@@ -162,7 +162,9 @@ class LandingController extends Controller
             if(empty($parent->getParent()) || $parent->getParent()->getId() !=  $user->getId())
             {
                 $this->get('security.context')->setToken(null);
-                $this->get('request')->getSession()->invalidate();
+                $session = $request->getSession();
+                $session->invalidate();
+                $session->set('parent', $_code);
             }
         }
 
