@@ -136,7 +136,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
 
         $encoder = $this->encoder->getEncoder($user);
         $password = $encoder->encodePassword('guest', $user->getSalt());
-        $this->context->setToken(new UsernamePasswordToken($user, $password, 'main', ['ROLE_GUEST', 'IS_AUTHENTICATED_ANONYMOUSLY']));
+        $this->context->setToken(new UsernamePasswordToken($user, $password, 'main', $user->getRoles()));
 
         if (null !== $this->logger) {
             $this->logger->info('Populated SecurityContext with an anonymous Token');

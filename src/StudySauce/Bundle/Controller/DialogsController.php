@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\ContactMessage;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\ParentInvite;
@@ -39,15 +40,22 @@ class DialogsController extends Controller
      */
     public function contactSendAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
 
         // save the invite
         $contact = new ContactMessage();
-        $contact->setUser($user == 'anon.' || $user->hasRole('ROLE_GUEST') ? null : $user);
+        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) {
+            $contact->setUser($user);
+        }
         $contact->setName($request->get('name'));
         $contact->setEmail($request->get('email'));
         $contact->setMessage($request->get('message'));
+        $orm->persist($contact);
+        $orm->flush();
 
         $email = new EmailsController();
         $email->setContainer($this->container);
@@ -221,6 +229,8 @@ class DialogsController extends Controller
      */
     public function billParentsSendAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
 
@@ -231,6 +241,8 @@ class DialogsController extends Controller
         $bill->setLast($request->get('last'));
         $bill->setEmail($request->get('email'));
         $bill->setCode(md5(microtime(true)));
+        $orm->persist($bill);
+        $orm->flush();
 
         $email = new EmailsController();
         $email->setContainer($this->container);
@@ -261,6 +273,8 @@ class DialogsController extends Controller
      */
     public function inviteStudentSendAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
 
@@ -271,6 +285,8 @@ class DialogsController extends Controller
         $student->setLast($request->get('last'));
         $student->setEmail($request->get('email'));
         $student->setCode(md5(microtime(true)));
+        $orm->persist($student);
+        $orm->flush();
 
         $email = new EmailsController();
         $email->setContainer($this->container);

@@ -11,6 +11,8 @@ use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class BuyController
@@ -24,17 +26,33 @@ class BuyController extends Controller
     const AUTHORIZENET_SANDBOX = true;
 
     /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function checkoutAction()
+    public function checkoutAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var User $user */
         $user = $this->getUser();
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('checkout')
             : null;
 
+        $first = $user->getFirst();
+        $last = $user->getLast();
+        if(!empty($request->getSession()->get('parent')))
+        {
+            /** @var ParentInvite $parent */
+            $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+            $first = $parent->getFirst();
+            $last = $parent->getLast();
+        }
+
         return $this->render('StudySauceBundle:Buy:checkout.html.php', [
                 'user' => $user,
+                'first' => $first,
+                'last' => $last,
                 'csrf_token' => $csrfToken
             ]);
     }
@@ -58,6 +76,38 @@ class BuyController extends Controller
         // create a new payment entity
         $payment = new Payment();
         // TODO: create a user if anonymous
+        if($user->hasRole('ROLE_GUEST') && !empty($request->getSession()->get('parent')))
+        {
+            /** @var ParentInvite $parent */
+            $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+            if(!empty($parent->getParent()))
+                $user = $parent->getParent();
+            else {
+                $user = $userManager->createUser();
+                $user->setFirst($request->get('first'));
+                $user->setLast($request->get('last'));
+                $user->setEmail($parent->getEmail());
+                $user->setEmailCanonical($parent->getEmail());
+                $encoder_service = $this->get('security.encoder_factory');
+                /** @var $encoder PasswordEncoderInterface */
+                $encoder = $encoder_service->getEncoder($user);
+                $password = $encoder->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt());
+                $user->setPassword($password);
+                $user->addRole('ROLE_USER');
+                $user->addRole('ROLE_PARENT');
+                $user->setEnabled(true);
+                $user->setUsername($parent->getEmail());
+                $user->setUsernameCanonical($parent->getEmail());
+                $orm->persist($user);
+                $orm->flush();
+
+                $context = $this->get('security.context');
+                $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
+                $context->setToken($token);
+                $session = $request->getSession();
+                $session->set('_security_main', serialize($token));
+            }
+        }
         $payment->setUser($user);
         $user->addPayment($payment);
         $payment->setAmount($amount);

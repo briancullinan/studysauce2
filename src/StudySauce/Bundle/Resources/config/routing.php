@@ -473,6 +473,19 @@ $collection->add(
     )
 );
 $collection->add(
+    'userlist_status',
+    new Route(
+        '/userlist/status',
+        ['_controller' => 'StudySauceBundle:Partner:updateStatus'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
     'adviser',
     new Route(
         '/adviser/{_user}/{_tab}/{_format}',

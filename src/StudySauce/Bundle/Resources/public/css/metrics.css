@@ -27,6 +27,11 @@
     fill: #555555;
 }
 
+#metrics #timeline svg *
+{
+    shape-rendering: optimizeQuality;
+}
+
 #metrics .centrify {
     margin: 0 auto;
     display:inline-block;

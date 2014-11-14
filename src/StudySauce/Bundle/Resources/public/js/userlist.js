@@ -80,19 +80,19 @@ $(document).ready(function () {
         selectStatus.css('top', row.position().top).off().on('click', 'a', function (evt) {
             evt.preventDefault();
             var status = jQuery(this).attr('href').substring(1),
-                uid = (/uid([0-9]+)(\s|$)/ig).exec(row.attr('class'));
+                userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'));
             row.removeClass('status_green status_yellow status_red');
             row.addClass('status_' + status);
             jQuery.ajax({
-                url: '/user/save/status',
+                url: window.callbackPaths['userlist_status'],
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    uid: uid[1],
+                    userId: userId[1],
                     status: status
                 },
                 success: function () {
-                    userlist.find('tr.uid' + uid[1]).removeClass('status_green status_yellow status_red')
+                    userlist.find('tr.user-id-' + userId[1]).removeClass('status_green status_yellow status_red')
                         .addClass('status_' + status);
                 }
             });
@@ -132,8 +132,8 @@ $(document).ready(function () {
                     }
                     if(i == 2)
                     {
-                        aTxt = jQuery(a).find('td:nth-child(' + i + ')').attr('actual');
-                        bTxt = jQuery(b).find('td:nth-child(' + i + ')').attr('actual');
+                        aTxt = jQuery(a).find('td:nth-child(' + i + ')').attr('data-timestamp');
+                        bTxt = jQuery(b).find('td:nth-child(' + i + ')').attr('data-timestamp');
                     }
                     if (aTxt > bTxt)
                         return (ascending ? 1 : -1);
@@ -142,7 +142,7 @@ $(document).ready(function () {
                     // a must be equal to b
                     return 0;
                 }).appendTo(userlist.find('tbody'));
-                jQuery(this).val(jQuery(this).data('last') || jQuery(this).find('option').first().attr('value'));
+                jQuery(this).val(jQuery(this).data('last') || jQuery(this).find('option').first().text());
             }
             else if(jQuery(this).val() != 'Status' &&
                 jQuery(this).val() != 'Date' &&

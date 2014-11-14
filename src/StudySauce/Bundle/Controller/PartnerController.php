@@ -27,7 +27,7 @@ class PartnerController extends Controller
         /** @var $user User */
         $user = $this->getUser();
         $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('partner_update')
             : null;
 
         return $this->render('StudySauceBundle:Partner:tab.html.php', [
@@ -102,7 +102,7 @@ class PartnerController extends Controller
         }
 
         $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('partner_update')
             : null;
         return new JsonResponse(['csrf_token' => $csrfToken]);
     }
@@ -203,6 +203,23 @@ class PartnerController extends Controller
                 'user' => $user,
                 'tab' => $_tab
             ]);
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function updateStatusAction(Request $request)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $user User */
+        $user = $userManager->findUserBy(['id' => intval($request->get('userId'))]);
+
+        // TODO: check if partner and user is connected
+        $user->setAdviserStatus($request->get('status'));
+        $userManager->updateUser($user);
+        return new JsonResponse(true);
     }
 }
 

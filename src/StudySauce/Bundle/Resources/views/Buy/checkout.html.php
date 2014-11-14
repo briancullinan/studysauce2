@@ -37,10 +37,10 @@ $view['slots']->start('body'); ?>
             <fieldset id="billing-pane">
                 <legend>Billing information</legend>
                 <div class="first-name">
-                    <label class="input"><span>First name</span><input name="first-name" type="text" value=""></label>
+                    <label class="input"><span>First name</span><input name="first-name" type="text" value="<?php print $first; ?>"></label>
                 </div>
                 <div class="last-name">
-                    <label class="input"><span>Last name</span><input name="last-name" type="text" value=""></label>
+                    <label class="input"><span>Last name</span><input name="last-name" type="text" value="<?php print $last; ?>"></label>
                 </div>
                 <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
                 <label class="input"><input name="street2" type="text" value=""></label>
@@ -167,11 +167,11 @@ $view['slots']->start('body'); ?>
                     <label class="select"><span>Expiration year</span>
                         <select name="cc-year">
                             <?php
-                            $first = true;
+                            $isFirst = true;
                             for($y = 0; $y < 20; $y++)
                             {
-                                ?><option value="<?php print intval(date('y')) + $y; ?>" <?php print ($first ? 'selected="selected"': ''); ?>><?php print intval(date('Y')) + $y; ?></option><?php
-                                $first = false;
+                                ?><option value="<?php print intval(date('y')) + $y; ?>" <?php print ($isFirst ? 'selected="selected"': ''); ?>><?php print intval(date('Y')) + $y; ?></option><?php
+                                $isFirst = false;
                             } ?></select></label>
                 </div>
                 <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value="">

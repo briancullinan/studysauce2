@@ -4,6 +4,8 @@ namespace StudySauce\Bundle\Controller;
 
 use Course1\Bundle\Entity\Course1;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -116,6 +118,8 @@ class LandingController extends Controller
      */
     public function partnersAction(Request $request, $_code)
     {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
@@ -126,6 +130,9 @@ class LandingController extends Controller
         $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $_code]);
         if(!empty($partner)) {
             $partner->setActivated(true);
+            $partnerUser = $userManager->findUserByEmail($partner->getEmail());
+            if($partnerUser != null)
+                $partner->setPartner($partnerUser);
             $orm->merge($partner);
             $orm->flush();
 
@@ -142,20 +149,26 @@ class LandingController extends Controller
 
     /**
      * @param Request $request
+     * @param $_code
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function parentsAction(Request $request, $_code)
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
 
         /** @var $user User */
         $user = $this->getUser();
 
-        /** @var PartnerInvite $partner */
+        /** @var ParentInvite $partner */
         $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
         if(!empty($parent)) {
             $parent->setActivated(true);
+            $parentUser = $userManager->findUserByEmail($parent->getEmail());
+            if($parentUser != null)
+                $parent->setParent($parentUser);
             $orm->merge($parent);
             $orm->flush();
 

@@ -40,14 +40,15 @@ class MetricsController extends Controller
             $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
 
         $isDemo = false;
-        if(empty($schedule) || empty($courses)) {
+        if(!empty($schedule) && !empty($courses)) {
+            list($checkins, $checkouts) = self::cleanCheckins($courses);
+        }
+        if(empty($checkins)) {
             $isDemo = true;
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
             $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-            self::demoCheckins($courses, $orm);
+            list($checkins, $checkouts) = self::demoCheckins($courses, $orm);
         }
-
-        list($checkins, $checkouts) = self::cleanCheckins($courses);
         list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
 
         /** @var $goal Goal */
@@ -233,6 +234,8 @@ class MetricsController extends Controller
             }
         }
         $orm->flush();
+
+        return self::cleanCheckins($courses);
     }
 
     /**

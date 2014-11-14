@@ -7,7 +7,7 @@ security:
             id: studysauce.drupal_encoder
 
     role_hierarchy:
-        ROLE_USER:        ROLE_GUEST, ROLE_PAID, ROLE_ADVISER, ROLE_PARTNER
+        ROLE_USER:        [ROLE_GUEST, ROLE_PAID, ROLE_ADVISER, ROLE_PARTNER]
         ROLE_ADMIN:       ROLE_ADMIN
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
@@ -53,7 +53,7 @@ security:
                     service: my_user_provider
 
     access_control:
-        - { path: ^/userlist$, role: [ROLE_ADVISER, ROLE_PARTNER] }
+        - { path: ^/userlist$, roles: [ROLE_ADVISER, ROLE_PARTNER] }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset$, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -310,11 +310,7 @@ class PlanController extends Controller
             /** @var Course $course */
             $reoccurring = array_merge($reoccurring, self::getReoccurring($course, $week));
         }
-        $others = $courses->filter(
-            function (Course $c) {
-                return $c->getType() == 'o';
-            }
-        )->toArray();
+        $others = $courses->filter(function (Course $c) {return $c->getType() == 'o';})->toArray();
         foreach ($others as $i => $other) {
             /** @var Course $other */
             $reoccurring = array_merge($reoccurring, self::getReoccurring($other, $week));

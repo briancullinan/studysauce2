@@ -185,6 +185,7 @@ class AccountController extends Controller
             $password = $encoder->encodePassword($request->get('pass'), $user->getSalt());
             $user->setPassword($password);
             $user->setEmail($request->get('email'));
+            $user->setEmailCanonical($request->get('email'));
             $user->addRole('ROLE_USER');
             // assign user to partner
             if(!empty($request->getSession()->get('partner'))) {

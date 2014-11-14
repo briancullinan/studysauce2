@@ -84,6 +84,7 @@ $(document).ready(function () {
         else {
             deadlines.find('.sort-by,header').show();
         }
+        // TODO: update home tab
     }
 
     body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {

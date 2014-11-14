@@ -65,33 +65,16 @@ $view['slots']->start('body'); ?>
                         <option>Date</option>
                         <option>Ascending (A-Z)</option>
                         <option>Descending (Z-A)</option>
-                        <option>28-Oct</option>
-                        <option>26-Oct</option>
-                        <option>25-Oct</option>
-                        <option>21-Oct</option>
-                        <option>18-Oct</option>
-                        <option>15-Oct</option>
-                        <option>14-Oct</option>
-                        <option>13-Oct</option>
-                        <option>11-Oct</option>
-                        <option>09-Oct</option>
-                        <option>08-Oct</option>
-                        <option>07-Oct</option>
                     </select></th>
                 <th><select>
                         <option>Student</option>
                         <option>Ascending (A-Z)</option>
                         <option>Descending (Z-A)</option>
-                        <option>Denice Carpenter</option>
-                        <option>Rahim Karim</option>
-                        <option>Uyen Tran</option>
                     </select></th>
                 <th><select>
                         <option>School</option>
                         <option>Ascending (A-Z)</option>
                         <option>Descending (Z-A)</option>
-                        <option>The University of Texas at Austin</option>
-                        <option>University of Texas at Austin</option>
                     </select></th>
             </tr>
             </thead>
@@ -106,9 +89,9 @@ $view['slots']->start('body'); ?>
                 /** @var Schedule $schedule */
                 $schedule = $u->getSchedules()->first();
                 ?>
-                <tr class="uid<?php print $u->getId(); ?> status_<?php print ($u->getAdviserStatus() ?: 'green'); ?>">
+                <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getAdviserStatus() ?: 'green'); ?>">
                     <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                    <td data-actual="0"><?php print (empty($u->getLastLogin()) ? 'Never' : $u->getLastLogin()->format('j M y')); ?></td>
+                    <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M y') : $u->getLastLogin()->format('j M y')); ?></td>
                     <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'metrics']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
                     <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
                 </tr><?php

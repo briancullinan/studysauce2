@@ -112,8 +112,8 @@ INSERT OR IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from s
 SELECT concat('INSERT OR IGNORE INTO schedule(user_id, university, grades, weekends, sharp6am11am,',
               ' sharp11am4pm, sharp4pm9pm, sharp9pm2am, created) VALUES ((SELECT id from ss_user ',
               'where email = ', quote(if(title IS NULL, '', title)), '),',
-              quote(if(university IS NULL, '', university)), ',', quote(if(weekends IS NULL, '', weekends)), ',',
-              quote(if(grades IS NULL, '', grades)),
+              quote(if(university IS NULL, '', university)), ',', quote(if(grades IS NULL, '', grades)), ',',
+              quote(if(weekends IS NULL, '', weekends)),
               ',', if(sharp6am11am IS NULL, 'null', sharp6am11am), ',', if(sharp11am4pm IS NULL, 'null', sharp11am4pm),
               ',',
               if(sharp4pm9pm IS NULL, 'null', sharp4pm9pm), ',', if(sharp9pm2am IS NULL, 'null', sharp9pm2am), ',\'',
@@ -220,8 +220,8 @@ where checkin is not null
 UNION
 /* copy goals */
 SELECT
-  concat('INSERT OR IGNORE INTO goal(user_id, type, goal, reward, created) VALUES ((SELECT schedule.id from ss_user,schedule where ss_user.id = schedule.user_id ',
-         ' and email = ', quote(if(title IS NULL, '', title)), '),', replace(quote(type), '\\\'', '\'\''), ',',
+  concat('INSERT OR IGNORE INTO goal(user_id, type, goal, reward, created) VALUES ((SELECT user.id from ss_user where email = ',
+         quote(if(title IS NULL, '', title)), '),', replace(quote(type), '\\\'', '\'\''), ',',
          quote(goal), ',', replace(quote(if(reward IS NULL, '', reward)), '\\\'', '\'\''),',\'',created,'\');') AS ins
 FROM (
        SELECT
@@ -285,8 +285,48 @@ FROM (
      ) AS goals
 WHERE course IS NOT NULL
 
-
+UNION
 /* copy partner and parent invites */
+SELECT
+  concat('INSERT OR IGNORE INTO partner_invite(user_id, partner_id, first, last, email, activated, code, created, reminder, permissions)',
+         ' VALUES ((SELECT id from ss_user where email = ', quote(if(mail IS NULL, '', mail)), '),',
+         '(SELECT id from ss_user where email = ', quote(if(email IS NULL, '''', email)), '),',
+         replace(quote(first), '\\\'', '\'\''), ',',replace(quote(last), '\\\'', '\'\''), ',',
+         replace(quote(email), '\\\'', '\'\''), ',',activated,',',replace(quote(code), '\\\'', '\'\''), ',\'',
+         if(created IS NULL,'null',created),'\',\'',if(reminder IS NULL,'null',reminder),'\',\'',if(reminder IS NULL,'null',permissions),'\');') AS ins
+FROM (
+       SELECT
+         mail,
+         field_first_name_value as first,
+         field_last_name_value as last,
+         field_email_value as email,
+         field_activated_value as activated,
+         field_code_value as code,
+         if(field_sent_value is null,from_unixtime(created),field_sent_value) as created,
+         field_reminder_value as reminder,
+         group_concat(field_permissions_value SEPARATOR ',') as permissions
+       FROM studysauce3.field_data_field_partners
+         LEFT JOIN studysauce3.users
+           ON uid = entity_id
+         left join studysauce3.field_data_field_first_name
+           on field_data_field_first_name.entity_id = field_partners_value
+         left join studysauce3.field_data_field_last_name
+           on field_data_field_last_name.entity_id = field_partners_value
+         left join studysauce3.field_data_field_email
+           on field_data_field_email.entity_id = field_partners_value
+         left join studysauce3.field_data_field_activated
+           on field_data_field_activated.entity_id = field_partners_value
+         left join studysauce3.field_data_field_code
+           on field_data_field_code.entity_id = field_partners_value
+         left join studysauce3.field_data_field_sent
+           on field_data_field_sent.entity_id = field_partners_value
+         left join studysauce3.field_data_field_reminder
+           on field_data_field_reminder.entity_id = field_partners_value
+         left join studysauce3.field_data_field_permissions
+           on field_data_field_permissions.entity_id = field_partners_value
+       where field_email_value is not null
+       GROUP BY field_data_field_permissions.entity_id
+     ) AS partners
 
 
 

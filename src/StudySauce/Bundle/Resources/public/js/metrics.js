@@ -255,7 +255,8 @@ $(document).ready(function () {
 
         x = d3.scale.linear()
             .domain([startTime, endTime])
-            .range([0, w]);
+            .range([0, w])
+            .nice();
 
         y = d3.scale.linear()
             .domain([0, d3.max(classes.map(function (c) {
@@ -263,7 +264,8 @@ $(document).ready(function () {
                     return d.length + d.lengthS;
                 }));
             }))])
-            .range([h, 0]);
+            .range([h, 0])
+            .nice();
 
         xAxis = d3.svg.axis()
             .orient("bottom")

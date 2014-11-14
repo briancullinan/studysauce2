@@ -175,7 +175,7 @@ $(document).ready(function () {
                             return;
                         }
 
-
+                        // TODO: fix this
                         $.ajax({
                             url: '/node/move/schedule',
                             type: 'POST',
