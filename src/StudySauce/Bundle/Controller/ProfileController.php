@@ -69,7 +69,7 @@ class ProfileController extends Controller
         if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
             return 'profile';
 
-        if (empty($courses)) {
+        if (!$schedule->getCourses()->exists(function ($i, Course $c) {return $c->getType() == 'c';})) {
             return 'schedule';
         }
 
@@ -114,7 +114,6 @@ class ProfileController extends Controller
                 return $b->getType() == 'c';
             }
         )->toArray();
-        $hasEmpties = false;
         foreach($courses as $i => $c)
         {
             /** @var Course $c */
@@ -126,8 +125,6 @@ class ProfileController extends Controller
                 $c->setStudyDifficulty($request->get('profile-difficulty-' . $c->getId()));
                 $orm->merge($c);
             }
-            if(empty($c->getStudyType()) || empty($c->getStudyDifficulty()))
-                $hasEmpties = true;
         }
         $orm->flush();
 

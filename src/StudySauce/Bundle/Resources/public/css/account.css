@@ -161,6 +161,8 @@ a[href="#sign-in-with-email"]
     display: none;
 }
 
+#login .form-actions .error,
+#register .form-actions .error,
 #account .form-actions .error
 {
     clear: both;

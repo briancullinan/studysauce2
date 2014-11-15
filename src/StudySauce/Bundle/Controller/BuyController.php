@@ -100,13 +100,12 @@ class BuyController extends Controller
                 $user->setUsernameCanonical($parent->getEmail());
                 $orm->persist($user);
                 $orm->flush();
-
-                $context = $this->get('security.context');
-                $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
-                $context->setToken($token);
-                $session = $request->getSession();
-                $session->set('_security_main', serialize($token));
             }
+            $context = $this->get('security.context');
+            $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+            $context->setToken($token);
+            $session = $request->getSession();
+            $session->set('_security_main', serialize($token));
         }
         $payment->setUser($user);
         $user->addPayment($payment);
@@ -136,8 +135,8 @@ class BuyController extends Controller
             $sale->setField('recurring_billing', true);
             $sale->setField('test_request', true);
             $sale->setField('duplicate_window', 120);
-            $sale->setSandbox(false);
-            $response = $sale->authorizeOnly();
+            $sale->setSandbox(true);
+            $response = $sale->authorizeAndCapture();
             if ($response->approved) {
                 $payment->setPayment($response->transaction_id);
             } else {
@@ -169,7 +168,7 @@ class BuyController extends Controller
 
             // Create the subscription.
             $request = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-            $request->setSandbox(false);
+            $request->setSandbox(true);
             $response = $request->createSubscription($subscription);
             if ($response->isOk()) {
                 $payment->setSubscription($response->getSubscriptionId());
@@ -179,7 +178,7 @@ class BuyController extends Controller
             }
 
             if (isset($error)) {
-                return new JsonResponse(['error' => $error]);
+                $response = new JsonResponse(['error' => $error]);
             }
             // success
             else {
@@ -187,50 +186,53 @@ class BuyController extends Controller
                 $user->addRole('ROLE_PAID');
                 $userManager->updateUser($user, false);
                 if($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
-                    return $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
+                    $response = $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
                 }
                 // redirect to buy funnel
                 else
-                    return $this->redirect($this->generateUrl('profile', ['_format' => 'funnel']));
+                    $response = $this->redirect($this->generateUrl('profile', ['_format' => 'funnel']));
 
             }
         } catch(\AuthorizeNetException $ex) {
             $this->get('logger')->error('Authorize.Net payment failed');
+            $response = new JsonResponse(['error' => 'Could not process payment, please try again later.']);
         }
-        finally {
-            $orm->persist($payment);
-            $orm->flush();
-            if($payment->getPayment() !== null) {
-                // send receipt
-                $emails = new EmailsController();
-                $emails->setContainer($this->container);
-                $emails->invoiceAction($user, $payment);
 
-                if ($user->hasRole('ROLE_PARENT')) {
-                    // send student email
-                    /** @var ParentInvite $parent */
-                    $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
-                        ['parent' => $user->getId()]
-                    );
-                    $student = $parent->getUser();
-                    $student->addRole('ROLE_PAID');
-                    $userManager->updateUser($student);
-                    $emails->parentPrepayAction($user, $student);
-                }
-                if($user->hasRole('ROLE_PARTNER')) {
-                    // send student email
-                    /** @var PartnerInvite $partner */
-                    $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findBy(
-                        ['partner' => $user->getId()]
-                    );
-                    $student = $partner->getUser();
-                    $student->addRole('ROLE_PAID');
-                    $userManager->updateUser($student);
-                    $emails->parentPrepayAction($user, $student);
-                }
+        $orm->persist($payment);
+        $orm->flush();
+        if($payment->getPayment() !== null) {
+            // send receipt
+            $emails = new EmailsController();
+            $emails->setContainer($this->container);
+            $emails->invoiceAction($user, $payment);
+
+            if ($user->hasRole('ROLE_PARENT')) {
+                // send student email
+                /** @var ParentInvite $parent */
+                $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
+                    ['parent' => $user->getId()]
+                );
+                $student = $parent->getUser();
+                $student->addRole('ROLE_PAID');
+                $userManager->updateUser($student);
+                $emails->parentPrepayAction($user, $student);
+            }
+            if($user->hasRole('ROLE_PARTNER')) {
+                // send student email
+                /** @var PartnerInvite $partner */
+                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findBy(
+                    ['partner' => $user->getId()]
+                );
+                $student = $partner->getUser();
+                $student->addRole('ROLE_PAID');
+                $userManager->updateUser($student);
+                $emails->parentPrepayAction($user, $student);
             }
         }
-        return new JsonResponse(['error' => 'Could not process payment, please try again later.']);
+
+        $loginManager = $this->get('fos_user.security.login_manager');
+        $loginManager->loginUser('main', $user, $response);
+        return $response;
     }
 
     /**

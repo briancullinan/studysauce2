@@ -5,12 +5,18 @@ namespace StudySauce\Bundle\Controller;
 use Course1\Bundle\Entity\Course1;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use FOS\UserBundle\Security\LoginManager;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Tests\Encoder\PasswordEncoder;
 
 /**
  * Class LandingController
@@ -128,20 +134,23 @@ class LandingController extends Controller
 
         /** @var PartnerInvite $partner */
         $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $_code]);
-        if(!empty($partner)) {
+        if(empty($partner)) {
+            return $this->render('StudySauceBundle:Landing:partners.html.php');
+        }
+        else {
             $partner->setActivated(true);
+            /** @var User $partnerUser */
             $partnerUser = $userManager->findUserByEmail($partner->getEmail());
             if($partnerUser != null)
                 $partner->setPartner($partnerUser);
             $orm->merge($partner);
             $orm->flush();
-            $this->get('security.context')->setToken(null);
+            $response = $this->render('StudySauceBundle:Landing:parents.html.php');
+            $this->logoutUser($userManager, $response);
             $session = $request->getSession();
-            $session->invalidate();
             $session->set('partner', $_code);
+            return $response;
         }
-
-        return $this->render('StudySauceBundle:Landing:partners.html.php');
     }
 
     /**
@@ -161,20 +170,42 @@ class LandingController extends Controller
 
         /** @var ParentInvite $partner */
         $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
-        if(!empty($parent)) {
+        if(empty($parent)) {
+            return $this->render('StudySauceBundle:Landing:parents.html.php');
+        }
+        else {
             $parent->setActivated(true);
             $parentUser = $userManager->findUserByEmail($parent->getEmail());
             if($parentUser != null)
                 $parent->setParent($parentUser);
             $orm->merge($parent);
             $orm->flush();
-            $this->get('security.context')->setToken(null);
+            $response = $this->render('StudySauceBundle:Landing:parents.html.php');
+            $this->logoutUser($userManager, $response);
             $session = $request->getSession();
-            $session->invalidate();
             $session->set('parent', $_code);
+            return $response;
         }
+    }
 
-        return $this->render('StudySauceBundle:Landing:parents.html.php');
+    /**
+     * @param UserManager $userManager
+     * @param Response $response
+     */
+    public function logoutUser(UserManager $userManager, Response $response)
+    {
+        $loginManager = $this->get('fos_user.security.login_manager');
+        $username = 'guest';
+        $this->get('security.context')->setToken(null);
+        $this->get('request')->getSession()->invalidate();
+        /** @var EncoderFactory $encoder_service */
+        $encoder_service = $this->get('security.encoder_factory');
+        /** @var PasswordEncoderInterface $encoder */
+        $user = $userManager->findUserByUsername($username);
+        $encoder = $encoder_service->getEncoder($user);
+        $password = $encoder->encodePassword('guest', $user->getSalt());
+        $this->get('security.context')->setToken(new UsernamePasswordToken($user, $password, 'main', $user->getRoles()));
+        $loginManager->loginUser('main', $user, $response);
     }
 
     /**
