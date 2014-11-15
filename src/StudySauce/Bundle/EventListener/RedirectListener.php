@@ -3,6 +3,8 @@
 namespace StudySauce\Bundle\EventListener;
 
 use AppKernel;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Controller\EmailsController;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
@@ -75,6 +77,15 @@ class RedirectListener implements EventSubscriberInterface
         // provide the better way to display a enhanced error page only in prod environment, if you want
         // exception object
         $exception = $event->getException();
+        try {
+            /** @var $orm EntityManager */
+            $orm = $this->kernel->getContainer()->get('doctrine')->getManager();
+            $orm->clear();
+        }
+        catch(\Exception $x) {
+
+        }
+
         try
         {
             // try to notify admin
@@ -85,6 +96,7 @@ class RedirectListener implements EventSubscriberInterface
         catch(\Exception $x)
         {
             // nothing more we can do here, hope it gets logged.
+            $xe = $x;
         }
 
         // new Response object

@@ -198,6 +198,8 @@ class BuyController extends Controller
             $this->get('logger')->error('Authorize.Net payment failed');
         }
         finally {
+            $orm->persist($payment);
+            $orm->flush();
             if($payment->getPayment() !== null) {
                 // send receipt
                 $emails = new EmailsController();
@@ -212,7 +214,7 @@ class BuyController extends Controller
                     );
                     $student = $parent->getUser();
                     $student->addRole('ROLE_PAID');
-                    $userManager->updateUser($student, false);
+                    $userManager->updateUser($student);
                     $emails->parentPrepayAction($user, $student);
                 }
                 if($user->hasRole('ROLE_PARTNER')) {
@@ -223,12 +225,10 @@ class BuyController extends Controller
                     );
                     $student = $partner->getUser();
                     $student->addRole('ROLE_PAID');
-                    $userManager->updateUser($student, false);
+                    $userManager->updateUser($student);
                     $emails->parentPrepayAction($user, $student);
                 }
             }
-            $orm->persist($payment);
-            $orm->flush();
         }
         return new JsonResponse(['error' => 'Could not process payment, please try again later.']);
     }
