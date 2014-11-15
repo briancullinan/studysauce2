@@ -135,13 +135,10 @@ class LandingController extends Controller
                 $partner->setPartner($partnerUser);
             $orm->merge($partner);
             $orm->flush();
-
-            if (empty($partner->getPartner()) || $partner->getPartner()->getId() != $user->getId()) {
-                $this->get('security.context')->setToken(null);
-                $session = $request->getSession();
-                $session->invalidate();
-                $session->set('partner', $_code);
-            }
+            $this->get('security.context')->setToken(null);
+            $session = $request->getSession();
+            $session->invalidate();
+            $session->set('partner', $_code);
         }
 
         return $this->render('StudySauceBundle:Landing:partners.html.php');
@@ -171,14 +168,10 @@ class LandingController extends Controller
                 $parent->setParent($parentUser);
             $orm->merge($parent);
             $orm->flush();
-
-            if(empty($parent->getParent()) || $parent->getParent()->getId() !=  $user->getId())
-            {
-                $this->get('security.context')->setToken(null);
-                $session = $request->getSession();
-                $session->invalidate();
-                $session->set('parent', $_code);
-            }
+            $this->get('security.context')->setToken(null);
+            $session = $request->getSession();
+            $session->invalidate();
+            $session->set('parent', $_code);
         }
 
         return $this->render('StudySauceBundle:Landing:parents.html.php');
