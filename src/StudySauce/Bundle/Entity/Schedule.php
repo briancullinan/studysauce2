@@ -119,6 +119,7 @@ class Schedule
     {
         $this->created = new \DateTime();
     }
+
     /**
      * Constructor
      */

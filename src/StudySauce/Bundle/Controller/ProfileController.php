@@ -69,7 +69,8 @@ class ProfileController extends Controller
         if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
             return 'profile';
 
-        if (!$schedule->getCourses()->exists(function ($i, Course $c) {return $c->getType() == 'c';})) {
+        if (empty($schedule->getUniversity()) ||
+            !$schedule->getCourses()->exists(function ($i, Course $c) {return $c->getType() == 'c';})) {
             return 'schedule';
         }
 
@@ -96,7 +97,15 @@ class ProfileController extends Controller
         $user = $this->getUser();
 
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
-        $schedule = $user->getSchedules()->first() ?: new Schedule();
+        $schedule = $user->getSchedules()->first();
+        $isNew = false;
+        if(empty($schedule)) {
+            $isNew = true;
+            $schedule = new Schedule();
+            $schedule->setUser($user);
+            //$schedule->setCreated(new \DateTime());
+            $user->addSchedule($schedule);
+        }
 
         if(!empty($request->get('grades')) && !empty($request->get('weekends'))) {
             $schedule->setGrades($request->get('grades'));
@@ -105,15 +114,16 @@ class ProfileController extends Controller
             $schedule->setSharp11am4pm($request->get('11-am-4-pm'));
             $schedule->setSharp4pm9pm($request->get('4-pm-9-pm'));
             $schedule->setSharp9pm2am($request->get('9-pm-2-am'));
-            $orm->merge($schedule);
-            $orm->flush();
         }
 
-        $courses = $schedule->getCourses()->filter(
-            function (Course $b) {
-                return $b->getType() == 'c';
-            }
-        )->toArray();
+        if($isNew) {
+            $orm->persist($schedule);
+       }
+        else {
+            $orm->merge($schedule);
+        }
+
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
         foreach($courses as $i => $c)
         {
             /** @var Course $c */

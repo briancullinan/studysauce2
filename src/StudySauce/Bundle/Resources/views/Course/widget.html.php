@@ -18,7 +18,7 @@ $overall = round((empty($level) ? 0 : ($level - 1)) / 4.0 * 100);
         <h3><?php print $overall; ?>% of course complete</h3>
         <div class="percent">
             <?php foreach ($view['assetic']->image(
-                ['@StudySauceBundle/Resources/public/images/logo_middle_transparent.png'],
+                ['@StudySauceBundle/Resources/public/images/logo_middle_transparent_compressed.png'],
                 [],
                 ['output' => 'bundles/studysauce/images/*']
             ) as $url): ?>

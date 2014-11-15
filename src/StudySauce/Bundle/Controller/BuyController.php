@@ -76,7 +76,7 @@ class BuyController extends Controller
         // create a new payment entity
         $payment = new Payment();
         // TODO: create a user if anonymous
-        if($user->hasRole('ROLE_GUEST') && !empty($request->getSession()->get('parent')))
+        if(!empty($request->getSession()->get('parent')))
         {
             /** @var ParentInvite $parent */
             $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
@@ -98,14 +98,18 @@ class BuyController extends Controller
                 $user->setEnabled(true);
                 $user->setUsername($parent->getEmail());
                 $user->setUsernameCanonical($parent->getEmail());
+                $parent->setParent($user);
                 $orm->persist($user);
+                $orm->merge($parent);
                 $orm->flush();
             }
-            $context = $this->get('security.context');
-            $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
-            $context->setToken($token);
-            $session = $request->getSession();
-            $session->set('_security_main', serialize($token));
+            if($user->hasRole('ROLE_GUEST')) {
+                $context = $this->get('security.context');
+                $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+                $context->setToken($token);
+                $session = $request->getSession();
+                $session->set('_security_main', serialize($token));
+            }
         }
         $payment->setUser($user);
         $user->addPayment($payment);
@@ -135,7 +139,7 @@ class BuyController extends Controller
             $sale->setField('recurring_billing', true);
             $sale->setField('test_request', true);
             $sale->setField('duplicate_window', 120);
-            $sale->setSandbox(true);
+            $sale->setSandbox(false);
             $response = $sale->authorizeAndCapture();
             if ($response->approved) {
                 $payment->setPayment($response->transaction_id);
@@ -168,7 +172,7 @@ class BuyController extends Controller
 
             // Create the subscription.
             $request = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-            $request->setSandbox(true);
+            $request->setSandbox(false);
             $response = $request->createSubscription($subscription);
             if ($response->isOk()) {
                 $payment->setSubscription($response->getSubscriptionId());
@@ -202,20 +206,20 @@ class BuyController extends Controller
         $orm->flush();
         if($payment->getPayment() !== null) {
             // send receipt
+            $address = $request->get('street1') .
+                (empty(trim($request->get('street2'))) ? '' : ("<br />" . $request->get('street2'))) . '<br />' .
+                $request->get('city') . ' ' . $request->get('state') . '<br />' .
+                $request->get('zip');
             $emails = new EmailsController();
             $emails->setContainer($this->container);
-            $emails->invoiceAction($user, $payment);
+            $emails->invoiceAction($user, $payment, $address);
 
-            if ($user->hasRole('ROLE_PARENT')) {
+            if ($user->hasRole('ROLE_PARENT') && isset($parent)) {
                 // send student email
-                /** @var ParentInvite $parent */
-                $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findBy(
-                    ['parent' => $user->getId()]
-                );
                 $student = $parent->getUser();
                 $student->addRole('ROLE_PAID');
                 $userManager->updateUser($student);
-                $emails->parentPrepayAction($user, $student);
+                $emails->parentPrepayAction($user, $student, $parent->getCode());
             }
             if($user->hasRole('ROLE_PARTNER')) {
                 // send student email
@@ -226,7 +230,8 @@ class BuyController extends Controller
                 $student = $partner->getUser();
                 $student->addRole('ROLE_PAID');
                 $userManager->updateUser($student);
-                $emails->parentPrepayAction($user, $student);
+                // TODO: create student invite?
+                $emails->parentPrepayAction($user, $student, $partner->getCode());
             }
         }
 

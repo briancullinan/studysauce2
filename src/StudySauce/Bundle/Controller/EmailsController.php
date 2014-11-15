@@ -142,7 +142,7 @@ class EmailsController extends Controller
         return new Response();
     }
 
-    public function invoiceAction(User $user = null, Payment $payment)
+    public function invoiceAction(User $user = null, Payment $payment, $address)
     {
         /** @var $user User */
         if(empty($user))
@@ -156,6 +156,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:invoice.html.php', [
                         'user' => $user,
+                        'address' => $address,
                         'payment' => $payment,
                         'greeting' => 'Hello ' . $user->getFirst() . ' ' . $user->getLast() . ',',
                         'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
@@ -172,15 +173,16 @@ class EmailsController extends Controller
     /**
      * @param User $user
      * @param User $student
+     * @param $_code
      * @return Response
      */
-    public function parentPrepayAction(User $user = null, User $student = null)
+    public function parentPrepayAction(User $user = null, User $student = null, $_code)
     {
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
 
-        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $student->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $_code], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your parent') . ' has prepaid for your study plan')
