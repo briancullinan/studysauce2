@@ -41,6 +41,16 @@ $(document).ready(function () {
     }
 
     body.on('show', '#metrics,#home', function () {
+        var metrics = $('#metrics');
+
+        // show empty dialog
+        if(metrics.is('.demo'))
+            $('#metrics-empty').modal({
+                backdrop: 'static',
+                keyboard: false,
+                modalOverflow: true
+            });
+
         if(($(this).is('#metrics') && !$(this).is('.loaded')) ||
             ($(this).is('#home') && !$(this).find('.metrics-widget').is('.loaded')))
         {
@@ -112,14 +122,6 @@ $(document).ready(function () {
         var metrics = $('#metrics'),
             timeline = $(this).find('#timeline:visible, .timeline:visible'),
             piechart = $(this).find('#pie-chart:visible, .pie-chart:visible');
-
-        // show empty dialog
-        if(metrics.is('.demo'))
-            $('#metrics-empty').modal({
-                backdrop: 'static',
-                keyboard: false,
-                modalOverflow: true
-            });
 
         if(timeline.find('svg').length == 0)
             d3.selectAll(timeline.toArray()).append("svg")

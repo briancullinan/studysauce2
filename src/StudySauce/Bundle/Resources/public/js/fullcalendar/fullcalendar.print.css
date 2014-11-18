@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v2.1.0-beta1 Print Stylesheet
+ * FullCalendar v2.2.0 Print Stylesheet
  * Docs & License: http://arshaw.com/fullcalendar/
  * (c) 2013 Adam Shaw
  */
@@ -44,6 +44,7 @@ tbody,
 
 /* kill the overlaid, absolutely-positioned common components */
 .fc-bg,
+.fc-bgevent-skeleton,
 .fc-highlight-skeleton,
 .fc-helper-skeleton {
 	display: none;
@@ -51,31 +52,44 @@ tbody,
 
 /* don't force a min-height on rows (for DayGrid) */
 .fc tbody .fc-row {
-	min-height: 0 !important;
+	height: auto !important; /* undo height that JS set in distributeHeight */
+	min-height: 0 !important; /* undo the min-height from each view's specific stylesheet */
 }
 
-/* don't have chunky padding underneath events (for Agenda, basicWeek, basicDay) */
 .fc tbody .fc-row .fc-content-skeleton {
-	padding-bottom: 0 !important;
+	position: static; /* undo .fc-rigid */
+	padding-bottom: 0 !important; /* use a more border-friendly method for this... */
 }
 
-/* Make space at the bottom by putting a non-breaking space in the last row's cells.
-   :last-child only works with newer browsers */
-.fc tbody .fc-row .fc-content-skeleton tbody tr:last-child td:after {
-	content: "\000A0";
+.fc tbody .fc-row .fc-content-skeleton tbody tr:last-child td { /* only works in newer browsers */
+	padding-bottom: 1em; /* ...gives space within the skeleton. also ensures min height in a way */
 }
 
-/* For IE8, which doesn't understand the above line, give a min-height.
-   For some reason, IE8 really overexaggerates this value.
-   Other browsers will already be taller than this. */
 .fc tbody .fc-row .fc-content-skeleton table {
-	height: 2em;
+	/* provides a min-height for the row, but only effective for IE, which exaggerates this value,
+	   making it look more like 3em. for other browers, it will already be this tall */
+	height: 1em;
 }
 
-/* For IE8, the table height might get too tall and create gaps between events and day lines.
-   Vertically centering events within these cells makes it look better */
-.fc-day-grid .fc-event-container {
-	vertical-align: middle !important;
+
+/* Undo month-view event limiting. Display all events and hide the "more" links
+--------------------------------------------------------------------------------------------------*/
+
+.fc-more-cell,
+.fc-more {
+	display: none !important;
+}
+
+.fc tr.fc-limited {
+	display: table-row !important;
+}
+
+.fc td.fc-limited {
+	display: table-cell !important;
+}
+
+.fc-popover {
+	display: none; /* never display the "more.." popover in print mode */
 }
 
 

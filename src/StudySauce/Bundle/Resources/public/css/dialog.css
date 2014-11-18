@@ -50,6 +50,11 @@
     font-size: 18px;
 }
 
+.modal .modal-header + .modal-footer
+{
+    padding-top:20px;
+}
+
 .modal .modal-header a
 {
     color:#ffffff;
