@@ -10,7 +10,7 @@ $view['slots']->start('stylesheets');
 
 foreach ($view['assetic']->stylesheets(
     [
-        '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.css'
+        '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'
     ],
     [],
     ['output' => 'bundles/studysauce/js/fullcalendar/*.css']

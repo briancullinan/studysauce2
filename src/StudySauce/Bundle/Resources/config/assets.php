@@ -79,7 +79,7 @@ $container->loadFromExtension('assetic', [
         ],
         'plan' => [
             'inputs' => [
-                //'@StudySauceBundle/Resources/public/js/fullcalendar/lib/moment.min.js',
+                '@StudySauceBundle/Resources/public/js/moment.min.js',
                 '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.js',
                 '@StudySauceBundle/Resources/public/js/plan.js',
                 '@StudySauceBundle/Resources/public/js/strategies.js'
