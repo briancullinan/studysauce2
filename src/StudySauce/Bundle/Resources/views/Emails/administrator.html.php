@@ -5,8 +5,11 @@ $view['slots']->start('message'); ?>
 <p><?php
 foreach($properties as $i => $prop)
 {
-    if(is_string($prop) || is_object($prop))
-        print $i . ' = ' . $prop . '<br />';
+    try {
+        print $i . ' = ' . var_export($prop, true) . '<br />';
+    } catch (\Exception $ex) {
+
+    }
 }
 ?></p>
 <?php $view['slots']->stop(); ?>

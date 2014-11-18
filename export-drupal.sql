@@ -1,9 +1,9 @@
 /* copy users
-INSERT OR IGNORE INTO ss_user(username, username_canonical, email, email_canonical, roles, created, enabled, locked, expired, credentials_expired, password, salt, first, last) VALUES ('bjcullinan', 'bjcullinan', 'admin@studysauce.com', 'admin@studysauce.com', 'a:1:{i:0;s:10:"ROLE_ADMIN";}', '2014-08-23 15:47:50', 1, 0, 0, 0, 'Q0pER0g2HhhsoGTttQXI16cxgvb7gM9bVPERG9Afiug', '$S$DYbMXewEA', 'Brian', 'Cullinan');
+INSERT IGNORE INTO ss_user(username, username_canonical, email, email_canonical, roles, created, enabled, locked, expired, credentials_expired, password, salt, first, last) VALUES ('bjcullinan', 'bjcullinan', 'admin@studysauce.com', 'admin@studysauce.com', 'a:1:{i:0;s:10:"ROLE_ADMIN";}', '2014-08-23 15:47:50', 1, 0, 0, 0, 'Q0pER0g2HhhsoGTttQXI16cxgvb7gM9bVPERG9Afiug', '$S$DYbMXewEA', 'Brian', 'Cullinan');
 */
 
 SELECT concat(
-           'INSERT OR IGNORE INTO ss_user(username, username_canonical, email, email_canonical, roles, created, ',
+           'INSERT IGNORE INTO ss_user(username, username_canonical, email, email_canonical, roles, created, ',
            'last_login, enabled, locked, expired, credentials_expired, password, salt, first, last)',
            ' VALUES (', quote(if(username IS NULL, '', username)), ',',
            quote(if(username_canonical IS NULL, '', username_canonical)), ',',
@@ -13,14 +13,17 @@ SELECT concat(
            enabled, ',', locked, ',', expired, ',', credentials_expired, ',', quote(if(password IS NULL, '', password)),
            ',',
            quote(if(salt IS NULL, '', salt)), ',', replace(quote(if(first IS NULL, '', first)), '\\\'', '\'\''), ',',
-           replace(quote(if(last IS NULL, '', last)), '\\\'', '\'\''), ');') AS ins
+           replace(quote(if(last IS NULL, '', last)), '\\\'', '\'\''), ');')
+  AS '/* insert */'
 FROM (
        SELECT
          name                                                         AS username,
          name                                                         AS username_canonical,
-/* convert to test data */
          mail                                                         AS email,
+         lower(mail)                                                  AS email_canonical,
+         /* convert to test data
          lower(concat(replace(mail, '@', '_'), '@example.org'))              AS email_canonical,
+         */
          IF((SELECT count(*)
              FROM studysauce.users_roles, studysauce.role
              WHERE users_roles.uid = users.uid
@@ -57,12 +60,12 @@ FROM (
          0                                                            AS locked,
          0                                                            AS expired,
          0                                                            AS credentials_expired,
-/* convert to test data
-SUBSTR(pass FROM 13) as password,
-SUBSTR(pass FROM 1 FOR 12) as salt,
-*/
+         SUBSTR(pass FROM 13) as password,
+         SUBSTR(pass FROM 1 FOR 12) as salt,
+         /* convert to test data
          'pKmDp4jBETNsSr4z3HIAL8ttTS08ZQ6YPfzyy3F0HNR'                AS password,
          '$S$DB1qzKYe9'                                               AS salt,
+         */
          field_first_name_value                                       AS first,
          field_last_name_value                                        AS last
        FROM studysauce.users
@@ -74,12 +77,13 @@ SUBSTR(pass FROM 1 FOR 12) as salt,
 
 UNION
 /* copy groups
-INSERT OR IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from ss_user where email = 'marketing@studysauce.com'), (SELECT id from ss_group where name = 'Stephen''s list'));
+INSERT IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from ss_user where email = 'marketing@studysauce.com'), (SELECT id from ss_group where name = 'Stephen''s list'));
 */
 
-SELECT concat('INSERT OR IGNORE INTO ss_group(name, description, created, roles) VALUES (',
+SELECT concat('INSERT IGNORE INTO ss_group(name, description, created, roles) VALUES (',
               replace(quote(title), '\\\'', '\'\''), ',\'\',', '\'', from_unixtime(created),
               '\',\'a:1:{i:0;s:9:"ROLE_PAID";}\');')
+  AS '/* insert */'
 FROM (
        SELECT
          title,
@@ -90,9 +94,10 @@ FROM (
 
 UNION
 
-SELECT concat('INSERT OR IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from ss_user where email = ',
+SELECT concat('INSERT IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from ss_user where email = ',
               quote(if(mail IS NULL, '', mail)), '),(SELECT id from ss_group where name = ',
-              replace(quote(if(title IS NULL, '', title)), '\\\'', '\'\''), '));') AS ins
+              replace(quote(if(title IS NULL, '', title)), '\\\'', '\'\''), '));')
+  AS '/* insert */'
 FROM (
        SELECT
          mail,
@@ -106,10 +111,10 @@ FROM (
 
 UNION
 /* copy schedules
-INSERT OR IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from ss_user where email = 'marketing@studysauce.com'), (SELECT id from ss_group where name = 'Stephen''s list'));
+INSERT IGNORE INTO ss_user_group(user_id, group_id) VALUES ((SELECT id from ss_user where email = 'marketing@studysauce.com'), (SELECT id from ss_group where name = 'Stephen''s list'));
 */
 
-SELECT concat('INSERT OR IGNORE INTO schedule(user_id, university, grades, weekends, sharp6am11am,',
+SELECT concat('INSERT IGNORE INTO schedule(user_id, university, grades, weekends, sharp6am11am,',
               ' sharp11am4pm, sharp4pm9pm, sharp9pm2am, created) VALUES ((SELECT id from ss_user ',
               'where email = ', quote(if(title IS NULL, '', title)), '),',
               quote(if(university IS NULL, '', university)), ',', quote(if(grades IS NULL, '', grades)), ',',
@@ -117,7 +122,8 @@ SELECT concat('INSERT OR IGNORE INTO schedule(user_id, university, grades, weeke
               ',', if(sharp6am11am IS NULL, 'null', sharp6am11am), ',', if(sharp11am4pm IS NULL, 'null', sharp11am4pm),
               ',',
               if(sharp4pm9pm IS NULL, 'null', sharp4pm9pm), ',', if(sharp9pm2am IS NULL, 'null', sharp9pm2am), ',\'',
-              created, '\');') AS ins
+              created, '\');')
+  AS '/* insert */'
 FROM (
        SELECT
          title,
@@ -150,12 +156,13 @@ FROM (
 UNION
 /* copy courses */
 SELECT
-  concat('INSERT OR IGNORE INTO course(schedule_id, name, type, study_type, study_difficulty, start_time, end_time,',
+  concat('INSERT IGNORE INTO course(schedule_id, name, type, study_type, study_difficulty, start_time, end_time,',
          ' created, deleted, dotw) VALUES ((SELECT schedule.id from ss_user,schedule where ss_user.id = schedule.user_id ',
          ' and email = ', quote(if(title IS NULL, '', title)), '),', replace(quote(name), '\\\'', '\'\''), ',',
          quote(type), ',', quote(if(study_type IS NULL, '', study_type)),
          ',', quote(if(study_difficulty IS NULL, '', study_difficulty)), ',\'', start_time, '\',\'', end_time, '\',\'',
-         now(), '\',0,\'', dotw, '\');') AS ins
+         now(), '\',0,\'', dotw, '\');')
+    AS '/* insert */'
 FROM (
        SELECT
          title,
@@ -191,13 +198,14 @@ UNION
 
 /* copy checkins */
 SELECT concat(
-           'INSERT OR IGNORE INTO checkin(course_id,checkin,utc_checkin,checkout,utc_checkout) VALUES ((',
+           'INSERT IGNORE INTO checkin(course_id,checkin,utc_checkin,checkout,utc_checkout) VALUES ((',
            'SELECT course.id from ss_user,schedule,course where ss_user.id = schedule.user_id ',
            ' and email = ', quote(if(title IS NULL, '', title)),
            ' and course.schedule_id = schedule.id and course.name = ',
            quote(course), '),\'', if(checkin IS NULL, 'null', checkin), '\',\'', if(utc_checkin IS NULL, 'null', utc_checkin),
            '\',',
-           if(checkout IS NULL, 'null', concat('\'',checkout,'\'')), ',', if(utc_checkout IS NULL, 'null', concat('\'',utc_checkout,'\'')), ');') AS ins
+           if(checkout IS NULL, 'null', concat('\'',checkout,'\'')), ',', if(utc_checkout IS NULL, 'null', concat('\'',utc_checkout,'\'')), ');')
+  AS '/* insert */'
 FROM (
        SELECT
          title,
@@ -220,9 +228,10 @@ where checkin is not null
 UNION
 /* copy goals */
 SELECT
-  concat('INSERT OR IGNORE INTO goal(user_id, type, goal, reward, created) VALUES ((SELECT id from ss_user where email = ',
+  concat('INSERT IGNORE INTO goal(user_id, type, goal, reward, created) VALUES ((SELECT id from ss_user where email = ',
          quote(if(title IS NULL, '', title)), '),', replace(quote(type), '\\\'', '\'\''), ',',
-         quote(goal), ',', replace(quote(if(reward IS NULL, '', reward)), '\\\'', '\'\''),',\'',created,'\');') AS ins
+         quote(goal), ',', replace(quote(if(reward IS NULL, '', reward)), '\\\'', '\'\''),',\'',created,'\');')
+    AS '/* insert */'
 FROM (
        SELECT
          title,
@@ -252,10 +261,11 @@ WHERE title IS NOT NULL
 UNION
 /* copy deadlines */
 SELECT
-  concat('INSERT OR IGNORE INTO deadline(user_id, course_id, assignment, due_date, percent, completed, created, deleted, reminder, reminder_sent)',
+  concat('INSERT IGNORE INTO deadline(user_id, course_id, assignment, due_date, percent, completed, created, deleted, reminder, reminder_sent)',
          ' VALUES ((SELECT id from ss_user where email = ', quote(if(title IS NULL, '', title)), '),',
          '(SELECT id from course where name = ',quote(if(course IS NULL, '', course)),'),',replace(quote(assignment), '\\\'', '\'\''), ',',
-         quote(due_date), ',', quote(if(percent IS NULL, 'null', percent)),',0,\'',created,'\',0,\'',reminder,'\',\'',if(reminder_sent IS NULL,'null',reminder_sent),'\');') AS ins
+         quote(due_date), ',', quote(if(percent IS NULL, 'null', percent)),',0,\'',created,'\',0,\'',reminder,'\',\'',if(reminder_sent IS NULL,'null',reminder_sent),'\');')
+    AS '/* insert */'
 FROM (
        SELECT
          title,
@@ -288,12 +298,13 @@ WHERE course IS NOT NULL
 UNION
 /* copy partner and parent invites */
 SELECT
-  concat('INSERT OR IGNORE INTO partner_invite(user_id, partner_id, first, last, email, activated, code, created, reminder, permissions)',
+  concat('INSERT IGNORE INTO partner_invite(user_id, partner_id, first, last, email, activated, code, created, reminder, permissions)',
          ' VALUES ((SELECT id from ss_user where email = ', quote(if(mail IS NULL, '', mail)), '),',
          '(SELECT id from ss_user where email = ', quote(if(email IS NULL, '', email)), '),',
          replace(quote(first), '\\\'', '\'\''), ',',replace(quote(last), '\\\'', '\'\''), ',',
          replace(quote(email), '\\\'', '\'\''), ',',activated,',',replace(quote(code), '\\\'', '\'\''), ',',
-         if(created IS NULL,'null',concat('\'',created,'\'')),',',if(reminder IS NULL,'null',concat('\'',reminder,'\'')),',',if(permissions IS NULL,'null',concat('\'',permissions,'\'')),');') AS ins
+         if(created IS NULL,'null',concat('\'',created,'\'')),',',if(reminder IS NULL,'null',concat('\'',reminder,'\'')),',',if(permissions IS NULL,'null',concat('\'',permissions,'\'')),');')
+  AS '/* insert */'
 FROM (
        SELECT
          mail,

@@ -87,6 +87,7 @@ class Lesson1Controller extends Controller
         // store quiz results
         $quiz = new Quiz1();
         $quiz->setCourse($course);
+        $course->addQuiz1($quiz);
         if(!empty($request->get('whyStudy')))
             $course->setWhyStudy($request->get('whyStudy'));
 

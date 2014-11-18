@@ -31,27 +31,27 @@ class Quiz2
     protected $goalPerformance;
 
     /**
-     * @ORM\Column(type="string", length=256, name="specific", nullable=true)
+     * @ORM\Column(type="string", length=256, name="acronym_specific", nullable=true)
      */
     protected $specific;
 
     /**
-     * @ORM\Column(type="string", length=256, name="measurable", nullable=true)
+     * @ORM\Column(type="string", length=256, name="acronym_measurable", nullable=true)
      */
     protected $measurable;
 
     /**
-     * @ORM\Column(type="string", length=256, name="achievable", nullable=true)
+     * @ORM\Column(type="string", length=256, name="acronym_achievable", nullable=true)
      */
     protected $achievable;
 
     /**
-     * @ORM\Column(type="string", length=256, name="relevant", nullable=true)
+     * @ORM\Column(type="string", length=256, name="acronym_relevant", nullable=true)
      */
     protected $relevant;
 
     /**
-     * @ORM\Column(type="string", length=256, name="time_bound", nullable=true)
+     * @ORM\Column(type="string", length=256, name="acronym_time_bound", nullable=true)
      */
     protected $timeBound;
 

@@ -80,9 +80,13 @@ class Lesson3Controller extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        /** @var Course1 $course */
+        $course = $user->getCourse1s()->first();
+
         // store quiz results
         $quiz = new Quiz3();
-        $quiz->setCourse($user->getCourse1s()->first());
+        $quiz->setCourse();
+        $course->addQuiz3($quiz);
         if(!empty($request->get('memoryA')))
             $quiz->setActiveMemory($request->get('memoryA'));
 

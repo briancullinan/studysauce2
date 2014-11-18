@@ -80,9 +80,12 @@ class Lesson2Controller extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        /** @var Course1 $course */
+        $course = $user->getCourse1s()->first();
         // store quiz results
         $quiz = new Quiz2();
-        $quiz->setCourse($user->getCourse1s()->first());
+        $quiz->setCourse($course);
+        $course->addQuiz2($quiz);
         if(!empty($request->get('performance')))
             $quiz->setGoalPerformance($request->get('performance'));
 

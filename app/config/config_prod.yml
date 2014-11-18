@@ -32,3 +32,21 @@ swiftmailer:
     username:  Study Sauce
     password:  2StudyBetter!
     spool:     { type: db }
+
+doctrine:
+    dbal:
+        driver:   "pdo_mysql"
+        host:     "studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com"
+        dbname:   "studysauce"
+        user:     "study"
+        password: "itekIO^#("
+
+services:
+    pdo:
+        class: Doctrine\DBAL\Driver\PDOConnection
+        arguments:
+            - "mysql:host=studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com;port=3306;dbname=studysauce"
+            - study
+            - itekIO^#(
+        calls:
+            - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION

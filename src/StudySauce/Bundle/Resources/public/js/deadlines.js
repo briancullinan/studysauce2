@@ -156,7 +156,7 @@ $(document).ready(function () {
         var deadlines = $('#deadlines');
         evt.preventDefault();
         var newDeadline = deadlines.find('.deadline-row').first().clone()
-            .removeClass('read-only hide').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
+            .removeClass('read-only historic').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
         newDeadline.attr('class', newDeadline.attr('class').replace(/deadline-id-([0-9]*)(\s|$)/ig, ' deadline-id- '));
         newDeadline.find('.class-name select, .assignment input, .percent input').val('');
         newDeadline.find('.due-date input').removeClass('hasDatepicker').val('');
@@ -226,8 +226,8 @@ $(document).ready(function () {
 
             for(var j = 0; j < keys.length; j++)
             {
-                var hidden = headings[keys[j]].filter('.deadline-row:not(.hide)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden ? 'hide' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
+                var hidden = headings[keys[j]].filter('.deadline-row:not(.historic)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden ? 'historic' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
             }
         }
         else
@@ -244,15 +244,15 @@ $(document).ready(function () {
             {
                 var d = new Date(keys2[j2]),
                     h = d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
-                var hidden2 = headings[h].filter('.deadline-row:not(.hide)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden2 ? 'hide' : '') + '">' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' <span>' + d.getFullYear() + '</span></div>'), headings[h].detach()));
+                var hidden2 = headings[h].filter('.deadline-row:not(.historic)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden2 ? 'historic' : '') + '">' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' <span>' + d.getFullYear() + '</span></div>'), headings[h].detach()));
             }
         }
         jQuery('.sort-by').nextAll('.head').remove();
         jQuery(rows).insertAfter(deadlines.find('.sort-by'));
         // reassign first row
         deadlines.find('.first').removeClass('first');
-        deadlines.find('.deadline-row:not(.hide,#new-dates-row)').first().addClass('first');
-        deadlines.find('.deadline-row.hide').first().addClass('first');
+        deadlines.find('.deadline-row:not(.historic,#new-dates-row)').first().addClass('first');
+        deadlines.find('.deadline-row.historic').first().addClass('first');
     });
 });
