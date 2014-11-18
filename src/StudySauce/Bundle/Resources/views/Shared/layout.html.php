@@ -15,15 +15,17 @@ $collection = $router->getRouteCollection();
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
     <link rel="apple-touch-icon-precomposed" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
+    <link rel="icon" sizes="300x300" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
     <link rel="shortcut icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/favicon.ico'); ?>" />
     <link rel="apple-touch-icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
     <link rel="image_src" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
     <meta name="description" content="Study Sauce teaches you the most effective study methods and provides you the tools to make the most of your study time." />
     <meta property="og:image" content="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
-    <title><?php $view['slots']->output('title', 'Study Sauce | Discover the secret sauce to studying') ?></title>
+    <title><?php $view['slots']->output('title', 'StudySauce | Discover the secret sauce to studying') ?></title>
 
     <?php foreach ($view['assetic']->stylesheets([
             '@StudySauceBundle/Resources/public/css/jquery-ui.min.css',

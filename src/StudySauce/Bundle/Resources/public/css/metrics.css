@@ -27,9 +27,14 @@
     fill: #555555;
 }
 
-#metrics #timeline svg *
+#metrics svg *
 {
     shape-rendering: optimizeQuality;
+}
+
+#metrics #timeline svg *
+{
+    shape-rendering: crispEdges;
 }
 
 #metrics .centrify {

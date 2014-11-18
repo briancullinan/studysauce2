@@ -1,4 +1,5 @@
 <?php
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
@@ -8,6 +9,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var $user User */
 /** @var Payment $payment */
 $payment = $user->getPayments()->first();
+/** @var ParentInvite $parent */
+$parent = $user->getParentInvites()->filter(function (ParentInvite $p) {return !empty($p->getParent());})->first();
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -35,7 +38,9 @@ $view['slots']->start('body'); ?>
         <div class="type">
             <label><span>Account type</span><?php if(!$user->hasRole('ROLE_PAID')) {
                 print 'Free';
-            } elseif(!empty($payment) && $payment->getProduct() == 'monthly') {
+            } elseif((!empty($payment) && $payment->getProduct() == 'monthly') ||
+                    (!empty($parent) && !empty($parent->getParent()->getPayments()->first()) &&
+                        $parent->getParent()->getPayments()->first()->getProduct() == 'monthly')) {
                 print 'Monthly';
             } else {
                 print 'Yearly';

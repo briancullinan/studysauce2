@@ -80,7 +80,7 @@ $view['slots']->start('body'); ?>
                 if ($headStr != $newHeadStr) {
                     $headStr = $newHeadStr;
                     $classes = [];
-                    if ($d->getDueDate() < date_sub(new \Datetime(), new \DateInterval('P1D'))) {
+                    if ($d->getDueDate() < date_sub(new \Datetime('today'), new \DateInterval('P1D'))) {
                         $classes[] = 'historic';
                     }
                     print '<div class="head ' . implode(' ', $classes) . '">' . $headStr . '</div>';
@@ -98,7 +98,7 @@ $view['slots']->start('body'); ?>
             <div class="deadline-row first invalid <?php
             print ($isDemo ? 'edit' : 'read-only');
             print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
-            print ($d->getDueDate() < date_sub(new \Datetime(), new \DateInterval('P1D')) ? ' historic' : '');
+            print ($d->getDueDate() < date_sub(new \Datetime('today'), new \DateInterval('P1D')) ? ' historic' : '');
             print ' deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">
@@ -107,9 +107,7 @@ $view['slots']->start('body'); ?>
                     <select>
                         <option value="" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                         <?php
-                        $found = false;
                         foreach ($courses as $c):
-                            $found = true;
                             /** @var $c Course */
                             ?>
                             <option value="<?php print $c->getId(); ?>" <?php print (!$isDemo &&

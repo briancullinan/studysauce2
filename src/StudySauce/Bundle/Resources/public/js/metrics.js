@@ -109,11 +109,12 @@ $(document).ready(function () {
 
     function initializeGraphs()
     {
-        var timeline = $(this).find('#timeline:visible, .timeline:visible'),
+        var metrics = $('#metrics'),
+            timeline = $(this).find('#timeline:visible, .timeline:visible'),
             piechart = $(this).find('#pie-chart:visible, .pie-chart:visible');
 
         // show empty dialog
-        if($(this).is('#metrics') && $(this).is('.demo'))
+        if(metrics.is('.demo'))
             $('#metrics-empty').modal({
                 backdrop: 'static',
                 keyboard: false,

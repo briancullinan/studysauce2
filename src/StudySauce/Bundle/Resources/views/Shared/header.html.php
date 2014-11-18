@@ -1,8 +1,23 @@
 <?php
+use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\User;
+
+/** @var User $user */
+$user = $app->getUser();
 
 /** @var PartnerInvite $partner */
-$partner = !empty($app->getUser()) ? $app->getUser()->getPartnerInvites()->first() : null;
+$partner = !empty($user) ? $user->getPartnerInvites()->first() : null;
+$advisers = !empty($user)
+    ? call_user_func_array('array_merge', $user->getGroups()
+        ->map(function (Group $g) {return $g->getUsers()->filter(function (User $u) {
+                        return $u->hasRole('ROLE_ADVISER');})->toArray();})
+        ->filter(function ($c) {return !empty($c);})
+        ->toArray())
+    : null;
+usort($advisers, function (User $a, User $b) {return $a->hasRole('ROLE_MASTER_ADVISER') - $b->hasRole('ROLE_MASTER_ADVISER');});
+/** @var User $adviser */
+$adviser = reset($advisers);
 
 ?>
 <div class="header-wrapper navbar navbar-inverse">
@@ -15,7 +30,19 @@ $partner = !empty($app->getUser()) ? $app->getUser()->getPartnerInvites()->first
         </div>
         <?php if($app->getRequest()->get('_format') == 'index') { ?>
             <div id="partner-message">
-                <?php if(!empty($partner)) { ?>
+                <?php if(!empty($adviser)) { ?>
+                    <div>
+                        <?php if (empty($adviser->getPhoto())) {
+                            foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                                <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>"/>
+                            <?php endforeach;
+                        } else {
+                            ?><img width="48" height="48" src="<?php echo $view->escape($adviser->getPhoto()->getUrl()) ?>"
+                                   alt="LOGO" />
+                        <?php } ?>
+                    </div>
+                    <div>I am accountable to: <br><span><?php print $adviser->getFirst(); ?> <?php print $adviser->getLast(); ?></span></div>
+                <?php } elseif(!empty($partner)) { ?>
                     <div>
                     <?php if (empty($partner->getPhoto())) {
                         foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>

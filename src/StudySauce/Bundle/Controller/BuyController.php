@@ -171,9 +171,9 @@ class BuyController extends Controller
             // TODO: if there is a duplicate subscription, increase the price
 
             // Create the subscription.
-            $request = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-            $request->setSandbox(false);
-            $response = $request->createSubscription($subscription);
+            $sr = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
+            $sr->setSandbox(false);
+            $response = $sr->createSubscription($subscription);
             if ($response->isOk()) {
                 $payment->setSubscription($response->getSubscriptionId());
             }

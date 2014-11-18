@@ -90,6 +90,7 @@
 {
     width: 30%;
     white-space: nowrap;
+    text-overflow: clip;
 }
 
 #schedule header .day-of-the-week label,

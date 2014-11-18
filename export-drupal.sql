@@ -20,33 +20,33 @@ FROM (
          name                                                         AS username_canonical,
 /* convert to test data */
          mail                                                         AS email,
-         concat(replace(mail, '@', '_'), '@example.org')              AS email_canonical,
+         lower(concat(replace(mail, '@', '_'), '@example.org'))              AS email_canonical,
          IF((SELECT count(*)
-             FROM studysauce3.users_roles, studysauce3.role
+             FROM studysauce.users_roles, studysauce.role
              WHERE users_roles.uid = users.uid
                    AND role.rid = users_roles.rid
                    AND role.name = 'adviser') > 0,
             'a:1:{i:0;s:12:"ROLE_ADVISER";}',
             IF((SELECT count(*)
-                FROM studysauce3.users_roles, studysauce3.role
+                FROM studysauce.users_roles, studysauce.role
                 WHERE users_roles.uid = users.uid
                       AND role.rid = users_roles.rid
                       AND role.name = 'master adviser') > 0,
                'a:1:{i:0;s:12:"ROLE_ADVISER";}',
                IF((SELECT count(*)
-                   FROM studysauce3.users_roles, studysauce3.role
+                   FROM studysauce.users_roles, studysauce.role
                    WHERE users_roles.uid = users.uid
                          AND role.rid = users_roles.rid
                          AND role.name = 'parent') > 0,
                   'a:1:{i:0;s:11:"ROLE_PARENT";}',
                   IF((SELECT count(*)
-                      FROM studysauce3.users_roles, studysauce3.role
+                      FROM studysauce.users_roles, studysauce.role
                       WHERE users_roles.uid = users.uid
                             AND role.rid = users_roles.rid
                             AND role.name = 'partner') > 0,
                      'a:1:{i:0;s:12:"ROLE_PARTNER";}',
                      IF((SELECT count(*)
-                         FROM studysauce3.users_roles, studysauce3.role
+                         FROM studysauce.users_roles, studysauce.role
                          WHERE users_roles.uid = users.uid
                                AND role.rid = users_roles.rid
                                AND role.name = 'administrator') > 0,
@@ -65,10 +65,10 @@ SUBSTR(pass FROM 1 FOR 12) as salt,
          '$S$DB1qzKYe9'                                               AS salt,
          field_first_name_value                                       AS first,
          field_last_name_value                                        AS last
-       FROM studysauce3.users
-         LEFT JOIN studysauce3.field_data_field_first_name fn
+       FROM studysauce.users
+         LEFT JOIN studysauce.field_data_field_first_name fn
            ON fn.entity_id = uid AND fn.entity_type = 'user'
-         LEFT JOIN studysauce3.field_data_field_last_name ln
+         LEFT JOIN studysauce.field_data_field_last_name ln
            ON ln.entity_id = uid AND ln.entity_type = 'user'
      ) AS users
 
@@ -84,7 +84,7 @@ FROM (
        SELECT
          title,
          created
-       FROM studysauce3.node
+       FROM studysauce.node
        WHERE type = 'adviser_membership'
      ) AS groups
 
@@ -97,10 +97,10 @@ FROM (
        SELECT
          mail,
          title
-       FROM studysauce3.og_membership
-         LEFT JOIN studysauce3.users
+       FROM studysauce.og_membership
+         LEFT JOIN studysauce.users
            ON uid = etid AND entity_type = 'user'
-         LEFT JOIN studysauce3.node
+         LEFT JOIN studysauce.node
            ON nid = gid AND group_type = 'node'
      ) AS user_groups
 
@@ -129,20 +129,20 @@ FROM (
          field_4_pm_9_pm_value                   AS sharp4pm9pm,
          field_9_pm_2_am_value                   AS sharp9pm2am,
          from_unixtime(created)                  AS created
-       FROM studysauce3.node
-         LEFT JOIN studysauce3.field_data_field_university
+       FROM studysauce.node
+         LEFT JOIN studysauce.field_data_field_university
            ON field_data_field_university.entity_id = node.nid
-         LEFT JOIN studysauce3.field_data_field_grades
+         LEFT JOIN studysauce.field_data_field_grades
            ON field_data_field_grades.entity_id = node.nid
-         LEFT JOIN studysauce3.field_data_field_weekends
+         LEFT JOIN studysauce.field_data_field_weekends
            ON field_data_field_weekends.entity_id = node.nid
-         LEFT JOIN studysauce3.field_data_field_6_am_11_am
+         LEFT JOIN studysauce.field_data_field_6_am_11_am
            ON field_data_field_6_am_11_am.entity_id = node.nid
-         LEFT JOIN studysauce3.field_data_field_11_am_4_pm
+         LEFT JOIN studysauce.field_data_field_11_am_4_pm
            ON field_data_field_11_am_4_pm.entity_id = node.nid
-         LEFT JOIN studysauce3.field_data_field_4_pm_9_pm
+         LEFT JOIN studysauce.field_data_field_4_pm_9_pm
            ON field_data_field_4_pm_9_pm.entity_id = node.nid
-         LEFT JOIN studysauce3.field_data_field_9_pm_2_am
+         LEFT JOIN studysauce.field_data_field_9_pm_2_am
            ON field_data_field_9_pm_2_am.entity_id = node.nid
        WHERE type = 'schedule'
      ) AS schedules
@@ -166,20 +166,20 @@ FROM (
          date_sub(field_time_value, INTERVAL 7 HOUR)                                          AS start_time,
          date_sub(field_time_value2, INTERVAL 7 HOUR)                                         AS end_time,
          replace(group_concat(field_day_of_the_week_value SEPARATOR ','), 'weekly', 'Weekly') AS dotw
-       FROM studysauce3.field_data_field_classes
-         LEFT JOIN studysauce3.node
+       FROM studysauce.field_data_field_classes
+         LEFT JOIN studysauce.node
            ON nid = entity_id
-         LEFT JOIN studysauce3.field_data_field_class_name
+         LEFT JOIN studysauce.field_data_field_class_name
            ON field_data_field_class_name.entity_id = field_data_field_classes.field_classes_value
-         LEFT JOIN studysauce3.field_data_field_event_type
+         LEFT JOIN studysauce.field_data_field_event_type
            ON field_data_field_event_type.entity_id = field_data_field_classes.field_classes_value
-         LEFT JOIN studysauce3.field_data_field_study_type
+         LEFT JOIN studysauce.field_data_field_study_type
            ON field_data_field_study_type.entity_id = field_data_field_classes.field_classes_value
-         LEFT JOIN studysauce3.field_data_field_study_difficulty
+         LEFT JOIN studysauce.field_data_field_study_difficulty
            ON field_data_field_study_difficulty.entity_id = field_data_field_classes.field_classes_value
-         LEFT JOIN studysauce3.field_data_field_time
+         LEFT JOIN studysauce.field_data_field_time
            ON field_data_field_time.entity_id = field_data_field_classes.field_classes_value
-         LEFT JOIN studysauce3.field_data_field_day_of_the_week
+         LEFT JOIN studysauce.field_data_field_day_of_the_week
            ON field_data_field_day_of_the_week.entity_id = field_data_field_classes.field_classes_value
        WHERE (field_event_type_value = 'c' OR field_event_type_value = 'o' OR field_event_type_value IS NULL)
              AND trim(field_class_name_value) != '' AND field_time_value IS NOT NULL AND field_time_value2 IS NOT NULL
@@ -196,8 +196,8 @@ SELECT concat(
            ' and email = ', quote(if(title IS NULL, '', title)),
            ' and course.schedule_id = schedule.id and course.name = ',
            quote(course), '),\'', if(checkin IS NULL, 'null', checkin), '\',\'', if(utc_checkin IS NULL, 'null', utc_checkin),
-           '\',\'',
-           if(checkout IS NULL, 'null', checkout), '\',\'', if(utc_checkout IS NULL, 'null', utc_checkout), '\');') AS ins
+           '\',',
+           if(checkout IS NULL, 'null', concat('\'',checkout,'\'')), ',', if(utc_checkout IS NULL, 'null', concat('\'',utc_checkout,'\'')), ');') AS ins
 FROM (
        SELECT
          title,
@@ -206,12 +206,12 @@ FROM (
          field_checkin_value2   AS checkout,
          now()                  AS utc_checkin,
          now()                  AS utc_checkout
-       FROM studysauce3.field_data_field_checkin
-         LEFT JOIN studysauce3.field_data_field_classes
+       FROM studysauce.field_data_field_checkin
+         LEFT JOIN studysauce.field_data_field_classes
            ON field_data_field_checkin.entity_id = field_classes_value
-         LEFT JOIN studysauce3.node
+         LEFT JOIN studysauce.node
            ON nid = field_data_field_classes.entity_id
-         LEFT JOIN studysauce3.field_data_field_class_name
+         LEFT JOIN studysauce.field_data_field_class_name
            ON field_data_field_class_name.entity_id = field_classes_value
        WHERE field_class_name_value IS NOT NULL
      ) AS checkins
@@ -220,7 +220,7 @@ where checkin is not null
 UNION
 /* copy goals */
 SELECT
-  concat('INSERT OR IGNORE INTO goal(user_id, type, goal, reward, created) VALUES ((SELECT user.id from ss_user where email = ',
+  concat('INSERT OR IGNORE INTO goal(user_id, type, goal, reward, created) VALUES ((SELECT id from ss_user where email = ',
          quote(if(title IS NULL, '', title)), '),', replace(quote(type), '\\\'', '\'\''), ',',
          quote(goal), ',', replace(quote(if(reward IS NULL, '', reward)), '\\\'', '\'\''),',\'',created,'\');') AS ins
 FROM (
@@ -232,18 +232,18 @@ FROM (
          field_type_value                                                                     AS type,
          field_reward_value as reward,
          FROM_UNIXTIME(created) as created
-       FROM studysauce3.field_data_field_goals
-         LEFT JOIN studysauce3.node
+       FROM studysauce.field_data_field_goals
+         LEFT JOIN studysauce.node
            ON nid = entity_id
-         LEFT JOIN studysauce3.field_data_field_type
+         LEFT JOIN studysauce.field_data_field_type
            ON field_data_field_type.entity_id = field_goals_value
-         LEFT JOIN studysauce3.field_data_field_reward
+         LEFT JOIN studysauce.field_data_field_reward
            ON field_data_field_reward.entity_id = field_goals_value
-         LEFT JOIN studysauce3.field_data_field_gpa
+         LEFT JOIN studysauce.field_data_field_gpa
            ON field_data_field_gpa.entity_id = field_goals_value
-         LEFT JOIN studysauce3.field_data_field_grade
+         LEFT JOIN studysauce.field_data_field_grade
            ON field_data_field_grade.entity_id = field_goals_value
-         LEFT JOIN studysauce3.field_data_field_hours
+         LEFT JOIN studysauce.field_data_field_hours
            ON field_data_field_hours.entity_id = field_goals_value
      ) AS goals
 WHERE title IS NOT NULL
@@ -266,23 +266,23 @@ FROM (
          group_concat(field_reminder_value SEPARATOR ',') as reminder,
          group_concat(field_reminder_sent_value SEPARATOR ',') as reminder_sent,
          FROM_UNIXTIME(created) as created
-       FROM studysauce3.field_data_field_reminders
-         LEFT JOIN studysauce3.node
+       FROM studysauce.field_data_field_reminders
+         LEFT JOIN studysauce.node
            ON nid = entity_id
-         LEFT JOIN studysauce3.field_data_field_class_name
+         LEFT JOIN studysauce.field_data_field_class_name
            ON field_data_field_class_name.entity_id = field_reminders_value
-         LEFT JOIN studysauce3.field_data_field_assignment
+         LEFT JOIN studysauce.field_data_field_assignment
            ON field_data_field_assignment.entity_id = field_reminders_value
-         LEFT JOIN studysauce3.field_data_field_due_date
+         LEFT JOIN studysauce.field_data_field_due_date
            ON field_data_field_due_date.entity_id = field_reminders_value
-         LEFT JOIN studysauce3.field_data_field_percent
+         LEFT JOIN studysauce.field_data_field_percent
            ON field_data_field_percent.entity_id = field_reminders_value
-         LEFT JOIN studysauce3.field_data_field_reminder
+         LEFT JOIN studysauce.field_data_field_reminder
            ON field_data_field_reminder.entity_id = field_reminders_value
-         LEFT JOIN studysauce3.field_data_field_reminder_sent
+         LEFT JOIN studysauce.field_data_field_reminder_sent
            ON field_data_field_reminder_sent.entity_id = field_reminders_value
        GROUP BY field_data_field_reminder.entity_id,field_data_field_reminder_sent.entity_id
-     ) AS goals
+     ) AS deadlines
 WHERE course IS NOT NULL
 
 UNION
@@ -290,10 +290,10 @@ UNION
 SELECT
   concat('INSERT OR IGNORE INTO partner_invite(user_id, partner_id, first, last, email, activated, code, created, reminder, permissions)',
          ' VALUES ((SELECT id from ss_user where email = ', quote(if(mail IS NULL, '', mail)), '),',
-         '(SELECT id from ss_user where email = ', quote(if(email IS NULL, '''', email)), '),',
+         '(SELECT id from ss_user where email = ', quote(if(email IS NULL, '', email)), '),',
          replace(quote(first), '\\\'', '\'\''), ',',replace(quote(last), '\\\'', '\'\''), ',',
-         replace(quote(email), '\\\'', '\'\''), ',',activated,',',replace(quote(code), '\\\'', '\'\''), ',\'',
-         if(created IS NULL,'null',created),'\',\'',if(reminder IS NULL,'null',reminder),'\',\'',if(reminder IS NULL,'null',permissions),'\');') AS ins
+         replace(quote(email), '\\\'', '\'\''), ',',activated,',',replace(quote(code), '\\\'', '\'\''), ',',
+         if(created IS NULL,'null',concat('\'',created,'\'')),',',if(reminder IS NULL,'null',concat('\'',reminder,'\'')),',',if(permissions IS NULL,'null',concat('\'',permissions,'\'')),');') AS ins
 FROM (
        SELECT
          mail,
@@ -305,24 +305,24 @@ FROM (
          if(field_sent_value is null,from_unixtime(created),field_sent_value) as created,
          field_reminder_value as reminder,
          group_concat(field_permissions_value SEPARATOR ',') as permissions
-       FROM studysauce3.field_data_field_partners
-         LEFT JOIN studysauce3.users
+       FROM studysauce.field_data_field_partners
+         LEFT JOIN studysauce.users
            ON uid = entity_id
-         left join studysauce3.field_data_field_first_name
+         left join studysauce.field_data_field_first_name
            on field_data_field_first_name.entity_id = field_partners_value
-         left join studysauce3.field_data_field_last_name
+         left join studysauce.field_data_field_last_name
            on field_data_field_last_name.entity_id = field_partners_value
-         left join studysauce3.field_data_field_email
+         left join studysauce.field_data_field_email
            on field_data_field_email.entity_id = field_partners_value
-         left join studysauce3.field_data_field_activated
+         left join studysauce.field_data_field_activated
            on field_data_field_activated.entity_id = field_partners_value
-         left join studysauce3.field_data_field_code
+         left join studysauce.field_data_field_code
            on field_data_field_code.entity_id = field_partners_value
-         left join studysauce3.field_data_field_sent
+         left join studysauce.field_data_field_sent
            on field_data_field_sent.entity_id = field_partners_value
-         left join studysauce3.field_data_field_reminder
+         left join studysauce.field_data_field_reminder
            on field_data_field_reminder.entity_id = field_partners_value
-         left join studysauce3.field_data_field_permissions
+         left join studysauce.field_data_field_permissions
            on field_data_field_permissions.entity_id = field_partners_value
        where field_email_value is not null
        GROUP BY field_data_field_permissions.entity_id

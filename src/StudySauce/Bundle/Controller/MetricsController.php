@@ -250,7 +250,8 @@ class MetricsController extends Controller
         foreach($courses as $i => $c) {
             /** @var $c Course */
             if ($c->getType() == 'c') {
-                foreach ($c->getCheckins() as $j => $checkin) {
+                $ch = $c->getCheckins()->toArray();
+                foreach ($ch as $j => $checkin) {
 
                     /** @var $checkin Checkin */
 

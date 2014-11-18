@@ -42,8 +42,8 @@ $view['slots']->start('body'); ?>
     <div class="pane-content">
         <?php echo $view->render('StudySauceBundle:Partner:partner-nav.html.php', ['user' => $user]); ?>
         <h2>Study metrics</h2>
-        <?php if(empty($times)) /* TODO: matches condition above */ { ?>
-            <h3>Your student has not completed this section yet.</h3>
+        <?php if($isDemo) /* TODO: matches condition above */ { ?>
+            <h3>Your student has not checked in yet.</h3>
         <?php } else { ?>
         <div class="centrify">
             <div id="legend">

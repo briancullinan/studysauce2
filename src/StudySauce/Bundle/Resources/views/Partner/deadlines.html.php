@@ -2,6 +2,12 @@
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 
+$isDemo = false;
+if (empty($deadlines)) {
+    $isDemo = true;
+    $deadlines = $demoDeadlines;
+}
+
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
@@ -79,7 +85,7 @@ $view['slots']->start('body'); ?>
                         $headStr = $newHeadStr;
                         $classes = [];
                         if ($time < date_add(new \Datetime(), new \DateInterval('P1D'))) {
-                            $classes[] = 'hide';
+                            $classes[] = 'historic';
                         }
                         print '<div class="head ' . implode(' ', $classes) . '">' . $headStr . '</div>';
                     }
@@ -90,31 +96,28 @@ $view['slots']->start('body'); ?>
                     }
                 }
 
+                $classI = array_search($d->getCourse(), $courses);
+
                 ?>
                 <div class="deadline-row first valid <?php
                 print ($isDemo ? ' edit' : ' read-only');
                 print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
-                print 'deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
+                print ($d->getDueDate() < date_sub(new \Datetime('today'), new \DateInterval('P1D')) ? ' historic' : '');
+                print ' deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
                     <div class="class-name">
                         <label class="select">
                             <span>Class name</span>
                             <i class="class<?php print $classI; ?>"></i>
                             <select>
-                                <option value="_none" <?php print ($isDemo || empty($d->getCourse(
-                                )) ? 'selected="selected"' : ''); ?>>- Select a class -
-                                </option>
                                 <?php
-                                $found = false;
-                                foreach (empty($courses) ? $demoCourses : $courses as $c):
-                                    $found = true;
+                                foreach ($courses as $c):
                                     /** @var $c Course */
                                     ?>
                                     <option value="<?php print $c->getId(); ?>" <?php print (!$isDemo &&
-                                    $d->getCourse() == $c ? 'selected="selected"' : ''); ?>><?php print $c->getName(
-                                        ); ?></option>
+                                    $d->getCourse()->getId() == $c->getId() ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
                                 <?php endforeach; ?>
-                                <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getAssignment())
-                                    ? 'selected="selected"' : ''); ?>>Nonacademic
+                                <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getAssignment()) &&
+                                    empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Nonacademic
                                 </option>
                             </select>
                         </label>
