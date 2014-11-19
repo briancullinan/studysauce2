@@ -137,7 +137,10 @@ class BuyController extends Controller
             $sale->setField('country', $request->get('country'));
             $sale->setField('card_code', $request->get('ccv'));
             $sale->setField('recurring_billing', true);
-            $sale->setField('test_request', true);
+            if($this->container->getParameter('authorize_test_mode'))
+                $sale->setField('test_request', true);
+            else
+                $sale->setField('test_request', false);
             $sale->setField('duplicate_window', 120);
             $sale->setSandbox(false);
             $response = $sale->authorizeAndCapture();
@@ -224,9 +227,7 @@ class BuyController extends Controller
             if($user->hasRole('ROLE_PARTNER')) {
                 // send student email
                 /** @var PartnerInvite $partner */
-                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findBy(
-                    ['partner' => $user->getId()]
-                );
+                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
                 $student = $partner->getUser();
                 $student->addRole('ROLE_PAID');
                 $userManager->updateUser($student);

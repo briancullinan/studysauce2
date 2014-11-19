@@ -22,7 +22,7 @@ class Visit
 
     /**
      * @ORM\ManyToOne(targetEntity="Session", inversedBy="visits")
-     * @ORM\JoinColumn(name="session_id", referencedColumnName="session_id", nullable=true)
+     * @ORM\Column(type="integer", name="session_id", nullable=true)
      */
     protected $session;
 
@@ -166,10 +166,10 @@ class Visit
     /**
      * Set session
      *
-     * @param \StudySauce\Bundle\Entity\Session $session
+     * @param string $session
      * @return Visit
      */
-    public function setSession(\StudySauce\Bundle\Entity\Session $session = null)
+    public function setSession($session = null)
     {
         $this->session = $session;
 

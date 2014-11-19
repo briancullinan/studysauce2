@@ -53,8 +53,8 @@ $view['slots']->start('body'); ?>
                 ?>
                 <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
                 <label class="radio"><span>Memorization</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Reading/<br/>writing</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="reading" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Conceptual<br/>application</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Reading / <br/>writing</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="reading" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label class="radio"><span>Conceptual <br/>application</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>
         </div>
         <div class="study-difficulty">

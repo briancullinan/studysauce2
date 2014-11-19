@@ -19,10 +19,9 @@ class HomeController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        if($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
-            return $this->redirect($this->generateUrl('userlist'));
-        elseif($user->hasRole('ROLE_PAID') && ($step = ProfileController::getFunnelState($user)))
-            return $this->redirect($this->generateUrl($step, ['_format' => 'funnel']));
+        list($route, $options) = self::getUserRedirect($user);
+        if($route != 'home' && $route != '_welcome')
+            return $this->redirect($this->generateUrl($route, $options));
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
@@ -35,5 +34,22 @@ class HomeController extends Controller
                 'csrf_token' => $csrfToken
             ]
         );
+    }
+
+    /**
+     * @param User $user
+     * @return array|string
+     */
+    public static function getUserRedirect(User $user)
+    {
+        if($user == 'anon.' || !is_object($user) || $user->hasRole('ROLE_GUEST'))
+            return ['_welcome', []];
+        elseif($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
+            return ['userlist', []];
+        elseif($user->hasRole('ROLE_PAID') && ($step = ProfileController::getFunnelState($user)))
+            return [$step, ['_format' => 'funnel']];
+        elseif(empty($user->getProperty('first_time')))
+            return ['course1_introduction', []];
+        return ['home', []];
     }
 }

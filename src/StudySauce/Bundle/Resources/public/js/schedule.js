@@ -37,8 +37,7 @@ $(document).ready(function () {
                     speed:'immediate',
                     yearRange: '-3:+3'
                 });
-            row.find('.start-time input[type="text"], .end-time input[type="text"]')
-                .filter(':not(.is-timeEntry)')
+            row.find('.start-time input[type="text"]:not(.is-timeEntry), .end-time input[type="text"]:not(.is-timeEntry)')
                 .timeEntry({
                     defaultTime: new Date(0, 0, 0, 6, 0, 0),
                     ampmNames: ['AM', 'PM'],
@@ -88,10 +87,16 @@ $(document).ready(function () {
             // check for invalid time entry
             var from = row.find('.start-time input').timeEntry('getTime'),
                 to = row.find('.end-time input').timeEntry('getTime');
-            if(from != null && to != null && (from.getTime() == to.getTime() || to.getTime() < from.getTime()))
-                row.addClass('invalid-time');
-            else
-                row.removeClass('invalid-time');
+            if(from != null && to != null) {
+                var length = (to.getTime() - from.getTime()) / 1000;
+                if (length < 0)
+                    length += 86400;
+                // check if the length is less than 8 hours
+                if (from.getTime() == to.getTime() || length > 8 * 60 * 60)
+                    row.addClass('invalid-time');
+                else
+                    row.removeClass('invalid-time');
+            }
 
             // check if there are any overlaps with the other rows
             var startDate = new Date(row.find('.start-date input').val());
@@ -113,7 +118,7 @@ $(document).ready(function () {
                 var endDate2 = new Date(that.find('.end-date input').val());
                 if(isNaN(startDate.getTime()) || isNaN(endDate.getTime()) ||
                     isNaN(startDate2.getTime()) || isNaN(endDate2.getTime()) ||
-                    startDate <= endDate2 || endDate >= startDate2)
+                    startDate < endDate2 || endDate > startDate2)
                 {
                     // check if weekdays overlap
                     var dotwOverlaps = false,

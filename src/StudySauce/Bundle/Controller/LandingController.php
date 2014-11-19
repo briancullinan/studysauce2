@@ -31,12 +31,11 @@ class LandingController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) {
-            if ($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
-                return $this->redirect($this->generateUrl('userlist'));
-            else
-                return $this->redirect($this->generateUrl('home'));
-        }
+        // check if we have a user and redirect accordingly.
+        list($route, $options) = HomeController::getUserRedirect($user);
+        if($route != '_welcome')
+            return $this->redirect($this->generateUrl($route, $options));
+
         return $this->render('StudySauceBundle:Landing:index.html.php');
     }
 
@@ -145,7 +144,7 @@ class LandingController extends Controller
                 $partner->setPartner($partnerUser);
             $orm->merge($partner);
             $orm->flush();
-            $response = $this->render('StudySauceBundle:Landing:parents.html.php');
+            $response = $this->render('StudySauceBundle:Landing:partners.html.php');
             $this->logoutUser($userManager, $response);
             $session = $request->getSession();
             $session->set('partner', $_code);

@@ -89,7 +89,7 @@ $view['slots']->start('body'); ?>
                 /** @var Schedule $schedule */
                 $schedule = $u->getSchedules()->first();
                 ?>
-                <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getAdviserStatus() ?: 'green'); ?>">
+                <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                     <td><a href="#change-status"><span>&nbsp;</span></a></td>
                     <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M y') : $u->getLastLogin()->format('j M y')); ?></td>
                     <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'metrics']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>

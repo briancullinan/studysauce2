@@ -518,6 +518,17 @@ a.fc-event:not([href])
     display:inline;
 }
 
+@media all and (max-width:1000px)
+{
+    #plan .selected .mini-checkin
+    {
+        left:auto;
+        right:0;
+        margin-left:0;
+    }
+
+}
+
 @media all and (max-width:700px)
 {
     #plan #calendar

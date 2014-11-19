@@ -25,7 +25,7 @@ $collection = $router->getRouteCollection();
     <link rel="image_src" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
     <meta name="description" content="Study Sauce teaches you the most effective study methods and provides you the tools to make the most of your study time." />
     <meta property="og:image" content="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>" />
-    <title><?php $view['slots']->output('title', 'StudySauce | Discover the secret sauce to studying') ?></title>
+    <title><?php $view['slots']->output('title', 'StudySauce') ?></title>
 
     <?php foreach ($view['assetic']->stylesheets([
             '@StudySauceBundle/Resources/public/css/jquery-ui.min.css',

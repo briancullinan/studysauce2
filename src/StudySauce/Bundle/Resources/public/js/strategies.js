@@ -1,18 +1,6 @@
 $(document).ready(function () {
     var body = $('body');
 
-    /*
-     function showFirst(type)
-     {
-     setTimeout(function () {
-     var row = plans.find('.session-row.default-' + type + ':visible').first();
-     if(!row.is('.selected'))
-     row.find('.field-name-field-assignment').trigger('click');
-     row.scrollintoview({padding: {top:120,bottom:100,left:0,right:0}});
-     }, 500);
-     }
-     */
-
     function videoPoller(fid, eventId) {
         var plans = $('#plan');
         var row = plans.find('.session-row.event-id-' + eventId);

@@ -207,6 +207,7 @@ class PartnerController extends Controller
 
     /**
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function updateStatusAction(Request $request)
     {
@@ -217,7 +218,7 @@ class PartnerController extends Controller
         $user = $userManager->findUserBy(['id' => intval($request->get('userId'))]);
 
         // TODO: check if partner and user is connected
-        $user->setAdviserStatus($request->get('status'));
+        $user->setProperty('adviser_status', $request->get('status'));
         $userManager->updateUser($user);
         return new JsonResponse(true);
     }

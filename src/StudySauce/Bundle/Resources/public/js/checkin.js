@@ -197,7 +197,7 @@ $(document).ready(function () {
             //}
             //else
             checkinCallback(null, courseId, false);
-            button.scrollintoview({padding: {top: 120, bottom: 200, left: 0, right: 0}});
+            button.scrollintoview(DASHBOARD_MARGINS);
         });
     }
 

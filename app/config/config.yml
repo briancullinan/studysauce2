@@ -2,6 +2,9 @@ imports:
     - { resource: security.yml }
     - { resource: "@StudySauceBundle/Resources/config/assets.php" }
 
+parameters:
+    authorize_test_mode: true
+
 services:
     pdo:
         class: Doctrine\DBAL\Driver\PDOConnection

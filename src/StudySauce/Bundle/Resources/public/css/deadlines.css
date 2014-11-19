@@ -312,6 +312,12 @@ a[href="#add-deadline"] span {
 @media all and (max-width:700px)
 {
 
+    #deadlines header,
+    #deadlines .sort-by
+    {
+        display:none;
+    }
+
     .deadline-row.edit > *
     {
         display: block;
@@ -334,12 +340,6 @@ a[href="#add-deadline"] span {
 
 @media all and (max-width:500px)
 {
-    #deadlines .sort-by label:last-child
-    {
-        position:static;
-    }
-
-    #deadlines header label:nth-child(4),
     .deadline-row.read-only .due-date
     {
         width:10%;

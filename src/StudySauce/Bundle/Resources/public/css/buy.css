@@ -161,6 +161,24 @@
 
 @media all and (max-width:700px)
 {
+    #checkout .form-actions
+    {
+        width:auto;
+        margin:0;
+        padding:0;
+        display:block;
+    }
+
+    #payment-pane .cc-number input:focus ~ .cards
+    {
+        display:none;
+    }
+
+    #payment-pane .cc-number input
+    {
+        padding-right:5px;
+    }
+
     #coupon-pane .coupon-code
     {
         margin-right: 0;

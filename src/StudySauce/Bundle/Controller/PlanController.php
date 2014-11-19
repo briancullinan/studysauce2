@@ -20,7 +20,6 @@ use StudySauce\Bundle\Entity\Week;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -102,20 +101,9 @@ class PlanController extends Controller
         }
 
         // get events for current week
-        self::$unresolved = [];
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm);
-        if(!empty($unresolved))
-        {
-            $unresolvedEmail = ['student' => $user->getEmail()];
-            foreach($unresolved as $i => $e)
-            {
-                $unresolvedEmail[$e->field_time['und'][0]['value'] . ' ' . $e->field_class_name['und'][0]['value']] = $e->field_event_type['und'][0]['value'];
-            }
-
-            $emails = new EmailsController();
-            $emails->setContainer($this->container);
-            $emails->administratorAction(null, $unresolvedEmail);
-        }
+        $emails = new EmailsController();
+        $emails->setContainer($this->container);
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm, $emails);
         $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
@@ -169,7 +157,10 @@ class PlanController extends Controller
         }
 
         // TODO: get demo Deadlines?
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $week, $orm);
+        $emails = new EmailsController();
+        $emails->setContainer($this->container);
+
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $week, $orm, $emails);
 
         $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         return $this->render(
@@ -280,10 +271,12 @@ class PlanController extends Controller
      * @param Collection $deadlines
      * @param $week
      * @param EntityManager $orm
+     * @param EmailsController $emails
      * @return array
      */
-    public static function rebuildSchedule(Schedule $schedule, Collection $courses, Collection $deadlines, $week, EntityManager $orm)
+    public static function rebuildSchedule(Schedule $schedule, Collection $courses, Collection $deadlines, $week, EntityManager $orm, EmailsController $emails)
     {
+        self::$unresolved = [];
         $events = [];
 
         $buckets = new \stdClass();
@@ -484,6 +477,19 @@ class PlanController extends Controller
         self::sortEvents($events);
 
         self::mergeSaved($schedule, $currentWeek, $events, $orm);
+
+        // send unresolved email to administrator
+        if(!empty(self::$unresolved))
+        {
+            $unresolvedEmail = ['student' => $schedule->getUser()->getEmail()];
+            foreach(self::$unresolved as $i => $e)
+            {
+                /** @var Event $e */
+                $unresolvedEmail[$e->getStart()->format('y-m-d H:i:s') . ' ' . $e->getType()] = $e->getName();
+            }
+
+            $emails->administratorAction(null, $unresolvedEmail);
+        }
 
         return $events;
     }

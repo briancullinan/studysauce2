@@ -1,16 +1,16 @@
 $(document).ready(function () {
     var body = $('body');
 
-    function lesson1Func() {
-        var actions = body.find('#lesson1-step4 .highlighted-link');
-        if(body.find('#lesson1-step4 textarea').val().trim() != '')
+    function introductionFunc() {
+        var actions = body.find('#course1_introduction-step4 .highlighted-link');
+        if(body.find('#course1_introduction-step4 textarea').val().trim() != '')
             actions.removeClass('invalid').addClass('valid');
         else
             actions.removeClass('valid').addClass('invalid');
     }
 
     function validateQuiz1() {
-        var step = body.find('#lesson1-step2'),
+        var step = body.find('#course1_introduction-step2'),
             actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-education"]:checked').length == 0 ||
@@ -26,7 +26,7 @@ $(document).ready(function () {
     }
 
     function validateQuiz2() {
-        var step = body.find('#lesson2-step2'),
+        var step = body.find('#course1_setting_goals-step2'),
             actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-goal-performance"]:checked').length == 0 ||
@@ -45,7 +45,7 @@ $(document).ready(function () {
     }
 
     function validateQuiz3() {
-        var step = body.find('#lesson3-step2'),
+        var step = body.find('#course1_procrastination-step2'),
             actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-memory-A"]').val().trim() == '' ||
@@ -62,7 +62,7 @@ $(document).ready(function () {
     }
 
     function validateQuiz4() {
-        var step = body.find('#lesson4-step2'),
+        var step = body.find('#course1_distractions-step2'),
             actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-multitask"]:checked').length == 0 ||
@@ -92,24 +92,24 @@ $(document).ready(function () {
         }
     });
     body.on('hide', '.course1.step1', function () {
-        $(window.players).each(function (z) {
+        $(window.players).each(function () {
             if($(this.d).is('.course1.step1 iframe'))
                 this.pauseVideo();
         });
     });
-    body.on('change', '#lesson1-step4 textarea', lesson1Func);
-    body.on('keyup', '#lesson1-step4 textarea', lesson1Func);
-    body.on('show', '#lesson1-step4', lesson1Func);
-    body.find('#lesson1-step4:visible').trigger('show');
-    body.on('click', '#lesson1-step4 .highlighted-link a', function (evt) {
+    body.on('change', '#course1_introduction-step4 textarea', introductionFunc);
+    body.on('keyup', '#course1_introduction-step4 textarea', introductionFunc);
+    body.on('show', '#course1_introduction-step4', introductionFunc);
+    body.find('#course1_introduction-step4:visible').trigger('show');
+    body.on('click', '#course1_introduction-step4 .highlighted-link a', function (evt) {
         evt.preventDefault();
-        var step = body.find('#lesson1-step4'),
+        var step = body.find('#course1_introduction-step4'),
             actions = step.find('.highlighted-link');
         if(actions.is('.invalid'))
             return;
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
-            url: window.callbackPaths['lesson1_update'],
+            url: window.callbackPaths['course1_introduction_update'],
             type: 'POST',
             dataType: 'json',
             data: {
@@ -121,18 +121,18 @@ $(document).ready(function () {
         });
     });
 
-    body.on('change', '#lesson1-step2 input[type="radio"]', validateQuiz1);
-    body.on('show', '#lesson1-step2', validateQuiz1);
-    body.find('#lesson1-step2:visible').trigger('show');
-    body.on('click', '#lesson1-step2 a[href="#submit-quiz"]', function (evt) {
+    body.on('change', '#course1_introduction-step2 input[type="radio"]', validateQuiz1);
+    body.on('show', '#course1_introduction-step2', validateQuiz1);
+    body.find('#course1_introduction-step2:visible').trigger('show');
+    body.on('click', '#course1_introduction-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
-        var step = body.find('#lesson1-step2'),
+        var step = body.find('#course1_introduction-step2'),
             actions = step.find('.highlighted-link');
         if(actions.is('.invalid'))
             return;
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
-            url: window.callbackPaths['lesson1_update'],
+            url: window.callbackPaths['course1_introduction_update'],
             type: 'POST',
             dataType: 'text',
             data: {
@@ -151,19 +151,19 @@ $(document).ready(function () {
         });
     });
 
-    body.on('change', '#lesson2-step2 input', validateQuiz2);
-    body.on('keyup', '#lesson2-step2 input[type="text"]', validateQuiz2);
-    body.on('show', '#lesson2-step2', validateQuiz2);
-    body.find('#lesson2-step2:visible').trigger('show');
-    body.on('click', '#lesson2-step2 a[href="#submit-quiz"]', function (evt) {
+    body.on('change', '#course1_setting_goals-step2 input', validateQuiz2);
+    body.on('keyup', '#course1_setting_goals-step2 input[type="text"]', validateQuiz2);
+    body.on('show', '#course1_setting_goals-step2', validateQuiz2);
+    body.find('#course1_setting_goals-step2:visible').trigger('show');
+    body.on('click', '#course1_setting_goals-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
-        var step = body.find('#lesson2-step2'),
+        var step = body.find('#course1_setting_goals-step2'),
             actions = step.find('.highlighted-link');
         if(actions.is('.invalid'))
             return;
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
-            url: window.callbackPaths['lesson2_update'],
+            url: window.callbackPaths['course1_setting_goals_update'],
             type: 'POST',
             dataType: 'text',
             data: {
@@ -193,19 +193,19 @@ $(document).ready(function () {
         });
     });
 
-    body.on('change', '#lesson3-step2 input', validateQuiz3);
-    body.on('keyup', '#lesson3-step2 input[type="text"]', validateQuiz3);
-    body.on('show', '#lesson3-step2', validateQuiz3);
-    body.find('#lesson3-step2:visible').trigger('show');
-    body.on('click', '#lesson3-step2 a[href="#submit-quiz"]', function (evt) {
+    body.on('change', '#course1_procrastination-step2 input', validateQuiz3);
+    body.on('keyup', '#course1_procrastination-step2 input[type="text"]', validateQuiz3);
+    body.on('show', '#course1_procrastination-step2', validateQuiz3);
+    body.find('#course1_procrastination-step2:visible').trigger('show');
+    body.on('click', '#course1_procrastination-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
-        var step = body.find('#lesson3-step2'),
+        var step = body.find('#course1_procrastination-step2'),
             actions = step.find('.highlighted-link');
         if(actions.is('.invalid'))
             return;
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
-            url: window.callbackPaths['lesson3_update'],
+            url: window.callbackPaths['course1_procrastination_update'],
             type: 'POST',
             dataType: 'text',
             data: {
@@ -233,25 +233,25 @@ $(document).ready(function () {
         });
     });
 
-    body.on('change', '#lesson4-step2 input', validateQuiz4);
-    body.on('show', '#lesson4-step2', validateQuiz4);
-    body.find('#lesson4-step2:visible').trigger('show');
-    body.on('click', '#lesson4-step2 a[href="#submit-quiz"]', function (evt) {
+    body.on('change', '#course1_distractions-step2 input', validateQuiz4);
+    body.on('show', '#course1_distractions-step2', validateQuiz4);
+    body.find('#course1_distractions-step2:visible').trigger('show');
+    body.on('click', '#course1_distractions-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
-        var step = body.find('#lesson4-step2'),
+        var step = body.find('#course1_distractions-step2'),
             actions = step.find('.highlighted-link');
         if(actions.is('.invalid'))
             return;
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
-            url: window.callbackPaths['lesson4_update'],
+            url: window.callbackPaths['course1_distractions_update'],
             type: 'POST',
             dataType: 'text',
             data: {
                 multitask: step.find('input[name="quiz-multitask"]:checked').val(),
-                downside: step.find('input[name="quiz-downside"]:checked').val().trim(),
-                lowerScore: step.find('input[name="quiz-lower-score"]:checked').val().trim(),
-                distraction: step.find('input[name="quiz-distraction"]:checked').val().trim()
+                downside: step.find('input[name="quiz-downside"]:checked').val(),
+                lowerScore: step.find('input[name="quiz-lower-score"]:checked').val(),
+                distraction: step.find('input[name="quiz-distraction"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -270,6 +270,57 @@ $(document).ready(function () {
         });
     });
 
+    function validateQuiz5() {
+        var step = body.find('#course1_environment-step2'),
+            actions = step.find('.highlighted-link'),
+            valid = true;
+        if(step.find('input[name="quiz-environment-bed"]:checked').length == 0 ||
+            step.find('input[name="quiz-environment-mozart"]:checked').length == 0 ||
+            step.find('input[name="quiz-environment-nature"]:checked').length == 0 ||
+            step.find('input[name="quiz-environment-breaks"]:checked').length == 0)
+            valid = false;
+        if(!valid)
+            actions.removeClass('valid').addClass('invalid');
+        else
+            actions.removeClass('invalid').addClass('valid');
+    }
+
+    body.on('change', '#course1_environment-step2 input', validateQuiz5);
+    body.on('show', '#course1_environment-step2', validateQuiz5);
+    body.find('#course1_environment-step2:visible').trigger('show');
+    body.on('click', '#course1_environment-step2 a[href="#submit-quiz"]', function (evt) {
+        evt.preventDefault();
+        var step = body.find('#course1_environment-step2'),
+            actions = step.find('.highlighted-link');
+        if(actions.is('.invalid'))
+            return;
+        actions.removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['course1_environment_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                bed: step.find('input[name="quiz-environment-bed"]:checked').val(),
+                mozart: step.find('input[name="quiz-environment-mozart"]:checked').val(),
+                nature: step.find('input[name="quiz-environment-nature"]:checked').val(),
+                breaks: step.find('input[name="quiz-environment-breaks"]:checked').val()
+            },
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
+
+                step.addClass('right');
+                actions.removeClass('invalid').addClass('valid');
+                // add answers in order
+                content.find('h3').each(function (i) {
+                    $(this).find('span').appendTo(step.find('h3').eq(i));
+                });
+                content.find('.results').each(function (i) {
+                    $(this).insertAfter(step.find('.questions').eq(i));
+                });
+            }
+        });
+    });
 });
 
 

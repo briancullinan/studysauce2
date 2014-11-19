@@ -142,6 +142,12 @@ class EmailsController extends Controller
         return new Response();
     }
 
+    /**
+     * @param User $user
+     * @param Payment $payment
+     * @param $address
+     * @return Response
+     */
     public function invoiceAction(User $user = null, Payment $payment, $address)
     {
         /** @var $user User */
@@ -319,36 +325,130 @@ class EmailsController extends Controller
         //$associations = $orm->getClassMetadata(get_class($properties))->getAssociationNames();
 
         if(is_object($properties))
-        {
             $from = get_class($properties);
-            $properties = (array)$properties;
-        }
         else
             $from = $this->get('request')->get('_controller');
 
-        if(is_array($properties)) {
-            $message = Swift_Message::newInstance()
-                ->setSubject('Message from ' . $from)
-                ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
-                ->setTo('admin@studysauce.com')
-                ->setBody(
-                    $this->renderView(
-                        'StudySauceBundle:Emails:administrator.html.php',
-                        [
-                            'link' => '&nbsp;',
-                            'user' => $user,
-                            'properties' => $properties
-                        ]
-                    ),
-                    'text/html'
-                );
-            $headers = $message->getHeaders();
-            $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                            'category' => ['sponsor-invite']])));
-            $mailer = $this->get('mailer');
-            $mailer->send($message);
-        }
+        $message = Swift_Message::newInstance()
+            ->setSubject('Message from ' . $from)
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo('admin@studysauce.com')
+            ->setBody(
+                $this->renderView(
+                    'StudySauceBundle:Emails:administrator.html.php',
+                    [
+                        'link' => '&nbsp;',
+                        'user' => $user,
+                        'properties' => substr(self::dump($properties, 2), 0, 4086)
+                    ]
+                ),
+                'text/html'
+            );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['sponsor-invite']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
 
         return new Response();
+    }
+    private static $_objects;
+    private static $_output;
+    private static $_depth;
+
+    /**
+     * Converts a variable into a string representation.
+     * This method achieves the similar functionality as var_dump and print_r
+     * but is more robust when handling complex objects such as PRADO controls.
+     * @param mixed $var variable to be dumped
+     * @param integer $depth maximum depth that the dumper should go into the variable. Defaults to 10.
+     * @param bool $highlight
+     * @return string the string representation of the variable
+     */
+    public static function dump($var,$depth=10,$highlight=false)
+    {
+        self::$_output='';
+        self::$_objects=[];
+        self::$_depth=$depth;
+        self::dumpInternal($var,0);
+        if($highlight)
+        {
+            $result=highlight_string("<?php\n".self::$_output,true);
+            return preg_replace('/&lt;\\?php<br \\/>/','',$result,1);
+        }
+        else
+            return self::$_output;
+    }
+
+    /**
+     * @param $var
+     * @param $level
+     */
+    private static function dumpInternal($var,$level)
+    {
+        switch(gettype($var))
+        {
+            case 'boolean':
+                self::$_output.=$var?'true':'false';
+                break;
+            case 'integer':
+                self::$_output.="$var";
+                break;
+            case 'double':
+                self::$_output.="$var";
+                break;
+            case 'string':
+                self::$_output.="'$var'";
+                break;
+            case 'resource':
+                self::$_output.='{resource}';
+                break;
+            case 'NULL':
+                self::$_output.="null";
+                break;
+            case 'unknown type':
+                self::$_output.='{unknown}';
+                break;
+            case 'array':
+                if(self::$_depth<=$level)
+                    self::$_output.='array(...)';
+                else if(empty($var))
+                    self::$_output.='array()';
+                else
+                {
+                    $keys=array_keys($var);
+                    $spaces=str_repeat(' ',$level*4);
+                    self::$_output.="array\n".$spaces.'(';
+                    foreach($keys as $key)
+                    {
+                        self::$_output.="\n".$spaces."    [$key] => ";
+                        self::dumpInternal($var[$key],$level+1);
+                    }
+                    self::$_output.="\n".$spaces.')';
+                }
+                break;
+            case 'object':
+                if(($id=array_search($var,self::$_objects,true))!==false)
+                    self::$_output.=get_class($var).'#'.($id+1).'(...)';
+                else if(self::$_depth<=$level)
+                    self::$_output.=get_class($var).'(...)';
+                else
+                {
+                    $id=array_push(self::$_objects,$var);
+                    $className=get_class($var);
+                    $members=(array)$var;
+                    $keys=array_keys($members);
+                    $spaces=str_repeat(' ',$level*4);
+                    self::$_output.="$className#$id\n".$spaces.'(';
+                    foreach($keys as $key)
+                    {
+                        $keyDisplay=strtr(trim($key),["\0"=>':']);
+                        self::$_output.="\n".$spaces."    [$keyDisplay] => ";
+                        self::dumpInternal($members[$key],$level+1);
+                    }
+                    self::$_output.="\n".$spaces.')';
+                }
+                break;
+        }
     }
 }

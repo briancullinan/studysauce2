@@ -1,16 +1,19 @@
 imports:
-    - { resource: config_dev.yml }
+    - { resource: config_prod.yml }
 
 framework:
     test: ~
-    session:
-        storage_id: session.storage.mock_file
-    profiler:
-        collect: false
 
-web_profiler:
-    toolbar: false
-    intercept_redirects: false
+doctrine:
+    dbal:
+        host:     "localhost"
 
-swiftmailer:
-    disable_delivery: true
+services:
+    pdo:
+        class: Doctrine\DBAL\Driver\PDOConnection
+        arguments:
+            - "mysql:host=localhost;port=3306;dbname=studysauce"
+            - study
+            - itekIO^#(
+        calls:
+            - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION

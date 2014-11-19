@@ -125,14 +125,7 @@ $(document).ready(function () {
                 if (plans.find('.event-id-' + calEvent.eventId).length > 0) {
                     if (!plans.find('.event-id-' + calEvent.eventId).is('.selected'))
                         plans.find('.event-id-' + calEvent.eventId).find('.assignment').trigger('click');
-                    plans.find('.event-id-' + calEvent.eventId).scrollintoview({
-                        padding: {
-                            top: 120,
-                            bottom: 100,
-                            left: 0,
-                            right: 0
-                        }
-                    });
+                    plans.find('.event-id-' + calEvent.eventId).scrollintoview(DASHBOARD_MARGINS);
                 }
 
             },

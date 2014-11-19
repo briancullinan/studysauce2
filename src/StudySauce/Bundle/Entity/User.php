@@ -138,8 +138,8 @@ class User extends BaseUser implements EncoderAwareInterface
      */
     protected $groups;
 
-    /** @ORM\Column(name="adviser_status", type="string", length=4096, nullable=true) */
-    protected $adviserStatus;
+    /** @ORM\Column(name="properties", type="array", nullable=true) */
+    protected $properties;
 
     /**
      * @ORM\PrePersist
@@ -159,6 +159,26 @@ class User extends BaseUser implements EncoderAwareInterface
         }
 
         return NULL;
+    }
+
+    /**
+     * @param $prop
+     * @param $value
+     */
+    public function setProperty($prop, $value)
+    {
+        $this->properties[$prop] = $value;
+    }
+
+    /**
+     * @param $prop
+     * @return null
+     */
+    public function getProperty($prop)
+    {
+        if(isset($this->properties[$prop]))
+            return $this->properties[$prop];
+        return null;
     }
 
     /**
@@ -353,26 +373,26 @@ class User extends BaseUser implements EncoderAwareInterface
     }
 
     /**
-     * Set adviserStatus
+     * Set properties
      *
-     * @param string $adviserStatus
+     * @param string $properties
      * @return User
      */
-    public function setAdviserStatus($adviserStatus)
+    public function setProperties($properties)
     {
-        $this->adviserStatus = $adviserStatus;
+        $this->properties = $properties;
 
         return $this;
     }
 
     /**
-     * Get adviserStatus
+     * Get properties
      *
      * @return string 
      */
-    public function getAdviserStatus()
+    public function getProperties()
     {
-        return $this->adviserStatus;
+        return $this->properties;
     }
 
     /**

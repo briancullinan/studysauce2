@@ -50,6 +50,12 @@ class Course1
     protected $quiz4s;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz5", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $quiz5s;
+
+    /**
      * @ORM\Column(type="string", name="why_study", nullable = true)
      */
     protected $whyStudy;
@@ -343,5 +349,38 @@ class Course1
     public function getWhyStudy()
     {
         return $this->whyStudy;
+    }
+
+    /**
+     * Add quiz5s
+     *
+     * @param \Course1\Bundle\Entity\Quiz5 $quiz5s
+     * @return Course1
+     */
+    public function addQuiz5(\Course1\Bundle\Entity\Quiz5 $quiz5s)
+    {
+        $this->quiz5s[] = $quiz5s;
+
+        return $this;
+    }
+
+    /**
+     * Remove quiz5s
+     *
+     * @param \Course1\Bundle\Entity\Quiz5 $quiz5s
+     */
+    public function removeQuiz5(\Course1\Bundle\Entity\Quiz5 $quiz5s)
+    {
+        $this->quiz5s->removeElement($quiz5s);
+    }
+
+    /**
+     * Get quiz5s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getQuiz5s()
+    {
+        return $this->quiz5s;
     }
 }

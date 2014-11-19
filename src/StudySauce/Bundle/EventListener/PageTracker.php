@@ -86,10 +86,8 @@ class PageTracker implements EventSubscriberInterface
             $this->session->start();
             $id = $this->session->getId();
 
-            /** @var UserSession $session */
-            $session = $this->orm->getRepository('StudySauceBundle:Session')->find($id);
-            if (!empty($session)) {
-                $visit->setSession($session);
+            if (!empty($id)) {
+                $visit->setSession($id);
             }
 
             /** @var TokenInterface $token */

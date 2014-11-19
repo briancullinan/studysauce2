@@ -9,11 +9,14 @@
                 <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-target="#level1" data-parent="#course1-menu"><span>1</span>Level 1</a>
                 </div>
-                <ul id="level1" class="accordion-body collapse <?php print (empty($course) || $course->getLevel() < 5 ? 'in' : ''); ?>">
-                    <li><a href="<?php print $view['router']->generate('lesson1', ['_step' => 0]); ?>"><span>&bullet;</span>Introduction to Study Sauce</a></li>
-                    <li><a href="<?php print $view['router']->generate('lesson2', ['_step' => 0]); ?>"><span>&bullet;</span>Setting goals</a></li>
-                    <li><a href="<?php print $view['router']->generate('lesson4', ['_step' => 0]); ?>"><span>&bullet;</span>Distractions</a></li>
-                    <li><a href="<?php print $view['router']->generate('lesson3', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
+                <ul id="level1" class="accordion-body collapse <?php print (empty($course) || $course->getLevel() < 8 ? 'in' : ''); ?>">
+                    <li><a href="<?php print $view['router']->generate('course1_introduction', ['_step' => 0]); ?>"><span>&bullet;</span>Introduction to Study Sauce</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_setting_goals', ['_step' => 0]); ?>"><span>&bullet;</span>Setting goals</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_distractions', ['_step' => 0]); ?>"><span>&bullet;</span>Distractions</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_procrastination', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_environment', ['_step' => 0]); ?>"><span>&bullet;</span>Study environment</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_partners', ['_step' => 0]); ?>"><span>&bullet;</span>Partners</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 0]); ?>"><span>&bullet;</span>Upgrade</a></li>
                 </ul>
             </li>
             <li class="accordion-group panel">

@@ -2,14 +2,5 @@
 $view->extend('StudySauceBundle:Emails:layout.html.php');
 
 $view['slots']->start('message'); ?>
-<p><?php
-foreach($properties as $i => $prop)
-{
-    try {
-        print $i . ' = ' . var_export($prop, true) . '<br />';
-    } catch (\Exception $ex) {
-
-    }
-}
-?></p>
+<pre><?php print $properties; ?></pre>
 <?php $view['slots']->stop(); ?>

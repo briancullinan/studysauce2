@@ -131,6 +131,11 @@
         display: none;
     }
 
+    #customization .study-types label span br
+    {
+        display:none;
+    }
+
     #customization .study-types label, #customization .study-difficulty label
     {
         display: block;

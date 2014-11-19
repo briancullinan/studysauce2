@@ -175,7 +175,6 @@ $view['slots']->start('body'); ?>
                             } ?></select></label>
                 </div>
                 <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value="">
-                    <img src="https://www.studysauce.com/sites/all/modules/ubercart/payment/uc_credit/images/info.png" alt="">
                     <a href="#ccv-info" data-toggle="modal">What's the CVV?</a>
                 </label>
             </fieldset>

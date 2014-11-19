@@ -1,5 +1,5 @@
 <?php
-$email_base = $view['assets']->getUrl('images');
+$email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysauce';
 ?>
 
 <body
@@ -59,7 +59,7 @@ $email_base = $view['assets']->getUrl('images');
 <div
     style="text-align: center; margin: 0 auto; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px; color: #555555; width:100%; max-width:600px;">
     Copyright <?php print date('Y'); ?>. &nbsp;<a target="_blank"
-                                                  href="<?php print $view['router']->generate('login', [], true); ?>"
+                                                  href="<?php print $view['router']->generate('privacy', [], true); ?>"
                                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Privacy
         Policy</a>&nbsp;|&nbsp;<a target="_blank" href="%unsubscribe%"
                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Unsubscribe</a>

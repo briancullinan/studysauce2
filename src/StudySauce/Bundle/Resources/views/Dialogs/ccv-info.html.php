@@ -8,18 +8,16 @@ What is the CVV?
 
 $view['slots']->start('modal-body') ?>
 <p>CVV stands for Card Verification Value. This number is used as a security feature to protect you from credit card
-    fraud. Finding the number on your card is a very simple process. Just follow the directions below.</p><br><b>Visa,
-    MasterCard, Discover:</b>
+    fraud. Finding the number on your card is a very simple process. Just follow the directions below.</p>
 
-<p><img src="https://www.studysauce.com/sites/all/modules/ubercart/payment/uc_credit/images/visa_cvv.jpg" alt="">The CVV
-    for these cards is found on the back side of the card. It is only the last three digits on the far right of the
+<br><b>Visa, MasterCard, Discover:</b>
+<p>The CVV for these cards is found on the back side of the card. It is only the last three digits on the far right of the
     signature panel box.</p><br>
 
 <p><b>American Express:</b></p>
-
-<p><img src="https://www.studysauce.com/sites/all/modules/ubercart/payment/uc_credit/images/amex_cvv.jpg" alt="">The CVV
-    on American Express cards is found on the front of the card. It is a four digit number printed in smaller text on
+<p>The CVV on American Express cards is found on the front of the card. It is a four digit number printed in smaller text on
     the right side above the credit card number.</p>
+
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

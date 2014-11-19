@@ -1,11 +1,12 @@
-var body = null;
+var body = null,
+    DASHBOARD_MARGINS = {};
 
 function activateMenu(path, noPush) {
     var that = $(this);
     var i = window.callbackUri.indexOf(path),
         panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
         panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
-        item = body.find('.main-menu a[href="' + path + '"]').first();
+        item = body.find('.main-menu a[href^="' + window.callbackUri[window.callbackKeys.indexOf(window.callbackKeys[i].replace(/-step[0-9]+/g, ''))] + '"]').first();
 
     // activate the menu
     body.find('.main-menu .active').removeClass('active');
@@ -86,7 +87,9 @@ function activatePanel(panel, i, noPush, path)
     body.find('.modal:visible').modal('hide');
     body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
     panel.delay(75).fadeIn(75);
-    setTimeout(function () { panel.trigger('show'); }, 100);
+    setTimeout(function () {
+        panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
+    }, 100);
     if(!noPush)
         window.history.pushState(window.callbackKeys[i], "", path);
 }
@@ -139,7 +142,11 @@ $(document).ready(function () {
 
     setTimeout(function () {
         // show the already visible tabs
-        body.find('.panel-pane:visible').trigger('show');
+        var panel = body.find('.panel-pane:visible').first(),
+            path = window.callbackUri[window.callbackKeys.indexOf(panel.attr('id').replace(/-step[0-9]+/g, ''))],
+            item = body.find('.main-menu a[href^="' + path + '"]').first();
+        item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+        panel.trigger('show');
     }, 100);
 
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
@@ -156,6 +163,10 @@ $(document).ready(function () {
         }
     });
 
+    $(window).resize(function () {
+        DASHBOARD_MARGINS = {padding: {top: $('.header-wrapper').outerHeight(), bottom: 0, left: 0, right: 0}};
+    });
+    $(window).trigger('resize');
 
     body.on('click', ':not(#left-panel):not(#right-panel):not(#left-panel *):not(#right-panel *)', function () {
         if(body.is('.left-menu') || body.is('.right-menu')) {

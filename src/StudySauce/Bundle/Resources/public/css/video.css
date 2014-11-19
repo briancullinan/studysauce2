@@ -80,19 +80,31 @@
 
 @media all and (max-width:700px)
 {
-    .landing-home .video .slides .highlighted-link,
-    .landing-home .video .slides .video-floater
+    .landing-home .video .slides .highlighted-link
     {
         float:none;
         display:block;
         width:auto;
         max-width: 400px;
-        margin:0 auto;
+        position:absolute;
+        bottom:0;
+        left:50%;
+        margin:0 0 0 -95px;
+    }
+
+    .landing-home .video h1
+    {
+        margin-bottom:30px;
+    }
+
+    .landing-home .video .slides li
+    {
+        padding-bottom:150px;
     }
 
     .landing-home .video .slides .highlighted-link p
     {
-        padding-top: 70px;
+        padding-top: 40px;
     }
 
     .landing-home .video .player-divider

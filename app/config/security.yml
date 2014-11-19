@@ -7,8 +7,9 @@ security:
             id: studysauce.drupal_encoder
 
     role_hierarchy:
+        ROLE_GUEST:       ROLE_GUEST
         ROLE_USER:        [ROLE_GUEST, ROLE_PAID, ROLE_ADVISER, ROLE_PARTNER]
-        ROLE_ADMIN:       ROLE_ADMIN
+        ROLE_ADMIN:       [ROLE_ADMIN, ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
