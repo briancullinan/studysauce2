@@ -1,12 +1,16 @@
 imports:
-    - { resource: config_prod.yml }
+    - { resource: config.yml }
 
 framework:
     test: ~
 
 doctrine:
     dbal:
+        driver:   "pdo_mysql"
         host:     "localhost"
+        dbname:   "studysauce"
+        user:     "study"
+        password: "itekIO^#("
 
 services:
     pdo:

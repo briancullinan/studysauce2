@@ -134,7 +134,7 @@ $collection = $router->getRouteCollection();
 $view['slots']->output('javascripts');
 $view['slots']->output('sincludes');
 // show error dialogs in debug environment
-if($app->getEnvironment() == 'dev') {
+if($app->getEnvironment() == 'dev' || $app->getEnvironment() == 'test') {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:error'));
 }
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']);

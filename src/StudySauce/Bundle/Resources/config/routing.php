@@ -22,6 +22,14 @@ $collection->add(
     )
 );
 $collection->add(
+    'contact',
+    new Route(
+        '/contact/{_format}',
+        ['_controller' => 'StudySauceBundle:Landing:contact', '_format' => 'funnel'],
+        ['_format' => DASHBOARD_VIEWS,]
+    )
+);
+$collection->add(
     'about',
     new Route(
         '/about/{_format}',
