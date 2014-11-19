@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd /var/www/Symfony/;
+cd /var/www/Symfony2/;
 sudo php app/console cache:clear --env=test;
 sudo php app/console doctrine:generate:entities StudySauceBundle;
 sudo php app/console doctrine:schema:update --force;

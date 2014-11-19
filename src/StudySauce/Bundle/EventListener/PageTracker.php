@@ -6,14 +6,13 @@ use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Controller\LandingController;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-use StudySauce\Bundle\Entity\Session as UserSession;
 
 /**
  * Class RedirectListener
@@ -29,14 +28,16 @@ class PageTracker implements EventSubscriberInterface
     /** @var SecurityContext $context */
     private $context;
 
+    /** @var ContainerInterface $container */
     private $container;
 
     /**
+     * @param ContainerInterface $container
      * @param EntityManager $orm
      * @param Session $session
      * @param SecurityContext $context
      */
-    public function __construct($container, EntityManager $orm, Session $session, SecurityContext $context)
+    public function __construct(ContainerInterface $container, EntityManager $orm, Session $session, SecurityContext $context)
     {
         $this->container = $container;
         $this->orm = $orm;
