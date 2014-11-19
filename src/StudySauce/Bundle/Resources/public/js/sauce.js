@@ -119,30 +119,32 @@ $.ajaxPrefilter(function (options, originalOptions) {
     options.data = $.param($.extend(data, { __visits: visits }));
 });
 
-var jqAjax = $.ajax;
-$.ajax = function(settings){
-    var success = settings.success;
-    settings.success = function (data, textStatus, jqXHR) {
-        if (typeof data == 'string' && data.indexOf('{"redirect":') > -1) {
-            try {
-                data = JSON.parse(data.substr(0, 4096)); // no way a redirect would be longer than that
-            } catch (ignore) {
+if(typeof window.jqAjax == 'undefined') {
+    window.jqAjax = $.ajax;
+    $.ajax = function (settings) {
+        var success = settings.success;
+        settings.success = function (data, textStatus, jqXHR) {
+            if (typeof data == 'string' && data.indexOf('{"redirect":') > -1) {
+                try {
+                    data = JSON.parse(data.substr(0, 4096)); // no way a redirect would be longer than that
+                } catch (ignore) {
 
+                }
             }
-        }
-        if (data != null && typeof data.redirect != 'undefined') {
-            var a = document.createElement('a');
-            a.href = data.redirect;
-            if (window.location.pathname != a.pathname) {
-                window.location = data.redirect;
-                return;
+            if (data != null && typeof data.redirect != 'undefined') {
+                var a = document.createElement('a');
+                a.href = data.redirect;
+                if (window.location.pathname != a.pathname) {
+                    window.location = data.redirect;
+                    return;
+                }
             }
-        }
-        if(typeof success != 'undefined')
-            success(data, textStatus, jqXHR);
+            if (typeof success != 'undefined')
+                success(data, textStatus, jqXHR);
+        };
+        window.jqAjax(settings);
     };
-    jqAjax(settings);
-};
+}
 
 $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
     var dialog = $('#error-dialog');

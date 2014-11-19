@@ -1,9 +1,9 @@
 
 <?php
 /** @var $view \Symfony\Bundle\FrameworkBundle\Templating\PhpEngine */
-$view->extend('StudySauceBundle:Shared:layout.html.php')
+$view->extend('StudySauceBundle:Shared:layout.html.php');
 
- $view['slots']->start('classes') ?>dashboard-home<?php $view['slots']->stop()
+ $view['slots']->start('classes') ?>dashboard-home<?php $view['slots']->stop();
 
 
 $view['slots']->start('tmp-stylesheets');
