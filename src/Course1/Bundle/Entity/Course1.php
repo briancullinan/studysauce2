@@ -56,6 +56,17 @@ class Course1
     protected $quiz5s;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz6", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $quiz6s;
+
+    /**
+     * @ORM\Column(type="boolean", name="enjoyed", nullable = true)
+     */
+    protected $enjoyed;
+
+    /**
      * @ORM\Column(type="string", name="why_study", nullable = true)
      */
     protected $whyStudy;
@@ -382,5 +393,61 @@ class Course1
     public function getQuiz5s()
     {
         return $this->quiz5s;
+    }
+
+    /**
+     * Add quiz6s
+     *
+     * @param \Course1\Bundle\Entity\Quiz6 $quiz6s
+     * @return Course1
+     */
+    public function addQuiz6(\Course1\Bundle\Entity\Quiz6 $quiz6s)
+    {
+        $this->quiz6s[] = $quiz6s;
+
+        return $this;
+    }
+
+    /**
+     * Remove quiz6s
+     *
+     * @param \Course1\Bundle\Entity\Quiz6 $quiz6s
+     */
+    public function removeQuiz6(\Course1\Bundle\Entity\Quiz6 $quiz6s)
+    {
+        $this->quiz6s->removeElement($quiz6s);
+    }
+
+    /**
+     * Get quiz6s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getQuiz6s()
+    {
+        return $this->quiz6s;
+    }
+
+    /**
+     * Set enjoyed
+     *
+     * @param boolean $enjoyed
+     * @return Course1
+     */
+    public function setEnjoyed($enjoyed)
+    {
+        $this->enjoyed = $enjoyed;
+
+        return $this;
+    }
+
+    /**
+     * Get enjoyed
+     *
+     * @return boolean 
+     */
+    public function getEnjoyed()
+    {
+        return $this->enjoyed;
     }
 }

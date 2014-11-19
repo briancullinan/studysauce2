@@ -60,7 +60,7 @@ $completed = !empty($quiz->getEducation()) &&
             <p>We will help you develop a plan to make sure that you are spending the right amount of time studying.</p>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
-        <div class="highlighted-link invalid">
+        <div class="highlighted-link <?php print ($complete ? ' valid' : ' invalid'); ?>">
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('course1_introduction', ['_step' => 3]); ?>" class="more">Next</a>
         </div>

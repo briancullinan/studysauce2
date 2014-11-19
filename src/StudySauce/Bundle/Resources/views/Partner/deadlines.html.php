@@ -3,7 +3,7 @@ use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 
 $isDemo = false;
-if (empty($deadlines)) {
+if (empty($deadlines) || empty($courses)) {
     $isDemo = true;
     $deadlines = $demoDeadlines;
 }
@@ -40,18 +40,12 @@ foreach ($view['assetic']->javascripts(
 
 $view['slots']->stop();
 
-$isDemo = false;
-if (empty($deadlines) || empty($courses)) {
-    $isDemo = true;
-    $deadlines = $demoDeadlines;
-}
-
 $view['slots']->start('body'); ?>
 <div class="panel-pane" id="deadlines">
     <div class="pane-content">
         <?php echo $view->render('StudySauceBundle:Partner:partner-nav.html.php', ['user' => $user]); ?>
         <h2>Upcoming deadlines</h2>
-        <?php if(empty($deadlines) || $isDemo) {
+        <?php if($isDemo) {
             ?><h3>Your student has not completed this section yet.</h3><?php
         }
         else { ?>
@@ -109,15 +103,16 @@ $view['slots']->start('body'); ?>
                             <span>Class name</span>
                             <i class="class<?php print $classI; ?>"></i>
                             <select>
+                                <option value="" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                                 <?php
                                 foreach ($courses as $c):
                                     /** @var $c Course */
                                     ?>
                                     <option value="<?php print $c->getId(); ?>" <?php print (!$isDemo &&
-                                    $d->getCourse()->getId() == $c->getId() ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
+                                    $d->getCourse() == $c ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
                                 <?php endforeach; ?>
                                 <option value="Nonacademic" <?php print (!$isDemo && !empty($d->getAssignment()) &&
-                                    empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Nonacademic
+                                empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Nonacademic
                                 </option>
                             </select>
                         </label>

@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
@@ -20,10 +21,12 @@ if (!$courseIncluded) {
     $view['slots']->output('body');
     $view['slots']->stop();
 
+    /** @var Request $request */
     $request = $app->getRequest();
     $controller = $request->get('_controller');
     $view['slots']->start('sincludes');
-    if($request->getMethod() == 'GET') {
+    $pos = strpos($request->getUri(), '/_fragment');
+    if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment')) {
         // TODO: include courses from the index page
         if ($app->getRequest()->get('_step') != 3) {
             echo $view['actions']->render(

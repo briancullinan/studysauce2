@@ -72,7 +72,7 @@ $complete = !empty($quiz->getGoalPerformance()) &&
         </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
-        <div class="highlighted-link">
+        <div class="highlighted-link <?php print ($complete ? ' valid' : ' invalid'); ?>">
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('course1_setting_goals', ['_step' => 3]); ?>" class="more">Next</a>
         </div>

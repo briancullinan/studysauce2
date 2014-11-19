@@ -52,7 +52,7 @@ class UpgradeController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:Upgrade:quiz.html.php', [
-                        'quiz' => $course->getQuiz2s()->first() ?: new Quiz2(),
+                        'course' => $course,
                         'csrf_token' => $csrfToken
                     ]);
                 break;
@@ -83,34 +83,9 @@ class UpgradeController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
         // store quiz results
-        $quiz = new Quiz2();
-        $quiz->setCourse($course);
-        $course->addQuiz2($quiz);
-        if(!empty($request->get('performance')))
-            $quiz->setGoalPerformance($request->get('performance'));
+        $course->setEnjoyed($request->get('enjoy'));
 
-        if(!empty($request->get('acronymS')))
-            $quiz->setSpecific($request->get('acronymS'));
-
-        if(!empty($request->get('acronymM')))
-            $quiz->setMeasurable($request->get('acronymM'));
-
-        if(!empty($request->get('acronymA')))
-            $quiz->setAchievable($request->get('acronymA'));
-
-        if(!empty($request->get('acronymR')))
-            $quiz->setRelevant($request->get('acronymR'));
-
-        if(!empty($request->get('acronymT')))
-            $quiz->setTimeBound($request->get('acronymT'));
-
-        if(!empty($request->get('motivationI')))
-            $quiz->setIntrinsic($request->get('motivationI'));
-
-        if(!empty($request->get('motivationE')))
-            $quiz->setExtrinsic($request->get('motivationE'));
-
-        $orm->persist($quiz);
+        $orm->merge($course);
         $orm->flush();
 
         return $this->forward('Course1Bundle:Upgrade:wizard', ['_step' => 2, '_format' => 'tab']);

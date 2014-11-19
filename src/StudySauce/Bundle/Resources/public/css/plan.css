@@ -124,6 +124,7 @@ a.fc-event:not([href])
     border: 3px solid #555555;
 }
 
+#plan .event-type-f .class-name span,
 #plan .event-type-h,
 #plan .fc-event.event-type-f,
 #plan .fc-event.event-type-o
@@ -142,6 +143,7 @@ a.fc-event:not([href])
     color: #555555;
 }
 
+#plan .event-type-o .class-name span,
 #plan .fc-event.event-type-o
 {
     background-color: #000000;

@@ -22,7 +22,7 @@ class Visit
 
     /**
      * @ORM\ManyToOne(targetEntity="Session", inversedBy="visits")
-     * @ORM\Column(type="integer", name="session_id", nullable=true)
+     * @ORM\Column(type="string", name="session_id", length=64, nullable=true)
      */
     protected $session;
 

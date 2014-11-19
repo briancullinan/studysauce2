@@ -29,7 +29,7 @@ $view['slots']->start('stylesheets');
 
  $view['slots']->output('tmp-stylesheets');
 
- $view['slots']->stop()
+ $view['slots']->stop();
 
 
 $view['slots']->start('tmp-javascripts');
@@ -52,7 +52,7 @@ $view['slots']->start('javascripts');
 
  $view['slots']->output('tmp-javascripts');
 
- $view['slots']->stop()
+ $view['slots']->stop();
 
 
 $view['slots']->start('tmp-body');
@@ -64,7 +64,7 @@ $view['slots']->start('body');
 
  echo $view->render('StudySauceBundle:Shared:menu.html.php');
 
- $view['slots']->output('tmp-body')
+ $view['slots']->output('tmp-body');
 
  echo $view->render('StudySauceBundle:Shared:footer.html.php');
 

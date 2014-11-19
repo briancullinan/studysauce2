@@ -321,6 +321,107 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    function validateQuiz6() {
+        var step = body.find('#course1_partners-step2'),
+            actions = step.find('.highlighted-link'),
+            valid = true;
+        if(step.find('input[name="quiz-partners-help"]:checked').length == 0 ||
+            step.find('input[name="quiz-partners-attribute"]:checked').length == 0 ||
+            step.find('input[name="quiz-partners-often"]').val().trim() == '' ||
+            step.find('input[name="quiz-partners-usage"]:checked').length == 0)
+            valid = false;
+        if(!valid)
+            actions.removeClass('valid').addClass('invalid');
+        else
+            actions.removeClass('invalid').addClass('valid');
+    }
+
+    body.on('change', '#course1_partners-step2 input', validateQuiz6);
+    body.on('keyup', '#course1_partners-step2 input[type="text"]', validateQuiz6);
+    body.on('show', '#course1_partners-step2', validateQuiz6);
+    body.find('#course1_partners-step2:visible').trigger('show');
+    body.on('click', '#course1_partners-step2 a[href="#submit-quiz"]', function (evt) {
+        evt.preventDefault();
+        var step = body.find('#course1_partners-step2'),
+            actions = step.find('.highlighted-link');
+        if(actions.is('.invalid'))
+            return;
+        actions.removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['course1_partners_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                help: step.find('input[name="quiz-partners-help"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
+                attribute: step.find('input[name="quiz-partners-attribute"]:checked').val(),
+                often: step.find('input[name="quiz-partners-often"]').val().trim(),
+                usage: step.find('input[name="quiz-partners-usage"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
+            },
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
+
+                step.addClass('right');
+                actions.removeClass('invalid').addClass('valid');
+                // add answers in order
+                content.find('h3').each(function (i) {
+                    $(this).find('span').appendTo(step.find('h3').eq(i));
+                });
+                content.find('.results').each(function (i) {
+                    $(this).insertAfter(step.find('.questions').eq(i));
+                });
+            }
+        });
+    });
+
+
+    function validateQuiz7() {
+        var step = body.find('#course1_upgrade-step2'),
+            actions = step.find('.highlighted-link'),
+            valid = true;
+        if(step.find('input[name="quiz-enjoyed"]:checked').length == 0)
+            valid = false;
+        if(!valid)
+            actions.removeClass('valid').addClass('invalid');
+        else
+            actions.removeClass('invalid').addClass('valid');
+    }
+
+    body.on('change', '#course1_upgrade-step2 input', validateQuiz7);
+    body.on('show', '#course1_upgrade-step2', validateQuiz7);
+    body.find('#course1_upgrade-step2:visible').trigger('show');
+    body.on('click', '#course1_upgrade-step2 a[href="#submit-quiz"]', function (evt) {
+        evt.preventDefault();
+        var step = body.find('#course1_upgrade-step2'),
+            actions = step.find('.highlighted-link');
+        if(actions.is('.invalid'))
+            return;
+        actions.removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['course1_upgrade_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                enjoy: step.find('input[name="quiz-enjoyed"]:checked').val()
+            },
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
+
+                step.addClass('right');
+                actions.removeClass('invalid').addClass('valid');
+                // add answers in order
+                content.find('h3').each(function (i) {
+                    $(this).find('span').appendTo(step.find('h3').eq(i));
+                });
+                content.find('.results').each(function (i) {
+                    $(this).insertAfter(step.find('.questions').eq(i));
+                });
+            }
+        });
+    });
 });
 
 

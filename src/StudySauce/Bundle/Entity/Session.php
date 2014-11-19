@@ -27,7 +27,7 @@ class Session
     protected $time;
 
     /**
-     * @ORM\OneToMany(targetEntity="Visit", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Visit", mappedBy="session")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $visits;
