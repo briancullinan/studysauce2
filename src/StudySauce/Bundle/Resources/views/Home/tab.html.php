@@ -55,6 +55,10 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
+if($showBookmark)
+{
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:bookmark'));
+}
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);

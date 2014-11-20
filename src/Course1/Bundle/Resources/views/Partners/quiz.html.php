@@ -31,7 +31,7 @@ $complete = !empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty(
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>Answers are specific, measurable, achievable, relevant, time-bound</p>
+            <p>Take time to choose your accountability partner.  You should have already established trust with the person because you will need them to challenge you and to celebrate successes with you.</p>
         </div>
         <?php } ?>
         <h3>How often should you talk with your accountability partner?</h3>

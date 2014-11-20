@@ -149,6 +149,17 @@ $(document).ready(function () {
         panel.trigger('show');
     }, 100);
 
+    body.on('show', '#home', function () {
+        // TODO: add mobile check here?
+        // show empty
+        $('#bookmark').modal();
+    });
+    // remove it so it never comes up more than once
+    body.on('hidden.bs.modal', '#bookmark', function () {
+        $(this).remove();
+    });
+    body.find('#home:visible').trigger('show');
+
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
         evt.preventDefault();
         var parent = $(this).parents('#left-panel, #right-panel');

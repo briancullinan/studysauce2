@@ -319,7 +319,7 @@ $(document).ready(function () {
         if (svg.select('.x.axisT').empty())
             svg.append("g").attr("class", "x axisT");
         svg.select('.x.axisT')
-            .attr("transform", "translate(0,0)")
+            .attr("transform", "translate(" + margins[1] + ",0)")
             .call(xAxisTotals)
             .select('path').remove();
 

@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,9 +28,19 @@ class HomeController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
             : null;
 
+        $showBookmark = false;
+        if(empty($user->getProperty('seen_bookmark'))) {
+            $showBookmark = true;
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $user->setProperty('seen_bookmark', true);
+            $userManager->updateUser($user);
+        }
+
         return $this->render(
             'StudySauceBundle:Home:tab.html.php',
             [
+                'showBookmark' => $showBookmark,
                 'user' => $user,
                 'csrf_token' => $csrfToken
             ]

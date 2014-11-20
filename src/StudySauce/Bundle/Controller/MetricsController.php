@@ -103,7 +103,7 @@ class MetricsController extends Controller
         return $this->render('StudySauceBundle:Metrics:widget.html.php', [
                 'hours' => !empty($goal) ? $goal->getGoal() : '',
                 'total' => $total,
-                'courses' => $courses,
+                'courses' => array_values($courses),
                 'checkins' => $checkins,
                 'checkouts' => $checkouts,
                 'times' => $times

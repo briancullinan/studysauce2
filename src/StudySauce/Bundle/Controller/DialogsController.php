@@ -35,6 +35,14 @@ class DialogsController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function bookmarkAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:bookmark.html.php', ['id' => 'bookmark']);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */
