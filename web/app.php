@@ -17,7 +17,18 @@ $apcLoader->register(true);
 require_once __DIR__.'/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';
 
-$kernel = new AppKernel('prod', false);
+if ( isset($_SERVER) &&
+    is_array($_SERVER) &&
+    isset($_SERVER['HTTP_HOST']) &&
+    preg_match('/test\.studysauce\.com/', $_SERVER['HTTP_HOST'] &&
+        in_array(@$_SERVER['REMOTE_ADDR'], ['68.230.47.111', '71.36.230.3', '127.0.0.1', 'fe80::1', '::1']))
+)
+{
+    $kernel = new AppKernel('test', false);
+}
+else {
+    $kernel = new AppKernel('prod', false);
+}
 $kernel->loadClassCache();
 //$kernel = new AppCache($kernel);
 
