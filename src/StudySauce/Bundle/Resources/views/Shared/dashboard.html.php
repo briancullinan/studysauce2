@@ -90,7 +90,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->start('javascripts');
         foreach ($view['assetic']->javascripts(
             [
-                '@dashboard',
+                '@dashboard_scripts',
             ],
             [],
             ['output' => 'bundles/studysauce/js/*.js']

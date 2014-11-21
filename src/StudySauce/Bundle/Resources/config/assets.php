@@ -17,7 +17,7 @@ $container->loadFromExtension('assetic', [
                 'output' => 'bundles/studysauce/js/*.js',
             ],
         ],
-        'dashboard' => [
+        'dashboard_scripts' => [
             'inputs' => [
                 '@funnel',
                 '@StudySauceBundle/Resources/public/js/jquery.jplayer.js',
@@ -31,7 +31,7 @@ $container->loadFromExtension('assetic', [
                 'output' => 'bundles/studysauce/js/*.js',
             ],
         ],
-        'landing' => [
+        'landing_scripts' => [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/landing.js',
                 '@StudySauceBundle/Resources/public/js/sauce.js',
@@ -56,7 +56,7 @@ $container->loadFromExtension('assetic', [
                 'output' => 'bundles/studysauce/js/*.js',
             ],
         ],
-        'metrics' => [
+        'metrics_scripts' => [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
                 '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
@@ -67,7 +67,7 @@ $container->loadFromExtension('assetic', [
                 'output' => 'bundles/studysauce/js/*.js',
             ],
         ],
-        'checkin' => [
+        'checkin_scripts' => [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/jquery.fittext.js',
                 '@StudySauceBundle/Resources/public/js/checkin.js'
@@ -77,7 +77,7 @@ $container->loadFromExtension('assetic', [
                 'output' => 'bundles/studysauce/js/*.js',
             ],
         ],
-        'plan' => [
+        'plan_scripts' => [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/moment.min.js',
                 '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.js',

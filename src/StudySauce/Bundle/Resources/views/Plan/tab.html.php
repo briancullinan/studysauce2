@@ -44,14 +44,10 @@ foreach ($view['assetic']->stylesheets(
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(['@checkin',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
+foreach ($view['assetic']->javascripts(['@checkin_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
-foreach ($view['assetic']->javascripts([
-    '@plan',
-],
-[],
-['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
+foreach ($view['assetic']->javascripts(['@plan_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 ?>

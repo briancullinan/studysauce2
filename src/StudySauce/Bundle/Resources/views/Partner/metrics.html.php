@@ -28,7 +28,7 @@ foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(['@metrics',], [], ['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
+foreach ($view['assetic']->javascripts(['@metrics_scripts',], [], ['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
     <script type="text/javascript">

@@ -29,7 +29,7 @@ $view['slots']->start('javascripts');
 
 foreach ($view['assetic']->javascripts(
     [
-        '@landing'
+        '@landing_scripts'
     ],
     [],
     ['output' => 'bundles/studysauce/js/*.js']
