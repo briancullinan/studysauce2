@@ -111,12 +111,13 @@ $(document).ready(function () {
         $.ajax({
             url: window.callbackPaths['course1_introduction_update'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 whyStudy: step.find('textarea').val().trim()
             },
-            success: function () {
-
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
             }
         });
     });
@@ -143,7 +144,8 @@ $(document).ready(function () {
                 study: step.find('input[name="quiz-study-much"]:checked').val()
             },
             success: function (data) {
-                step.find('input[name="csrf_token"]').val(data.csrf_token);
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
                 step.addClass('right');
                 actions.removeClass('invalid').addClass('valid');
                 // TODO: update study plan
