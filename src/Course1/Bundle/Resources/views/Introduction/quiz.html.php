@@ -4,12 +4,12 @@ use Course1\Bundle\Entity\Quiz1;
 $view->extend('Course1Bundle:Shared:layout.html.php');
 
 /** @var Quiz1 $quiz */
-$completed = !empty($quiz->getEducation()) &&
+$complete = !empty($quiz->getEducation()) &&
     !empty($quiz->getMindset()) && !empty($quiz->getTimeManagement()) && !empty($quiz->getDevices()) &&
     !empty($quiz->getStudyMuch());
 
  $view['slots']->start('body'); ?>
-<div class="panel-pane course1 step2 <?php print ($completed ? ' right' : ''); ?>" id="course1_introduction-step2">
+<div class="panel-pane course1 step2 <?php print ($complete ? ' right' : ''); ?>" id="course1_introduction-step2">
     <div class="pane-content">
         <h2>To help us better tailor Study Sauce to you, please answer the below questions.</h2>
         <h3>What grade are you in?</h3>

@@ -339,7 +339,7 @@ class EmailsController extends Controller
                     [
                         'link' => '&nbsp;',
                         'user' => $user,
-                        'properties' => substr(self::dump($properties, 2), 0, 4086)
+                        'properties' => substr(self::dump($properties, $properties instanceof \Exception ? 3 : 2), 0, 4086)
                     ]
                 ),
                 'text/html'

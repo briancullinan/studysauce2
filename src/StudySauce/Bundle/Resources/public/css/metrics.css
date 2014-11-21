@@ -32,6 +32,7 @@
     shape-rendering: optimizeQuality;
 }
 
+.metrics-widget .timeline svg *,
 #metrics #timeline svg *
 {
     shape-rendering: crispEdges;
@@ -39,21 +40,26 @@
 
 #metrics .centrify {
     margin: 0 auto;
-    display:inline-block;
+    display: block;
     width: 100%;
     max-width: 1000px;
+    position:relative;
+    text-align: left;
+    padding-bottom: 35%;
 }
 
 #metrics #legend {
     text-align: center;
     width: 30%;
     vertical-align: top;
-    margin: 20px -2px 0 -2px;
-    padding: 0 10px;
+    margin: 20px 0 0;
+    padding: 0;
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    left:0;
+    position:absolute;
 }
 
 #metrics ol {
@@ -101,6 +107,7 @@
     margin:0 -2px;
     position:absolute;
     padding: 0 10px 0 2px;
+    height: 100%;
 }
 
 .metrics-widget .pie-chart
@@ -115,14 +122,17 @@
 }
 
 #metrics #timeline {
-    display: inline-block;
+    display: block;
     width: 35%;
-    max-width: 600px;
-    margin: 0 -2px;
-    padding: 0 10px;
+    margin: 0;
+    padding: 0;
     vertical-align: top;
     overflow: hidden;
     white-space: nowrap;
+    position:absolute;
+    left:30%;
+    top:0;
+    height: 100%;
 }
 
 #metrics #timeline svg {
@@ -130,13 +140,17 @@
 }
 
 #metrics #pie-chart {
-    display: inline-block;
+    display: block;
     width: 35%;
-    margin: 0 -2px;
-    padding: 0 10px;
+    margin: 0;
+    padding: 0;
     vertical-align: top;
     overflow: hidden;
     white-space: nowrap;
+    position:absolute;
+    left:65%;
+    top:0;
+    height: 100%;
 }
 
 #metrics .checkin-row {
@@ -199,8 +213,16 @@
     {
         width:auto;
         display:block;
+        position:static;
+        top:auto;
+        left:auto;
     }
 
+    #metrics .centrify
+    {
+        padding-bottom:0;
+        text-align: center;
+    }
 }
 
 @media all and (max-width:700px)

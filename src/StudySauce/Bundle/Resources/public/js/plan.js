@@ -301,6 +301,14 @@ $(document).ready(function () {
         });
     });
 
+    body.on('change', '#plan .sort-by .checkbox input', function () {
+        var plan = $('#plan');
+        if(jQuery(this).is(':checked'))
+            plan.addClass('show-historic');
+        else
+            plan.removeClass('show-historic');
+    });
+
     body.on('change', '#plan .sort-by input[type="radio"]', function () {
         var plans = $('#plan');
         var headings = {},
@@ -330,16 +338,16 @@ $(document).ready(function () {
                     keys[keys.length] = k;
 
             for (var j = 0; j < keys.length; j++) {
-                var h1 = headings[keys[j]].filter('.row:not(.hide)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h1 ? 'hide' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
+                var h1 = headings[keys[j]].filter('.row:not(.historic)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h1 ? 'historic' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
             }
         }
         else {
             for (var h in headings) {
                 if (!headings.hasOwnProperty(h))
                     continue;
-                var h2 = headings[h].filter('.row:not(.hide)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h2 ? 'hide' : '') + '">' + h + '</div>'), headings[h].detach()));
+                var h2 = headings[h].filter('.row:not(.historic)').length == 0;
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h2 ? 'historic' : '') + '">' + h + '</div>'), headings[h].detach()));
             }
         }
         plans.find('.head, .row').replaceWith(rows);

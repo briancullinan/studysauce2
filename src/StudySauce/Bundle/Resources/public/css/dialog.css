@@ -38,7 +38,7 @@
     padding-bottom:50px;
 }
 
-#bookmark i.sauce
+#bookmark .sauce
 {
     position:absolute;
     display:block;
@@ -47,7 +47,6 @@
     width:100px;
     height:100px;
     top:0;
-    background:url(../images/menu_new_double.png) no-repeat 0 -7700px transparent;
 }
 
 #bookmark
@@ -57,6 +56,12 @@
     transform: none;
     bottom:0;
     position:fixed;
+}
+
+body.left-menu #bookmark,
+body.right-menu #bookmark
+{
+    position:absolute;
 }
 
 #bookmark i.arrow

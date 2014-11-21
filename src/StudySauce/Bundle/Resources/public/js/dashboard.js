@@ -151,8 +151,12 @@ $(document).ready(function () {
 
     body.on('show', '#home', function () {
         // TODO: add mobile check here?
-        // show empty
-        $('#bookmark').modal();
+        if (typeof navigator != 'undefined' &&
+            (navigator.userAgent.toLowerCase().indexOf("iphone") > -1 ||
+            navigator.userAgent.toLowerCase().indexOf("ipad") > -1)) {
+            // show empty
+            $('#bookmark').modal();
+        }
     });
     // remove it so it never comes up more than once
     body.on('hidden.bs.modal', '#bookmark', function () {

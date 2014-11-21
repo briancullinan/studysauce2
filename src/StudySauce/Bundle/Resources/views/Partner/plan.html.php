@@ -164,7 +164,7 @@ $view['slots']->start('body'); ?>
                     print ($first && !($first = false) ? ' first' : '');
                     print ' event-type-' . $event->getType();
                     print ' checkin' . $classI;
-                    print ($event->getStart() < $yesterday || $event->getDeleted() ? ' hide' : '');
+                    print ($event->getStart() < $yesterday || $event->getDeleted() ? ' historic' : '');
                     print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
                     print (!empty($course) ? (' course-id-' . $course->getId()) : '');
                     print (' default-' . $session);

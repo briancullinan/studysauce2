@@ -289,8 +289,8 @@ a.fc-event:not([href])
     display:none;
 }
 
-#plan.show-historic .head.hide,
-#plan.show-historic .session-row.hide
+#plan.show-historic .head.historic,
+#plan.show-historic .session-row.historic
 {
     display:block;
 }

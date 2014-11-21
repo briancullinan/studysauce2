@@ -44,7 +44,7 @@ $(document).ready(function () {
         var metrics = $('#metrics');
 
         // show empty dialog
-        if(metrics.is('.demo'))
+        if($(this).is('#metrics') && metrics.is('.demo'))
             $('#metrics-empty').modal({
                 backdrop: 'static',
                 keyboard: false,

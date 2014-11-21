@@ -16,13 +16,16 @@ jQuery(document).ready(function() {
             account.find('.first-name input').val() == '' ||
             account.find('.last-name input').val() == '' ||
             account.find('.email input').val().trim() == '' ||
-            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val()))
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val()) ||
+            account.find('.password input').val() == '')
             valid = false;
 
         if (!valid)
             account.find('.form-actions').removeClass('valid').addClass('invalid');
-        else
+        else {
             account.find('.form-actions').removeClass('invalid').addClass('valid');
+            account.find('.form-actions .error').remove();
+        }
     }
     body.on('show', '#register', function () {
         if($(this).data('state') == null)

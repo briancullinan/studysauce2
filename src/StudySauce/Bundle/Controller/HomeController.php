@@ -28,7 +28,7 @@ class HomeController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
             : null;
 
-        $showBookmark = false;
+        $showBookmark = true; // TODO: false in production
         if(empty($user->getProperty('seen_bookmark'))) {
             $showBookmark = true;
             /** @var $userManager UserManager */

@@ -107,7 +107,7 @@ $view['slots']->start('body'); ?>
             $newHead = $event->getStart()->format('j F');
             if ($headStr != $newHead) {
                 $headStr = $newHead;
-                ?><div class="head <?php print ($event->getStart() < $yesterday ? ' hide' : '');
+                ?><div class="head <?php print ($event->getStart() < $yesterday ? ' historic' : '');
                 print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : ''); ?>">
                 <?php print $headStr; ?>
                 </div><?php
@@ -161,7 +161,7 @@ $view['slots']->start('body'); ?>
             print ($first && !($first = false) ? ' first' : '');
             print ' event-type-' . $event->getType();
             print ' checkin' . $classI;
-            print ($event->getStart() < $yesterday || $event->getDeleted() ? ' hide' : '');
+            print ($event->getStart() < $yesterday || $event->getDeleted() ? ' historic' : '');
             print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
             print (!empty($course) ? (' course-id-' . $course->getId()) : '');
             print (' default-' . $session);
