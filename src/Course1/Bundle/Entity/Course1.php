@@ -103,6 +103,8 @@ class Course1
         $this->quiz2s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->quiz3s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->quiz4s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz5s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz6s = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

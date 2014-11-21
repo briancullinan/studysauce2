@@ -92,29 +92,41 @@ class IntroductionController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
 
-        // store quiz results
-        $quiz = new Quiz1();
-        $quiz->setCourse($course);
-        $course->addQuiz1($quiz);
-        if(!empty($request->get('whyStudy')))
+        if(!empty($request->get('whyStudy'))) {
             $course->setWhyStudy($request->get('whyStudy'));
+            $orm->merge($course);
+        }
 
-        if(!empty($request->get('education')))
-            $quiz->setEducation($request->get('education'));
+        if(!empty($request->get('education')) || !empty($request->get('mindset')) || !empty($request->get('time')) ||
+            !empty($request->get('devices')) || !empty($request->get('study'))) {
+            
+            // store quiz results
+            $quiz = new Quiz1();
+            $quiz->setCourse($course);
+            $course->addQuiz1($quiz);
 
-        if(!empty($request->get('mindset')))
-            $quiz->setMindset($request->get('mindset'));
+            if (!empty($request->get('education'))) {
+                $quiz->setEducation($request->get('education'));
+            }
 
-        if(!empty($request->get('time')))
-            $quiz->setTimeManagement($request->get('time'));
+            if (!empty($request->get('mindset'))) {
+                $quiz->setMindset($request->get('mindset'));
+            }
 
-        if(!empty($request->get('devices')))
-            $quiz->setDevices($request->get('devices'));
+            if (!empty($request->get('time'))) {
+                $quiz->setTimeManagement($request->get('time'));
+            }
 
-        if(!empty($request->get('study')))
-            $quiz->setStudyMuch($request->get('study'));
+            if (!empty($request->get('devices'))) {
+                $quiz->setDevices($request->get('devices'));
+            }
 
-        $orm->persist($quiz);
+            if (!empty($request->get('study'))) {
+                $quiz->setStudyMuch($request->get('study'));
+            }
+
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course1Bundle:Introduction:wizard', ['_step' => 2, '_format' => 'tab']);
