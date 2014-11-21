@@ -99,7 +99,7 @@ class IntroductionController extends Controller
 
         if(!empty($request->get('education')) || !empty($request->get('mindset')) || !empty($request->get('time')) ||
             !empty($request->get('devices')) || !empty($request->get('study'))) {
-            
+
             // store quiz results
             $quiz = new Quiz1();
             $quiz->setCourse($course);

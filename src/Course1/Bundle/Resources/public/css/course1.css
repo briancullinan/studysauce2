@@ -617,6 +617,15 @@
 
 @media all and (max-width:700px)
 {
+    .course1 .time
+    {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        float: none;
+        width: 150px;
+    }
+
     .course1.step2 h3
     {
         padding-right:0;
