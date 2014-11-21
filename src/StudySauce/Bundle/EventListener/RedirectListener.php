@@ -84,7 +84,7 @@ class RedirectListener implements EventSubscriberInterface
             /** @var EntityManager $orm */
             $orm = $doc->getManager();
             $orm->clear();
-            $doc->resetEntityManager();
+            $doc->resetManager();
         }
         catch(\Exception $x) {
 
