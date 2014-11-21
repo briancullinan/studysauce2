@@ -41,7 +41,7 @@ class Quiz6
     protected $often;
 
     /**
-     * @ORM\Column(type="simple_array", name="usage", nullable=true)
+     * @ORM\Column(type="simple_array", name="partner_usage", nullable=true)
      */
     protected $usage = [];
 

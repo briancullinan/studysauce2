@@ -21,8 +21,7 @@ if ( isset($_SERVER) &&
     is_array($_SERVER) &&
     isset($_SERVER['HTTP_HOST']) &&
     (preg_match('/test\.studysauce\.com/', $_SERVER['HTTP_HOST']) ||
-        preg_match('/staging\.studysauce\.com/', $_SERVER['HTTP_HOST'])) &&
-    in_array(@$_SERVER['REMOTE_ADDR'], ['68.230.47.111', '71.36.230.3', '127.0.0.1', 'fe80::1', '::1'])) {
+        preg_match('/staging\.studysauce\.com/', $_SERVER['HTTP_HOST']))) {
     Symfony\Component\Debug\Debug::enable();
     $kernel = new AppKernel('test', true);
 }

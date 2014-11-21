@@ -6,6 +6,7 @@ use AppKernel;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Controller\EmailsController;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 use Symfony\Component\DependencyInjection\Container;
@@ -78,9 +79,12 @@ class RedirectListener implements EventSubscriberInterface
         // exception object
         $exception = $event->getException();
         try {
-            /** @var $orm EntityManager */
-            $orm = $this->kernel->getContainer()->get('doctrine')->getManager();
+            /** @var RegistryInterface $doc */
+            $doc = $this->kernel->getContainer()->get('doctrine');
+            /** @var EntityManager $orm */
+            $orm = $doc->getManager();
             $orm->clear();
+            $doc->resetEntityManager();
         }
         catch(\Exception $x) {
 
