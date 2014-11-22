@@ -13,9 +13,9 @@ $view['slots']->start('body'); ?>
         <?php endforeach; ?>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="badge setup-hours">&nbsp;</span>
-            <strong>Big Brain</strong>
-            <p class="description">Using an accountability partner can give you a great boost in school.  You have learned about the concept, now invite someone to help!</p>
+            <span class="badge beginner-apples">&nbsp;</span>
+            <strong>Level 1 Complete</strong>
+            <p class="description">Well done. You have completed the first part of the course. Keep going!</p>
         </div>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 4]); ?>" class="more">Next</a>
