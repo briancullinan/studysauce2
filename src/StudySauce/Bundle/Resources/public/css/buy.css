@@ -169,6 +169,7 @@
         display:block;
     }
 
+    #payment-pane .cc-number .cards,
     #payment-pane .cc-number input:focus ~ .cards
     {
         display:none;

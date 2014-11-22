@@ -149,6 +149,7 @@ $(document).ready(function () {
                 step.addClass('right');
                 actions.removeClass('invalid').addClass('valid');
                 // TODO: update study plan
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });
@@ -191,6 +192,7 @@ $(document).ready(function () {
                 content.find('.results').each(function (i) {
                     $(this).insertAfter(step.find('.questions').eq(i));
                 });
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });
@@ -231,6 +233,7 @@ $(document).ready(function () {
                 content.find('.results').each(function (i) {
                     $(this).insertAfter(step.find('.questions').eq(i));
                 });
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });
@@ -268,6 +271,7 @@ $(document).ready(function () {
                 content.find('.results').each(function (i) {
                     $(this).insertAfter(step.find('.questions').eq(i));
                 });
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });
@@ -320,6 +324,7 @@ $(document).ready(function () {
                 content.find('.results').each(function (i) {
                     $(this).insertAfter(step.find('.questions').eq(i));
                 });
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });
@@ -374,6 +379,7 @@ $(document).ready(function () {
                 content.find('.results').each(function (i) {
                     $(this).insertAfter(step.find('.questions').eq(i));
                 });
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });
@@ -421,6 +427,7 @@ $(document).ready(function () {
                 content.find('.results').each(function (i) {
                     $(this).insertAfter(step.find('.questions').eq(i));
                 });
+                step.scrollintoview(DASHBOARD_MARGINS);
             }
         });
     });

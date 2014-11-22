@@ -4,7 +4,7 @@
     width:40%;
     display:inline-block;
     vertical-align: top;
-    margin: 40px 10% 0 -2px;
+    margin: 40px 10% 0 -4px;
 }
 
 .course1.step0 ol a {
@@ -39,7 +39,7 @@
 
 .course1 .time
 {
-    display: block;
+    display: inline-block;
     position: absolute;
     right: 40px;
     top: 20px;
@@ -50,6 +50,7 @@
     vertical-align: middle;
     padding-top: 5px;
     color:#555555;
+    float:left;
 }
 
 .course1 .time small
@@ -109,7 +110,7 @@
     width:50%;
     display:inline-block;
     vertical-align: top;
-    margin: 40px -2px 0;
+    margin: 40px -4px 0;
     padding-right:20px;
 }
 
@@ -570,17 +571,6 @@
         padding-right:0;
     }
 
-    .course1.step0 h2
-    {
-        padding-right:0;
-    }
-
-    .course1 .time
-    {
-        position:static;
-        float:right;
-    }
-
     .course1.step0 .highlighted-link,
     .course1.step1 .highlighted-link,
     .course1.step2 .highlighted-link,
@@ -619,11 +609,13 @@
 {
     .course1 .time
     {
+        /*position:static;
         text-align: center;
         display: block;
         margin: 0 auto;
         float: none;
-        width: 150px;
+        width: 150px;*/
+        display:none;
     }
 
     .course1.step2 h3

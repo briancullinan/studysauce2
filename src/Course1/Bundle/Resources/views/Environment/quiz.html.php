@@ -17,7 +17,7 @@ $view['slots']->start('body'); ?>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>False - Your brain associates your brain with sleeping, so studying on your bed can lead to increased drowsiness.</p>
+            <p>False - Your brain associates your bed with sleeping, so studying on your bed can lead to increased drowsiness.</p>
         </div>
         <?php } ?>
         <h3>Listening to Mozart is proven to help you study better.</h3>

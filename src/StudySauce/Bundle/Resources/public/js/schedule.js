@@ -234,7 +234,7 @@ $(document).ready(function () {
             .appendTo($('.schedule.other'));
 
         planFunc.apply(schedule.find('.schedule .class-row'));
-
+        schedule.scrollintoview(DASHBOARD_MARGINS);
         body.trigger('scheduled');
     }
 

@@ -16,7 +16,7 @@
                     <li><a href="<?php print $view['router']->generate('course1_procrastination', ['_step' => 0]); ?>"><span>&bullet;</span>Procrastination</a></li>
                     <li><a href="<?php print $view['router']->generate('course1_environment', ['_step' => 0]); ?>"><span>&bullet;</span>Study environment</a></li>
                     <li><a href="<?php print $view['router']->generate('course1_partners', ['_step' => 0]); ?>"><span>&bullet;</span>Partners</a></li>
-                    <li><a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 0]); ?>"><span>&bullet;</span>Upgrade</a></li>
+                    <li><a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 0]); ?>"><span>&bullet;</span>End of Level 1</a></li>
                 </ul>
             </li>
             <li class="accordion-group panel">

@@ -49,6 +49,11 @@
     top:0;
 }
 
+#sds-messages .mobile-only
+{
+    display:none;
+}
+
 #bookmark
 {
     top: auto;
@@ -231,6 +236,16 @@ body.right-menu #bookmark
 
 @media all and (max-width:700px)
 {
+
+    #sds-messages .full-only
+    {
+        display:none;
+    }
+
+    #sds-messages .mobile-only
+    {
+        display:block;
+    }
 
     .modal.in .modal-dialog
     {
