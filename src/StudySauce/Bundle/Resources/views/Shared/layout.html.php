@@ -18,9 +18,13 @@ $collection = $router->getRouteCollection();
     <meta name="mobile-web-app-capable" content="yes">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <link rel="icon" sizes="72x72" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-72x72.png'); ?>">
+    <link rel="icon" sizes="120x120" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-120x120.png'); ?>">
+    <link rel="icon" sizes="152x152" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-152x152.png'); ?>">
+    <link rel="icon" sizes="180x180" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-180x180.png'); ?>">
+    <link rel="icon" sizes="300x300" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
     <link rel="apple-touch-icon-precomposed" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
     <link rel="apple-touch-icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
-    <link rel="icon" sizes="300x300" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
     <link rel="shortcut icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/favicon.ico'); ?>">
     <link rel="image_src" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
     <meta name="description" content="Study Sauce teaches you the most effective study methods and provides you the tools to make the most of your study time.">
