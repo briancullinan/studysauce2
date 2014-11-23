@@ -77,7 +77,10 @@ $(document).ready(function () {
             else
                 $('#checkin-empty').modal('hide');
         }
-        setClock()
+        setClock();
+        setTimeout(function () {
+            setClock();
+        }, 150);
     });
     body.find('#checkin:visible,#home:visible').trigger('show');
 

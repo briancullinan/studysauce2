@@ -82,6 +82,10 @@ $(document).ready(function () {
                         partner.find('.plup-filelist .squiggle').stop().remove();
                         partner.find('.plupload img').attr('src', data.src);
                         body.find('#partner-message img').attr('src', data.src);
+                        partnerFunc();
+                        if(partner.find('.form-actions').is('.invalid'))
+                            return;
+                        partner.find('.form-actions').removeClass('valid').addClass('invalid');
                         jQuery.ajax({
                             url: window.callbackPaths['update_partner'],
                             type: 'POST',
@@ -114,9 +118,9 @@ $(document).ready(function () {
     body.on('click', '#partner a[href="#partner-save"]', function (evt) {
         var partner = jQuery('#partner');
         evt.preventDefault();
-        if($(this).parent().is('.invalid'))
+        if(partner.find('.form-actions').is('.invalid'))
             return;
-        $(this).parent().removeClass('valid').addClass('invalid');
+        partner.find('.form-actions').removeClass('valid').addClass('invalid');
 
         var hash = getHash();
 

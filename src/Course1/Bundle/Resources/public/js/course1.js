@@ -79,6 +79,9 @@ $(document).ready(function () {
 
     body.on('show', '.course1.step0', function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
+        setTimeout(function () {
+            body.find('.course1.step0 h3').textfill({widthOnly: true});
+        }, 150);
     });
     body.find('.course1.step0:visible').trigger('show');
     $(window).resize(function () {

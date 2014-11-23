@@ -252,6 +252,7 @@ class BuyController extends Controller
     /**
      * @param User $user
      * @param Payment $payment
+     * @throws \Exception
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function cancelPaymentAction(User $user = null, Payment $payment = null)
@@ -265,17 +266,19 @@ class BuyController extends Controller
         {
             /** @var Payment $p */
             try {
-                $request = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-                $response = $request->cancelSubscription($p->getSubscription());
-                if ($response->isOk()) {
-                    $payment->setSubscription($response->getSubscriptionId());
+                $arbRequest = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
+                $arbRequest->setSandbox(false);
+                $arbResponse = $arbRequest->cancelSubscription($p->getSubscription());
+                if ($arbResponse->isOk()) {
+
                 }
                 else {
-                    throw new \Exception($response->getMessageText());
+                    throw new \Exception($arbResponse->getMessageText());
                 }
             }
             catch (\Exception $ex){
                 $this->get('logger')->error('Authorize.Net cancel failed: ' . $p->getSubscription());
+                throw $ex;
             }
         }
 

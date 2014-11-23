@@ -115,7 +115,7 @@ class RedirectListener implements EventSubscriberInterface
         $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         /** @var TimedPhpEngine $engine */
-        if($this->kernel->getEnvironment() == 'prod' || $this->kernel->getEnvironment() == 'test')
+        if($this->kernel->getEnvironment() == 'prod')
             $engine = $container->get('templating.engine.php');
         else
             $engine = $container->get('debug.templating.engine.php');

@@ -533,6 +533,8 @@ class ScheduleController extends Controller
      */
     public static function getInstitutions($search)
     {
+        if(empty($search))
+            return new ArrayCollection();
         if(empty(self::$institutions))
         {
             self::$institutions = json_decode(file_get_contents(StudySauceBundle::$institutions_path));

@@ -154,7 +154,6 @@ if(typeof window.jqAjax == 'undefined') {
 
 $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
     var dialog = $('#error-dialog');
-    debugger;
     if(dialog.length > 0)
     {
         var error = '';
