@@ -136,4 +136,9 @@
     {
         padding: 0;
     }
+
+    #partner .plupload
+    {
+        display:none;
+    }
 }
