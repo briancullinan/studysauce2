@@ -4,11 +4,11 @@ Upgrade instruction
 This document describes the changes needed when upgrading because of a BC
 break. For the full list of changes, please look at the Changelog file.
 
-## 1.3 to 2.0
+## 1.3 to 2.0-alpha1
 
 ### User Provider
 
-Using the UserManager as a user provider is no longer supported and is 
+Using the UserManager as a user provider is no longer supported and is
 deprecated. Change your security.yml's provider section to look like:
 
 ```yml
@@ -26,7 +26,32 @@ for the classes in the Model namespace directly, instead
 of having empty extending classes. The User and Group classes in the Entity and
 Document namespaces are deprecated, you should update your User and Group
 classes to extend the classes found in `Model`.
-The old classes will stay until 2.0 is released stable, but throw deprecated warnings.
+The old classes will are still available for now, but throw deprecated warnings. They will be removed
+in the next alpha.
+
+## 1.3.4 to 1.3.5
+
+The characters used in generated tokens have changed. They now include dashes
+and underscores as well. Any routing requirement matching them should be
+updated to ``[\w\-]+``.
+
+Before:
+
+```yaml
+my_route:
+    path: /{token}
+    requirement:
+        token: \w+
+```
+
+After:
+
+```yaml
+my_route:
+    path: /{token}
+    requirement:
+        token: '[\w\-]+'
+```
 
 ## 1.2 to 1.3
 

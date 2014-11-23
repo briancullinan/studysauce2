@@ -44,15 +44,21 @@ function ssMergeStyles(content)
     return styles;
 }
 
+var alreadyLoadedScripts = [];
 function ssMergeScripts(content)
 {
     var scripts = $.merge(content.filter('script[type="text/javascript"]'), content.find('script[type="text/javascript"]'));
 
     $(scripts).each(function () {
-        var url = $(this).attr('src');
-        if (typeof url != 'undefined' && $('script[src="' + url + '"]').length == 0) {
-            console.log(url.replace(/\?.*/ig, ''));
-            $.getScript(url.replace(/\?.*/ig, ''));
+        // TODO: remove version information from link, only load one version per page refresh
+        var url = ($(this).attr('src') || '').replace(/\?.*/ig, '');
+        if (url != '') {
+            // only load script if it hasn't already been loaded
+            if ($('script[src="' + url + '"]').length == 0 && alreadyLoadedScripts.indexOf(url) == -1) {
+                console.log(url);
+                $.getScript(url);
+                alreadyLoadedScripts[alreadyLoadedScripts.length] = url;
+            }
         }
         else {
             try
@@ -114,8 +120,8 @@ $.ajaxPrefilter(function (options, originalOptions) {
         data = {};
     }
 
-    var visits = window.visits;
-    window.visits = [];
+    var visits = window.visits.slice(0, Math.min(10, window.visits.length));
+    window.visits = window.visits.length <= 10 ? [] : window.visits.slice(10, window.visits.length);
     options.data = $.param($.extend(data, { __visits: visits }));
 });
 
@@ -148,11 +154,12 @@ if(typeof window.jqAjax == 'undefined') {
 
 $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
     var dialog = $('#error-dialog');
+    debugger;
     if(dialog.length > 0)
     {
         var error = '';
         try {
-            console.log(thrownError.stack);
+            console.log(thrownError);
             var content = $(jqXHR.responseText);
             if(content.filter('#error'))
                 error = content.filter('#error').find('.pane-content').html();

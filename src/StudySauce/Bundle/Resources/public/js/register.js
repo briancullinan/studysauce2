@@ -60,7 +60,7 @@ jQuery(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             data: {
-                _remember_me: true,
+                _remember_me: 'on',
                 first: account.find('.first-name input').val(),
                 last: account.find('.last-name input').val(),
                 email: account.find('.email input').val(),

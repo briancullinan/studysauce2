@@ -15,7 +15,6 @@ $collection = $router->getRouteCollection();
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="mobile-web-app-capable" content="yes">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <link rel="icon" sizes="72x72" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-72x72.png'); ?>">
@@ -23,12 +22,17 @@ $collection = $router->getRouteCollection();
     <link rel="icon" sizes="152x152" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-152x152.png'); ?>">
     <link rel="icon" sizes="180x180" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-180x180.png'); ?>">
     <link rel="icon" sizes="300x300" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
-    <link rel="apple-touch-icon-precomposed" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
-    <link rel="apple-touch-icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
-    <link rel="shortcut icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/favicon.ico'); ?>">
-    <link rel="image_src" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
+    <link rel="apple-touch-icon-precomposed" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
+    <link rel="apple-touch-icon" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
+    <link rel="shortcut icon" sizes="16x16 32x32 64x64" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/favicon.ico'); ?>">
+    <link rel="image_src" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
     <meta name="description" content="Study Sauce teaches you the most effective study methods and provides you the tools to make the most of your study time.">
-    <meta property="og:image" content="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-google-page.png'); ?>">
+    <meta property="og:image" content="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-startup-image" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-300x300.png'); ?>">
+    <link rel="manifest" href="<?php print $view['assets']->getUrl('bundles/studysauce/js/manifest.json'); ?>">
     <title><?php $view['slots']->output('title', 'StudySauce') ?></title>
 
     <?php foreach ($view['assetic']->stylesheets([

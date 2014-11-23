@@ -5,18 +5,15 @@ namespace StudySauce\Bundle\Controller;
 use Course1\Bundle\Entity\Course1;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
-use FOS\UserBundle\Security\LoginManager;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Symfony\Component\Security\Core\Tests\Encoder\PasswordEncoder;
 
 /**
  * Class LandingController
@@ -128,9 +125,6 @@ class LandingController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        /** @var $user User */
-        $user = $this->getUser();
-
         /** @var PartnerInvite $partner */
         $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $_code]);
         if(empty($partner)) {
@@ -144,8 +138,7 @@ class LandingController extends Controller
                 $partner->setPartner($partnerUser);
             $orm->merge($partner);
             $orm->flush();
-            $response = $this->render('StudySauceBundle:Landing:partners.html.php');
-            $this->logoutUser($userManager, $response);
+            $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:partners.html.php');
             $session = $request->getSession();
             $session->set('partner', $_code);
             return $response;
@@ -164,9 +157,6 @@ class LandingController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
 
-        /** @var $user User */
-        $user = $this->getUser();
-
         /** @var ParentInvite $partner */
         $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
         if(empty($parent)) {
@@ -179,8 +169,7 @@ class LandingController extends Controller
                 $parent->setParent($parentUser);
             $orm->merge($parent);
             $orm->flush();
-            $response = $this->render('StudySauceBundle:Landing:parents.html.php');
-            $this->logoutUser($userManager, $response);
+            $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:parents.html.php');
             $session = $request->getSession();
             $session->set('parent', $_code);
             return $response;
@@ -189,22 +178,24 @@ class LandingController extends Controller
 
     /**
      * @param UserManager $userManager
-     * @param Response $response
+     * @param string $template
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function logoutUser(UserManager $userManager, Response $response)
+    public function logoutUser(UserManager $userManager, $template)
     {
         $loginManager = $this->get('fos_user.security.login_manager');
-        $username = 'guest';
         $this->get('security.context')->setToken(null);
         $this->get('request')->getSession()->invalidate();
         /** @var EncoderFactory $encoder_service */
         $encoder_service = $this->get('security.encoder_factory');
         /** @var PasswordEncoderInterface $encoder */
-        $user = $userManager->findUserByUsername($username);
+        $user = $userManager->findUserByUsername('guest');
         $encoder = $encoder_service->getEncoder($user);
         $password = $encoder->encodePassword('guest', $user->getSalt());
         $this->get('security.context')->setToken(new UsernamePasswordToken($user, $password, 'main', $user->getRoles()));
+        $response = $this->render($template);
         $loginManager->loginUser('main', $user, $response);
+        return $response;
     }
 
     /**

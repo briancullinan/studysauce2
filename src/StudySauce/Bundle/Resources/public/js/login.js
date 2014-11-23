@@ -42,7 +42,7 @@ jQuery(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             data: {
-                _remember_me: true,
+                _remember_me: 'on',
                 email: account.find('.email input').val(),
                 pass: account.find('.password input').val(),
                 csrf_token: account.find('input[name="csrf_token"]').val()

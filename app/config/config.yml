@@ -15,6 +15,9 @@ services:
         calls:
             - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
 
+    security.authentication.rememberme.services.persistent.main:
+        alias: security.authentication.rememberme.services.simplehash.main
+
     session.handler.pdo:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         arguments: ["@pdo", {db_table: session, db_id_col: session_id, db_data_col: session_value, db_time_col: session_time}]
@@ -116,6 +119,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        mappings:
+            FOSUserBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

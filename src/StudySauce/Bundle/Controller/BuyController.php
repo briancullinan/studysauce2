@@ -143,11 +143,11 @@ class BuyController extends Controller
                 $sale->setField('test_request', false);
             $sale->setField('duplicate_window', 120);
             $sale->setSandbox(false);
-            $response = $sale->authorizeAndCapture();
-            if ($response->approved) {
-                $payment->setPayment($response->transaction_id);
+            $aimResponse = $sale->authorizeAndCapture();
+            if ($aimResponse->approved) {
+                $payment->setPayment($aimResponse->transaction_id);
             } else {
-                $error = $response->response_reason_text;
+                $error = $aimResponse->response_reason_text;
             }
 
             $subscription = new \AuthorizeNet_Subscription();
@@ -174,14 +174,14 @@ class BuyController extends Controller
             // TODO: if there is a duplicate subscription, increase the price
 
             // Create the subscription.
-            $sr = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-            $sr->setSandbox(false);
-            $response = $sr->createSubscription($subscription);
-            if ($response->isOk()) {
-                $payment->setSubscription($response->getSubscriptionId());
+            $arbRequest = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
+            $arbRequest->setSandbox(false);
+            $arbResponse = $arbRequest->createSubscription($subscription);
+            if ($arbResponse->isOk()) {
+                $payment->setSubscription($arbResponse->getSubscriptionId());
             }
             else {
-                $error = $response->getMessageText();
+                $error = $arbResponse->getMessageText();
             }
 
             if (isset($error)) {

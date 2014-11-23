@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use FOS\UserBundle\Security\LoginManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -218,6 +219,7 @@ class AccountController extends Controller
             else
                 $response = $this->redirect($this->generateUrl('home'));
 
+            /** @var LoginManager $loginManager */
             $loginManager = $this->get('fos_user.security.login_manager');
             $loginManager->loginUser('main', $user, $response);
 

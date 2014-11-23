@@ -11,11 +11,12 @@
 
 namespace FOS\UserBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-class SecurityController extends ContainerAware
+class SecurityController extends Controller
 {
     public function loginAction(Request $request)
     {
@@ -29,18 +30,18 @@ class SecurityController extends ContainerAware
             $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
             $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
         } else {
-            $error = '';
+            $error = null;
         }
 
-        if ($error) {
-            // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
-            $error = $error->getMessage();
+        if (!$error instanceof AuthenticationException) {
+            $error = null; // The value does not come from the security component.
         }
+
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
 
-        $csrfToken = $this->container->has('form.csrf_provider')
-            ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('authenticate')
             : null;
 
         return $this->renderLogin(array(
@@ -60,9 +61,7 @@ class SecurityController extends ContainerAware
      */
     protected function renderLogin(array $data)
     {
-        $template = sprintf('FOSUserBundle:Security:login.html.%s', $this->container->getParameter('fos_user.template.engine'));
-
-        return $this->container->get('templating')->renderResponse($template, $data);
+        return $this->render('FOSUserBundle:Security:login.html.twig', $data);
     }
 
     public function checkAction()

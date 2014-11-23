@@ -11,4 +11,5 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class Course1Bundle extends Bundle
 {
 
+    const COUNT_LEVEL = 7;
 }
