@@ -617,7 +617,8 @@
         width: 150px;*/
         display:none;
     }
-
+    
+    .course1.step0 h2,
     .course1.step2 h3
     {
         padding-right:0;
