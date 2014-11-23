@@ -10,29 +10,31 @@ function activateMenu(path, noPush) {
 
     // activate the menu
     body.find('.main-menu .active').removeClass('active');
+
+    // do not push when menu is activated from back or forward buttons
+    if(!noPush) {
+        // create a mock link to get the browser to parse pathname, query, and hash
+        var a = document.createElement('a');
+        a.href = path;
+        visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
+        window.history.pushState(window.callbackKeys[i], "", path);
+    }
+    // expand menu groups
     if(item.length > 0) {
-        visits[visits.length] = {path: item[0].pathname, query: item[0].search, hash: item[0].hash, time: (new Date()).toJSON()};
         if(item.parents('ul.collapse').length != 0 &&
             item.parents('ul.collapse')[0] != body.find('.main-menu ul.collapse.in')[0])
             body.find('.main-menu ul.collapse.in').removeClass('in');
         item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
     }
-    else
-    {
-        // create a mock link to get the browser to parse pathname, query, and hash
-        var a = document.createElement('a');
-        a.href = path;
-        visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
-    }
+    if(that.is('a') && that.parents('.panel-pane').length > 0)
+        item = item.add(that);
 
     // download the panel
     if(panel.length == 0) {
-        if(that.is('a') && that.parents('.panel-pane').length > 0)
-            item = item.add(that);
         item.each(function (i, obj) { loadingAnimation($(obj)); });
         if(window.sincluding) {
             setTimeout(function () {
-                activateMenu.apply(that, [path, noPush]);
+                activateMenu.apply(that, [path, true]);
             }, 1000);
             return;
         }
@@ -65,7 +67,7 @@ function activateMenu(path, noPush) {
                         newPane = content.filter('.panel-pane').first();
                     }
                     item.find('.squiggle').stop().remove();
-                    activatePanel(newPane, i, noPush, path);
+                    activatePanel(newPane);
                     window.sincluding = false;
                 }
             },
@@ -77,11 +79,12 @@ function activateMenu(path, noPush) {
     }
     // collapse menus and show panel if it is not already visible
     else if(!panel.is(':visible')) {
-        activatePanel(panel, i, noPush, path);
+        item.find('.squiggle').stop().remove();
+        activatePanel(panel);
     }
 }
 
-function activatePanel(panel, i, noPush, path)
+function activatePanel(panel)
 {
     body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
     body.find('.modal:visible').modal('hide');
@@ -90,8 +93,6 @@ function activatePanel(panel, i, noPush, path)
     setTimeout(function () {
         panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
     }, 100);
-    if(!noPush)
-        window.history.pushState(window.callbackKeys[i], "", path);
 }
 
 function loadingAnimation(that)
