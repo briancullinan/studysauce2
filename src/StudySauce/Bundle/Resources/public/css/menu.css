@@ -1009,18 +1009,6 @@
 
 @media all and (max-width: 700px) {
 
-    body.left-menu
-    {
-        padding-left:220px;
-        margin-right:-220px;
-    }
-
-    body.right-menu
-    {
-        padding-right:220px;
-        margin-left:-220px;
-    }
-
     #left-panel .navbar-toggle .icon-bar
     {
         display:none;
@@ -1038,17 +1026,12 @@
     }
     body.right-menu #right-panel.expanded .navbar-toggle
     {
-        right:205px;
+        right:220px;
     }
 
     body.right-menu #left-panel a[href="#expand"], body.left-menu #right-panel a[href="#expand"]
     {
         display:none;
-    }
-
-    body.left-menu #left-panel a[href="#expand"], body.right-menu #right-panel a[href="#expand"]
-    {
-        position:fixed;
     }
 
     body.left-menu #left-panel.expanded .navbar-toggle, body.right-menu #right-panel.expanded .navbar-toggle,
@@ -1182,21 +1165,20 @@
         border-color:transparent;
     }
 
-    #left-panel.expanded
-    {
-    }
-
-    #right-panel.expanded
-    {
-        left:100%;
-    }
-
-    .navbar-toggle,
-    #right-panel .navbar-toggle
+    #left-panel .navbar-toggle
     {
         width:40px;
         left:-5px;
-        transition: linear .15s;
+        transition: left linear .15s;
+        position: fixed;
+    }
+
+    #right-panel .navbar-toggle
+    {
+        width:40px;
+        transition: right linear .15s;
+        position: fixed;
+        right:-5px;
     }
 
     #left-panel .navbar-toggle
@@ -1205,8 +1187,7 @@
     }
 
     #right-panel a[href="#expand"],
-    #right-panel.collapsed a[href="#expand"],
-    #right-panel .navbar-toggle
+    #right-panel.collapsed a[href="#expand"]
     {
         left: auto;
         right:17px;

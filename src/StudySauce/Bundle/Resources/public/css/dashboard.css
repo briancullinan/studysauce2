@@ -81,6 +81,7 @@
     width: 100%;
     padding:70px 240px 20px 240px;
     box-sizing: border-box;
+    position:relative;
 }
 
 aside + .panel-pane,
@@ -359,9 +360,27 @@ a[href="#remove-deadline"]:hover
         position: fixed;
     }
 
+    body.left-menu .footer,
+    body.right-menu .footer
+    {
+        display:none;
+    }
+
     .panel-pane {
         padding: 50px 0 40px 0;
         max-width: 900px;
+        transition: left linear .15s;
+        left:0;
+    }
+
+    body.left-menu .panel-pane
+    {
+        left:220px;
+    }
+
+    body.right-menu .panel-pane
+    {
+        left:-220px;
     }
 
     .dashboard-home .footer
@@ -375,12 +394,6 @@ a[href="#remove-deadline"]:hover
     {
         padding:10px 15px;
         border-radius: 0;
-    }
-
-    body.left-menu .footer,
-    body.right-menu .footer
-    {
-        display: none;
     }
 
 }

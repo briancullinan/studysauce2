@@ -1,99 +1,4 @@
-var body = null,
-    DASHBOARD_MARGINS = {};
-
-function activateMenu(path, noPush) {
-    var that = $(this);
-    var i = window.callbackUri.indexOf(path),
-        panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
-        panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
-        item = body.find('.main-menu a[href^="' + window.callbackUri[window.callbackKeys.indexOf(window.callbackKeys[i].replace(/-step[0-9]+/g, ''))] + '"]').first();
-
-    // activate the menu
-    body.find('.main-menu .active').removeClass('active');
-
-    // do not push when menu is activated from back or forward buttons
-    if(!noPush) {
-        // create a mock link to get the browser to parse pathname, query, and hash
-        var a = document.createElement('a');
-        a.href = path;
-        visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
-        window.history.pushState(window.callbackKeys[i], "", path);
-    }
-    // expand menu groups
-    if(item.length > 0) {
-        if(item.parents('ul.collapse').length != 0 &&
-            item.parents('ul.collapse')[0] != body.find('.main-menu ul.collapse.in')[0])
-            body.find('.main-menu ul.collapse.in').removeClass('in');
-        item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
-    }
-    if(that.is('a') && that.parents('.panel-pane').length > 0)
-        item = item.add(that);
-
-    // download the panel
-    if(panel.length == 0) {
-        item.each(function (i, obj) { loadingAnimation($(obj)); });
-        if(window.sincluding) {
-            setTimeout(function () {
-                activateMenu.apply(that, [path, true]);
-            }, 1000);
-            return;
-        }
-        window.sincluding = true;
-        $.ajax({
-            url: window.callbackPaths[window.callbackKeys[i]],
-            type: 'GET',
-            dataType: 'text',
-            success: function (tab) {
-                var content = $(tab),
-                    panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
-                    styles = ssMergeStyles(content),
-                    scripts = ssMergeScripts(content);
-                content = content.not(styles).not(scripts);
-
-                // don't ever add panes that are already on the page, this is to help with debugging, but should never really happen
-                if (panelIds.length > 0)
-                    panes = panes.not('#' + panelIds.join(', #'));
-
-                if (panes.length > 0) {
-                    content.filter('[id]').each(function () {
-                        var id = $(this).attr('id');
-                        if($('#' + id).length > 0)
-                            content = content.not('#' + id);
-                    });
-                    panes.hide().insertBefore(body.find('.footer'));
-                    content.not(panes).insertBefore(body.find('.footer'));
-                    var newPane = content.filter('#' + window.callbackKeys[i]);
-                    if (newPane.length == 0) {
-                        newPane = content.filter('.panel-pane').first();
-                    }
-                    item.find('.squiggle').stop().remove();
-                    activatePanel(newPane);
-                    window.sincluding = false;
-                }
-            },
-            error:function () {
-                window.sincluding = false;
-                item.find('.squiggle').stop().remove();
-            }
-        });
-    }
-    // collapse menus and show panel if it is not already visible
-    else if(!panel.is(':visible')) {
-        item.find('.squiggle').stop().remove();
-        activatePanel(panel);
-    }
-}
-
-function activatePanel(panel)
-{
-    body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-    body.find('.modal:visible').modal('hide');
-    body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-    panel.delay(75).fadeIn(75);
-    setTimeout(function () {
-        panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
-    }, 100);
-}
+var DASHBOARD_MARGINS = {};
 
 function loadingAnimation(that)
 {
@@ -118,7 +23,102 @@ function loadingAnimation(that)
 $(document).ready(function () {
 
     // TODO: remove old unused tabs
-    body = $('body');
+    var body = $('body');
+
+    function activateMenu(path, noPush) {
+        var that = $(this);
+        var i = window.callbackUri.indexOf(path),
+            panel = $('#' + window.callbackKeys[i] + '.panel-pane'),
+            panelIds = body.find('.panel-pane').map(function () {return $(this).attr('id');}).toArray(),
+            item = body.find('.main-menu a[href^="' + window.callbackUri[window.callbackKeys.indexOf(window.callbackKeys[i].replace(/-step[0-9]+/g, ''))] + '"]').first();
+
+        // activate the menu
+        body.find('.main-menu .active').removeClass('active');
+
+        // do not push when menu is activated from back or forward buttons
+        if(!noPush) {
+            // create a mock link to get the browser to parse pathname, query, and hash
+            var a = document.createElement('a');
+            a.href = path;
+            visits[visits.length] = {path: a.pathname, query: a.search, hash: a.hash, time: (new Date()).toJSON()};
+            window.history.pushState(window.callbackKeys[i], "", path);
+        }
+        // expand menu groups
+        if(item.length > 0) {
+            if(item.parents('ul.collapse').length != 0 &&
+                item.parents('ul.collapse')[0] != body.find('.main-menu ul.collapse.in')[0])
+                body.find('.main-menu ul.collapse.in').removeClass('in');
+            item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+        }
+        if(that.is('a') && that.parents('.panel-pane').length > 0)
+            item = item.add(that);
+
+        // download the panel
+        if(panel.length == 0) {
+            item.each(function (i, obj) { loadingAnimation($(obj)); });
+            if(window.sincluding) {
+                setTimeout(function () {
+                    activateMenu.apply(that, [path, true]);
+                }, 1000);
+                return;
+            }
+            window.sincluding = true;
+            $.ajax({
+                url: window.callbackPaths[window.callbackKeys[i]],
+                type: 'GET',
+                dataType: 'text',
+                success: function (tab) {
+                    var content = $(tab),
+                        panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
+                        styles = ssMergeStyles(content),
+                        scripts = ssMergeScripts(content);
+                    content = content.not(styles).not(scripts);
+
+                    // don't ever add panes that are already on the page, this is to help with debugging, but should never really happen
+                    if (panelIds.length > 0)
+                        panes = panes.not('#' + panelIds.join(', #'));
+
+                    if (panes.length > 0) {
+                        content.filter('[id]').each(function () {
+                            var id = $(this).attr('id');
+                            if($('#' + id).length > 0)
+                                content = content.not('#' + id);
+                        });
+                        panes.hide().insertBefore(body.find('.footer'));
+                        content.not(panes).insertBefore(body.find('.footer'));
+                        var newPane = content.filter('#' + window.callbackKeys[i]);
+                        if (newPane.length == 0) {
+                            newPane = content.filter('.panel-pane').first();
+                        }
+                        item.find('.squiggle').stop().remove();
+                        activatePanel(newPane);
+                        window.sincluding = false;
+                    }
+                },
+                error:function () {
+                    window.sincluding = false;
+                    item.find('.squiggle').stop().remove();
+                }
+            });
+        }
+        // collapse menus and show panel if it is not already visible
+        else if(!panel.is(':visible')) {
+            item.find('.squiggle').stop().remove();
+            activatePanel(panel);
+        }
+    }
+    window.activateMenu = activateMenu;
+
+    function activatePanel(panel)
+    {
+        collapseMenu.apply(this);
+        body.find('.modal:visible').modal('hide');
+        body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
+        panel.delay(75).fadeIn(75);
+        setTimeout(function () {
+            panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
+        }, 100);
+    }
 
     function expandMenu(evt)
     {
@@ -131,14 +131,31 @@ $(document).ready(function () {
             body.find('#left-panel, #right-panel').not(parent).removeClass('expanded').addClass('collapsed');
             // re-render visible panels
             body.find('.panel-pane:visible').redraw();
+            var top = -$(window).scrollTop();
             if(parent.is('#left-panel'))
                 body.removeClass('right-menu').addClass('left-menu');
             else
                 body.removeClass('left-menu').addClass('right-menu');
             parent.removeClass('collapsed').addClass('expanded');
+            body.find('.panel-pane:visible').css('top', top);
+            $(window).scrollTop(0);
             return false;
         }
         return true;
+    }
+
+    function collapseMenu(evt)
+    {
+        if(body.is('.left-menu') || body.is('.right-menu')) {
+            if($(this).is('[href="#collapse"]'))
+                evt.preventDefault();
+            // collapse menus
+            body.removeClass('right-menu left-menu');
+            var top = body.find('.panel-pane:visible').css('top');
+            body.find('.panel-pane:visible').css('top', '');
+            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+            $(window).scrollTop(-parseInt(top));
+        }
     }
 
     setTimeout(function () {
@@ -168,13 +185,6 @@ $(document).ready(function () {
         $(this).remove();
     });
 
-    body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
-        evt.preventDefault();
-        var parent = $(this).parents('#left-panel, #right-panel');
-        body.removeClass('right-menu left-menu');
-        parent.removeClass('expanded').addClass('collapsed');
-    });
-
     body.on('click', '.main-menu a:not([href])', function (evt) {
         expandMenu.apply(this, [evt]);
         if($($(this).attr('data-parent')).find($(this).attr('data-target')).is('.in')){
@@ -187,13 +197,8 @@ $(document).ready(function () {
     });
     $(window).trigger('resize');
 
-    body.on('click', ':not(#left-panel):not(#right-panel):not(#left-panel *):not(#right-panel *)', function () {
-        if(body.is('.left-menu') || body.is('.right-menu')) {
-            // collapse menus
-            body.removeClass('right-menu left-menu');
-            body.find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
-        }
-    });
+    body.on('click', ':not(#left-panel):not(#right-panel):not(#left-panel *):not(#right-panel *)', collapseMenu);
+    body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', collapseMenu);
 
     function handleLink(evt) {
         var that = $(this),
@@ -214,7 +219,7 @@ $(document).ready(function () {
             // check if there is a tab with the selected url
             callback == -1) {
             visits[visits.length] = {path: el.pathname, query: el.search, hash: el.hash, time:(new Date()).toJSON()};
-            body.removeClass('right-menu left-menu').find('#left-panel, #right-panel').removeClass('expanded').addClass('collapsed');
+            collapseMenu.apply(this);
         }
         // if the path clicked is a callback, use callback to load the new tab
         else
