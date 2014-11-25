@@ -179,11 +179,15 @@ $view['slots']->start('body'); ?>
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planUpgrade'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro1'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro2'),['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro3'),['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro4'),['strategy' => 'sinclude']);
+if($isDemo) {
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planUpgrade'));
+}
+if($showPlanIntro) {
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro1'));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro2'),['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro3'),['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro4'),['strategy' => 'sinclude']);
+}
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);

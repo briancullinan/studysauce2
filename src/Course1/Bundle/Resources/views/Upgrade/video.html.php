@@ -12,7 +12,7 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
             <iframe id="course1_upgrade-player" src="https://www.youtube.com/embed/blKtz-qZVNg?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1"></iframe>
         </div>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 2]); ?>" class="more">Next</a>
+            <a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 2]); ?>" class="more">Next</a><a href="#play" class="more">Play</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

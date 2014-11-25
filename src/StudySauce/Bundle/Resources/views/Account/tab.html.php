@@ -64,7 +64,7 @@ $view['slots']->start('body'); ?>
         <div class="new-password">
             <label class="input"><span>New password</span><input type="password" placeholder="No change &bullet; &bullet; &bullet; &bullet; &bullet; &bullet;" value=""></label>
         </div>
-        <div class="form-actions highlighted-link invalid">
+        <div class="highlighted-link">
             <div class="edit-icons">
                 <a href="#edit-account">Edit information</a>
                 <a href="#edit-password">Change password</a>
@@ -74,7 +74,7 @@ $view['slots']->start('body'); ?>
                     ?><a href="<?php print $view['router']->generate('premium'); ?>" class="more">Upgrade</a><?php
                 }?>
             </div>
-            <a href="#save-account" class="more">Save</a>
+            <div class="form-actions"><a href="#save-account" class="more">Save</a></div>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
     </div>

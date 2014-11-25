@@ -147,9 +147,19 @@ class PartnerController extends Controller
         ;
         */
 
+        $showPartnerIntro = false;
+        if(count($users) && empty($user->getProperty('seen_partner_intro'))) {
+            $showPartnerIntro = true;
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $user->setProperty('seen_partner_intro', true);
+            $userManager->updateUser($user);
+        }
+
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
             'groups' => $groups,
-            'users' => $users
+            'users' => $users,
+            'showPartnerIntro' => $showPartnerIntro
         ]);
     }
 

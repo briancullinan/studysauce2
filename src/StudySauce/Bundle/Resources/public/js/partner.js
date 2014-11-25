@@ -113,7 +113,6 @@ $(document).ready(function () {
         }
         partnerFunc();
     });
-    body.find('#partner:visible').trigger('show');
 
     body.on('click', '#partner a[href="#partner-save"]', function (evt) {
         var partner = jQuery('#partner');

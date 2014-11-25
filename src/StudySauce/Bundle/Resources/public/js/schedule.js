@@ -417,5 +417,4 @@ $(document).ready(function () {
         }
         planFunc.apply(schedule.find('.schedule .class-row'));
     });
-    body.find('#schedule:visible').trigger('show');
 });

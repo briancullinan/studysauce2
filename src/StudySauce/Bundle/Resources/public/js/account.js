@@ -33,7 +33,6 @@ jQuery(document).ready(function() {
         $(this).data('state', getHash());
         accountFunc();
     });
-    body.find('#account:visible').trigger('show');
     body.on('change', '#account .first-name input, #account .last-name input, #account .email input, ' +
         '#account .password input, #account .new-password input', accountFunc);
     body.on('keyup', '#account .first-name input, #account .last-name input, #account .email input, ' +

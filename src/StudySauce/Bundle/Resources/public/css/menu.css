@@ -779,6 +779,7 @@
 #right-panel a[href="#expand"]
 {
     color:#555555;
+    text-align: right;
 }
 
 #right-panel a[href="#expand"]:hover
@@ -1010,14 +1011,14 @@
 
     body.left-menu
     {
-        left:220px;
-        overflow-x:hidden;
+        padding-left:220px;
+        margin-right:-220px;
     }
 
     body.right-menu
     {
-        left:-220px;
-        overflow-x:hidden;
+        padding-right:220px;
+        margin-left:-220px;
     }
 
     #left-panel .navbar-toggle .icon-bar
@@ -1037,7 +1038,7 @@
     }
     body.right-menu #right-panel.expanded .navbar-toggle
     {
-        right:25px;
+        right:205px;
     }
 
     body.right-menu #left-panel a[href="#expand"], body.left-menu #right-panel a[href="#expand"]
@@ -1045,10 +1046,15 @@
         display:none;
     }
 
+    body.left-menu #left-panel a[href="#expand"], body.right-menu #right-panel a[href="#expand"]
+    {
+        position:fixed;
+    }
+
     body.left-menu #left-panel.expanded .navbar-toggle, body.right-menu #right-panel.expanded .navbar-toggle,
     body.left-menu #left-panel a[href="#expand"], body.right-menu #right-panel a[href="#expand"]
     {
-        display:block;
+        display:inline-block;
     }
 
     #right-panel .main-menu a[href*="/home"] span
@@ -1162,6 +1168,7 @@
     #left-panel.collapsed,
     #right-panel.collapsed
     {
+        padding-top:0;
         width:0;
         z-index: 2100;
     }
@@ -1170,7 +1177,6 @@
     #left-panel.expanded, #right-panel.expanded
     {
         padding-top:0;
-        padding-bottom:0;
         background:transparent none;
         color:#ffffff;
         border-color:transparent;
@@ -1178,12 +1184,11 @@
 
     #left-panel.expanded
     {
-        left: -220px;
     }
 
     #right-panel.expanded
     {
-        right: -220px;
+        left:100%;
     }
 
     .navbar-toggle,
@@ -1191,6 +1196,7 @@
     {
         width:40px;
         left:-5px;
+        transition: linear .15s;
     }
 
     #left-panel .navbar-toggle

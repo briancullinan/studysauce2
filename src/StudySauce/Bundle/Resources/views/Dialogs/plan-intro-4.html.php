@@ -9,3 +9,7 @@ Tip #4 - Try out different study strategies
 <p>Click on the study sessions listed below the calendar to expand the session.  Once expanded, you will see the recommended study strategy.</p>
 <?php $view['slots']->stop();
 
+$view['slots']->start('modal-footer') ?>
+<a href="#close" class="btn btn-primary" data-dismiss="modal">Done</a>
+<?php $view['slots']->stop() ?>
+

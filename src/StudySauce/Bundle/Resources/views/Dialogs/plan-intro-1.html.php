@@ -10,6 +10,6 @@ Tip #1 - Further customize your plan
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-footer') ?>
-<a href="#plan-intro-2" class="btn btn-primary">Next</a>
+<a href="#plan-intro-2" class="btn btn-primary" data-toggle="modal">Next</a>
 <?php $view['slots']->stop() ?>
 

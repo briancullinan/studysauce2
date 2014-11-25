@@ -32,7 +32,6 @@ jQuery(document).ready(function() {
             $(this).data('state', getHash());
         accountFunc();
     });
-    body.find('#register:visible').trigger('show');
 
     body.on('change', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
     body.on('keyup', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);

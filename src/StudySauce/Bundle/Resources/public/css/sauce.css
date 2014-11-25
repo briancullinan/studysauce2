@@ -21,13 +21,13 @@ html, body
     vertical-align: baseline;
     text-align: justify;
     position:relative;
-    width:auto;
+    width:100%;
     left:0;
 }
 
 body
 {
-    transition: left linear .15s;
+    transition: linear .15s;
     height:auto;
 }
 

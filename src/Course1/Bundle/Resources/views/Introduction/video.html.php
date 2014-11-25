@@ -13,7 +13,7 @@ $view['slots']->start('body'); ?>
             <iframe id="course1_introduction-player" src="https://www.youtube.com/embed/KgCJ5yDISNs?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1"></iframe>
         </div>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('course1_introduction', ['_step' => 2]); ?>" class="more">Next</a>
+            <a href="<?php print $view['router']->generate('course1_introduction', ['_step' => 2]); ?>" class="more">Next</a><a href="#play" class="more">Play</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

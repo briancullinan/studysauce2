@@ -83,10 +83,11 @@ $(document).ready(function () {
             body.find('.course1.step0 h3').textfill({widthOnly: true});
         }, 150);
     });
-    body.find('.course1.step0:visible').trigger('show');
+
     $(window).resize(function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
     });
+
     body.on('show', '.course1.step1', function () {
         if(!$(this).is('.loaded'))
         {
@@ -94,16 +95,40 @@ $(document).ready(function () {
             onYouTubeIframeAPIReady.apply(this);
         }
     });
-    body.on('hide', '.course1.step1', function () {
+
+    body.on('yt1', '.course1.step1', function () {
+        var actions = $(this).find('.highlighted-link');
+        actions.addClass('played invalid');
+        setTimeout(function () {
+            actions.removeClass('invalid');
+        }, 10000);
+    });
+    body.on('yt0', '.course1.step1', function () {
+        $(this).find('.highlighted-link').removeClass('invalid').addClass('played');
+    });
+    body.on('yt2', '.course1.step1', function () {
+        $(this).find('.highlighted-link').removeClass('invalid').addClass('played');
+    });
+
+    body.on('click', '.course1.step1 .highlighted-link a[href="#play"]', function () {
+        var step = $(this).parents('.course1');
         $(window.players).each(function () {
-            if($(this.d).is('.course1.step1 iframe'))
+            if($(this.d).parents(step).length > 0)
+                this.playVideo();
+        });
+    });
+
+    body.on('hide', '.course1.step1', function () {
+        var step = $(this).parents('.course1');
+        $(window.players).each(function () {
+            if($(this.d).parents(step).length > 0)
                 this.pauseVideo();
         });
     });
+
     body.on('change', '#course1_introduction-step4 textarea', introductionFunc);
     body.on('keyup', '#course1_introduction-step4 textarea', introductionFunc);
     body.on('show', '#course1_introduction-step4', introductionFunc);
-    body.find('#course1_introduction-step4:visible').trigger('show');
     body.on('click', '#course1_introduction-step4 .highlighted-link a', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_introduction-step4'),
@@ -127,7 +152,6 @@ $(document).ready(function () {
 
     body.on('change', '#course1_introduction-step2 input[type="radio"]', validateQuiz1);
     body.on('show', '#course1_introduction-step2', validateQuiz1);
-    body.find('#course1_introduction-step2:visible').trigger('show');
     body.on('click', '#course1_introduction-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_introduction-step2'),
@@ -160,7 +184,6 @@ $(document).ready(function () {
     body.on('change', '#course1_setting_goals-step2 input', validateQuiz2);
     body.on('keyup', '#course1_setting_goals-step2 input[type="text"]', validateQuiz2);
     body.on('show', '#course1_setting_goals-step2', validateQuiz2);
-    body.find('#course1_setting_goals-step2:visible').trigger('show');
     body.on('click', '#course1_setting_goals-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_setting_goals-step2'),
@@ -203,7 +226,6 @@ $(document).ready(function () {
     body.on('change', '#course1_procrastination-step2 input', validateQuiz3);
     body.on('keyup', '#course1_procrastination-step2 input[type="text"]', validateQuiz3);
     body.on('show', '#course1_procrastination-step2', validateQuiz3);
-    body.find('#course1_procrastination-step2:visible').trigger('show');
     body.on('click', '#course1_procrastination-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_procrastination-step2'),
@@ -243,7 +265,6 @@ $(document).ready(function () {
 
     body.on('change', '#course1_distractions-step2 input', validateQuiz4);
     body.on('show', '#course1_distractions-step2', validateQuiz4);
-    body.find('#course1_distractions-step2:visible').trigger('show');
     body.on('click', '#course1_distractions-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_distractions-step2'),
@@ -296,7 +317,6 @@ $(document).ready(function () {
 
     body.on('change', '#course1_environment-step2 input', validateQuiz5);
     body.on('show', '#course1_environment-step2', validateQuiz5);
-    body.find('#course1_environment-step2:visible').trigger('show');
     body.on('click', '#course1_environment-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_environment-step2'),
@@ -351,7 +371,6 @@ $(document).ready(function () {
     body.on('change', '#course1_partners-step2 input', validateQuiz6);
     body.on('keyup', '#course1_partners-step2 input[type="text"]', validateQuiz6);
     body.on('show', '#course1_partners-step2', validateQuiz6);
-    body.find('#course1_partners-step2:visible').trigger('show');
     body.on('click', '#course1_partners-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_partners-step2'),
@@ -402,7 +421,6 @@ $(document).ready(function () {
 
     body.on('change', '#course1_upgrade-step2 input', validateQuiz7);
     body.on('show', '#course1_upgrade-step2', validateQuiz7);
-    body.find('#course1_upgrade-step2:visible').trigger('show');
     body.on('click', '#course1_upgrade-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
         var step = body.find('#course1_upgrade-step2'),

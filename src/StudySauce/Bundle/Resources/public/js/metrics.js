@@ -2,7 +2,7 @@
 $(document).ready(function () {
     var body = $('body');
 
-    var margins = [25, 0, 45, 0];
+    var margins = [25, -15, 45, 0];
 
     var color = d3.scale.category10().range(["#FF1100", "#FF9900", "#FFDD00", "#BBEE00", "#33DD00",
         "#009999", "#1133AA", "#6611AA", "#BB0088"]);
@@ -59,7 +59,6 @@ $(document).ready(function () {
         }
         resizeComponents();
     });
-    body.find('#metrics:visible,#home:visible').trigger('show');
     $(window).resize(resizeComponents);
 
     function updateHistory(newHistory) {
@@ -240,7 +239,7 @@ $(document).ready(function () {
     function redraw() {
         var timeline = $('#timeline:visible, .timeline:visible').find('svg'),
             h = (timeline.width() * 12 / 16) - margins[0] - margins[2],
-            w = timeline.width() - margins[1] - margins[3],
+            w = timeline.width(),
             svg = d3.selectAll(timeline.toArray());
 
         if (classes.length == 0)

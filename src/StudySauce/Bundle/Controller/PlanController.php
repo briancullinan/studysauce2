@@ -77,14 +77,24 @@ class PlanController extends Controller
         /** @var $user \StudySauce\Bundle\Entity\User */
         if(empty($user))
             $user = $this->getUser();
+
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
 
         // get demo schedule instead
+        $showPlanIntro = false; // TODO: false in production
         if (empty($schedule) || empty($schedule->getCourses()) || !$user->hasRole('ROLE_PAID')) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
+        }
+        // show intro for paid users
+        elseif(empty($user->getProperty('seen_plan_intro'))) {
+            $showPlanIntro = true;
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $user->setProperty('seen_plan_intro', true);
+            $userManager->updateUser($user);
         }
 
         if($_week !== 0 && empty($_week)) {
@@ -111,7 +121,8 @@ class PlanController extends Controller
                 'jsonEvents' =>  self::getJsonEvents($events, array_values($courses)),
                 'user' => $user,
                 'strategies' => self::getStrategies($schedule),
-                'week' => $_week
+                'week' => $_week,
+                'showPlanIntro' => $showPlanIntro
             ]);
     }
 

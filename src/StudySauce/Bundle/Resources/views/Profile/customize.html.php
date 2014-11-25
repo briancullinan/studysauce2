@@ -42,9 +42,9 @@ $view['slots']->start('body'); ?>
         <div class="study-types">
             <h3>What is the primary type of studying you expect to do in this class? <span>Q: 1/2</span></h3>
             <header>
-                <label>Memorization</label>
-                <label>Reading/<br/>writing</label>
-                <label>Conceptual<br/>application</label>
+                <label title="Class will primarily test your ability to remember definitions or terms">Memorization</label>
+                <label title="Class work focuses on heavy reading and writing">Reading / <br/>writing</label>
+                <label title="Class will focus on deeper understanding of materials">Conceptual <br/>application</label>
             </header>
             <?php
             foreach($courses as $i => $c)
@@ -52,17 +52,20 @@ $view['slots']->start('body'); ?>
                 /** @var Course $c */
                 ?>
                 <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
-                <label class="radio"><span>Memorization</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Reading / <br/>writing</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="reading" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Conceptual <br/>application</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label title="Class will primarily test your ability to remember definitions or terms"
+                    class="radio"><span>Memorization</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label title="Class work focuses on heavy reading and writing"
+                    class="radio"><span>Reading / <br/>writing</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="reading" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label title="Class will focus on deeper understanding of materials"
+                    class="radio"><span>Conceptual <br/>application</span><input name="profile-type-<?php print $c->getId(); ?>" type="radio" value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>
         </div>
         <div class="study-difficulty">
             <h3>What is the primary type of studying you expect to do in this class? <span>Q: 2/2</span></h3>
             <header>
-                <label>Easy</label>
-                <label>Average</label>
-                <label>Tough</label>
+                <label title="Class should require less homework and/or be less difficult than most classes.  Will require less than 2 hours of studying for every hour of class">Easy</label>
+                <label title="Class will be a pretty standard amount of homework/difficulty.  Will require ~2 hours studying for every hour of class">Average</label>
+                <label title="Class will require much more homework and focus than others.  ~3 hours studying for every hour of class">Tough</label>
             </header>
             <?php
             foreach($courses as $i => $c)
@@ -70,9 +73,12 @@ $view['slots']->start('body'); ?>
                 /** @var Course $c */
                 ?>
                 <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
-                <label class="radio"><span>Easy</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="easy" <?php print ($c->getStudyDifficulty() == 'easy' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'average' ? 'checked="checked"' : ''); ?>><i></i></label>
-                <label class="radio"><span>Tough</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="tough" <?php print ($c->getStudyDifficulty() == 'tough' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label title="Class should require less homework and/or be less difficult than most classes.  Will require less than 2 hours of studying for every hour of class"
+                    class="radio"><span>Easy</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="easy" <?php print ($c->getStudyDifficulty() == 'easy' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label title="Class will be a pretty standard amount of homework/difficulty.  Will require ~2 hours studying for every hour of class"
+                    class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'average' ? 'checked="checked"' : ''); ?>><i></i></label>
+                <label title="Class will require much more homework and focus than others.  ~3 hours studying for every hour of class"
+                    class="radio"><span>Tough</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="tough" <?php print ($c->getStudyDifficulty() == 'tough' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>
         </div>
         <div class="form-actions highlighted-link">

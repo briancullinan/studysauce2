@@ -5,14 +5,24 @@ function onYouTubeIframeAPIReady() {
     var frames = $(this).find('iframe[src*="youtube.com/embed"]');
     var players = [];
     frames.each(function () {
-        players[players.length] = new YT.Player($(this).attr('id'), {
+        var ytPlayer = new YT.Player($(this).attr('id'), {
             events: {
                 'onStateChange': function (e) {
+                    $(ytPlayer.d).trigger('yt' + e.data);
+                    /*
+                    -1 – unstarted
+                     0 – ended
+                     1 – playing
+                     2 – paused
+                     3 – buffering
+                     5 – video cued
+                     */
                     _gaq.push(['_trackPageview', location.pathname + location.search  + '#yt' + e.data]);
                     visits[visits.length] = {path: window.location.pathname, query: window.location.search, hash: '#yt' + e.data, time:(new Date()).toJSON()};
                 }
             }
         });
+        players[players.length] = ytPlayer;
     });
     window.players = $.merge(window.players, players);
 }
@@ -54,7 +64,7 @@ function ssMergeScripts(content)
         var url = ($(this).attr('src') || '').replace(/\?.*/ig, '');
         if (url != '') {
             // only load script if it hasn't already been loaded
-            if ($('script[src="' + url + '"]').length == 0 && alreadyLoadedScripts.indexOf(url) == -1) {
+            if ($('script[src^="' + url + '"]').length == 0 && alreadyLoadedScripts.indexOf(url) == -1) {
                 console.log(url);
                 $.getScript(url);
                 alreadyLoadedScripts[alreadyLoadedScripts.length] = url;
@@ -103,6 +113,23 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    $('body').on('show.bs.modal', '.modal', function () {
+        var modals = $('.modal');
+        //if(backdrops.length > 1)
+        if(modals.length > 0)
+            modals.each(function () {
+                if($(this).is(':visible')) {
+                    $(this).modal('hide').finish();
+                }
+                if($(this).data('bs.modal') != null) {
+                    $(this).data('bs.modal').removeBackdrop();
+                }
+            });
+        $('.modal-backdrop').remove();
+    });
+
 });
 
 $.ajaxPrefilter(function (options, originalOptions) {

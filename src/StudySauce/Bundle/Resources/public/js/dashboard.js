@@ -150,6 +150,10 @@ $(document).ready(function () {
         panel.trigger('show');
     }, 100);
 
+    body.on('mouseenter', '*[title]:not([original-title])', function () {
+        $(this).tipsy().trigger('mouseenter');
+    });
+
     body.on('show', '#home', function () {
         // TODO: add mobile check here?
         if (typeof navigator != 'undefined' &&
@@ -163,7 +167,6 @@ $(document).ready(function () {
     body.on('hidden.bs.modal', '#bookmark', function () {
         $(this).remove();
     });
-    body.find('#home:visible').trigger('show');
 
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', function (evt) {
         evt.preventDefault();
@@ -199,6 +202,12 @@ $(document).ready(function () {
             callback = window.callbackUri.indexOf(path);
         if(!expandMenu.apply(this, [evt]))
             return;
+        if($(this).is('.invalid a.more'))
+        {
+            evt.preventDefault();
+            evt.stopPropagation();
+            return;
+        }
 
         // the path is not a callback so just return normally
         if(typeof window.history == 'undefined' || typeof window.history.pushState == 'undefined' ||

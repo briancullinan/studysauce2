@@ -64,6 +64,7 @@ $(document).ready(function () {
             userlist.find('th:nth-child(5)').html('<select><option>' + advisers.join("</option><option>") + '</option></select>');
 
         }
+        $('#partner-advice-1').modal();
     });
 
     body.on('click', '#userlist a[href="#change-status"]', function (evt) {

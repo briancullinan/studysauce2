@@ -82,7 +82,6 @@ $(document).ready(function () {
             setClock();
         }, 150);
     });
-    body.find('#checkin:visible,#home:visible').trigger('show');
 
     function resetClock()
     {

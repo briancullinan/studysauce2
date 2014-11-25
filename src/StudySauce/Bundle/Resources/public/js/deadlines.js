@@ -60,7 +60,7 @@ $(document).ready(function () {
             datesFunc.apply($(this).find('.deadline-row'));
         }
     });
-    body.find('#deadlines:visible').trigger('show');
+
     body.on('click', '#deadlines .deadline-row a[href="#edit-deadline"]', function (evt) {
         var deadlines = $('#deadlines');
         evt.preventDefault();

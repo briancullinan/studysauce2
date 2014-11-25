@@ -9,5 +9,5 @@ $view['slots']->start('modal-body') ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>
-<a href="#partner-advice-2" class="more btn btn-primary" data-toggle="modal">Next</a>
+<a href="#partner-advice-2" class="btn btn-primary" data-toggle="modal">Next</a>
 <?php $view['slots']->stop() ?>

@@ -48,11 +48,26 @@
     padding-bottom: 35%;
 }
 
+#metrics h3
+{
+    margin-top:0;
+}
+
+#metrics h2
+{
+    margin-bottom:40px;
+}
+
+#metrics hr
+{
+    margin-top:40px;
+}
+
 #metrics #legend {
     text-align: center;
     width: 30%;
     vertical-align: top;
-    margin: 20px 0 0;
+    margin: 0;
     padding: 0;
     display: inline-block;
     overflow: hidden;

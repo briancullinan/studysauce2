@@ -224,8 +224,8 @@ $(document).ready(function () {
             });
         else
             $('#plan-upgrade').modal('hide');
+        $('#plan-intro-1').modal();
     });
-    body.find('#plan:visible').trigger('show');
 
     body.on('click', 'a[href="#bill-parents"]', function () {
         $('#plan-upgrade').modal('hide');
@@ -265,7 +265,6 @@ $(document).ready(function () {
             });
         }, 100);
     });
-    body.find('#plan:visible').trigger('show');
 
     body.on('click', '#plan .sort-by a[href="#expand"]', function () {
         var plans = $('#plan');

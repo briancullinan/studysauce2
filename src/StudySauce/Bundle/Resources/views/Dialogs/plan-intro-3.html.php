@@ -10,6 +10,6 @@ Tip #3 - After class study sessions
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-footer') ?>
-<a href="#plan-intro-4" class="btn btn-primary">Next</a>
+<a href="#plan-intro-4" class="btn btn-primary" data-toggle="modal">Next</a>
 <?php $view['slots']->stop() ?>
 

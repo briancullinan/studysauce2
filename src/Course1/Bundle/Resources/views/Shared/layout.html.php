@@ -27,7 +27,7 @@ if (!$courseIncluded) {
     $view['slots']->start('sincludes');
     $pos = strpos($request->getUri(), '/_fragment');
     if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment')) {
-        // TODO: include courses from the index page
+        // include courses from the index page
         if ($app->getRequest()->get('_step') != 3) {
             echo $view['actions']->render(
                 new ControllerReference($controller, ['_step' => 3, '_format' => 'tab']),

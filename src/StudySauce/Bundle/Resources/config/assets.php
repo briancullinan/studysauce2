@@ -24,6 +24,7 @@ $container->loadFromExtension('assetic', [
                 '@StudySauceBundle/Resources/public/js/plupload/js/plupload.full.min.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/moxie.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/plupload.dev.js',
+                '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
                 '@StudySauceBundle/Resources/public/js/dashboard.js',
             ],
             'filters' => [],
@@ -46,7 +47,6 @@ $container->loadFromExtension('assetic', [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/jquery-2.1.1.min.js',
                 '@StudySauceBundle/Resources/public/js/jquery.textfill.min.js',
-                //'@StudySauceBundle/Resources/public/js/jquery.fittext.js',
                 '@StudySauceBundle/Resources/public/js/jquery-ui.min.js',
                 '@StudySauceBundle/Resources/public/js/bootstrap.min.js',
                 '@StudySauceBundle/Resources/public/js/underscore-min.js'
@@ -59,7 +59,6 @@ $container->loadFromExtension('assetic', [
         'metrics_scripts' => [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/d3.v3.min.js',
-                '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
                 '@StudySauceBundle/Resources/public/js/metrics.js'
             ],
             'filters' => [],
