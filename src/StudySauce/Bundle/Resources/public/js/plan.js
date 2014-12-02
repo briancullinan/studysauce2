@@ -209,13 +209,17 @@ $(document).ready(function () {
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
     //   we will activate the calendar only once, when the menu is clicked
     body.on('show', '#plan', function () {
-        var plan = $('#plan');
-        setTimeout(function () {
-            initialize();
-            if ($('#calendar:visible').length > 0)
-                $('#calendar').fullCalendar('refetchEvents');
-            // show unpaid dialog
-        }, 150);
+        var plan = $('#plan'),
+            callback = function () {
+                if ($('#calendar:visible').length > 0) {
+                    initialize();
+                    $('#calendar').fullCalendar('refetchEvents');
+                }
+                else
+                    setTimeout(callback, 150);
+                // show unpaid dialog
+            };
+        setTimeout(callback, 150);
         if (plan.is('.demo'))
             $('#plan-upgrade').modal({
                 backdrop: 'static',
@@ -251,6 +255,8 @@ $(document).ready(function () {
                 dataType: 'text',
                 success: function (data) {
                     var content = $(data);
+                    window.planEvents = [];
+                    window.planLoaded = [];
                     ssMergeScripts(content.filter('script:not([src])'));
                     if(content.find('#metrics').is('.demo'))
                         plan.addClass('demo');
@@ -260,7 +266,7 @@ $(document).ready(function () {
                     // reset calendar
                     $('#calendar').fullCalendar('destroy');
                     isInitialized = false;
-                    initialize();
+                    plan.filter(':visible').trigger('show');
                 }
             });
         }, 100);

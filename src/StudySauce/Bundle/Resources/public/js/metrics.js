@@ -318,7 +318,7 @@ $(document).ready(function () {
         if (svg.select('.x.axisT').empty())
             svg.append("g").attr("class", "x axisT");
         svg.select('.x.axisT')
-            .attr("transform", "translate(" + margins[1] + ",0)")
+            .attr("transform", "translate(0,0)")
             .call(xAxisTotals)
             .select('path').remove();
 
@@ -363,7 +363,7 @@ $(document).ready(function () {
                     if(typeof c.bases[w] != 'undefined')
                         weekTotal += c.bases[w];
                 });
-                d3.select(this).attr('transform', 'translate(15,' + y(weekTotal) + ')');
+                d3.select(this).attr('transform', 'translate(0,' + y(weekTotal) + ')');
             });
 
         redrawPie();

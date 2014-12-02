@@ -2,9 +2,17 @@
 
 namespace StudySauce\Bundle\Command;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
+use StudySauce\Bundle\Controller\EmailsController;
+use StudySauce\Bundle\Entity\Deadline;
+use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\User;
+use Swift_Mailer;
+use Swift_Transport;
+use Swift_Transport_SpoolTransport;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -43,17 +51,81 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //$output->writeln(sprintf('Hello <comment>%s</comment>!', $input->getArgument('who')));
-
-        // TODO: send reminders
-
-
-        // TODO: clear mail spool
         $container = $this->getContainer();
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        $emails = new EmailsController();
+        $emails->setContainer($container);
 
-        $transport = $container->get('mailer')->getTransport();
+        // send reminders
+        $notActivated = Criteria::create()->where(Criteria::expr()->isNull('activated'))->orWhere(Criteria::expr()->eq('activated', false));
+        $partners = $orm->getRepository('StudySauceBundle:PartnerInvite')->matching($notActivated)->toArray();
+        foreach($partners as $i => $p) {
+            /** @var PartnerInvite $p */
+            // send for 4 weeks
+            if ((($p->getCreated() > time() - 86400 * 3 && $p->getCreated() < time() - 86400 * 4) ||
+                ($p->getCreated() > time() - 86400 * 10 && $p->getCreated() < time() - 86400 * 11) ||
+                ($p->getCreated() > time() - 86400 * 17 && $p->getCreated() < time() - 86400 * 18) ||
+                ($p->getCreated() > time() - 86400 * 24 && $p->getCreated() < time() - 86400 * 25)) &&
+                (empty($p->getReminder()) || $p->getReminder() < time() - 86400 * 7)) {
+                $emails->partnerReminderAction($p->getUser(), $p);
+            }
+        }
+
+        // send signup reminder
+        $users = $orm->getRepository('StudySauceBundle:User');
+        /** @var QueryBuilder $qb */
+        $qb = $users->createQueryBuilder('p')
+            ->where('p.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\'');
+        $users = $qb->getQuery()->execute();
+        foreach($users as $i => $u) {
+            /** @var User $u */
+            if($u->getCreated() > time() - 86400 * 3 && $u->getCreated() < time() - 86400 * 4) {
+                $u->setProperty('welcome_reminder', true);
+                $emails->marketingReminderAction($u);
+                $orm->merge($u);
+                $orm->flush();
+            }
+        }
+
+        // send deadline reminders
+        $futureReminders = Criteria::create()->where(Criteria::expr()->gt('due_date', new \DateTime()));
+        $reminders = $orm->getRepository('StudySauceBundle:Deadline')->matching($futureReminders)->toArray();
+        $deadlines = [];
+        foreach($reminders as $i => $d) {
+            /** @var Deadline $d */
+            if((in_array(86400, $d->getReminder()) && $d->getDueDate() < 86400 * 2 && $d->getDueDate() > 86400) ||
+                (in_array(172800, $d->getReminder()) && $d->getDueDate() < 86400 * 3 && $d->getDueDate() > 86400 * 2 &&
+                    !in_array(86400, $d->getReminderSent())) ||
+                (in_array(345600, $d->getReminder()) && $d->getDueDate() < 86400 * 5 && $d->getDueDate() > 86400 * 4 &&
+                    !in_array(86400, $d->getReminderSent()) && !in_array(172800, $d->getReminderSent())) ||
+                (in_array(604800, $d->getReminder()) && $d->getDueDate() < 86400 * 8 && $d->getDueDate() > 86400 * 7 &&
+                    !in_array(86400, $d->getReminderSent()) && !in_array(172800, $d->getReminderSent()) &&
+                    !in_array(345600, $d->getReminderSent())) ||
+                (in_array(1209600, $d->getReminder()) && $d->getDueDate() < 86400 * 15 && $d->getDueDate() > 86400 * 14 &&
+                    !in_array(86400, $d->getReminderSent()) && !in_array(172800, $d->getReminderSent()) &&
+                    !in_array(345600, $d->getReminderSent()) && !in_array(604800, $d->getReminderSent()))) {
+                $deadlines[$d->getUser()->getId()][] = $d;
+            }
+        }
+
+        // send aggregate emails
+        foreach($deadlines as $i => $all)
+        {
+            /** @var Deadline $d */
+            $d = $all[0];
+            $emails->deadlineReminderAction($d->getUser(), $all);
+        }
+
+        // clear mail spool
+        /** @var Swift_Mailer $mailer */
+        $mailer = $container->get('mailer');
+        /** @var Swift_Transport_SpoolTransport $transport */
+        $transport = $mailer->getTransport();
+        /** @var  $spool */
         $spool = $transport->getSpool();
-
-        $spool->flushQueue($container->get('swiftmailer.transport.smtp'));
+        /** @var Swift_Transport $queue */
+        $queue = $container->get('swiftmailer.transport.smtp');
+        $spool->flushQueue($queue);
     }
 }

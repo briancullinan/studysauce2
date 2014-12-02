@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
+use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
@@ -202,6 +203,11 @@ class AccountController extends Controller
                 $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
                 $parent->setParent($user);
                 $orm->merge($parent);
+            }
+            if(!empty($request->getSession()->get('organization'))) {
+                /** @var Group $group */
+                $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);
+                $user->addGroup($group);
             }
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));

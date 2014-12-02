@@ -42,6 +42,12 @@ services:
             - {name: kernel.event_subscriber}
         arguments: [@templating, @kernel]
 
+    torchandlaurel.user_register:
+        class: TorchAndLaurel\Bundle\EventListener\OrgEmailNotifier
+        tags:
+            - {name: kernel.event_subscriber}
+        arguments: [@service_container, @templating, @kernel, @mailer]
+
     studysauce.drupal_encoder:
         class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
 
@@ -94,7 +100,7 @@ assetic:
     #read_from:      "%kernel.root_dir%/../web"
     write_to:       "%kernel.root_dir%/../web"
     use_controller: false
-    bundles:        [ "StudySauceBundle", "Course1Bundle" ]
+    bundles:        [ "StudySauceBundle", "Course1Bundle", "TorchAndLaurelBundle" ]
     #output: "/Symfony/web/app_dev.php/*"
     #java: /usr/bin/java
     #variables:

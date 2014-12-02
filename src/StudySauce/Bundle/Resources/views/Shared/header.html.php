@@ -2,9 +2,21 @@
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
+use Symfony\Component\HttpFoundation\Session\Session;
+/** @var GlobalVariables $app */
 
 /** @var User $user */
 $user = $app->getUser();
+
+/** @var Session $session */
+$session = $app->getSession();
+
+if(!empty($user) && $user->hasGroup('Torch And Laurel') || ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+{
+    print $view->render('TorchAndLaurelBundle:Shared:header.html.php');
+    return;
+}
 
 /** @var PartnerInvite $partner */
 $partner = !empty($user) ? $user->getPartnerInvites()->first() : null;

@@ -24,6 +24,12 @@
     background-position:0 -381px;
 }
 
+#contact .centrify
+{
+    margin: 0 auto;
+    max-width: 600px;
+}
+
 #about img {
     position: absolute;
     top: 0;

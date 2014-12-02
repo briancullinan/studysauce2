@@ -3,13 +3,12 @@
 namespace StudySauce\Bundle\EventListener;
 
 use AppKernel;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Controller\EmailsController;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +24,7 @@ use Symfony\Component\Templating\Helper\SlotsHelper;
  */
 class RedirectListener implements EventSubscriberInterface
 {
+    /** @var DelegatingEngine $templating */
     protected $templating;
 
     /** @var  AppKernel $kernel */
@@ -100,27 +100,17 @@ class RedirectListener implements EventSubscriberInterface
         catch(\Exception $x)
         {
             // nothing more we can do here, hope it gets logged.
-            $xe = $x;
         }
 
         // new Response object
         $response = new Response();
-        //$oldResponse = $event->getResponse();
-        /** @var Container $container */
-        $container = $this->kernel->getContainer();
 
         /** @var Request $request */
         $request = $event->getRequest();
 
         $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-
         /** @var TimedPhpEngine $engine */
-        if($this->kernel->getEnvironment() == 'prod')
-            $engine = $container->get('templating.engine.php');
-        else
-            $engine = $container->get('debug.templating.engine.php');
-
-        /** @var SlotsHelper $slots */
+        $engine = $this->templating->getEngine('StudySauceBundle:Exception:error.html.php');
         $engine->set(new SlotsHelper());
 
         // set response content

@@ -321,6 +321,14 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function unsupportedAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:unsupported.html.php', ['id' => 'unsupported']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function partnerAdvice1Action()
     {
         return $this->render('StudySauceBundle:Dialogs:partner-advice-1.html.php', ['id' => 'partner-advice-1']);

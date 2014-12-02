@@ -49,6 +49,57 @@
     top:0;
 }
 
+#deadlines-empty .close,
+#unsupported .close
+{
+    display: none;
+}
+
+#unsupported .modal-body
+{
+    text-align: center;
+}
+
+#unsupported .modal-body a
+{
+    display:inline-block;
+    height: 128px;
+    width: 128px;
+    background: url(../images/menu_icons_128.png) no-repeat left -6016px transparent;
+    vertical-align: bottom;
+}
+
+#unsupported .modal-body a[href*="chrome"]
+{
+    background-position: left -6144px;
+}
+
+#unsupported .modal-body a[href*="safari"]
+{
+    background-position: left -6272px;
+}
+
+#unsupported .modal-body a[href*="microsoft"]
+{
+    background-position: left -6400px;
+    position:relative;
+}
+
+/*
+#unsupported .modal-body a[href*="microsoft"]:after
+{
+    content: "Click to upgrade";
+    padding-top: 70px;
+    line-height: 0px;
+    height: auto;
+    width: 128px;
+    display: block;
+    background: url(../images/menu_icons_128.png) no-repeat left -6556px transparent;
+    position: absolute;
+    top: 100%;
+}
+*/
+
 #sds-messages .mobile-only
 {
     display:none;

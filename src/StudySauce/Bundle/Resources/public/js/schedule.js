@@ -36,6 +36,10 @@ $(document).ready(function () {
                     fromTo:false,
                     speed:'immediate',
                     yearRange: '-3:+3'
+                }).on('focus', function () {
+                    setTimeout(function () {
+                        $('#ui-datepicker-div').scrollintoview(DASHBOARD_MARGINS);
+                    }, 50);
                 });
             row.find('.start-time input[type="text"]:not(.is-timeEntry), .end-time input[type="text"]:not(.is-timeEntry)')
                 .timeEntry({

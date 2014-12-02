@@ -1,5 +1,7 @@
 <?php
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+/** @var GlobalVariables $app */
 
 $view->extend('StudySauceBundle:Shared:layout.html.php');
 

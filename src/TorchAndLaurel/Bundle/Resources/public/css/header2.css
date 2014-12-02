@@ -1,0 +1,8 @@
+
+
+#site-name a > span
+{
+    font-size: 30px;
+    line-height: 110%;
+    display:inline-block;
+}

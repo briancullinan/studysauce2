@@ -382,12 +382,20 @@ class PlanController extends Controller
         $events = array_merge($events, $studySessions);
         $events = array_merge($events, $freeStudy);
 
-        // cache and compare list of events in their default positions
-        $weekHash = md5(serialize($events) .
+        // hash list of events in their default order and schedule settings
+        $weekHash = md5(implode('', array_map(function (array $e) {
+                        /** @var Course $c */
+                        $c = isset($e['course']) ? $e['course'] : null;
+                        /** @var Deadline $d */
+                        $d = isset($e['deadline']) ? $e['deadline'] : null;
+                        return $e['name'] . $e['type'] . (!empty($c) ? $c->getId() : '') . (!empty($d) ? $d->getId() : '');
+                    }, $events)) .
             // add configuration used to build plan so it updates when that changes
             $schedule->getGrades() . $schedule->getWeekends() . $schedule->getSharp11am4pm() .
             $schedule->getSharp4pm9pm() . $schedule->getSharp9pm2am() . $schedule->getSharp6am11am() .
             implode('', $courses->map(function (Course $c) {return $c->getStudyDifficulty() . $c->getStudyType();})->toArray()));
+
+        // check to see if there is a matching list of events for another week
         if (($eventWeek = $schedule->getWeeks()->filter(
                 function (Week $w) use ($weekHash, $events) {
                     return $w->getHash() == $weekHash && $w->getEvents()->count() == count($events);
@@ -397,45 +405,23 @@ class PlanController extends Controller
             /** @var Week $eventWeek */
             // if the event hash matches use final arrangement from week cache
             $matchingEvents = $eventWeek->getEvents()->toArray();
-            $events = array_map(
-                function (Event $e, Event $_) {
-                    $e->setCourse($_->getCourse());
-                    $e->setType($_->getType());
-                    $e->setName($_->getName());
-                    $e->setStart(clone $_->getStart());
-                    $e->setEnd(clone $_->getEnd());
-                    return $e;
-                },
-                $events,
-                $matchingEvents
-            );
+            $diff = (intval($w->format('W')) - $eventWeek->getWeek()) * 86400 * 7;
+            $interval = new \DateInterval('PT' . abs($diff) . 'S');
+            if($diff < 0)
+                $interval->invert = 1;
+            $events = array_map(function (Event $e) use ($interval) {
+                return [
+                    'deadline' => $e->getDeadline(),
+                    'course' => $e->getCourse(),
+                    'type' => $e->getType(),
+                    'name' => $e->getName(),
+                    // shift times to new week
+                    'start' => date_add(clone $e->getStart(), $interval),
+                    'end' => date_add(clone $e->getEnd(), $interval)
+                ];
+            }, $matchingEvents);
         }
-
-        // get the current week
-        if (($currentWeek = $schedule->getWeeks()->filter(
-                function (Week $week) use ($weekHash, $w) {
-                    return $week->getWeek() == intval($w->format('W')) &&
-                    $week->getYear() == $w->format('Y');
-                }
-            )->first()) == null
-        ) {
-            // create a new week entity to cache the events
-            $currentWeek = new Week();
-            $currentWeek->setStart($w);
-            $currentWeek->setWeek($w->format('W'));
-            $currentWeek->setHash($weekHash);
-            $currentWeek->setSchedule($schedule);
-            $currentWeek->setYear($w->format('Y'));
-            $schedule->addWeek($currentWeek);
-            $orm->persist($currentWeek);
-            $orm->flush();
-        } else {
-            $currentWeek->setHash($weekHash);
-            $orm->merge($currentWeek);
-            $orm->flush();
-        }
-
-        if ($eventWeek == null) {
+        else {
             // TODO: reset buckets
             $buckets->buckets = [];
             $buckets->studyTotals = 0;
@@ -481,13 +467,44 @@ class PlanController extends Controller
                 $workingEvents[] = $event;
                 self::bucketEvents([$event], $buckets);
             }
+            $events = $workingEvents;
         }
 
         $events = array_merge($events, self::getAllDay($deadlines, $week));
 
-        self::sortEvents($events);
+        // get the current week
+        /** @var Week $currentWeek */
+        $currentWeek = $schedule->getWeeks()->filter(
+            function (Week $week) use ($weekHash, $w) {
+                return $week->getWeek() == intval($w->format('W')) &&
+                $week->getYear() == $w->format('Y');
+            })->first();
+        if($currentWeek == null) {
+            // create a new week entity to cache the events
+            $currentWeek = new Week();
+            $currentWeek->setStart($w);
+            $currentWeek->setHash('');
+            $currentWeek->setWeek($w->format('W'));
+            $currentWeek->setSchedule($schedule);
+            $currentWeek->setYear($w->format('Y'));
+            $schedule->addWeek($currentWeek);
+            $orm->persist($currentWeek);
+            $orm->flush();
+        }
 
-        self::mergeSaved($schedule, $currentWeek, $events, $orm);
+        // if week has changed, update the events
+        if($currentWeek->getHash() != $weekHash || $currentWeek->getEvents()->count() != count($events)) {
+            $currentWeek->setHash($weekHash);
+            $orm->merge($currentWeek);
+            $orm->flush();
+
+            self::sortEvents($events);
+            self::mergeSaved($schedule, $currentWeek, $events, $orm);
+        }
+        else {
+            // no change
+            $events = $currentWeek->getEvents();
+        }
 
         // send unresolved email to administrator
         if(!empty(self::$unresolved))
@@ -522,13 +539,14 @@ class PlanController extends Controller
 
             if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
                 // create a new event
-                $deadline = new Event();
-                $deadline->setDeadline($d);
-                $deadline->setCourse($d->getCourse());
-                $deadline->setName($d->getAssignment());
-                $deadline->setType('d');
-                $deadline->setStart($classT);
-                $deadline->setEnd(date_add(clone $classT, new \DateInterval('PT86399S')));
+                $deadline = [
+                    'deadline' => $d,
+                    'course' => $d->getCourse(),
+                    'name' => $d->getAssignment(),
+                    'type' => 'd',
+                    'start' => $classT,
+                    'end' => date_add(clone $classT, new \DateInterval('PT86399S'))
+                ];
                 $events[] = $deadline;
             }
 
@@ -540,13 +558,14 @@ class PlanController extends Controller
                 $classR->sub(new \DateInterval('PT' . $r . 'S'));
 
                 if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
-                    $reminder = new Event();
-                    $reminder->setCourse($d->getCourse());
-                    $reminder->setDeadline($d);
-                    $reminder->setName($d->getAssignment());
-                    $reminder->setType('r');
-                    $reminder->setStart($classR);
-                    $reminder->setEnd(date_add(clone $classR, new \DateInterval('PT86399S')));
+                    $reminder = [
+                        'deadline' => $d,
+                        'course' => $d->getCourse(),
+                        'name' => $d->getAssignment(),
+                        'type' => 'r',
+                        'start' => $classR,
+                        'end' => date_add(clone $classR, new \DateInterval('PT86399S'))
+                    ];
                     $events[] = $reminder;
                 }
             }
@@ -556,11 +575,12 @@ class PlanController extends Controller
             $classT = new \DateTime($k);
 
             if($classT->getTimestamp() > $week && $classT->getTimestamp() < $week + 604800) {
-                $holiday = new Event();
-                $holiday->setName($h);
-                $holiday->setType('h');
-                $holiday->setStart($classT);
-                $holiday->setEnd(date_add(clone $classT, new \DateInterval('PT86399S')));
+                $holiday = [
+                    'name' => $h,
+                    'type' => 'h',
+                    'start' => $classT,
+                    'end' => date_add(clone $classT, new \DateInterval('PT86399S'))
+                ];
                 $events[] = $holiday;
             }
         }
@@ -573,42 +593,48 @@ class PlanController extends Controller
      */
     private static function sortEvents(&$events)
     {
-        usort($events, function (Event $a, Event $b) use ($events) {
-                return $a->getStart()->getTimestamp() - $b->getStart()->getTimestamp();
+        usort($events, function (array $a, array $b) use ($events) {
+                /** @var \DateTime $aStart */
+                $aStart = $a['start'];
+                /** @var \DateTime $bStart */
+                $bStart = $b['start'];
+                return $aStart->getTimestamp() - $bStart->getTimestamp();
             });
     }
 
     /**
-     * @param Event $event
+     * @param array $event
      * @return array
      */
-    private static function getMealBoundaries(Event $event)
+    private static function getMealBoundaries(array $event)
     {
-        switch($event->getName())
+        /** @var \DateTime $s */
+        $s = $event['start'];
+        switch($event['name'])
         {
             case 'Breakfast':
-                return [$event->getStart()->getTimestamp() - 3600 * 3, $event->getStart()->getTimestamp() + 3600 * 2];
+                return [$s->getTimestamp() - 3600 * 3, $s->getTimestamp() + 3600 * 2];
                 break;
             case 'Lunch':
-                return [$event->getStart()->getTimestamp() - 3600 * 2, $event->getStart()->getTimestamp() + 3600 * 3];
+                return [$s->getTimestamp() - 3600 * 2, $s->getTimestamp() + 3600 * 3];
                 break;
             case 'Dinner':
-                return [$event->getStart()->getTimestamp() - 3600 * 2.5, $event->getStart()->getTimestamp() + 3600 * 5.5];
+                return [$s->getTimestamp() - 3600 * 2.5, $s->getTimestamp() + 3600 * 5.5];
                 break;
         }
         throw new Exception('Un-recognized meal');
     }
 
     /**
-     * @param Event $event
+     * @param array $event
      * @param $workingEvents
      * @param $week
      * @param Schedule $schedule
      * @return array
      */
-    private static function getBoundaries(Event $event, $workingEvents, $week, Schedule $schedule)
+    private static function getBoundaries(array $event, $workingEvents, $week, Schedule $schedule)
     {
-        switch($event->getType())
+        switch($event['type'])
         {
             case 'p':
                 return self::getPreworkBoundaries($event, $workingEvents);
@@ -657,57 +683,75 @@ class PlanController extends Controller
     }
 
     /**
-     * @param Event $event
+     * @param array $event
      * @param $workingEvents
      * @return array
      */
-    private static function getPreworkBoundaries(Event $event, $workingEvents)
+    private static function getPreworkBoundaries(array $event, $workingEvents)
     {
+        /** @var \DateTime $e */
+        $e = $event['end'];
+        /** @var \DateTime $s */
+        $s = $event['start'];
         // the boundary for prework is the previous and next class
         // count forwards to matching type
         for($j = 0; $j < count($workingEvents); $j++)
         {
-            /** @var Event $e */
-            $e = $workingEvents[$j];
+            $w = $workingEvents[$j];
+            /** @var \DateTime $eW */
+            $eW = $event['end'];
+            /** @var \DateTime $sW */
+            $sW = $event['start'];
             // stop after we pass current events time
-            if($event->getEnd()->getTimestamp() - $e->getStart()->getTimestamp() < 0)
+            if($e->getTimestamp() - $sW->getTimestamp() < 0)
                 break;
-            if($e->getName() == $event->getName())
-                return [$e->getEnd()->getTimestamp(), $event->getStart()->getTimestamp() + 86400];
+            if($w['course'] == $event['course'])
+                return [$eW->getTimestamp(), $s->getTimestamp() + 86400];
         }
-        return [$event->getStart()->getTimestamp() - 86400, $event->getStart()->getTimestamp() + 86400];
+        return [$s->getTimestamp() - 86400, $s->getTimestamp() + 86400];
     }
 
     /**
-     * @param Event $event
+     * @param array $event
      * @param $workingEvents
      * @return array
      */
-    private static function getStudyBoundaries(Event $event, $workingEvents)
+    private static function getStudyBoundaries(array $event, $workingEvents)
     {
+        /** @var \DateTime $e */
+        $e = $event['end'];
+        /** @var \DateTime $s */
+        $s = $event['start'];
         // the boundary for study is the previous and next class
         // count backwards to matching type
         for($j = count($workingEvents) - 1; $j >= 0 ; $j--)
         {
-            /** @var Event $e */
-            $e = $workingEvents[$j];
+            $w = $workingEvents[$j];
+            /** @var \DateTime $eW */
+            $eW = $event['end'];
+            /** @var \DateTime $sW */
+            $sW = $event['start'];
             // stop after we pass the current events time
-            if($e->getStart()->getTimestamp() - $event->getEnd()->getTimestamp() < 0)
+            if($sW->getTimestamp() - $e->getTimestamp() < 0)
                 break;
-            if($e->getName() == $event->getName())
-                return [$event->getStart()->getTimestamp(), $e->getStart()->getTimestamp()];
+            if($w['course'] == $event['course'])
+                return [$s->getTimestamp(), $eW->getTimestamp()];
         }
-        return [$event->getStart()->getTimestamp(), $event->getStart()->getTimestamp() + 86400 * 2];
+        return [$s->getTimestamp(), $s->getTimestamp() + 86400 * 2];
     }
 
     /**
-     * @param Event $event
+     * @param array $event
      * @return array
      */
-    private static function getSleepBoundaries(Event $event)
+    private static function getSleepBoundaries(array $event)
     {
-        $length = $event->getEnd()->getTimestamp() - $event->getStart()->getTimestamp();
-        $mealTimestamp = $event->getStart()->getTimestamp();
+        /** @var \DateTime $e */
+        $e = $event['end'];
+        /** @var \DateTime $s */
+        $s = $event['start'];
+        $length = $e->getTimestamp() - $s->getTimestamp();
+        $mealTimestamp = $s->getTimestamp();
         $notBefore = $mealTimestamp - 3600 * ($length / 3600 + 2);
         $notAfter = $mealTimestamp + 3600 * (2 + ($length / 3600 - 6)); // allow 8 AM start time on weekends
         return [$notBefore, $notAfter];
@@ -727,15 +771,19 @@ class PlanController extends Controller
         $afterDistances = [];
         foreach ($events as $i => $event)
         {
-            /** @var Event $event */
+            /** @var array $event */
             if($i == $index ||
                 // ignore all day events
-                $event->getType() == 'd' || $event->getType() == 'h' ||
-                $event->getType() == 'r')
+                $event['type'] == 'd' || $event['type'] == 'h' ||
+                $event['type'] == 'r')
                 continue;
 
-            $startDistance = $event->getStart()->getTimestamp() - $notBefore;
-            $endDistance = $notAfter - $event->getEnd()->getTimestamp();
+            /** @var \DateTime $s */
+            $s = $event['start'];
+            /** @var \DateTime $e */
+            $e = $event['end'];
+            $startDistance = $s->getTimestamp() - $notBefore;
+            $endDistance = $notAfter - $e->getTimestamp();
             $beforeDistances[$i] = $startDistance;
             $afterDistances[$i] = $endDistance;
         }
@@ -786,25 +834,30 @@ class PlanController extends Controller
 
     /**
      * @param $workingEvents
-     * @param Event $event
+     * @param array $event
      * @param $buckets
      * @param $notBefore
      * @param $notAfter
      */
-    private static function removeOverlaps($workingEvents, Event $event, $buckets, $notBefore, $notAfter)
+    private static function removeOverlaps($workingEvents, array &$event, $buckets, $notBefore, $notAfter)
     {
         // find gaps
         if(empty($workingEvents)) {
             return;
         }
-        $length = $event->getEnd()->getTimestamp() - $event->getStart()->getTimestamp();
+        /** @var \DateTime $endFirst */
+        $endFirst = $event['end'];
+        /** @var \DateTime $startFirst */
+        $startFirst = $event['start'];
+        $length = $endFirst->getTimestamp() - $startFirst->getTimestamp();
         $gapStart = new \DateTime();
         $gapStart->setTimestamp($notBefore);
         $last = $gapStart->getTimestamp();
         $gaps = [];
         foreach ($workingEvents as $c => $e) {
-            /** @var Event $e */
-            $gapEnd = clone $e->getStart();
+            /** @var array $e */
+            /** @var \DateTime $gapEnd */
+            $gapEnd = clone $e['start'];
             $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter));
             $gap = $gapEnd->getTimestamp() - $gapStart->getTimestamp();
 
@@ -816,7 +869,8 @@ class PlanController extends Controller
                 $gaps['i'.$c] = clone $gapStart;
             }
 
-            $gapStart = clone $e->getEnd();
+            /** @var \DateTime $gapStart */
+            $gapStart = clone $e['end'];
             $gapStart->setTimestamp(max($gapStart->getTimestamp(), $notBefore));
             // fix situation where this is one already overlapping
             $gapStart->setTimestamp(max($gapStart->getTimestamp(), $last));
@@ -828,8 +882,7 @@ class PlanController extends Controller
             $gapEnd->setTimestamp($notAfter);
 
             $gaps['empty'] = $gapStart;
-            $workingEvents['empty'] = new \stdClass();
-            $workingEvents['empty']->getStart = function () use ($gapEnd) {return clone $gapEnd;};
+            $workingEvents['empty']['start'] = clone $gapEnd;
         }
 
         // get the closest opening to the original time
@@ -839,7 +892,8 @@ class PlanController extends Controller
             /** @var \DateTime $d */
             // reset the time so we pick out the closest day,
             //    this levels the playing field for all daily preferred times
-            $startDay = clone $event->getStart();
+            /** @var \DateTime $startDay */
+            $startDay = clone $event['start'];
             if (intval($startDay->format('H')) < 5) {
                 $startDay->sub(new \DateInterval('P1D'));
             }
@@ -854,9 +908,9 @@ class PlanController extends Controller
             $closest[$c] = abs($gapStart->getTimestamp() - $startDay->getTimestamp());
 
             // check if ending of gap is closer to preferred day
-            /** @var Event $e */
+            /** @var array $e */
             $e = $workingEvents[intval(substr($c, 1))];
-            $gapEnd = clone $e->getStart();
+            $gapEnd = clone $e['start'];
             // if after midnight subtract 1 day
             if (intval($gapEnd->format('H')) < 5) {
                 $gapEnd->sub(new \DateInterval('P1D'));
@@ -890,22 +944,22 @@ class PlanController extends Controller
 
             // if we are dealing with a mean the preferred time is when the meal is originally set
             // TODO: move this in to add_meals somehow?
-            if ($event->getType() == 'p') {
+            if ($event['type'] == 'p') {
                 $preferred = clone $start;
                 $preferred->setTime(6, 0, 0);
-            } elseif ($event->getType() == 'm' || $event->getType() == 'z' || (
+            } elseif ($event['type'] == 'm' || $event['type'] == 'z' || (
                     isset($buckets->buckets[$b]) && array_sum(array_values($buckets->buckets[$b])) >= array_sum(
                         array_values($buckets->timeSlots)))
             ) {
-                $preferred = clone $event->getStart();
+                $preferred = clone $event['start'];
             } else {
                 $preferred = clone self::getPreferredTime($buckets, $start, $start->getTimestamp() - 86400, $start->getTimestamp() + 86400);
             }
 
             $distance[$c] = $closest[$c] + (abs($start->getTimestamp() - $preferred->getTimestamp()));
-            /** @var Event $e */
+            /** @var array $e */
             $e = $workingEvents[intval(substr($c, 1))];
-            $gapEnd = clone $e->getStart();
+            $gapEnd = clone $e['start'];
             $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter));
             $end = $closest[$c] + (abs($gapEnd->getTimestamp() - $length - $preferred->getTimestamp()));
             if ($end < $distance[$c]) {
@@ -920,24 +974,24 @@ class PlanController extends Controller
         $top = key($distance);
         if ($top > -1) {
             if (in_array($top, $ends)) {
-                /** @var Event $start */
+                /** @var array $start */
                 $start = $workingEvents[intval(substr($top, 1))];
-                $gapEnd = clone $start->getStart();
+                $gapEnd = clone $start['start'];
                 $gapEnd->setTimestamp(min($gapEnd->getTimestamp(), $notAfter));
                 $gapEnd->sub(new \DateInterval('PT' . ($length + self::OVERLAP_INCREMENT) . 'S'));
-                $event->setStart($gapEnd);
-                $event->setEnd(date_add(clone $gapEnd, new \DateInterval('PT' . $length . 'S')));
+                $event['start'] = $gapEnd;
+                $event['end'] = date_add(clone $gapEnd, new \DateInterval('PT' . $length . 'S'));
             } else {
                 /** @var \DateTime $d */
                 $d = clone $gaps[$top];
                 $d->add(new \DateInterval('PT' . self::OVERLAP_INCREMENT . 'S'));
-                $event->setStart($d);
-                $event->setEnd(date_add(clone $d, new \DateInterval('PT' . $length . 'S')));
+                $event['start'] = $d;
+                $event['end'] = date_add(clone $d, new \DateInterval('PT' . $length . 'S'));
             }
         }
 
-        // send assertion email when we fail to find a spot
-        if (!empty($workingEvents) && $event->getType() != 'm' && $event->getType() != 'z') {
+        // send assertion email when we fail to find a spot to place the event
+        if (!empty($workingEvents) && $event['type'] != 'm' && $event['type'] != 'z' && $top == -1) {
             self::$unresolved[] = $event;
         }
     }
@@ -954,63 +1008,85 @@ class PlanController extends Controller
         // find matching saved events
         $saved = $week->getEvents();
         foreach ($events as $i => $event) {
-            /** @var Event $event */
+            /** @var array $event */
+            /** @var \DateTime $s */
+            $s = $event['start'];
+            // no notes are enabled for these events so they don't have any associations
+            if($event['type'] == 'm' || $event['type'] == 'z' || $event['type'] == 'h')
+                continue;
+
             // check if we have a saved event around the same time
             $lastEvent = null;
-            if (!($event->getType() == 'm' || $event->getType() == 'z' ||
-                $event->getType() == 'c' || $event->getType() == 'd' || $event->getType() == 'h')
-            ) {
-                $lastDistance = 172800;
-
-                foreach ($saved->filter(
-                    function (Event $e) use ($event) {
-                        return $e->getType() == $event->getType() && $e->getName() == $event->getName();
-                    }
-                )->toArray() as $j => $e) {
-                    /** @var Event $e */
-                    // if saved is 24 hours before current event, skip and never go back because we are ordered by time
-                    $distance = abs($event->getStart()->getTimestamp() - $e->getStart()->getTimestamp());
-                    if ($distance < $lastDistance) {
-                        $lastEvent = $e;
-                        $lastDistance = $distance;
-                    } elseif (!empty($lastEvent)) {
-                        break;
-                    }
+            $lastDistance = 172800;
+            $similarEvents = $saved->filter(
+                function (Event $e) use ($event) {
+                    return $e->getType() == $event['type'] && $e->getName() == $event['name'] &&
+                        $e->getCourse()
+                        == (!empty($event['course']) ? $event['course'] : null) && $e->getDeadline()
+                        == (!empty($event['deadline']) ? $event['deadline'] : null);
+                }
+            )->toArray();
+            foreach ($similarEvents as $j => $e) {
+                /** @var Event $e */
+                // if saved is 24 hours before current event, skip and never go back because we are ordered by time
+                $distance = abs($s->getTimestamp() - $e->getStart()->getTimestamp());
+                if ($distance < $lastDistance) {
+                    $lastEvent = $e;
+                    $lastDistance = $distance;
+                } elseif (!empty($lastEvent)) {
+                    break;
                 }
             }
 
+            // change times of existing event to fit in to new schedule
             if ($lastEvent) {
-                $lastEvent->setStart($event->getStart());
-                $lastEvent->setEnd($event->getEnd());
+                $lastEvent->setStart($event['start']);
+                $lastEvent->setEnd($event['end']);
                 $events[$i] = $lastEvent;
                 $saved->removeElement($lastEvent);
             }
         }
 
-        // remove unused saved events
+        // remove unassociated events from database,
+        //   unless they have data attached we will just hide them in historic view
         $remove = $saved->toArray();
-        foreach ($remove as $i => $event) {
+        foreach ($remove as $i => $save) {
             // TODO: check if in strategies
-            $schedule->removeEvent($event);
-            $orm->remove($event);
-        }
+            /** @var Event $save */
+            if(!empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
+                !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced()))
+                continue;
 
+            $schedule->removeEvent($save);
+            $week->removeEvent($save);
+            $orm->remove($save);
+        }
         $orm->flush();
 
+        // create new entities if needed
         foreach ($events as $i => $event) {
-            if($event->getWeek() == null)
+            if(is_array($event))
             {
-                $event->setSchedule($schedule);
-                $event->setWeek($week);
-                $schedule->addEvent($event);
-                $orm->persist($event);
+                $newEvent = new Event();
+                $newEvent->setDeadline(!empty($event['deadline']) ? $event['deadline'] : null);
+                $newEvent->setCourse(!empty($event['course']) ? $event['course'] : null);
+                $newEvent->setName($event['name']);
+                $newEvent->setType($event['type']);
+                $newEvent->setStart($event['start']);
+                $newEvent->setEnd($event['end']);
+                $newEvent->setSchedule($schedule);
+                $newEvent->setWeek($week);
+                $schedule->addEvent($newEvent);
+                $week->addEvent($newEvent);
+                $orm->persist($newEvent);
+                $events[$i] = $newEvent;
             }
             else
             {
+                /** @var Event $event */
                 $orm->merge($event);
             }
         }
-
         $orm->flush();
     }
 
@@ -1059,12 +1135,12 @@ class PlanController extends Controller
             // get the day with the least obligations
             $classT = new \DateTime(key($bucketSums));
             $classT->setTime(12, 0, 0);
-
-            $event = new Event();
-            $event->setName('Free study');
-            $event->setType('f');
-            $event->setStart($classT);
-            $event->setEnd(date_add(clone $classT, new \DateInterval('PT3600S')));
+            $event = [
+                'name' => 'Free study',
+                'type' => 'f',
+                'start' => $classT,
+                'end' => date_add(clone $classT, new \DateInterval('PT3600S'))
+            ];
             $events[] = $event;
             self::bucketEvents([$event], $buckets);
         }
@@ -1114,12 +1190,13 @@ class PlanController extends Controller
             $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
             $classT->sub(new \DateInterval('P1D'));
 
-            $event = new Event();
-            $event->setCourse($course);
-            $event->setName($course->getName());
-            $event->setType('p');
-            $event->setStart($classT);
-            $event->setEnd(date_add(clone $classT, new \DateInterval('PT' . $length . 'S')));
+            $event = [
+                'course' => $course,
+                'name' => $course->getName(),
+                'type' => 'p',
+                'start' => $classT,
+                'end' => date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
+            ];
             $events[] = $event;
         }
 
@@ -1173,12 +1250,13 @@ class PlanController extends Controller
             $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
             $classT->add(new \DateInterval('PT' . $fullLength . 'S'));
 
-            $event = new Event();
-            $event->setCourse($course);
-            $event->setName($course->getName());
-            $event->setType('sr');
-            $event->setStart($classT);
-            $event->setEnd(date_add(clone $classT, new \DateInterval('PT' . $length . 'S')));
+            $event = [
+                'course' => $course,
+                'name' => $course->getName(),
+                'type' => 'sr',
+                'start' => $classT,
+                'end' => date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
+            ];
             $events[] = $event;
         }
 
@@ -1199,36 +1277,40 @@ class PlanController extends Controller
             $day = new \DateTime(date('Y/m/d', $week + $j * 86400));
 
             // breakfast
-            $breakfast = new Event();
             $classB = clone $day;
             $classB->setTime(8, 0, 0);
 
-            $breakfast->setName('Breakfast');
-            $breakfast->setType('m');
-            $breakfast->setStart($classB);
-            $breakfast->setEnd(date_add(clone $classB, new \DateInterval('PT1800S')));
+            $breakfast = [
+                'name' => 'Breakfast',
+                'type' => 'm',
+                'start' => $classB,
+                'end' => date_add(clone $classB, new \DateInterval('PT1800S'))
+            ];
+
             $events[] = $breakfast;
 
             // lunch
-            $lunch = new Event();
             $classL = clone $day;
             $classL->setTime(12, 30, 0);
 
-            $lunch->setName('Lunch');
-            $lunch->setType('m');
-            $lunch->setStart($classL);
-            $lunch->setEnd(date_add(clone $classL, new \DateInterval('PT1800S')));
+            $lunch = [
+                'name' => 'Lunch',
+                'type' => 'm',
+                'start' => $classL,
+                'end' => date_add(clone $classL, new \DateInterval('PT1800S'))
+            ];
             $events[] = $lunch;
 
             // dinner
-            $dinner = new Event();
             $classD = clone $day;
             $classD->setTime(19, 0, 0);
 
-            $dinner->setName('Dinner');
-            $dinner->setType('m');
-            $dinner->setStart($classD);
-            $dinner->setEnd(date_add(clone $classD, new \DateInterval('PT2700S')));
+            $dinner = [
+                'name' => 'Dinner',
+                'type' => 'm',
+                'start' => $classD,
+                'end' => date_add(clone $classD, new \DateInterval('PT2700S'))
+            ];
             $events[] = $dinner;
 
             // longer sleep time on weekends, fri, sat, sun
@@ -1237,7 +1319,6 @@ class PlanController extends Controller
             //    $length = 28800;
 
             // sleep
-            $sleep = new Event();
             $classZ = clone $day;
             $classZ->setTime(19, 0, 0);
             // adjust time based on preferred time
@@ -1252,10 +1333,12 @@ class PlanController extends Controller
             } else {
                 $classZ->setTime(6, 0, 0);
             }
-            $sleep->setName('Sleep');
-            $sleep->setType('z');
-            $sleep->setStart($classZ);
-            $sleep->setEnd(date_add(clone $classZ, new \DateInterval('PT' . $length . 'S')));
+            $sleep = [
+                'name' => 'Dinner',
+                'type' => 'm',
+                'start' => $classZ,
+                'end' => date_add(clone $classZ, new \DateInterval('PT' . $length . 'S'))
+            ];
             $events[] = $sleep;
         }
 
@@ -1300,19 +1383,15 @@ class PlanController extends Controller
             }
             $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
 
-            $event = new Event();
-            $event->setCourse($course);
-            $event->setName($course->getName());
-            $event->setType($course->getType());
-            $event->setStart($classT);
-            $event->setEnd(
-                $once
-                    ? date_timestamp_set(
-                    clone $classT,
-                    min(date_add($classT->getTimestamp() + 86400, $classEnd->getTimestamp()))
-                )
-                    : date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
-            );
+            $event = [
+                'course' => $course,
+                'name' => $course->getName(),
+                'type' => $course->getType(),
+                'start' => $classT,
+                'end' => $once
+                        ? date_timestamp_set(clone $classT,min(date_add($classT->getTimestamp() + 86400, $classEnd->getTimestamp())))
+                        : date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
+            ];
             $events[] = $event;
         }
 
@@ -1401,17 +1480,18 @@ class PlanController extends Controller
     private static function bucketEvents($events, \stdClass $buckets)
     {
         foreach ($events as $i => $event) {
-            /** @var Event $event */
             // don't count all day events
-            if ($event->getType() == 'h' || $event->getType() == 'd' ||
-                $event->getType() == 'r' || $event->getType() == 'm' ||
-                $event->getType() == 'z'
+            if ($event['type'] == 'h' || $event['type'] == 'd' ||
+                $event['type'] == 'r' || $event['type'] == 'm' ||
+                $event['type'] == 'z'
             ) {
                 continue;
             }
 
-            $start = $event->getStart();
-            $end = $event->getEnd();
+            /** @var \DateTime $start */
+            $start = $event['start'];
+            /** @var \DateTime $end */
+            $end = $event['end'];
 
             // if the event is before 4 am put in the bucket from the previous day
             $bucket = clone $start;
@@ -1457,9 +1537,9 @@ class PlanController extends Controller
                     $h += 5;
                 }
             }
-            if ($event->getType() == 'c') {
+            if ($event['type'] == 'c') {
                 $buckets->classTotals = (isset($buckets->classTotals) ? $buckets->classTotals : 0) + ($length + 600);
-            } elseif ($event->getType() == 'sr' || $event->getType() == 'p') {
+            } elseif ($event['type'] == 'sr' || $event['type'] == 'p') {
                 $buckets->studyTotals = (isset($buckets->studyTotals) ? $buckets->studyTotals : 0) + ($length + 600);
             }
         }

@@ -130,15 +130,14 @@ $collection = $router->getRouteCollection();
 <body class="<?php $view['slots']->output('classes') ?>">
 <?php $view['slots']->output('body') ?>
 <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
-<?php foreach ($view['assetic']->javascripts([
-        '@layout'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+<?php foreach ($view['assetic']->javascripts(['@layout'],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
+$agent = strtolower($app->getRequest()->server->get('HTTP_USER_AGENT'));
+if((strpos($agent, 'android') && strpos($agent, 'chrome') === false) ||
+    preg_match('/(?i)msie [1-9]/', $agent)) {
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:unsupported'));
+}
 $view['slots']->output('javascripts');
 $view['slots']->output('sincludes');
 // show error dialogs in debug environment

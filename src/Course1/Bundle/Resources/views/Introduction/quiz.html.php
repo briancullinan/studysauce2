@@ -43,7 +43,7 @@ $complete = !empty($quiz->getEducation()) &&
         </div>
         <h3>How do you manage your electronic devices when you study?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-devices" type="radio" value="on" <?php print ($quiz->getDevices() == 'on' ? 'checked="checked"' : ''); ?>><i></i><span>I keep them nearby. I will respond to texts, etc. if I get them, and then I right back to work.</span></label>
+            <label class="radio"><input name="quiz-devices" type="radio" value="on" <?php print ($quiz->getDevices() == 'on' ? 'checked="checked"' : ''); ?>><i></i><span>I keep them nearby. I will respond to texts, etc. if I get them, and then I get right back to work.</span></label>
             <label class="radio"><input name="quiz-devices" type="radio" value="off" <?php print ($quiz->getDevices() == 'off' ? 'checked="checked"' : ''); ?>><i></i><span>I turn them off or put them somewhere so they won't distract me.</span></label>
         </div>
         <div class="results">

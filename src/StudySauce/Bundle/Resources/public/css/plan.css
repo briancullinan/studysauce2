@@ -18,14 +18,16 @@ a.fc-event:not([href])
     color: #FFFFFF;
 }
 
+#plan .fc-time-grid-event.fc-short .fc-title,
 #plan .fc-title
 {
     white-space: nowrap;
     overflow:hidden;
     text-overflow: ellipsis;
     display: block;
-    padding-right:20px;
+    padding:1px 20px 1px 1px;
     line-height: 110%;
+    font-size: inherit;
 }
 
 #plan .fc-time-grid-container
@@ -75,7 +77,7 @@ a.fc-event:not([href])
     color: #FFFFFF;
     width: auto;
     position: absolute;
-    right:0;
+    right:2px;
 }
 
 #plan .fc-agenda-axis

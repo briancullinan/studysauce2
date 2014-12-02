@@ -3,6 +3,8 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\Payment;
@@ -113,6 +115,45 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
+     * @param PartnerInvite $partner
+     * @return Response
+     */
+    public function partnerReminderAction(User $user = null, PartnerInvite $partner = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        if($partner == null)
+            $partner = $user->getPartnerInvites()->filter(function (PartnerInvite $p) {return $p->getActivated();})->first();
+
+        if(empty($partner)) {
+            $logger = $this->get('logger');
+            $logger->error('Achievement called with no partner.');
+            return new Response();
+        }
+        $codeUrl = $this->generateUrl('partner_welcome', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('Your invitation' . (!empty($user->getFirst()) ? (' from ' . $user->getFirst()) : '') . ' to join Study Sauce is still pending')
+            ->setFrom($user->getEmail())
+            ->setTo($partner->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:partner-reminder.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Hello ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">If you are prepared to help ' . $user->getFirst() . ', click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['partner-reminder']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
      * @param StudentInvite $student
      * @return Response
      */
@@ -177,6 +218,36 @@ class EmailsController extends Controller
     }
 
     /**
+     * @param $user
+     * @return Response
+     */
+    public function marketingReminderAction(User $user)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('Get the most out of your Study Sauce account')
+            ->setFrom('admin@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:welcome-reminder.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Hello ' . $user->getFirst() . ' ' . $user->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['marketing-reminder']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
      * @param User $user
      * @param User $student
      * @param $_code
@@ -233,6 +304,99 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['adviser-invite']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param $reminders
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deadlineReminderAction(User $user, $reminders)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        $schedule = $user->getSchedules()->first();
+        if(!empty($schedule))
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        else
+            $courses = [];
+        $reminderOutput = count($reminders) > 1 ? 'Below are your reminders.<br /><br />' : 'Below is your reminder.<br /><br />';
+        $classes = [];
+        foreach($reminders as $reminder)
+        {
+            /** @var Deadline $reminder */
+            $classI = array_search($reminder->getCourse(), array_values($courses));
+
+            if($classI === false)
+                $classI = -1;
+
+            if($classI == 0)
+                $color = '#FF0D00';
+            elseif($classI == 1)
+                $color = '#FF8900';
+            elseif($classI == 2)
+                $color = '#FFD700';
+            elseif($classI == 3)
+                $color = '#BAF300';
+            elseif($classI == 4)
+                $color = '#2DD700';
+            elseif($classI == 5)
+                $color = '#009999';
+            elseif($classI == 6)
+                $color = '#162EAE';
+            elseif($classI == 7)
+                $color = '#6A0AAB';
+            elseif($classI == 8)
+                $color = '#BE008A';
+            else
+                $color = '#DDDDDD';
+
+            $timespan = strtotime($reminder->getDueDate()) - time();
+            if(floor($timespan / 86400) + 1 <= 0)
+                $days = 'today';
+            elseif(floor($timespan / 86400) + 1 > 1)
+                $days = floor($timespan / 86400) + 1 . ' days';
+            else
+                $days = '1 day';
+
+            $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . (!empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic') . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment() . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
+            if(array_search($reminder->getCourse(), $classes) === false)
+                $classes[] = $reminder->getCourse();
+
+            // save the sent status of the reminder
+            foreach([86400,172800,345600,604800,1209600] as $i => $t)
+            {
+                if($timespan - $t <= 0)
+                {
+                    $sent = $reminder->getReminderSent();
+                    $sent[] = $t;
+                    $reminder->setReminderSent($sent);
+                    $orm->merge($reminder);
+                    $orm->flush();
+                    break;
+                }
+            }
+        }
+
+        $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('You have a notification for ' . implode(', ', $classes))
+            ->setFrom('admin@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:deadline-reminder.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Hi ' . $user->getFirst() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Click here to log in to Study Sauce and edit your deadlines</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['reminders']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 
@@ -339,7 +503,7 @@ class EmailsController extends Controller
                     [
                         'link' => '&nbsp;',
                         'user' => $user,
-                        'properties' => substr(self::dump($properties, $properties instanceof \Exception ? 3 : 2), 0, 4086)
+                        'properties' => self::dump($properties, $properties instanceof \Exception ? 3 : 2)
                     ]
                 ),
                 'text/html'
@@ -451,4 +615,5 @@ class EmailsController extends Controller
                 break;
         }
     }
+
 }

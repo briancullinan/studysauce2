@@ -38,6 +38,10 @@ $(document).ready(function () {
                 fromTo:false,
                 speed:'immediate',
                 yearRange: '-3:+3'
+            }).on('focus', function () {
+                setTimeout(function () {
+                    $('#ui-datepicker-div').scrollintoview(DASHBOARD_MARGINS);
+                }, 50);
             });
         });
 

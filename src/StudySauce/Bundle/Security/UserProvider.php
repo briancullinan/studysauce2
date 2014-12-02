@@ -5,7 +5,7 @@ namespace StudySauce\Bundle\Security;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
+use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseUserProvider;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Class UserProvider
  * @package StudySauce\Bundle\Security
  */
-class UserProvider extends BaseClass
+class UserProvider extends BaseUserProvider
 {
     /**
      * @var \Doctrine\Common\Persistence\ObjectManager
@@ -110,7 +110,7 @@ class UserProvider extends BaseClass
         $user->$setter_id($username);
         $setter_token = $setter.'AccessToken';
         $user->$setter_token($response->getAccessToken());
-        $user->setEmail($response->getEmail());
+        $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
         $user->setFirst($response->getFirst());
         $user->setLast($response->getLast());
         $this->userManager->updateUser($user);

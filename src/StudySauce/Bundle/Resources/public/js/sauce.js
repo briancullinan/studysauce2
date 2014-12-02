@@ -114,6 +114,12 @@ $(document).ready(function () {
         });
     });
 
+    // show unsupported dialog if it is needed
+    $('#unsupported').modal({
+        backdrop: 'static',
+        keyboard: false,
+        modalOverflow: true
+    });
 
     $('body').on('show.bs.modal', '.modal', function () {
         var modals = $('.modal');

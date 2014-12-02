@@ -28,6 +28,7 @@ class LandingController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+
         // check if we have a user and redirect accordingly.
         list($route, $options) = HomeController::getUserRedirect($user);
         if($route != '_welcome')
@@ -66,6 +67,14 @@ class LandingController extends Controller
     public function refundAction()
     {
         return $this->render('StudySauceBundle:Landing:refund.html.php');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contactAction()
+    {
+        return $this->render('StudySauceBundle:Landing:contact.html.php');
     }
 
     /**
@@ -252,10 +261,20 @@ class LandingController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function videoAction()
+    public function videoAction(Request $request)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $session = $request->getSession();
+
+        if($user->hasGroup('Torch And Laurel') || ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+        {
+            return $this->render('TorchAndLaurelBundle:Landing:video.html.php');
+        }
         return $this->render('StudySauceBundle:Landing:video.html.php');
     }
 

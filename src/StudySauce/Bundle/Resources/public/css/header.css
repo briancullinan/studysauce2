@@ -36,11 +36,23 @@
 
 #site-name a
 {
-    font-size: 42px;
     padding: 0;
-    line-height: 110%;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    display: block;
+    display: inline-block;
+}
+
+#site-name a > span
+{
+    font-size: 42px;
+    line-height: 110%;
+    display:inline-block;
+}
+
+#site-name a small
+{
+    font-size:12px;
+    display:block;
+    line-height: 110%;
 }
 
 #site-name a > *

@@ -23,7 +23,7 @@ class AppKernel extends Kernel
         $bundles[] = new StudySauce\Bundle\StudySauceBundle();
         $bundles[] = new Course1\Bundle\Course1Bundle();
         $bundles[] = new WhiteOctober\SwiftMailerDBBundle\WhiteOctoberSwiftMailerDBBundle();
-        //$bundles[] = new NewBrand\Bundle\NewBrandBundle();
+        $bundles[] = new TorchAndLaurel\Bundle\TorchAndLaurelBundle();
 
         if (in_array($this->getEnvironment(), ['dev', 'test'])) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
