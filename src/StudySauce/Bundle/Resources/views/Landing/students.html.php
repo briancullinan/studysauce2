@@ -34,10 +34,10 @@ foreach ($view['assetic']->javascripts(['@landing_scripts'],[],['output' => 'bun
 $view['slots']->stop();
 
 $view['slots']->start('body');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:video'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:scr'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:banner'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:features'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'));
+echo $view->render('StudySauceBundle:Landing:video.html.php');
+echo $view->render('StudySauceBundle:Landing:scr.html.php');
+echo $view->render('StudySauceBundle:Landing:banner.html.php');
+echo $view->render('StudySauceBundle:Landing:features.html.php');
+echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();
 

@@ -46,7 +46,7 @@ echo $view->render('StudySauceBundle:Landing:parent-video.html.php');
 echo $view->render('StudySauceBundle:Landing:parent-scr.html.php');
 echo $view->render('StudySauceBundle:Landing:parent-banner.html.php');
 echo $view->render('StudySauceBundle:Landing:parent-features.html.php');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Landing:testimony'));
+echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');

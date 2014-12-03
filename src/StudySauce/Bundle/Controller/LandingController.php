@@ -22,9 +22,10 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 class LandingController extends Controller
 {
     /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -33,6 +34,13 @@ class LandingController extends Controller
         list($route, $options) = HomeController::getUserRedirect($user);
         if($route != '_welcome')
             return $this->redirect($this->generateUrl($route, $options));
+
+        $session = $request->getSession();
+
+        if($user->hasGroup('Torch And Laurel') || ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+        {
+            return $this->forward('TorchAndLaurelBundle:Landing:index');
+        }
 
         return $this->render('StudySauceBundle:Landing:index.html.php');
     }
@@ -236,53 +244,4 @@ class LandingController extends Controller
         return $this->render('StudySauceBundle:Landing:students.html.php');
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function scrAction()
-    {
-        return $this->render('StudySauceBundle:Landing:scr.html.php');
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function bannerAction()
-    {
-        return $this->render('StudySauceBundle:Landing:banner.html.php');
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function featuresAction()
-    {
-        return $this->render('StudySauceBundle:Landing:features.html.php');
-    }
-
-    /**
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function videoAction(Request $request)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $session = $request->getSession();
-
-        if($user->hasGroup('Torch And Laurel') || ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
-        {
-            return $this->render('TorchAndLaurelBundle:Landing:video.html.php');
-        }
-        return $this->render('StudySauceBundle:Landing:video.html.php');
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function testimonyAction()
-    {
-        return $this->render('StudySauceBundle:Landing:testimony.html.php');
-    }
 }

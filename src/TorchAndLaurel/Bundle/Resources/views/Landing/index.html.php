@@ -1,6 +1,5 @@
 <?php
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var GlobalVariables $app */
 
 $view->extend('StudySauceBundle:Shared:layout.html.php');
@@ -43,7 +42,7 @@ foreach ($view['assetic']->javascripts(
 $view['slots']->stop();
 
 $view['slots']->start('body');
-echo $view->render('StudySauceBundle:Landing:video.html.php');
+echo $view->render('TorchAndLaurelBundle:Landing:video.html.php');
 echo $view->render('StudySauceBundle:Landing:scr.html.php');
 echo $view->render('StudySauceBundle:Landing:banner.html.php');
 echo $view->render('StudySauceBundle:Landing:features.html.php');
