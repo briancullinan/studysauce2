@@ -105,6 +105,7 @@ class Group extends BaseGroup implements GroupInterface
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = [];
     }
 
     /**
