@@ -1,8 +1,26 @@
 
+#site-name a > *
+{
+    vertical-align: bottom;
+}
+
+#site-name a small
+{
+    font-size:10px;
+    line-height: 110%;
+}
 
 #site-name a > span
 {
-    font-size: 30px;
-    line-height: 110%;
+    font-size: 16px;
+    line-height: 100%;
     display:inline-block;
+    text-align: justify;
+    max-width: 150px;
+}
+
+#site-name a > span > span
+{
+    font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    text-transform: uppercase;
 }

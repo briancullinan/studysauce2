@@ -172,6 +172,12 @@ $view['slots']->start('body'); ?>
                                autocomplete="off"
                                value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/y', $startDate)); ?>">
                     </label>
+                    <label class="input mobile-only">
+                        <span>Date</span>
+                        <input type="date" placeholder="First class" title="What day does your academic term begin?"
+                               autocomplete="off"
+                               value="<?php print ($isDemo || $startDate == null ? '' : date('Y-m-d', $startDate)); ?>">
+                    </label>
                 </div>
                 <div class="end-date">
                     <label class="input">
@@ -179,6 +185,12 @@ $view['slots']->start('body'); ?>
                         <input type="text" placeholder="Last class" title="What day does your academic term end?"
                                autocomplete="off"
                                value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/y', $endDate)); ?>">
+                    </label>
+                    <label class="input mobile-only">
+                        <span>&nbsp;</span>
+                        <input type="date" placeholder="Last class" title="What day does your academic term end?"
+                               autocomplete="off"
+                               value="<?php print ($isDemo || $endDate == null ? '' : date('Y-m-d', $endDate)); ?>">
                     </label>
                 </div>
                 <input type="hidden" name="event-type" value="c">
@@ -278,38 +290,23 @@ $view['slots']->start('body'); ?>
                         <input type="checkbox" value="Su" <?php print (!$isDemo && in_array('Su',$daysOfTheWeek)
                             ? 'checked="checked"'
                             : ''); ?>><i></i></label>
-
-                    <div class="recurring">
-                        <label class="checkbox">
-                            <input type="checkbox" value="Weekly" <?php print ($isDemo || in_array('Weekly',$daysOfTheWeek)
-                                ? 'checked="checked"'
-                                : ''); ?>><span>Recurring</span><i></i><span>Weekly</span></label>
-                    </div>
                 </div>
                 <div class="start-time">
-                    <div class="input">
-                        <label><span>Time</span>
-                            <input type="text" placeholder="Start" autocomplete="off"
-                                   value="<?php print ($isDemo || $startDate == null ? '' : date(
-                                       'H:i:s',
-                                       $startDate
-                                   )); ?>">
-                        </label>
-                    </div>
-                    <div class="input mobile-only">
-                        <label><span>Time</span>
-                            <input type="time" title="What time does your class begin?" autocomplete="off"
-                                   value="<?php print ($isDemo || $startDate == null ? '' : date(
-                                       'H:i:s',
-                                       $startDate
-                                   )); ?>">
-                        </label>
-                    </div>
+                    <label class="input">
+                        <span>Time</span>
+                        <input type="text"  title="What time does your class begin?" placeholder="Start" autocomplete="off"
+                               value="<?php print ($isDemo || $startDate == null ? '' : date('H:i:s',$startDate)); ?>">
+                    </label>
+                    <label class="input mobile-only">
+                        <span>Time</span>
+                        <input type="time" title="What time does your class begin?" autocomplete="off"
+                               value="<?php print ($isDemo || $startDate == null ? '' : date('H:i:s',$startDate)); ?>">
+                    </label>
                 </div>
                 <div class="end-time">
                     <label class="input">
                         <span>&nbsp;</span>
-                        <input type="text" placeholder="End" autocomplete="off"
+                        <input type="text" title="What time does your class end?" placeholder="End" autocomplete="off"
                                value="<?php print ($isDemo || $endDate == null ? '' : date('H:i:s', $endDate)); ?>">
                     </label>
                     <label class="input mobile-only">
@@ -321,17 +318,29 @@ $view['slots']->start('body'); ?>
                 <div class="start-date">
                     <label class="input">
                         <span>Date</span>
-                        <input type="text" placeholder="Start"
+                        <input type="text" placeholder="Start" title="What day does your academic term begin?"
                                autocomplete="off"
                                value="<?php print ($isDemo || $startDate == null ? '' : date('m/d/y', $startDate)); ?>">
+                    </label>
+                    <label class="input mobile-only">
+                        <span>Date</span>
+                        <input type="date" placeholder="Start" title="What day does your academic term begin?"
+                               autocomplete="off"
+                               value="<?php print ($isDemo || $startDate == null ? '' : date('Y-m-d', $startDate)); ?>">
                     </label>
                 </div>
                 <div class="end-date">
                     <label class="input">
                         <span>&nbsp;</span>
-                        <input type="text" placeholder="End"
+                        <input type="text" placeholder="End" title="What day does your academic term end?"
                                autocomplete="off"
                                value="<?php print ($isDemo || $endDate == null ? '' : date('m/d/y', $endDate)); ?>">
+                    </label>
+                    <label class="input mobile-only">
+                        <span>&nbsp;</span>
+                        <input type="date" placeholder="End" title="What day does your academic term end?"
+                               autocomplete="off"
+                               value="<?php print ($isDemo || $endDate == null ? '' : date('Y-m-d', $endDate)); ?>">
                     </label>
                 </div>
                 <div class="read-only"><a href="#edit-class">&nbsp;</a><a href="#remove-class">&nbsp;</a></div>

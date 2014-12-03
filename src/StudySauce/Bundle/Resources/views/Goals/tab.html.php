@@ -149,7 +149,10 @@ $view['slots']->start('body'); ?>
                     <a class="more" href="#claim" data-target="#claim">Brag</a>
                 </div>
             </div>
-            <p class="highlighted-link form-actions invalid" <?php print (!empty($outcome) ? 'style="visibility:hidden;"' : ''); ?>>
+            <p class="highlighted-link form-actions invalid"
+                <?php print (!empty($outcome) && !empty($milestone) && !empty($behavior)
+                    ? 'style="visibility:hidden;"'
+                    : ''); ?>>
                 <a href="#save-goal" class="more">Save</a>
             </p>
 

@@ -173,6 +173,8 @@
     border-bottom:3px solid #CC0000;
 }
 
+.schedule .start-date .input.mobile-only,
+.schedule .end-date .input.mobile-only,
 .schedule .start-time .input.mobile-only,
 .schedule .end-time .input.mobile-only
 {
@@ -323,12 +325,16 @@ a[href="#add-class"] span, a[href="#add-other"] span {
 
 @media all and (max-width: 500px) {
 
+    .schedule .start-date .input,
+    .schedule .end-date .input,
     .schedule .start-time .input,
     .schedule .end-time .input
     {
         display:none;
     }
 
+    .schedule .start-date .input.mobile-only,
+    .schedule .end-date .input.mobile-only,
     .schedule .start-time .input.mobile-only,
     .schedule .end-time .input.mobile-only
     {

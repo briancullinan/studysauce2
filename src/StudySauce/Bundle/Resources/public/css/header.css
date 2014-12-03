@@ -46,13 +46,7 @@
     font-size: 42px;
     line-height: 110%;
     display:inline-block;
-}
-
-#site-name a small
-{
-    font-size:12px;
-    display:block;
-    line-height: 110%;
+    white-space: normal;
 }
 
 #site-name a > *

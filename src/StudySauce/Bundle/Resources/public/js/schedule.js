@@ -22,7 +22,7 @@ $(document).ready(function () {
             else
                 row.removeClass('invalid blank').addClass('valid');
 
-            row.find('.start-date input, .end-date input')
+            row.find('.start-date input[type="text"], .end-date input[type="text"]')
                 .datepicker({
                     showOtherMonths: true,
                     selectOtherMonths: true,

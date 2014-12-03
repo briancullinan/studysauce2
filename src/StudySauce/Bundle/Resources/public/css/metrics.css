@@ -19,6 +19,11 @@
     margin-top:0;
 }
 
+.metrics-widget svg
+{
+    margin-top:20px;
+}
+
 #metrics text,
 .metrics-widget text,
 #metrics .axis path,

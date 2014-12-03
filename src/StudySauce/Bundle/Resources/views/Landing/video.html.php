@@ -8,7 +8,7 @@
                 </div>
                 <div class="player-divider">
                     <div class="player-wrapper">
-                        <iframe id="landing-intro-player" src="https://www.youtube.com/embed/vJG9PDaXNaQ?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1"></iframe>
+                        <iframe id="landing-intro-player" src="https://www.youtube.com/embed/vJG9PDaXNaQ?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;origin=<?php print $app->getRequest()->getScheme() . '://' . $app->getRequest()->getHttpHost(); ?>"></iframe>
                     </div>
                 </div>
             </li>
