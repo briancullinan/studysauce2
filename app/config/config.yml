@@ -40,7 +40,7 @@ services:
         class: StudySauce\Bundle\EventListener\RedirectListener
         tags:
             - {name: kernel.event_subscriber}
-        arguments: [@templating, @kernel]
+        arguments: [@templating, @service_container]
 
     torchandlaurel.user_register:
         class: TorchAndLaurel\Bundle\EventListener\OrgEmailNotifier
@@ -136,7 +136,7 @@ swiftmailer:
     host:      smtp.gmail.com
     username:  brian@studysauce.com
     password:  Da1ddy23
-    spool:     { type: db }
+    spool:     { type: memory }
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'

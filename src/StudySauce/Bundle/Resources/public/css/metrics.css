@@ -205,6 +205,10 @@
 
 @media all and (max-width:1000px)
 {
+    #metrics h3
+    {
+        margin-top:40px;
+    }
 
     #metrics .checkin-row .full-only
     {

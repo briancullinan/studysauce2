@@ -259,6 +259,19 @@ body.right-menu #bookmark
         height: auto;
         position:absolute;
         bottom:auto;
+        transition: left linear .15s;
+    }
+
+    .left-menu.modal-open .modal
+    {
+        left:220px;
+        position:fixed;
+    }
+
+    .right-menu.modal-open .modal
+    {
+        left:-220px;
+        position:fixed;
     }
 
     body.modal-open .footer

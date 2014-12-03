@@ -55,7 +55,7 @@ class OrgEmailNotifier implements EventSubscriberInterface
 
         /** @var SecurityContext $context */
         $context = $this->container->get('security.context');
-        if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController' &&
+        if($event->getRequest()->get('_controller') == 'StudySauceBundle:Account:create' &&
             $event->getResponse() instanceof RedirectResponse) {
 
             /** @var User $user */

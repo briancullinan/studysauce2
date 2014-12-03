@@ -214,10 +214,6 @@
 }
 
 @media all and (max-width: 500px) {
-    #site-name
-    {
-        margin-top:8px;
-    }
 
     #site-name a
     {
@@ -226,7 +222,6 @@
 
     #site-name img
     {
-        max-height: 32px;
-        max-width: 32px;
+        display:none;
     }
 }

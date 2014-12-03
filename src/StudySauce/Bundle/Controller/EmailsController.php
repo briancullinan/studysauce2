@@ -493,6 +493,7 @@ class EmailsController extends Controller
         else
             $from = $this->get('request')->get('_controller');
 
+        /** @var \Swift_Mime_SimpleMessage $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Message from ' . $from)
             ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
@@ -510,8 +511,14 @@ class EmailsController extends Controller
             );
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['sponsor-invite']])));
-        $mailer = $this->get('mailer');
+                        'category' => ['administrator']])));
+
+        /** @var \Swift_Transport_EsmtpTransport $transport */
+        $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+            ->setUsername('brian@studysauce.com')
+            ->setPassword('Da1ddy23');
+        /** @var \Swift_Mailer $mailer */
+        $mailer = \Swift_Mailer::newInstance($transport);
         $mailer->send($message);
 
         return new Response();

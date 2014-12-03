@@ -1009,6 +1009,14 @@
 
 @media all and (max-width: 700px) {
 
+    #left-panel.expanded a[href="#collapse"],
+    #right-panel.expanded a[href="#collapse"],
+    #left-panel a[href="#collapse"],
+    #right-panel a[href="#collapse"]
+    {
+        display:none;
+    }
+
     #left-panel .navbar-toggle .icon-bar
     {
         display:none;

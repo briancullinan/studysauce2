@@ -147,7 +147,7 @@ $(document).ready(function () {
     function collapseMenu(evt)
     {
         if(body.is('.left-menu') || body.is('.right-menu')) {
-            if($(this).is('[href="#collapse"]'))
+            if($(this).is('[href="#collapse"]') || $(this).is('[href="#expand"]'))
                 evt.preventDefault();
             // collapse menus
             body.removeClass('right-menu left-menu');
@@ -219,7 +219,7 @@ $(document).ready(function () {
             // check if there is a tab with the selected url
             callback == -1) {
             visits[visits.length] = {path: el.pathname, query: el.search, hash: el.hash, time:(new Date()).toJSON()};
-            collapseMenu.apply(this);
+            collapseMenu.apply(this, [evt]);
         }
         // if the path clicked is a callback, use callback to load the new tab
         else

@@ -368,7 +368,7 @@ input[type=month],
     font-family: inherit;
     font-weight: normal;
     line-height: normal;
-    padding: 5px;
+    padding: 2px 5px;
     width: 100%;
     outline: none;
     border-radius: 2px;
@@ -392,15 +392,6 @@ input[type=month],
 textarea
 {
     height:8em;
-}
-
-.selectize-input,
-.selectize-control.single .selectize-input,
-select,
-.ui-datepicker-title select
-{
-    padding-top:3px;
-    padding-bottom:2px;
 }
 
 .ui-datepicker table
@@ -802,6 +793,21 @@ sup.premium
 }
 
 @media all and (max-width: 700px) {
+
+    h1
+    {
+        font-size:30px;
+    }
+
+    h2
+    {
+        font-size:24px;
+    }
+
+    h3
+    {
+        font-size:18px;
+    }
 
 }
 

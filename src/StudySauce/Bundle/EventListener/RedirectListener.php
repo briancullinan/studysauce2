@@ -2,13 +2,13 @@
 
 namespace StudySauce\Bundle\EventListener;
 
-use AppKernel;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Controller\EmailsController;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,17 +27,17 @@ class RedirectListener implements EventSubscriberInterface
     /** @var DelegatingEngine $templating */
     protected $templating;
 
-    /** @var  AppKernel $kernel */
-    protected $kernel;
+    /** @var  ContainerInterface $kernel */
+    protected $container;
 
     /**
      * @param EngineInterface $templating
-     * @param $kernel
+     * @param $container
      */
-    public function __construct(EngineInterface $templating, $kernel)
+    public function __construct(EngineInterface $templating, $container)
     {
         $this->templating = $templating;
-        $this->kernel = $kernel;
+        $this->container = $container;
 
     }
 
@@ -80,7 +80,7 @@ class RedirectListener implements EventSubscriberInterface
         $exception = $event->getException();
         try {
             /** @var RegistryInterface $doc */
-            $doc = $this->kernel->getContainer()->get('doctrine');
+            $doc = $this->container->get('doctrine');
             /** @var EntityManager $orm */
             $orm = $doc->getManager();
             $orm->clear();
@@ -94,7 +94,7 @@ class RedirectListener implements EventSubscriberInterface
         {
             // try to notify admin
             $email = new EmailsController();
-            $email->setContainer($this->kernel->getContainer());
+            $email->setContainer($this->container);
             $email->administratorAction(null, $exception);
         }
         catch(\Exception $x)
@@ -171,8 +171,8 @@ class RedirectListener implements EventSubscriberInterface
             $options = ['redirect' => $response->headers->get('Location')];
             if(strpos($response->headers->get('Location'), '/login'))
             {
-                $csrfToken = $this->kernel->getContainer()->has('form.csrf_provider')
-                    ? $this->kernel->getContainer()->get('form.csrf_provider')->generateCsrfToken('account_login')
+                $csrfToken = $this->container->has('form.csrf_provider')
+                    ? $this->container->get('form.csrf_provider')->generateCsrfToken('account_login')
                     : null;
                 $options['csrf_token'] = $csrfToken;
             }

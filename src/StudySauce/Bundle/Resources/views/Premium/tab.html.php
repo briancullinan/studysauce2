@@ -177,7 +177,7 @@ $view['slots']->start('body'); ?>
                 <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/did_you_know_620x310.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img width="165" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
-                <h1>Your parents can sponsor you.</h1>
+                <h2>Your parents can sponsor you.</h2>
                 <div class="one highlighted-link"><a class="more parents" href="#bill-parents" data-toggle="modal">Bill my parents</a></div>
             </div>
         </div>

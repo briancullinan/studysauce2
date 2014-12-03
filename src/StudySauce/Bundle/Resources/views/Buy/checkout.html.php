@@ -129,7 +129,7 @@ $view['slots']->start('body'); ?>
                 <div class="fieldset-description">
                     <div>
                         <label class="radio"><input name="reoccurs" type="radio" value="monthly" checked="checked"><i></i><span>$9.99/mo</span></label><br />
-                        <label class="radio"><input name="reoccurs" type="radio" value="yearly"><i></i><span>$99/year <sup>Recommended</sup></span></label>
+                        <label class="radio"><input name="reoccurs" type="radio" value="yearly"><i></i><span>$99/year <sup class="premium">Recommended</sup></span></label>
                     </div>
                     <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/money_back_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                         <img src="<?php echo $view->escape($url) ?>" />
