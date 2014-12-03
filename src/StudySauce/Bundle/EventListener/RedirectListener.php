@@ -165,6 +165,9 @@ class RedirectListener implements EventSubscriberInterface
         $response = $event->getResponse();
         $request = $event->getRequest();
 
+        // always add origin policy
+        $response->headers->set('Access-Control-Allow-Origin', 'https://www.youtube.com');
+
         // TODO: add social login redirect here
 
         if ($request->isXmlHttpRequest() && $response->isRedirect()) {

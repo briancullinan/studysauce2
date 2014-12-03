@@ -17,7 +17,7 @@ $collection = $router->getRouteCollection();
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <link rel="icon" sizes="72x72" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-72x72.png'); ?>">
+    <link rel="icon" sizes="76x76" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-76x76.png'); ?>">
     <link rel="icon" sizes="120x120" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-120x120.png'); ?>">
     <link rel="icon" sizes="152x152" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-152x152.png'); ?>">
     <link rel="icon" sizes="180x180" href="<?php print $view['assets']->getUrl('bundles/studysauce/images/studysauce-icon-180x180.png'); ?>">
