@@ -1,6 +1,7 @@
 .landing-home .video {
-    background: url(../images/SMU_blur.jpg) no-repeat fixed 50% 0 #007799 !important;
+    background: url(../images/SMU_blur.jpg) no-repeat fixed 50% -50px #007799;
     text-align: center;
+    background-size: 100% 100%;
 }
 
 .landing-home .video h1 {

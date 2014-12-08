@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="parent_invite")
  * @ORM\HasLifecycleCallbacks()
  */
-class ParentInvite
+class ParentInvite implements Invite
 {
     /**
      * @ORM\Column(type="integer", name="id")

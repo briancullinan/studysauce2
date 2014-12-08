@@ -5,10 +5,15 @@ namespace StudySauce\Bundle\Controller;
 use Course1\Bundle\Entity\Course1;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Command\CronSauceCommand;
+use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -27,22 +32,41 @@ class LandingController extends Controller
      */
     public function indexAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         /** @var User $user */
         $user = $this->getUser();
+        $session = $request->getSession();
 
         // check if we have a user and redirect accordingly.
         list($route, $options) = HomeController::getUserRedirect($user);
         if($route != '_welcome')
             return $this->redirect($this->generateUrl($route, $options));
 
-        $session = $request->getSession();
-
-        if($user->hasGroup('Torch And Laurel') || ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+        /** @var GroupInvite $group */
+        // TODO: generalize this for other groups
+        $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($group) && $group->getGroup()->getName() == 'Torch And Laurel' ||
+            ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
         {
             return $this->forward('TorchAndLaurelBundle:Landing:index');
         }
 
         return $this->render('StudySauceBundle:Landing:index.html.php');
+    }
+
+    /**
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function cronAction()
+    {
+        $command = new CronSauceCommand();
+        $command->setContainer($this->container);
+        $input = new ArrayInput([] /* array('some-param' => 10, '--some-option' => true)*/);
+        $output = new NullOutput();
+        $command->run($input, $output);
+        return new JsonResponse(true);
     }
 
     /**
@@ -132,10 +156,9 @@ class LandingController extends Controller
 
     /**
      * @param Request $request
-     * @param $_code
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnersAction(Request $request, $_code)
+    public function partnersAction(Request $request)
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -143,7 +166,7 @@ class LandingController extends Controller
         $orm = $this->get('doctrine')->getManager();
 
         /** @var PartnerInvite $partner */
-        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $_code]);
+        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->get('_code')]);
         if(empty($partner)) {
             return $this->render('StudySauceBundle:Landing:partners.html.php');
         }
@@ -157,30 +180,30 @@ class LandingController extends Controller
             $orm->flush();
             $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:partners.html.php');
             $session = $request->getSession();
-            $session->set('partner', $_code);
+            $session->set('partner', $request->get('_code'));
             return $response;
         }
     }
 
     /**
      * @param Request $request
-     * @param $_code
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function parentsAction(Request $request, $_code)
+    public function parentsAction(Request $request)
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
 
-        /** @var ParentInvite $partner */
+        /** @var ParentInvite $parent */
         $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
         if(empty($parent)) {
             return $this->render('StudySauceBundle:Landing:parents.html.php');
         }
         else {
             $parent->setActivated(true);
+            /** @var User $parentUser */
             $parentUser = $userManager->findUserByEmail($parent->getEmail());
             if($parentUser != null)
                 $parent->setParent($parentUser);
@@ -188,7 +211,7 @@ class LandingController extends Controller
             $orm->flush();
             $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:parents.html.php');
             $session = $request->getSession();
-            $session->set('parent', $_code);
+            $session->set('parent', $request->get('_code'));
             return $response;
         }
     }
@@ -223,25 +246,27 @@ class LandingController extends Controller
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
 
-        /** @var $user User */
-        $user = $this->getUser();
-
-        /** @var PartnerInvite $partner */
-        $parent = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->get('_code')]);
-        if(!empty($parent)) {
-            $parent->setActivated(true);
-            $orm->merge($parent);
-            $orm->flush();
-
-            if(empty($parent->getParent()) || $parent->getParent()->getId() !=  $user->getId())
-            {
-                $this->get('security.context')->setToken(null);
-                $this->get('request')->getSession()->invalidate();
-            }
+        /** @var StudentInvite $student */
+        $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(empty($student)) {
+            return $this->render('StudySauceBundle:Landing:students.html.php');
         }
-
-        return $this->render('StudySauceBundle:Landing:students.html.php');
+        else {
+            $student->setActivated(true);
+            /** @var User $studentUser */
+            $studentUser = $userManager->findUserByEmail($student->getEmail());
+            if($studentUser != null)
+                $student->setStudent($studentUser);
+            $orm->merge($student);
+            $orm->flush();
+            $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:students.html.php');
+            $session = $request->getSession();
+            $session->set('student', $request->get('_code'));
+            return $response;
+        }
     }
 
 }

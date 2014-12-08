@@ -12,6 +12,7 @@ use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -356,25 +357,25 @@ class EmailsController extends Controller
             else
                 $color = '#DDDDDD';
 
-            $timespan = strtotime($reminder->getDueDate()) - time();
-            if(floor($timespan / 86400) + 1 <= 0)
+            $timespan = floor(($reminder->getDueDate()->getTimestamp() - time()) / 86400);
+            if($timespan <= 0)
                 $days = 'today';
-            elseif(floor($timespan / 86400) + 1 > 1)
-                $days = floor($timespan / 86400) + 1 . ' days';
+            elseif($timespan > 1)
+                $days = $timespan . ' days';
             else
-                $days = '1 day';
+                $days = 'tomorrow';
 
             $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . (!empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic') . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment() . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
-            if(array_search($reminder->getCourse(), $classes) === false)
-                $classes[] = $reminder->getCourse();
+            if(array_search(!empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic', $classes) === false)
+                $classes[] = $reminder->getCourse()->getName();
 
             // save the sent status of the reminder
-            foreach([86400,172800,345600,604800,1209600] as $i => $t)
+            foreach([1,2,4,7,14] as $i => $t)
             {
                 if($timespan - $t <= 0)
                 {
                     $sent = $reminder->getReminderSent();
-                    $sent[] = $t;
+                    $sent[] = $t * 86400;
                     $reminder->setReminderSent($sent);
                     $orm->merge($reminder);
                     $orm->flush();
@@ -391,6 +392,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:deadline-reminder.html.php', [
                         'user' => $user,
+                        'reminders' => $reminderOutput,
                         'greeting' => 'Hi ' . $user->getFirst() . ',',
                         'link' => '<a href="' . $codeUrl . '">Click here to log in to Study Sauce and edit your deadlines</a>'
                     ]), 'text/html');

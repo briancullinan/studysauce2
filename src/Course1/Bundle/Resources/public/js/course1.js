@@ -110,7 +110,8 @@ $(document).ready(function () {
         $(this).find('.highlighted-link').removeClass('invalid').addClass('played');
     });
 
-    body.on('click', '.course1.step1 .highlighted-link a[href="#play"]', function () {
+    body.on('click', '.course1.step1 .highlighted-link a[href="#play"]', function (evt) {
+        evt.preventDefault();
         var step = $(this).parents('.course1');
         $(window.players).each(function () {
             if($(this.d).parents(step).length > 0)

@@ -1,4 +1,5 @@
 <?php
+use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
@@ -12,7 +13,9 @@ $user = $app->getUser();
 /** @var Session $session */
 $session = $app->getSession();
 
-if(!empty($user) && $user->hasGroup('Torch And Laurel') || ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+// TODO: generalize this for other groups
+if(!empty($user) && $user->hasGroup('Torch And Laurel') ||
+    ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
 {
     print $view->render('TorchAndLaurelBundle:Shared:header.html.php');
     return;

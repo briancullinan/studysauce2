@@ -7,8 +7,11 @@ use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\Group;
+use StudySauce\Bundle\Entity\GroupInvite;
+use StudySauce\Bundle\Entity\Invite;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -138,13 +141,25 @@ class AccountController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
 
+        /** @var Invite $invite */
         if(!empty($request->getSession()->get('partner'))) {
-            /** @var PartnerInvite $partner */
-            $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
+            $invite = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
+        }
+        if(!empty($request->getSession()->get('student'))) {
+            $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
+        }
+        if(!empty($request->getSession()->get('parent'))) {
+            $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+        }
+        if(!empty($request->getSession()->get('group'))) {
+            $invite = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->getSession()->get('group')]);
+        }
+
+        if(!empty($invite)) {
             return $this->render('StudySauceBundle:Account:register.html.php', [
-                    'email' => $partner->getEmail(),
-                    'first' => $partner->getFirst(),
-                    'last' => $partner->getLast(),
+                    'email' => $invite->getEmail(),
+                    'first' => $invite->getFirst(),
+                    'last' => $invite->getLast(),
                     'csrf_token' => $csrfToken,
                     'services' => $services
                 ]);
@@ -195,15 +210,34 @@ class AccountController extends Controller
                 /** @var PartnerInvite $partner */
                 $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
                 $partner->setPartner($user);
+                $user->addInvitedPartner($partner);
                 $orm->merge($partner);
             }
             if(!empty($request->getSession()->get('parent'))) {
                 $user->addRole('ROLE_PARENT');
-                /** @var ParentInvite $partner */
+                /** @var ParentInvite $parent */
                 $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
                 $parent->setParent($user);
+                $user->addInvitedParent($parent);
                 $orm->merge($parent);
             }
+            if(!empty($request->getSession()->get('student'))) {
+                /** @var StudentInvite $student */
+                $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
+                $student->setStudent($user);
+                $user->addInvitedStudent($student);
+                $orm->merge($student);
+            }
+            // assign group to group invited users
+            if(!empty($request->getSession()->get('group'))) {
+                /** @var GroupInvite $group */
+                $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['name' => $request->getSession()->get('group')]);
+                $group->setStudent($user);
+                $user->addInvitedGroup($group);
+                $user->addGroup($group->getGroup());
+                $orm->merge($group);
+            }
+            // assign correct group to anonymous users
             if(!empty($request->getSession()->get('organization'))) {
                 /** @var Group $group */
                 $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);

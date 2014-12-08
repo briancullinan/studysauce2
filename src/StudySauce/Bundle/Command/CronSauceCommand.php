@@ -36,8 +36,9 @@ class CronSauceCommand extends ContainerAwareCommand
             ->setName('sauce:cron')
             ->setDescription('Run all the periodic things Study Sauce needs to do.')
             //->addArgument('who', InputArgument::OPTIONAL, 'Who to greet.', 'World')
-            ->setHelp(<<<EOF
-The <info>%command.name%</info> command performs the following tasks:
+            ->setHelp(
+                <<<EOF
+                The <info>%command.name%</info> command performs the following tasks:
 * Send reminder e-mails
 * Clear the mail queue
 <info>php %command.full_name%</info>
@@ -58,16 +59,23 @@ EOF
         $emails->setContainer($container);
 
         // send reminders
-        $notActivated = Criteria::create()->where(Criteria::expr()->isNull('activated'))->orWhere(Criteria::expr()->eq('activated', false));
+        $notActivated = Criteria::create()->where(Criteria::expr()->isNull('activated'))->orWhere(
+            Criteria::expr()->eq('activated', false)
+        );
         $partners = $orm->getRepository('StudySauceBundle:PartnerInvite')->matching($notActivated)->toArray();
-        foreach($partners as $i => $p) {
+        foreach ($partners as $i => $p) {
             /** @var PartnerInvite $p */
             // send for 4 weeks
-            if ((($p->getCreated() > time() - 86400 * 3 && $p->getCreated() < time() - 86400 * 4) ||
-                ($p->getCreated() > time() - 86400 * 10 && $p->getCreated() < time() - 86400 * 11) ||
-                ($p->getCreated() > time() - 86400 * 17 && $p->getCreated() < time() - 86400 * 18) ||
-                ($p->getCreated() > time() - 86400 * 24 && $p->getCreated() < time() - 86400 * 25)) &&
-                (empty($p->getReminder()) || $p->getReminder() < time() - 86400 * 7)) {
+            if ((($p->getCreated()->getTimestamp() < time() - 86400 * 3 && $p->getCreated()->getTimestamp() > time(
+                        ) - 86400 * 4) ||
+                    ($p->getCreated()->getTimestamp() < time() - 86400 * 10 && $p->getCreated()->getTimestamp() > time(
+                        ) - 86400 * 11) ||
+                    ($p->getCreated()->getTimestamp() < time() - 86400 * 17 && $p->getCreated()->getTimestamp() > time(
+                        ) - 86400 * 18) ||
+                    ($p->getCreated()->getTimestamp() < time() - 86400 * 24 && $p->getCreated()->getTimestamp() > time(
+                        ) - 86400 * 25)) &&
+                (empty($p->getReminder()) || $p->getReminder()->getTimestamp() < time() - 86400 * 7)
+            ) {
                 $emails->partnerReminderAction($p->getUser(), $p);
             }
         }
@@ -76,11 +84,14 @@ EOF
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('p')
-            ->where('p.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\'');
+            ->where('p.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\'')
+            ->orWhere('p.properties IS NULL');
         $users = $qb->getQuery()->execute();
-        foreach($users as $i => $u) {
+        foreach ($users as $i => $u) {
             /** @var User $u */
-            if($u->getCreated() > time() - 86400 * 3 && $u->getCreated() < time() - 86400 * 4) {
+            if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time(
+                ) - 86400 * 4
+            ) {
                 $u->setProperty('welcome_reminder', true);
                 $emails->marketingReminderAction($u);
                 $orm->merge($u);
@@ -89,29 +100,43 @@ EOF
         }
 
         // send deadline reminders
-        $futureReminders = Criteria::create()->where(Criteria::expr()->gt('due_date', new \DateTime()));
+        $futureReminders = Criteria::create()->where(Criteria::expr()->gt('dueDate', new \DateTime()));
         $reminders = $orm->getRepository('StudySauceBundle:Deadline')->matching($futureReminders)->toArray();
         $deadlines = [];
-        foreach($reminders as $i => $d) {
+        foreach ($reminders as $i => $d) {
             /** @var Deadline $d */
-            if((in_array(86400, $d->getReminder()) && $d->getDueDate() < 86400 * 2 && $d->getDueDate() > 86400) ||
-                (in_array(172800, $d->getReminder()) && $d->getDueDate() < 86400 * 3 && $d->getDueDate() > 86400 * 2 &&
-                    !in_array(86400, $d->getReminderSent())) ||
-                (in_array(345600, $d->getReminder()) && $d->getDueDate() < 86400 * 5 && $d->getDueDate() > 86400 * 4 &&
-                    !in_array(86400, $d->getReminderSent()) && !in_array(172800, $d->getReminderSent())) ||
-                (in_array(604800, $d->getReminder()) && $d->getDueDate() < 86400 * 8 && $d->getDueDate() > 86400 * 7 &&
-                    !in_array(86400, $d->getReminderSent()) && !in_array(172800, $d->getReminderSent()) &&
-                    !in_array(345600, $d->getReminderSent())) ||
-                (in_array(1209600, $d->getReminder()) && $d->getDueDate() < 86400 * 15 && $d->getDueDate() > 86400 * 14 &&
-                    !in_array(86400, $d->getReminderSent()) && !in_array(172800, $d->getReminderSent()) &&
-                    !in_array(345600, $d->getReminderSent()) && !in_array(604800, $d->getReminderSent()))) {
+            // due tomorrow
+            if ((in_array('86400', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 && $d->getDueDate()->getTimestamp() < time() + 86400 * 2 &&
+                    !in_array('86400', $d->getReminderSent())) ||
+                // due in two days
+                (in_array('172800', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 2 && $d->getDueDate()->getTimestamp() < time() + 86400 * 3 &&
+                    !in_array('86400', $d->getReminderSent()) &&
+                    !in_array('172800', $d->getReminderSent())) ||
+                // due in four days
+                (in_array('345600', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 4 && $d->getDueDate()->getTimestamp() < time() + 86400 * 5 &&
+                    !in_array('86400',$d->getReminderSent()) &&
+                    !in_array('172800', $d->getReminderSent()) &&
+                    !in_array('345600', $d->getReminderSent())) ||
+                // due in a week
+                (in_array('604800', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 7 && $d->getDueDate()->getTimestamp() < time() + 86400 * 8 &&
+                    !in_array('86400', $d->getReminderSent()) &&
+                    !in_array('172800', $d->getReminderSent()) &&
+                    !in_array('345600', $d->getReminderSent()) &&
+                    !in_array('604800', $d->getReminderSent())) ||
+                // due in two weeks
+                (in_array('1209600', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 14 && $d->getDueDate()->getTimestamp() < time() + 86400 * 15 &&
+                    !in_array('86400',$d->getReminderSent()) &&
+                    !in_array('172800', $d->getReminderSent()) &&
+                    !in_array('345600', $d->getReminderSent()) &&
+                    !in_array('604800', $d->getReminderSent()) &&
+                    !in_array('1209600', $d->getReminderSent()))
+            ) {
                 $deadlines[$d->getUser()->getId()][] = $d;
             }
         }
 
         // send aggregate emails
-        foreach($deadlines as $i => $all)
-        {
+        foreach ($deadlines as $i => $all) {
             /** @var Deadline $d */
             $d = $all[0];
             $emails->deadlineReminderAction($d->getUser(), $all);
@@ -125,7 +150,7 @@ EOF
         /** @var  $spool */
         $spool = $transport->getSpool();
         /** @var Swift_Transport $queue */
-        $queue = $container->get('swiftmailer.transport.smtp');
+        $queue = $container->get('swiftmailer.transport.real');
         $spool->flushQueue($queue);
     }
 }

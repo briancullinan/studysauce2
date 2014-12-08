@@ -2,9 +2,6 @@
 
 namespace StudySauce\Bundle\Entity;
 
-use Course1\Bundle\Entity\Quiz1;
-use Doctrine\Common\Collections\ArrayCollection;
-use FOS\UserBundle\Model\GroupableInterface;
 use FOS\UserBundle\Model\GroupInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,10 +71,40 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $parentInvites;
 
     /**
-     * @ORM\OneToMany(targetEntity="ParentInvite", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="StudentInvite", mappedBy="user")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $studentInvites;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GroupInvite", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $groupInvites;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PartnerInvite", mappedBy="partner")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $invitedPartners;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ParentInvite", mappedBy="parent")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $invitedParents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="StudentInvite", mappedBy="student")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $invitedStudents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GroupInvite", mappedBy="student")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $invitedGroups;
 
     /**
      * @ORM\OneToMany(targetEntity="File", mappedBy="user")
@@ -191,13 +218,19 @@ class User extends BaseUser implements EncoderAwareInterface
         $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
         $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
         $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->partnerInvites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course1s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->partnerInvites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->parentInvites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->studentInvites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groupInvites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->invitedParents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->invitedPartners = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->invitedStudents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->invitedGroups = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct();
     }
 
@@ -662,10 +695,10 @@ class User extends BaseUser implements EncoderAwareInterface
     /**
      * Add studentInvites
      *
-     * @param \StudySauce\Bundle\Entity\ParentInvite $studentInvites
+     * @param StudentInvite $studentInvites
      * @return User
      */
-    public function addStudentInvite(\StudySauce\Bundle\Entity\ParentInvite $studentInvites)
+    public function addStudentInvite(StudentInvite $studentInvites)
     {
         $this->studentInvites[] = $studentInvites;
 
@@ -675,9 +708,9 @@ class User extends BaseUser implements EncoderAwareInterface
     /**
      * Remove studentInvites
      *
-     * @param \StudySauce\Bundle\Entity\ParentInvite $studentInvites
+     * @param StudentInvite $studentInvites
      */
-    public function removeStudentInvite(\StudySauce\Bundle\Entity\ParentInvite $studentInvites)
+    public function removeStudentInvite(StudentInvite $studentInvites)
     {
         $this->studentInvites->removeElement($studentInvites);
     }
@@ -845,5 +878,170 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getGroups()
     {
         return $this->groups;
+    }
+
+    /**
+     * Add groupInvites
+     *
+     * @param \StudySauce\Bundle\Entity\GroupInvite $groupInvites
+     * @return User
+     */
+    public function addGroupInvite(\StudySauce\Bundle\Entity\GroupInvite $groupInvites)
+    {
+        $this->groupInvites[] = $groupInvites;
+
+        return $this;
+    }
+
+    /**
+     * Remove groupInvites
+     *
+     * @param \StudySauce\Bundle\Entity\GroupInvite $groupInvites
+     */
+    public function removeGroupInvite(\StudySauce\Bundle\Entity\GroupInvite $groupInvites)
+    {
+        $this->groupInvites->removeElement($groupInvites);
+    }
+
+    /**
+     * Get groupInvites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGroupInvites()
+    {
+        return $this->groupInvites;
+    }
+
+    /**
+     * Add invitedPartners
+     *
+     * @param \StudySauce\Bundle\Entity\PartnerInvite $invitedPartners
+     * @return User
+     */
+    public function addInvitedPartner(\StudySauce\Bundle\Entity\PartnerInvite $invitedPartners)
+    {
+        $this->invitedPartners[] = $invitedPartners;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitedPartners
+     *
+     * @param \StudySauce\Bundle\Entity\PartnerInvite $invitedPartners
+     */
+    public function removeInvitedPartner(\StudySauce\Bundle\Entity\PartnerInvite $invitedPartners)
+    {
+        $this->invitedPartners->removeElement($invitedPartners);
+    }
+
+    /**
+     * Get invitedPartners
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInvitedPartners()
+    {
+        return $this->invitedPartners;
+    }
+
+    /**
+     * Add invitedParents
+     *
+     * @param \StudySauce\Bundle\Entity\ParentInvite $invitedParents
+     * @return User
+     */
+    public function addInvitedParent(\StudySauce\Bundle\Entity\ParentInvite $invitedParents)
+    {
+        $this->invitedParents[] = $invitedParents;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitedParents
+     *
+     * @param \StudySauce\Bundle\Entity\ParentInvite $invitedParents
+     */
+    public function removeInvitedParent(\StudySauce\Bundle\Entity\ParentInvite $invitedParents)
+    {
+        $this->invitedParents->removeElement($invitedParents);
+    }
+
+    /**
+     * Get invitedParents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInvitedParents()
+    {
+        return $this->invitedParents;
+    }
+
+    /**
+     * Add invitedStudents
+     *
+     * @param \StudySauce\Bundle\Entity\StudentInvite $invitedStudents
+     * @return User
+     */
+    public function addInvitedStudent(\StudySauce\Bundle\Entity\StudentInvite $invitedStudents)
+    {
+        $this->invitedStudents[] = $invitedStudents;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitedStudents
+     *
+     * @param \StudySauce\Bundle\Entity\StudentInvite $invitedStudents
+     */
+    public function removeInvitedStudent(\StudySauce\Bundle\Entity\StudentInvite $invitedStudents)
+    {
+        $this->invitedStudents->removeElement($invitedStudents);
+    }
+
+    /**
+     * Get invitedStudents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInvitedStudents()
+    {
+        return $this->invitedStudents;
+    }
+
+    /**
+     * Add invitedGroups
+     *
+     * @param \StudySauce\Bundle\Entity\GroupInvite $invitedGroups
+     * @return User
+     */
+    public function addInvitedGroup(\StudySauce\Bundle\Entity\GroupInvite $invitedGroups)
+    {
+        $this->invitedGroups[] = $invitedGroups;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitedGroups
+     *
+     * @param \StudySauce\Bundle\Entity\GroupInvite $invitedGroups
+     */
+    public function removeInvitedGroup(\StudySauce\Bundle\Entity\GroupInvite $invitedGroups)
+    {
+        $this->invitedGroups->removeElement($invitedGroups);
+    }
+
+    /**
+     * Get invitedGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInvitedGroups()
+    {
+        return $this->invitedGroups;
     }
 }

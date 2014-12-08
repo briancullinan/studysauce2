@@ -3,12 +3,16 @@
 namespace TorchAndLaurel\Bundle\EventListener;
 
 use StudySauce\Bundle\Entity\User;
+use Swift_Mailer;
 use Swift_Message;
+use Swift_Mime_SimpleMessage;
 use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -17,23 +21,22 @@ use Symfony\Component\Security\Core\SecurityContext;
  */
 class OrgEmailNotifier implements EventSubscriberInterface
 {
+    /** @var ContainerInterface $container */
     protected $container;
     /** @var DelegatingEngine $templating */
     protected $templating;
-    protected $kernel;
+    /** @var  Swift_Mailer $mailer */
     protected $mailer;
 
     /**
      * @param $container
      * @param EngineInterface $templating
-     * @param $kernel
      * @param $mailer
      */
-    public function __construct($container, EngineInterface $templating, $kernel, $mailer)
+    public function __construct($container, EngineInterface $templating, $mailer)
     {
         $this->container = $container;
         $this->templating = $templating;
-        $this->kernel = $kernel;
         $this->mailer = $mailer;
     }
 
@@ -44,7 +47,25 @@ class OrgEmailNotifier implements EventSubscriberInterface
     {
         return [
             KernelEvents::RESPONSE => ['onRegistrationSuccess', -128],
+            KernelEvents::REQUEST => ['onCheckoutBegin', -128],
         ];
+    }
+
+    /**
+     * @param GetResponseEvent $event
+     */
+    public function onCheckoutBegin(GetResponseEvent $event)
+    {
+        $session = $event->getRequest()->getSession();
+        /** @var SecurityContext $context */
+        $context = $this->container->get('security.context');
+        if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\BuyController::checkoutAction') {
+            $user = $context->getToken()->getUser();
+            if ($user->hasGroup('Torch And Laurel') || ($session->has('organization') &&
+                    $session->get('organization') == 'Torch And Laurel')) {
+                $session->set('coupon', 'TAL17A0D6');
+            }
+        }
     }
 
     /**
@@ -55,22 +76,23 @@ class OrgEmailNotifier implements EventSubscriberInterface
 
         /** @var SecurityContext $context */
         $context = $this->container->get('security.context');
-        if($event->getRequest()->get('_controller') == 'StudySauceBundle:Account:create' &&
+        if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController::createAction' &&
             $event->getResponse() instanceof RedirectResponse) {
 
             /** @var User $user */
             $user = $context->getToken()->getUser();
 
             if ($user->hasGroup('Torch And Laurel')) {
+                /** @var Swift_Mime_SimpleMessage $message */
                 $message = Swift_Message::newInstance()
                     ->setSubject($user->getFirst() . ' ' . $user->getLast() . ' has signed up for an account.')
                     ->setFrom('admin@studysauce.com')
                     ->setTo('torchandlaurel@mailinator.com')
                     ->setBody(
                         $this->templating->render(
-                            'TorchAndLaurel:Emails:registration-notification.html.php',
+                            'TorchAndLaurelBundle:Emails:registration-notification.html.php',
                             [
-                                'name' => $user,
+                                'user' => $user,
                                 'greeting' => 'Dear Torch And Laurel,'
                             ]
                         ),

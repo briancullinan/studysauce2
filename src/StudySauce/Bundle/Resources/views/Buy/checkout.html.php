@@ -1,6 +1,7 @@
 <?php
-
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+/** @var GlobalVariables $app */
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -41,6 +42,9 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="last-name">
                     <label class="input"><span>Last name</span><input name="last-name" type="text" value="<?php print $last; ?>"></label>
+                </div>
+                <div class="email">
+                    <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
                 </div>
                 <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
                 <label class="input"><input name="street2" type="text" value=""></label>
@@ -126,15 +130,18 @@ $view['slots']->start('body'); ?>
             </fieldset>
             <fieldset id="payment-pane">
                 <legend>Payment method</legend>
-                <div class="fieldset-description">
-                    <div>
-                        <label class="radio"><input name="reoccurs" type="radio" value="monthly" checked="checked"><i></i><span>$9.99/mo</span></label><br />
-                        <label class="radio"><input name="reoccurs" type="radio" value="yearly"><i></i><span>$99/year <sup class="premium">Recommended</sup></span></label>
-                    </div>
-                    <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/money_back_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                        <img src="<?php echo $view->escape($url) ?>" />
-                    <?php endforeach; ?>
+                <div class="product-option">
+                    <label class="radio"><input name="reoccurs" type="radio" value="monthly" checked="checked"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][0] : '9.99'); ?>/mo</span></label><br />
+                    <label class="radio"><input name="reoccurs" type="radio" value="yearly"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][1] : '99'); ?>/year <sup class="premium">Recommended</sup></span></label>
+                    <?php if(!empty($coupon)) {
+                        foreach($coupon['lines'] as $i => $line) {
+                            ?><div class="line-item"><?php print $line; ?></div><?php
+                        }
+                    } ?>
                 </div>
+                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/money_back_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img src="<?php echo $view->escape($url) ?>" />
+                <?php endforeach; ?>
                 <div class="cc-number">
                     <label class="input">
                         <span>Card number</span><input name="cc-number" type="text" value="">
@@ -180,10 +187,17 @@ $view['slots']->start('body'); ?>
             </fieldset>
             <fieldset id="coupon-pane">
                 <legend>Coupon discount</legend>
-                <div class="coupon-code">
-                    <label class="input"><input name="coupon-code" type="text" placeholder="Enter code" value=""></label>
-                </div>
-                <a href="#coupon-apply" class="more">Apply to order</a>
+                <?php if(!empty($coupon)) {
+                    foreach($coupon['lines'] as $i => $line) { ?>
+                        <div class="coupon-code"><strong><?php print $app->getRequest()->getSession()->get('coupon'); ?> - </strong><?php print $line; ?></div>
+                        <a href="#coupon-remove" class="more">Remove</a>
+                    <?php }
+                } else { ?>
+                    <div class="coupon-code">
+                        <label class="input"><input name="coupon-code" type="text" placeholder="Enter code" value=""></label>
+                    </div>
+                    <a href="#coupon-apply" class="more">Apply to order</a>
+                <?php } ?>
             </fieldset>
             <div class="form-actions highlighted-link invalid"><a href="#submit-order" class="more">Complete order</a></div>
         </div>

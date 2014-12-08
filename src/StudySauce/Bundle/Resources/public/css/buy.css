@@ -32,7 +32,7 @@
     border-radius: 5px;
 }
 
-#payment-pane .fieldset-description div
+#payment-pane .product-option
 {
     margin-right: -110px;
     padding-right: 100px;
@@ -41,7 +41,7 @@
     vertical-align: middle;
 }
 
-#payment-pane .fieldset-description img
+#payment-pane .product-option + img
 {
     vertical-align: middle;
 }

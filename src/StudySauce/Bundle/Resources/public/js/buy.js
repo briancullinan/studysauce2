@@ -42,6 +42,74 @@ jQuery(document).ready(function($) {
             .animate({opacity:1,height: 115});
     });
 
+    body.on('click', '#checkout a[href="#coupon-apply"]', function (evt) {
+        var checkout = $('#checkout');
+        evt.preventDefault();
+        $.ajax({
+            url: window.callbackPaths['checkout_coupon'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                coupon: checkout.find('.coupon-code input').val().trim()
+            },
+            success: function (data) {
+                // this should redirect anyways
+                if (typeof data.error != 'undefined') {
+                    checkout.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
+                }
+                else {
+                    // set new line item
+                    checkout.find('.product-option .radio').first().find('span').html('$' + data.options[0] + '/mo');
+                    checkout.find('.product-option .radio').last().find('span').html('$' + data.options[1] + '/year <sup class="premium">Recommended</sup>');
+
+                    // set coupon form
+                    checkout.find('.line-item').remove();
+                    for(var i = 0; i < data.lines.length; i++) {
+                        $('<div class="line-item">' + data.lines[i] + '</div>').appendTo(checkout.find('.product-option'));
+                    }
+
+                    // update coupon pane
+                    var code = checkout.find('.coupon-code input').val().trim();
+                    checkout.find('.coupon-code, a[href="#coupon-apply"]').remove();
+                    $('<div class="coupon-code"><strong>' + code + ' - </strong>' + data.lines.join('<br />') + '</div>' +
+                    '<a href="#coupon-remove" class="more">Remove</a>').appendTo(checkout.find('#coupon-pane'));
+                }
+            }
+        });
+    });
+
+    body.on('click', '#checkout a[href="#coupon-remove"]', function (evt) {
+        var checkout = $('#checkout');
+        evt.preventDefault();
+        $.ajax({
+            url: window.callbackPaths['checkout_coupon'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                remove: true
+            },
+            success: function (data) {
+                // this should redirect anyways
+                if (typeof data.error != 'undefined') {
+                    checkout.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
+                }
+                else {
+                    // set new line item
+                    checkout.find('.product-option .radio').first().find('span').html('$9.99/mo');
+                    checkout.find('.product-option .radio').last().find('span').html('$99/year <sup class="premium">Recommended</sup>');
+
+                    // set coupon form
+                    checkout.find('.line-item').remove();
+
+                    // update coupon pane
+                    checkout.find('.coupon-code, a[href="#coupon-remove"]').remove();
+                    $('<div class="coupon-code"><label class="input"><input name="coupon-code" type="text" placeholder="Enter code" value=""></label></div>' +
+                    '<a href="#coupon-apply" class="more">Apply to order</a>').appendTo(checkout.find('#coupon-pane'));
+                }
+            }
+        });
+    });
+
     body.on('click', '#checkout a[href="#submit-order"]', function (evt) {
         var checkout = $('#checkout');
         evt.preventDefault();
@@ -56,6 +124,7 @@ jQuery(document).ready(function($) {
                 reoccurs: checkout.find('input[name="reoccurs"]:checked').val().trim(),
                 first: checkout.find('.first-name input').val().trim(),
                 last: checkout.find('.last-name input').val().trim(),
+                email: checkout.find('.email input').val().trim(),
                 street1: checkout.find('input[name="street1"]').val().trim(),
                 street2: checkout.find('input[name="street2"]').val().trim(),
                 city: checkout.find('.city input').val().trim(),

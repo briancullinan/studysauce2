@@ -6,10 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="student_invite")
+ * @ORM\Table(name="group_invite")
  * @ORM\HasLifecycleCallbacks()
  */
-class StudentInvite implements Invite
+class GroupInvite implements Invite
 {
     /**
      * @ORM\Column(type="integer", name="id")
@@ -19,13 +19,19 @@ class StudentInvite implements Invite
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="studentInvites")
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="groupInvites")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     */
+    protected $group;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="groupInvites")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitedStudents")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitedGroups")
      * @ORM\JoinColumn(name="student_id", referencedColumnName="id", nullable=true)
      */
     protected $student;
@@ -88,7 +94,7 @@ class StudentInvite implements Invite
      * Set first
      *
      * @param string $first
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setFirst($first)
     {
@@ -111,7 +117,7 @@ class StudentInvite implements Invite
      * Set last
      *
      * @param string $last
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setLast($last)
     {
@@ -134,7 +140,7 @@ class StudentInvite implements Invite
      * Set email
      *
      * @param string $email
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setEmail($email)
     {
@@ -157,7 +163,7 @@ class StudentInvite implements Invite
      * Set activated
      *
      * @param boolean $activated
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setActivated($activated)
     {
@@ -180,7 +186,7 @@ class StudentInvite implements Invite
      * Set code
      *
      * @param string $code
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setCode($code)
     {
@@ -203,7 +209,7 @@ class StudentInvite implements Invite
      * Set created
      *
      * @param \DateTime $created
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setCreated($created)
     {
@@ -226,7 +232,7 @@ class StudentInvite implements Invite
      * Set reminder
      *
      * @param \DateTime $reminder
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setReminder($reminder)
     {
@@ -246,10 +252,33 @@ class StudentInvite implements Invite
     }
 
     /**
+     * Set group
+     *
+     * @param \StudySauce\Bundle\Entity\Group $group
+     * @return GroupInvite
+     */
+    public function setGroup(\StudySauce\Bundle\Entity\Group $group = null)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * Get group
+     *
+     * @return \StudySauce\Bundle\Entity\Group 
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
      * Set user
      *
      * @param \StudySauce\Bundle\Entity\User $user
-     * @return ParentInvite
+     * @return GroupInvite
      */
     public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
@@ -272,7 +301,7 @@ class StudentInvite implements Invite
      * Set student
      *
      * @param \StudySauce\Bundle\Entity\User $student
-     * @return StudentInvite
+     * @return GroupInvite
      */
     public function setStudent(\StudySauce\Bundle\Entity\User $student = null)
     {

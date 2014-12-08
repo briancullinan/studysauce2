@@ -4,7 +4,12 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
 $collection = new RouteCollection();
-$collection->add('_welcome', new Route('/', ['_controller' => 'StudySauceBundle:Landing:index',]));
+$collection->add('_welcome',
+    new Route('/', ['_controller' => 'StudySauceBundle:Landing:index'])
+);
+$collection->add('cronsauce',
+    new Route('/cron', ['_controller' => 'StudySauceBundle:Landing:cron'])
+);
 $collection->add(
     'terms',
     new Route(
@@ -451,6 +456,19 @@ $collection->add(
     new Route(
         '/checkout/pay',
         ['_controller' => 'StudySauceBundle:Buy:pay'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'checkout_coupon',
+    new Route(
+        '/checkout/coupon',
+        ['_controller' => 'StudySauceBundle:Buy:applyCoupon'],
         [],
         [],
         '',
