@@ -152,45 +152,45 @@
 }
 
 
-.landing-home.parents .two,
-.landing-home.parents .one {
+.landing-home .did-you-know .two,
+.landing-home .did-you-know .one {
     display:inline-block;
     vertical-align: top;
     text-align: left;
 }
 
-.landing-home.parents .one {
+.landing-home .did-you-know .one {
     margin-left:-170px;
     padding-left:220px;
     width: 60%;
 }
 
-.landing-home.parents .two {
+.landing-home .did-you-know .two {
     padding-left:20px;
     width: 40%;
 }
 
-.landing-home.parents .two h3,
-.landing-home.parents .one h3 {
+.landing-home .did-you-know .two h3,
+.landing-home .did-you-know .one h3 {
     padding-left:50px;
     position: relative;
     text-align: left;
 }
 
-.landing-home.parents .two h3 span,
-.landing-home.parents .one h3 span {
+.landing-home .did-you-know .two h3 span,
+.landing-home .did-you-know .one h3 span {
     position: absolute;
     top:0;
     left:0;
     font-size: 56px;
 }
 
-.landing-home.parents .two .more,
-.landing-home.parents .one .more {
+.landing-home .did-you-know .two .more,
+.landing-home .did-you-know .one .more {
     margin-left:50px;
 }
 
-.landing-home.parents .did-you-know
+.landing-home .did-you-know
 {
     box-shadow: 0 -10px 10px rgba(0,0,0,.5);
     background: url("../images/noise_white.png") repeat scroll 0 0 #ffffff;
@@ -198,25 +198,25 @@
     text-align: center;
 }
 
-.landing-home.parents .did-you-know > div
+.landing-home .did-you-know > div
 {
     width: 900px;
     margin:0 auto;
 }
 
-.landing-home.parents .did-you-know p.small,
-.landing-home.parents .did-you-know h1
+.landing-home .did-you-know p.small,
+.landing-home .did-you-know h1
 {
     padding:0 0 20px 190px;
 }
 
-.landing-home.parents .did-you-know small
+.landing-home .did-you-know small
 {
     display:inline-block;
     padding-top:15px;
 }
 
-.landing-home.parents .did-you-know img {
+.landing-home .did-you-know img {
     float: left;
     margin: 50px 0;
 }
