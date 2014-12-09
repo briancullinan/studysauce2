@@ -1,5 +1,18 @@
 
 .landing-home .video
 {
-    background: url(../images/landing_logo_compressed.png) fixed 50% -50px #555555;
+    background: url(../images/landing_logo_compressed.png) fixed 50% -50px #999999;
+}
+
+.landing-home .video h1
+{
+    margin: 20px -75px 70px -75px;
+}
+
+@media all and (max-width: 1200px)
+{
+    .landing-home .video h1
+    {
+        margin: 20px 0 70px 0;
+    }
 }

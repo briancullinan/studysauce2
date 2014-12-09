@@ -69,18 +69,6 @@
     text-align: center;
 }
 
-.course1.step1 .highlighted-link.played a[href="#play"],
-.course1.step1 .highlighted-link a
-{
-    display:none;
-}
-
-.course1.step1 .highlighted-link.played a,
-.course1.step1 .highlighted-link a[href="#play"]
-{
-    display:inline-block;
-}
-
 .course1.step0 h2
 {
     padding-right:150px;

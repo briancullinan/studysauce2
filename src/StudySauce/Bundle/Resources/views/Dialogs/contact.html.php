@@ -1,11 +1,13 @@
 <?php
 use StudySauce\Bundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 
+/** @var GlobalVariables $app */
 $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 /** @var User $user */
 $user = $app->getUser();
-$isDemo = $user == 'anon.' || $user->hasRole('ROLE_GUEST');
+$isDemo = $user == 'anon.' || !is_object($user) || $user->hasRole('ROLE_GUEST');
 
  $view['slots']->start('modal-header') ?>
 Contact us

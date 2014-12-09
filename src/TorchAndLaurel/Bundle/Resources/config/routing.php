@@ -11,4 +11,9 @@ $collection->add(
     new Route('/torchandlaurel/{_code}', ['_controller' => 'TorchAndLaurelBundle:Landing:index','_code' => ''])
 );
 
+$collection->add(
+    'torchandlaurelparents_welcome',
+    new Route('/torchandlaurelparents/{_code}', ['_controller' => 'TorchAndLaurelBundle:Landing:parents','_code' => ''])
+);
+
 return $collection;

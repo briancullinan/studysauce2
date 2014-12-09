@@ -151,6 +151,10 @@
     content: "";
 }
 
+.landing-home .did-you-know h2
+{
+    padding-left:260px;
+}
 
 .landing-home .did-you-know .two,
 .landing-home .did-you-know .one {

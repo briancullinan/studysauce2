@@ -1,10 +1,9 @@
 <?php
-use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
-/** @var GlobalVariables $app */
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:layout.html.php');
 
-$view['slots']->start('classes') ?>landing-home<?php $view['slots']->stop();
+$view['slots']->start('classes') ?>landing-home parents<?php $view['slots']->stop();
 
 $view['slots']->start('stylesheets');
 
@@ -24,9 +23,7 @@ foreach ($view['assetic']->stylesheets(
     ?>
     <link rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
-foreach ($view['assetic']->stylesheets(['@TorchAndLaurelBundle/Resources/public/css/landing2.css'],[],['output' => 'bundles/torchandlaurel/css/*.css']) as $url):?>
-    <link rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
-<?php endforeach;
+
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
@@ -45,9 +42,14 @@ foreach ($view['assetic']->javascripts(
 $view['slots']->stop();
 
 $view['slots']->start('body');
-echo $view->render('TorchAndLaurelBundle:Landing:video.html.php');
-echo $view->render('TorchAndLaurelBundle:Landing:scr.html.php');
-echo $view->render('StudySauceBundle:Landing:banner.html.php');
-echo $view->render('StudySauceBundle:Landing:features.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-video.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-scr.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-banner.html.php');
+echo $view->render('StudySauceBundle:Landing:parent-features.html.php');
 echo $view->render('StudySauceBundle:Landing:testimony.html.php');
+$view['slots']->stop();
+
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInvite'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInviteConfirm'));
 $view['slots']->stop();

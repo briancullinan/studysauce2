@@ -105,7 +105,7 @@ class UserProvider extends BaseUserProvider
 
         }
 
-        // these fields can always be updates and sync from the service
+        // these fields can always be updated and sync from the service
         $setter_id = $setter.'Id';
         $user->$setter_id($username);
         $setter_token = $setter.'AccessToken';

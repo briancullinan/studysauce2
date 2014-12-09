@@ -4,6 +4,8 @@ use Doctrine\Common\Collections\Criteria;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\Entity\Visit;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /** @var $partner Partner */
@@ -80,6 +82,21 @@ $view['slots']->start('body'); ?>
             </thead>
             <tbody>
             <?php
+            foreach($sessions as $i => $s)
+            {
+                /** @var Visit $s */
+                $path = substr($s->getPath(), 1, min(strpos($s->getPath(), '/'), strlen($s->getPath())));
+                /** @var Schedule $schedule */
+                $schedule = $s->getUser()->getSchedules()->first();
+                ?>
+            <tr class="user-id-<?php print $s->getId(); ?> status_<?php print ($s->getUser()->getProperty('adviser_status') ?: 'green'); ?>">
+                <td><a href="#change-status"><span>&nbsp;</span></a></td>
+                <td data-timestamp="<?php print $s->getCreated()->getTimestamp(); ?>"><?php print $s->getCreated()->format('j M y'); ?></td>
+                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
+                <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
+                </tr><?php
+            } ?>
+            <?php
             foreach($users as $i => $u)
             {
                 /** @var User $u */
@@ -89,11 +106,11 @@ $view['slots']->start('body'); ?>
                 /** @var Schedule $schedule */
                 $schedule = $u->getSchedules()->first();
                 ?>
-                <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
-                    <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                    <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M y') : $u->getLastLogin()->format('j M y')); ?></td>
-                    <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'metrics']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
-                    <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
+            <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
+                <td><a href="#change-status"><span>&nbsp;</span></a></td>
+                <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M y') : $u->getLastLogin()->format('j M y')); ?></td>
+                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'metrics']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
+                <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
                 </tr><?php
             } ?>
             </tbody>

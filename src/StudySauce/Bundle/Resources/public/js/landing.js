@@ -20,4 +20,6 @@ $(document).ready(function () {
             video.stop().animate({'background-position-y': 20 * percent - 50}, 100);
         }, 10);
     });
+
+    $(window).trigger('scroll');
 });

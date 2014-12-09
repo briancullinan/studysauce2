@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\File;
@@ -117,13 +118,17 @@ class PartnerController extends Controller
 
         /** @var $user User */
         $user = $this->getUser();
-
-        $groups = $user->getGroups()->toArray();
-        $users = [];
-        foreach($groups as $i => $g)
-        {
-            /** @var Group $g */
-            $users = array_merge($users, $g->getUsers()->toArray());
+        if($user->hasRole('ROLE_ADMIN')) {
+            $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();
+            $users = $orm->getRepository('StudySauceBundle:User')->findAll();
+        }
+        else {
+            $groups = $user->getGroups()->toArray();
+            $users = [];
+            foreach ($groups as $i => $g) {
+                /** @var Group $g */
+                $users = array_merge($users, $g->getUsers()->toArray());
+            }
         }
 
         /** @var PartnerInvite $partner */
@@ -134,18 +139,49 @@ class PartnerController extends Controller
             $users[] = $p->getUser();
         }
         // show sessions
-        /** @var ArrayCollection $visits */
-        /*
-        $visits = $u->getVisits();
-        $criteria = Criteria::create();
-        $sessions = $visits->matching($criteria)->;
-        $queryBuilder
-            ->select('DATE(last_login) as date', 'COUNT(id) AS users')
-            ->from('user')
-            ->groupBy('')
-            ->having('users > 10')
-        ;
-        */
+        $sessions = [];
+        foreach($users as $i => $u) {
+            /** @var User $u */
+            if($u->hasRole('ROLE_ADVISER'))
+                continue;
+
+            $dql = 'SELECT v.session FROM StudySauceBundle:Visit v GROUP BY v.session ORDER BY v.created DESC';
+            $query = $orm->createQuery($dql);
+            $sids = $query->execute();
+            $count = 0;
+            foreach($sids as $j => $id)
+            {
+                if($count == 10)
+                    break;
+                /** @var ArrayCollection $visits */
+                $visits = $u->getVisits();
+                $criteria = Criteria::create()
+                    ->where(Criteria::expr()->contains('path', '/metrics'))
+                    ->orWhere(Criteria::expr()->contains('path', '/schedule'))
+                    ->orWhere(Criteria::expr()->contains('path', '/account'))
+                    ->orWhere(Criteria::expr()->contains('path', '/profile'))
+                    ->orWhere(Criteria::expr()->contains('path', '/premium'))
+                    ->orWhere(Criteria::expr()->contains('path', '/home'))
+                    ->orWhere(Criteria::expr()->contains('path', '/partner'))
+                    ->orWhere(Criteria::expr()->contains('path', '/goals'))
+                    ->orWhere(Criteria::expr()->contains('path', '/plan'))
+                    ->orWhere(Criteria::expr()->contains('path', '/deadlines'));
+                $v = $visits
+                    ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $id)))
+                    ->matching($criteria)->first();
+                if(empty($v))
+                {
+                    $v = $visits
+                        ->matching(Criteria::create()
+                                ->where(Criteria::expr()->eq('session', $id)))->first();
+                    if(!empty($v))
+                        $v->setPath('/');
+                }
+                if(!empty($v))
+                    $sessions[] = $v;
+                $count++;
+            }
+        }
 
         $showPartnerIntro = false;
         if(count($users) && empty($user->getProperty('seen_partner_intro'))) {
@@ -157,6 +193,7 @@ class PartnerController extends Controller
         }
 
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
+            'sessions' => $sessions,
             'groups' => $groups,
             'users' => $users,
             'showPartnerIntro' => $showPartnerIntro

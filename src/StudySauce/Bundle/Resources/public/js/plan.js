@@ -8,6 +8,55 @@ $(document).ready(function () {
         m = date.getMonth(),
         calendar;
 
+    function loadWeek(w, callback, s, e)
+    {
+        var plans = $('#plan');
+        $.ajax({
+            url: window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
+            type: 'GET',
+            dataType: 'text',
+            success: function (data) {
+                var tmpEvents = window.planEvents,
+                    content = $(data);
+                window.planEvents = [];
+                // merge scripts
+                ssMergeScripts(content.filter('script:not([src])'));
+                for (var i = 0; i < window.planEvents.length; i++) {
+                    window.planEvents[i].start = new Date(window.planEvents[i].start);
+                    window.planEvents[i].end = new Date(window.planEvents[i].end);
+                }
+
+                // merge rows
+                if (w.getWeekNumber() == window.planLoaded[0] + 1)
+                    content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                window.planEvents = $.merge(window.planEvents, tmpEvents);
+                if(callback) {
+                    var events = filterEvents(s, e);
+                    callback(events);
+                }
+            }
+        });
+    }
+
+    function filterEvents(s, e) {
+        var plans = $('#plan'),
+            events = [];
+        for (var i = 0; i < window.planEvents.length; i++) {
+            if (window.planEvents[i].start.getTime() > s - 86400 && window.planEvents[i].end.getTime() < e + 86400) {
+                events[events.length] = window.planEvents[i];
+            }
+        }
+        if (events.length == 0) {
+            plans.addClass('empty');
+            $('#plan-empty').modal({backdrop: false});
+        }
+        else {
+            plans.removeClass('empty');
+            $('#plan-empty').modal('hide');
+        }
+        return events;
+    }
+
     function initialize() {
         var plans = $('#plan');
         if (isInitialized)
@@ -69,54 +118,15 @@ $(document).ready(function () {
             defaultView: 'agendaWeek',
             selectable: false,
             events: function (start, end, timezone, callback) {
-                var events = [],
-                    s = start.unix() * 1000,
+                var s = start.unix() * 1000,
                     e = end.unix() * 1000,
-                    w = new Date(),
-                    filterEvents = function () {
-                        for (var i = 0; i < window.planEvents.length; i++) {
-                            if (window.planEvents[i].start.getTime() > s - 86400 && window.planEvents[i].end.getTime() < e + 86400) {
-                                events[events.length] = window.planEvents[i];
-                            }
-                        }
-                        if (events.length == 0) {
-                            plans.addClass('empty');
-                            $('#plan-empty').modal({backdrop: false});
-                        }
-                        else {
-                            plans.removeClass('empty');
-                            $('#plan-empty').modal('hide');
-                        }
-                    };
+                    w = new Date();
                 w.setTime(s);
                 if (window.planLoaded.indexOf(w.getWeekNumber()) == -1) {
-                    $.ajax({
-                        url: window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
-                        type: 'GET',
-                        dataType: 'text',
-                        success: function (data) {
-                            var tmpEvents = window.planEvents,
-                                content = $(data);
-                            window.planEvents = [];
-                            // merge scripts
-                            ssMergeScripts(content.filter('script:not([src])'));
-                            for (var i = 0; i < window.planEvents.length; i++) {
-                                window.planEvents[i].start = new Date(window.planEvents[i].start);
-                                window.planEvents[i].end = new Date(window.planEvents[i].end);
-                            }
-
-                            if (w.getWeekNumber() == window.planLoaded[0] + 1)
-                                content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
-                            // TODO: do this after merge if events aren't showing up
-                            filterEvents();
-                            // TODO: merge rows
-                            window.planEvents = $.merge(window.planEvents, tmpEvents);
-                            callback(events);
-                        }
-                    });
+                    loadWeek(w, callback, s, e);
                 }
                 else {
-                    filterEvents();
+                    var events = filterEvents(s, e);
                     callback(events);
                 }
             },
@@ -204,6 +214,14 @@ $(document).ready(function () {
                 });
             }
         });
+        var now = new Date(),
+            w = new Date(now.getUTCFullYear(), 0, 1,  0, 0, 0),
+            week = now.getWeekNumber();
+        w.setUTCHours(0);
+        w.setTime(w.getTime() + week * 86400 * 7 * 1000 - localOffset);
+        var dayNr = (w.getDay() + 6) % 7;
+        w.setDate(w.getDate() - dayNr - 2);
+        loadWeek(w)
     }
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead

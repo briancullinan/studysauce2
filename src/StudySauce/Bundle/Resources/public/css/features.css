@@ -8,10 +8,8 @@
     width: 50%;
     margin: 0 -2px;
     display:inline-block;
-    vertical-align: middle;
+    vertical-align: top;
     padding:0 20px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 .features .two-column-guide .grid_6 div
@@ -22,8 +20,6 @@
 
 .features .two-column-guide .grid_6 h3
 {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     min-height: 72px;
     margin-bottom: -40px;
     padding-bottom: 50px;
@@ -41,32 +37,32 @@
 
 .features .two-column-guide .grid_6:nth-of-type(1) div:nth-of-type(1) h3
 {
-    background-position: left -3584px;
+    background-position: left -3722px;
 }
 
 .features .two-column-guide .grid_6:nth-of-type(1) div:nth-of-type(2) h3
 {
-    background-position: left -3068px;
+    background-position: left -772px;
 }
 
 .features .two-column-guide .grid_6:nth-of-type(1) div:nth-of-type(3) h3
 {
-    background-position: left -764px;
+    background-position: left -1412px;
 }
 
 .features .two-column-guide .grid_6:nth-of-type(2) div:nth-of-type(1) h3
 {
-    background-position: left -892px;
+    background-position: left -3584px;
 }
 
 .features .two-column-guide .grid_6:nth-of-type(2) div:nth-of-type(2) h3
 {
-    background-position: left -3328px;
+    background-position: left -3333px;
 }
 
 .features .two-column-guide .grid_6:nth-of-type(2) div:nth-of-type(3) h3
 {
-    background-position: left -3456px;
+    background-position: left -3080px;
 }
 
 .support-box

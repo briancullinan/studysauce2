@@ -476,6 +476,7 @@
     background-position: left -4705px;
 }
 
+.pane-content a[href*="/home"]:not(.more),
 .pane-content a[href*="/goals"]:not(.more),
 .pane-content a[href*="/deadlines"]:not(.more),
 .pane-content a[href*="/checkin"]:not(.more),
@@ -493,6 +494,7 @@
     position:relative;
 }
 
+.pane-content a[href*="/home"]:not(.more):before,
 .pane-content a[href*="/goals"]:not(.more):before,
 .pane-content a[href*="/deadlines"]:not(.more):before,
 .pane-content a[href*="/checkin"]:not(.more):before,
@@ -515,6 +517,19 @@
     position:absolute;
     left:2px;
     top:50%;
+}
+
+.pane-content a[href*="/home"]:not(.more):before
+{
+    background-position: left -2452px;
+}
+
+.pane-content a[href*="/home"]:not(.more):hover:before,
+.pane-content a[href*="/home"]:not(.more):focus:before,
+.pane-content a[href*="/home"]:not(.more):active:before,
+.pane-content a[href*="/home"].active:not(.more):before
+{
+    background-position: left -2502px;
 }
 
 .pane-content a[href*="/goals"]:not(.more):before

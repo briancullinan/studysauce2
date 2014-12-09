@@ -3,36 +3,30 @@
         <h2>Study Sauce features</h2>
         <div class="grid_6">
             <div>
-                <h3>Proven science</h3>
-                <p>We incorporate the leading science in memory retention to ensure study time is maximized. Improve
-                    study skills and stop cramming for exams only to forget all of the information a few days later.</p>
+                <h3>Video instruction</h3>
+                <p>Our study curriculum provides invaluable tips on how to study, and more importantly how not to study. It is a safe bet that you will be surprised by the results.</p>
             </div>
             <div>
-                <h3>Check in</h3>
-                <p>Students log into study sessions and retrain themselves to use the most effective study methods. We
-                    teach them as they go.</p>
+                <h3>Study plans</h3>
+                <p>Take your studying to the next level with one of our custom study plans. We build your personalized plan based on your study preferences and your goals.</p>
             </div>
             <div>
-                <h3>Create incentives</h3>
-                <p>We incorporate the Incentive Theory of Motivation to help establish meaningful rewards. In fact, many
-                    of our sponsors establish extra incentives for student achievements.</p>
+                <h3>Deadline reminders</h3>
+                <p>Enter in your important dates and study sauce will send you email reminders so nothing sneaks up on you.</p>
             </div>
         </div>
         <div class="grid_6">
             <div>
-                <h3>Study plans</h3>
-                <p>Take studying to the next level with one of our custom study plans. We build personalized plans based
-                    on the student's study preferences and individual needs.</p>
-            </div>
-            <div>
-                <h3>Study tips</h3>
-                <p>We provide invaluable tips on how to study, and more importantly how not to study. It is a safe bet
-                    that you will be surprised by the insights.</p>
+                <h3>Proven science</h3>
+                <p>We incorporate the leading science in memory retention to ensure you are maximizing your study time.  Improve your study skills and stop cramming for exams only to forget all of the information a few days later.</p>
             </div>
             <div>
                 <h3>Study metrics</h3>
-                <p>Track study sessions over time. See all of the hard work aggregated in custom charts that we create
-                    when students check in.</p>
+                <p>Track your study sessions over time. See all of your hard work aggregated in custom charts that we create when you check in.</p>
+            </div>
+            <div>
+                <h3>Set goals</h3>
+                <p>Goal setting is a terrific way to improve your performance.  Establish different types of goals and incentives to improve your academic results.</p>
             </div>
         </div>
     </div>
