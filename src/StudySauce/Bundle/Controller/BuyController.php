@@ -107,40 +107,39 @@ class BuyController extends Controller
         $result = $orm->getRepository('StudySauceBundle:Coupon')->findAll();
         foreach($result as $i => $c) {
             /** @var Coupon $c */
-            if(substr($coupon, 0, strlen($c->getName())));
-                return $c;
+            if(strtolower(substr($coupon, 0, strlen($c->getName()))) == strtolower($c->getName())) {
+                // one use coupons should match exactly
+                if($c->getMaxUses() <= 1 && strtolower($coupon) == strtolower($c->getName()))
+                    return $c;
+
+                // ensure code exists in random value
+                for ($i = 0; $i < $c->getMaxUses(); $i++) {
+                    $compareCode = $c->getName() . substr(md5($c->getSeed() . $i), 0, 6);
+                    if (strtolower($coupon) == strtolower($compareCode)) {
+                        return $c;
+                    }
+                }
+            }
         }
         return null;
     }
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function applyCouponAction(Request $request)
     {
         if(!empty($request->get('remove'))) {
             $request->getSession()->remove('coupon');
-            return new JsonResponse(true);
+            return $this->forward('StudySauceBundle:Buy:checkout', ['_format' => 'tab']);
         }
         $code = $request->get('coupon');
         $coupon = $this->getCoupon($code);
         if(!empty($coupon)) {
-            // ensure code exists in random value
-            for($i = 0; $i < $coupon->getMaxUses(); $i++)
-            {
-                $compareCode = $coupon->getName() . substr(md5($coupon->getSeed() . $i), 0, 6);
-                if(strtolower($code) == strtolower($compareCode)) {
-                    // store coupon in session for use at checkout
-                    $request->getSession()->set('coupon', $code);
-                    // process coupon rule
-                    if(!empty($options = $this->getCouponPrice($coupon)))
-                        return new JsonResponse($options);
-                    else
-                        throw new Exception('Unknown coupon type');
-                    break;
-                }
-            }
+            // store coupon in session for use at checkout
+            $request->getSession()->set('coupon', $code);
+            return $this->forward('StudySauceBundle:Buy:checkout', ['_format' => 'tab']);
         }
         return new JsonResponse(['error' => 'Coupon not found.']);
     }
@@ -154,9 +153,19 @@ class BuyController extends Controller
         // percentage discount
         if(substr($coupon->getType(), 0, 1) == '.') {
             $percent = floatval($coupon->getType());
-            return ['options' => [number_format(9.99 * $percent, 2), number_format(99 * $percent, 2)], 'lines' => [$coupon->getDescription()]];
+            if(!empty($coupon->getTerm()))
+                return ['options' => [number_format(99 * $percent, 2)], 'term' => $coupon->getTerm(), 'lines' => [$coupon->getDescription()]];
+            else
+                return ['options' => [number_format(9.99 * $percent, 2), number_format(99 * $percent, 2)], 'lines' => [$coupon->getDescription()]];
         }
-        return null;
+        if(substr($coupon->getType(), 0, 1) == '=') {
+            $value = floatval(substr($coupon->getType(), 1));
+            if(!empty($coupon->getTerm()))
+                return ['options' => [number_format($value, 2)], 'term' => $coupon->getTerm(), 'lines' => [$coupon->getDescription()]];
+            else
+                return ['options' => [number_format($value, 2)], 'term' => 12, 'lines' => [$coupon->getDescription()]];
+        }
+        throw new Exception('Unknown coupon type');
     }
 
     /**
@@ -181,7 +190,11 @@ class BuyController extends Controller
             $coupon = $this->getCoupon($code);
             if(!empty($coupon)) {
                 if(!empty($options = $this->getCouponPrice($coupon)))
-                    $amount = $request->get('reoccurs') == 'yearly' ? $options['options'][1] : $options['options'][0];
+                    $amount = $request->get('reoccurs') == 'custom'
+                        ? $options['options'][0]
+                        : ($request->get('reoccurs') == 'yearly'
+                            ? $options['options'][1]
+                            : $options['options'][0]);
             }
         }
 
@@ -230,7 +243,9 @@ class BuyController extends Controller
             $subscription->name = 'Study Sauce ' . ($request->get(
                     'reoccurs'
                 ) == 'yearly' ? 'Monthly' : 'Yearly') . ' Plan';
-            $subscription->intervalLength = $request->get('reoccurs') == 'yearly' ? '12': '1';
+            $subscription->intervalLength = $request->get('reoccurs') == 'custom' && isset($options['term'])
+                ? $options['term']
+                : ($request->get('reoccurs') == 'yearly' ? '12': '1');
             $subscription->intervalUnit = 'months';
             $subscription->startDate = date('Y-m-d');
             $subscription->amount = $amount;

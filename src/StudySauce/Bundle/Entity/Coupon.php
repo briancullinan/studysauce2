@@ -34,6 +34,11 @@ class Coupon
     protected $type;
 
     /**
+     * @ORM\Column(type="integer", name="term", nullable=true)
+     */
+    protected $term;
+
+    /**
      * @ORM\Column(type="datetime", name="valid_from", nullable=true)
      */
     protected $validFrom;
@@ -287,5 +292,28 @@ class Coupon
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set term
+     *
+     * @param integer $term
+     * @return Coupon
+     */
+    public function setTerm($term)
+    {
+        $this->term = $term;
+
+        return $this;
+    }
+
+    /**
+     * Get term
+     *
+     * @return integer 
+     */
+    public function getTerm()
+    {
+        return $this->term;
     }
 }

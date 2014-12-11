@@ -39,7 +39,7 @@ $view['slots']->stop();
 
 $view['slots']->start('row-headings'); ?>
 <div class="highlighted-link form-actions invalid">
-    <a href="#add-deadline">Add <span>+</span> deadline</a>
+    <a href="#add-deadline" class="big-add">Add <span>+</span> deadline</a>
     <a href="#save-deadline" class="more">Save</a>
 </div>
 <div class="sort-by" <?php print($isDemo ? 'style="display:none;"' : ''); ?>>

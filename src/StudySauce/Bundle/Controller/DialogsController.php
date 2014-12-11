@@ -248,7 +248,7 @@ class DialogsController extends Controller
         $bill->setFirst($request->get('first'));
         $bill->setLast($request->get('last'));
         $bill->setEmail($request->get('email'));
-        $bill->setCode(md5(microtime(true)));
+        $bill->setCode(md5(microtime()));
         $orm->persist($bill);
         $orm->flush();
 
@@ -292,7 +292,7 @@ class DialogsController extends Controller
         $student->setFirst($request->get('first'));
         $student->setLast($request->get('last'));
         $student->setEmail($request->get('email'));
-        $student->setCode(md5(microtime(true)));
+        $student->setCode(md5(microtime()));
         $orm->persist($student);
         $orm->flush();
 

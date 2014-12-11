@@ -103,7 +103,8 @@ $(document).ready(function () {
             dataType: 'text',
             success: function (data)
             {
-                var newStuff = $(data),
+                var visible = $('.panel-pane:visible'),
+                    newStuff = $(data),
                     styles = ssMergeStyles(newStuff),
                     scripts = ssMergeScripts(newStuff);
                 newStuff = newStuff.not(styles).not(scripts);
@@ -114,7 +115,10 @@ $(document).ready(function () {
                         newStuff = newStuff.not('#' + id);
                 });
                 that.replaceWith(newStuff);
-                setTimeout(function () {newStuff.filter('[id]').trigger('loaded');}, 100);
+                setTimeout(function () {
+                    newStuff.filter('[id]').trigger('loaded');
+                    $('.panel-pane:visible').not(visible).trigger('show');
+                }, 100);
             },
             error: function () {
             }
@@ -198,15 +202,17 @@ $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
     {
         var error = '';
         try {
-            console.log(thrownError);
             var content = $(jqXHR.responseText);
             if(content.filter('#error'))
                 error = content.filter('#error').find('.pane-content').html();
         } catch(ex) {
             error = jqXHR.responseText;
         }
-        dialog.find('.modal-body').html(error);
-        dialog.modal();
+        finally {
+            dialog.find('.modal-body').html(error);
+            dialog.modal();
+            throw thrownError;
+        }
     }
 });
 

@@ -2,17 +2,22 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Aws\S3\Exception\AccessDeniedException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Group;
+use StudySauce\Bundle\Entity\GroupInvite;
+use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Class PartnerController
@@ -77,7 +82,7 @@ class PartnerController extends Controller
             $isNew = true;
             $partner = new PartnerInvite();
             $partner->setUser($user);
-            $partner->setCode(md5(microtime(true)));
+            $partner->setCode(md5(microtime()));
             $partner->setEmail($request->get('email'));
             $user->addPartnerInvite($partner);
         }
@@ -113,11 +118,16 @@ class PartnerController extends Controller
      */
     public function userlistAction()
     {
+        set_time_limit(0);
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
         /** @var $user User */
         $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADVISER') && !$user->hasRole('ROLE_MASTER_ADVISER') && !$user->hasRole('ROLE_ADMIN') &&
+            !$user->hasRole('ROLE_PARTNER')) {
+            throw new AccessDeniedException();
+        }
         if($user->hasRole('ROLE_ADMIN')) {
             $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();
             $users = $orm->getRepository('StudySauceBundle:User')->findAll();
@@ -145,11 +155,11 @@ class PartnerController extends Controller
             if($u->hasRole('ROLE_ADVISER'))
                 continue;
 
-            $dql = 'SELECT v.session FROM StudySauceBundle:Visit v GROUP BY v.session ORDER BY v.created DESC';
+            $dql = 'SELECT DISTINCT SUBSTRING(v.created,1,10) AS created, v.session FROM StudySauceBundle:Visit v WHERE v.user=' . $u->getId() . ' GROUP BY v.session ORDER BY v.created DESC';
             $query = $orm->createQuery($dql);
             $sids = $query->execute();
             $count = 0;
-            foreach($sids as $j => $id)
+            foreach($sids as $j => $s)
             {
                 if($count == 10)
                     break;
@@ -166,22 +176,24 @@ class PartnerController extends Controller
                     ->orWhere(Criteria::expr()->contains('path', '/goals'))
                     ->orWhere(Criteria::expr()->contains('path', '/plan'))
                     ->orWhere(Criteria::expr()->contains('path', '/deadlines'));
+                /** @var Visit $v */
                 $v = $visits
-                    ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $id)))
+                    ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $s['session'])))
                     ->matching($criteria)->first();
                 if(empty($v))
                 {
                     $v = $visits
                         ->matching(Criteria::create()
-                                ->where(Criteria::expr()->eq('session', $id)))->first();
+                                ->where(Criteria::expr()->eq('session', $s['session'])))->first();
                     if(!empty($v))
                         $v->setPath('/');
                 }
                 if(!empty($v))
-                    $sessions[] = $v;
+                    $sessions[$v->getCreated()->getTimestamp()] = $v;
                 $count++;
             }
         }
+        krsort($sessions);
 
         $showPartnerIntro = false;
         if(count($users) && empty($user->getProperty('seen_partner_intro'))) {
@@ -209,23 +221,63 @@ class PartnerController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param Group $group
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function importSaveAction(Request $request, Group $group = null)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if($group == null)
+            $group = $user->getGroups()->first();
+
+        $users = $request->get('users');
+        $existing = $user->getGroupInvites()->toArray();
+        $emails = new EmailsController();
+        $emails->setContainer($this->container);
+        foreach($users as $i => $u)
+        {
+            // check if invite has already been sent
+            foreach($existing as $j => $gi)
+            {
+                /** @var GroupInvite $gi */
+                if(strtolower($gi->getEmail()) == $u['email']) {
+                    $invite = $gi;
+                    break;
+                }
+            }
+            // save the invite
+            if(!isset($invite)) {
+                $invite = new GroupInvite();
+                $invite->setGroup($group);
+                $invite->setUser($user);
+                $invite->setFirst($u['first']);
+                $invite->setLast($u['last']);
+                $invite->setEmail($u['email']);
+                $invite->setCode(md5(microtime()));
+            }
+            $user->addGroupInvite($invite);
+            $emails->groupInviteAction($user, $invite);
+            $orm->persist($invite);
+        }
+        $orm->flush();
+
+        return $this->importAction();
+    }
+
+    /**
      * @param $_user
      * @param $_tab
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnerAction($_user, $_tab)
+    public function partnerAction(User $_user, $_tab)
     {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
-        /** @var $user User */
-        $user = $userManager->findUserBy(['id' => intval($_user)]);
-
-        // TODO: check if partner and user is connected
-        // if()
-
         return $this->render('StudySauceBundle:Partner:partner.html.php', [
-                'user' => $user,
+                'user' => $_user,
                 'tab' => $_tab
             ]);
     }
@@ -235,19 +287,15 @@ class PartnerController extends Controller
      * @param $_tab
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adviserAction($_user, $_tab)
+    public function adviserAction(User $_user, $_tab)
     {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
+        $u = $this->getUser();
 
-        /** @var $user User */
-        $user = $userManager->findUserBy(['id' => intval($_user)]);
-
-        // TODO: check if partner and user is connected
-        // if()
-
+        if(!$u->hasRole('ROLE_PARTNER') && !$u->hasRole('ROLE_ADVISER') && !$u->hasRole('ROLE_MASTER_ADVISER') &&
+            !$u->hasRole('ROLE_ADMIN'))
+            throw new AccessDeniedException;
         return $this->render('StudySauceBundle:Partner:adviser.html.php', [
-                'user' => $user,
+                'user' => $_user,
                 'tab' => $_tab
             ]);
     }

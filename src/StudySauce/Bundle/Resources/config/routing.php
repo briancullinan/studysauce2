@@ -278,7 +278,15 @@ $collection->add(
     new Route(
         '/plan/{_week}/{_format}',
         ['_controller' => 'StudySauceBundle:Plan:index', '_format' => 'index', '_week' => ''],
-        ['_format' => DASHBOARD_VIEWS, '_week' => '^$|[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z']
+        ['_format' => DASHBOARD_VIEWS, '_week' => '[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z']
+    )
+);
+$collection->add(
+    'plan_adviser_week',
+    new Route(
+        'adviser/{_user}/plan/{_week}/{_format}',
+        ['_controller' => 'StudySauceBundle:Plan:index', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS, '_week' => '[0-9]+|[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00:00\.000Z']
     )
 );
 $collection->add(
@@ -533,6 +541,19 @@ $collection->add(
         '/import/{_format}',
         ['_controller' => 'StudySauceBundle:Partner:import', '_format' => 'adviser'],
         ['_format' => DASHBOARD_VIEWS]
+    )
+);
+$collection->add(
+    'import_save',
+    new Route(
+        '/import/save',
+        ['_controller' => 'StudySauceBundle:Partner:importSave'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 $collection->add(

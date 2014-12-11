@@ -3,9 +3,9 @@ $(document).ready(function () {
     var body = $('body');
 
     function sortSelect(a, b) {
-        if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date')
+        if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date' || a == 'Completion')
             return -1;
-        if(b == 'Student' || b == 'Status' || b == 'Adviser' || b == 'School' || b == 'Date')
+        if(b == 'Student' || b == 'Status' || b == 'Adviser' || b == 'School' || b == 'Date' || a == 'Completion')
             return 1;
         if(a == 'Ascending (A-Z)' && b == 'Descending (Z-A)')
             return -1;
@@ -47,21 +47,29 @@ $(document).ready(function () {
             students.sort(sortSelect);
             userlist.find('th:nth-child(3)').html('<select><option>' + students.join("</option><option>") + '</option></select>');
 
-            var schools = ['School', 'Ascending (A-Z)', 'Descending (Z-A)'];
+            var completion = ['Completion', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('td:nth-child(4)').each(function () {
+                if(completion.indexOf(jQuery(this).text()) == -1)
+                    completion[completion.length] = jQuery(this).text();
+            });
+            completion.sort(sortSelect);
+            userlist.find('th:nth-child(4)').html('<select><option>' + completion.join("</option><option>") + '</option></select>');
+
+            var schools = ['School', 'Ascending (A-Z)', 'Descending (Z-A)'];
+            userlist.find('td:nth-child(5)').each(function () {
                 if(schools.indexOf(jQuery(this).text()) == -1)
                     schools[schools.length] = jQuery(this).text();
             });
             schools.sort(sortSelect);
-            userlist.find('th:nth-child(4)').html('<select><option>' + schools.join("</option><option>") + '</option></select>');
+            userlist.find('th:nth-child(5)').html('<select><option>' + schools.join("</option><option>") + '</option></select>');
 
             var advisers = ['Adviser', 'Ascending (A-Z)', 'Descending (Z-A)'];
-            userlist.find('td:nth-child(5)').each(function () {
+            userlist.find('td:nth-child(6)').each(function () {
                 if(advisers.indexOf(jQuery(this).text()) == -1)
                     advisers[advisers.length] = jQuery(this).text();
             });
             advisers.sort(sortSelect);
-            userlist.find('th:nth-child(5)').html('<select><option>' + advisers.join("</option><option>") + '</option></select>');
+            userlist.find('th:nth-child(6)').html('<select><option>' + advisers.join("</option><option>") + '</option></select>');
 
         }
         $('#partner-advice-1').modal();
@@ -148,6 +156,7 @@ $(document).ready(function () {
             else if(jQuery(this).val() != 'Status' &&
                 jQuery(this).val() != 'Date' &&
                 jQuery(this).val() != 'Student' &&
+                jQuery(this).val() != 'Completion' &&
                 jQuery(this).val() != 'School' &&
                 jQuery(this).val() != 'Adviser')
             {

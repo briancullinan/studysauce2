@@ -91,7 +91,7 @@ $collection = $router->getRouteCollection();
                     $callbackPaths[$route] = $router->generate($route, ['_format' => 'tab']);
                     $callbackKeys[] = $route;
                     $callbackUri[] = $router->generate($route);
-                } catch(MissingMandatoryParametersException $ex) {
+                } catch(Exception $ex) {
                     // TODO: replace with defaults
                 }
             }

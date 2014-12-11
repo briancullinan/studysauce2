@@ -1,4 +1,7 @@
 <?php
+/** @var User $user */
+use StudySauce\Bundle\Entity\User;
+
 $user = $app->getUser();
 ?>
 <aside id="right-panel" class="collapsed">
@@ -7,7 +10,7 @@ $user = $app->getUser();
         <ul class="main-menu">
             <li><a href="#collapse">Hide</a><h3>Adviser Tools</h3></li>
             <li><a href="<?php print $view['router']->generate('userlist'); ?>"><span>&nbsp;</span>Home</a></li>
-            <?php if($user->hasRole('ROLE_ADVISER')) { ?>
+            <?php if($user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_ADMIN')) { ?>
             <li><a href="<?php print $view['router']->generate('import'); ?>"><span>&nbsp;</span>User Import</a></li>
             <?php } ?>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>

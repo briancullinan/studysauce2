@@ -30,13 +30,14 @@ class TorchAndLaurelBundle extends Bundle
             }
 
             // create a torch and laurel discount coupon
-            $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TAL']);
+            $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCHANDLAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setName('TAL');
-                $coupon->setDescription('50% off from Torch & Laurel');
-                $coupon->setType('.50');
-                $coupon->setMaxUses(1000);
+                $coupon->setTerm(18);
+                $coupon->setName('TORCHANDLAUREL');
+                $coupon->setDescription('75% off from Torch & Laurel');
+                $coupon->setType('=50');
+                $coupon->setMaxUses(1);
                 $coupon->setSeed(md5(uniqid()));
                 $orm->persist($coupon);
                 $orm->flush();

@@ -144,6 +144,9 @@ $(document).ready(function () {
                     goals.find('.form-actions').css('visibility', 'visible');
                 // TODO: make new rows fade in to place
 
+                // update goals widget
+
+
                 goalsFunc.apply(goals.find('.goal-row'));
             },
             error: function () {

@@ -163,7 +163,7 @@ class GoalsController extends Controller
             $claim->setPhoto(empty($photo) ? null : $photo);
             $claim->setMessage($request->get('message'));
             $claim->setGoal($goal);
-            $claim->setCode(md5(microtime(true)));
+            $claim->setCode(md5(microtime()));
             $goal->addClaim($claim);
             $orm->persist($claim);
             $orm->flush();

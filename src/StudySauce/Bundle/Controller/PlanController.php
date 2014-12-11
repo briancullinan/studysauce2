@@ -65,36 +65,36 @@ class PlanController extends Controller
     }
 
     /**
-     * @param User $user
+     * @param User $_user
      * @param null $_week
      * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(User $user = null, $_week = null, $template = ['Plan', 'tab'])
+    public function indexAction(User $_user = null, $_week = null, $template = ['Plan', 'tab'])
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
-        /** @var $user \StudySauce\Bundle\Entity\User */
-        if(empty($user))
-            $user = $this->getUser();
+        /** @var $_user \StudySauce\Bundle\Entity\User */
+        if(empty($_user))
+            $_user = $this->getUser();
 
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
-        $schedule = $user->getSchedules()->first();
+        $schedule = $_user->getSchedules()->first();
 
         // get demo schedule instead
         $showPlanIntro = false; // TODO: false in production
-        if (empty($schedule) || empty($schedule->getCourses()) || !$user->hasRole('ROLE_PAID')) {
+        if (empty($schedule) || empty($schedule->getCourses()) || !$_user->hasRole('ROLE_PAID')) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
         }
         // show intro for paid users
-        elseif(empty($user->getProperty('seen_plan_intro'))) {
+        elseif(empty($_user->getProperty('seen_plan_intro'))) {
             $showPlanIntro = true;
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
-            $user->setProperty('seen_plan_intro', true);
-            $userManager->updateUser($user);
+            $_user->setProperty('seen_plan_intro', true);
+            $userManager->updateUser($_user);
         }
 
         if($_week !== 0 && empty($_week)) {
@@ -113,13 +113,13 @@ class PlanController extends Controller
         // get events for current week
         $emails = new EmailsController();
         $emails->setContainer($this->container);
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $_week, $orm, $emails);
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $_user->getDeadlines(), $_week, $orm, $emails);
         $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
                 'courses' => array_values($courses),
                 'jsonEvents' =>  self::getJsonEvents($events, array_values($courses)),
-                'user' => $user,
+                'user' => $_user,
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week,
                 'showPlanIntro' => $showPlanIntro
@@ -131,15 +131,9 @@ class PlanController extends Controller
      * @param $_week
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function partnerAction($_user, $_week = null)
+    public function partnerAction(User $_user, $_week = null)
     {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
-        /** @var $user User */
-        $user = $userManager->findUserBy(['id' => intval($_user)]);
-
-        return $this->indexAction($user, $_week, ['Partner', 'plan']);
+        return $this->indexAction($_user, $_week, ['Partner', 'plan']);
     }
 
     /**

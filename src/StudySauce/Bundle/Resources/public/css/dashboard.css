@@ -113,6 +113,49 @@ aside + .panel-pane,
     margin-bottom:20px;
 }
 
+.big-add:active,
+.big-add:focus,
+.big-add:hover
+{
+    color:#555555;
+}
+
+.big-add:active span,
+.big-add:focus span,
+.big-add:hover span
+{
+    color:#00CCEE;
+}
+
+.big-add
+{
+    position: relative;
+    z-index: 0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, .5);
+    border-bottom: 0;
+    color: #555555;
+    font-size: 22px;
+    font-weight: 700;
+    display: inline-block;
+    float: left;
+    margin-top: 20px;
+}
+
+.big-add span
+{
+    margin: 0 10px 0 0;
+    line-height: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    top: 0;
+    float: left;
+    font-size: 50px;
+    vertical-align: middle;
+}
+
+.import-row > *,
 .session-row > *,
 #schedule header > *,
 .class-row > *,

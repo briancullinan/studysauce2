@@ -12,7 +12,9 @@ $(document).ready(function () {
     {
         var plans = $('#plan');
         $.ajax({
-            url: window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
+            url: $('.dashboard-home.adviser').length == 1
+                ? window.location.pathname.replace(/adviser\/([0-9]+)(\/.*)?/i, 'adviser/$1/plan/' + w.toJSON() + '/tab')
+                : window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
             type: 'GET',
             dataType: 'text',
             success: function (data) {
@@ -284,7 +286,7 @@ $(document).ready(function () {
                     // reset calendar
                     $('#calendar').fullCalendar('destroy');
                     isInitialized = false;
-                    plan.filter(':visible').trigger('show');
+                    plan.filter(':visible').jtrigger('show');
                 }
             });
         }, 100);
@@ -361,7 +363,7 @@ $(document).ready(function () {
                     keys[keys.length] = k;
 
             for (var j = 0; j < keys.length; j++) {
-                var h1 = headings[keys[j]].filter('.row:not(.historic)').length == 0;
+                var h1 = headings[keys[j]].filter('.session-row:not(.historic)').length == 0;
                 rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h1 ? 'historic' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
             }
         }
@@ -369,10 +371,10 @@ $(document).ready(function () {
             for (var h in headings) {
                 if (!headings.hasOwnProperty(h))
                     continue;
-                var h2 = headings[h].filter('.row:not(.historic)').length == 0;
+                var h2 = headings[h].filter('.session-row:not(.historic)').length == 0;
                 rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h2 ? 'historic' : '') + '">' + h + '</div>'), headings[h].detach()));
             }
         }
-        plans.find('.head, .row').replaceWith(rows);
+        plans.find('.head, .session-row').replaceWith(rows);
     });
 });

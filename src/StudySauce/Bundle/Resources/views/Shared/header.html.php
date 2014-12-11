@@ -47,10 +47,15 @@ $adviser = reset($advisers);
                     <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?><span><strong>Study</strong> Sauce</span></a>
         </div>
-        <?php if($app->getRequest()->get('_format') == 'index') { ?>
+        <?php if($app->getRequest()->get('_format') == 'index' || ($app->getRequest()->get('_format') != 'funnel' &&
+                !empty($user) && $user->hasRole('ROLE_PARTNER'))) { ?>
             <div id="partner-message">
-                <?php if(!empty($adviser)) { ?>
-                    <div>
+                <?php if($user->hasRole('ROLE_PARTNER')) { ?>
+                    <div class="highlighted-link">
+                        <a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Upgrade</a>
+                    </div>
+                <?php } elseif(!empty($adviser)) { ?>
+                    <div class="partner-icon">
                         <?php if (empty($adviser->getPhoto())) {
                             foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
                                 <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>"/>
@@ -62,7 +67,7 @@ $adviser = reset($advisers);
                     </div>
                     <div>I am accountable to: <br><span><?php print $adviser->getFirst(); ?> <?php print $adviser->getLast(); ?></span></div>
                 <?php } elseif(!empty($partner)) { ?>
-                    <div>
+                    <div class="partner-icon">
                     <?php if (empty($partner->getPhoto())) {
                         foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
                             <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>"/>
@@ -74,7 +79,7 @@ $adviser = reset($advisers);
                     </div>
                     <div>I am accountable to: <br><span><?php print $partner->getFirst(); ?> <?php print $partner->getLast(); ?></span></div>
                 <?php } else { ?>
-                    <div>
+                    <div class="partner-icon">
                     <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                         <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>" />
                     <?php endforeach; ?>
@@ -84,7 +89,7 @@ $adviser = reset($advisers);
             </div>
         <?php } ?>
         <?php if($app->getRequest()->get('_format') != 'funnel') { ?>
-            <div id="welcome-message"><strong><?php print $app->getUser()->getFirst(); ?></strong>
+            <div id="welcome-message"><strong><?php print (!empty($user) ? $user->getFirst() : ''); ?></strong>
                 <a href="<?php print $view['router']->generate('logout'); ?>" title="Log out">logout</a></div>
             <div id="jquery_jplayer" style="width: 0; height: 0;"></div>
         <?php } ?>

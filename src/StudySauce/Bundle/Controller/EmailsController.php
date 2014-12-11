@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
+use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\Payment;
@@ -282,37 +283,6 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
-     * @param StudentInvite $student
-     * @return Response
-     */
-    public function adviserInviteAction(User $user = null, StudentInvite $student = null)
-    {
-        /** @var $user User */
-        if(empty($user))
-            $user = $this->getUser();
-
-        $codeUrl = $this->generateUrl('scholar_welcome', ['_code' => $student->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        $message = Swift_Message::newInstance()
-            ->setSubject('Welcome to Study Sauce!')
-            ->setFrom($user->getEmail())
-            ->setTo($student->getEmail())
-            ->setBody($this->renderView('StudySauceBundle:Emails:adviser-invite.html.php', [
-                        'user' => $user,
-                        'greeting' => 'Hello ' . $student->getFirst() . ' ' . $student->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
-                    ]), 'text/html');
-        $headers = $message->getHeaders();
-        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['adviser-invite']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
-
-        return new Response();
-    }
-
-    /**
-     * @param User $user
      * @param $reminders
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -469,6 +439,37 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['parent-invite']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param GroupInvite $invite
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function groupInviteAction(User $user = null, GroupInvite $invite = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('Welcome to Study Sauce!')
+            ->setFrom($user->getEmail())
+            ->setTo($invite->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:group-invite.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Dear ' . $invite->getFirst() . ' ' . $invite->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['group-invite']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 

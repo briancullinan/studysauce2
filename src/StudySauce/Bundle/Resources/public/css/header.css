@@ -71,6 +71,15 @@
     vertical-align: middle;
 }
 
+#partner-message a.more
+{
+    color:#222222;
+    text-decoration: none;
+    font-size: 16px;
+    padding:10px 15px;
+    margin-top:2px;
+}
+
 #partner-message > *
 {
     display:inline-block;
@@ -83,7 +92,7 @@
     min-height: 48px;
 }
 
-#partner-message > div:first-child
+#partner-message > div.partner-icon
 {
     border-radius: 100%;
     overflow:hidden;
@@ -209,9 +218,9 @@
 
 @media all and (max-width: 500px) {
 
-    #site-name a
+    #site-name a > span
     {
-        font-size: 30px;
+        font-size: 38px;
     }
 
     #site-name img

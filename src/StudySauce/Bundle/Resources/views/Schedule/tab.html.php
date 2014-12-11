@@ -194,14 +194,13 @@ $view['slots']->start('body'); ?>
                     </label>
                 </div>
                 <input type="hidden" name="event-type" value="c">
-
                 <div class="read-only"><a href="#edit-class">&nbsp;</a><a href="#remove-class">&nbsp;</a></div>
             </div>
         <?php } ?>
     </div>
 
     <div class="form-actions highlighted-link clearfix invalid">
-        <a href="#add-class">Add <span>+</span> class</a>
+        <a href="#add-class" class="big-add">Add <span>+</span> class</a>
         <div class="invalid-times">Error - invalid class time</div>
         <div class="overlaps-only">Error - classes cannot overlap</div>
         <div class="invalid-only">Error - please make sure all class information is filled in</div>
@@ -349,7 +348,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
     </div>
     <div class="form-actions highlighted-link clearfix invalid">
-        <a href="#add-other">Add <span>+</span> other event</a>
+        <a href="#add-other" class="big-add">Add <span>+</span> other event</a>
         <div class="invalid-times">Error - invalid class time</div>
         <div class="overlaps-only">Error - classes cannot overlap</div>
         <div class="invalid-only">Error - please make sure all class information is filled in</div>

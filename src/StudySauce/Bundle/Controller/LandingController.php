@@ -258,6 +258,16 @@ class LandingController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
+        $session = $request->getSession();
+
+        /** @var GroupInvite $group */
+        // TODO: generalize this for other groups
+        $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($group) && $group->getGroup()->getName() == 'Torch And Laurel' ||
+            ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+        {
+            return $this->forward('TorchAndLaurelBundle:Landing:index');
+        }
 
         /** @var StudentInvite $student */
         $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->get('_code')]);

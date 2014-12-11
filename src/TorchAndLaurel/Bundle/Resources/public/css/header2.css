@@ -1,19 +1,14 @@
 
-#site-name a > *
-{
-    vertical-align: bottom;
-}
-
 #site-name a small
 {
     font-size:10px;
-    line-height: 110%;
+    line-height: 90%;
 }
 
 #site-name a > span
 {
     font-size: 16px;
-    line-height: 100%;
+    line-height: 90%;
     display:inline-block;
     text-align: justify;
     max-width: 150px;
