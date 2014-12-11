@@ -10,6 +10,7 @@ Tip #2 - Prework study sessions
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-footer') ?>
+<ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
 <a href="#plan-intro-3" class="btn btn-primary" data-toggle="modal">Next</a>
 <?php $view['slots']->stop() ?>
 

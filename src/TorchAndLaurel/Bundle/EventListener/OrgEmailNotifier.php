@@ -63,7 +63,7 @@ class OrgEmailNotifier implements EventSubscriberInterface
             $user = $context->getToken()->getUser();
             if ($user->hasGroup('Torch And Laurel') || ($session->has('organization') &&
                     $session->get('organization') == 'Torch And Laurel')) {
-                $session->set('coupon', 'TAL17A0D6');
+                $session->set('coupon', 'TORCHANDLAUREL');
             }
         }
     }

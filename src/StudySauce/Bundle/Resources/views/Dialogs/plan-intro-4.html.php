@@ -10,6 +10,7 @@ Tip #4 - Try out different study strategies
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>
+<ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
 <a href="#close" class="btn btn-primary" data-dismiss="modal">Done</a>
 <?php $view['slots']->stop() ?>
 
