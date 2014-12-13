@@ -64,7 +64,7 @@ class PartnerController extends Controller
         }
         else
         {
-            // check if they every invited this partner
+            // check if they ever invited this partner
             $current = $user->getPartnerInvites()->filter(function (PartnerInvite $x) use ($request) {return $x->getEmail() == $request->get('email');})->first();
             if(!empty($current)) {
                 // update created time so they become the current partner

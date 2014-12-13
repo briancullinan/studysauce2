@@ -145,7 +145,7 @@ $(document).ready(function () {
                 // TODO: make new rows fade in to place
 
                 // update goals widget
-
+                $('#home').find('.goals-widget').replaceWith(response.find('.goals-widget'));
 
                 goalsFunc.apply(goals.find('.goal-row'));
             },

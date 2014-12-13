@@ -16,7 +16,7 @@
         <?php }
         if(!empty($outcome)) { ?>
         <div class="outcome">
-            <strong><?php print $outcome->getGoal(); ?></strong> target GPA for the term
+            <strong><?php print number_format($outcome->getGoal(), 2); ?></strong> target GPA for the term
         </div>
         <?php } ?>
     </div>

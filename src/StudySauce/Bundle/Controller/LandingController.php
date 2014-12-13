@@ -4,21 +4,14 @@ namespace StudySauce\Bundle\Controller;
 
 use Course1\Bundle\Entity\Course1;
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Command\CronSauceCommand;
 use StudySauce\Bundle\Entity\GroupInvite;
-use StudySauce\Bundle\Entity\ParentInvite;
-use StudySauce\Bundle\Entity\PartnerInvite;
-use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class LandingController
@@ -160,29 +153,12 @@ class LandingController extends Controller
      */
     public function partnersAction(Request $request)
     {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
+        $session = $request->getSession();
 
-        /** @var PartnerInvite $partner */
-        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->get('_code')]);
-        if(empty($partner)) {
-            return $this->render('StudySauceBundle:Landing:partners.html.php');
-        }
-        else {
-            $partner->setActivated(true);
-            /** @var User $partnerUser */
-            $partnerUser = $userManager->findUserByEmail($partner->getEmail());
-            if($partnerUser != null)
-                $partner->setPartner($partnerUser);
-            $orm->merge($partner);
-            $orm->flush();
-            $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:partners.html.php');
-            $session = $request->getSession();
-            $session->set('partner', $request->get('_code'));
-            return $response;
-        }
+        if(empty($session->get('partner')))
+            $session->set('partner', true);
+
+        return $this->render('StudySauceBundle:Landing:partners.html.php');
     }
 
     /**
@@ -193,8 +169,6 @@ class LandingController extends Controller
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
         $session = $request->getSession();
 
         /** @var GroupInvite $group */
@@ -206,46 +180,9 @@ class LandingController extends Controller
             return $this->forward('TorchAndLaurelBundle:Landing:parents');
         }
 
-        /** @var ParentInvite $parent */
-        $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->get('_code')]);
-        if(empty($parent)) {
-            return $this->render('StudySauceBundle:Landing:parents.html.php');
-        }
-        else {
-            $parent->setActivated(true);
-            /** @var User $parentUser */
-            $parentUser = $userManager->findUserByEmail($parent->getEmail());
-            if($parentUser != null)
-                $parent->setParent($parentUser);
-            $orm->merge($parent);
-            $orm->flush();
-            $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:parents.html.php');
-            $session = $request->getSession();
-            $session->set('parent', $request->get('_code'));
-            return $response;
-        }
-    }
-
-    /**
-     * @param UserManager $userManager
-     * @param string $template
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function logoutUser(UserManager $userManager, $template)
-    {
-        $loginManager = $this->get('fos_user.security.login_manager');
-        $this->get('security.context')->setToken(null);
-        $this->get('request')->getSession()->invalidate();
-        /** @var EncoderFactory $encoder_service */
-        $encoder_service = $this->get('security.encoder_factory');
-        /** @var PasswordEncoderInterface $encoder */
-        $user = $userManager->findUserByUsername('guest');
-        $encoder = $encoder_service->getEncoder($user);
-        $password = $encoder->encodePassword('guest', $user->getSalt());
-        $this->get('security.context')->setToken(new UsernamePasswordToken($user, $password, 'main', $user->getRoles()));
-        $response = $this->render($template);
-        $loginManager->loginUser('main', $user, $response);
-        return $response;
+        if(empty($session->get('parent')))
+            $session->set('parent', true);
+        return $this->render('StudySauceBundle:Landing:parents.html.php');
     }
 
     /**
@@ -256,8 +193,6 @@ class LandingController extends Controller
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
         $session = $request->getSession();
 
         /** @var GroupInvite $group */
@@ -269,24 +204,7 @@ class LandingController extends Controller
             return $this->forward('TorchAndLaurelBundle:Landing:index');
         }
 
-        /** @var StudentInvite $student */
-        $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->get('_code')]);
-        if(empty($student)) {
-            return $this->render('StudySauceBundle:Landing:students.html.php');
-        }
-        else {
-            $student->setActivated(true);
-            /** @var User $studentUser */
-            $studentUser = $userManager->findUserByEmail($student->getEmail());
-            if($studentUser != null)
-                $student->setStudent($studentUser);
-            $orm->merge($student);
-            $orm->flush();
-            $response = $this->logoutUser($userManager, 'StudySauceBundle:Landing:students.html.php');
-            $session = $request->getSession();
-            $session->set('student', $request->get('_code'));
-            return $response;
-        }
+        return $this->render('StudySauceBundle:Landing:students.html.php');
     }
 
 }

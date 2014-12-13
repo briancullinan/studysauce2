@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Coupon;
+use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\Invite;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -375,6 +376,24 @@ class BuyController extends Controller
         $session = $request->getSession();
         $user = $this->getUser();
 
+        // create a mock invite
+        if(!empty($request->get('invite')))
+        {
+            /** @var User $inviteUser */
+            $inviteUser = $userManager->findUserByEmail($request->get('invite')['email']);
+            /** @var StudentInvite $invite */
+            $invite = new StudentInvite();
+            $invite->setUser($user);
+            $invite->setFirst($request->get('first'));
+            $invite->setLast($request->get('last'));
+            $invite->setEmail($request->get('email'));
+            $invite->setCode(md5(microtime()));
+            if(!empty($inviteUser))
+                $invite->setStudent($inviteUser);
+            $orm->persist($invite);
+            $orm->flush();
+        }
+
         // create a user from checkout only if we are currently logged in as guests
         if($user->hasRole('ROLE_GUEST')) {
             // look up existing user by email address
@@ -383,8 +402,20 @@ class BuyController extends Controller
             $email = $request->get('email');
             $user = $userManager->findUserByEmail($email);
 
-            /** @var Invite $invite */
             $relationSetter = function ($user) {};
+            if(!empty($session->get('group'))) {
+                /** @var GroupInvite $group */
+                $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->getSession()->get('group')]);
+                if(!empty($group->getStudent()))
+                    $user = $group->getStudent();
+                else {
+                    $relationSetter = function (User $user) use ($group, $orm) {
+                        $group->setStudent($user);
+                        $user->addInvitedGroup($group);
+                        $orm->merge($group);
+                    };
+                }
+            }
             if(!empty($session->get('parent'))) {
                 /** @var ParentInvite $parent */
                 $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
@@ -400,7 +431,7 @@ class BuyController extends Controller
             }
             if(!empty($session->get('partner'))) {
                 /** @var PartnerInvite $partner */
-                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
                 if(!empty($partner->getPartner()))
                     $user = $partner->getPartner();
                 else {
@@ -408,6 +439,19 @@ class BuyController extends Controller
                         $partner->setPartner($user);
                         $user->addInvitedPartner($partner);
                         $orm->merge($partner);
+                    };
+                }
+            }
+            if(!empty($session->get('student'))) {
+                /** @var StudentInvite $student */
+                $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
+                if(!empty($student->getStudent()))
+                    $user = $student->getStudent();
+                else {
+                    $relationSetter = function (User $user) use ($student, $orm) {
+                        $student->setStudent($user);
+                        $user->addInvitedStudent($student);
+                        $orm->merge($student);
                     };
                 }
             }
@@ -434,9 +478,16 @@ class BuyController extends Controller
                 $user->setUsername($email);
                 $user->setUsernameCanonical($email);
                 $relationSetter($user);
-                $orm->persist($user);
-                $orm->flush();
+                $userManager->updateUser($user);
             }
+            if(isset($relationSetter))
+                $relationSetter($user);
+            if(isset($invite)) {
+                $invite->setUser($user);
+                $user->addStudentInvite($invite);
+                $orm->merge($invite);
+            }
+            $orm->flush();
 
             // set the context for this load, and log in after transaction is complete
             $context = $this->get('security.context');

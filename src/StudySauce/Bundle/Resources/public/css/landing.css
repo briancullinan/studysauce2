@@ -154,6 +154,7 @@
 .landing-home .did-you-know h2
 {
     padding-left:260px;
+    margin-top:0;
 }
 
 .landing-home .did-you-know .two,
@@ -204,8 +205,9 @@
 
 .landing-home .did-you-know > div
 {
-    width: 900px;
+    max-width: 900px;
     margin:0 auto;
+    padding:0 20px;
 }
 
 .landing-home .did-you-know p.small,
@@ -222,5 +224,64 @@
 
 .landing-home .did-you-know img {
     float: left;
-    margin: 50px 0;
+    margin: 70px 0;
+}
+
+@media all and (max-width: 800px)
+{
+    .landing-home .did-you-know img
+    {
+        margin:100px 0;
+    }
+}
+
+@media all and (max-width: 700px)
+{
+    .landing-home .did-you-know img
+    {
+        display:none;
+    }
+
+    .landing-home .did-you-know h2
+    {
+        padding-left:0;
+    }
+
+    .landing-home .did-you-know > div
+    {
+        padding:0 10px;
+    }
+
+    .landing-home .did-you-know .one,
+    .landing-home .did-you-know .two
+    {
+        margin:0 -2px;
+        padding: 0 2px;
+        width: 50%;
+    }
+
+}
+
+@media all and (max-width: 600px)
+{
+
+    .landing-home .did-you-know .one,
+    .landing-home .did-you-know .two
+    {
+        margin:0;
+        padding:0;
+        width: 100%;
+    }
+
+    .landing-home .did-you-know div:nth-of-type(2)
+    {
+        position:relative;
+        top:55px;
+    }
+
+    .landing-home .did-you-know div:nth-of-type(3)
+    {
+        position:relative;
+        top:-50px;
+    }
 }

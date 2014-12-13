@@ -133,10 +133,12 @@ class GoalsController extends Controller
             $orm->flush();
         }
 
-        /** @var  $request Request */
-        //$request = $this->container->get('request');
-        /** @var  $goals Response */
-        return $this->forward('StudySauceBundle:Goals:index', ['_format' => 'tab']);
+        $request->attributes->set('_format', 'tab');
+        /** @var Response $goals */
+        $goals = $this->indexAction();
+        /** @var Response $widget */
+        $widget = $this->widgetAction();
+        return new Response($goals->getContent() . $widget->getContent());
     }
 
     /**

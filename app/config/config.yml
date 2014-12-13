@@ -48,6 +48,12 @@ services:
             - {name: kernel.event_subscriber}
         arguments: [@service_container, @templating, @mailer]
 
+    studysauce.invite_listener:
+        class: StudySauce\Bundle\EventListener\InviteListener
+        tags:
+            - {name: kernel.event_subscriber}
+        arguments: [@service_container]
+
     studysauce.drupal_encoder:
         class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
 

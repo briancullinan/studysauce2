@@ -3,6 +3,10 @@ use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var GlobalVariables $app */
 
+$isPartner =
+    $app->getSession()->has('parent') || $app->getUser()->hasRole('ROLE_PARENT') ||
+    $app->getSession()->has('partner') || $app->getUser()->hasRole('ROLE_PARTNER');
+
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
@@ -127,6 +131,7 @@ $view['slots']->start('body'); ?>
                         <option value="United States" selected="selected">United States</option>
                     </select></label>
                 <a href="#show-coupon" class="cloak">Have a coupon code? Click <span class="reveal">here</span>.</a>
+                <a href="#show-gift" class="cloak" <?php print ($isPartner ? 'style="display:none;"' : ''); ?>>Are you purchasing as a gift? Click <span class="reveal">here</span>.</a>
             </fieldset>
             <fieldset id="payment-pane">
                 <legend>Payment method</legend>
@@ -194,6 +199,19 @@ $view['slots']->start('body'); ?>
                     <a href="#ccv-info" data-toggle="modal">What's the CVV?</a>
                 </label>
             </fieldset>
+            <div class="form-actions highlighted-link invalid"><a href="#submit-order" class="more">Complete order</a></div>
+            <fieldset id="gift-pane" class="<?php print ($isPartner ? 'shown-by-default' : ''); ?>">
+                <legend>Student information</legend>
+                <div class="first-name">
+                    <label class="input"><span>First name</span><input name="first-name" type="text" value="<?php print $first; ?>"></label>
+                </div>
+                <div class="last-name">
+                    <label class="input"><span>Last name</span><input name="last-name" type="text" value="<?php print $last; ?>"></label>
+                </div>
+                <div class="email">
+                    <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
+                </div>
+            </fieldset>
             <fieldset id="coupon-pane">
                 <legend>Coupon discount</legend>
                 <?php if(!empty($coupon)) {
@@ -208,7 +226,6 @@ $view['slots']->start('body'); ?>
                     <a href="#coupon-apply" class="more">Apply to order</a>
                 <?php } ?>
             </fieldset>
-            <div class="form-actions highlighted-link invalid"><a href="#submit-order" class="more">Complete order</a></div>
         </div>
     </div>
 <?php $view['slots']->stop();

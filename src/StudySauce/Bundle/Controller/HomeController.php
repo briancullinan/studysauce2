@@ -56,6 +56,7 @@ class HomeController extends Controller
     {
         if($user == 'anon.' || !is_object($user) || $user->hasRole('ROLE_GUEST'))
             return ['_welcome', []];
+            // TODO: split this in to separate pages
         elseif($user->hasRole('ROLE_PARTNER') && $user->getInvitedPartners()->count() > 1)
             return ['adviser', ['_user' => $user->getInvitedPartners()->first()->getUser()->getId(), '_tab' => 'metrics']];
         elseif($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER'))

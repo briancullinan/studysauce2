@@ -11,6 +11,7 @@ use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class DeadlinesController
@@ -195,7 +196,12 @@ class DeadlinesController extends Controller
             $orm->flush();
         }
 
-        return $this->forward('StudySauceBundle:Deadlines:index', ['_format' => 'tab']);
+        $request->attributes->set('_format', 'tab');
+        /** @var Response $deadlines */
+        $deadlines = $this->indexAction();
+        /** @var Response $widget */
+        $widget = $this->widgetAction();
+        return new Response($deadlines->getContent() . $widget->getContent());
     }
 
     /**

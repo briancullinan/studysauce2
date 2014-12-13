@@ -19,4 +19,6 @@ interface Invite
     function getLast();
 
     function getUser();
+
+    function setActivated($bool);
 }

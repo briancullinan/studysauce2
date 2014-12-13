@@ -149,9 +149,9 @@ $(document).ready(function () {
                 }
                 else {
                     that.addClass('checked-in');
-                    $.merge(checklist, sdsmessages).modal('hide').removeClass('invalid');
                     startClock();
                 }
+                $.merge(checklist, sdsmessages).modal('hide').removeClass('invalid');
 
                 // update SDS
                 sdsmessages.find('.show').removeClass('show').addClass('hide');

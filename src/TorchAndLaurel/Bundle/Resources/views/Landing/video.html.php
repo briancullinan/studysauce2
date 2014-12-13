@@ -15,7 +15,6 @@
         </ul>
     </div>
 </div>
-<?php /*
 <div class="did-you-know">
     <div>
         <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/did_you_know_620x310.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
@@ -27,4 +26,4 @@
         <div class="one"><a class="more" href="#parent-invite" data-toggle="modal">Ask your parents</a></div>
         <div class="two highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Checkout</a></div>
     </div>
-</div> */ ?>
+</div>

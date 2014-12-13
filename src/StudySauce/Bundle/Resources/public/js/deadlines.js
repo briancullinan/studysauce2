@@ -79,7 +79,7 @@ $(document).ready(function () {
         var deadlines = $('#deadlines');
         // update key dates list
         deadlines.find('.deadline-row,.head').remove();
-        response.find('.deadline-row,.head').insertAfter(deadlines.find('header'));
+        response.find('.pane-content .deadline-row,.pane-content .head').insertAfter(deadlines.find('header'));
         deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row').last());
         if(deadlines.find('.deadline-row:not(.first):visible,.head:visible').length == 0) {
             deadlines.find('.deadline-row.first').detach().insertBefore(deadlines.find('.form-actions').first());
@@ -88,7 +88,9 @@ $(document).ready(function () {
         else {
             deadlines.find('.sort-by,header').show();
         }
-        // TODO: update home tab
+
+        // update home tab
+        $('#home').find('.deadlines-widget').replaceWith(response.find('.deadlines-widget'));
     }
 
     body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {

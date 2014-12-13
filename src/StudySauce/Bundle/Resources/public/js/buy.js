@@ -5,10 +5,13 @@ jQuery(document).ready(function($) {
     function checkoutFunc()
     {
         var checkout = $('#checkout');
-        var valid = false;
+        var valid = false,
+            valid2 = false;
         if(checkout.find('input[name="reoccurs"]:checked').val().trim() != '' &&
-            checkout.find('.first-name input').val().trim() != '' &&
-            checkout.find('.last-name input').val().trim() != '' &&
+            checkout.find('#billing-pane .first-name input').val().trim() != '' &&
+            checkout.find('#billing-pane .last-name input').val().trim() != '' &&
+            checkout.find('#billing-pane .email input').val().trim() != '' &&
+            (/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(checkout.find('#billing-pane .email input').val()) &&
             checkout.find('input[name="street1"]').val().trim() != '' &&
             //checkout.find('input[name="street2"]').val().trim() != '' &&
             checkout.find('.city input').val().trim() != '' &&
@@ -20,7 +23,13 @@ jQuery(document).ready(function($) {
             checkout.find('select[name="cc-year"]').val().trim() != '' &&
             checkout.find('input[name="cc-ccv"]').val().trim() != '')
             valid = true;
-        if(!valid)
+        if(!checkout.find('#gift-pane').is(':visible') ||
+            checkout.find('#gift-pane .first-name input').val().trim() != '' &&
+            checkout.find('#gift-pane .last-name input').val().trim() != '' &&
+            checkout.find('#gift-pane .email input').val().trim() != '' &&
+            (/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(checkout.find('#gift-pane .email input').val()))
+            valid2 = true;
+        if(!valid || !valid2)
             checkout.find('.form-actions').removeClass('valid').addClass('invalid');
         else {
             checkout.find('.form-actions').removeClass('invalid').addClass('valid');
@@ -39,7 +48,17 @@ jQuery(document).ready(function($) {
         checkout.find('#coupon-pane')
             .css('display', 'inline-block')
             .css('visibility', 'visible')
-            .animate({opacity:1,height: 115});
+            .animate({opacity:1,height: 100});
+    });
+
+    body.on('click', '#checkout a[href="#show-gift"]', function (evt) {
+        var checkout = $('#checkout');
+        evt.preventDefault();
+        $(this).hide();
+        checkout.find('#gift-pane')
+            .css('display', 'inline-block')
+            .css('visibility', 'visible')
+            .animate({opacity:1,height: 166});
     });
 
     body.on('click', '#checkout a[href="#coupon-apply"]', function (evt) {
@@ -108,9 +127,9 @@ jQuery(document).ready(function($) {
             dataType: 'json',
             data: {
                 reoccurs: checkout.find('input[name="reoccurs"]:checked').val().trim(),
-                first: checkout.find('.first-name input').val().trim(),
-                last: checkout.find('.last-name input').val().trim(),
-                email: checkout.find('.email input').val().trim(),
+                first: checkout.find('#billing-pane .first-name input').val().trim(),
+                last: checkout.find('#billing-pane .last-name input').val().trim(),
+                email: checkout.find('#billing-pane .email input').val().trim(),
                 street1: checkout.find('input[name="street1"]').val().trim(),
                 street2: checkout.find('input[name="street2"]').val().trim(),
                 city: checkout.find('.city input').val().trim(),
@@ -120,7 +139,12 @@ jQuery(document).ready(function($) {
                 number: checkout.find('input[name="cc-number"]').val().trim(),
                 month: checkout.find('select[name="cc-month"]').val().trim(),
                 year: checkout.find('select[name="cc-year"]').val().trim(),
-                ccv: checkout.find('input[name="cc-ccv"]').val().trim()
+                ccv: checkout.find('input[name="cc-ccv"]').val().trim(),
+                invite: checkout.find('#gift-pane').is(':visible') ? {
+                    first: checkout.find('#gift-pane .first-name input').val().trim(),
+                    last: checkout.find('#gift-pane .last-name input').val().trim(),
+                    email: checkout.find('#gift-pane .email input').val().trim()
+                } : null
             },
             success: function (data) {
                 // this should redirect anyways

@@ -13,7 +13,6 @@ use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

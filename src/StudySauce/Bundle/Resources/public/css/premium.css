@@ -374,9 +374,10 @@
         display:block;
     }
 
-    #premium h2
+    #premium .did-you-know h2
     {
-        font-size:24px;
+        margin-top:20px;
+        padding-left:0;
     }
 
     #premium .three-step-process li

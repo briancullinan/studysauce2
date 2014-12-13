@@ -96,6 +96,10 @@ $(document).ready(function () {
         }
     });
 
+    body.on('show', '.course1', function () {
+
+    });
+
     body.on('yt1', '.course1.step1', function () {
         var actions = $(this).find('.highlighted-link');
         actions.addClass('played invalid');

@@ -2,7 +2,8 @@
 
 #checkout #payment-pane,
 #checkout #billing-pane,
-#checkout #coupon-pane
+#checkout #coupon-pane,
+#checkout #gift-pane
 {
     width:50%;
     display:inline-block;
@@ -10,11 +11,32 @@
     margin: 0 -4px 10px;
 }
 
+#checkout #gift-pane,
+#checkout #coupon-pane,
+#checkout #billing-pane
+{
+    float:left;
+    clear:left;
+}
+
+#checkout #payment-pane
+{
+    float:right;
+    clear:right;
+}
+
+#checkout #gift-pane,
 #checkout #coupon-pane {
-    margin-bottom: 0;
     visibility: hidden;
     height: 0;
     opacity: 0;
+}
+
+#checkout #gift-pane.shown-by-default
+{
+    height: auto;
+    opacity: 1;
+    visibility: visible;
 }
 
 #checkout .form-actions .error
@@ -46,8 +68,16 @@
     display:inline-block;
     width:100%;
     padding-right:200px;
-    margin-right: -190px;
+    margin-right: -185px;
     vertical-align: middle;
+}
+
+#billing-pane a[href="#show-coupon"],
+#billing-pane a[href="#show-gift"]
+{
+    display: block;
+    margin-right: auto;
+    max-width: 350px;
 }
 
 #coupon-pane a[href="#coupon-apply"]
@@ -59,6 +89,8 @@
 
 #payment-pane .cc-year,
 #payment-pane .cc-month,
+#gift-pane .first-name,
+#gift-pane .last-name,
 #billing-pane .first-name,
 #billing-pane .last-name,
 #billing-pane .city,
@@ -76,7 +108,8 @@
     margin: 0 -4px 0 2px;
     padding:0;
     display: inline-block;
-    vertical-align: bottom;
+    vertical-align: top;
+    float:right;
 }
 
 
