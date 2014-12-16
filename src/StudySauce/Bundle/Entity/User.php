@@ -125,6 +125,12 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $course1s;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\Course2", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $course2s;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -1043,5 +1049,38 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getInvitedGroups()
     {
         return $this->invitedGroups;
+    }
+
+    /**
+     * Add course2s
+     *
+     * @param \Course2\Bundle\Entity\Course2 $course2s
+     * @return User
+     */
+    public function addCourse2(\Course2\Bundle\Entity\Course2 $course2s)
+    {
+        $this->course2s[] = $course2s;
+
+        return $this;
+    }
+
+    /**
+     * Remove course2s
+     *
+     * @param \Course2\Bundle\Entity\Course2 $course2s
+     */
+    public function removeCourse2(\Course2\Bundle\Entity\Course2 $course2s)
+    {
+        $this->course2s->removeElement($course2s);
+    }
+
+    /**
+     * Get course2s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCourse2s()
+    {
+        return $this->course2s;
     }
 }

@@ -112,6 +112,10 @@
     width: 2px;
 }
 
+.main-menu li.complete {
+    text-decoration: line-through;
+}
+
 #left-panel a[href="#collapse"]
 {
     right:0;

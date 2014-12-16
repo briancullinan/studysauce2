@@ -3,7 +3,6 @@
 namespace Course1\Bundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use StudySauce\Bundle\Entity\User;
 
 /**
  * @ORM\Entity
@@ -72,14 +71,39 @@ class Course1
     protected $whyStudy;
 
     /**
-     * @ORM\Column(type="integer", name="level")
+     * @ORM\Column(type="integer", name="lesson1", options={"default"=0})
      */
-    protected $level = 0;
+    protected $lesson1 = 0;
 
     /**
-     * @ORM\Column(type="integer", name="step")
+     * @ORM\Column(type="integer", name="lesson2", options={"default"=0})
      */
-    protected $step = 0;
+    protected $lesson2 = 0;
+
+    /**
+     * @ORM\Column(type="integer", name="lesson3", options={"default"=0})
+     */
+    protected $lesson3 = 0;
+
+    /**
+     * @ORM\Column(type="integer", name="lesson4", options={"default"=0})
+     */
+    protected $lesson4 = 0;
+
+    /**
+     * @ORM\Column(type="integer", name="lesson5", options={"default"=0})
+     */
+    protected $lesson5 = 0;
+
+    /**
+     * @ORM\Column(type="integer", name="lesson6", options={"default"=0})
+     */
+    protected $lesson6 = 0;
+
+    /**
+     * @ORM\Column(type="integer", name="lesson7", options={"default"=0})
+     */
+    protected $lesson7 = 0;
 
     /**
      * @ORM\Column(type="datetime", name="created")
@@ -115,52 +139,6 @@ class Course1
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set level
-     *
-     * @param integer $level
-     * @return Course1
-     */
-    public function setLevel($level)
-    {
-        $this->level = $level;
-
-        return $this;
-    }
-
-    /**
-     * Get level
-     *
-     * @return integer 
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * Set step
-     *
-     * @param integer $step
-     * @return Course1
-     */
-    public function setStep($step)
-    {
-        $this->step = $step;
-
-        return $this;
-    }
-
-    /**
-     * Get step
-     *
-     * @return integer 
-     */
-    public function getStep()
-    {
-        return $this->step;
     }
 
     /**
@@ -451,5 +429,166 @@ class Course1
     public function getEnjoyed()
     {
         return $this->enjoyed;
+    }
+
+    /**
+     * Set lesson1
+     *
+     * @param integer $lesson1
+     * @return Course1
+     */
+    public function setLesson1($lesson1)
+    {
+        $this->lesson1 = $lesson1;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson1
+     *
+     * @return integer 
+     */
+    public function getLesson1()
+    {
+        return $this->lesson1;
+    }
+
+    /**
+     * Set lesson2
+     *
+     * @param integer $lesson2
+     * @return Course1
+     */
+    public function setLesson2($lesson2)
+    {
+        $this->lesson2 = $lesson2;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson2
+     *
+     * @return integer 
+     */
+    public function getLesson2()
+    {
+        return $this->lesson2;
+    }
+
+    /**
+     * Set lesson3
+     *
+     * @param integer $lesson3
+     * @return Course1
+     */
+    public function setLesson3($lesson3)
+    {
+        $this->lesson3 = $lesson3;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson3
+     *
+     * @return integer 
+     */
+    public function getLesson3()
+    {
+        return $this->lesson3;
+    }
+
+    /**
+     * Set lesson4
+     *
+     * @param integer $lesson4
+     * @return Course1
+     */
+    public function setLesson4($lesson4)
+    {
+        $this->lesson4 = $lesson4;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson4
+     *
+     * @return integer 
+     */
+    public function getLesson4()
+    {
+        return $this->lesson4;
+    }
+
+    /**
+     * Set lesson5
+     *
+     * @param integer $lesson5
+     * @return Course1
+     */
+    public function setLesson5($lesson5)
+    {
+        $this->lesson5 = $lesson5;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson5
+     *
+     * @return integer 
+     */
+    public function getLesson5()
+    {
+        return $this->lesson5;
+    }
+
+    /**
+     * Set lesson6
+     *
+     * @param integer $lesson6
+     * @return Course1
+     */
+    public function setLesson6($lesson6)
+    {
+        $this->lesson6 = $lesson6;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson6
+     *
+     * @return integer 
+     */
+    public function getLesson6()
+    {
+        return $this->lesson6;
+    }
+
+    /**
+     * Set lesson7
+     *
+     * @param integer $lesson7
+     * @return Course1
+     */
+    public function setLesson7($lesson7)
+    {
+        $this->lesson7 = $lesson7;
+
+        return $this;
+    }
+
+    /**
+     * Get lesson7
+     *
+     * @return integer 
+     */
+    public function getLesson7()
+    {
+        return $this->lesson7;
     }
 }

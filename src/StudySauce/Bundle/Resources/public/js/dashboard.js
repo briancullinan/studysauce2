@@ -164,6 +164,8 @@ $(document).ready(function () {
             key = window.callbackKeys.indexOf(panel.attr('id').replace(/-step[0-9]+/g, '')),
             path = window.callbackUri[key],
             item = body.find('.main-menu a[href^="' + path + '"]').first();
+        if(item.parents('nav').find('ul.collapse.in') != item.parents('ul.collapse.in'))
+            item.parents('nav').find('ul.collapse.in').removeClass('in');
         item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
         body.find('.panel-pane:visible').trigger('show');
     }, 100);

@@ -70,27 +70,13 @@ if (!$courseIncluded) {
     $view['slots']->stop();
 
     $view['slots']->start('stylesheets');
-    foreach ($view['assetic']->stylesheets(
-        [
-            '@Course1Bundle/Resources/public/css/course1.css'
-        ],
-        [],
-        ['output' => 'bundles/course1/css/*.css']
-    ) as $url):
-        ?>
+    foreach ($view['assetic']->stylesheets(['@Course1Bundle/Resources/public/css/course1.css'],[],['output' => 'bundles/course1/css/*.css']) as $url): ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
     <?php endforeach;
     $view['slots']->stop();
 
     $view['slots']->start('javascripts');
-    foreach ($view['assetic']->javascripts(
-        [
-            '@Course1Bundle/Resources/public/js/course1.js'
-        ],
-        [],
-        ['output' => 'bundles/course1/js/*.js']
-    ) as $url):
-        ?>
+    foreach ($view['assetic']->javascripts(['@Course1Bundle/Resources/public/js/course1.js'],[],['output' => 'bundles/course1/js/*.js']) as $url): ?>
         <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
     <?php endforeach;
     $view['slots']->stop();

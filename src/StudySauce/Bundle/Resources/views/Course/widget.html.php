@@ -2,41 +2,53 @@
 use Course1\Bundle\Course1Bundle;
 use Course1\Bundle\Entity\Course1;
 /** @var Course1 $course */
-$level = empty($course) ? 0 : $course->getLevel();
-$step = empty($course) ? 0 : $course->getStep();
-// add one because we always go to the next step
-if($step == 4) {
-    $step = 0;
-    $level++;
+$completed = 0;
+$next = 1;
+if(!empty($course) && $course->getLesson1() === 4) {
+    $completed++;
+    if($next === 1) $next = 2;
 }
-else
-    $step++;
-//$percent = empty($course) ? 0 : round($step/5.0*100);
-$overall = round((empty($level) ? 0.0 : ($level - 1.0)) * 100.0 / Course1Bundle::COUNT_LEVEL);
+if(!empty($course) && $course->getLesson2() === 4) {
+    $completed++;
+    if($next === 2) $next = 3;
+}
+if(!empty($course) && $course->getLesson3() === 4) {
+    $completed++;
+    if($next === 3) $next = 4;
+}
+if(!empty($course) && $course->getLesson4() === 4) {
+    $completed++;
+    if($next === 4) $next = 5;
+}
+if(!empty($course) && $course->getLesson5() === 4) {
+    $completed++;
+    if($next === 5) $next = 6;
+}
+if(!empty($course) && $course->getLesson6() === 4) {
+    $completed++;
+    if($next === 6) $next = 7;
+}
+if(!empty($course) && $course->getLesson7() === 4) {
+    $completed++;
+    // TODO: next go to course 2
+}
+$overall = round($completed * 100.0 / Course1Bundle::COUNT_LEVEL);
 ?>
 <div class="widget-wrapper">
     <div class="widget course-widget">
         <h3><?php print $overall; ?>% of course complete</h3>
         <div class="percent">
-            <?php foreach ($view['assetic']->image(
-                ['@StudySauceBundle/Resources/public/images/logo_middle_transparent_compressed.png'],
-                [],
-                ['output' => 'bundles/studysauce/images/*']
-            ) as $url): ?>
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/logo_middle_transparent_compressed.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
                 <img width="150" height="150" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
             <?php endforeach; ?>
             <div class="percent-background">&nbsp;</div>
-            <?php if($level > Course1Bundle::COUNT_LEVEL) { ?>
-                <div class="percent-bars" style="height:100%; background-color:#F90;">&nbsp;</div>
-            <?php } else { ?>
-                <div class="percent-bars" style="height:<?php print $overall; ?>%;">&nbsp;</div>
-            <?php } ?>
+            <div class="percent-bars" style="height:<?php print $overall; ?>%;">&nbsp;</div>
         </div>
         <div class="highlighted-link">
-            <?php if($level > Course1Bundle::COUNT_LEVEL) { ?>
+            <?php if($completed >= Course1Bundle::COUNT_LEVEL) { ?>
                 <h4>Complete!</h4>
             <?php } else { ?>
-                <a href="<?php print $view['router']->generate('_welcome'); ?>course/1/lesson/<?php print (empty($level) ? 1 : $level); ?>/step/<?php print (empty($level) ? 0 : $step); ?>" class="more">Next module</a>
+                <a href="<?php print $view['router']->generate('_welcome'); ?>course/1/lesson/<?php print $next; ?>/step/0" class="more">Next module</a>
             <?php } ?>
         </div>
     </div>

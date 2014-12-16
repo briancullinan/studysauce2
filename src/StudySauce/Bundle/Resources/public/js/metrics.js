@@ -312,7 +312,7 @@ $(document).ready(function () {
         if (svg.select('.x.axis2').empty())
             svg.append("g").attr("class", "x axis2");
         svg.select('.x.axis2')
-            .attr("transform", "translate(0," + (h + margins[0] + 20) + ")")
+            .attr("transform", "translate(0," + (h + margins[0] + 18) + ")")
             .call(xAxisLine2)
             .select('path').remove();
         if (svg.select('.x.axisT').empty())

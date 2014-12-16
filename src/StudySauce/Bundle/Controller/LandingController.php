@@ -134,12 +134,24 @@ class LandingController extends Controller
 
                     if(!empty($course))
                     {
-                        if($course->getLevel() * 10 + $course->getStep() < intval($matches[1]) * 10 + intval(isset($matches[2]) ? $matches[2] : 0)) {
-                            $course->setLevel(intval($matches[1]));
-                            $course->setStep(intval(isset($matches[2]) ? $matches[2] : 0));
-                            $orm->merge($course);
-                            $orm->flush();
-                        }
+                        $lesson = intval($matches[1]);
+                        $step = isset($matches[2]) ? intval($matches[2]) : 0;
+                        if($lesson === 1 && $course->getLesson1() < $step)
+                            $course->setLesson1($step);
+                        if($lesson === 2 && $course->getLesson2() < $step)
+                            $course->setLesson2($step);
+                        if($lesson === 3 && $course->getLesson3() < $step)
+                            $course->setLesson3($step);
+                        if($lesson === 4 && $course->getLesson4() < $step)
+                            $course->setLesson4($step);
+                        if($lesson === 5 && $course->getLesson5() < $step)
+                            $course->setLesson5($step);
+                        if($lesson === 6 && $course->getLesson6() < $step)
+                            $course->setLesson6($step);
+                        if($lesson === 7 && $course->getLesson7() < $step)
+                            $course->setLesson7($step);
+                        $orm->merge($course);
+                        $orm->flush();
                     }
                 }
         }

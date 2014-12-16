@@ -30,6 +30,7 @@
 .metrics-widget .axis path
 {
     fill: #555555;
+    font-size:14px;
 }
 
 #metrics svg *

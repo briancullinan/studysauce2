@@ -94,17 +94,11 @@ $view['slots']->start('body'); ?>
                 $schedule = $s->getUser()->getSchedules()->first();
                 /** @var Course1 $course */
                 $course = $s->getUser()->getCourse1s()->first();
-                $level = empty($course) ? 0 : $course->getLevel();
-                $step = empty($course) ? 0 : $course->getStep();
-                // add one because we always go to the next step
-                if($step == 4) {
-                    $step = 0;
-                    $level++;
-                }
-                else
-                    $step++;
-                //$percent = empty($course) ? 0 : round($step/5.0*100);
-                $overall = round((empty($level) ? 0.0 : ($level - 1.0)) * 100.0 / Course1Bundle::COUNT_LEVEL);
+                $completed = ($course->getLesson1() === 4 ? 1 : 0) + ($course->getLesson2() === 4 ? 1 : 0) +
+                    ($course->getLesson3() === 4 ? 1 : 0) + ($course->getLesson4() === 4 ? 1 : 0) +
+                    ($course->getLesson5() === 4 ? 1 : 0) + ($course->getLesson6() === 4 ? 1 : 0) +
+                    ($course->getLesson7() === 4 ? 1 : 0);
+                $overall = round($completed * 100.0 / Course1Bundle::COUNT_LEVEL);
                 /** @var User $adviser */
                 $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 if(!empty($adviser))
@@ -131,17 +125,11 @@ $view['slots']->start('body'); ?>
                 $schedule = $u->getSchedules()->first();
                 /** @var Course1 $course */
                 $course = $u->getCourse1s()->first();
-                $level = empty($course) ? 0 : $course->getLevel();
-                $step = empty($course) ? 0 : $course->getStep();
-                // add one because we always go to the next step
-                if($step == 4) {
-                    $step = 0;
-                    $level++;
-                }
-                else
-                    $step++;
-                //$percent = empty($course) ? 0 : round($step/5.0*100);
-                $overall = round((empty($level) ? 0.0 : ($level - 1.0)) * 100.0 / Course1Bundle::COUNT_LEVEL);
+                $completed = ($course->getLesson1() === 4 ? 1 : 0) + ($course->getLesson2() === 4 ? 1 : 0) +
+                    ($course->getLesson3() === 4 ? 1 : 0) + ($course->getLesson4() === 4 ? 1 : 0) +
+                    ($course->getLesson5() === 4 ? 1 : 0) + ($course->getLesson6() === 4 ? 1 : 0) +
+                    ($course->getLesson7() === 4 ? 1 : 0);
+                $overall = round($completed * 100.0 / Course1Bundle::COUNT_LEVEL);
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M y')); ?></td>
