@@ -3,7 +3,7 @@
 namespace Course2\Bundle\Controller;
 
 use Course2\Bundle\Entity\Course2;
-use Course2\Bundle\Entity\Quiz6;
+use Course2\Bundle\Entity\StudyPlan;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,7 +52,7 @@ class StudyPlanController extends Controller
                     : null;
 
                 return $this->render('Course2Bundle:StudyPlan:quiz.html.php', [
-                        'quiz' => $course->getQuiz6s()->first() ?: new Quiz2(),
+                        'quiz' => $course->getStudyPlan()->first() ?: new StudyPlan(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;
@@ -83,20 +83,9 @@ class StudyPlanController extends Controller
         /** @var Course2 $course */
         $course = $user->getCourse2s()->first();
         // store quiz results
-        $quiz = new Quiz6();
+        $quiz = new StudyPlan();
         $quiz->setCourse($course);
-        $course->addQuiz6($quiz);
-        if(!empty($request->get('help')))
-            $quiz->setHelp(explode(',', $request->get('help')));
-
-        if(!empty($request->get('attribute')))
-            $quiz->setAttribute($request->get('attribute'));
-
-        if(!empty($request->get('often')))
-            $quiz->setOften($request->get('often'));
-
-        if(!empty($request->get('usage')))
-            $quiz->setUsage(explode(',', $request->get('usage')));
+        $course->addStudyPlan($quiz);
 
         $orm->persist($quiz);
         $orm->flush();

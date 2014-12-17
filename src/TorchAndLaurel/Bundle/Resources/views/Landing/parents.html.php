@@ -23,7 +23,9 @@ foreach ($view['assetic']->stylesheets(
     ?>
     <link rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
-
+foreach ($view['assetic']->stylesheets(['@TorchAndLaurelBundle/Resources/public/css/landing2.css'],[],['output' => 'bundles/torchandlaurel/css/*.css']) as $url):?>
+    <link rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');

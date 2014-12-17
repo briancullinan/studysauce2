@@ -1,5 +1,7 @@
 <?php
 
+$user = $app->getUser();
+
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
  $view['slots']->start('body'); ?>
@@ -9,9 +11,9 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>
-                <li><a><span>1</span>How to set up an effective study environment.</a></li>
-                <li><a><span>2</span>Where and how long you should study.</a></li>
-                <li><a><span>3</span>How music affects your studies.</a></li>
+                <li><a><span>1</span>Why it is important to track how much you study.</a></li>
+                <li><a><span>2</span>When to ask for help.</a></li>
+                <li><a><span>3</span>How many students are overwhelmed.</a></li>
             </ol>
         </div>
         <div class="player-divider">

@@ -1,11 +1,11 @@
 <?php
-use Course2\Bundle\Entity\Quiz4;
+use Course2\Bundle\Entity\StudyTests;
 
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
-/** @var Quiz4 $quiz */
-$complete = !empty($quiz->getMultitask()) &&
-    !empty($quiz->getLowerScore()) && !empty($quiz->getDistraction()) && !empty($quiz->getDownside());
+/** @var StudyTests $quiz */
+$complete = true /*!empty($quiz->getMultitask()) &&
+    !empty($quiz->getLowerScore()) && !empty($quiz->getDistraction()) && !empty($quiz->getDownside())*/;
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_study_tests-step2">
@@ -18,8 +18,8 @@ $complete = !empty($quiz->getMultitask()) &&
                     : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-multitask" type="radio" value="true" <?php print ($quiz->getMultitask() == 'true' ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-multitask" type="radio" value="false" <?php print ($quiz->getMultitask() == 'false' ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-multitask" type="radio" value="true" <?php /*print ($quiz->getMultitask() == 'true' ? 'checked="checked"' : '');*/ ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-multitask" type="radio" value="false" <?php /*print ($quiz->getMultitask() == 'false' ? 'checked="checked"' : '');*/ ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -33,10 +33,10 @@ $complete = !empty($quiz->getMultitask()) &&
                     : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-downside" type="radio" value="tired" <?php print ($quiz->getDownside() == 'tired' ? 'checked="checked"' : ''); ?>><i></i><span>Get tired more easily</span></label>
-            <label class="radio"><input name="quiz-downside" type="radio" value="shorter" <?php print ($quiz->getDownside() == 'shorter' ? 'checked="checked"' : ''); ?>><i></i><span>Shorter memory of material</span></label>
-            <label class="radio"><input name="quiz-downside" type="radio" value="remember" <?php print ($quiz->getDownside() == 'remember' ? 'checked="checked"' : ''); ?>><i></i><span>Remember less</span></label>
-            <label class="radio"><input name="quiz-downside" type="radio" value="longer" <?php print ($quiz->getDownside() == 'longer' ? 'checked="checked"' : ''); ?>><i></i><span>Takes longer to study</span></label>
+            <label class="radio"><input name="quiz-downside" type="radio" value="tired" <?php /*print ($quiz->getDownside() == 'tired' ? 'checked="checked"' : '');*/ ?>><i></i><span>Get tired more easily</span></label>
+            <label class="radio"><input name="quiz-downside" type="radio" value="shorter" <?php /*print ($quiz->getDownside() == 'shorter' ? 'checked="checked"' : '');*/ ?>><i></i><span>Shorter memory of material</span></label>
+            <label class="radio"><input name="quiz-downside" type="radio" value="remember" <?php /*print ($quiz->getDownside() == 'remember' ? 'checked="checked"' : '');*/ ?>><i></i><span>Remember less</span></label>
+            <label class="radio"><input name="quiz-downside" type="radio" value="longer" <?php /*print ($quiz->getDownside() == 'longer' ? 'checked="checked"' : '');*/ ?>><i></i><span>Takes longer to study</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -50,10 +50,10 @@ $complete = !empty($quiz->getMultitask()) &&
                     : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-lower-score" type="radio" value="10" <?php print ($quiz->getLowerScore() == '10' ? 'checked="checked"' : ''); ?>><i></i><span>10%</span></label>
-            <label class="radio"><input name="quiz-lower-score" type="radio" value="20" <?php print ($quiz->getLowerScore() == '20' ? 'checked="checked"' : ''); ?>><i></i><span>20%</span></label>
-            <label class="radio"><input name="quiz-lower-score" type="radio" value="30" <?php print ($quiz->getLowerScore() == '30' ? 'checked="checked"' : ''); ?>><i></i><span>30%</span></label>
-            <label class="radio"><input name="quiz-lower-score" type="radio" value="40" <?php print ($quiz->getLowerScore() == '40' ? 'checked="checked"' : ''); ?>><i></i><span>40%</span></label>
+            <label class="radio"><input name="quiz-lower-score" type="radio" value="10" <?php /*print ($quiz->getLowerScore() == '10' ? 'checked="checked"' : '');*/ ?>><i></i><span>10%</span></label>
+            <label class="radio"><input name="quiz-lower-score" type="radio" value="20" <?php /*print ($quiz->getLowerScore() == '20' ? 'checked="checked"' : '');*/ ?>><i></i><span>20%</span></label>
+            <label class="radio"><input name="quiz-lower-score" type="radio" value="30" <?php /*print ($quiz->getLowerScore() == '30' ? 'checked="checked"' : '');*/ ?>><i></i><span>30%</span></label>
+            <label class="radio"><input name="quiz-lower-score" type="radio" value="40" <?php /*print ($quiz->getLowerScore() == '40' ? 'checked="checked"' : '');*/ ?>><i></i><span>40%</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -67,10 +67,10 @@ $complete = !empty($quiz->getMultitask()) &&
                     : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-distraction" type="radio" value="3" <?php print ($quiz->getDistraction() == '3' ? 'checked="checked"' : ''); ?>><i></i><span>1-3 minutes</span></label>
-            <label class="radio"><input name="quiz-distraction" type="radio" value="15" <?php print ($quiz->getDistraction() == '15' ? 'checked="checked"' : ''); ?>><i></i><span>5-15 minutes</span></label>
-            <label class="radio"><input name="quiz-distraction" type="radio" value="40" <?php print ($quiz->getDistraction() == '40' ? 'checked="checked"' : ''); ?>><i></i><span>25-40 minutes</span></label>
-            <label class="radio"><input name="quiz-distraction" type="radio" value="60" <?php print ($quiz->getDistraction() == '60' ? 'checked="checked"' : ''); ?>><i></i><span>45-60 minutes</span></label>
+            <label class="radio"><input name="quiz-distraction" type="radio" value="3" <?php /*print ($quiz->getDistraction() == '3' ? 'checked="checked"' : '');*/ ?>><i></i><span>1-3 minutes</span></label>
+            <label class="radio"><input name="quiz-distraction" type="radio" value="15" <?php /*print ($quiz->getDistraction() == '15' ? 'checked="checked"' : '');*/ ?>><i></i><span>5-15 minutes</span></label>
+            <label class="radio"><input name="quiz-distraction" type="radio" value="40" <?php /*print ($quiz->getDistraction() == '40' ? 'checked="checked"' : '');*/ ?>><i></i><span>25-40 minutes</span></label>
+            <label class="radio"><input name="quiz-distraction" type="radio" value="60" <?php /*print ($quiz->getDistraction() == '60' ? 'checked="checked"' : '');*/ ?>><i></i><span>45-60 minutes</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

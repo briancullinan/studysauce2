@@ -1,34 +1,19 @@
 <?php
-use Course2\Bundle\Entity\Quiz3;
+use Course2\Bundle\Entity\TestTaking;
 
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
-/** @var Quiz3 $quiz */
-$complete = !empty($quiz->getActiveMemory()) &&
-    !empty($quiz->getReferenceMemory()) && !empty($quiz->getStudyGoal()) && !empty($quiz->getProcrastinating()) &&
-    !empty($quiz->getDeadlines()) && !empty($quiz->getPlan());
+/** @var TestTaking $quiz */
+$complete = true;
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_test_taking-step2">
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
-        <h3>You have short and long term memory. What are these two types of memory also called?<?php
-            /*if ($complete) {
-                print ((strpos(strtolower($quiz->getActiveMemory()), 'active') > -1 &&
-                    strpos(strtolower($quiz->getReferenceMemory()), 'reference') > -1) ||
-                (strpos(strtolower($quiz->getReferenceMemory()), 'active') > -1 &&
-                    strpos(strtolower($quiz->getActiveMemory()), 'reference')) > -1
-                    ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
-            }*/
-            ?></h3>
+        <h3>You have short and long term memory. What are these two types of memory also called?</h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-memory-A" type="text" value="<?php print $view->escape(
-                    $quiz->getActiveMemory()
-                ); ?>"></label>
-            <label class="input"><span>2</span><input name="quiz-memory-R" type="text" value="<?php print $view->escape(
-                    $quiz->getReferenceMemory()
-                ); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-memory-A" type="text" value="<?php /*print $view->escape($quiz->getActiveMemory());*/ ?>"></label>
+            <label class="input"><span>2</span><input name="quiz-memory-R" type="text" value="<?php /*print $view->escape($quiz->getReferenceMemory());*/ ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -37,21 +22,9 @@ $view['slots']->start('body'); ?>
                     memory is known as &ldquo;reference memory.&rdquo;</p>
             </div>
         <?php } ?>
-        <h3>What is the goal of studying?<?php
-            /*if ($complete) {
-                print ((strpos(strtolower($quiz->getStudyGoal()), 'commit') > -1 ||
-                    strpos(strtolower($quiz->getStudyGoal()), 'retain') > -1) &&
-                strpos(strtolower($quiz->getStudyGoal()), 'long') > -1 &&
-                strpos(strtolower($quiz->getStudyGoal()),'term',strpos(strtolower($quiz->getStudyGoal()), 'long')) > -1
-                    ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
-            }*/
-            ?></h3>
+        <h3>What is the goal of studying?</h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-study-goal" type="text"
-                                                      value="<?php print $view->escape(
-                                                          $quiz->getStudyGoal()
-                                                      ); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-study-goal" type="text" value="<?php /*print $view->escape($quiz->getStudyGoal());*/ ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -60,23 +33,9 @@ $view['slots']->start('body'); ?>
                     order to do this, you must commit things to your long term memory</p>
             </div>
         <?php } ?>
-        <h3>What is the solution to stopping the procrastination to cramming cycle?<?php
-            /*if ($complete) {
-                print (strpos(strtolower($quiz->getProcrastinating()), 'space') > -1 &&
-                strpos(
-                    strtolower($quiz->getProcrastinating()),
-                    'study',
-                    strpos(strtolower($quiz->getProcrastinating()), 'space')
-                ) > -1
-                    ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
-            }*/
-            ?></h3>
+        <h3>What is the solution to stopping the procrastination to cramming cycle?</h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-stop-procrastinating" type="text"
-                                                      value="<?php print $view->escape(
-                                                          $quiz->getProcrastinating()
-                                                      ); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-stop-procrastinating" type="text" value="<?php /*print $view->escape($quiz->getProcrastinating());*/ ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -85,25 +44,10 @@ $view['slots']->start('body'); ?>
                     will help you avoid cramming sessions after which you forget everything anyway.</p>
             </div>
         <?php } ?>
-        <h3>What are two tools that you can use to help reduce procrastination?<?php
-            /*if ($complete) {
-                print ((strpos(strtolower($quiz->getDeadlines()), 'deadline') > -1 &&
-                    strpos(strtolower($quiz->getPlan()), 'study') > -1 &&
-                    strpos(strtolower($quiz->getPlan()), 'plan', strpos(strtolower($quiz->getPlan()), 'study')) > -1) ||
-                (strpos(strtolower($quiz->getPlan()), 'deadline') > -1 &&
-                    strpos(strtolower($quiz->getDeadlines()), 'study') > -1 &&
-                    strpos(strtolower($quiz->getDeadlines()),'plan',strpos(strtolower($quiz->getDeadlines()), 'study'))) > -1
-                    ? '<span class="answer correct">Correct!</span>'
-                    : '<span class="answer wrong">Wrong.</span>');
-            }*/
-            ?></h3>
+        <h3>What are two tools that you can use to help reduce procrastination?</h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-reduce-procrastination-D" type="text"
-                                                      value="<?php print $view->escape(
-                                                          $quiz->getDeadlines()
-                                                      ); ?>"></label>
-            <label class="input"><span>2</span><input name="quiz-reduce-procrastination-P" type="text"
-                                                      value="<?php print $view->escape($quiz->getPlan()); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-reduce-procrastination-D" type="text" value="<?php /*print $view->escape($quiz->getDeadlines());*/ ?>"></label>
+            <label class="input"><span>2</span><input name="quiz-reduce-procrastination-P" type="text" value="<?php /*print $view->escape($quiz->getPlan());*/ ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

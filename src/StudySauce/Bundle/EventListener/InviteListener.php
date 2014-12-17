@@ -77,7 +77,7 @@ class InviteListener implements EventSubscriberInterface
                 $partner->setPartner($user);
                 $orm->merge($partner);
             };
-            $autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
+            $this->autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
                 $session->set('partner', $request->get('_code'));
             };
         }
@@ -89,7 +89,7 @@ class InviteListener implements EventSubscriberInterface
                 $parent->setParent($user);
                 $orm->merge($parent);
             };
-            $autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
+            $this->autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
                 $session->set('parent', $request->get('_code'));
             };
         }
@@ -101,7 +101,7 @@ class InviteListener implements EventSubscriberInterface
                 $group->setStudent($user);
                 $orm->merge($group);
             };
-            $autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
+            $this->autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
                 $session->set('group', $request->get('_code'));
             };
         }
@@ -113,7 +113,7 @@ class InviteListener implements EventSubscriberInterface
                 $student->setStudent($user);
                 $orm->merge($student);
             };
-            $autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
+            $this->autoLogoutUser[$request->get('_code')] = function ($session) use ($request) {
                 $session->set('student', $request->get('_code'));
             };
         }
@@ -144,19 +144,22 @@ class InviteListener implements EventSubscriberInterface
      */
     public function onInviteResponse(FilterResponseEvent $event)
     {
-        /** @var $userManager UserManager */
-        $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserByUsername('guest');
-        /** @var LoginManager $loginManager */
-        $loginManager = $this->container->get('fos_user.security.login_manager');
         /** @var Response $response */
         $response = $event->getResponse();
         /** @var Request $request */
         $request = $event->getRequest();
 
-        $loginManager->loginUser('main', $user, $response);
-        $session = $request->getSession();
-        if(isset($autoLogoutUser[$request->get('_code')]))
+        if(isset($this->autoLogoutUser[$request->get('_code')])) {
+            /** @var $userManager UserManager */
+            $userManager = $this->container->get('fos_user.user_manager');
+            $user = $userManager->findUserByUsername('guest');
+            /** @var LoginManager $loginManager */
+            $loginManager = $this->container->get('fos_user.security.login_manager');
+
+            $loginManager->loginUser('main', $user, $response);
+            $session = $request->getSession();
             $autoLogoutUser[$request->get('_code')]($session);
+            unset($this->autoLogoutUser[$request->get('_code')]);
+        }
     }
 }

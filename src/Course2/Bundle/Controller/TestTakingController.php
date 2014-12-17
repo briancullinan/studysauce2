@@ -3,7 +3,7 @@
 namespace Course2\Bundle\Controller;
 
 use Course2\Bundle\Entity\Course2;
-use Course2\Bundle\Entity\Quiz3;
+use Course2\Bundle\Entity\TestTaking;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,7 +52,7 @@ class TestTakingController extends Controller
                     : null;
 
                 return $this->render('Course2Bundle:TestTaking:quiz.html.php', [
-                        'quiz' => $course->getQuiz3s()->first() ?: new Quiz3(),
+                        'quiz' => $course->getTestTaking()->first() ?: new TestTaking(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;
@@ -83,6 +83,12 @@ class TestTakingController extends Controller
         /** @var Course2 $course */
         $course = $user->getCourse2s()->first();
 
+        // store quiz results
+        $quiz = new TestTaking();
+        $quiz->setCourse($course);
+        $course->addTestTaking($quiz);
+
+        $orm->persist($quiz);
         $orm->flush();
 
         return $this->forward('Course2Bundle:TestTaking:wizard', ['_step' => 2, '_format' => 'tab']);

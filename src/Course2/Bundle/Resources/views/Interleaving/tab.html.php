@@ -11,9 +11,9 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>
-                <li><a><span>1</span>Some common misconceptions about studying</a></li>
-                <li><a><span>2</span>Why studying is important</a></li>
-                <li><a><span>3</span>How Study Sauce will help you take control of your academic life</a></li>
+                <li><a><span>1</span>What interleaving is</a></li>
+                <li><a><span>2</span>How it works</a></li>
+                <li><a><span>3</span>How to incorporate it into your studies</a></li>
             </ol>
         </div>
         <div class="player-divider">

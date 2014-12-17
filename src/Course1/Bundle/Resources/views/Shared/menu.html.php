@@ -1,7 +1,9 @@
 <?php
 
 use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Entity\Course2;
 /** @var Course1 $course1 */
+/** @var Course2 $course2 */
 
 $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLesson2() == 4 && $course1->getLesson3() == 4 &&
     $course1->getLesson4() == 4 && $course1->getLesson5() == 4 && $course1->getLesson6() == 4 &&
@@ -41,16 +43,26 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
                     <a class="accordion-toggle" data-toggle="collapse" data-target="#level2" data-parent="#course1-menu"><span>2</span>Level 2</a>
                 </div>
                 <ul id="level2" class="accordion-body collapse <?php print ($complete ? 'in' : ''); ?>">
-                    <li class="<?php print (!empty($course2) && $course2->getLesson1() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_interleaving', ['_step' => 0]); ?>"><span>&bullet;</span>Interleaving</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson2() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_study_plan', ['_step' => 0]); ?>"><span>&bullet;</span>Study plan</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson3() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_test_taking', ['_step' => 0]); ?>"><span>&bullet;</span>Test-taking</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson4() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_study_tests', ['_step' => 0]); ?>"><span>&bullet;</span>Studying for tests</a></li>
                     <li class="<?php print (!empty($course2) && $course2->getLesson5() === 4 ? 'complete' : ''); ?>">
                         <a href="<?php print $view['router']->generate('course2_study_metrics', ['_step' => 0]); ?>"><span>&bullet;</span>Study metrics</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson2() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_study_plan', ['_step' => 0]); ?>"><span>&bullet;</span>Study plan</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson1() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_interleaving', ['_step' => 0]); ?>"><span>&bullet;</span>Interleaving</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson4() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_study_tests', ['_step' => 0]); ?>"><span>&bullet;</span>Studying for tests</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson3() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_test_taking', ['_step' => 0]); ?>"><span>&bullet;</span>Test-taking</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson6() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_interleaving', ['_step' => 0]); ?>"><span>&bullet;</span>Flash cards</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson7() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_study_plan', ['_step' => 0]); ?>"><span>&bullet;</span>Study groups</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson8() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_test_taking', ['_step' => 0]); ?>"><span>&bullet;</span>Recall</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson9() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_study_tests', ['_step' => 0]); ?>"><span>&bullet;</span>Teaching</a></li>
+                    <li class="<?php print (!empty($course2) && $course2->getLesson10() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course2_study_metrics', ['_step' => 0]); ?>"><span>&bullet;</span>Self testing</a></li>
                 </ul>
             </li>
             <li class="accordion-group panel">

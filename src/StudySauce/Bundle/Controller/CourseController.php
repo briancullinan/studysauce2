@@ -41,9 +41,11 @@ class CourseController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $course = $user->getCourse1s()->first();
+        $course1 = $user->getCourse1s()->first();
+        $course2 = $user->getCourse2s()->first();
         return $this->render('StudySauceBundle:Course:widget.html.php', [
-                'course' => $course
+                'course1' => $course1,
+                'course2' => $course2,
             ]);
     }
 }

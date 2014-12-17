@@ -10,6 +10,5 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class Course2Bundle extends Bundle
 {
-
-    const COUNT_LEVEL = 7;
+    const COUNT_LEVEL = 10;
 }

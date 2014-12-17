@@ -26,6 +26,11 @@ class StudyMetrics
     protected $course;
 
     /**
+     * @ORM\Column(type="simple_array", name="track_hours", nullable=true)
+     */
+    protected $trackHours = [];
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -93,5 +98,28 @@ class StudyMetrics
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set trackHours
+     *
+     * @param array $trackHours
+     * @return StudyMetrics
+     */
+    public function setTrackHours($trackHours)
+    {
+        $this->trackHours = $trackHours;
+
+        return $this;
+    }
+
+    /**
+     * Get trackHours
+     *
+     * @return array 
+     */
+    public function getTrackHours()
+    {
+        return $this->trackHours;
     }
 }

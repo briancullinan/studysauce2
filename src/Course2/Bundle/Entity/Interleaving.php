@@ -31,6 +31,21 @@ class Interleaving
     protected $created;
 
     /**
+     * @ORM\Column(type="text", length=256, name="multiple_sessions", nullable=true)
+     */
+    protected $multipleSessions;
+
+    /**
+     * @ORM\Column(type="text", length=256, name="other_name", nullable=true)
+     */
+    protected $otherName;
+
+    /**
+     * @ORM\Column(type="boolean", name="types_courses", nullable=true)
+     */
+    protected $typesCourses;
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()
@@ -93,5 +108,74 @@ class Interleaving
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set multipleSessions
+     *
+     * @param string $multipleSessions
+     * @return Interleaving
+     */
+    public function setMultipleSessions($multipleSessions)
+    {
+        $this->multipleSessions = $multipleSessions;
+
+        return $this;
+    }
+
+    /**
+     * Get multipleSessions
+     *
+     * @return string 
+     */
+    public function getMultipleSessions()
+    {
+        return $this->multipleSessions;
+    }
+
+    /**
+     * Set otherName
+     *
+     * @param string $otherName
+     * @return Interleaving
+     */
+    public function setOtherName($otherName)
+    {
+        $this->otherName = $otherName;
+
+        return $this;
+    }
+
+    /**
+     * Get otherName
+     *
+     * @return string 
+     */
+    public function getOtherName()
+    {
+        return $this->otherName;
+    }
+
+    /**
+     * Set typesCourses
+     *
+     * @param boolean $typesCourses
+     * @return Interleaving
+     */
+    public function setTypesCourses($typesCourses)
+    {
+        $this->typesCourses = $typesCourses;
+
+        return $this;
+    }
+
+    /**
+     * Get typesCourses
+     *
+     * @return boolean 
+     */
+    public function getTypesCourses()
+    {
+        return $this->typesCourses;
     }
 }

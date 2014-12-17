@@ -1,5 +1,7 @@
 <?php
 
+$user = $app->getUser();
+
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
  $view['slots']->start('body'); ?>

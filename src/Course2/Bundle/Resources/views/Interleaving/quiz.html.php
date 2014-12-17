@@ -4,61 +4,40 @@ use Course2\Bundle\Entity\Interleaving;
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
 /** @var Interleaving $quiz */
-$complete = !empty($quiz->getEducation()) &&
-    !empty($quiz->getMindset()) && !empty($quiz->getTimeManagement()) && !empty($quiz->getDevices()) &&
-    !empty($quiz->getStudyMuch());
+$complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()) && !empty($quiz->getTypesCourses());
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_interleaving-step2">
     <div class="pane-content">
         <h2>To help us better tailor Study Sauce to you, please answer the below questions.</h2>
-        <h3>What grade are you in?</h3>
+        <h3>What is it called when you study the same class material for multiple study session?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-education" type="radio" value="highschool" <?php print ($quiz->getEducation() == 'highschool' ? 'checked="checked"' : ''); ?>><i></i><span>High school student</span></label>
-            <label class="radio"><input name="quiz-education" type="radio" value="college-freshman" <?php print ($quiz->getEducation() == 'college-freshman' ? 'checked="checked"' : ''); ?>><i></i><span>College Freshman</span></label>
-            <label class="radio"><input name="quiz-education" type="radio" value="college-sophomore" <?php print ($quiz->getEducation() == 'college-sophomore' ? 'checked="checked"' : ''); ?>><i></i><span>College Sophomore</span></label>
-            <label class="radio"><input name="quiz-education" type="radio" value="college-junior" <?php print ($quiz->getEducation() == 'college-junior' ? 'checked="checked"' : ''); ?>><i></i><span>College Junior</span></label>
-            <label class="radio"><input name="quiz-education" type="radio" value="college-senior" <?php print ($quiz->getEducation() == 'college-senior' ? 'checked="checked"' : ''); ?>><i></i><span>College Senior</span></label>
-            <label class="radio"><input name="quiz-education" type="radio" value="graduate" <?php print ($quiz->getEducation() == 'graduate' ? 'checked="checked"' : ''); ?>><i></i><span>Graduate student</span></label>
+            <label class="input"><span>A:</span><input name="quiz-multiple-sessions" type="text" value="<?php print $quiz->getMultipleSessions(); ?>"></label>
         </div>
+        <?php if($complete) { ?>
         <div class="results">
-            <p>We are excited to help you learn how to study more effectively.</p>
+            <p>Blocked practice.</p>
         </div>
-        <h3>Which do you agree with more?</h3>
+        <?php } ?>
+        <h3>What is another name for interleaving?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-mindset" type="radio" value="born" <?php print ($quiz->getMindset() == 'born' ? 'checked="checked"' : ''); ?>><i></i><span>Some people are born good at academics.</span></label>
-            <label class="radio"><input name="quiz-mindset" type="radio" value="practice" <?php print ($quiz->getMindset() == 'practice' ? 'checked="checked"' : ''); ?>><i></i><span>People become good at academics through experience and building skills.</span></label>
+            <label class="input"><span>A:</span><input name="quiz-other-name" type="text" value="<?php print $quiz->getOtherName(); ?>"></label>
         </div>
+        <?php if($complete) { ?>
         <div class="results">
-            <p>We will talk about this concept in great detail later in the course.</p>
+            <p>Varied practice.</p>
         </div>
-        <h3>How do you manage your time studying for exams?</h3>
+        <?php } ?>
+        <h3>When interleaving, alternating similar types of courses is most effective because your brain is already in the right mode.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-time-management" type="radio" value="advance" <?php print ($quiz->getTimeManagement() == 'advance' ? 'checked="checked"' : ''); ?>><i></i><span>I have to space out my studying far in advance of my exam. Otherwise, I get too stressed out.</span></label>
-            <label class="radio"><input name="quiz-time-management" type="radio" value="cram" <?php print ($quiz->getTimeManagement() == 'cram' ? 'checked="checked"' : ''); ?>><i></i><span>I try to space it out, but usually end up cramming a day or two before my exam.</span></label>
-            <label class="radio"><input name="quiz-time-management" type="radio" value="pressure" <?php print ($quiz->getTimeManagement() == 'pressure' ? 'checked="checked"' : ''); ?>><i></i><span>I do my best work under pressure and plan to cram before each exam.</span></label>
+            <label class="radio"><input name="quiz-types-courses" type="radio" value="1" <?php print ($quiz->getTypesCourses() === true ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-types-courses" type="radio" value="0" <?php print ($quiz->getTypesCourses() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
+        <?php if($complete) { ?>
         <div class="results">
-            <p>Our study tools will help you break the procrastination habit.</p>
+            <p>False, try to alternate very different types of subjects if possible. Activating different parts of the brain helps you to remember more information.</p>
         </div>
-        <h3>How do you manage your electronic devices when you study?</h3>
-        <div class="questions">
-            <label class="radio"><input name="quiz-devices" type="radio" value="on" <?php print ($quiz->getDevices() == 'on' ? 'checked="checked"' : ''); ?>><i></i><span>I keep them nearby. I will respond to texts, etc. if I get them, and then I get right back to work.</span></label>
-            <label class="radio"><input name="quiz-devices" type="radio" value="off" <?php print ($quiz->getDevices() == 'off' ? 'checked="checked"' : ''); ?>><i></i><span>I turn them off or put them somewhere so they won't distract me.</span></label>
-        </div>
-        <div class="results">
-            <p>Get ready to learn how your electronic devices are killing your ability to study effectively.</p>
-        </div>
-        <h3>How much do you study per day?</h3>
-        <div class="questions">
-            <label class="radio"><input name="quiz-study-much" type="radio" value="one" <?php print ($quiz->getStudyMuch() == 'one' ? 'checked="checked"' : ''); ?>><i></i><span>0-1 hour</span></label>
-            <label class="radio"><input name="quiz-study-much" type="radio" value="two" <?php print ($quiz->getStudyMuch() == 'two' ? 'checked="checked"' : ''); ?>><i></i><span>1-2 hours</span></label>
-            <label class="radio"><input name="quiz-study-much" type="radio" value="four" <?php print ($quiz->getStudyMuch() == 'four' ? 'checked="checked"' : ''); ?>><i></i><span>2-4 hours</span></label>
-            <label class="radio"><input name="quiz-study-much" type="radio" value="more" <?php print ($quiz->getStudyMuch() == 'more' ? 'checked="checked"' : ''); ?>><i></i><span>4+ hours</span></label>
-        </div>
-        <div class="results">
-            <p>We will help you develop a plan to make sure that you are spending the right amount of time studying.</p>
-        </div>
+        <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="highlighted-link <?php print ($complete ? ' valid' : ' invalid'); ?>">
             <a href="#submit-quiz" class="more">Submit</a>

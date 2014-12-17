@@ -83,8 +83,13 @@ class InterleavingController extends Controller
 
         /** @var Course2 $course */
         $course = $user->getCourse2s()->first();
-
-
+        $quiz = new Interleaving();
+        $quiz->setCourse($course);
+        $quiz->setMultipleSessions($request->get('multipleSessions'));
+        $quiz->setOtherName($request->get('otherName'));
+        $quiz->setTypesCourses($request->get('typesCourses'));
+        $course->addInterleaving($quiz);
+        $orm->persist($quiz);
         $orm->flush();
 
         return $this->forward('Course2Bundle:Interleaving:wizard', ['_step' => 2, '_format' => 'tab']);

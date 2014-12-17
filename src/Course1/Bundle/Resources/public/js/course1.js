@@ -113,7 +113,23 @@ $(document).ready(function () {
         if($(this).is('#course1_upgrade-step4'))
             $('.main-menu a[href*="course/1/lesson/7"]').parent('li').addClass('complete');
 
-        var completed = Math.round($('.main-menu #level1 li.complete').length * 100 / $('.main-menu #level1 li').length),
+        // course 2
+        if($(this).is('#course2_interleaving-step4'))
+            $('.main-menu a[href*="course/2/lesson/1"]').parent('li').addClass('complete');
+        if($(this).is('#course2_study_plan-step4'))
+            $('.main-menu a[href*="course/2/lesson/2"]').parent('li').addClass('complete');
+        if($(this).is('#course2_test_taking-step4'))
+            $('.main-menu a[href*="course/2/lesson/3"]').parent('li').addClass('complete');
+        if($(this).is('#course2_study_tests-step4'))
+            $('.main-menu a[href*="course/2/lesson/4"]').parent('li').addClass('complete');
+        if($(this).is('#course2_study_metrics-step4'))
+            $('.main-menu a[href*="course/2/lesson/5"]').parent('li').addClass('complete');
+
+
+        var main = $('.main-menu'),
+            completed = main.find('#level1 li.complete').length == main.find('#level1 li').length
+                ? Math.round(main.find('#level1 li.complete').length * 100 / main.find('#level1 li').length)
+                : Math.round(main.find('#level2 li.complete').length * 100 / main.find('#level2 li').length),
             widget = $('#home').find('.course-widget');
         widget.find('h3').text(completed + '% of course complete');
         widget.find('.percent-bars').css('height', completed + '%');

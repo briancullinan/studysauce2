@@ -1,54 +1,46 @@
 <?php
-use Course2\Bundle\Entity\Quiz5;
+use Course2\Bundle\Entity\StudyMetrics;
 
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
-/** @var Quiz5 $quiz */
-$complete = $quiz->getBed() !== null && $quiz->getBreaks() !== null && $quiz->getMozart() !== null && $quiz->getNature() !== null;
+/** @var StudyMetrics $quiz */
+$complete = TRUE; /*$quiz->getBed() !== null && $quiz->getBreaks() !== null && $quiz->getMozart() !== null && $quiz->getNature() !== null;*/
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_study_metrics-step2">
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
-        <h3>Your bed is a great place to study since getting comfortable is critical to memory retention.</h3>
+        <h3>Which of the following are reasons to track your study hours?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-bed" type="radio" value="1" <?php print ($quiz->getBed() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-bed" type="radio" value="0" <?php print ($quiz->getBed() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="checkbox"><input name="quiz-track-hours" type="checkbox" value="guarantee" <?php print (in_array('guarantee', $quiz->getTrackHours()) ? 'checked="checked"' : ''); ?>><i></i><span>By studying a certain number of hours per week, you guarantee you will be prepared.</span></label>
+            <label class="checkbox"><input name="quiz-track-hours" type="checkbox" value="procrastination" <?php print (in_array('procrastination', $quiz->getTrackHours()) ? 'checked="checked"' : ''); ?>><i></i><span>Tracking your study time helps you avoid procrastination because you can easily see how much time you have been studying.</span></label>
+            <label class="checkbox"><input name="quiz-track-hours" type="checkbox" value="tracking" <?php print (in_array('tracking', $quiz->getTrackHours()) ? 'checked="checked"' : ''); ?>><i></i><span>Tracking your hours helps cement your new good study habits.</span></label>
+            <label class="checkbox"><input name="quiz-track-hours" type="checkbox" value="problems" <?php print (in_array('problems', $quiz->getTrackHours()) ? 'checked="checked"' : ''); ?>><i></i><span>It helps you identify any problems early so you have the time to fix them and they don’t become big problems.</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>False - Your brain associates your bed with sleeping, so studying on your bed can lead to increased drowsiness.</p>
+            <p>Tracking helps you in several ways, but it does not guarantee that you are prepared. The total number of hours is less important that the quality of those hours spent studying.</p>
         </div>
         <?php } ?>
-        <h3>Listening to Mozart is proven to help you study better.</h3>
+        <h3>Your school has many people that whose sole job is to make sure you are doing well in school.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="1" <?php print ($quiz->getMozart() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="0" <?php print ($quiz->getMozart() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="1" <?php /*print ($quiz->getMozart() ? 'checked="checked"' : '');*/ ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="0" <?php /*print ($quiz->getMozart() === false ? 'checked="checked"' : '');*/ ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>False - The research does not conclusively prove this.  However, Mozart and other soothing instrumental music is better than listening to music with lyrics.</p>
+            <p>True - Help provide them some job security and find out what resources are available for you. No need to bang your head against the wall unnecessarily.</p>
         </div>
         <?php } ?>
-        <h3>A nature walk can be an effective way to take a break between study sessions.</h3>
+        <h3>Why does everyone else look like they have it all together?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-nature" type="radio" value="1" <?php print ($quiz->getNature() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-nature" type="radio" value="0" <?php print ($quiz->getNature() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-environment-nature" type="radio" value="1" <?php /*print ($quiz->getNature() ? 'checked="checked"' : '');*/ ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-environment-nature" type="radio" value="0" <?php /*print ($quiz->getNature() === false ? 'checked="checked"' : '');*/ ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>True - Research shows that taking a walk in natural surroundings can actually improve your ability to remember what you are studying.</p>
+            <p>They don't. They just typically put on a brave face so that you will think they are smart. Everyone struggles in school, so don't get down on yourself.</p>
         </div>
-        <?php } ?>
-        <h3>Your study sessions should last a minimum of 1 hour and ideally you should stick with a topic for several hours to get the greatest benefit of prolonged focus.</h3>
-        <div class="questions">
-            <label class="radio"><input name="quiz-environment-breaks" type="radio" value="1" <?php print ($quiz->getBreaks() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-breaks" type="radio" value="0" <?php print ($quiz->getBreaks() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
-        </div>
-        <?php if($complete) { ?>
-            <div class="results">
-                <p>False - Taking breaks is a critical component of studying.  Try to study for 50-60 minutes before taking a 10 minute break.  Alternatively, try to study for 25-30 minutes with a 5 minute break if you find the shorter sessions are more effective for you.</p>
-            </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="highlighted-link <?php print ($complete ? ' valid' : ' invalid'); ?>">
