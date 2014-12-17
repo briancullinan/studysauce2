@@ -7,15 +7,18 @@
 
 #site-name a > span
 {
-    font-size: 16px;
-    line-height: 90%;
-    display:inline-block;
-    text-align: justify;
-    max-width: 150px;
+    display:none;
 }
 
-#site-name a > span > span
+#site-name img
 {
-    font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
-    text-transform: uppercase;
+    width: 200px;
+    max-width: none;
+    max-height: none;
+    background: url(../images/tal_logo2_shadow.png) no-repeat 0 0 transparent;
+}
+
+#site-name a:hover img
+{
+    background: none;
 }

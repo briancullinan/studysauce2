@@ -80,7 +80,7 @@ EOF
             }
         }
 
-        // send signup reminder
+        // send 3 day signup reminder
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('p')
@@ -89,9 +89,7 @@ EOF
         $users = $qb->getQuery()->execute();
         foreach ($users as $i => $u) {
             /** @var User $u */
-            if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time(
-                ) - 86400 * 4
-            ) {
+            if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time() - 86400 * 4) {
                 $u->setProperty('welcome_reminder', true);
                 $emails->marketingReminderAction($u);
                 $orm->merge($u);

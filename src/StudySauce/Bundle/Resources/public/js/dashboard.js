@@ -56,13 +56,13 @@ $(document).ready(function () {
         // download the panel
         if(panel.length == 0) {
             item.each(function (i, obj) { loadingAnimation($(obj)); });
-            if(window.sincluding) {
+            if(window.sincluding.length > 0) {
                 setTimeout(function () {
                     activateMenu.apply(that, [path, true]);
                 }, 1000);
                 return;
             }
-            window.sincluding = true;
+            setTimeout(function () {window.sincluding[window.sincluding.length] = window.callbackPaths[window.callbackKeys[i]];}, 15);
             $.ajax({
                 url: window.callbackPaths[window.callbackKeys[i]],
                 type: 'GET',
@@ -92,11 +92,9 @@ $(document).ready(function () {
                         }
                         item.find('.squiggle').stop().remove();
                         activatePanel(newPane);
-                        window.sincluding = false;
                     }
                 },
                 error:function () {
-                    window.sincluding = false;
                     item.find('.squiggle').stop().remove();
                 }
             });
@@ -115,9 +113,14 @@ $(document).ready(function () {
         body.find('.modal:visible').modal('hide');
         body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
         panel.delay(75).fadeIn(75);
-        setTimeout(function () {
+        var triggerShow = function () {
+            if(window.sincluding.length > 0) {
+                setTimeout(triggerShow, 100);
+                return;
+            }
             panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
-        }, 100);
+        };
+        setTimeout(triggerShow, 100);
     }
 
     function expandMenu(evt)

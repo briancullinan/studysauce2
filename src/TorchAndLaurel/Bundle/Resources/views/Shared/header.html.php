@@ -43,9 +43,9 @@ $adviser = reset($advisers);
     <div class="header">
         <div id="site-name" class="container navbar-header">
             <a title="Home" href="<?php print $view['router']->generate('_welcome'); ?>">
-                <?php foreach ($view['assetic']->image(['@TorchAndLaurelBundle/Resources/public/images/tal_logo.png'], [], ['output' => 'bundles/torchandlaurel/images/*']) as $url): ?>
+                <?php foreach ($view['assetic']->image(['@TorchAndLaurelBundle/Resources/public/images/tal_logo2.png'], [], ['output' => 'bundles/torchandlaurel/images/*']) as $url): ?>
                     <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
-                <?php endforeach; ?><span><span>The Society Of</span> <span>Torch & Laurel</span> <small>Powered by</small> <strong>Study</strong> Sauce</span></a>
+                <?php endforeach; ?></a>
         </div>
         <?php if($app->getRequest()->get('_format') == 'index' || ($app->getRequest()->get('_format') != 'funnel' &&
                 !empty($user) && $user->hasRole('ROLE_PARTNER'))) { ?>

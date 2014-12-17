@@ -5,6 +5,7 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Coupon;
+use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\Invite;
 use StudySauce\Bundle\Entity\ParentInvite;
@@ -283,6 +284,10 @@ class BuyController extends Controller
             else {
                 // update paid status
                 $user->addRole('ROLE_PAID');
+                // set group for coupon is necessary
+                if(!empty($coupon) && !empty($coupon->getGroup())) {
+                    $user->addGroup($coupon->getGroup());
+                }
                 $userManager->updateUser($user, false);
                 if($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
                     $response = $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
@@ -474,6 +479,12 @@ class BuyController extends Controller
                     $user->addRole('ROLE_PARENT');
                 if(isset($partner))
                     $user->addRole('ROLE_PARTNER');
+                // assign correct group to anonymous users
+                if(!empty($request->getSession()->get('organization'))) {
+                    /** @var Group $group */
+                    $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);
+                    $user->addGroup($group);
+                }
                 $user->setEnabled(true);
                 $user->setUsername($email);
                 $user->setUsernameCanonical($email);

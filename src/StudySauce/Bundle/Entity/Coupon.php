@@ -34,6 +34,12 @@ class Coupon
     protected $type;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="coupons")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=true)
+     */
+    protected $group;
+
+    /**
      * @ORM\Column(type="integer", name="term", nullable=true)
      */
     protected $term;
@@ -315,5 +321,28 @@ class Coupon
     public function getTerm()
     {
         return $this->term;
+    }
+
+    /**
+     * Set group
+     *
+     * @param \StudySauce\Bundle\Entity\Group $group
+     * @return Coupon
+     */
+    public function setGroup(\StudySauce\Bundle\Entity\Group $group = null)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * Get group
+     *
+     * @return \StudySauce\Bundle\Entity\Group 
+     */
+    public function getGroup()
+    {
+        return $this->group;
     }
 }

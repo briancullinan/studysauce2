@@ -118,6 +118,11 @@ $(document).ready(function () {
 
     function initializeGraphs()
     {
+        if(typeof window.initialHistory == 'undefined') {
+            setTimeout(initializeGraphs, 100);
+            return;
+        }
+
         var metrics = $('#metrics'),
             timeline = $(this).find('#timeline:visible, .timeline:visible'),
             piechart = $(this).find('#pie-chart:visible, .pie-chart:visible');

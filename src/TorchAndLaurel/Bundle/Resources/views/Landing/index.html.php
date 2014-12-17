@@ -1,5 +1,7 @@
 <?php
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+
 /** @var GlobalVariables $app */
 
 $view->extend('StudySauceBundle:Shared:layout.html.php');
@@ -31,14 +33,7 @@ $view['slots']->stop();
 
 $view['slots']->start('javascripts');
 
-foreach ($view['assetic']->javascripts(
-    [
-        '@landing_scripts'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@landing_scripts'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 
@@ -50,4 +45,9 @@ echo $view->render('TorchAndLaurelBundle:Landing:scr.html.php');
 echo $view->render('StudySauceBundle:Landing:banner.html.php');
 echo $view->render('StudySauceBundle:Landing:features.html.php');
 echo $view->render('StudySauceBundle:Landing:testimony.html.php');
+$view['slots']->stop();
+
+$view['slots']->start('sincludes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents1'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents2'));
 $view['slots']->stop();

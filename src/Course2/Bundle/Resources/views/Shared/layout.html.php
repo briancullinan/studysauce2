@@ -23,54 +23,62 @@ if (!$courseIncluded) {
 
     /** @var Request $request */
     $request = $app->getRequest();
-    $controller = $request->get('_controller');
-    $view['slots']->start('sincludes');
-    $pos = strpos($request->getUri(), '/_fragment');
-    if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment')) {
-        // include courses from the index page
-        if ($app->getRequest()->get('_step') != 3) {
-            echo $view['actions']->render(
-                new ControllerReference($controller, ['_step' => 3, '_format' => 'tab']),
-                ['strategy' => 'sinclude']
-            );
-        }
 
-        if ($app->getRequest()->get('_step') != 2) {
-            echo $view['actions']->render(
-                new ControllerReference($controller, ['_step' => 2, '_format' => 'tab']),
-                ['strategy' => 'sinclude']
-            );
-        }
-
-        if ($app->getRequest()->get('_step') != 1) {
-            echo $view['actions']->render(
-                new ControllerReference($controller, ['_step' => 1, '_format' => 'tab']),
-                ['strategy' => 'sinclude']
-            );
-        }
-
-        if ($app->getRequest()->get('_step') != 0) {
-            echo $view['actions']->render(
-                new ControllerReference($controller, ['_step' => 0, '_format' => 'tab']),
-                ['strategy' => 'sinclude']
-            );
-        }
-
-        if ($app->getRequest()->get('_step') != 4) {
-            echo $view['actions']->render(
-                new ControllerReference($controller, ['_step' => 4, '_format' => 'tab']),
-                ['strategy' => 'sinclude']
-            );
-        }
-
-        if ($app->getUser() == 'anon.' || !is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
-            echo $view['actions']->render(
-                new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),
-                ['strategy' => 'sinclude']
-            );
-        }
+    // check for paid account
+    if ($app->getUser() == 'anon.' || !is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
+        $view['slots']->start('sincludes2');
+        echo $view['actions']->render(
+            new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),
+            ['strategy' => 'sinclude']
+        );
+        $view['slots']->stop();
+        $view['slots']->start('sincludes');
+        $view['slots']->output('sincludes2');
+        $view['slots']->stop();
     }
-    $view['slots']->stop();
+    else {
+        $view['slots']->start('sincludes');
+        $controller = $request->get('_controller');
+        $pos = strpos($request->getUri(), '/_fragment');
+        if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment')) {
+            // include courses from the index page
+            if ($app->getRequest()->get('_step') != 3) {
+                echo $view['actions']->render(
+                    new ControllerReference($controller, ['_step' => 3, '_format' => 'tab']),
+                    ['strategy' => 'sinclude']
+                );
+            }
+
+            if ($app->getRequest()->get('_step') != 2) {
+                echo $view['actions']->render(
+                    new ControllerReference($controller, ['_step' => 2, '_format' => 'tab']),
+                    ['strategy' => 'sinclude']
+                );
+            }
+
+            if ($app->getRequest()->get('_step') != 1) {
+                echo $view['actions']->render(
+                    new ControllerReference($controller, ['_step' => 1, '_format' => 'tab']),
+                    ['strategy' => 'sinclude']
+                );
+            }
+
+            if ($app->getRequest()->get('_step') != 0) {
+                echo $view['actions']->render(
+                    new ControllerReference($controller, ['_step' => 0, '_format' => 'tab']),
+                    ['strategy' => 'sinclude']
+                );
+            }
+
+            if ($app->getRequest()->get('_step') != 4) {
+                echo $view['actions']->render(
+                    new ControllerReference($controller, ['_step' => 4, '_format' => 'tab']),
+                    ['strategy' => 'sinclude']
+                );
+            }
+        }
+        $view['slots']->stop();
+    }
 
     $view['slots']->start('body');
     $view['slots']->output('lesson-body');

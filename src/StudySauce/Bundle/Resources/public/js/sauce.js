@@ -1,4 +1,4 @@
-window.sincluding = false;
+window.sincluding = [];
 window.visits = [];
 window.players = [];
 function onYouTubeIframeAPIReady() {
@@ -65,7 +65,6 @@ var alreadyLoadedScripts = [];
 function ssMergeScripts(content)
 {
     var scripts = $.merge(content.filter('script[type="text/javascript"]'), content.find('script[type="text/javascript"]'));
-
     $(scripts).each(function () {
         // TODO: remove version information from link, only load one version per page refresh
         var url = ($(this).attr('src') || '').replace(/\?.*/ig, '');
@@ -73,6 +72,7 @@ function ssMergeScripts(content)
             // only load script if it hasn't already been loaded
             if ($('script[src^="' + url + '"]').length == 0 && alreadyLoadedScripts.indexOf(url) == -1) {
                 console.log(url);
+                setTimeout(function () {window.sincluding[window.sincluding.length] = url;}, 15);
                 $.getScript(url);
                 alreadyLoadedScripts[alreadyLoadedScripts.length] = url;
             }
@@ -88,15 +88,14 @@ function ssMergeScripts(content)
             }
         }
     });
-
     return scripts;
 }
 
 $(document).ready(function () {
-    window.sincluding = true;
     $('.sinclude').each(function () {
         var that = $(this),
             url = that.attr('data-src');
+        setTimeout(function () {window.sincluding[window.sincluding.length] = url;}, 15);
         $.ajax({
             url: url,
             type: 'GET',
@@ -172,8 +171,10 @@ $.ajaxPrefilter(function (options, originalOptions) {
 if(typeof window.jqAjax == 'undefined') {
     window.jqAjax = $.ajax;
     $.ajax = function (settings) {
-        var success = settings.success;
+        var success = settings.success,
+            url = settings.url;
         settings.success = function (data, textStatus, jqXHR) {
+            window.sincluding.splice(window.sincluding.indexOf(url), 1);
             if (typeof data == 'string' && data.indexOf('{"redirect":') > -1) {
                 try {
                     data = JSON.parse(data.substr(0, 4096)); // no way a redirect would be longer than that
@@ -217,7 +218,7 @@ $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
 });
 
 $(document).ajaxStop(function () {
-    window.sincluding = false;
+    window.sincluding = [];
 });
 
 // set some extra utility functions globally
