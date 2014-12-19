@@ -4,7 +4,7 @@ use Course2\Bundle\Entity\StudyMetrics;
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
 /** @var StudyMetrics $quiz */
-$complete = TRUE; /*$quiz->getBed() !== null && $quiz->getBreaks() !== null && $quiz->getMozart() !== null && $quiz->getNature() !== null;*/
+$complete = !empty($quiz->getTrackHours()) && $quiz->getDoingWell() !== null && $quiz->getAllTogether() !== null;
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_study_metrics-step2">
@@ -24,8 +24,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Your school has many people that whose sole job is to make sure you are doing well in school.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="1" <?php /*print ($quiz->getMozart() ? 'checked="checked"' : '');*/ ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="0" <?php /*print ($quiz->getMozart() === false ? 'checked="checked"' : '');*/ ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-doing-well" type="radio" value="1" <?php print ($quiz->getDoingWell() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-doing-well" type="radio" value="0" <?php print ($quiz->getDoingWell() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -34,8 +34,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Why does everyone else look like they have it all together?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-nature" type="radio" value="1" <?php /*print ($quiz->getNature() ? 'checked="checked"' : '');*/ ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-nature" type="radio" value="0" <?php /*print ($quiz->getNature() === false ? 'checked="checked"' : '');*/ ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-all-together" type="radio" value="1" <?php print ($quiz->getAllTogether() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-all-together" type="radio" value="0" <?php print ($quiz->getAllTogether() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

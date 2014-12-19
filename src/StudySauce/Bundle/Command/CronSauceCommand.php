@@ -89,6 +89,7 @@ EOF
         $users = $qb->getQuery()->execute();
         foreach ($users as $i => $u) {
             /** @var User $u */
+            // TODO: skip advised users
             if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time() - 86400 * 4) {
                 $u->setProperty('welcome_reminder', true);
                 $emails->marketingReminderAction($u);

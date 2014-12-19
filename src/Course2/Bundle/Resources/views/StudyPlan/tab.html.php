@@ -11,14 +11,14 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>
-                <li><a><span>1</span>How an accountability partner can help you in school.</a></li>
-                <li><a><span>2</span>What to look for in a good accountability partner.</a></li>
-                <li><a><span>3</span>How to work with an accountability partner.</a></li>
+                <li><a><span>1</span>Why you should build a study plan.</a></li>
+                <li><a><span>2</span>How to build a study plan.</a></li>
+                <li><a><span>3</span>The different types of study sessions.</a></li>
             </ol>
         </div>
         <div class="player-divider">
             <div class="player-wrapper">
-                <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/intro6.jpg'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/intro6.jpg'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
                     <img src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
             </div>

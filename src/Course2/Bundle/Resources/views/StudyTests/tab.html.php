@@ -11,15 +11,14 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>
-                <li><a><span>1</span>The science behind multitasking</a></li>
-                <li><a><span>2</span>The downside of multitasking</a></li>
-                <li><a><span>3</span>How distractions affect your performance</a></li>
-                <li><a><span>4</span>How long an interruption affects you when you study</a></li>
+                <li><a><span>1</span>The most important thing about studying for tests</a></li>
+                <li><a><span>2</span>How to study for different types of tests</a></li>
+                <li><a><span>3</span>Tips for different types of tests</a></li>
             </ol>
         </div>
         <div class="player-divider">
             <div class="player-wrapper">
-                <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/intro3.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/intro3.png'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
                     <img src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
             </div>

@@ -11,15 +11,14 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>
-                <li><a><span>1</span>Why procrastination leads to a cycle of cramming</a></li>
-                <li><a><span>2</span>How the human brain creates memories</a></li>
-                <li><a><span>3</span>How to defeat the procrastination to cramming cycle</a></li>
-                <li><a><span>4</span>Two tools that will help you stop procrastination</a></li>
+                <li><a><span>1</span>What to do leading up to the test</a></li>
+                <li><a><span>2</span>How to manage test anxiety</a></li>
+                <li><a><span>3</span>What to do during the test</a></li>
             </ol>
         </div>
         <div class="player-divider">
             <div class="player-wrapper">
-                <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/intro4.jpg'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/intro4.jpg'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
                     <img src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
             </div>

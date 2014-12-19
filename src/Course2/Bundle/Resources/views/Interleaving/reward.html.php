@@ -8,12 +8,12 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step3" id="course2_interleaving-step3">
     <div class="pane-content">
         <h2>Train like an elite athlete.</h2>
-        <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/reward1.gif'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
+        <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/reward1.gif'],[],['output' => 'bundles/course2/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
         <?php endforeach; ?>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="badge beginner-mix">&nbsp;</span>
+            <span class="medal beginner-mix">&nbsp;</span>
             <strong>Mix It Up</strong>
             <p class="description">Studying different topics sequentially is an important tool in maximizing your brain's effectiveness to retain information.  For maximum benefit, select very different subjects to give parts of your brain a break.</p>
         </div>

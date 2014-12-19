@@ -60,7 +60,9 @@ class StudyTestsController extends Controller
                 return $this->render('Course2Bundle:StudyTests:reward.html.php');
                 break;
             case 4:
-                return $this->render('Course2Bundle:StudyTests:investment.html.php');
+                return $this->render('Course2Bundle:StudyTests:investment.html.php', [
+                        'course' => $course
+                    ]);
                 break;
             default:
                 throw new NotFoundHttpException();
@@ -83,12 +85,21 @@ class StudyTestsController extends Controller
         /** @var Course2 $course */
         $course = $user->getCourse2s()->first();
 
-        // store quiz results
-        $quiz = new StudyTests();
-        $quiz->setCourse($course);
-        $course->addStudyTest($quiz);
-
-        $orm->persist($quiz);
+        if(!empty($request->get('testTypes'))) {
+            $course->setTestTypes($request->get('testTypes'));
+            $orm->merge($course);
+        }
+        else {
+            // store quiz results
+            $quiz = new StudyTests();
+            $quiz->setCourse($course);
+            $course->addStudyTest($quiz);
+            $quiz->setTypesTests(explode(',', $request->get('typesTests')));
+            $quiz->setMostImportant($request->get('mostImportant'));
+            $quiz->setOpenTips1($request->get('openTips1'));
+            $quiz->setOpenTips2($request->get('openTips2'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course2Bundle:StudyTests:wizard', ['_step' => 2, '_format' => 'tab']);

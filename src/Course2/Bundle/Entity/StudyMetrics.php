@@ -31,6 +31,16 @@ class StudyMetrics
     protected $trackHours = [];
 
     /**
+     * @ORM\Column(type="boolean", name="doing_well", nullable=true)
+     */
+    protected $doingWell;
+
+    /**
+     * @ORM\Column(type="boolean", name="all_together", nullable=true)
+     */
+    protected $allTogether;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -121,5 +131,51 @@ class StudyMetrics
     public function getTrackHours()
     {
         return $this->trackHours;
+    }
+
+    /**
+     * Set doingWell
+     *
+     * @param boolean $doingWell
+     * @return StudyMetrics
+     */
+    public function setDoingWell($doingWell)
+    {
+        $this->doingWell = $doingWell;
+
+        return $this;
+    }
+
+    /**
+     * Get doingWell
+     *
+     * @return boolean 
+     */
+    public function getDoingWell()
+    {
+        return $this->doingWell;
+    }
+
+    /**
+     * Set allTogether
+     *
+     * @param boolean $allTogether
+     * @return StudyMetrics
+     */
+    public function setAllTogether($allTogether)
+    {
+        $this->allTogether = $allTogether;
+
+        return $this;
+    }
+
+    /**
+     * Get allTogether
+     *
+     * @return boolean 
+     */
+    public function getAllTogether()
+    {
+        return $this->allTogether;
     }
 }

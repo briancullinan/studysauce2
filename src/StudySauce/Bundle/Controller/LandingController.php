@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\Controller;
 
 use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Entity\Course2;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Command\CronSauceCommand;
 use StudySauce\Bundle\Entity\GroupInvite;
@@ -120,10 +121,9 @@ class LandingController extends Controller
         $visits = $request->get('__visits');
         $visits[]['path'] = $request->getPathInfo();
         foreach ($visits as $i => $v) {
-            if(substr(str_replace($request->getBaseUrl(), '', $v['path']), 0, 10) == '/course/1/')
+            if(substr(str_replace($request->getBaseUrl(), '', $v['path']), 0, 10) == '/course/1/') {
                 // TODO: check for quiz completeness
-                if(preg_match('/lesson\/([0-9]+)\/step\/?([0-9]+)?/', $v['path'], $matches))
-                {
+                if (preg_match('/lesson\/([0-9]+)\/step\/?([0-9]+)?/', $v['path'], $matches)) {
                     // compare course progress
 
                     /** @var $user User */
@@ -132,28 +132,84 @@ class LandingController extends Controller
                     /** @var Course1 $course */
                     $course = $user->getCourse1s()->first();
 
-                    if(!empty($course))
-                    {
+                    if (!empty($course)) {
                         $lesson = intval($matches[1]);
                         $step = isset($matches[2]) ? intval($matches[2]) : 0;
-                        if($lesson === 1 && $course->getLesson1() < $step)
+                        if ($lesson === 1 && $course->getLesson1() < $step) {
                             $course->setLesson1($step);
-                        if($lesson === 2 && $course->getLesson2() < $step)
+                        }
+                        if ($lesson === 2 && $course->getLesson2() < $step) {
                             $course->setLesson2($step);
-                        if($lesson === 3 && $course->getLesson3() < $step)
+                        }
+                        if ($lesson === 3 && $course->getLesson3() < $step) {
                             $course->setLesson3($step);
-                        if($lesson === 4 && $course->getLesson4() < $step)
+                        }
+                        if ($lesson === 4 && $course->getLesson4() < $step) {
                             $course->setLesson4($step);
-                        if($lesson === 5 && $course->getLesson5() < $step)
+                        }
+                        if ($lesson === 5 && $course->getLesson5() < $step) {
                             $course->setLesson5($step);
-                        if($lesson === 6 && $course->getLesson6() < $step)
+                        }
+                        if ($lesson === 6 && $course->getLesson6() < $step) {
                             $course->setLesson6($step);
-                        if($lesson === 7 && $course->getLesson7() < $step)
+                        }
+                        if ($lesson === 7 && $course->getLesson7() < $step) {
                             $course->setLesson7($step);
+                        }
                         $orm->merge($course);
                         $orm->flush();
                     }
                 }
+            }
+            elseif(substr(str_replace($request->getBaseUrl(), '', $v['path']), 0, 10) == '/course/2/') {
+                // TODO: check for quiz completeness
+                if (preg_match('/lesson\/([0-9]+)\/step\/?([0-9]+)?/', $v['path'], $matches)) {
+                    // compare course progress
+
+                    /** @var $user User */
+                    $user = $this->getUser();
+
+                    /** @var Course2 $course */
+                    $course = $user->getCourse2s()->first();
+
+                    if (!empty($course)) {
+                        $lesson = intval($matches[1]);
+                        $step = isset($matches[2]) ? intval($matches[2]) : 0;
+                        if ($lesson === 1 && $course->getLesson1() < $step) {
+                            $course->setLesson1($step);
+                        }
+                        if ($lesson === 2 && $course->getLesson2() < $step) {
+                            $course->setLesson2($step);
+                        }
+                        if ($lesson === 3 && $course->getLesson3() < $step) {
+                            $course->setLesson3($step);
+                        }
+                        if ($lesson === 4 && $course->getLesson4() < $step) {
+                            $course->setLesson4($step);
+                        }
+                        if ($lesson === 5 && $course->getLesson5() < $step) {
+                            $course->setLesson5($step);
+                        }
+                        if ($lesson === 6 && $course->getLesson6() < $step) {
+                            $course->setLesson6($step);
+                        }
+                        if ($lesson === 7 && $course->getLesson7() < $step) {
+                            $course->setLesson7($step);
+                        }
+                        if ($lesson === 8 && $course->getLesson8() < $step) {
+                            $course->setLesson8($step);
+                        }
+                        if ($lesson === 9 && $course->getLesson9() < $step) {
+                            $course->setLesson9($step);
+                        }
+                        if ($lesson === 10 && $course->getLesson10() < $step) {
+                            $course->setLesson10($step);
+                        }
+                        $orm->merge($course);
+                        $orm->flush();
+                    }
+                }
+            }
         }
 
         return new JsonResponse(true);

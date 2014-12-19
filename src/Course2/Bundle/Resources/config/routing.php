@@ -131,5 +131,130 @@ $collection->add(
     )
 );
 
+$collection->add('course2_strategies', new Route('/course/2/lesson/6/step/{_step}/{_format}', [
+            '_controller' => 'Course2Bundle:Strategies:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
+$collection->add(
+    'course2_strategies_update',
+    new Route(
+        '/course/2/lesson/6/update',
+        [
+            '_controller' => 'Course2Bundle:Strategies:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+
+$collection->add('course2_group_study', new Route('/course/2/lesson/7/step/{_step}/{_format}', [
+            '_controller' => 'Course2Bundle:GroupStudy:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
+$collection->add(
+    'course2_group_study_update',
+    new Route(
+        '/course/2/lesson/7/update',
+        [
+            '_controller' => 'Course2Bundle:GroupStudy:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add('course2_teaching', new Route('/course/2/lesson/8/step/{_step}/{_format}', [
+            '_controller' => 'Course2Bundle:Teaching:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
+$collection->add(
+    'course2_teaching_update',
+    new Route(
+        '/course/2/lesson/8/update',
+        [
+            '_controller' => 'Course2Bundle:Teaching:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add('course2_active_reading', new Route('/course/2/lesson/9/step/{_step}/{_format}', [
+            '_controller' => 'Course2Bundle:ActiveReading:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
+$collection->add(
+    'course2_active_reading_update',
+    new Route(
+        '/course/2/lesson/9/update',
+        [
+            '_controller' => 'Course2Bundle:ActiveReading:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add('course2_spaced_repetition', new Route('/course/2/lesson/10/step/{_step}/{_format}', [
+            '_controller' => 'Course2Bundle:SpacedRepetition:wizard',
+            '_step' => 0,
+            '_format'     => 'index'
+        ], [
+            '_format' => DASHBOARD_VIEWS,
+            '_step' => '0|1|2|3|4'
+        ]));
+
+$collection->add(
+    'course2_spaced_repetition_update',
+    new Route(
+        '/course/2/lesson/10/update',
+        [
+            '_controller' => 'Course2Bundle:SpacedRepetition:update'
+        ],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
 
 return $collection;

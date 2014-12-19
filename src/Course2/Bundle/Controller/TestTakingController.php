@@ -87,7 +87,9 @@ class TestTakingController extends Controller
         $quiz = new TestTaking();
         $quiz->setCourse($course);
         $course->addTestTaking($quiz);
-
+        $quiz->setIdeaCram($request->get('ideaCram'));
+        $quiz->setBreathing($request->get('breathing'));
+        $quiz->setSkimming($request->get('skimming'));
         $orm->persist($quiz);
         $orm->flush();
 

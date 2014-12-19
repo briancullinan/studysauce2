@@ -26,6 +26,21 @@ class TestTaking
     protected $course;
 
     /**
+     * @ORM\Column(type="boolean", name="idea_cram")
+     */
+    protected $ideaCram;
+
+    /**
+     * @ORM\Column(type="text", name="breathing")
+     */
+    protected $breathing;
+
+    /**
+     * @ORM\Column(type="text", name="skimming")
+     */
+    protected $skimming;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -93,5 +108,74 @@ class TestTaking
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set ideaCram
+     *
+     * @param boolean $ideaCram
+     * @return TestTaking
+     */
+    public function setIdeaCram($ideaCram)
+    {
+        $this->ideaCram = $ideaCram;
+
+        return $this;
+    }
+
+    /**
+     * Get ideaCram
+     *
+     * @return boolean 
+     */
+    public function getIdeaCram()
+    {
+        return $this->ideaCram;
+    }
+
+    /**
+     * Set breathing
+     *
+     * @param string $breathing
+     * @return TestTaking
+     */
+    public function setBreathing($breathing)
+    {
+        $this->breathing = $breathing;
+
+        return $this;
+    }
+
+    /**
+     * Get breathing
+     *
+     * @return string 
+     */
+    public function getBreathing()
+    {
+        return $this->breathing;
+    }
+
+    /**
+     * Set skimming
+     *
+     * @param string $skimming
+     * @return TestTaking
+     */
+    public function setSkimming($skimming)
+    {
+        $this->skimming = $skimming;
+
+        return $this;
+    }
+
+    /**
+     * Get skimming
+     *
+     * @return string 
+     */
+    public function getSkimming()
+    {
+        return $this->skimming;
     }
 }

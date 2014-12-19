@@ -475,6 +475,8 @@ class BuyController extends Controller
                 $password = $encoder->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt());
                 $user->setPassword($password);
                 $user->addRole('ROLE_USER');
+                if(isset($group))
+                    $user->addGroup($group->getGroup());
                 if(isset($parent))
                     $user->addRole('ROLE_PARENT');
                 if(isset($partner))

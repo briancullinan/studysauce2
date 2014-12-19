@@ -4,55 +4,50 @@ use Course2\Bundle\Entity\StudyPlan;
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
 /** @var StudyPlan $quiz */
-$complete = true /*!empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty($quiz->getOften()) && !empty($quiz->getUsage())*/;
+$complete = !empty($quiz->getMultiply()) && !empty($quiz->getProcrastination()) && !empty($quiz->getStudySessions()) &&
+    !empty($quiz->getStickPlan());
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_study_plan-step2">
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
-        <h3>Select the two main ways an accountability partners can help you in school from the list below:</h3>
+        <h3>Multiply your class hours by ___ to get the total number of hours you should study per week.</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="motivate" <?php /*print (in_array('motivate', $quiz->getHelp()) ? 'checked="checked"' : '');*/ ?>><i></i><span>To motivate you</span></label>
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="tutor" <?php /*print (in_array('tutor', $quiz->getHelp()) ? 'checked="checked"' : '');*/ ?>><i></i><span>Tutoring for your most difficult classes</span></label>
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="focus" <?php /*print (in_array('focus', $quiz->getHelp()) ? 'checked="checked"' : '');*/ ?>><i></i><span>Help keep you focused</span></label>
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="incentive" <?php /*print (in_array('incentive', $quiz->getHelp()) ? 'checked="checked"' : '');*/ ?>><i></i><span>To incentivize you to achieve your goals</span></label>
+            <label class="radio"><input name="quiz-multiply" type="radio" value="1" <?php print ($quiz->getMultiply() == 1 ? 'checked="checked"' : ''); ?>><i></i><span>1</span></label>
+            <label class="radio"><input name="quiz-multiply" type="radio" value="2" <?php print ($quiz->getMultiply() == 2 ? 'checked="checked"' : ''); ?>><i></i><span>2</span></label>
+            <label class="radio"><input name="quiz-multiply" type="radio" value="3" <?php print ($quiz->getMultiply() == 3 ? 'checked="checked"' : ''); ?>><i></i><span>3</span></label>
+            <label class="radio"><input name="quiz-multiply" type="radio" value="4" <?php print ($quiz->getMultiply() == 4 ? 'checked="checked"' : ''); ?>><i></i><span>4</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>Your accountability partner may be able to help you in several different ways, but the two main ways are by keeping you focused and motivated.</p>
+            <p>Multiply by 3 to get the number of weekly study hours.</p>
         </div>
         <?php } ?>
-        <h3>Which of the following is not a key attribute to look for when choosing your accountability partner?</h3>
+        <h3>How does building a study plan help you stop procrastinating?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="trust" <?php /*print ($quiz->getAttribute() == 'trust' ? 'checked="checked"' : '');*/ ?>><i></i><span>Someone you trust.</span></label>
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="challenge" <?php /*print ($quiz->getAttribute() == 'challenge' ? 'checked="checked"' : '');*/ ?>><i></i><span>Someone that will challenge you.</span></label>
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="knows" <?php /*print ($quiz->getAttribute() == 'knows' ? 'checked="checked"' : '');*/ ?>><i></i><span>Someone that knows you best.</span></label>
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="celebrate" <?php /*print ($quiz->getAttribute() == 'celebrate' ? 'checked="checked"' : '');*/ ?>><i></i><span>Someone that will celebrate your successes.</span></label>
+            <label class="input"><textarea name="quiz-procrastination"><?php print $view->escape($quiz->getProcrastination()); ?></textarea></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>Take time to choose your accountability partner.  You should have already established trust with the person because you will need them to challenge you and to celebrate successes with you.</p>
+            <p>You commit yourself to studying at a time when you are motivated instead of waiting until you can find reasons not to study.</p>
         </div>
         <?php } ?>
-        <h3>How often should you talk with your accountability partner?</h3>
+        <h3>How should you use the time in your free study sessions?</h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-partners-often" type="text" value="<?php /*print $view->escape($quiz->getOften());*/ ?>"></label>
+            <label class="input"><textarea name="quiz-study-sessions"><?php print $view->escape($quiz->getStudySessions()); ?></textarea></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
-            <p>Ideally, you can communicate with your accountability partner on a weekly basis.</p>
+            <p>This time should be allocated to give you the flexibility to focus on whichever class is most in need of attention at the time.  It is also a great time to work on bigger projects or papers that span several weeks.</p>
         </div>
         <?php } ?>
-        <h3>According to the video, which of the following are examples of other ways accountability partners are used?</h3>
+        <h3>What are two methods you can use to help yourself stick with a study plan?</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="drive" <?php /*print (in_array('drive', $quiz->getUsage()) ? 'checked="checked"' : '');*/ ?>><i></i><span>Learning to drive</span></label>
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="dieting" <?php /*print (in_array('dieting', $quiz->getUsage()) ? 'checked="checked"' : '');*/ ?>><i></i><span>Dieting</span></label>
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="gyms" <?php /*print (in_array('gyms', $quiz->getUsage()) ? 'checked="checked"' : '');*/ ?>><i></i><span>Gyms</span></label>
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="churches" <?php /*print (in_array('churches', $quiz->getUsage()) ? 'checked="checked"' : '');*/ ?>><i></i><span>Churches</span></label>
+            <label class="input"><textarea name="quiz-stick-plan"><?php print $view->escape($quiz->getStickPlan()); ?></textarea></label>
         </div>
         <?php if($complete) { ?>
             <div class="results">
-                <p>Although there are many other ways that accountability partners are used, the video specifically highlights gyms, dieting, and churches.</p>
+                <p>Starting immediately is a great way to get some momentum.  Additionally, choosing study locations ahead of time can help you keep your motivation.</p>
             </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>

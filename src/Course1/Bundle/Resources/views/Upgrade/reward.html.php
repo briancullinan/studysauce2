@@ -8,12 +8,12 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step3" id="course1_upgrade-step3">
     <div class="pane-content">
         <h2>Congratulations on completing Study Sauce level 1</h2>
-        <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward7.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+        <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward7.gif'], [], ['output' => 'bundles/course1/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
         <?php endforeach; ?>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="badge beginner-apples">&nbsp;</span>
+            <span class="medal beginner-apples">&nbsp;</span>
             <strong>Level 1 Complete</strong>
             <p class="description">Well done. You have completed the first part of the course. Keep going!</p>
         </div>

@@ -86,7 +86,10 @@ class StudyPlanController extends Controller
         $quiz = new StudyPlan();
         $quiz->setCourse($course);
         $course->addStudyPlan($quiz);
-
+        $quiz->setMultiply($request->get('multiply'));
+        $quiz->setProcrastination($request->get('procrastination'));
+        $quiz->setStudySessions($request->get('studySessions'));
+        $quiz->setStickPlan($request->get('stickPlan'));
         $orm->persist($quiz);
         $orm->flush();
 

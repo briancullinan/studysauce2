@@ -85,6 +85,9 @@ if (!$courseIncluded) {
     $view['slots']->stop();
 
     $view['slots']->start('stylesheets');
+    foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/awards.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
+        <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
+    <?php endforeach;
     foreach ($view['assetic']->stylesheets(['@Course2Bundle/Resources/public/css/course2.css'],[],['output' => 'bundles/course2/css/*.css']) as $url): ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
     <?php endforeach;

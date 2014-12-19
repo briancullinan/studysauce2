@@ -55,6 +55,34 @@ class Course2
     protected $studyMetrics;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\Strategies", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $strategies;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\GroupStudy", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $groupStudy;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\Teaching", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $teaching;
+
+    /**
+     * @ORM\Column(type="text", name="test_types", nullable=true)
+     */
+    protected $testTypes;
+
+    /**
+     * @ORM\Column(type="text", name="group_goals", nullable=true)
+     */
+    protected $groupGoals;
+
+    /**
      * @ORM\Column(type="integer", name="lesson1", options={"default"=0})
      */
     protected $lesson1 = 0;
@@ -127,6 +155,7 @@ class Course2
         $this->testTaking = new \Doctrine\Common\Collections\ArrayCollection();
         $this->studyTests = new \Doctrine\Common\Collections\ArrayCollection();
         $this->studyMetrics = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->strategies = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -578,5 +607,150 @@ class Course2
     public function getLesson10()
     {
         return $this->lesson10;
+    }
+
+    /**
+     * Set testTypes
+     *
+     * @param string $testTypes
+     * @return Course2
+     */
+    public function setTestTypes($testTypes)
+    {
+        $this->testTypes = $testTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get testTypes
+     *
+     * @return string 
+     */
+    public function getTestTypes()
+    {
+        return $this->testTypes;
+    }
+
+    /**
+     * Add strategies
+     *
+     * @param \Course2\Bundle\Entity\Strategies $strategies
+     * @return Course2
+     */
+    public function addStrategy(\Course2\Bundle\Entity\Strategies $strategies)
+    {
+        $this->strategies[] = $strategies;
+
+        return $this;
+    }
+
+    /**
+     * Remove strategies
+     *
+     * @param \Course2\Bundle\Entity\Strategies $strategies
+     */
+    public function removeStrategy(\Course2\Bundle\Entity\Strategies $strategies)
+    {
+        $this->strategies->removeElement($strategies);
+    }
+
+    /**
+     * Get strategies
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStrategies()
+    {
+        return $this->strategies;
+    }
+
+    /**
+     * Set groupGoals
+     *
+     * @param string $groupGoals
+     * @return Course2
+     */
+    public function setGroupGoals($groupGoals)
+    {
+        $this->groupGoals = $groupGoals;
+
+        return $this;
+    }
+
+    /**
+     * Get groupGoals
+     *
+     * @return string 
+     */
+    public function getGroupGoals()
+    {
+        return $this->groupGoals;
+    }
+
+    /**
+     * Add groupStudy
+     *
+     * @param \Course2\Bundle\Entity\GroupStudy $groupStudy
+     * @return Course2
+     */
+    public function addGroupStudy(\Course2\Bundle\Entity\GroupStudy $groupStudy)
+    {
+        $this->groupStudy[] = $groupStudy;
+
+        return $this;
+    }
+
+    /**
+     * Remove groupStudy
+     *
+     * @param \Course2\Bundle\Entity\GroupStudy $groupStudy
+     */
+    public function removeGroupStudy(\Course2\Bundle\Entity\GroupStudy $groupStudy)
+    {
+        $this->groupStudy->removeElement($groupStudy);
+    }
+
+    /**
+     * Get groupStudy
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGroupStudy()
+    {
+        return $this->groupStudy;
+    }
+
+    /**
+     * Add teaching
+     *
+     * @param \Course2\Bundle\Entity\Teaching $teaching
+     * @return Course2
+     */
+    public function addTeaching(\Course2\Bundle\Entity\Teaching $teaching)
+    {
+        $this->teaching[] = $teaching;
+
+        return $this;
+    }
+
+    /**
+     * Remove teaching
+     *
+     * @param \Course2\Bundle\Entity\Teaching $teaching
+     */
+    public function removeTeaching(\Course2\Bundle\Entity\Teaching $teaching)
+    {
+        $this->teaching->removeElement($teaching);
+    }
+
+    /**
+     * Get teaching
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTeaching()
+    {
+        return $this->teaching;
     }
 }

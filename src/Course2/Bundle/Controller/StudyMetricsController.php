@@ -85,7 +85,9 @@ class StudyMetricsController extends Controller
         // store quiz results
         $quiz = new StudyMetrics();
         $quiz->setCourse($course);
-
+        $quiz->setTrackHours(explode(',', $request->get('trackHours')));
+        $quiz->setDoingWell($request->get('doingWell'));
+        $quiz->setAllTogether($request->get('allTogether'));
         $course->addStudyMetric($quiz);
         $orm->persist($quiz);
         $orm->flush();

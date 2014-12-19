@@ -8,12 +8,12 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step3" id="course1_introduction-step3">
     <div class="pane-content">
         <h2>Clearly you have some swag. Let's get started!</h2>
-        <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward1.gif'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
+        <?php foreach ($view['assetic']->image(['@Course1Bundle/Resources/public/images/reward1.gif'],[],['output' => 'bundles/course1/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
         <?php endforeach; ?>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="badge">&nbsp;</span>
+            <span class="medal">&nbsp;</span>
             <strong>Pulse Detected</strong>
 
             <div class="description">Yep, you are alive. Now let's get started.</div>
