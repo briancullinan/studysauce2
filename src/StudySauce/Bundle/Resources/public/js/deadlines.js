@@ -142,7 +142,7 @@ $(document).ready(function () {
                     courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
                     className = row.find('.class-name input').val();
                 return '<option value="' + courseId + '">' + className + '</option>';
-            });
+            }).toArray();
         if(options.length == 0)
             deadlines.addClass('empty');
         else

@@ -7,7 +7,7 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
     <div class="pane-content">
         <h2>Level 1 complete</h2>
         <div class="grid_6">
-            <p>Well done. You have completed the first part of the course. Keep going!</p>
+            <p>Well done. You have completed the first part of the course. Upgrade to premium or bill your parents to keep going!</p>
         </div>
         <div class="grid_6">
             <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/situation_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
@@ -16,6 +16,7 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
         </div>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('premium'); ?>" class="more">Upgrade to premium</a>
+            <a href="#bill-parents" class="more parents" data-toggle="modal">Bill my parents</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

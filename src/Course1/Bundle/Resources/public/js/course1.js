@@ -114,20 +114,30 @@ $(document).ready(function () {
             $('.main-menu a[href*="course/1/lesson/7"]').parent('li').addClass('complete');
 
         // course 2
-        if($(this).is('#course2_interleaving-step4'))
+        if($(this).is('#course2_study_metrics-step4'))
             $('.main-menu a[href*="course/2/lesson/1"]').parent('li').addClass('complete');
         if($(this).is('#course2_study_plan-step4'))
             $('.main-menu a[href*="course/2/lesson/2"]').parent('li').addClass('complete');
-        if($(this).is('#course2_test_taking-step4'))
+        if($(this).is('#course2_interleaving-step4'))
             $('.main-menu a[href*="course/2/lesson/3"]').parent('li').addClass('complete');
         if($(this).is('#course2_study_tests-step4'))
             $('.main-menu a[href*="course/2/lesson/4"]').parent('li').addClass('complete');
-        if($(this).is('#course2_study_metrics-step4'))
+        if($(this).is('#course2_test_taking-step4'))
             $('.main-menu a[href*="course/2/lesson/5"]').parent('li').addClass('complete');
+        if($(this).is('#course2_strategies-step4'))
+            $('.main-menu a[href*="course/2/lesson/6"]').parent('li').addClass('complete');
+        if($(this).is('#course2_group_study-step4'))
+            $('.main-menu a[href*="course/2/lesson/7"]').parent('li').addClass('complete');
+        if($(this).is('#course2_teaching-step4'))
+            $('.main-menu a[href*="course/2/lesson/8"]').parent('li').addClass('complete');
+        if($(this).is('#course2_active_reading-step4'))
+            $('.main-menu a[href*="course/2/lesson/9"]').parent('li').addClass('complete');
+        if($(this).is('#course2_spaced_repetition-step4'))
+            $('.main-menu a[href*="course/2/lesson/10"]').parent('li').addClass('complete');
 
 
         var main = $('.main-menu'),
-            completed = main.find('#level1 li.complete').length == main.find('#level1 li').length
+            completed = main.find('#level1 li.complete').length <= main.find('#level1 li').length
                 ? Math.round(main.find('#level1 li.complete').length * 100 / main.find('#level1 li').length)
                 : Math.round(main.find('#level2 li.complete').length * 100 / main.find('#level2 li').length),
             widget = $('#home').find('.course-widget');
