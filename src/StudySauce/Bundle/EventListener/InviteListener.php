@@ -63,7 +63,7 @@ class InviteListener implements EventSubscriberInterface
         $userManager = $this->container->get('fos_user.user_manager');
         /** @var Request $request */
         $request = $event->getRequest();
-        if(!$request->request->has('_code'))
+        if(empty($request->get('_code')))
             return;
         /** @var Session $session */
         $session = $request->getSession();
@@ -158,7 +158,7 @@ class InviteListener implements EventSubscriberInterface
 
             $loginManager->loginUser('main', $user, $response);
             $session = $request->getSession();
-            $autoLogoutUser[$request->get('_code')]($session);
+            $this->autoLogoutUser[$request->get('_code')]($session);
             unset($this->autoLogoutUser[$request->get('_code')]);
         }
     }
