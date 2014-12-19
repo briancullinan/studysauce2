@@ -295,18 +295,6 @@ body.right-menu #bookmark
         transition: left linear .15s;
     }
 
-    .left-menu.modal-open .modal
-    {
-        left:220px;
-        position:fixed;
-    }
-
-    .right-menu.modal-open .modal
-    {
-        left:-220px;
-        position:fixed;
-    }
-
     body.modal-open .footer
     {
         display:none;
@@ -333,6 +321,18 @@ body.right-menu #bookmark
 
 @media all and (max-width:700px)
 {
+
+    .left-menu.modal-open .modal
+    {
+        left:220px;
+        position:fixed;
+    }
+
+    .right-menu.modal-open .modal
+    {
+        left:-220px;
+        position:fixed;
+    }
 
     #sds-messages .full-only
     {

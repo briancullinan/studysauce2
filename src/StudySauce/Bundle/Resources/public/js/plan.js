@@ -286,7 +286,7 @@ $(document).ready(function () {
                     // reset calendar
                     $('#calendar').fullCalendar('destroy');
                     isInitialized = false;
-                    plan.filter(':visible').jtrigger('show');
+                    plan.filter(':visible').trigger('show');
                 }
             });
         }, 100);

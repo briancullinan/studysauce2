@@ -65,7 +65,7 @@ legend
     margin-bottom: 1px;
     color: inherit;
     width: auto;
-    display: inline-block;
+    display: block;
     border: 1px solid #555;
     padding: 5px;
     border-radius: 5px;
