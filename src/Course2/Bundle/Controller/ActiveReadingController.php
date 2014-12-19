@@ -3,7 +3,7 @@
 namespace Course2\Bundle\Controller;
 
 use Course2\Bundle\Entity\Course2;
-use Course2\Bundle\Entity\TestTaking;
+use Course2\Bundle\Entity\ActiveReading;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,7 +52,7 @@ class ActiveReadingController extends Controller
                     : null;
 
                 return $this->render('Course2Bundle:ActiveReading:quiz.html.php', [
-                        'quiz' => $course->getTestTaking()->first() ?: new TestTaking(),
+                        'quiz' => $course->getActiveReading()->first() ?: new ActiveReading(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;
@@ -84,12 +84,13 @@ class ActiveReadingController extends Controller
         $course = $user->getCourse2s()->first();
 
         // store quiz results
-        $quiz = new TestTaking();
+        $quiz = new ActiveReading();
         $quiz->setCourse($course);
-        $course->addTestTaking($quiz);
-        $quiz->setIdeaCram($request->get('ideaCram'));
-        $quiz->setBreathing($request->get('breathing'));
+        $course->addActiveReading($quiz);
+        $quiz->setWhatReading($request->get('whatReading'));
+        $quiz->setSelfExplanation($request->get('selfExplanation'));
         $quiz->setSkimming($request->get('skimming'));
+        $quiz->setHighlighting($request->get('highlighting'));
         $orm->persist($quiz);
         $orm->flush();
 

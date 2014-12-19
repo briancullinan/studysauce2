@@ -1,41 +1,53 @@
 <?php
-use Course2\Bundle\Entity\TestTaking;
+use Course2\Bundle\Entity\ActiveReading;
 
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
-/** @var TestTaking $quiz */
-$complete = !empty($quiz->getIdeaCram()) && !empty($quiz->getBreathing()) && !empty($quiz->getSkimming());
+/** @var ActiveReading $quiz */
+$complete = !empty($quiz->getWhatReading()) && $quiz->getHighlighting() !== null && $quiz->getSkimming() !== null &&
+    $quiz->getSelfExplanation() !== null;
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_active_reading-step2">
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
-        <h3>Leading up to the test, it is a super good idea to cram.</h3>
+        <h3>What is active reading?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="1" <?php print ($quiz->getIdeaCram() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="0" <?php print ($quiz->getIdeaCram() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="input"><span>A:</span><input name="quiz-what-reading" type="text" value="<?php print $view->escape($quiz->getWhatReading()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>SAY NO TO CRAMMING!!!</p>
+                <p>Active reading is simply trying to understand what you are reading and recognizing which parts are most important to your needs.  The key to active reading is being curious about what you are covering.</p>
             </div>
         <?php } ?>
-        <h3>What is the name of the breathing exercise demonstrated in this video?</h3>
+        <h3>Highlighting and underlining is an effective tool for active reading.</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-breathing" type="text" value="<?php print $view->escape($quiz->getBreathing()); ?>"></label>
+            <label class="radio"><input name="quiz-highlighting" type="radio" value="1" <?php print ($quiz->getHighlighting() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-highlighting" type="radio" value="0" <?php print ($quiz->getHighlighting() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>It is called four-part breathing.  It is also sometimes called combat or tactical breathing.</p>
+                <p>False.  People have been lying to you for years...  Highlighting and underlining is a complete waste of time and won't help you remember anything.  In order to learn the material, you have to go one step further.  Convert whatever you are highlighting and underlining into an exercise that will help you commit the material to memory.</p>
             </div>
         <?php } ?>
-        <h3>What should you be looking for when you skim the test?</h3>
+        <h3>Skimming through the reading is an effective tool for active reading.</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-skimming" type="text" value="<?php print $view->escape($quiz->getSkimming()); ?>"></label>
+            <label class="radio"><input name="quiz-skimming" type="radio" value="1" <?php print ($quiz->getSkimming() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-skimming" type="radio" value="0" <?php print ($quiz->getSkimming() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>Skimming the test will help you pace yourself.  In particular, look for the number of questions, the type of questions, and the value of questions.</p>
+                <p>True.  Use this technique to get curious about the topic before you start reading.  Pay particular attention to learning objectives, chapter summaries, charts, tables, and section headings.  The author is trying to tell you what is important and what isn't.  Take the hint.</p>
+            </div>
+        <?php } ?>
+        <h3>Self-explanation is an effect tool for active reading.</h3>
+        <div class="questions">
+            <label class="radio"><input name="quiz-self-explanation" type="radio" value="1" <?php print ($quiz->getSelfExplanation() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-self-explanation" type="radio" value="0" <?php print ($quiz->getSelfExplanation() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+        </div>
+        <?php if ($complete) { ?>
+            <div class="results">
+                <p>True.  Pause periodically when reading and try to explain what is going on in the text.  This will help you stop spacing out in the middle of your reading sessions and will also help you maintain your curiosity.</p>
             </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>

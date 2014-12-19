@@ -20,25 +20,30 @@ class SpacedRepetition
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Course2", inversedBy="testTaking")
+     * @ORM\ManyToOne(targetEntity="Course2", inversedBy="spacedRepetition")
      * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
      */
     protected $course;
 
     /**
-     * @ORM\Column(type="boolean", name="idea_cram")
+     * @ORM\Column(type="boolean", name="space_out", nullable=true)
      */
-    protected $ideaCram;
+    protected $spaceOut;
 
     /**
-     * @ORM\Column(type="text", name="breathing")
+     * @ORM\Column(type="text", name="forgetting", nullable=true)
      */
-    protected $breathing;
+    protected $forgetting;
 
     /**
-     * @ORM\Column(type="text", name="skimming")
+     * @ORM\Column(type="text", length=256, name="revisiting", nullable=true)
      */
-    protected $skimming;
+    protected $revisiting;
+
+    /**
+     * @ORM\Column(type="text", length=256, name="another_name", nullable=true)
+     */
+    protected $anotherName;
 
     /**
      * @ORM\Column(type="datetime", name="created")
@@ -52,6 +57,7 @@ class SpacedRepetition
     {
         $this->created = new \DateTime();
     }
+
 
 
     /**
@@ -68,7 +74,7 @@ class SpacedRepetition
      * Set created
      *
      * @param \DateTime $created
-     * @return TestTaking
+     * @return SpacedRepetition
      */
     public function setCreated($created)
     {
@@ -91,7 +97,7 @@ class SpacedRepetition
      * Set course
      *
      * @param \Course2\Bundle\Entity\Course2 $course
-     * @return TestTaking
+     * @return SpacedRepetition
      */
     public function setCourse(\Course2\Bundle\Entity\Course2 $course = null)
     {
@@ -111,71 +117,94 @@ class SpacedRepetition
     }
 
     /**
-     * Set ideaCram
+     * Set spaceOut
      *
-     * @param boolean $ideaCram
-     * @return TestTaking
+     * @param boolean $spaceOut
+     * @return SpacedRepetition
      */
-    public function setIdeaCram($ideaCram)
+    public function setSpaceOut($spaceOut)
     {
-        $this->ideaCram = $ideaCram;
+        $this->spaceOut = $spaceOut;
 
         return $this;
     }
 
     /**
-     * Get ideaCram
+     * Get spaceOut
      *
      * @return boolean 
      */
-    public function getIdeaCram()
+    public function getSpaceOut()
     {
-        return $this->ideaCram;
+        return $this->spaceOut;
     }
 
     /**
-     * Set breathing
+     * Set forgetting
      *
-     * @param string $breathing
-     * @return TestTaking
+     * @param string $forgetting
+     * @return SpacedRepetition
      */
-    public function setBreathing($breathing)
+    public function setForgetting($forgetting)
     {
-        $this->breathing = $breathing;
+        $this->forgetting = $forgetting;
 
         return $this;
     }
 
     /**
-     * Get breathing
+     * Get forgetting
      *
      * @return string 
      */
-    public function getBreathing()
+    public function getForgetting()
     {
-        return $this->breathing;
+        return $this->forgetting;
     }
 
     /**
-     * Set skimming
+     * Set revisiting
      *
-     * @param string $skimming
-     * @return TestTaking
+     * @param string $revisiting
+     * @return SpacedRepetition
      */
-    public function setSkimming($skimming)
+    public function setRevisiting($revisiting)
     {
-        $this->skimming = $skimming;
+        $this->revisiting = $revisiting;
 
         return $this;
     }
 
     /**
-     * Get skimming
+     * Get revisiting
      *
      * @return string 
      */
-    public function getSkimming()
+    public function getRevisiting()
     {
-        return $this->skimming;
+        return $this->revisiting;
+    }
+
+    /**
+     * Set anotherName
+     *
+     * @param string $anotherName
+     * @return SpacedRepetition
+     */
+    public function setAnotherName($anotherName)
+    {
+        $this->anotherName = $anotherName;
+
+        return $this;
+    }
+
+    /**
+     * Get anotherName
+     *
+     * @return string 
+     */
+    public function getAnotherName()
+    {
+        return $this->anotherName;
     }
 }

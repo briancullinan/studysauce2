@@ -1,41 +1,55 @@
 <?php
-use Course2\Bundle\Entity\TestTaking;
+use Course2\Bundle\Entity\SpacedRepetition;
 
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
-/** @var TestTaking $quiz */
-$complete = !empty($quiz->getIdeaCram()) && !empty($quiz->getBreathing()) && !empty($quiz->getSkimming());
+/** @var SpacedRepetition $quiz */
+$complete = $quiz->getSpaceOut() !== null && !empty($quiz->getForgetting()) && !empty($quiz->getRevisiting()) && !empty($quiz->getAnotherName());
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_spaced_repetition-step2">
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
-        <h3>Leading up to the test, it is a super good idea to cram.</h3>
+        <h3>Spacing out your study sessions isn't important at all.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="1" <?php print ($quiz->getIdeaCram() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="0" <?php print ($quiz->getIdeaCram() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-space-out" type="radio" value="1" <?php print ($quiz->getSpaceOut() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-space-out" type="radio" value="0" <?php print ($quiz->getSpaceOut() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>SAY NO TO CRAMMING!!!</p>
+                <p>False.  We just can't resist beating this dead horse.</p>
             </div>
         <?php } ?>
-        <h3>What is the name of the breathing exercise demonstrated in this video?</h3>
+        <h3>What is the Forgetting Curve?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-breathing" type="text" value="<?php print $view->escape($quiz->getBreathing()); ?>"></label>
+            <label class="input"><span>A:</span><input name="quiz-forgetting" type="text" value="<?php print $view->escape($quiz->getForgetting()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>It is called four-part breathing.  It is also sometimes called combat or tactical breathing.</p>
+                <p>The forgetting curve illustrates how quickly we lose information from our memory if we do not return to reinforce it.  We forget almost everything we learn in a manner of days.</p>
             </div>
         <?php } ?>
-        <h3>What should you be looking for when you skim the test?</h3>
+        <h3>How often do we recommend you revisit your flash cards in spaced repetition study sessions?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-skimming" type="text" value="<?php print $view->escape($quiz->getSkimming()); ?>"></label>
+            <label class="radio"><input name="quiz-revisiting" type="radio" value="daily" <?php print ($quiz->getRevisiting() == 'daily' ? 'checked="checked"' : ''); ?>><i></i><span>Every day</span></label>
+            <label class="radio"><input name="quiz-revisiting" type="radio" value="weekly" <?php print ($quiz->getRevisiting() == 'weekly' ? 'checked="checked"' : ''); ?>><i></i><span>Once a week</span></label>
+            <label class="radio"><input name="quiz-revisiting" type="radio" value="biweekly" <?php print ($quiz->getRevisiting() == 'biweekly' ? 'checked="checked"' : ''); ?>><i></i><span>Every other week</span></label>
+            <label class="radio"><input name="quiz-revisiting" type="radio" value="monthly" <?php print ($quiz->getRevisiting() == 'monthly' ? 'checked="checked"' : ''); ?>><i></i><span>Once a month</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>Skimming the test will help you pace yourself.  In particular, look for the number of questions, the type of questions, and the value of questions.</p>
+                <p>We recommend going through the same material once a week for the first month.  After that, revisit as necessary.</p>
+            </div>
+        <?php } ?>
+        <h3>Which of the following is <strong>not</strong> another name for Spaced Repetition?</h3>
+        <div class="questions">
+            <label class="radio"><input name="quiz-another-name" type="radio" value="practice" <?php print ($quiz->getAnotherName() == 'practice' ? 'checked="checked"' : ''); ?>><i></i><span>Spaced practice</span></label>
+            <label class="radio"><input name="quiz-another-name" type="radio" value="distributed" <?php print ($quiz->getAnotherName() == 'distributed' ? 'checked="checked"' : ''); ?>><i></i><span>Distributed practice</span></label>
+            <label class="radio"><input name="quiz-another-name" type="radio" value="blocked" <?php print ($quiz->getAnotherName() == 'blocked' ? 'checked="checked"' : ''); ?>><i></i><span>Blocked practice</span></label>
+        </div>
+        <?php if ($complete) { ?>
+            <div class="results">
+                <p>Spaced Repetition is also know as spaced practice and distributed practice.</p>
             </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>

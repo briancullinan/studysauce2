@@ -7,13 +7,13 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step0" id="course2_active_reading">
     <div class="pane-content">
-        <h2>Test taking <span class="time">10<small> minutes</small></span></h2>
+        <h2>Active reading <span class="time">10<small> minutes</small></span></h2>
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>
-                <li><a><span>1</span>What to do leading up to the test</a></li>
-                <li><a><span>2</span>How to manage test anxiety</a></li>
-                <li><a><span>3</span>What to do during the test</a></li>
+                <li><a><span>1</span>What active reading is</a></li>
+                <li><a><span>2</span>Why it is important</a></li>
+                <li><a><span>3</span>How to use it</a></li>
             </ol>
         </div>
         <div class="player-divider">

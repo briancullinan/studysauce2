@@ -3,7 +3,7 @@
 namespace Course2\Bundle\Controller;
 
 use Course2\Bundle\Entity\Course2;
-use Course2\Bundle\Entity\TestTaking;
+use Course2\Bundle\Entity\SpacedRepetition;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,7 +52,7 @@ class SpacedRepetitionController extends Controller
                     : null;
 
                 return $this->render('Course2Bundle:SpacedRepetition:quiz.html.php', [
-                        'quiz' => $course->getTestTaking()->first() ?: new TestTaking(),
+                        'quiz' => $course->getSpacedRepetition()->first() ?: new SpacedRepetition(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;
@@ -84,12 +84,13 @@ class SpacedRepetitionController extends Controller
         $course = $user->getCourse2s()->first();
 
         // store quiz results
-        $quiz = new TestTaking();
+        $quiz = new SpacedRepetition();
         $quiz->setCourse($course);
-        $course->addTestTaking($quiz);
-        $quiz->setIdeaCram($request->get('ideaCram'));
-        $quiz->setBreathing($request->get('breathing'));
-        $quiz->setSkimming($request->get('skimming'));
+        $course->addSpacedRepetition($quiz);
+        $quiz->setSpaceOut($request->get('spaceOut'));
+        $quiz->setForgetting($request->get('forgetting'));
+        $quiz->setRevisiting($request->get('revisiting'));
+        $quiz->setAnotherName($request->get('anotherName'));
         $orm->persist($quiz);
         $orm->flush();
 

@@ -87,7 +87,9 @@ class TeachingController extends Controller
         $quiz = new Teaching();
         $quiz->setCourse($course);
         $course->addTeaching($quiz);
-
+        $quiz->setMemorizing($request->get('memorizing'));
+        $quiz->setNewLanguage($request->get('newLanguage'));
+        $quiz->setVideotaping($request->get('videotaping'));
         $orm->persist($quiz);
         $orm->flush();
 

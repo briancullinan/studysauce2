@@ -1,41 +1,41 @@
 <?php
-use Course2\Bundle\Entity\TestTaking;
+use Course2\Bundle\Entity\Teaching;
 
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
-/** @var TestTaking $quiz */
-$complete = !empty($quiz->getIdeaCram()) && !empty($quiz->getBreathing()) && !empty($quiz->getSkimming());
+/** @var Teaching $quiz */
+$complete = !empty($quiz->getNewLanguage()) && $quiz->getMemorizing() !== null && !empty($quiz->getVideotaping());
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_teaching-step2">
     <div class="pane-content">
         <h2>Now let's see how much you remember</h2>
-        <h3>Leading up to the test, it is a super good idea to cram.</h3>
+        <h3>Why is using the teaching to learn strategy similar to learning a new language?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="1" <?php print ($quiz->getIdeaCram() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="0" <?php print ($quiz->getIdeaCram() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="input"><span>A:</span><input name="quiz-new-language" type="text" value="<?php print ($quiz->getNewLanguage() ? 'checked="checked"' : ''); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>SAY NO TO CRAMMING!!!</p>
+                <p>They are similar because you lose the ability to guess the answer based on context and because you are forced to understand the information at a deeper level when you have to explain it.</p>
             </div>
         <?php } ?>
-        <h3>What is the name of the breathing exercise demonstrated in this video?</h3>
+        <h3>True or false, teaching to learn is an effective strategy for memorizing lots of information.</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-breathing" type="text" value="<?php print $view->escape($quiz->getBreathing()); ?>"></label>
+            <label class="radio"><input name="quiz-memorizing" type="radio" value="1" <?php print ($quiz->getMemorizing() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-memorizing" type="radio" value="0" <?php print ($quiz->getMemorizing() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>It is called four-part breathing.  It is also sometimes called combat or tactical breathing.</p>
+                <p>False.  Teaching to learn should be used when you need to understand a topic more deeply.  For memorizing, there are better strategies to use.</p>
             </div>
         <?php } ?>
-        <h3>What should you be looking for when you skim the test?</h3>
+        <h3>Why is videotaping yourself explaining a concept particularly helpful?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-skimming" type="text" value="<?php print $view->escape($quiz->getSkimming()); ?>"></label>
+            <label class="input"><span>A:</span><input name="quiz-videotaping" type="text" value="<?php print $view->escape($quiz->getVideotaping()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
-                <p>Skimming the test will help you pace yourself.  In particular, look for the number of questions, the type of questions, and the value of questions.</p>
+                <p>First, when you have a video recorded, you can tell immediately if you don't understand the material.  Second, everyone wants to look good on camera.  This will actually help you think through the response more deeply and will help force yourself to learn the concept.</p>
             </div>
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>

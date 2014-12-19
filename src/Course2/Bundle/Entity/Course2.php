@@ -73,6 +73,18 @@ class Course2
     protected $teaching;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\ActiveReading", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $activeReading;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\SpacedRepetition", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $spacedRepetition;
+
+    /**
      * @ORM\Column(type="text", name="test_types", nullable=true)
      */
     protected $testTypes;
@@ -752,5 +764,71 @@ class Course2
     public function getTeaching()
     {
         return $this->teaching;
+    }
+
+    /**
+     * Add activeReading
+     *
+     * @param \Course2\Bundle\Entity\ActiveReading $activeReading
+     * @return Course2
+     */
+    public function addActiveReading(\Course2\Bundle\Entity\ActiveReading $activeReading)
+    {
+        $this->activeReading[] = $activeReading;
+
+        return $this;
+    }
+
+    /**
+     * Remove activeReading
+     *
+     * @param \Course2\Bundle\Entity\ActiveReading $activeReading
+     */
+    public function removeActiveReading(\Course2\Bundle\Entity\ActiveReading $activeReading)
+    {
+        $this->activeReading->removeElement($activeReading);
+    }
+
+    /**
+     * Get activeReading
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActiveReading()
+    {
+        return $this->activeReading;
+    }
+
+    /**
+     * Add spacedRepetition
+     *
+     * @param \Course2\Bundle\Entity\SpacedRepetition $spacedRepetition
+     * @return Course2
+     */
+    public function addSpacedRepetition(\Course2\Bundle\Entity\SpacedRepetition $spacedRepetition)
+    {
+        $this->spacedRepetition[] = $spacedRepetition;
+
+        return $this;
+    }
+
+    /**
+     * Remove spacedRepetition
+     *
+     * @param \Course2\Bundle\Entity\SpacedRepetition $spacedRepetition
+     */
+    public function removeSpacedRepetition(\Course2\Bundle\Entity\SpacedRepetition $spacedRepetition)
+    {
+        $this->spacedRepetition->removeElement($spacedRepetition);
+    }
+
+    /**
+     * Get spacedRepetition
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSpacedRepetition()
+    {
+        return $this->spacedRepetition;
     }
 }

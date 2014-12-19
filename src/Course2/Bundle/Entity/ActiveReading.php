@@ -20,25 +20,30 @@ class ActiveReading
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Course2", inversedBy="testTaking")
+     * @ORM\ManyToOne(targetEntity="Course2", inversedBy="activeReading")
      * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
      */
     protected $course;
 
     /**
-     * @ORM\Column(type="boolean", name="idea_cram")
+     * @ORM\Column(type="text", name="what_reading", nullable=true)
      */
-    protected $ideaCram;
+    protected $whatReading;
 
     /**
-     * @ORM\Column(type="text", name="breathing")
+     * @ORM\Column(type="boolean", name="highlighting", nullable=true)
      */
-    protected $breathing;
+    protected $highlighting;
 
     /**
-     * @ORM\Column(type="text", name="skimming")
+     * @ORM\Column(type="boolean", name="skimming", nullable=true)
      */
     protected $skimming;
+
+    /**
+     * @ORM\Column(type="boolean", name="self_explanation", nullable=true)
+     */
+    protected $selfExplanation;
 
     /**
      * @ORM\Column(type="datetime", name="created")
@@ -54,6 +59,7 @@ class ActiveReading
     }
 
 
+
     /**
      * Get id
      *
@@ -65,10 +71,102 @@ class ActiveReading
     }
 
     /**
+     * Set whatReading
+     *
+     * @param string $whatReading
+     * @return ActiveReading
+     */
+    public function setWhatReading($whatReading)
+    {
+        $this->whatReading = $whatReading;
+
+        return $this;
+    }
+
+    /**
+     * Get whatReading
+     *
+     * @return string 
+     */
+    public function getWhatReading()
+    {
+        return $this->whatReading;
+    }
+
+    /**
+     * Set highlighting
+     *
+     * @param boolean $highlighting
+     * @return ActiveReading
+     */
+    public function setHighlighting($highlighting)
+    {
+        $this->highlighting = $highlighting;
+
+        return $this;
+    }
+
+    /**
+     * Get highlighting
+     *
+     * @return boolean 
+     */
+    public function getHighlighting()
+    {
+        return $this->highlighting;
+    }
+
+    /**
+     * Set skimming
+     *
+     * @param boolean $skimming
+     * @return ActiveReading
+     */
+    public function setSkimming($skimming)
+    {
+        $this->skimming = $skimming;
+
+        return $this;
+    }
+
+    /**
+     * Get skimming
+     *
+     * @return boolean 
+     */
+    public function getSkimming()
+    {
+        return $this->skimming;
+    }
+
+    /**
+     * Set selfExplanation
+     *
+     * @param boolean $selfExplanation
+     * @return ActiveReading
+     */
+    public function setSelfExplanation($selfExplanation)
+    {
+        $this->selfExplanation = $selfExplanation;
+
+        return $this;
+    }
+
+    /**
+     * Get selfExplanation
+     *
+     * @return boolean 
+     */
+    public function getSelfExplanation()
+    {
+        return $this->selfExplanation;
+    }
+
+    /**
      * Set created
      *
      * @param \DateTime $created
-     * @return TestTaking
+     * @return ActiveReading
      */
     public function setCreated($created)
     {
@@ -91,7 +189,7 @@ class ActiveReading
      * Set course
      *
      * @param \Course2\Bundle\Entity\Course2 $course
-     * @return TestTaking
+     * @return ActiveReading
      */
     public function setCourse(\Course2\Bundle\Entity\Course2 $course = null)
     {
@@ -108,74 +206,5 @@ class ActiveReading
     public function getCourse()
     {
         return $this->course;
-    }
-
-    /**
-     * Set ideaCram
-     *
-     * @param boolean $ideaCram
-     * @return TestTaking
-     */
-    public function setIdeaCram($ideaCram)
-    {
-        $this->ideaCram = $ideaCram;
-
-        return $this;
-    }
-
-    /**
-     * Get ideaCram
-     *
-     * @return boolean 
-     */
-    public function getIdeaCram()
-    {
-        return $this->ideaCram;
-    }
-
-    /**
-     * Set breathing
-     *
-     * @param string $breathing
-     * @return TestTaking
-     */
-    public function setBreathing($breathing)
-    {
-        $this->breathing = $breathing;
-
-        return $this;
-    }
-
-    /**
-     * Get breathing
-     *
-     * @return string 
-     */
-    public function getBreathing()
-    {
-        return $this->breathing;
-    }
-
-    /**
-     * Set skimming
-     *
-     * @param string $skimming
-     * @return TestTaking
-     */
-    public function setSkimming($skimming)
-    {
-        $this->skimming = $skimming;
-
-        return $this;
-    }
-
-    /**
-     * Get skimming
-     *
-     * @return string 
-     */
-    public function getSkimming()
-    {
-        return $this->skimming;
     }
 }

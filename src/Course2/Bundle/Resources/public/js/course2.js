@@ -477,6 +477,167 @@ $(document).ready(function () {
     });
 
 
+    function validateTeaching() {
+        var step = body.find('#course2_teaching-step2'),
+            actions = step.find('.highlighted-link'),
+            valid = true;
+        if(step.find('input[name="quiz-new-language"]').val().trim() == '' ||
+            step.find('input[name="quiz-memorizing"]:checked').length == 0 ||
+            step.find('input[name="quiz-videotaping"]').val().trim() == '')
+            valid = false;
+        if(!valid)
+            actions.removeClass('valid').addClass('invalid');
+        else
+            actions.removeClass('invalid').addClass('valid');
+    }
+
+    body.on('change', '#course2_teaching-step2 input', validateTeaching);
+    body.on('keyup', '#course2_teaching-step2 input[type="text"]', validateTeaching);
+    body.on('show', '#course2_teaching-step2', validateTeaching);
+    body.on('click', '#course2_teaching-step2 a[href="#submit-quiz"]', function (evt) {
+        evt.preventDefault();
+        var step = body.find('#course2_teaching-step2'),
+            actions = step.find('.highlighted-link');
+        if(actions.is('.invalid'))
+            return;
+        actions.removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['course2_teaching_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                newLanguage: step.find('input[name="quiz-new-language"]').val().trim(),
+                memorizing: step.find('input[name="quiz-memorizing"]:checked').val(),
+                videotaping: step.find('input[name="quiz-videotaping"]').val().trim()
+            },
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
+
+                step.addClass('right');
+                actions.removeClass('invalid').addClass('valid');
+                // add answers in order
+                content.find('h3').each(function (i) {
+                    $(this).find('span').appendTo(step.find('h3').eq(i));
+                });
+                content.find('.results').each(function (i) {
+                    $(this).insertAfter(step.find('.questions').eq(i));
+                });
+                step.scrollintoview(DASHBOARD_MARGINS);
+            }
+        });
+    });
+
+
+
+    function validateActiveReading() {
+        var step = body.find('#course2_active_reading-step2'),
+            actions = step.find('.highlighted-link'),
+            valid = true;
+        if(step.find('input[name="quiz-what-reading"]').val().trim() == '' ||
+            step.find('input[name="quiz-highlighting"]:checked').length == 0 ||
+            step.find('input[name="quiz-skimming"]:checked').length == 0 ||
+            step.find('input[name="quiz-self-explanation"]:checked').length == 0)
+            valid = false;
+        if(!valid)
+            actions.removeClass('valid').addClass('invalid');
+        else
+            actions.removeClass('invalid').addClass('valid');
+    }
+
+    body.on('change', '#course2_active_reading-step2 input', validateActiveReading);
+    body.on('keyup', '#course2_active_reading-step2 input[type="text"]', validateActiveReading);
+    body.on('show', '#course2_active_reading-step2', validateActiveReading);
+    body.on('click', '#course2_active_reading-step2 a[href="#submit-quiz"]', function (evt) {
+        evt.preventDefault();
+        var step = body.find('#course2_active_reading-step2'),
+            actions = step.find('.highlighted-link');
+        if(actions.is('.invalid'))
+            return;
+        actions.removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['course2_active_reading_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                whatReading: step.find('input[name="quiz-what-reading"]').val().trim(),
+                highlighting: step.find('input[name="quiz-highlighting"]:checked').val(),
+                skimming: step.find('input[name="quiz-skimming"]:checked').val(),
+                selfExplanation: step.find('input[name="quiz-self-explanation"]:checked').val()
+            },
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
+
+                step.addClass('right');
+                actions.removeClass('invalid').addClass('valid');
+                // add answers in order
+                content.find('h3').each(function (i) {
+                    $(this).find('span').appendTo(step.find('h3').eq(i));
+                });
+                content.find('.results').each(function (i) {
+                    $(this).insertAfter(step.find('.questions').eq(i));
+                });
+                step.scrollintoview(DASHBOARD_MARGINS);
+            }
+        });
+    });
+
+
+
+    function validateSpacedRepetition() {
+        var step = body.find('#course2_spaced_repetition-step2'),
+            actions = step.find('.highlighted-link'),
+            valid = true;
+        if(step.find('input[name="quiz-space-out"]:checked').length == 0 ||
+            step.find('input[name="quiz-forgetting"]').val().trim() == '' ||
+            step.find('input[name="quiz-revisiting"]:checked').length == 0 ||
+            step.find('input[name="quiz-another-name"]:checked').length == 0)
+            valid = false;
+        if(!valid)
+            actions.removeClass('valid').addClass('invalid');
+        else
+            actions.removeClass('invalid').addClass('valid');
+    }
+
+    body.on('change', '#course2_spaced_repetition-step2 input', validateSpacedRepetition);
+    body.on('keyup', '#course2_spaced_repetition-step2 input[type="text"]', validateSpacedRepetition);
+    body.on('show', '#course2_spaced_repetition-step2', validateSpacedRepetition);
+    body.on('click', '#course2_spaced_repetition-step2 a[href="#submit-quiz"]', function (evt) {
+        evt.preventDefault();
+        var step = body.find('#course2_spaced_repetition-step2'),
+            actions = step.find('.highlighted-link');
+        if(actions.is('.invalid'))
+            return;
+        actions.removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['course2_spaced_repetition_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                spaceOut: step.find('input[name="quiz-space-out"]:checked').val(),
+                forgetting: step.find('input[name="quiz-forgetting"]').val().trim(),
+                revisiting: step.find('input[name="quiz-revisiting"]:checked').val(),
+                anotherName: step.find('input[name="quiz-another-name"]:checked').val()
+            },
+            success: function (data) {
+                var content = $(data);
+                step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
+
+                step.addClass('right');
+                actions.removeClass('invalid').addClass('valid');
+                // add answers in order
+                content.find('h3').each(function (i) {
+                    $(this).find('span').appendTo(step.find('h3').eq(i));
+                });
+                content.find('.results').each(function (i) {
+                    $(this).insertAfter(step.find('.questions').eq(i));
+                });
+                step.scrollintoview(DASHBOARD_MARGINS);
+            }
+        });
+    });
+
 });
 
 

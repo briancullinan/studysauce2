@@ -26,6 +26,21 @@ class Teaching
     protected $course;
 
     /**
+     * @ORM\Column(type="text", name="new_language", nullable=true)
+     */
+    protected $newLanguage;
+
+    /**
+     * @ORM\Column(type="boolean", name="memorizing", nullable=true)
+     */
+    protected $memorizing;
+
+    /**
+     * @ORM\Column(type="text", name="videotaping", nullable=true)
+     */
+    protected $videotaping;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -39,6 +54,7 @@ class Teaching
     }
 
 
+
     /**
      * Get id
      *
@@ -47,6 +63,75 @@ class Teaching
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set newLanguage
+     *
+     * @param string $newLanguage
+     * @return Teaching
+     */
+    public function setNewLanguage($newLanguage)
+    {
+        $this->newLanguage = $newLanguage;
+
+        return $this;
+    }
+
+    /**
+     * Get newLanguage
+     *
+     * @return string 
+     */
+    public function getNewLanguage()
+    {
+        return $this->newLanguage;
+    }
+
+    /**
+     * Set memorizing
+     *
+     * @param boolean $memorizing
+     * @return Teaching
+     */
+    public function setMemorizing($memorizing)
+    {
+        $this->memorizing = $memorizing;
+
+        return $this;
+    }
+
+    /**
+     * Get memorizing
+     *
+     * @return boolean 
+     */
+    public function getMemorizing()
+    {
+        return $this->memorizing;
+    }
+
+    /**
+     * Set videotaping
+     *
+     * @param string $videotaping
+     * @return Teaching
+     */
+    public function setVideotaping($videotaping)
+    {
+        $this->videotaping = $videotaping;
+
+        return $this;
+    }
+
+    /**
+     * Get videotaping
+     *
+     * @return string 
+     */
+    public function getVideotaping()
+    {
+        return $this->videotaping;
     }
 
     /**

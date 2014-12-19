@@ -7,15 +7,15 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step3" id="course2_active_reading-step3">
     <div class="pane-content">
-        <h2>Don't get carried away on test day.</h2>
-        <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/reward3.gif'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
+        <h2>Curiosity is the key</h2>
+        <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/reward9.gif'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
         <?php endforeach; ?>
         <div class="award">
             <h3>Badge awarded:</h3>
-            <span class="medal buddha">&nbsp;</span>
-            <strong>Zen master</strong>
-            <p class="description">Test taking doesn't have to be stressful Grasshopper.</p>
+            <span class="medal setup-hours">&nbsp;</span>
+            <strong>Book worm</strong>
+            <p class="description">Your days of head-bobbing while getting through your reading are over!!!  Well, maybe.  Use active reading as a tool to defeat the sleep monster and actually remember what you are reading.</p>
         </div>
         <div class="highlighted-link">
             <a href="<?php print $view['router']->generate('course2_active_reading', ['_step' => 4]); ?>" class="more">Next</a>

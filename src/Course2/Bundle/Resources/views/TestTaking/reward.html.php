@@ -8,7 +8,7 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step3" id="course2_test_taking-step3">
     <div class="pane-content">
         <h2>Don't get carried away on test day.</h2>
-        <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/reward3.gif'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
+        <?php foreach ($view['assetic']->image(['@Course2Bundle/Resources/public/images/reward5.gif'], [], ['output' => 'bundles/course2/images/*']) as $url): ?>
             <img width="100%" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
         <?php endforeach; ?>
         <div class="award">
