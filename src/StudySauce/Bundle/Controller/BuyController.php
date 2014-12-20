@@ -49,12 +49,18 @@ class BuyController extends Controller
             $first = $user->getFirst();
             $last = $user->getLast();
             $email = $user->getEmail();
+            $studentfirst = '';
+            $studentlast = '';
+            $studentemail = '';
         }
         else
         {
             $first = '';
             $last = '';
             $email = '';
+            $studentfirst = '';
+            $studentlast = '';
+            $studentemail = '';
         }
         /** @var Invite $invite */
         if(!empty($request->getSession()->get('parent')))
@@ -78,6 +84,9 @@ class BuyController extends Controller
             $first = $invite->getFirst();
             $last = $invite->getLast();
             $email = $invite->getEmail();
+            $studentfirst = $invite->getUser()->getFirst();
+            $studentlast = $invite->getUser()->getLast();
+            $studentemail = $invite->getUser()->getEmail();
         }
 
         // check for coupon
@@ -93,6 +102,9 @@ class BuyController extends Controller
                 'email' => $email,
                 'first' => $first,
                 'last' => $last,
+                'studentemail' => $studentemail,
+                'studentfirst' => $studentfirst,
+                'studentlast' => $studentlast,
                 'coupon' => isset($options) ? $options : null,
                 'csrf_token' => $csrfToken
             ]);

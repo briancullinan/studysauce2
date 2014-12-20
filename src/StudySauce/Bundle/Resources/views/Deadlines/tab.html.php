@@ -98,7 +98,7 @@ $view['slots']->start('body'); ?>
             <div class="deadline-row first invalid <?php
             print ($isDemo ? 'edit' : 'read-only');
             print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
-            print ($d->getDueDate() < date_sub(new \Datetime('today'), new \DateInterval('P1D')) ? ' historic' : '');
+            print (!$isDemo && $d->getDueDate() < date_sub(new \Datetime('today'), new \DateInterval('P1D')) ? ' historic' : '');
             print ' deadline-id-' . ($isDemo ? '' : $d->getId()); ?>">
             <div class="class-name">
                 <label class="select">

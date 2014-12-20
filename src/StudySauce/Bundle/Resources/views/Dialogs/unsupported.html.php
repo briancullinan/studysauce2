@@ -12,7 +12,7 @@ Your browser is not supported
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<p>Please choose from the vendors below to download the latest version.  Thank you!</p>
+<p>Please choose from the browsers below to download the latest version.  Thank you!</p>
 <p>
     <a href="https://www.google.com/chrome/browser/">&nbsp;</a>
     <a href="https://www.mozilla.org/en-US/firefox/new/">&nbsp;</a>

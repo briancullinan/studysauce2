@@ -203,13 +203,13 @@ $view['slots']->start('body'); ?>
             <fieldset id="gift-pane" class="<?php print ($isPartner ? 'shown-by-default' : ''); ?>">
                 <legend>Student information</legend>
                 <div class="first-name">
-                    <label class="input"><span>First name</span><input name="first-name" type="text" value="<?php print $first; ?>"></label>
+                    <label class="input"><span>First name</span><input name="first-name" type="text" value="<?php print $studentfirst; ?>"></label>
                 </div>
                 <div class="last-name">
-                    <label class="input"><span>Last name</span><input name="last-name" type="text" value="<?php print $last; ?>"></label>
+                    <label class="input"><span>Last name</span><input name="last-name" type="text" value="<?php print $studentlast; ?>"></label>
                 </div>
                 <div class="email">
-                    <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
+                    <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $studentemail; ?>"></label>
                 </div>
             </fieldset>
             <fieldset id="coupon-pane">

@@ -239,7 +239,7 @@ $(document).ready(function () {
                     setTimeout(callback, 150);
                 // show unpaid dialog
             };
-        setTimeout(callback, 150);
+        callback();
         if (plan.is('.demo'))
             $('#plan-upgrade').modal({
                 backdrop: 'static',
@@ -253,6 +253,10 @@ $(document).ready(function () {
 
     body.on('click', 'a[href="#bill-parents"]', function () {
         $('#plan-upgrade').modal('hide');
+    });
+
+    body.on('hidden.bs.modal', '#plan-intro-1', function () {
+        $(this).remove();
     });
 
     body.on('hidden.bs.modal', '#bill-parents', function () {

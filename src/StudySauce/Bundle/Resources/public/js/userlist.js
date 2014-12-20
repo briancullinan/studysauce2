@@ -75,6 +75,10 @@ $(document).ready(function () {
         $('#partner-advice-1').modal();
     });
 
+    body.on('hidden.bs.modal', '#partner-advice-1', function () {
+        $(this).remove();
+    });
+
     body.on('click', '#userlist a[href="#change-status"]', function (evt) {
         var userlist = jQuery('#userlist');
         evt.preventDefault();

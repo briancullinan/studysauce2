@@ -137,9 +137,7 @@ $(document).ready(function () {
 
 
         var main = $('.main-menu'),
-            completed = main.find('#level1 li.complete').length <= main.find('#level1 li').length
-                ? Math.round(main.find('#level1 li.complete').length * 100 / main.find('#level1 li').length)
-                : Math.round(main.find('#level2 li.complete').length * 100 / main.find('#level2 li').length),
+            completed = Math.round((main.find('#level1 li.complete').length + Math.round(main.find('#level2 li.complete').length)) * 100 / (main.find('#level1 li').length + main.find('#level2 li').length)),
             widget = $('#home').find('.course-widget');
         widget.find('h3').text(completed + '% of course complete');
         widget.find('.percent-bars').css('height', completed + '%');

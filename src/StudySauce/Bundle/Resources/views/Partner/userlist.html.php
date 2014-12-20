@@ -1,6 +1,8 @@
 <?php
 use Course1\Bundle\Course1Bundle;
 use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Course2Bundle;
+use Course2\Bundle\Entity\Course2;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use StudySauce\Bundle\Entity\Group;
@@ -92,13 +94,23 @@ $view['slots']->start('body'); ?>
                 $path = substr($s->getPath(), 1, min(strpos($s->getPath(), '/'), strlen($s->getPath())));
                 /** @var Schedule $schedule */
                 $schedule = $s->getUser()->getSchedules()->first();
-                /** @var Course1 $course */
-                $course = $s->getUser()->getCourse1s()->first();
-                $completed = ($course->getLesson1() === 4 ? 1 : 0) + ($course->getLesson2() === 4 ? 1 : 0) +
-                    ($course->getLesson3() === 4 ? 1 : 0) + ($course->getLesson4() === 4 ? 1 : 0) +
-                    ($course->getLesson5() === 4 ? 1 : 0) + ($course->getLesson6() === 4 ? 1 : 0) +
-                    ($course->getLesson7() === 4 ? 1 : 0);
-                $overall = round($completed * 100.0 / Course1Bundle::COUNT_LEVEL);
+                /** @var Course1 $course1 */
+                $course1 = $s->getUser()->getCourse1s()->first();
+                /** @var Course2 $course2 */
+                $course2 = $s->getUser()->getCourse2s()->first();
+                $completed = 0;
+                if(!empty($course1))
+                    $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2() === 4 ? 1 : 0) +
+                        ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
+                        ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
+                        ($course1->getLesson7() === 4 ? 1 : 0);
+                if(!empty($course2))
+                    $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2() === 4 ? 1 : 0) +
+                        ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
+                        ($course2->getLesson5() === 4 ? 1 : 0) + ($course2->getLesson6() === 4 ? 1 : 0) +
+                        ($course2->getLesson7() === 4 ? 1 : 0) + ($course2->getLesson8() === 4 ? 1 : 0) +
+                        ($course2->getLesson9() === 4 ? 1 : 0) + ($course2->getLesson10() === 4 ? 1 : 0);
+                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL + Course2Bundle::COUNT_LEVEL));
                 /** @var User $adviser */
                 $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 if(!empty($adviser))
@@ -123,16 +135,26 @@ $view['slots']->start('body'); ?>
 
                 /** @var Schedule $schedule */
                 $schedule = $u->getSchedules()->first();
-                /** @var Course1 $course */
-                $course = $u->getCourse1s()->first();
-                $completed = ($course->getLesson1() === 4 ? 1 : 0) + ($course->getLesson2() === 4 ? 1 : 0) +
-                    ($course->getLesson3() === 4 ? 1 : 0) + ($course->getLesson4() === 4 ? 1 : 0) +
-                    ($course->getLesson5() === 4 ? 1 : 0) + ($course->getLesson6() === 4 ? 1 : 0) +
-                    ($course->getLesson7() === 4 ? 1 : 0);
-                $overall = round($completed * 100.0 / Course1Bundle::COUNT_LEVEL);
+                /** @var Course1 $course1 */
+                $course1 = $s->getUser()->getCourse1s()->first();
+                /** @var Course2 $course2 */
+                $course2 = $s->getUser()->getCourse2s()->first();
+                $completed = 0;
+                if(!empty($course1))
+                    $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2() === 4 ? 1 : 0) +
+                        ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
+                        ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
+                        ($course1->getLesson7() === 4 ? 1 : 0);
+                if(!empty($course2))
+                    $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2() === 4 ? 1 : 0) +
+                        ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
+                        ($course2->getLesson5() === 4 ? 1 : 0) + ($course2->getLesson6() === 4 ? 1 : 0) +
+                        ($course2->getLesson7() === 4 ? 1 : 0) + ($course2->getLesson8() === 4 ? 1 : 0) +
+                        ($course2->getLesson9() === 4 ? 1 : 0) + ($course2->getLesson10() === 4 ? 1 : 0);
+                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL + Course2Bundle::COUNT_LEVEL));
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M y')); ?></td>
+                <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M')); ?></td>
                 <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'metrics']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
                 <td><?php print $overall; ?>%</td>
                 <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>

@@ -6,7 +6,7 @@ $view->extend('StudySauceBundle:Emails:layout.html.php');
 /** @var User $user */
 
 $view['slots']->start('message'); ?>
-<?php $user->getFirst(); ?> has asked for your help to sponsor a premium Study Sauce account.<br />
+<?php print $user->getFirst(); ?> has asked for your help to sponsor a premium Study Sauce account.<br />
 <br />
 We started Study Sauce based on the realization that no one ever teaches students the most effective study methods. We thought that was crazy when considering the fact that students spend up to 75% of their time outside the classroom.<br />
 <br />
