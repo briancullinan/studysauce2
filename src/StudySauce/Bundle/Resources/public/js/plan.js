@@ -29,8 +29,13 @@ $(document).ready(function () {
                 }
 
                 // merge rows
-                if (w.getWeekNumber() == window.planLoaded[0] + 1)
+                if (w.getWeekNumber() == window.planLoaded[window.planLoaded.length] + 1) {
                     content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                    if(w.getWeekNumber() <= window.planLoaded[0] + 4) {
+                        w = new Date(w.getTime() + 604800 * 1000);
+                        loadWeek(w)
+                    }
+                }
                 window.planEvents = $.merge(window.planEvents, tmpEvents);
                 if(callback) {
                     var events = filterEvents(s, e);
