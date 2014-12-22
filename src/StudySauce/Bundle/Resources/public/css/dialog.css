@@ -47,7 +47,17 @@
 
 #plan-empty
 {
-    position: relative;
+    position: absolute;
+}
+
+#plan-empty .close
+{
+    display:none;
+}
+
+#plan-empty.modal.in .modal-dialog .modal-content
+{
+    margin-top:-25%;
 }
 
 #metrics-empty .close

@@ -12,7 +12,7 @@ $complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()
         <h2>To help us better tailor Study Sauce to you, please answer the below questions.</h2>
         <h3>What is it called when you study the same class material for multiple study session?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-multiple-sessions" type="text" value="<?php print $quiz->getMultipleSessions(); ?>"></label>
+            <label class="input"><input name="quiz-multiple-sessions" type="text" value="<?php print $quiz->getMultipleSessions(); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -21,7 +21,7 @@ $complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()
         <?php } ?>
         <h3>What is another name for interleaving?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-other-name" type="text" value="<?php print $quiz->getOtherName(); ?>"></label>
+            <label class="input"><input name="quiz-other-name" type="text" value="<?php print $quiz->getOtherName(); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

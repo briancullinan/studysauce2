@@ -172,7 +172,7 @@ class DialogsController extends Controller
      */
     public function planEmptyAction()
     {
-        return $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty']);
+        return $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty', 'attributes' => 'data-backdrop="false"']);
     }
 
     /**

@@ -106,6 +106,76 @@ h4, h2
     text-align: right;
 }
 
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+    cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-prev:after, .ui-datepicker .ui-datepicker-next:after,
+.ui-datepicker .ui-datepicker-prev:before, .ui-datepicker .ui-datepicker-next:before {
+    top: 50%;
+    right: 10px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+.ui-datepicker .ui-datepicker-next:after {
+    left:12px;
+    right:auto;
+}
+
+.ui-datepicker .ui-datepicker-prev:after {
+    right:12px;
+}
+
+.ui-datepicker .ui-datepicker-next:before {
+    left:10px;
+    right:auto;
+}
+
+.ui-datepicker .ui-datepicker-prev:after {
+    border-right-color: #555;
+    border-width: 10px;
+    margin-top: -10px;
+}
+
+.ui-datepicker .ui-datepicker-next:after {
+    border-left-color: #555;
+    border-width: 10px;
+    margin-top: -10px;
+}
+
+.ui-datepicker .ui-datepicker-prev:before
+{
+    border-right-color: #CCC;
+    border-width: 16px;
+    margin-top: -16px;
+}
+
+.ui-datepicker .ui-datepicker-next:before {
+    border-left-color: #CCC;
+    border-width: 16px;
+    margin-top: -16px;
+}
+
+.ui-datepicker .ui-datepicker-prev-hover
+{
+    top:2px;
+    left:2px;
+}
+
+.ui-datepicker .ui-datepicker-next-hover
+{
+    top:2px;
+    right:2px;
+}
+
+.ui-datepicker .ui-state-disabled .ui-state-default:hover,
+.ui-datepicker .ui-state-disabled .ui-state-default {
+    background-color: #CCC;
+}
+
 .btn,
 .btn-default,
 a.more,

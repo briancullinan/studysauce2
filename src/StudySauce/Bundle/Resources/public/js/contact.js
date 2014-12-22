@@ -49,7 +49,7 @@ $(document).ready(function () {
             success: function () {
                 contact.removeClass('invalid').addClass('valid').modal('hide');
                 contact.find('.first-name input, .last-name input, .email input').val('');
-                $('#bill-parents-confirm').modal();
+                $('#bill-parents-confirm').modal({show:true});
             },
             error: function () {
                 contact.removeClass('invalid').addClass('valid');
@@ -76,7 +76,7 @@ $(document).ready(function () {
             success: function () {
                 contact.removeClass('invalid').addClass('valid').modal('hide');
                 contact.find('.first-name input, .last-name input, .email input').val('');
-                $('#student-invite-confirm').modal();
+                $('#student-invite-confirm').modal({show:true});
             },
             error: function () {
                 contact.removeClass('invalid').addClass('valid');

@@ -274,33 +274,6 @@
     width: 100%;
 }
 
-.course1.step3 .award
-{
-    margin: 0 4%;
-    display:inline-block;
-    vertical-align: middle;
-    border:5px solid #555;
-    background: url(../../studysauce/images/noise_white.png) repeat #ffffff;
-    padding:50px 20px;
-    border-radius: 5px;
-    width: 500px;
-    max-width: 40%;
-}
-
-.course1.step3 .award h3
-{
-    text-align: center;
-    margin-bottom:20px;
-    margin-top:0;
-}
-
-.course1.step3 .award strong
-{
-    display:block;
-    font-size: 32px;
-    margin:20px 0;
-}
-
 .course1.step3 > .pane-content
 {
     text-align: center;
@@ -428,14 +401,6 @@
     .course1.step2 h3
     {
         padding-right:0;
-    }
-
-    .course1.step3 .award
-    {
-        margin: 10px auto;
-        display:block;
-        width: 300px;
-        max-width: 90%;
     }
 
     .course1.step3 img

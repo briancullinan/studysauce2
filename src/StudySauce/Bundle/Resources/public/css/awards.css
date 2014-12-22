@@ -230,3 +230,43 @@
 {
     background-position:0 -5550px;
 }
+
+.award
+{
+    margin: 0 4%;
+    display:inline-block;
+    vertical-align: middle;
+    border:5px solid #555;
+    background: url(../images/noise_white.png) repeat #ffffff;
+    padding:50px 20px;
+    border-radius: 5px;
+    width: 500px;
+    max-width: 40%;
+}
+
+.award h3
+{
+    text-align: center;
+    margin-bottom:20px;
+    margin-top:0;
+}
+
+.award strong
+{
+    display:block;
+    font-size: 32px;
+    margin:20px 0;
+    line-height: 100%;
+}
+
+@media all and (max-width:700px)
+{
+
+    .award
+    {
+        margin: 10px auto;
+        display:block;
+        width: 300px;
+        max-width: 90%;
+    }
+}

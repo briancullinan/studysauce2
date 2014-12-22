@@ -4,7 +4,7 @@ use Course2\Bundle\Entity\StudyMetrics;
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
 /** @var StudyMetrics $quiz */
-$complete = !empty($quiz->getTrackHours()) && $quiz->getDoingWell() !== null && $quiz->getAllTogether() !== null;
+$complete = !empty($quiz->getTrackHours()) && $quiz->getDoingWell() !== null && !empty($quiz->getAllTogether());
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_study_metrics-step2">
@@ -34,8 +34,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Why does everyone else look like they have it all together?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-all-together" type="radio" value="1" <?php print ($quiz->getAllTogether() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-all-together" type="radio" value="0" <?php print ($quiz->getAllTogether() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="input"><input name="quiz-all-together" type="text" value="<?php print $view->escape($quiz->getAllTogether()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

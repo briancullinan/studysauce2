@@ -27,11 +27,7 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
 <div class="panel-pane" id="about">
     <div class="pane-content">
-        <?php foreach ($view['assetic']->image(
-            ['@StudySauceBundle/Resources/public/images/about_us_background.png'],
-            [],
-            ['output' => 'bundles/studysauce/images/*']
-        ) as $url): ?>
+        <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/about_us_background_compressed.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
         <?php endforeach; ?>
         <div class="rightify">

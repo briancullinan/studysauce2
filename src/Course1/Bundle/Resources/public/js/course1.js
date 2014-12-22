@@ -98,43 +98,9 @@ $(document).ready(function () {
 
     body.on('show', '.course1.step4', function () {
         // mark lesson completed on the menu
-        if($(this).is('#course1_introduction-step4'))
-            $('.main-menu a[href*="course/1/lesson/1"]').parent('li').addClass('complete');
-        if($(this).is('#course1_setting_goals-step4'))
-            $('.main-menu a[href*="course/1/lesson/2"]').parent('li').addClass('complete');
-        if($(this).is('#course1_distractions-step4'))
-            $('.main-menu a[href*="course/1/lesson/3"]').parent('li').addClass('complete');
-        if($(this).is('#course1_procrastination-step4'))
-            $('.main-menu a[href*="course/1/lesson/4"]').parent('li').addClass('complete');
-        if($(this).is('#course1_environment-step4'))
-            $('.main-menu a[href*="course/1/lesson/5"]').parent('li').addClass('complete');
-        if($(this).is('#course1_partners-step4'))
-            $('.main-menu a[href*="course/1/lesson/6"]').parent('li').addClass('complete');
-        if($(this).is('#course1_upgrade-step4'))
-            $('.main-menu a[href*="course/1/lesson/7"]').parent('li').addClass('complete');
-
-        // course 2
-        if($(this).is('#course2_study_metrics-step4'))
-            $('.main-menu a[href*="course/2/lesson/1"]').parent('li').addClass('complete');
-        if($(this).is('#course2_study_plan-step4'))
-            $('.main-menu a[href*="course/2/lesson/2"]').parent('li').addClass('complete');
-        if($(this).is('#course2_interleaving-step4'))
-            $('.main-menu a[href*="course/2/lesson/3"]').parent('li').addClass('complete');
-        if($(this).is('#course2_study_tests-step4'))
-            $('.main-menu a[href*="course/2/lesson/4"]').parent('li').addClass('complete');
-        if($(this).is('#course2_test_taking-step4'))
-            $('.main-menu a[href*="course/2/lesson/5"]').parent('li').addClass('complete');
-        if($(this).is('#course2_strategies-step4'))
-            $('.main-menu a[href*="course/2/lesson/6"]').parent('li').addClass('complete');
-        if($(this).is('#course2_group_study-step4'))
-            $('.main-menu a[href*="course/2/lesson/7"]').parent('li').addClass('complete');
-        if($(this).is('#course2_teaching-step4'))
-            $('.main-menu a[href*="course/2/lesson/8"]').parent('li').addClass('complete');
-        if($(this).is('#course2_active_reading-step4'))
-            $('.main-menu a[href*="course/2/lesson/9"]').parent('li').addClass('complete');
-        if($(this).is('#course2_spaced_repetition-step4'))
-            $('.main-menu a[href*="course/2/lesson/10"]').parent('li').addClass('complete');
-
+        var step = $(this).attr('id').substr(1).replace(/-step[0-9]/ig),
+            path = window.callbackUri[window.callbackKeys.indexOf(step)];
+        $('.main-menu a[href*="' + path + '"]').parent('li').addClass('complete');
 
         var main = $('.main-menu'),
             completed = Math.round((main.find('#level1 li.complete').length + Math.round(main.find('#level2 li.complete').length)) * 100 / (main.find('#level1 li').length + main.find('#level2 li').length)),

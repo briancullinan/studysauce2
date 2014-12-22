@@ -115,7 +115,7 @@ $view['slots']->start('body'); ?>
                 $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 if(!empty($adviser))
                     $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_MASTER_ADVISER');})->first();})->first();
-                ?><tr class="user-id-<?php print $s->getId(); ?> status_<?php print ($s->getUser()->getProperty('adviser_status') ?: 'green'); ?>">
+                ?><tr class="user-id-<?php print $s->getUser()->getId(); ?> status_<?php print ($s->getUser()->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print $s->getCreated()->getTimestamp(); ?>"><?php print $s->getCreated()->format('j M'); ?></td>
                 <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>

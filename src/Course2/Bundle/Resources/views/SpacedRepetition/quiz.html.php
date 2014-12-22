@@ -22,7 +22,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>What is the Forgetting Curve?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-forgetting" type="text" value="<?php print $view->escape($quiz->getForgetting()); ?>"></label>
+            <label class="input"><textarea name="quiz-forgetting"><?php print $view->escape($quiz->getForgetting()); ?></textarea></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

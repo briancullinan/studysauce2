@@ -174,6 +174,7 @@ $(document).ready(function () {
     }, 100);
 
     body.on('mouseenter', '*[title]:not([original-title])', function () {
+        $('.tipsy').remove();
         $(this).tipsy().trigger('mouseenter');
     });
 
@@ -183,7 +184,7 @@ $(document).ready(function () {
             (navigator.userAgent.toLowerCase().indexOf("iphone") > -1 ||
             navigator.userAgent.toLowerCase().indexOf("ipad") > -1)) {
             // show empty
-            $('#bookmark').modal();
+            $('#bookmark').modal({show:true});
         }
     });
     // remove it so it never comes up more than once

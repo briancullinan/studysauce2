@@ -13,7 +13,7 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>What is active reading?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-what-reading" type="text" value="<?php print $view->escape($quiz->getWhatReading()); ?>"></label>
+            <label class="input"><input name="quiz-what-reading" type="text" value="<?php print $view->escape($quiz->getWhatReading()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -40,7 +40,7 @@ $view['slots']->start('body'); ?>
                 <p>True.  Use this technique to get curious about the topic before you start reading.  Pay particular attention to learning objectives, chapter summaries, charts, tables, and section headings.  The author is trying to tell you what is important and what isn't.  Take the hint.</p>
             </div>
         <?php } ?>
-        <h3>Self-explanation is an effect tool for active reading.</h3>
+        <h3>Self-explanation is an effective tool for active reading</h3>
         <div class="questions">
             <label class="radio"><input name="quiz-self-explanation" type="radio" value="1" <?php print ($quiz->getSelfExplanation() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
             <label class="radio"><input name="quiz-self-explanation" type="radio" value="0" <?php print ($quiz->getSelfExplanation() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>

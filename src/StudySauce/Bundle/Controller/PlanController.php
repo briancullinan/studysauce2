@@ -1093,6 +1093,10 @@ class PlanController extends Controller
     private static function getFree($buckets, $week, Schedule $schedule)
     {
         $events = [];
+        // no free study before first or after last classes
+        if($week < min($schedule->getCourses()->map(function (Course $c) {return $c->getStartTime()->getTimestamp();})->toArray()) ||
+            $week > max($schedule->getCourses()->map(function (Course $c) {return $c->getEndTime()->getTimestamp();})->toArray()))
+            return $events;
         // add free study to every
         $totalLength = $buckets->classTotals;
         $studyLength = isset($buckets->studyTotals) ? $buckets->studyTotals : 0;

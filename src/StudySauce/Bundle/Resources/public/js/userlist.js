@@ -72,7 +72,7 @@ $(document).ready(function () {
             userlist.find('th:nth-child(6)').html('<select><option>' + advisers.join("</option><option>") + '</option></select>');
 
         }
-        $('#partner-advice-1').modal();
+        $('#partner-advice-1').modal({show:true});
     });
 
     body.on('hidden.bs.modal', '#partner-advice-1', function () {

@@ -1,4 +1,5 @@
 <?php
+use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
@@ -37,7 +38,6 @@ elseif(count($advisers) > 0)
 usort($advisers, function (User $a, User $b) {return $a->hasRole('ROLE_MASTER_ADVISER') - $b->hasRole('ROLE_MASTER_ADVISER');});
 /** @var User $adviser */
 $adviser = reset($advisers);
-
 ?>
 <div class="header-wrapper navbar navbar-inverse">
     <div class="header">
@@ -50,11 +50,13 @@ $adviser = reset($advisers);
         <?php if($app->getRequest()->get('_format') == 'index' || ($app->getRequest()->get('_format') != 'funnel' &&
                 !empty($user) && $user->hasRole('ROLE_PARTNER'))) { ?>
             <div id="partner-message">
-                <?php if($user->hasRole('ROLE_PARTNER')) { ?>
+                <?php if($user->hasRole('ROLE_PARTNER')) {
+                    if($user->getInvitedPartners()->exists(function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) { ?>
                     <div class="highlighted-link">
                         <a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Upgrade</a>
                     </div>
-                <?php } elseif(!empty($adviser)) { ?>
+                <?php }
+                } elseif(!empty($adviser)) { ?>
                     <div class="partner-icon">
                         <?php if (empty($adviser->getPhoto())) {
                             foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>

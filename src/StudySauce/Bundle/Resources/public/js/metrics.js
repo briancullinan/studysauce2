@@ -48,7 +48,7 @@ $(document).ready(function () {
             $('#metrics-empty').modal({
                 backdrop: 'static',
                 keyboard: false,
-                modalOverflow: true
+                show: true
             });
 
         if(($(this).is('#metrics') && !$(this).is('.loaded')) ||

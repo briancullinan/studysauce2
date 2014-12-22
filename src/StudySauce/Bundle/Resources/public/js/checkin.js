@@ -51,7 +51,7 @@ $(document).ready(function () {
                     checkin.find('.classes').replaceWith(content.find('.classes'));
                     if(content.filter('#checkin').is('.demo')) {
                         checkin.addClass('demo');
-                        $('#checkin-empty').modal();
+                        $('#checkin-empty').modal({show:true});
                     }
                     else
                     {
@@ -72,7 +72,7 @@ $(document).ready(function () {
                 $('#checkin-empty').modal({
                     backdrop: 'static',
                     keyboard: false,
-                    modalOverflow: true
+                    show:true
                 });
             else
                 $('#checkin-empty').modal('hide');
@@ -178,12 +178,12 @@ $(document).ready(function () {
 
         if (sdsmessages.find('.show').length > 0)
         {
-            sdsmessages.modal();
+            sdsmessages.modal({show:true});
         }
         else
         {
             checklist.find('.checkboxes input').removeAttr('checked');
-            checklist.modal();
+            checklist.modal({show:true});
         }
 
         $.merge(checklist, sdsmessages).off('click', 'a[href="#study"]').on('click', 'a[href="#study"]', function (evt) {
@@ -216,7 +216,7 @@ $(document).ready(function () {
                 clearInterval(clock);
             clock = null;
             resetClock();
-            $('#timer-expire').modal();
+            $('#timer-expire').modal({show:true});
             checkinCallback(null, courseId, true);
         }
         else if (body.find(checkedInBtn).length > 0)
@@ -233,7 +233,7 @@ $(document).ready(function () {
             // show expire message
             $('#timer-expire').off('hidden.bs.modal').on('hidden.bs.modal', function (evt) {
                 sessionBegin(evt, that, courseId);
-            }).modal();
+            }).modal({show:true});
         }
         else
             sessionBegin(evt, that, courseId);

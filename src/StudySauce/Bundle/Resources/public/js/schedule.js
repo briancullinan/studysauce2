@@ -364,6 +364,17 @@ $(document).ready(function () {
         '#schedule .start-date input, #schedule .end-date input, #schedule .university input', function () {
         planFunc.apply(jQuery(this).parents('.class-row'));
     });
+    body.on('change', '#schedule .start-date input, #schedule .end-date input', function () {
+        var schedule = $('#schedule'),
+            start = schedule.find('.start-date input').datepicker('getDate'),
+            end = schedule.find('.end-date input').datepicker('getDate');
+        if(start != null) {
+            schedule.find('.end-date input').datepicker('option', 'minDate', start);
+        }
+        if(end != null) {
+            schedule.find('.start-date input').datepicker('option', 'maxDate', end);
+        }
+    });
     body.on('change', '#schedule .class-name input, #schedule .day-of-the-week input, #schedule .start-time input, ' +
         '#schedule .end-time input, #schedule .start-date input, #schedule .end-date input, #schedule .university input', function () {
         planFunc.apply(jQuery(this).parents('.class-row'));

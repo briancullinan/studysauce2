@@ -36,7 +36,7 @@ class StudyMetrics
     protected $doingWell;
 
     /**
-     * @ORM\Column(type="boolean", name="all_together", nullable=true)
+     * @ORM\Column(type="text", name="all_together", nullable=true)
      */
     protected $allTogether;
 

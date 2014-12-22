@@ -20,6 +20,21 @@ $(document).ready(function () {
         }
     });
 
+    body.on('show', '.course2.step4', function () {
+        // mark lesson completed on the menu
+        var step = $(this).attr('id').substr(1).replace(/-step[0-9]/ig),
+            path = window.callbackUri[window.callbackKeys.indexOf(step)];
+        $('.main-menu a[href*="' + path + '"]').parent('li').addClass('complete');
+
+        var main = $('.main-menu'),
+            completed = Math.round((main.find('#level1 li.complete').length + Math.round(main.find('#level2 li.complete').length)) * 100 / (main.find('#level1 li').length + main.find('#level2 li').length)),
+            widget = $('#home').find('.course-widget');
+        widget.find('h3').text(completed + '% of course complete');
+        widget.find('.percent-bars').css('height', completed + '%');
+        var next = $('.main-menu li:not(.complete)').first();
+        widget.find('.highlighted-link').html(next.length == 0 ? '<h4>Complete!</h4>' : ('<a href="' + next.find('a').attr('href') + '" class="more">Next module</a>'));
+    });
+
     body.on('yt1', '.course2.step1', function () {
         var actions = $(this).find('.highlighted-link');
         actions.addClass('played invalid');
@@ -101,7 +116,7 @@ $(document).ready(function () {
             valid = true;
         if(step.find('input[name="quiz-track-hours"]:checked').length == 0 ||
             step.find('input[name="quiz-doing-well"]:checked').length == 0 ||
-            step.find('input[name="quiz-all-together"]:checked').length == 0)
+            step.find('input[name="quiz-all-together"]').val().trim() == '')
             valid = false;
         if(!valid)
             actions.removeClass('valid').addClass('invalid');
@@ -125,7 +140,7 @@ $(document).ready(function () {
             data: {
                 trackHours: step.find('input[name="quiz-track-hours"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
                 doingWell: step.find('input[name="quiz-doing-well"]:checked').val(),
-                allTogether: step.find('input[name="quiz-all-together"]:checked').val()
+                allTogether: step.find('input[name="quiz-all-together"]').val().trim()
             },
             success: function (data) {
                 var content = $(data);
@@ -590,7 +605,7 @@ $(document).ready(function () {
             actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-space-out"]:checked').length == 0 ||
-            step.find('input[name="quiz-forgetting"]').val().trim() == '' ||
+            step.find('textarea[name="quiz-forgetting"]').val().trim() == '' ||
             step.find('input[name="quiz-revisiting"]:checked').length == 0 ||
             step.find('input[name="quiz-another-name"]:checked').length == 0)
             valid = false;
@@ -600,8 +615,8 @@ $(document).ready(function () {
             actions.removeClass('invalid').addClass('valid');
     }
 
-    body.on('change', '#course2_spaced_repetition-step2 input', validateSpacedRepetition);
-    body.on('keyup', '#course2_spaced_repetition-step2 input[type="text"]', validateSpacedRepetition);
+    body.on('change', '#course2_spaced_repetition-step2 input, #course2_spaced_repetition-step2 textarea', validateSpacedRepetition);
+    body.on('keyup', '#course2_spaced_repetition-step2 textarea', validateSpacedRepetition);
     body.on('show', '#course2_spaced_repetition-step2', validateSpacedRepetition);
     body.on('click', '#course2_spaced_repetition-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();
@@ -616,7 +631,7 @@ $(document).ready(function () {
             dataType: 'text',
             data: {
                 spaceOut: step.find('input[name="quiz-space-out"]:checked').val(),
-                forgetting: step.find('input[name="quiz-forgetting"]').val().trim(),
+                forgetting: step.find('textarea[name="quiz-forgetting"]').val().trim(),
                 revisiting: step.find('input[name="quiz-revisiting"]:checked').val(),
                 anotherName: step.find('input[name="quiz-another-name"]:checked').val()
             },

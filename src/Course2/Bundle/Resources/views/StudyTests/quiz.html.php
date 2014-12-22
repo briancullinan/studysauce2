@@ -26,7 +26,7 @@ $complete = !empty($quiz->getTypesTests()) && !empty($quiz->getMostImportant()) 
         <?php } ?>
         <h3>What is the most important thing in studying for tests?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-most-important" type="text" value="<?php print $view->escape($quiz->getMostImportant()); ?>"></label>
+            <label class="input"><input name="quiz-most-important" type="text" value="<?php print $view->escape($quiz->getMostImportant()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

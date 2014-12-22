@@ -50,7 +50,12 @@ $(document).ready(function () {
         }
         if (events.length == 0) {
             plans.addClass('empty');
-            $('#plan-empty').modal({backdrop: false});
+            $('#plan-empty').modal({
+                backdrop:false,
+                keyboard:false,
+                show:true
+            });
+            $('body').removeClass('modal-open');
         }
         else {
             plans.removeClass('empty');
@@ -244,11 +249,11 @@ $(document).ready(function () {
             $('#plan-upgrade').modal({
                 backdrop: 'static',
                 keyboard: false,
-                modalOverflow: true
+                show: true
             });
         else
             $('#plan-upgrade').modal('hide');
-        $('#plan-intro-1').modal();
+        $('#plan-intro-1').modal({show:true});
     });
 
     body.on('click', 'a[href="#bill-parents"]', function () {
@@ -265,7 +270,7 @@ $(document).ready(function () {
         $('#plan-upgrade').modal({
             backdrop: 'static',
             keyboard: false,
-            modalOverflow: true
+            show: true
         });
     });
 

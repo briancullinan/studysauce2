@@ -16,7 +16,7 @@ $view['slots']->start('body'); ?>
             <?php endforeach; ?>
         </div>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('plan'); ?>" class="more">Study plan</a>
+            <a href="<?php print $view['router']->generate('plan'); ?>" class="more">Do teach session</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

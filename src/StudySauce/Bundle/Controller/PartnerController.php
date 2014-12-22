@@ -132,13 +132,17 @@ class PartnerController extends Controller
             $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();
             $users = $orm->getRepository('StudySauceBundle:User')->findAll();
         }
-        else {
+        elseif($user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER')) {
             $groups = $user->getGroups()->toArray();
             $users = [];
             foreach ($groups as $i => $g) {
                 /** @var Group $g */
                 $users = array_merge($users, $g->getUsers()->toArray());
             }
+        }
+        else {
+            $users = [];
+            $groups = [];
         }
 
         /** @var PartnerInvite $partner */
@@ -204,6 +208,9 @@ class PartnerController extends Controller
             $userManager->updateUser($user);
         }
 
+        $signups = array_map(function (User $u) {
+                return empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp();}, $users);
+        array_multisort($signups, SORT_DESC, SORT_NUMERIC, $users);
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
             'sessions' => $sessions,
             'groups' => $groups,

@@ -136,7 +136,7 @@ $(document).ready(function () {
             },
             success: function () {
                 partner.data('state', hash);
-                $('#partner-confirm').modal();
+                $('#partner-confirm').modal({show:true});
                 body.find('#partner-message > div > span, #partner-message > div > a')
                     .first().replaceWith('<span>' + partner.find('.first-name input').val() + ' ' + partner.find('.last-name input').val() + '</span>');
 

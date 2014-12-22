@@ -22,7 +22,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>What is the name of the breathing exercise demonstrated in this video?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-breathing" type="text" value="<?php print $view->escape($quiz->getBreathing()); ?>"></label>
+            <label class="input"><input name="quiz-breathing" type="text" value="<?php print $view->escape($quiz->getBreathing()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -31,7 +31,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>What should you be looking for when you skim the test?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-skimming" type="text" value="<?php print $view->escape($quiz->getSkimming()); ?>"></label>
+            <label class="input"><input name="quiz-skimming" type="text" value="<?php print $view->escape($quiz->getSkimming()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

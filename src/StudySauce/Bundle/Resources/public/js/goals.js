@@ -33,7 +33,7 @@ $(document).ready(function () {
         var claim = $('#claim').modal({
             backdrop: 'static',
             keyboard: false,
-            modalOverflow: true
+            show: true
         });
         claim.addClass('gid' + gid);
         if(claim.find('.plupload').is('.init'))

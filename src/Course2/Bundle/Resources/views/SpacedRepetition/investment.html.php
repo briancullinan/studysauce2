@@ -5,10 +5,10 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step4" id="course2_spaced_repetition-step4">
     <div class="pane-content">
-        <h2>Take a deep breath.</h2>
+        <h2>Congratulations, you have finished the course!!!</h2>
         <div class="grid_6">
             <h3>Assignment:</h3>
-            <p>Take a few seconds and try out the four part breathing exercise.  For extra credit, check out how it affects your pulse (it should drop quite a bit).</p>
+            <p>We hope you enjoyed the course.  You now know how to study effectively.  Remember to use your study tools and feel free to revisit some of the videos from time to time.  Please let us know what you thought of the course.  We are particularly interested in your feedback and your suggestions for new videos and study tools that you would like to see us make.  Thanks!!!</p>
         </div>
         <div class="grid_6">
             <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/complication_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
@@ -16,7 +16,7 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
             <?php endforeach; ?>
         </div>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('home'); ?>" class="more">Go home</a>
+            <a href="<?php print $view['router']->generate('home'); ?>" class="more">Way to go...me</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

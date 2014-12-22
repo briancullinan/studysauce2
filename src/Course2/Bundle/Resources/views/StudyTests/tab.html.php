@@ -7,7 +7,7 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step0" id="course2_study_tests">
     <div class="pane-content">
-        <h2>Studying for tests <span class="time">10<small> minutes</small></span></h2>
+        <h2>Tips for taking different types of tests <span class="time">10<small> minutes</small></span></h2>
         <div class="learn-bullets">
             <h3><span>In this course you will learn:</span></h3>
             <ol>

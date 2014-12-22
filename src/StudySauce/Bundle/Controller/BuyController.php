@@ -79,6 +79,11 @@ class BuyController extends Controller
         {
             $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
         }
+        if(empty($invite) && $user->getInvitedPartners()->exists(
+                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) {
+            $invite = $user->getInvitedPartners()->filter(
+                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first();
+        }
         if(!empty($invite))
         {
             $first = $invite->getFirst();

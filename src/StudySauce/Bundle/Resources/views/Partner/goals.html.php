@@ -60,13 +60,16 @@ $view['slots']->start('body'); ?>
                 <label class="select">
                     <span>Goal</span>
                     <select>
-                        <option value="_none" <?php print (empty($behavior) || empty($behavior->getGoal()) ? 'selected="selected"' : ''); ?>>- None -</option>
+                        <option value="_none" <?php print (empty($behavior) || empty($behavior->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
+                        <option value="50" <?php print (!empty($behavior) && $behavior->getGoal() == 50 ? 'selected="selected"' : ''); ?>>50</option>
+                        <option value="45" <?php print (!empty($behavior) && $behavior->getGoal() == 45 ? 'selected="selected"' : ''); ?>>45</option>
+                        <option value="40" <?php print (!empty($behavior) && $behavior->getGoal() == 40 ? 'selected="selected"' : ''); ?>>40</option>
+                        <option value="35" <?php print (!empty($behavior) && $behavior->getGoal() == 35 ? 'selected="selected"' : ''); ?>>35</option>
                         <option value="30" <?php print (!empty($behavior) && $behavior->getGoal() == 30 ? 'selected="selected"' : ''); ?>>30</option>
                         <option value="25" <?php print (!empty($behavior) && $behavior->getGoal() == 25 ? 'selected="selected"' : ''); ?>>25</option>
                         <option value="20" <?php print (!empty($behavior) && $behavior->getGoal() == 20 ? 'selected="selected"' : ''); ?>>20</option>
                         <option value="15" <?php print (!empty($behavior) && $behavior->getGoal() == 15 ? 'selected="selected"' : ''); ?>>15</option>
                         <option value="10" <?php print (!empty($behavior) && $behavior->getGoal() == 10 ? 'selected="selected"' : ''); ?>>10</option>
-                        <option value="5" <?php print (!empty($behavior) && $behavior->getGoal() == 5 ? 'selected="selected"' : ''); ?>>5</option>
                     </select>
                     hours per week
                 </label>
@@ -86,7 +89,7 @@ $view['slots']->start('body'); ?>
                 <label class="select">
                     <span>Goal</span>
                     <select>
-                        <option value="_none" <?php print (empty($milestone) || empty($milestone->getGoal()) ? 'selected="selected"' : ''); ?>>- None -</option>
+                        <option value="_none" <?php print (empty($milestone) || empty($milestone->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
                         <option value="A" <?php print (!empty($milestone) && $milestone->getGoal() == 'A' ? 'selected="selected"' : ''); ?>>A</option>
                         <option value="A-" <?php print (!empty($milestone) && $milestone->getGoal() == 'A-' ? 'selected="selected"' : ''); ?>>A-</option>
                         <option value="B+" <?php print (!empty($milestone) && $milestone->getGoal() == 'B+' ? 'selected="selected"' : ''); ?>>B+</option>
@@ -113,7 +116,7 @@ $view['slots']->start('body'); ?>
                 <label class="select">
                     <span>Goal</span>
                     <select>
-                        <option value="_none" <?php print (empty($outcome) || empty($outcome->getGoal()) ? 'selected="selected"' : ''); ?>>- None -</option>
+                        <option value="_none" <?php print (empty($outcome) || empty($outcome->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
                         <option value="4" <?php print (!empty($outcome) && $outcome->getGoal() == '4' ? 'selected="selected"' : ''); ?>>4.00</option>
                         <option value="3.75" <?php print (!empty($outcome) && $outcome->getGoal() == '3.75' ? 'selected="selected"' : ''); ?>>3.75</option>
                         <option value="3.5" <?php print (!empty($outcome) && $outcome->getGoal() == '3.5' ? 'selected="selected"' : ''); ?>>3.50</option>
@@ -121,12 +124,6 @@ $view['slots']->start('body'); ?>
                         <option value="3" <?php print (!empty($outcome) && $outcome->getGoal() == '3' ? 'selected="selected"' : ''); ?>>3.00</option>
                         <option value="2.75" <?php print (!empty($outcome) && $outcome->getGoal() == '2.75' ? 'selected="selected"' : ''); ?>>2.75</option>
                         <option value="2.5" <?php print (!empty($outcome) && $outcome->getGoal() == '2.5' ? 'selected="selected"' : ''); ?>>2.50</option>
-                        <option value="2.25" <?php print (!empty($outcome) && $outcome->getGoal() == '2.25' ? 'selected="selected"' : ''); ?>>2.25</option>
-                        <option value="2" <?php print (!empty($outcome) && $outcome->getGoal() == '2' ? 'selected="selected"' : ''); ?>>2.00</option>
-                        <option value="1.75" <?php print (!empty($outcome) && $outcome->getGoal() == '1.75' ? 'selected="selected"' : ''); ?>>1.75</option>
-                        <option value="1.5" <?php print (!empty($outcome) && $outcome->getGoal() == '1.5' ? 'selected="selected"' : ''); ?>>1.50</option>
-                        <option value="1.25" <?php print (!empty($outcome) && $outcome->getGoal() == '1.25' ? 'selected="selected"' : ''); ?>>1.25</option>
-                        <option value="1" <?php print (!empty($outcome) && $outcome->getGoal() == '1' ? 'selected="selected"' : ''); ?>>1.00</option>
                     </select>
                     target GPA for the term
                 </label>

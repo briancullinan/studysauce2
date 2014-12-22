@@ -57,7 +57,7 @@ $(document).ready(function () {
             $('#deadlines-empty').modal({
                 backdrop: 'static',
                 keyboard: false,
-                modalOverflow: true
+                show: true
             });
         else {
             $('#deadlines-empty').modal('hide');

@@ -12,9 +12,9 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <h2>Take the next step in group studying</h2>
         <div class="grid_6">
             <h3>Assignment:</h3>
-            <p>Now that you have watched the group study video, write down any goals that you want to try in a group setting.</p>
+            <p>Now that you have watched the group study video, write down any goals that you want to try in a group setting.
+                Are there classes that you want to form a group for? Do you want to speak up more in your group?</p>
             <label class="input">
-                <span>Are there classes that you want to form a group for?  Do you want to speak up more in your group?</span>
                 <textarea placeholder="" cols="60" rows="2"><?php print $view->escape($course->getGroupGoals()); ?></textarea>
             </label>
         </div>

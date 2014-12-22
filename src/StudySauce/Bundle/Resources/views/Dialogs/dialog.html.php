@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal" id="<?php print $id; ?>" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="<?php print $id; ?>" tabindex="-1" role="dialog" aria-hidden="true" <?php print (isset($attributes) ? $attributes : ''); ?>>
     <div class="modal-dialog">
         <div class="modal-content">
             <?php if($view['slots']->get('modal-header') != null): ?>

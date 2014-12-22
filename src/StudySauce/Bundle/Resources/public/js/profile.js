@@ -43,7 +43,7 @@ $(document).ready(function () {
             $('#plan-upgrade').modal({
                 backdrop: 'static',
                 keyboard: false,
-                modalOverflow: true
+                show: true
             });
         else {
             $('#plan-upgrade').modal('hide');
@@ -62,7 +62,7 @@ $(document).ready(function () {
         $('#plan-upgrade').modal({
             backdrop: 'static',
             keyboard: false,
-            modalOverflow: true
+            show: true
         });
     });
     body.on('change', '#customization .study-types input, #customization .study-difficulty input', customizationFunc);

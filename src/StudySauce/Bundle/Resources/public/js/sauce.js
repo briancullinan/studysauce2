@@ -128,7 +128,7 @@ $(document).ready(function () {
     $('#unsupported').modal({
         backdrop: 'static',
         keyboard: false,
-        modalOverflow: true
+        show: true
     });
 
     $('body').on('show.bs.modal', '.modal', function () {
@@ -211,7 +211,7 @@ $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
         }
         finally {
             dialog.find('.modal-body').html(error);
-            dialog.modal();
+            dialog.modal({show:true});
             throw thrownError;
         }
     }

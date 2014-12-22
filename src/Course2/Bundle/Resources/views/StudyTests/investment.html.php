@@ -12,9 +12,9 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <h2>What kind of tests do you have?</h2>
         <div class="grid_6">
             <h3>Assignment:</h3>
-            <p>Think about your classes and exams.  Are they objective or subjective?</p>
+            <p>Think about your classes and exams. Are they objective or subjective?
+                Below, write which of your classes are objective and which are subjective.</p>
             <label class="input">
-                <span>Below, write which of your classes are objective and which are subjective.</span>
                 <textarea placeholder="" cols="60" rows="2"><?php print $view->escape($course->getTestTypes()); ?></textarea>
             </label>
         </div>

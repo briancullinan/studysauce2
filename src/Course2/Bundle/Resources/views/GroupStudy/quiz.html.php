@@ -37,7 +37,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>What role should be rotated every week when the study group meets?</h3>
         <div class="questions">
-            <label class="input"><span>A:</span><input name="quiz-group-role" type="text" value="<?php print $view->escape($quiz->getGroupRole()); ?>"></label>
+            <label class="input"><input name="quiz-group-role" type="text" value="<?php print $view->escape($quiz->getGroupRole()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
