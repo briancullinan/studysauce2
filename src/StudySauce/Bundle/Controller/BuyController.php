@@ -65,7 +65,11 @@ class BuyController extends Controller
         /** @var Invite $invite */
         if(!empty($request->getSession()->get('parent')))
         {
+            /** @var ParentInvite $invite */
             $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+            $studentfirst = $invite->getFromFirst();
+            $studentlast = $invite->getFromLast();
+            $studentemail = $invite->getFromEmail();
         }
         if(!empty($request->getSession()->get('partner')))
         {
@@ -83,15 +87,15 @@ class BuyController extends Controller
                 function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) {
             $invite = $user->getInvitedPartners()->filter(
                 function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first();
+            $studentfirst = $invite->getUser()->getFirst();
+            $studentlast = $invite->getUser()->getLast();
+            $studentemail = $invite->getUser()->getEmail();
         }
         if(!empty($invite))
         {
             $first = $invite->getFirst();
             $last = $invite->getLast();
             $email = $invite->getEmail();
-            $studentfirst = $invite->getUser()->getFirst();
-            $studentlast = $invite->getUser()->getLast();
-            $studentemail = $invite->getUser()->getEmail();
         }
 
         // check for coupon
@@ -405,10 +409,13 @@ class BuyController extends Controller
             $inviteUser = $userManager->findUserByEmail($request->get('invite')['email']);
             /** @var StudentInvite $invite */
             $invite = new StudentInvite();
-            $invite->setUser($user);
-            $invite->setFirst($request->get('first'));
-            $invite->setLast($request->get('last'));
-            $invite->setEmail($request->get('email'));
+            $invite->setUser($user); // might be guest here
+            $invite->setFirst($request->get('invite')['first']);
+            $invite->setLast($request->get('invite')['last']);
+            $invite->setEmail($request->get('invite')['email']);
+            $invite->setFromFirst($request->get('first'));
+            $invite->setFromLast($request->get('last'));
+            $invite->setFromEmail($request->get('email'));
             $invite->setCode(md5(microtime()));
             if(!empty($inviteUser))
                 $invite->setStudent($inviteUser);
@@ -512,6 +519,7 @@ class BuyController extends Controller
             }
             if(isset($relationSetter))
                 $relationSetter($user);
+            // change invite owner to the actual user
             if(isset($invite)) {
                 $invite->setUser($user);
                 $user->addStudentInvite($invite);

@@ -46,6 +46,21 @@ class StudentInvite implements Invite
     protected $email;
 
     /**
+     * @ORM\Column(type="string", length=256, name="from_first", nullable=true)
+     */
+    protected $fromFirst;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="from_last", nullable=true)
+     */
+    protected $fromLast;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="from_email", nullable=true)
+     */
+    protected $fromEmail;
+
+    /**
      * @ORM\Column(type="boolean", name="activated")
      */
     protected $activated = false;
@@ -289,5 +304,74 @@ class StudentInvite implements Invite
     public function getStudent()
     {
         return $this->student;
+    }
+
+    /**
+     * Set fromFirst
+     *
+     * @param string $fromFirst
+     * @return StudentInvite
+     */
+    public function setFromFirst($fromFirst)
+    {
+        $this->fromFirst = $fromFirst;
+
+        return $this;
+    }
+
+    /**
+     * Get fromFirst
+     *
+     * @return string 
+     */
+    public function getFromFirst()
+    {
+        return $this->fromFirst;
+    }
+
+    /**
+     * Set fromLast
+     *
+     * @param string $fromLast
+     * @return StudentInvite
+     */
+    public function setFromLast($fromLast)
+    {
+        $this->fromLast = $fromLast;
+
+        return $this;
+    }
+
+    /**
+     * Get fromLast
+     *
+     * @return string 
+     */
+    public function getFromLast()
+    {
+        return $this->fromLast;
+    }
+
+    /**
+     * Set fromEmail
+     *
+     * @param string $fromEmail
+     * @return StudentInvite
+     */
+    public function setFromEmail($fromEmail)
+    {
+        $this->fromEmail = $fromEmail;
+
+        return $this;
+    }
+
+    /**
+     * Get fromEmail
+     *
+     * @return string 
+     */
+    public function getFromEmail()
+    {
+        return $this->fromEmail;
     }
 }

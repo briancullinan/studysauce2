@@ -92,6 +92,21 @@
     top:0;
 }
 
+#student-invite .first-name,
+#student-invite .last-name,
+#student-invite .your-first,
+#student-invite .your-last,
+#bill-parents .first-name,
+#bill-parents .last-name,
+#bill-parents .your-first,
+#bill-parents .your-last
+{
+    width:50%;
+    margin:0 -2px;
+    padding: 0 2px;
+    display:inline-block;
+}
+
 #deadlines-empty .close,
 #unsupported .close
 {

@@ -91,7 +91,7 @@ class DeadlinesController extends Controller
 
         return $this->render('StudySauceBundle:Deadlines:widget.html.php', [
                 'deadlines' => $deadlines,
-                'courses' => $courses
+                'courses' => array_values($courses)
             ]);
     }
 

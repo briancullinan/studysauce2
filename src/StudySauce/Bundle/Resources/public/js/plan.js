@@ -244,7 +244,7 @@ $(document).ready(function () {
                     setTimeout(callback, 150);
                 // show unpaid dialog
             };
-        callback();
+        setTimeout(callback, 150);
         if (plan.is('.demo'))
             $('#plan-upgrade').modal({
                 backdrop: 'static',

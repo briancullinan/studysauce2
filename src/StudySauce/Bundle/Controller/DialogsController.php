@@ -8,6 +8,7 @@ use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\StudentInvite;
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -249,9 +250,23 @@ class DialogsController extends Controller
         $bill->setLast($request->get('last'));
         $bill->setEmail($request->get('email'));
         $bill->setCode(md5(microtime()));
+        if(!is_object($user) || $user->hasRole('ROLE_GUEST')) {
+            $bill->setFromFirst($request->get('yourFirst'));
+            $bill->setFromLast($request->get('yourLast'));
+            $bill->setFromEmail($request->get('yourEmail'));
+            // temporary user for sending email
+            $user = new User();
+            $user->setFirst($request->get('yourFirst'));
+            $user->setLast($request->get('yourLast'));
+            $user->setEmail($request->get('yourEmail'));
+        }
+        else {
+            $bill->setFromFirst($request->get('yourFirst'));
+            $bill->setFromLast($request->get('yourLast'));
+            $bill->setFromEmail($request->get('yourEmail'));
+        }
         $orm->persist($bill);
         $orm->flush();
-
         $email = new EmailsController();
         $email->setContainer($this->container);
         $email->parentPayAction($user, $bill);
@@ -293,9 +308,23 @@ class DialogsController extends Controller
         $student->setLast($request->get('last'));
         $student->setEmail($request->get('email'));
         $student->setCode(md5(microtime()));
+        if(!is_object($user) || $user->hasRole('ROLE_GUEST')) {
+            $student->setFromFirst($request->get('yourFirst'));
+            $student->setFromLast($request->get('yourLast'));
+            $student->setFromEmail($request->get('yourEmail'));
+            // temporary user for sending email
+            $user = new User();
+            $user->setFirst($request->get('yourFirst'));
+            $user->setLast($request->get('yourLast'));
+            $user->setEmail($request->get('yourEmail'));
+        }
+        else {
+            $student->setFromFirst($user->getFirst());
+            $student->setFromLast($user->getLast());
+            $student->setFromEmail($user->getEmail());
+        }
         $orm->persist($student);
         $orm->flush();
-
         $email = new EmailsController();
         $email->setContainer($this->container);
         $email->studentInviteAction($user, $student);

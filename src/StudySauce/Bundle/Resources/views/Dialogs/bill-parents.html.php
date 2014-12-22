@@ -22,13 +22,13 @@ $view['slots']->start('modal-body') ?>
 </div>
 <?php
 if(!is_object($user) || $user->hasRole('ROLE_GUEST')) { ?>
-    <div class="first-name">
+    <div class="your-first">
         <label class="input"><span>Your first name</span><input type="text" value=""></label>
     </div>
-    <div class="last-name">
+    <div class="your-last">
         <label class="input"><span>Your last name</span><input type="text" value=""></label>
     </div>
-    <div class="email">
+    <div class="your-email">
         <label class="input"><span>Your email</span><input type="email" value=""></label>
     </div>
 <?php }
