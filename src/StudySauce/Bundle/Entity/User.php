@@ -131,6 +131,12 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $course2s;
 
     /**
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\Course3", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $course3s;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -227,6 +233,8 @@ class User extends BaseUser implements EncoderAwareInterface
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course1s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->course2s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->course3s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->partnerInvites = new \Doctrine\Common\Collections\ArrayCollection();

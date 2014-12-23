@@ -28,9 +28,11 @@ class CourseController extends Controller
         $user = $this->getUser();
         $course1 = $user->getCourse1s()->first();
         $course2 = $user->getCourse2s()->first();
+        $course3 = $user->getCourse3s()->first();
         return $this->render('Course1Bundle:Shared:menu.html.php', [
                 'course1' => $course1,
-                'course2' => $course2
+                'course2' => $course2,
+                'course3' => $course3
             ]);
     }
 
@@ -43,9 +45,11 @@ class CourseController extends Controller
         $user = $this->getUser();
         $course1 = $user->getCourse1s()->first();
         $course2 = $user->getCourse2s()->first();
+        $course3 = $user->getCourse3s()->first();
         return $this->render('StudySauceBundle:Course:widget.html.php', [
                 'course1' => $course1,
                 'course2' => $course2,
+                'course3' => $course3
             ]);
     }
 }

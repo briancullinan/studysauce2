@@ -1,15 +1,15 @@
 <?php
 
-namespace Course2\Bundle\Entity;
+namespace Course3\Bundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="course2")
+ * @ORM\Table(name="course3")
  * @ORM\HasLifecycleCallbacks()
  */
-class Course2
+class Course3
 {
     /**
      * @ORM\Id
@@ -19,45 +19,45 @@ class Course2
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StudySauce\Bundle\Entity\User", inversedBy="Course2s")
+     * @ORM\ManyToOne(targetEntity="StudySauce\Bundle\Entity\User", inversedBy="Course3s")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\Interleaving", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\Strategies", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $interleaving;
+    protected $strategies;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\StudyPlan", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\GroupStudy", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $studyPlan;
+    protected $groupStudy;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\TestTaking", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\Teaching", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $testTaking;
+    protected $teaching;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\StudyTests", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\ActiveReading", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $studyTests;
+    protected $activeReading;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\StudyMetrics", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\SpacedRepetition", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $studyMetrics;
+    protected $spacedRepetition;
 
     /**
-     * @ORM\Column(type="text", name="test_types", nullable=true)
+     * @ORM\Column(type="text", name="group_goals", nullable=true)
      */
-    protected $testTypes;
+    protected $groupGoals;
 
     /**
      * @ORM\Column(type="integer", name="lesson1", options={"default"=0})
@@ -124,7 +124,7 @@ class Course2
      * Set lesson1
      *
      * @param integer $lesson1
-     * @return Course2
+     * @return Course3
      */
     public function setLesson1($lesson1)
     {
@@ -147,7 +147,7 @@ class Course2
      * Set lesson2
      *
      * @param integer $lesson2
-     * @return Course2
+     * @return Course3
      */
     public function setLesson2($lesson2)
     {
@@ -170,7 +170,7 @@ class Course2
      * Set lesson3
      *
      * @param integer $lesson3
-     * @return Course2
+     * @return Course3
      */
     public function setLesson3($lesson3)
     {
@@ -193,7 +193,7 @@ class Course2
      * Set lesson4
      *
      * @param integer $lesson4
-     * @return Course2
+     * @return Course3
      */
     public function setLesson4($lesson4)
     {
@@ -216,7 +216,7 @@ class Course2
      * Set lesson5
      *
      * @param integer $lesson5
-     * @return Course2
+     * @return Course3
      */
     public function setLesson5($lesson5)
     {
@@ -239,7 +239,7 @@ class Course2
      * Set created
      *
      * @param \DateTime $created
-     * @return Course2
+     * @return Course3
      */
     public function setCreated($created)
     {
@@ -262,7 +262,7 @@ class Course2
      * Set user
      *
      * @param \StudySauce\Bundle\Entity\User $user
-     * @return Course2
+     * @return Course3
      */
     public function setUser(\StudySauce\Bundle\Entity\User $user = null)
     {
@@ -284,10 +284,10 @@ class Course2
     /**
      * Add interleaving
      *
-     * @param \Course2\Bundle\Entity\Interleaving $interleaving
-     * @return Course2
+     * @param \Course3\Bundle\Entity\Interleaving $interleaving
+     * @return Course3
      */
-    public function addInterleaving(\Course2\Bundle\Entity\Interleaving $interleaving)
+    public function addInterleaving(\Course3\Bundle\Entity\Interleaving $interleaving)
     {
         $this->interleaving[] = $interleaving;
 
@@ -297,9 +297,9 @@ class Course2
     /**
      * Remove interleaving
      *
-     * @param \Course2\Bundle\Entity\Interleaving $interleaving
+     * @param \Course3\Bundle\Entity\Interleaving $interleaving
      */
-    public function removeInterleaving(\Course2\Bundle\Entity\Interleaving $interleaving)
+    public function removeInterleaving(\Course3\Bundle\Entity\Interleaving $interleaving)
     {
         $this->interleaving->removeElement($interleaving);
     }
@@ -317,10 +317,10 @@ class Course2
     /**
      * Add studyPlan
      *
-     * @param \Course2\Bundle\Entity\StudyPlan $studyPlan
-     * @return Course2
+     * @param \Course3\Bundle\Entity\StudyPlan $studyPlan
+     * @return Course3
      */
-    public function addStudyPlan(\Course2\Bundle\Entity\StudyPlan $studyPlan)
+    public function addStudyPlan(\Course3\Bundle\Entity\StudyPlan $studyPlan)
     {
         $this->studyPlan[] = $studyPlan;
 
@@ -330,9 +330,9 @@ class Course2
     /**
      * Remove studyPlan
      *
-     * @param \Course2\Bundle\Entity\StudyPlan $studyPlan
+     * @param \Course3\Bundle\Entity\StudyPlan $studyPlan
      */
-    public function removeStudyPlan(\Course2\Bundle\Entity\StudyPlan $studyPlan)
+    public function removeStudyPlan(\Course3\Bundle\Entity\StudyPlan $studyPlan)
     {
         $this->studyPlan->removeElement($studyPlan);
     }
@@ -350,10 +350,10 @@ class Course2
     /**
      * Add testTaking
      *
-     * @param \Course2\Bundle\Entity\TestTaking $testTaking
-     * @return Course2
+     * @param \Course3\Bundle\Entity\TestTaking $testTaking
+     * @return Course3
      */
-    public function addTestTaking(\Course2\Bundle\Entity\TestTaking $testTaking)
+    public function addTestTaking(\Course3\Bundle\Entity\TestTaking $testTaking)
     {
         $this->testTaking[] = $testTaking;
 
@@ -363,9 +363,9 @@ class Course2
     /**
      * Remove testTaking
      *
-     * @param \Course2\Bundle\Entity\TestTaking $testTaking
+     * @param \Course3\Bundle\Entity\TestTaking $testTaking
      */
-    public function removeTestTaking(\Course2\Bundle\Entity\TestTaking $testTaking)
+    public function removeTestTaking(\Course3\Bundle\Entity\TestTaking $testTaking)
     {
         $this->testTaking->removeElement($testTaking);
     }
@@ -383,10 +383,10 @@ class Course2
     /**
      * Add studyTests
      *
-     * @param \Course2\Bundle\Entity\StudyTests $studyTests
-     * @return Course2
+     * @param \Course3\Bundle\Entity\StudyTests $studyTests
+     * @return Course3
      */
-    public function addStudyTest(\Course2\Bundle\Entity\StudyTests $studyTests)
+    public function addStudyTest(\Course3\Bundle\Entity\StudyTests $studyTests)
     {
         $this->studyTests[] = $studyTests;
 
@@ -396,9 +396,9 @@ class Course2
     /**
      * Remove studyTests
      *
-     * @param \Course2\Bundle\Entity\StudyTests $studyTests
+     * @param \Course3\Bundle\Entity\StudyTests $studyTests
      */
-    public function removeStudyTest(\Course2\Bundle\Entity\StudyTests $studyTests)
+    public function removeStudyTest(\Course3\Bundle\Entity\StudyTests $studyTests)
     {
         $this->studyTests->removeElement($studyTests);
     }
@@ -416,10 +416,10 @@ class Course2
     /**
      * Add studyMetrics
      *
-     * @param \Course2\Bundle\Entity\StudyMetrics $studyMetrics
-     * @return Course2
+     * @param \Course3\Bundle\Entity\StudyMetrics $studyMetrics
+     * @return Course3
      */
-    public function addStudyMetric(\Course2\Bundle\Entity\StudyMetrics $studyMetrics)
+    public function addStudyMetric(\Course3\Bundle\Entity\StudyMetrics $studyMetrics)
     {
         $this->studyMetrics[] = $studyMetrics;
 
@@ -429,9 +429,9 @@ class Course2
     /**
      * Remove studyMetrics
      *
-     * @param \Course2\Bundle\Entity\StudyMetrics $studyMetrics
+     * @param \Course3\Bundle\Entity\StudyMetrics $studyMetrics
      */
-    public function removeStudyMetric(\Course2\Bundle\Entity\StudyMetrics $studyMetrics)
+    public function removeStudyMetric(\Course3\Bundle\Entity\StudyMetrics $studyMetrics)
     {
         $this->studyMetrics->removeElement($studyMetrics);
     }
@@ -450,7 +450,7 @@ class Course2
      * Set lesson6
      *
      * @param integer $lesson6
-     * @return Course2
+     * @return Course3
      */
     public function setLesson6($lesson6)
     {
@@ -473,7 +473,7 @@ class Course2
      * Set lesson7
      *
      * @param integer $lesson7
-     * @return Course2
+     * @return Course3
      */
     public function setLesson7($lesson7)
     {
@@ -496,7 +496,7 @@ class Course2
      * Set lesson8
      *
      * @param integer $lesson8
-     * @return Course2
+     * @return Course3
      */
     public function setLesson8($lesson8)
     {
@@ -519,7 +519,7 @@ class Course2
      * Set lesson9
      *
      * @param integer $lesson9
-     * @return Course2
+     * @return Course3
      */
     public function setLesson9($lesson9)
     {
@@ -542,7 +542,7 @@ class Course2
      * Set lesson10
      *
      * @param integer $lesson10
-     * @return Course2
+     * @return Course3
      */
     public function setLesson10($lesson10)
     {
@@ -565,7 +565,7 @@ class Course2
      * Set testTypes
      *
      * @param string $testTypes
-     * @return Course2
+     * @return Course3
      */
     public function setTestTypes($testTypes)
     {
@@ -587,10 +587,10 @@ class Course2
     /**
      * Add strategies
      *
-     * @param \Course2\Bundle\Entity\Strategies $strategies
-     * @return Course2
+     * @param \Course3\Bundle\Entity\Strategies $strategies
+     * @return Course3
      */
-    public function addStrategy(\Course2\Bundle\Entity\Strategies $strategies)
+    public function addStrategy(\Course3\Bundle\Entity\Strategies $strategies)
     {
         $this->strategies[] = $strategies;
 
@@ -600,9 +600,9 @@ class Course2
     /**
      * Remove strategies
      *
-     * @param \Course2\Bundle\Entity\Strategies $strategies
+     * @param \Course3\Bundle\Entity\Strategies $strategies
      */
-    public function removeStrategy(\Course2\Bundle\Entity\Strategies $strategies)
+    public function removeStrategy(\Course3\Bundle\Entity\Strategies $strategies)
     {
         $this->strategies->removeElement($strategies);
     }
@@ -621,7 +621,7 @@ class Course2
      * Set groupGoals
      *
      * @param string $groupGoals
-     * @return Course2
+     * @return Course3
      */
     public function setGroupGoals($groupGoals)
     {
@@ -643,10 +643,10 @@ class Course2
     /**
      * Add groupStudy
      *
-     * @param \Course2\Bundle\Entity\GroupStudy $groupStudy
-     * @return Course2
+     * @param \Course3\Bundle\Entity\GroupStudy $groupStudy
+     * @return Course3
      */
-    public function addGroupStudy(\Course2\Bundle\Entity\GroupStudy $groupStudy)
+    public function addGroupStudy(\Course3\Bundle\Entity\GroupStudy $groupStudy)
     {
         $this->groupStudy[] = $groupStudy;
 
@@ -656,9 +656,9 @@ class Course2
     /**
      * Remove groupStudy
      *
-     * @param \Course2\Bundle\Entity\GroupStudy $groupStudy
+     * @param \Course3\Bundle\Entity\GroupStudy $groupStudy
      */
-    public function removeGroupStudy(\Course2\Bundle\Entity\GroupStudy $groupStudy)
+    public function removeGroupStudy(\Course3\Bundle\Entity\GroupStudy $groupStudy)
     {
         $this->groupStudy->removeElement($groupStudy);
     }
@@ -676,10 +676,10 @@ class Course2
     /**
      * Add teaching
      *
-     * @param \Course2\Bundle\Entity\Teaching $teaching
-     * @return Course2
+     * @param \Course3\Bundle\Entity\Teaching $teaching
+     * @return Course3
      */
-    public function addTeaching(\Course2\Bundle\Entity\Teaching $teaching)
+    public function addTeaching(\Course3\Bundle\Entity\Teaching $teaching)
     {
         $this->teaching[] = $teaching;
 
@@ -689,9 +689,9 @@ class Course2
     /**
      * Remove teaching
      *
-     * @param \Course2\Bundle\Entity\Teaching $teaching
+     * @param \Course3\Bundle\Entity\Teaching $teaching
      */
-    public function removeTeaching(\Course2\Bundle\Entity\Teaching $teaching)
+    public function removeTeaching(\Course3\Bundle\Entity\Teaching $teaching)
     {
         $this->teaching->removeElement($teaching);
     }
@@ -709,10 +709,10 @@ class Course2
     /**
      * Add activeReading
      *
-     * @param \Course2\Bundle\Entity\ActiveReading $activeReading
-     * @return Course2
+     * @param \Course3\Bundle\Entity\ActiveReading $activeReading
+     * @return Course3
      */
-    public function addActiveReading(\Course2\Bundle\Entity\ActiveReading $activeReading)
+    public function addActiveReading(\Course3\Bundle\Entity\ActiveReading $activeReading)
     {
         $this->activeReading[] = $activeReading;
 
@@ -722,9 +722,9 @@ class Course2
     /**
      * Remove activeReading
      *
-     * @param \Course2\Bundle\Entity\ActiveReading $activeReading
+     * @param \Course3\Bundle\Entity\ActiveReading $activeReading
      */
-    public function removeActiveReading(\Course2\Bundle\Entity\ActiveReading $activeReading)
+    public function removeActiveReading(\Course3\Bundle\Entity\ActiveReading $activeReading)
     {
         $this->activeReading->removeElement($activeReading);
     }
@@ -742,10 +742,10 @@ class Course2
     /**
      * Add spacedRepetition
      *
-     * @param \Course2\Bundle\Entity\SpacedRepetition $spacedRepetition
-     * @return Course2
+     * @param \Course3\Bundle\Entity\SpacedRepetition $spacedRepetition
+     * @return Course3
      */
-    public function addSpacedRepetition(\Course2\Bundle\Entity\SpacedRepetition $spacedRepetition)
+    public function addSpacedRepetition(\Course3\Bundle\Entity\SpacedRepetition $spacedRepetition)
     {
         $this->spacedRepetition[] = $spacedRepetition;
 
@@ -755,9 +755,9 @@ class Course2
     /**
      * Remove spacedRepetition
      *
-     * @param \Course2\Bundle\Entity\SpacedRepetition $spacedRepetition
+     * @param \Course3\Bundle\Entity\SpacedRepetition $spacedRepetition
      */
-    public function removeSpacedRepetition(\Course2\Bundle\Entity\SpacedRepetition $spacedRepetition)
+    public function removeSpacedRepetition(\Course3\Bundle\Entity\SpacedRepetition $spacedRepetition)
     {
         $this->spacedRepetition->removeElement($spacedRepetition);
     }

@@ -23,6 +23,7 @@ class AppKernel extends Kernel
         $bundles[] = new StudySauce\Bundle\StudySauceBundle();
         $bundles[] = new Course1\Bundle\Course1Bundle();
         $bundles[] = new Course2\Bundle\Course2Bundle();
+        $bundles[] = new Course3\Bundle\Course3Bundle();
         $bundles[] = new WhiteOctober\SwiftMailerDBBundle\WhiteOctoberSwiftMailerDBBundle();
         $bundles[] = new TorchAndLaurel\Bundle\TorchAndLaurelBundle();
 

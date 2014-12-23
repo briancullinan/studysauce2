@@ -1,0 +1,472 @@
+
+.course3 .learn-bullets
+{
+    width:40%;
+    display:inline-block;
+    vertical-align: top;
+    margin: 40px 10% 0 -4px;
+}
+
+.course3.step0 ol a {
+    display: block;
+    padding: 10px 0 10px 50px;
+    position: relative;
+    font-size: 20px;
+}
+
+.course3.step0 ol a:hover,
+.course3.step0 ol a:focus,
+.course3.step0 ol a:active,
+.course3.step0 ol a.active {
+    padding-left: 45px;
+    background-color: #DDDDDD;
+    border-left: 5px solid #555555;
+    transition: background-color ease-in-out .15s;
+}
+
+.course3.step0 ol a:hover span,
+.course3.step0 ol a:focus span,
+.course3.step0 ol a:active span,
+.course3.step0 ol a.active span {
+    left: -5px;
+}
+
+.course3.step0 ol {
+    list-style: none none;
+    padding: 0;
+    margin:0;
+}
+
+.course3 .time
+{
+    display: inline-block;
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    background: url(../../studysauce/images/menu_new.png) no-repeat left -4800px transparent;
+    height: 50px;
+    text-align: center;
+    padding-left: 50px;
+    vertical-align: middle;
+    padding-top: 5px;
+    color:#555555;
+    float:left;
+}
+
+.course3 .time small
+{
+    font-size: 14px;
+}
+
+.course3 .highlighted-link
+{
+    margin:20px 0 0 0;
+}
+
+.course3.step0 .highlighted-link
+{
+    margin:20px 0 20px 50%;
+    text-align: center;
+}
+
+.course3.step0 h2
+{
+    padding-right:150px;
+}
+
+.course3.step0 h3
+{
+    font-size: 28px;
+    margin-top:0;
+}
+
+.course3.step0 ol li {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    position: relative;
+}
+
+.course3.step0 ol span {
+    line-height: 40px;
+    text-align: center;
+    font-size: 40px;
+    color: #555555;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    vertical-align: middle;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    min-width: 40px;
+    font-style: italic;
+    margin-top:-20px;
+}
+
+.course3.step0 .player-divider
+{
+    width:50%;
+    display:inline-block;
+    vertical-align: top;
+    margin: 40px -4px 0;
+    padding-right:20px;
+}
+
+.course3.step0 .player-divider img
+{
+    position:absolute;
+}
+
+.course3.step2 .results,
+.course3.step2 .questions
+{
+    width: 50%;
+    margin: 0 -2px;
+    display:inline-block;
+    vertical-align: top;
+}
+
+.course3.step2 h3
+{
+    border-bottom:1px solid #555555;
+    padding-right:50%;
+}
+
+.course3.step2 h3 span
+{
+    width: 100%;
+    float: right;
+    margin-right: -100%;
+    text-align: left;
+    padding-left:20px;
+}
+
+.course3.step2 .answer
+{
+    display:none;
+}
+
+.course3.step2 .questions
+{
+    padding-right:20px;
+}
+
+.course3.step2 .results
+{
+    padding:20px;
+    display:none;
+    border-left:3px solid #0099BB;
+    background: url(../../studysauce/images/noise_white.png) repeat 0 0 #FFFFFF;
+}
+
+.course3.step2.right .answer,
+.course3.step2.right .results
+{
+    display:inline-block;
+}
+
+.course3.step2 label
+{
+    padding-left:40px;
+    display: block;
+    position: relative;
+}
+
+.course3.step2 label.input span
+{
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    margin-top: -12px;
+    width: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+.course3.step2 label i
+{
+    margin-left:-20px;
+}
+
+.course3.step2 .highlighted-link
+{
+    margin-left:50%;
+}
+
+.course3.step2 .highlighted-link a:not([href="#submit-quiz"])
+{
+    display:none;
+}
+
+.course3.step2.right .highlighted-link
+{
+}
+
+.course3.step2.right .highlighted-link a[href="#submit-quiz"]
+{
+    display:none;
+}
+
+.course3.step2.right .highlighted-link a:not([href="#submit-quiz"])
+{
+    display:inline-block;
+}
+
+.course3.step3 h2
+{
+    margin-bottom: 40px;
+}
+
+.course3 .tab-tracker
+{
+    list-style: none;
+    font-size: 40px;
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    z-index: 9;
+    padding:0;
+    margin:0;
+}
+
+.course3 .tab-tracker li
+{
+    list-style: none;
+    display: inline-block;
+    margin:10px;
+    vertical-align: middle;
+}
+
+.course3.step0 .tab-tracker li:first-child,
+.course3.step1 .tab-tracker li:nth-child(2),
+.course3.step2 .tab-tracker li:nth-child(3),
+.course3.step3 .tab-tracker li:nth-child(4),
+.course3.step4 .tab-tracker li:nth-child(5)
+{
+    font-size: 60px;
+    color: #0099BB;
+}
+
+.course3.step4 .grid_6
+{
+    display:inline-block;
+    width:60%;
+    margin:0 -2px;
+    vertical-align: middle;
+    padding-right:100px;
+}
+
+.course3.step4 .grid_6 + .grid_6
+{
+    padding:0;
+    width:40%;
+}
+
+.course3.step4 .highlighted-link
+{
+    margin-top:20px;
+}
+
+.course3.step4 .grid_6 img
+{
+    width: 100%;
+}
+
+.course3.step3 .award
+{
+    margin: 0 4%;
+    display:inline-block;
+    vertical-align: middle;
+    border:5px solid #555;
+    background: url(../../studysauce/images/noise_white.png) repeat #ffffff;
+    padding:50px 20px;
+    border-radius: 5px;
+    width: 500px;
+    max-width: 40%;
+}
+
+.course3.step3 .award h3
+{
+    text-align: center;
+    margin-bottom:20px;
+    margin-top:0;
+}
+
+.course3.step3 .award strong
+{
+    display:block;
+    font-size: 32px;
+    margin:20px 0;
+}
+
+.course3.step3 > .pane-content
+{
+    text-align: center;
+}
+
+.course3.step3 img
+{
+    width: 400px;
+    margin: 0 5%;
+    display:inline-block;
+    position:relative;
+    z-index: 3;
+    vertical-align: middle;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,1);
+    max-width: 40%;
+}
+/*
+.course3.step3 .joke {
+    width: 40%;
+    margin: 0 5%;
+    display:inline-block;
+    position:relative;
+    box-shadow: 0 0 15px rgba(255,255,255,1);
+}
+
+.course3.step3 .joke:after
+{
+    position:absolute;
+    content: " ";
+    display:block;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    box-shadow: inset 0 0 15px rgba(0,0,0,.75);
+    border-radius: 5px;
+}
+*/
+
+.course3.step3 .highlighted-link
+{
+    position:relative;
+    z-index: 10;
+}
+
+.course3.step3 p:last-child
+{
+    margin-bottom: 0;
+}
+
+.course3.step3 .description
+{
+    max-width:650px;
+}
+
+.course3.step3 .description,
+.course3.step3 .description *
+{
+    text-align: center !important;
+}
+
+@media all and (max-width:1000px)
+{
+
+    .course3.step0 .player-divider,
+    .course3.step0 ol,
+    .course3 .learn-bullets
+    {
+        width:auto;
+        display:block;
+        margin-right:0;
+        padding-right:0;
+    }
+
+    .course3.step0 .highlighted-link,
+    .course3.step1 .highlighted-link,
+    .course3.step2 .highlighted-link,
+    .course3.step3 .highlighted-link,
+    .course3.step4 .highlighted-link
+    {
+        margin-left:0;
+        margin-right:0;
+        padding-left:0;
+        padding-right:0;
+        margin-bottom:20px;
+        padding-bottom:0;
+    }
+
+    .course3 .tab-tracker
+    {
+        position:static;
+        width:auto;
+        display:block;
+        text-align: center;
+    }
+
+    .course3.step4 .grid_6
+    {
+        padding-right:10px;
+        width:75%;
+    }
+
+    .course3.step4 .grid_6 + .grid_6
+    {
+        width:25%;
+    }
+}
+
+@media all and (max-width:700px)
+{
+    .course3 .time
+    {
+        /*position:static;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        float: none;
+        width: 150px;*/
+        display:none;
+    }
+
+    .course3.step0 h2,
+    .course3.step2 h3
+    {
+        padding-right:0;
+    }
+
+    .course3.step3 .award
+    {
+        margin: 10px auto;
+        display:block;
+        width: 300px;
+        max-width: 90%;
+    }
+
+    .course3.step3 img
+    {
+        max-width:90%;
+    }
+
+    .course3.step2.right .results,
+    .course3.step2 .questions
+    {
+        width:auto;
+        display:block;
+        padding-left:0;
+        padding-right:0;
+    }
+
+    .course3.step2.right .results
+    {
+        border:3px solid #0099BB;
+        padding:5px;
+        border-radius: 5px;
+    }
+
+    .course3.step4 .grid_6
+    {
+        width:auto;
+        display:block;
+        padding-right:0;
+    }
+
+    .course3.step4 .grid_6 + .grid_6
+    {
+        display:none;
+    }
+}

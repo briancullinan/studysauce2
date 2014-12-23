@@ -190,20 +190,39 @@ class LandingController extends Controller
                         if ($lesson === 5 && $course->getLesson5() < $step) {
                             $course->setLesson5($step);
                         }
-                        if ($lesson === 6 && $course->getLesson6() < $step) {
-                            $course->setLesson6($step);
+                        $orm->merge($course);
+                        $orm->flush();
+                    }
+                }
+            }
+            elseif(substr(str_replace($request->getBaseUrl(), '', $v['path']), 0, 10) == '/course/3/') {
+                // TODO: check for quiz completeness
+                if (preg_match('/lesson\/([0-9]+)\/step\/?([0-9]+)?/', $v['path'], $matches)) {
+                    // compare course progress
+
+                    /** @var $user User */
+                    $user = $this->getUser();
+
+                    /** @var Course3 $course */
+                    $course = $user->getCourse3s()->first();
+
+                    if (!empty($course)) {
+                        $lesson = intval($matches[1]);
+                        $step = isset($matches[2]) ? intval($matches[2]) : 0;
+                        if ($lesson === 1 && $course->getLesson1() < $step) {
+                            $course->setLesson1($step);
                         }
-                        if ($lesson === 7 && $course->getLesson7() < $step) {
-                            $course->setLesson7($step);
+                        if ($lesson === 2 && $course->getLesson2() < $step) {
+                            $course->setLesson2($step);
                         }
-                        if ($lesson === 8 && $course->getLesson8() < $step) {
-                            $course->setLesson8($step);
+                        if ($lesson === 3 && $course->getLesson3() < $step) {
+                            $course->setLesson3($step);
                         }
-                        if ($lesson === 9 && $course->getLesson9() < $step) {
-                            $course->setLesson9($step);
+                        if ($lesson === 4 && $course->getLesson4() < $step) {
+                            $course->setLesson4($step);
                         }
-                        if ($lesson === 10 && $course->getLesson10() < $step) {
-                            $course->setLesson10($step);
+                        if ($lesson === 5 && $course->getLesson5() < $step) {
+                            $course->setLesson5($step);
                         }
                         $orm->merge($course);
                         $orm->flush();

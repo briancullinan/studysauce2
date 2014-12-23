@@ -53,16 +53,6 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
                         <a href="<?php print $view['router']->generate('course2_study_tests', ['_step' => 0]); ?>"><span>&bullet;</span>Studying for tests</a></li>
                     <li class="<?php print (!empty($course2) && $course2->getLesson5() === 4 ? 'complete' : ''); ?>">
                         <a href="<?php print $view['router']->generate('course2_test_taking', ['_step' => 0]); ?>"><span>&bullet;</span>Test-taking</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson6() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_strategies', ['_step' => 0]); ?>"><span>&bullet;</span>Intro to strategies</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson7() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_group_study', ['_step' => 0]); ?>"><span>&bullet;</span>Group study</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson8() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_teaching', ['_step' => 0]); ?>"><span>&bullet;</span>Teach to learn</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson9() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_active_reading', ['_step' => 0]); ?>"><span>&bullet;</span>Active reading</a></li>
-                    <li class="<?php print (!empty($course2) && $course2->getLesson10() === 4 ? 'complete' : ''); ?>">
-                        <a href="<?php print $view['router']->generate('course2_spaced_repetition', ['_step' => 0]); ?>"><span>&bullet;</span>Spaced repetition</a></li>
                 </ul>
             </li>
             <li class="accordion-group panel">
@@ -70,7 +60,16 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
                     <a class="accordion-toggle" data-toggle="collapse" data-target="#level3" data-parent="#course1-menu"><span>3</span>Level 3</a>
                 </div>
                 <ul id="level3" class="accordion-body collapse">
-                    <li class="coming">Coming soon</li>
+                    <li class="<?php print (!empty($course3) && $course3->getLesson1() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course3_strategies', ['_step' => 0]); ?>"><span>&bullet;</span>Intro to strategies</a></li>
+                    <li class="<?php print (!empty($course3) && $course3->getLesson2() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course3_group_study', ['_step' => 0]); ?>"><span>&bullet;</span>Group study</a></li>
+                    <li class="<?php print (!empty($course3) && $course3->getLesson3() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course3_teaching', ['_step' => 0]); ?>"><span>&bullet;</span>Teach to learn</a></li>
+                    <li class="<?php print (!empty($course3) && $course3->getLesson4() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course3_active_reading', ['_step' => 0]); ?>"><span>&bullet;</span>Active reading</a></li>
+                    <li class="<?php print (!empty($course3) && $course3->getLesson5() === 4 ? 'complete' : ''); ?>">
+                        <a href="<?php print $view['router']->generate('course3_spaced_repetition', ['_step' => 0]); ?>"><span>&bullet;</span>Spaced repetition</a></li>
                 </ul>
             </li>
         </ul>

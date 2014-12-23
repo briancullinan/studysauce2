@@ -98,12 +98,13 @@ $(document).ready(function () {
 
     body.on('show', '.course1.step4', function () {
         // mark lesson completed on the menu
-        var step = $(this).attr('id').substr(1).replace(/-step[0-9]/ig),
+        var step = $(this).attr('id').replace(/-step[0-9]/ig, ''),
             path = window.callbackUri[window.callbackKeys.indexOf(step)];
         $('.main-menu a[href*="' + path + '"]').parent('li').addClass('complete');
 
         var main = $('.main-menu'),
-            completed = Math.round((main.find('#level1 li.complete').length + Math.round(main.find('#level2 li.complete').length)) * 100 / (main.find('#level1 li').length + main.find('#level2 li').length)),
+            completed = Math.round((main.find('#level1 li.complete').length + main.find('#level2 li.complete').length + main.find('#level3 li.complete').length) *
+            100 / (main.find('#level1 li').length + main.find('#level2 li').length + main.find('#level3 li').length)),
             widget = $('#home').find('.course-widget');
         widget.find('h3').text(completed + '% of course complete');
         widget.find('.percent-bars').css('height', completed + '%');
