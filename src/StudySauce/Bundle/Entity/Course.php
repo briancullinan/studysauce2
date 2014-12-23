@@ -76,6 +76,12 @@ class Course
     protected $deleted = false;
 
     /**
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="course")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $events;
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()

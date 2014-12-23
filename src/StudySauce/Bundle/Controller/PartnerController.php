@@ -156,7 +156,7 @@ class PartnerController extends Controller
         $sessions = [];
         foreach($users as $i => $u) {
             /** @var User $u */
-            if($u->hasRole('ROLE_ADVISER'))
+            if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER'))
                 continue;
 
             $dql = 'SELECT DISTINCT SUBSTRING(v.created,1,10) AS created, v.session FROM StudySauceBundle:Visit v WHERE v.user=' . $u->getId() . ' GROUP BY v.session ORDER BY v.created DESC';
@@ -207,6 +207,7 @@ class PartnerController extends Controller
             $userManager->updateUser($user);
         }
 
+        $users = array_unique($users);
         $signups = array_map(function (User $u) {
                 return empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp();}, $users);
         array_multisort($signups, SORT_DESC, SORT_NUMERIC, $users);

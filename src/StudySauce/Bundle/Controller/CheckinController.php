@@ -28,7 +28,7 @@ class CheckinController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -36,7 +36,7 @@ class CheckinController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         else
             $courses = [];
 
@@ -62,7 +62,7 @@ class CheckinController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -70,7 +70,7 @@ class CheckinController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         else
             $courses = [];
 
@@ -97,7 +97,7 @@ class CheckinController extends Controller
 
         /** @var $course Course */
         $course = $schedule->getCourses()->filter(function (Course $b) use ($courseId) {
-                return $b->getType() == 'c' && $b->getId() == $courseId;
+                return !$b->getDeleted() && $b->getType() == 'c' && $b->getId() == $courseId;
             })->first();
         if($request->get('checkedIn'))
         {

@@ -39,21 +39,21 @@ $(document).ready(function () {
             });
             userlist.find('th:nth-child(2)').html('<select><option>' + dates.join("</option><option>") + '</option></select>');
 
-            var students = ['Student', 'Ascending (A-Z)', 'Descending (Z-A)'];
-            userlist.find('td:nth-child(3)').each(function () {
-                if(students.indexOf(jQuery(this).text()) == -1)
-                    students[students.length] = jQuery(this).text();
-            });
-            students.sort(sortSelect);
-            userlist.find('th:nth-child(3)').html('<select><option>' + students.join("</option><option>") + '</option></select>');
-
             var completion = ['Completion', 'Ascending (A-Z)', 'Descending (Z-A)'];
-            userlist.find('td:nth-child(4)').each(function () {
+            userlist.find('td:nth-child(3)').each(function () {
                 if(completion.indexOf(jQuery(this).text()) == -1)
                     completion[completion.length] = jQuery(this).text();
             });
             completion.sort(sortSelect);
-            userlist.find('th:nth-child(4)').html('<select><option>' + completion.join("</option><option>") + '</option></select>');
+            userlist.find('th:nth-child(3)').html('<select><option>' + completion.join("</option><option>") + '</option></select>');
+
+            var students = ['Student', 'Ascending (A-Z)', 'Descending (Z-A)'];
+            userlist.find('td:nth-child(4)').each(function () {
+                if(students.indexOf(jQuery(this).text()) == -1)
+                    students[students.length] = jQuery(this).text();
+            });
+            students.sort(sortSelect);
+            userlist.find('th:nth-child(4)').html('<select><option>' + students.join("</option><option>") + '</option></select>');
 
             var schools = ['School', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('td:nth-child(5)').each(function () {

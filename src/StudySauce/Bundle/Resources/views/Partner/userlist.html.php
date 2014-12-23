@@ -4,6 +4,7 @@ use Course1\Bundle\Entity\Course1;
 use Course2\Bundle\Course2Bundle;
 use Course2\Bundle\Entity\Course2;
 use Course3\Bundle\Course3Bundle;
+use Course3\Bundle\Entity\Course3;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use StudySauce\Bundle\Entity\Group;
@@ -64,12 +65,12 @@ $view['slots']->start('body'); ?>
                         <option>Descending (Z-A)</option>
                     </select></th>
                 <th><select>
-                        <option>Student</option>
+                        <option>Completion</option>
                         <option>Ascending (A-Z)</option>
                         <option>Descending (Z-A)</option>
                     </select></th>
                 <th><select>
-                        <option>Completion</option>
+                        <option>Student</option>
                         <option>Ascending (A-Z)</option>
                         <option>Descending (Z-A)</option>
                     </select></th>
@@ -125,8 +126,8 @@ $view['slots']->start('body'); ?>
                 ?><tr class="user-id-<?php print $s->getUser()->getId(); ?> status_<?php print ($s->getUser()->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print $s->getCreated()->getTimestamp(); ?>"><?php print $s->getCreated()->format('j M'); ?></td>
-                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
                 <td><?php print $overall; ?>%</td>
+                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
                 <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>
                 <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>
@@ -137,7 +138,7 @@ $view['slots']->start('body'); ?>
             foreach($users as $i => $u)
             {
                 /** @var User $u */
-                if($u->hasRole('ROLE_ADVISER'))
+                if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER'))
                     continue;
 
                 /** @var Schedule $schedule */
@@ -163,11 +164,13 @@ $view['slots']->start('body'); ?>
                         ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
                         ($course3->getLesson5() === 4 ? 1 : 0);
                 $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
+                /** @var User $adviser */
+                $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M')); ?></td>
-                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'home']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
                 <td><?php print $overall; ?>%</td>
+                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'home']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
                 <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>
                 <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>

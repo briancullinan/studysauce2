@@ -356,27 +356,34 @@ $(document).ready(function () {
             that = jQuery(this);
         plans.find('.head').each(function () {
             var head = jQuery(this);
-            head.nextUntil('.head,p:last-of-type').each(function () {
+            head.nextUntil(':not(.session-row)').each(function () {
                 var row = jQuery(this),
                     that = row.find('.class-name');
                 if (typeof headings[that.text().trim()] == 'undefined')
                     headings[that.text().trim()] = row;
                 else
                     headings[that.text().trim()] = jQuery.merge(headings[that.text().trim()], row);
-                that.text(head.text().trim());
+                that.html('<span class="' + that.find('span').attr('class') + '">&nbsp;</span> ' + head.text().trim());
             });
         });
         var rows = [];
+        // order by classes
         if (that.val() == 'class') {
             var keys = [];
 
-            for (var i = 0; i < window.classNames.length; i++)
-                if (typeof headings[window.classNames[i]] != 'undefined')
-                    keys[keys.length] = window.classNames[i];
-
             for (var k in headings)
-                if (headings.hasOwnProperty(k) && keys.indexOf(k) == -1)
-                    keys[keys.length] = k;
+                if (headings.hasOwnProperty(k) && keys.indexOf(k) == -1) {
+                    var i = (/checkin([0-9]*)(\s|$)/ig).exec(headings[k].first().attr('class'))[1];
+                    if(i != '')
+                        keys[i] = k;
+                }
+
+            for (var m in headings)
+                if (headings.hasOwnProperty(m) && keys.indexOf(m) == -1) {
+                    var l = (/checkin([0-9]*)(\s|$)/ig).exec(headings[m].first().attr('class'))[1];
+                    if(l == '')
+                        keys[keys.length] = m;
+                }
 
             for (var j = 0; j < keys.length; j++) {
                 var h1 = headings[keys[j]].filter('.session-row:not(.historic)').length == 0;
@@ -391,6 +398,7 @@ $(document).ready(function () {
                 rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h2 ? 'historic' : '') + '">' + h + '</div>'), headings[h].detach()));
             }
         }
-        plans.find('.head, .session-row').replaceWith(rows);
+        plans.find('.head').remove();
+        $(rows).insertAfter(plans.find('.sort-by'));
     });
 });

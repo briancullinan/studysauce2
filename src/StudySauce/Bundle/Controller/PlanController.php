@@ -699,7 +699,7 @@ class PlanController extends Controller
             // stop after we pass current events time
             if($e->getTimestamp() - $sW->getTimestamp() < 0)
                 break;
-            if($w['course'] == $event['course'])
+            if(isset($w['course']) && $w['course'] == $event['course'])
                 return [$eW->getTimestamp(), $s->getTimestamp() + 86400];
         }
         return [$s->getTimestamp() - 86400, $s->getTimestamp() + 86400];

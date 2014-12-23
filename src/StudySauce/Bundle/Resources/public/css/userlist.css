@@ -76,23 +76,33 @@
     height: 24px;
 }
 
+#userlist th:nth-child(3),
+#userlist td:nth-child(3),
 #userlist th:nth-child(2),
 #userlist td:nth-child(2),
 #userlist th:nth-child(1),
 #userlist td:nth-child(1)
 {
     text-align: center;
-    width: 12.5%;
+    width: 10%;
 }
 
-#userlist th:nth-child(3),
-#userlist td:nth-child(3),
 #userlist th:nth-child(4),
 #userlist td:nth-child(4),
 #userlist th:nth-child(5),
 #userlist td:nth-child(5)
 {
-    width: 25%;
+    width: 35%;
+}
+
+#userlist .master th:nth-child(4),
+#userlist .master td:nth-child(4),
+#userlist .master th:nth-child(5),
+#userlist .master td:nth-child(5),
+#userlist .master th:nth-child(6),
+#userlist .master td:nth-child(6)
+{
+    width: 23.33%;
 }
 
 #select-status a[href="#red"] span,

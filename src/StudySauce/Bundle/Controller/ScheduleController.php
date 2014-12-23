@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\StudySauceBundle;
@@ -410,58 +411,6 @@ class ScheduleController extends Controller
             if(empty($dotw[0]))
                 $dotw = [];
 
-            // TODO: select the first day between the two dates
-            /*
-            if($c['type'] == 'o' && !in_array('Weekly', $dotw))
-            {
-                $classStart = new \DateTime($c['start']);
-                $classEnd = new \DateTime($c['end']);
-
-                // add repeating other events
-                $startTerm = date_timestamp_set(new \DateTime(), strtotime('this week', $classStart->getTimestamp()));
-                $startTerm->setTime(0, 0, 0);
-                $endTerm = date_timestamp_set(new \DateTime(), strtotime('this week', $classEnd->getTimestamp()) + 604800);
-                $endTerm->setTime(0, 0, 0);
-                for ($w = $startTerm->getTimestamp(); $w < $endTerm->getTimestamp(); $w += 604800)
-                {
-                    for($d = 0; $d < 7; $d++)
-                    {
-                        $t = strtotime('this week', $w) + $d * 86400;
-                        if ($t <= $classEnd->getTimestamp() && $t + 86400 >= $classStart->getTimestamp())
-                        {
-                            switch ($d)
-                            {
-                                case 0:
-                                    $dotw[] = 'M';
-                                    break;
-                                case 1:
-                                    $dotw[] = 'Tu';
-                                    break;
-                                case 2:
-                                    $dotw[] = 'W';
-                                    break;
-                                case 3:
-                                    $dotw[] = 'Th';
-                                    break;
-                                case 4:
-                                    $dotw[] = 'F';
-                                    break;
-                                case 5:
-                                    $dotw[] = 'Sa';
-                                    break;
-                                case 6:
-                                    $dotw[] = 'Su';
-                                    break;
-                                default:
-                                    continue;
-                            }
-
-                        }
-                    }
-                }
-            }
-            */
-
             $dotw = array_unique($dotw);
             sort($dotw);
 
@@ -519,8 +468,17 @@ class ScheduleController extends Controller
 
         if(!empty($course))
         {
-            $schedule->removeCourse($course);
-            $orm->remove($course);
+            if($course->getEvents()->exists(function (Event $save) {
+                    return !empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
+                        !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
+                })) {
+                $course->setDeleted(true);
+                $orm->merge($course);
+            }
+            else {
+                $schedule->removeCourse($course);
+                $orm->remove($course);
+            }
             $orm->flush();
         }
 
