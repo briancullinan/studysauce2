@@ -51,7 +51,7 @@ $adviser = reset($advisers);
                 !empty($user) && $user->hasRole('ROLE_PARTNER'))) { ?>
             <div id="partner-message">
                 <?php if($user->hasRole('ROLE_PARTNER')) {
-                    if($user->getInvitedPartners()->exists(function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) { ?>
+                    if($user->getInvitedPartners()->exists(function ($k, PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) { ?>
                     <div class="highlighted-link">
                         <a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Upgrade</a>
                     </div>

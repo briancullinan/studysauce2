@@ -187,6 +187,14 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function profileUpgradeAction()
+    {
+        return $this->render('StudySauceBundle:Dialogs:profile-upgrade.html.php', ['id' => 'profile-upgrade']);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function planIntro1Action()
     {
         return $this->render('StudySauceBundle:Dialogs:plan-intro-1.html.php', ['id' => 'plan-intro-1']);

@@ -1352,9 +1352,10 @@ class PlanController extends Controller
     {
         $events = [];
         $once = false;
-        if ($course->getType() == 'o' && !in_array('Weekly', $course->getDotw())) {
-            $once = true;
-        }
+        // TODO: uncomment this to bring back singly occuring events
+        // if ($course->getType() == 'o' && !in_array('Weekly', $course->getDotw())) {
+        //    $once = true;
+        //}
 
         $classStart = $course->getStartTime();
         $classEnd = $course->getEndTime();
@@ -1387,7 +1388,7 @@ class PlanController extends Controller
                 'type' => $course->getType(),
                 'start' => $classT,
                 'end' => $once
-                        ? date_timestamp_set(clone $classT,min(date_add($classT->getTimestamp() + 86400, $classEnd->getTimestamp())))
+                        ? date_timestamp_set(clone $classT, min(date_add(clone $classT, new \DateInterval('PT86400S'))->getTimestamp(), $classEnd->getTimestamp()))
                         : date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
             ];
             $events[] = $event;

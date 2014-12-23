@@ -24,6 +24,12 @@ jQuery(document).ready(function($) {
             checkout.find('input[name="cc-ccv"]').val().trim() != '')
             valid = true;
         if(!checkout.find('#gift-pane').is(':visible') ||
+            // checked if everything is blank, that's ok too
+            (
+                checkout.find('#gift-pane .first-name input').val().trim() == '' &&
+                checkout.find('#gift-pane .last-name input').val().trim() == '' &&
+                checkout.find('#gift-pane .email input').val().trim() == ''
+            ) ||
             checkout.find('#gift-pane .first-name input').val().trim() != '' &&
             checkout.find('#gift-pane .last-name input').val().trim() != '' &&
             checkout.find('#gift-pane .email input').val().trim() != '' &&

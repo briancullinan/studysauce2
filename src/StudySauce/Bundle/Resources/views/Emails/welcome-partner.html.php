@@ -4,9 +4,9 @@ $view->extend('StudySauceBundle:Emails:layout.html.php');
 $view['slots']->start('message'); ?>
 Thank you for joining Study Sauce on behalf of your student.  To get the most out of our service, we recommend a few key things to get started.<br />
 <br />
-1. Set up regular check in meetings with your student to discuss the highs and lows of school.  We recommend weekly meetings.<br />
+1. Set up regular check in meetings with your student to discuss the highs and lows of school.  We recommend weekly meetings.
 <br />
-2. Lean on your experience to help students avoid common pitfalls.  Try to find a good balance between being supportive and challenging your student during your weekly meetings.<br />
+2. Lean on your experience to help students avoid common pitfalls.  Try to find a good balance between being supportive and challenging your student during your weekly meetings.
 <br />
 3. Consider purchasing a personalized study plan for your student to help take their studying to the next level.<br />
 <br />

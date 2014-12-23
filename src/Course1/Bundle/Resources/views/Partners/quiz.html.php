@@ -36,7 +36,7 @@ $complete = !empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty(
         <?php } ?>
         <h3>How often should you talk with your accountability partner?</h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-partners-often" type="text" value="<?php print $view->escape($quiz->getOften()); ?>"></label>
+            <label class="input"><input name="quiz-partners-often" type="text" value="<?php print $view->escape($quiz->getOften()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

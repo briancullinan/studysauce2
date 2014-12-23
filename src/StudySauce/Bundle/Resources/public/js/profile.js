@@ -40,26 +40,26 @@ $(document).ready(function () {
         // TODO: update this if payment happens automatically from dashboard
         // show unpaid dialog
         if($(this).is('.demo'))
-            $('#plan-upgrade').modal({
+            $('#profile-upgrade').modal({
                 backdrop: 'static',
                 keyboard: false,
                 show: true
             });
         else {
-            $('#plan-upgrade').modal('hide');
+            $('#profile-upgrade').modal('hide');
             profileFunc();
         }
     });
     body.on('click', 'a[href="#bill-parents"]', function () {
-        $('#plan-upgrade').modal('hide');
+        $('#profile-upgrade').modal('hide');
     });
     body.on('shown.bs.modal', '#bill-parents, #bill-parents-confirm', function () {
-        $('#plan-upgrade').modal('hide');
+        $('#profile-upgrade').modal('hide');
     });
     body.on('hidden.bs.modal', '#bill-parents, #bill-parents-confirm', function () {
         if(!$('#profile').is(':visible'))
             return;
-        $('#plan-upgrade').modal({
+        $('#profile-upgrade').modal({
             backdrop: 'static',
             keyboard: false,
             show: true

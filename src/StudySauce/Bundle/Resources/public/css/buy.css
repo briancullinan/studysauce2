@@ -30,6 +30,7 @@
     visibility: hidden;
     height: 0;
     opacity: 0;
+    display:none;
 }
 
 #checkout #gift-pane.shown-by-default
