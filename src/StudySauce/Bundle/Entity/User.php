@@ -1091,4 +1091,37 @@ class User extends BaseUser implements EncoderAwareInterface
     {
         return $this->course2s;
     }
+
+    /**
+     * Add course3s
+     *
+     * @param \Course3\Bundle\Entity\Course3 $course3s
+     * @return User
+     */
+    public function addCourse3(\Course3\Bundle\Entity\Course3 $course3s)
+    {
+        $this->course3s[] = $course3s;
+
+        return $this;
+    }
+
+    /**
+     * Remove course3s
+     *
+     * @param \Course3\Bundle\Entity\Course3 $course3s
+     */
+    public function removeCourse3(\Course3\Bundle\Entity\Course3 $course3s)
+    {
+        $this->course3s->removeElement($course3s);
+    }
+
+    /**
+     * Get course3s
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCourse3s()
+    {
+        return $this->course3s;
+    }
 }

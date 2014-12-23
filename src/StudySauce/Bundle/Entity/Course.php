@@ -369,4 +369,37 @@ class Course
     {
         return $this->schedule;
     }
+
+    /**
+     * Add events
+     *
+     * @param \StudySauce\Bundle\Entity\Event $events
+     * @return Course
+     */
+    public function addEvent(\StudySauce\Bundle\Entity\Event $events)
+    {
+        $this->events[] = $events;
+
+        return $this;
+    }
+
+    /**
+     * Remove events
+     *
+     * @param \StudySauce\Bundle\Entity\Event $events
+     */
+    public function removeEvent(\StudySauce\Bundle\Entity\Event $events)
+    {
+        $this->events->removeElement($events);
+    }
+
+    /**
+     * Get events
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
 }
