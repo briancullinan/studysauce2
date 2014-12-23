@@ -17,7 +17,7 @@ $view->extend('Course3Bundle:Shared:layout.html.php');
         </div>
         <div class="player-divider">
             <div class="player-wrapper">
-                <?php foreach ($view['assetic']->image(['@Course3Bundle/Resources/public/images/intro6.jpg'], [], ['output' => 'bundles/course3/images/*']) as $url): ?>
+                <?php foreach ($view['assetic']->image(['@Course3Bundle/Resources/public/images/Intro_to_Strategies.png'], [], ['output' => 'bundles/course3/images/*']) as $url): ?>
                     <img src="<?php echo $view->escape($url) ?>" alt="LOGO" />
                 <?php endforeach; ?>
             </div>
