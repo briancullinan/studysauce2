@@ -170,12 +170,11 @@ class PartnerController extends Controller
                 /** @var ArrayCollection $visits */
                 $visits = $u->getVisits();
                 $criteria = Criteria::create()
-                    ->where(Criteria::expr()->contains('path', '/metrics'))
+                    ->orWhere(Criteria::expr()->contains('path', '/metrics'))
                     ->orWhere(Criteria::expr()->contains('path', '/schedule'))
                     ->orWhere(Criteria::expr()->contains('path', '/account'))
                     ->orWhere(Criteria::expr()->contains('path', '/profile'))
                     ->orWhere(Criteria::expr()->contains('path', '/premium'))
-                    ->orWhere(Criteria::expr()->contains('path', '/home'))
                     ->orWhere(Criteria::expr()->contains('path', '/partner'))
                     ->orWhere(Criteria::expr()->contains('path', '/goals'))
                     ->orWhere(Criteria::expr()->contains('path', '/plan'))

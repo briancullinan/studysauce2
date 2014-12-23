@@ -35,7 +35,7 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCHANDLAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setTerm(18);
+                $coupon->setTerm(0);
                 $coupon->setName('TORCHANDLAUREL');
                 $coupon->setDescription('75% off from Torch & Laurel');
                 $coupon->setType('=50');
@@ -51,7 +51,7 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCH&LAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setTerm(18);
+                $coupon->setTerm(0);
                 $coupon->setName('TORCH&LAUREL');
                 $coupon->setDescription('75% off from Torch & Laurel');
                 $coupon->setType('=50');
@@ -67,7 +67,7 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCH AND LAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setTerm(18);
+                $coupon->setTerm(0);
                 $coupon->setName('TORCH AND LAUREL');
                 $coupon->setDescription('75% off from Torch & Laurel');
                 $coupon->setType('=50');
@@ -83,7 +83,7 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCH & LAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setTerm(18);
+                $coupon->setTerm(0);
                 $coupon->setName('TORCH & LAUREL');
                 $coupon->setDescription('75% off from Torch & Laurel');
                 $coupon->setType('=50');

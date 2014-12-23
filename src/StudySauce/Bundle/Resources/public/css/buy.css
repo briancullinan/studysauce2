@@ -38,6 +38,7 @@
     height: auto;
     opacity: 1;
     visibility: visible;
+    display: inline-block;
 }
 
 #checkout .form-actions .error
@@ -199,12 +200,14 @@
 
     #checkout #payment-pane,
     #checkout #billing-pane,
-    #checkout #coupon-pane
+    #checkout #coupon-pane,
+    #checkout #gift-pane
     {
         width: auto;
-        display:block;
+        display:block !important;
         float:none;
         clear:both;
+        height:auto !important;
     }
 }
 

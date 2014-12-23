@@ -31,10 +31,6 @@ $(document).ready(function () {
                 // merge rows
                 if (w.getWeekNumber() == window.planLoaded[window.planLoaded.length] + 1) {
                     content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
-                    if(w.getWeekNumber() <= window.planLoaded[0] + 4) {
-                        w = new Date(w.getTime() + 604800 * 1000);
-                        loadWeek(w)
-                    }
                 }
                 window.planEvents = $.merge(window.planEvents, tmpEvents);
                 if(callback) {
@@ -233,7 +229,13 @@ $(document).ready(function () {
         w.setTime(w.getTime() + week * 86400 * 7 * 1000 - localOffset);
         var dayNr = (w.getDay() + 6) % 7;
         w.setDate(w.getDate() - dayNr - 2);
-        loadWeek(w)
+        loadWeek(w);
+        var w2 = new Date(w.getTime() + 604800 * 1000);
+        loadWeek(w2);
+        var w3 = new Date(w2.getTime() + 604800 * 1000);
+        loadWeek(w3);
+        var w4 = new Date(w3.getTime() + 604800 * 1000);
+        loadWeek(w4);
     }
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead

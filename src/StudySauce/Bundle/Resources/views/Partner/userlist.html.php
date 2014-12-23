@@ -92,7 +92,9 @@ $view['slots']->start('body'); ?>
             foreach($sessions as $i => $s)
             {
                 /** @var Visit $s */
-                $path = substr($s->getPath(), 1, min(strpos($s->getPath(), '/'), strlen($s->getPath())));
+                $first = strpos($s->getPath(), '/', 1);
+                $length = ($first ? $first : strlen($s->getPath())) - 1;
+                $path = empty($length) ? '' : substr($s->getPath(), 1, $length);
                 /** @var Schedule $schedule */
                 $schedule = $s->getUser()->getSchedules()->first();
                 /** @var Course1 $course1 */
@@ -164,7 +166,7 @@ $view['slots']->start('body'); ?>
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M')); ?></td>
-                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'metrics']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
+                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => 'home']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
                 <td><?php print $overall; ?>%</td>
                 <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>

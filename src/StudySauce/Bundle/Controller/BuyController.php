@@ -83,10 +83,10 @@ class BuyController extends Controller
         {
             $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
         }
-        if(empty($invite) && $user->getInvitedPartners()->exists(
+        if(empty($studentfirst) && $user->getInvitedPartners()->exists(
                 function ($k, PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) {
             $invite = $user->getInvitedPartners()->filter(
-                function ($k, PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first();
+                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first();
             $studentfirst = $invite->getUser()->getFirst();
             $studentlast = $invite->getUser()->getLast();
             $studentemail = $invite->getUser()->getEmail();
@@ -262,40 +262,42 @@ class BuyController extends Controller
                 $error = $aimResponse->response_reason_text;
             }
 
-            $subscription = new \AuthorizeNet_Subscription();
-            $subscription->name = 'Study Sauce ' . ($request->get(
-                    'reoccurs'
-                ) == 'yearly' ? 'Monthly' : 'Yearly') . ' Plan';
-            $subscription->intervalLength = $request->get('reoccurs') == 'custom' && isset($options['term'])
-                ? $options['term']
-                : ($request->get('reoccurs') == 'yearly' ? '12': '1');
-            $subscription->intervalUnit = 'months';
-            $subscription->startDate = date('Y-m-d');
-            $subscription->amount = $amount;
-            $subscription->creditCardCardNumber = $request->get('number');
-            $subscription->creditCardExpirationDate = '20' . $request->get('year') . '-' . $request->get('month');
-            $subscription->creditCardCardCode = $request->get('ccv');
-            $subscription->billToFirstName = $request->get('first');
-            $subscription->billToLastName = $request->get('last');
-            $subscription->billToAddress = $request->get('street1') .
-                (empty(trim($request->get('street2'))) ? '' : ("\n" . $request->get('street2')));
-            $subscription->billToCity = $request->get('city');
-            $subscription->billToZip = $request->get('zip');
-            $subscription->billToState = $request->get('state');
-            $subscription->billToCountry = $request->get('country');
-            $subscription->totalOccurrences = 9999;
+            // only set up reoccurring if the term is greater than zero
+            if($request->get('reoccurs') == 'custom' && isset($options['term']) && $options['term'] > 0) {
+                $subscription = new \AuthorizeNet_Subscription();
+                $subscription->name = 'Study Sauce ' . ($request->get(
+                        'reoccurs'
+                    ) == 'yearly' ? 'Monthly' : 'Yearly') . ' Plan';
+                $subscription->intervalLength = $request->get('reoccurs') == 'custom' && isset($options['term'])
+                    ? $options['term']
+                    : ($request->get('reoccurs') == 'yearly' ? '12' : '1');
+                $subscription->intervalUnit = 'months';
+                $subscription->startDate = date('Y-m-d');
+                $subscription->amount = $amount;
+                $subscription->creditCardCardNumber = $request->get('number');
+                $subscription->creditCardExpirationDate = '20' . $request->get('year') . '-' . $request->get('month');
+                $subscription->creditCardCardCode = $request->get('ccv');
+                $subscription->billToFirstName = $request->get('first');
+                $subscription->billToLastName = $request->get('last');
+                $subscription->billToAddress = $request->get('street1') .
+                    (empty(trim($request->get('street2'))) ? '' : ("\n" . $request->get('street2')));
+                $subscription->billToCity = $request->get('city');
+                $subscription->billToZip = $request->get('zip');
+                $subscription->billToState = $request->get('state');
+                $subscription->billToCountry = $request->get('country');
+                $subscription->totalOccurrences = 9999;
 
-            // TODO: if there is a duplicate subscription, increase the price
+                // TODO: if there is a duplicate subscription, increase the price
 
-            // Create the subscription.
-            $arbRequest = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-            $arbRequest->setSandbox(false);
-            $arbResponse = $arbRequest->createSubscription($subscription);
-            if ($arbResponse->isOk()) {
-                $payment->setSubscription($arbResponse->getSubscriptionId());
-            }
-            else {
-                $error = $arbResponse->getMessageText();
+                // Create the subscription.
+                $arbRequest = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
+                $arbRequest->setSandbox(false);
+                $arbResponse = $arbRequest->createSubscription($subscription);
+                if ($arbResponse->isOk()) {
+                    $payment->setSubscription($arbResponse->getSubscriptionId());
+                } else {
+                    $error = $arbResponse->getMessageText();
+                }
             }
 
             if (isset($error)) {

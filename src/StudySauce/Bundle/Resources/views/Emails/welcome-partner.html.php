@@ -8,7 +8,7 @@ Thank you for joining Study Sauce on behalf of your student.  To get the most ou
 <br />
 2. Lean on your experience to help students avoid common pitfalls.  Try to find a good balance between being supportive and challenging your student during your weekly meetings.
 <br />
-3. Consider purchasing a personalized study plan for your student to help take their studying to the next level.<br />
+3. Consider upgrading your student to a premium Study Sauce account to help take his/her studying to the next level.<br />
 <br />
 As always, we are happy to help with any questions that you might have. Just email us at admin@studysauce.com.<br />
 <br />

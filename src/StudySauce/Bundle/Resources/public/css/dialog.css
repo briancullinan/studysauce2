@@ -48,6 +48,7 @@
 #plan-empty
 {
     position: absolute;
+    top:40px;
 }
 
 #plan-empty .close

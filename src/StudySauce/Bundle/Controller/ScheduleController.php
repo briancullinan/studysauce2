@@ -410,7 +410,8 @@ class ScheduleController extends Controller
             if(empty($dotw[0]))
                 $dotw = [];
 
-            // select the first day between the two dates
+            // TODO: select the first day between the two dates
+            /*
             if($c['type'] == 'o' && !in_array('Weekly', $dotw))
             {
                 $classStart = new \DateTime($c['start']);
@@ -459,6 +460,7 @@ class ScheduleController extends Controller
                     }
                 }
             }
+            */
 
             $dotw = array_unique($dotw);
             sort($dotw);
