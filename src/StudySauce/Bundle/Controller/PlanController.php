@@ -83,7 +83,9 @@ class PlanController extends Controller
 
         // get demo schedule instead
         $showPlanIntro = false; // TODO: false in production
-        if (empty($schedule) || empty($schedule->getCourses()) || !$_user->hasRole('ROLE_PAID')) {
+        if (empty($schedule) ||
+            empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count()) ||
+            !$_user->hasRole('ROLE_PAID')) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
@@ -114,7 +116,7 @@ class PlanController extends Controller
         $emails = new EmailsController();
         $emails->setContainer($this->container);
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $_user->getDeadlines(), $_week, $orm, $emails);
-        $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
+        $courses = $schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted() && $c->getType() == 'c';})->toArray();
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
                 'courses' => array_values($courses),
@@ -149,7 +151,8 @@ class PlanController extends Controller
         $schedule = $user->getSchedules()->first();
 
         // get events for current week
-        if (empty($schedule) || empty($schedule->getCourses())) {
+        if (empty($schedule) ||
+            empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count())) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
 
@@ -167,7 +170,7 @@ class PlanController extends Controller
 
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $week, $orm, $emails);
 
-        $courses = $schedule->getCourses()->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
+        $courses = $schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted() && $c->getType() == 'c';})->toArray();
         return $this->render(
             'StudySauceBundle:Plan:widget.html.php',
             [
@@ -302,13 +305,13 @@ class PlanController extends Controller
         // TODO: get holidays and deadlines
 
         // add reoccurring events
-        $classes = $courses->filter(function (Course $c) {return $c->getType() == 'c';})->toArray();
+        $classes = $courses->filter(function (Course $c) {return !$c->getDeleted() && $c->getType() == 'c';})->toArray();
         $reoccurring = [];
         foreach ($classes as $i => $course) {
             /** @var Course $course */
             $reoccurring = array_merge($reoccurring, self::getReoccurring($course, $week));
         }
-        $others = $courses->filter(function (Course $c) {return $c->getType() == 'o';})->toArray();
+        $others = $courses->filter(function (Course $c) {return !$c->getDeleted() && $c->getType() == 'o';})->toArray();
         foreach ($others as $i => $other) {
             /** @var Course $other */
             $reoccurring = array_merge($reoccurring, self::getReoccurring($other, $week));
@@ -1094,8 +1097,8 @@ class PlanController extends Controller
     {
         $events = [];
         // no free study before first or after last classes
-        if($week < min($schedule->getCourses()->map(function (Course $c) {return $c->getStartTime()->getTimestamp();})->toArray()) ||
-            $week > max($schedule->getCourses()->map(function (Course $c) {return $c->getEndTime()->getTimestamp();})->toArray()))
+        if($week < min($schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted();})->map(function (Course $c) {return $c->getStartTime()->getTimestamp();})->toArray()) ||
+            $week > max($schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted();})->map(function (Course $c) {return $c->getEndTime()->getTimestamp();})->toArray()))
             return $events;
         // add free study to every
         $totalLength = $buckets->classTotals;

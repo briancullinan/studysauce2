@@ -76,7 +76,7 @@ $view['slots']->start('body'); ?>
                 <label title="Class should require less homework and/or be less difficult than most classes.  Will require less than 2 hours of studying for every hour of class"
                     class="radio"><span>Easy</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="easy" <?php print ($c->getStudyDifficulty() == 'easy' ? 'checked="checked"' : ''); ?>><i></i></label>
                 <label title="Class will be a pretty standard amount of homework/difficulty.  Will require ~2 hours studying for every hour of class"
-                    class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="medium" <?php print ($c->getStudyDifficulty() == 'average' ? 'checked="checked"' : ''); ?>><i></i></label>
+                    class="radio"><span>Average</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="average" <?php print ($c->getStudyDifficulty() == 'average' ? 'checked="checked"' : ''); ?>><i></i></label>
                 <label title="Class will require much more homework and focus than others.  ~3 hours studying for every hour of class"
                     class="radio"><span>Tough</span><input name="profile-difficulty-<?php print $c->getId(); ?>" type="radio" value="tough" <?php print ($c->getStudyDifficulty() == 'tough' ? 'checked="checked"' : ''); ?>><i></i></label>
             <?php } ?>

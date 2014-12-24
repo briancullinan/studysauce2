@@ -37,7 +37,7 @@ class MetricsController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
 
         $isDemo = false;
         if(!empty($schedule) && !empty($courses)) {
@@ -46,7 +46,7 @@ class MetricsController extends Controller
         if(empty($checkins)) {
             $isDemo = true;
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
             list($checkins, $checkouts) = self::demoCheckins($courses, $orm);
         }
         list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
@@ -91,7 +91,7 @@ class MetricsController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         else
             $courses = [];
 

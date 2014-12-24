@@ -45,11 +45,7 @@ class ProfileController extends Controller
 
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first() ?: new Schedule();
-        $courses = $schedule->getCourses()->filter(
-            function (Course $b) {
-                return $b->getType() == 'c';
-            }
-        )->toArray();
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
 
         return $this->render('StudySauceBundle:Profile:customize.html.php', [
                 'courses' => array_values($courses),
@@ -70,12 +66,12 @@ class ProfileController extends Controller
             return 'profile';
 
         if (empty($schedule->getUniversity()) ||
-            !$schedule->getCourses()->exists(function ($i, Course $c) {return $c->getType() == 'c';})) {
+            !$schedule->getCourses()->exists(function ($i, Course $c) {return !$c->getDeleted() && $c->getType() == 'c';})) {
             return 'schedule';
         }
 
         if($schedule->getCourses()->exists(function ($i, Course $c) {
-                return $c->getType() == 'c' && (empty($c->getStudyType()) || empty($c->getStudyDifficulty()));
+                return !$c->getDeleted() && $c->getType() == 'c' && (empty($c->getStudyType()) || empty($c->getStudyDifficulty()));
             }))
         {
             return 'customization';
@@ -123,7 +119,7 @@ class ProfileController extends Controller
             $orm->merge($schedule);
         }
 
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         foreach($courses as $i => $c)
         {
             /** @var Course $c */

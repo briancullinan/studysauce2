@@ -9,7 +9,6 @@ use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +30,7 @@ class DeadlinesController extends Controller
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         $demoDeadlines = $this->getDemoDeadlines();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
@@ -42,7 +41,7 @@ class DeadlinesController extends Controller
         /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         else
             $courses = [];
 
@@ -85,7 +84,7 @@ class DeadlinesController extends Controller
         $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         else
             $courses = [];
 
@@ -176,7 +175,7 @@ class DeadlinesController extends Controller
 
             if(!empty($d['courseId']) && $d['courseId'] != 'Nonacademic')
                 $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
-                        return $c->getId() == $d['courseId'];})->first();
+                        return !$c->getDeleted() && $c->getId() == $d['courseId'];})->first();
             $deadline->setCourse(empty($course) ? null : $course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));

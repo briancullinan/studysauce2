@@ -46,12 +46,12 @@ class ScheduleController extends Controller
         if(!empty($schedule)) {
             $courses = $schedule->getCourses()->filter(
                 function (Course $b) {
-                    return $b->getType() == 'c';
+                    return !$b->getDeleted() && $b->getType() == 'c';
                 }
             )->toArray();
             $others = $schedule->getCourses()->filter(
                 function (Course $b) {
-                    return $b->getType() == 'o';
+                    return !$b->getDeleted() && $b->getType() == 'o';
                 }
             )->toArray();
         }
@@ -68,7 +68,6 @@ class ScheduleController extends Controller
         return $this->render('StudySauceBundle:Schedule:tab.html.php', [
                 'schedule' => $schedule,
                 'demo' => $demo,
-                'classes' => $schedule != null ? $schedule->getCourses()->toArray() : [],
                 'csrf_token' => $csrfToken,
                 'courses' => array_values($courses),
                 'demoCourses' => $demoCourses,
@@ -122,7 +121,7 @@ class ScheduleController extends Controller
     private static function getDemoCourses(Schedule $schedule, EntityManager $orm)
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
         if(empty($courses))
         {
             $courses = [];
@@ -293,7 +292,7 @@ class ScheduleController extends Controller
 
         $birthdayUsers = $userCollection->matching($criteria);
         */
-        $others = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'o';})->toArray();
+        $others = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'o';})->toArray();
         if(empty($others))
         {
             $others = [];
@@ -399,7 +398,7 @@ class ScheduleController extends Controller
                 $course->setName($c['className']);
             } else {
                 /** @var $course Course */
-                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {return $x->getId() == $c['courseId'];})->first();
+                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
                 // figure out what changed
                 if ($course->getName() != $c['className']) {
                     // remove old reoccurring events
@@ -463,7 +462,7 @@ class ScheduleController extends Controller
 
         /** @var Course $course */
         $course = $schedule->getCourses()
-            ->filter(function (Course $c) use($request) {return $c->getId() == $request->get('remove');})
+            ->filter(function (Course $c) use($request) {return !$c->getDeleted() && $c->getId() == $request->get('remove');})
             ->first();
 
         if(!empty($course))
