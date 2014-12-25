@@ -467,7 +467,7 @@ class ScheduleController extends Controller
 
         if(!empty($course))
         {
-            if($course->getEvents()->exists(function (Event $save) {
+            if($course->getEvents()->exists(function ($k, Event $save) {
                     return !empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
                         !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
                 })) {
@@ -475,6 +475,12 @@ class ScheduleController extends Controller
                 $orm->merge($course);
             }
             else {
+                $events = $course->getEvents()->toArray();
+                foreach($events as $event) {
+                    $course->removeEvent($event);
+                    $schedule->removeEvent($event);
+                    $orm->remove($event);
+                }
                 $schedule->removeCourse($course);
                 $orm->remove($course);
             }

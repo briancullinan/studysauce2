@@ -21,7 +21,8 @@ jQuery(document).ready(function($) {
             checkout.find('input[name="cc-number"]').val().trim() != '' &&
             checkout.find('select[name="cc-month"]').val().trim() != '' &&
             checkout.find('select[name="cc-year"]').val().trim() != '' &&
-            checkout.find('input[name="cc-ccv"]').val().trim() != '')
+            checkout.find('input[name="cc-ccv"]').val().trim() != '' &&
+            (checkout.find('input[name="password"]:visible').length == 0 || checkout.find('input[name="password"]:visible"]').val().trim() != ''))
             valid = true;
         if(!checkout.find('#gift-pane').is(':visible') ||
             // checked if everything is blank, that's ok too
@@ -136,6 +137,7 @@ jQuery(document).ready(function($) {
                 first: checkout.find('#billing-pane .first-name input').val().trim(),
                 last: checkout.find('#billing-pane .last-name input').val().trim(),
                 email: checkout.find('#billing-pane .email input').val().trim(),
+                password: checkout.find('input[name="password"]:visible').length == 0 ? null : checkout.find('input[name="password"]:visible').val(),
                 street1: checkout.find('input[name="street1"]').val().trim(),
                 street2: checkout.find('input[name="street2"]').val().trim(),
                 city: checkout.find('.city input').val().trim(),

@@ -1,3 +1,5 @@
+var DASHBOARD_MARGINS = {};
+
 window.sincluding = [];
 window.visits = [];
 window.players = [];
@@ -92,6 +94,13 @@ function ssMergeScripts(content)
 }
 
 $(document).ready(function () {
+    var body = $('body');
+
+    $(window).resize(function () {
+        DASHBOARD_MARGINS = {padding: {top: $('.header-wrapper').outerHeight(), bottom: 0, left: 0, right: 0}};
+    });
+    $(window).trigger('resize');
+
     $('.sinclude').each(function () {
         var that = $(this),
             url = that.attr('data-src');
@@ -131,7 +140,7 @@ $(document).ready(function () {
         show: true
     });
 
-    $('body').on('show.bs.modal', '.modal', function () {
+    body.on('show.bs.modal', '.modal', function () {
         var modals = $('.modal');
         //if(backdrops.length > 1)
         if(modals.length > 0)
@@ -146,6 +155,25 @@ $(document).ready(function () {
         $('.modal-backdrop').remove();
     });
 
+    // show the already visible tabs
+    var panel = body.find('.panel-pane:visible').first();
+    if(panel.length > 0) {
+        var key = window.callbackKeys.indexOf(panel.attr('id').replace(/-step[0-9]+/g, '')),
+            path = window.callbackUri[key],
+            item = body.find('.main-menu a[href^="' + path + '"]').first();
+
+        if (item.parents('nav').find('ul.collapse.in') != item.parents('ul.collapse.in'))
+            item.parents('nav').find('ul.collapse.in').removeClass('in');
+        item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
+        var triggerShow = function () {
+            if (window.sincluding.length > 0) {
+                setTimeout(triggerShow, 100);
+                return;
+            }
+            panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
+        };
+        setTimeout(triggerShow, 100);
+    }
 });
 
 $.ajaxPrefilter(function (options, originalOptions) {

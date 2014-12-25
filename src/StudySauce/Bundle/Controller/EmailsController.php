@@ -292,7 +292,7 @@ class EmailsController extends Controller
 
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
         else
             $courses = [];
         $reminderOutput = count($reminders) > 1 ? 'Below are your reminders.<br /><br />' : 'Below is your reminder.<br /><br />';

@@ -290,6 +290,19 @@ $collection->add(
     )
 );
 $collection->add(
+    'plan_update',
+    new Route(
+        '/plan/update',
+        ['_controller' => 'StudySauceBundle:Plan:update'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
     'plan_strategy',
     new Route(
         '/plan/strategy',

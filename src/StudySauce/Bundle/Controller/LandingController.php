@@ -258,6 +258,9 @@ class LandingController extends Controller
         $orm = $this->get('doctrine')->getManager();
         $session = $request->getSession();
 
+        if(empty($session->get('parent')))
+            $session->set('parent', true);
+
         /** @var GroupInvite $group */
         // TODO: generalize this for other groups
         $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->get('_code')]);
@@ -267,8 +270,6 @@ class LandingController extends Controller
             return $this->forward('TorchAndLaurelBundle:Landing:parents');
         }
 
-        if(empty($session->get('parent')))
-            $session->set('parent', true);
         return $this->render('StudySauceBundle:Landing:parents.html.php');
     }
 

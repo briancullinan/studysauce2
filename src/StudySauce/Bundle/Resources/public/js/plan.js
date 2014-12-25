@@ -29,9 +29,8 @@ $(document).ready(function () {
                 }
 
                 // merge rows
-                if (w.getWeekNumber() == window.planLoaded[window.planLoaded.length] + 1) {
-                    content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
-                }
+                content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                // TODO: resort rows
                 window.planEvents = $.merge(window.planEvents, tmpEvents);
                 if(callback) {
                     var events = filterEvents(s, e);
@@ -56,6 +55,7 @@ $(document).ready(function () {
                 keyboard:false,
                 show:true
             });
+            $(document).off('focusin.bs.modal');
             $('body').removeClass('modal-open');
         }
         else {
@@ -102,8 +102,8 @@ $(document).ready(function () {
         min = morning + ':00:00';
 
         calendar = $('#calendar').fullCalendar({
-            minTime: min,
-            maxTime: max,
+            //minTime: min,
+            //maxTime: max,
             titleFormat: 'MMMM',
             editable: true,
             draggable: true,
@@ -161,6 +161,7 @@ $(document).ready(function () {
 
                 var prev = null, next = null;
 
+                // find the next event of the same type
                 for (var i = 0; i < window.planEvents.length; i++) {
                     if ((window.planEvents[i].className[1] == event.className[1] ||
                         window.planEvents[i].className[0] == event.className[1]) &&
@@ -188,9 +189,9 @@ $(document).ready(function () {
 
                 // TODO: fix this
                 $.ajax({
-                    url: '/node/move/schedule',
+                    url: window.callbackPaths['plan_update'],
                     type: 'POST',
-                    dataType: 'json',
+                    dataType: 'text',
                     data: {
                         eventId: event['eventId'],
                         start: event['start'].toJSON(),
@@ -209,13 +210,20 @@ $(document).ready(function () {
                     },
                     error: revertFunc,
                     success: function (data) {
-                        // update calendar events
-                        window.planEvents = data.events;
-                        window.planLoaded = [event['start'].getWeekNumber()];
-                        for (var i = 0; i < window.planEvents.length; i++) {
-                            window.planEvents[i].start = new Date(window.planEvents[i].start);
-                            window.planEvents[i].end = new Date(window.planEvents[i].end);
+                        var content = $(data);
+                        window.planEvents = [];
+                        window.planLoaded = [];
+                        // merge scripts
+                        ssMergeScripts(content.filter('script:not([src])'));
+                        for (var j = 0; j < window.planEvents.length; j++) {
+                            window.planEvents[j].start = new Date(window.planEvents[j].start);
+                            window.planEvents[j].end = new Date(window.planEvents[j].end);
                         }
+
+                        // merge rows
+                        plans.find('.head,.session-row').remove();
+                        content.find('.head,.session-row').insertAfter(plans.find('.sort-by'));
+
                         if (calendar != null && typeof calendar.fullCalendar != 'undefined')
                             calendar.fullCalendar('refetchEvents');
                     }

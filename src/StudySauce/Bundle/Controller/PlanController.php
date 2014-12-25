@@ -22,6 +22,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class PlanController
@@ -41,7 +42,7 @@ class PlanController extends Controller
         'Su' => 0
     ];
     private static $holidays;
-    private static $unresolved;
+    private static $unresolved = [];
 
     /**
      *
@@ -378,6 +379,8 @@ class PlanController extends Controller
         $events = array_merge($events, $meals);
         $events = array_merge($events, $studySessions);
         $events = array_merge($events, $freeStudy);
+        $allDay = self::getAllDay($deadlines, $week);
+        $events = array_merge($events, $allDay);
 
         // hash list of events in their default order and schedule settings
         $weekHash = md5(implode('', array_map(function (array $e) {
@@ -402,20 +405,17 @@ class PlanController extends Controller
             /** @var Week $eventWeek */
             // if the event hash matches use final arrangement from week cache
             $matchingEvents = $eventWeek->getEvents()->toArray();
-            $diff = (intval($w->format('W')) - $eventWeek->getWeek()) * 86400 * 7;
-            $interval = new \DateInterval('PT' . abs($diff) . 'S');
-            if($diff < 0)
-                $interval->invert = 1;
-            $events = array_map(function (Event $e) use ($interval) {
-                return [
-                    'deadline' => $e->getDeadline(),
-                    'course' => $e->getCourse(),
-                    'type' => $e->getType(),
-                    'name' => $e->getName(),
-                    // shift times to new week
-                    'start' => date_add(clone $e->getStart(), $interval),
-                    'end' => date_add(clone $e->getEnd(), $interval)
-                ];
+            $events = array_map(function (Event $e) use ($week) {
+                    $offset = $week - strtotime('last Sunday', $e->getStart()->getTimestamp());
+                    return [
+                        'deadline' => $e->getDeadline(),
+                        'course' => $e->getCourse(),
+                        'type' => $e->getType(),
+                        'name' => $e->getName(),
+                        // shift times to new week
+                        'start' => date_timestamp_set(new \DateTime(), $e->getStart()->getTimestamp() + $offset),
+                        'end' => date_timestamp_set(new \DateTime(), $e->getEnd()->getTimestamp() + $offset)
+                    ];
             }, $matchingEvents);
         }
         else {
@@ -436,10 +436,12 @@ class PlanController extends Controller
                     $workingEvents,
                     $week,
                     $schedule);
-                $currentEvents = self::getWorkingEvents($workingEvents, $i, $notBefore, $notAfter);
+                $currentEvents = self::getWorkingEvents($workingEvents, $notBefore, $notAfter);
                 self::removeOverlaps($currentEvents, $event, $buckets, $notBefore, $notAfter);
                 $workingEvents[] = $event;
             }
+            // TODO: resort events so getWorkingEvents doesn't have to
+            self::sortEvents($workingEvents);
             foreach($studySessions as $i => $event)
             {
                 list($notBefore, $notAfter) = self::getBoundaries(
@@ -447,11 +449,13 @@ class PlanController extends Controller
                     $workingEvents,
                     $week,
                     $schedule);
-                $currentEvents = self::getWorkingEvents($workingEvents, $i, $notBefore, $notAfter);
+                $currentEvents = self::getWorkingEvents($workingEvents, $notBefore, $notAfter);
                 self::removeOverlaps($currentEvents, $event, $buckets, $notBefore, $notAfter);
                 $workingEvents[] = $event;
                 self::bucketEvents([$event], $buckets);
             }
+            // TODO: resort events so getWorkingEvents doesn't have to
+            self::sortEvents($workingEvents);
             foreach($freeStudy as $i => $event)
             {
                 list($notBefore, $notAfter) = self::getBoundaries(
@@ -459,15 +463,15 @@ class PlanController extends Controller
                     $workingEvents,
                     $week,
                     $schedule);
-                $currentEvents = self::getWorkingEvents($workingEvents, $i, $notBefore, $notAfter);
+                $currentEvents = self::getWorkingEvents($workingEvents, $notBefore, $notAfter);
                 self::removeOverlaps($currentEvents, $event, $buckets, $notBefore, $notAfter);
                 $workingEvents[] = $event;
                 self::bucketEvents([$event], $buckets);
             }
+            $workingEvents = array_merge($workingEvents, $allDay);
+            self::sortEvents($workingEvents);
             $events = $workingEvents;
         }
-
-        $events = array_merge($events, self::getAllDay($deadlines, $week));
 
         // get the current week
         /** @var Week $currentWeek */
@@ -756,12 +760,11 @@ class PlanController extends Controller
 
     /**
      * @param $events
-     * @param $index
-     * @param \DateTime $notBefore
-     * @param \DateTime $notAfter
+     * @param double $notBefore
+     * @param double $notAfter
      * @return array
      */
-    private static function getWorkingEvents($events, $index, $notBefore, $notAfter)
+    private static function getWorkingEvents($events, $notBefore, $notAfter)
     {
         // get a list of events within a 24 hour time range to work with, we should never move more than that
         $beforeDistances = [];
@@ -769,9 +772,8 @@ class PlanController extends Controller
         foreach ($events as $i => $event)
         {
             /** @var array $event */
-            if($i == $index ||
-                // ignore all day events
-                $event['type'] == 'd' || $event['type'] == 'h' ||
+            // ignore all day events
+            if($event['type'] == 'd' || $event['type'] == 'h' ||
                 $event['type'] == 'r')
                 continue;
 
@@ -831,22 +833,14 @@ class PlanController extends Controller
 
     /**
      * @param $workingEvents
-     * @param array $event
-     * @param $buckets
+     * @param double $length
      * @param $notBefore
      * @param $notAfter
+     * @return array
      */
-    private static function removeOverlaps($workingEvents, array &$event, $buckets, $notBefore, $notAfter)
+    private static function getGaps(&$workingEvents, $length, $notBefore, $notAfter)
     {
         // find gaps
-        if(empty($workingEvents)) {
-            return;
-        }
-        /** @var \DateTime $endFirst */
-        $endFirst = $event['end'];
-        /** @var \DateTime $startFirst */
-        $startFirst = $event['start'];
-        $length = $endFirst->getTimestamp() - $startFirst->getTimestamp();
         $gapStart = new \DateTime();
         $gapStart->setTimestamp($notBefore);
         $last = $gapStart->getTimestamp();
@@ -881,7 +875,28 @@ class PlanController extends Controller
             $gaps['empty'] = $gapStart;
             $workingEvents['empty']['start'] = clone $gapEnd;
         }
+        return $gaps;
+    }
 
+    /**
+     * @param $workingEvents
+     * @param array $event
+     * @param $buckets
+     * @param $notBefore
+     * @param $notAfter
+     */
+    private static function removeOverlaps($workingEvents, array &$event, $buckets, $notBefore, $notAfter)
+    {
+        if(empty($workingEvents)) {
+            return;
+        }
+        // find gaps
+        /** @var \DateTime $endFirst */
+        $endFirst = $event['end'];
+        /** @var \DateTime $startFirst */
+        $startFirst = $event['start'];
+        $length = $endFirst->getTimestamp() - $startFirst->getTimestamp();
+        $gaps = self::getGaps($workingEvents, $length, $notBefore, $notAfter);
         // get the closest opening to the original time
         // TODO: store list of gaps by adjusting the ends when the new event is added
         $closest = [];
@@ -907,6 +922,7 @@ class PlanController extends Controller
             // check if ending of gap is closer to preferred day
             /** @var array $e */
             $e = $workingEvents[intval(substr($c, 1))];
+            /** @var \DateTime $gapEnd */
             $gapEnd = clone $e['start'];
             // if after midnight subtract 1 day
             if (intval($gapEnd->format('H')) < 5) {
@@ -988,7 +1004,7 @@ class PlanController extends Controller
         }
 
         // send assertion email when we fail to find a spot to place the event
-        if (!empty($workingEvents) && $event['type'] != 'm' && $event['type'] != 'z' && $top == -1) {
+        if (!empty($workingEvents) && !isset($workingEvents['empty']) && $event['type'] != 'm' && $event['type'] != 'z' && $top == -1) {
             self::$unresolved[] = $event;
         }
     }
@@ -1545,6 +1561,117 @@ class PlanController extends Controller
                 $buckets->studyTotals = (isset($buckets->studyTotals) ? $buckets->studyTotals : 0) + ($length + 600);
             }
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Schedule $schedule */
+        $schedule = $user->getSchedules()->first();
+
+        /** @var Event $event */
+        $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
+
+        if (!empty($event)) {
+            $oldStart = $event->getStart();
+            $newStart = new \DateTime($request->get('start'));
+            $newStart->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+            $newEnd = new \DateTime($request->get('end'));
+            $newEnd->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
+            $event->setStart($newStart);
+            $event->setEnd($newEnd);
+            $event->setMoved(true);
+            $orm->merge($event);
+
+            if($newStart->getTimestamp() - $oldStart->getTimestamp() < 0) {
+                $diff = new \DateInterval('PT' . abs($newStart->getTimestamp() - $oldStart->getTimestamp()) . 'S');
+                $diff->invert = 1;
+            }
+            else {
+                $diff = new \DateInterval('PT' . ($newStart->getTimestamp() - $oldStart->getTimestamp()) . 'S');
+            }
+
+            // move subsequent events of the same type
+            $events = $schedule->getEvents()
+                ->filter(function (Event $e)use($event, $oldStart) {
+                    return $e->getType() == $event->getType() &&
+                            $e->getName() == $event->getName() &&
+                            $e->getStart() > $oldStart &&
+                            $e->getId() != $event->getId(); })
+                ->toArray();
+            usort($events, function (Event $a, Event $b) use ($events) {
+                    return $a->getStart()->getTimestamp() - $b->getStart()->getTimestamp();
+                });
+
+            foreach ($events as $k => $e)
+            {
+                /** @var Event $e */
+                // if more than a week has passed add a week to $newStart and test again
+                if ($e->getStart()->getTimestamp() - $oldStart->getTimestamp() > 60 * 60 * 24 * 8)
+                    $oldStart->setTimestamp($oldStart->getTimestamp() + 60 * 60 * 24 * 7);
+
+                // make sure next event is about a week later
+                if ($e->getStart()->getTimestamp() - $oldStart->getTimestamp() > 60 * 60 * 24 * 6 &&
+                    $e->getStart()->getTimestamp() - $oldStart->getTimestamp() < 60 * 60 * 24 * 8 &&
+                    date_add(clone $e->getStart(), $diff)->format('H:i:s') == $newStart->format('H:i:s')
+                ) {
+                    // get events for the day to make sure we are not overlapping
+                    $working = $schedule->getEvents()
+                        ->filter(function (Event $x) use ($e) {
+                                // ignore all these event types because they are not displayed to the user
+                                return $e->getId() != $x->getId() && $x->getType() != 'h' && $x->getType() != 'd' &&
+                                    $x->getType() != 'r' && $x->getType() != 'm' && $x->getType() != 'z'; })
+                        ->map(function (Event $e) {return [
+                                'start' => $e->getStart(),
+                                'end' => $e->getEnd(),
+                                'type' => $e->getType()
+                            ];})->toArray();
+                    self::sortEvents($working);
+                    $working = self::getWorkingEvents($working,
+                        $e->getStart()->getTimestamp() - 86400,
+                        $e->getEnd()->getTimestamp() + 86400);
+                    self::sortEvents($working);
+                    /** @var \DateTime $tempStart */
+                    $tempStart = date_add(clone $e->getStart(), $diff);
+                    /** @var \DateTime $tempEnd */
+                    $tempEnd = date_add(clone $e->getEnd(), $diff);
+
+                    $gaps = self::getGaps(
+                        $working,
+                        $tempEnd->getTimestamp() - $tempStart->getTimestamp(),
+                        $e->getStart()->getTimestamp() - 604800,
+                        $e->getEnd()->getTimestamp() + 604800);
+                    // make sure one of the gaps overlaps the newTime
+                    foreach($gaps as $c => $d) {
+                        /** @var \DateTime $d */
+                        /** @var \DateTime $gapEnd */
+                        $gapEnd = $working[intval(substr($c, 1))]['start'];
+                        if ($d <= $tempStart &&
+                            $gapEnd >= $tempEnd
+                        ) {
+                            $e->setStart($tempStart);
+                            $e->setEnd($tempEnd);
+                            $e->setMoved(true);
+                            $orm->merge($e);
+                        }
+                    }
+                }
+            }
+
+        }
+        $orm->flush();
+
+        return $this->indexAction(null, $event->getStart()->format('Y-m-d'));
     }
 
     /**

@@ -1,4 +1,4 @@
-var DASHBOARD_MARGINS = {};
+
 
 function loadingAnimation(that)
 {
@@ -161,18 +161,6 @@ $(document).ready(function () {
         }
     }
 
-    setTimeout(function () {
-        // show the already visible tabs
-        var panel = body.find('.panel-pane:visible').first(),
-            key = window.callbackKeys.indexOf(panel.attr('id').replace(/-step[0-9]+/g, '')),
-            path = window.callbackUri[key],
-            item = body.find('.main-menu a[href^="' + path + '"]').first();
-        if(item.parents('nav').find('ul.collapse.in') != item.parents('ul.collapse.in'))
-            item.parents('nav').find('ul.collapse.in').removeClass('in');
-        item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
-        body.find('.panel-pane:visible').trigger('show');
-    }, 100);
-
     body.on('mouseenter', '*[title]:not([original-title])', function () {
         $('.tipsy').remove();
         $(this).tipsy().trigger('mouseenter');
@@ -198,11 +186,6 @@ $(document).ready(function () {
             evt.stopPropagation();
         }
     });
-
-    $(window).resize(function () {
-        DASHBOARD_MARGINS = {padding: {top: $('.header-wrapper').outerHeight(), bottom: 0, left: 0, right: 0}};
-    });
-    $(window).trigger('resize');
 
     body.on('click', ':not(#left-panel):not(#right-panel):not(#left-panel *):not(#right-panel *)', collapseMenu);
     body.on('click', '#left-panel a[href="#collapse"], #right-panel a[href="#collapse"]', collapseMenu);

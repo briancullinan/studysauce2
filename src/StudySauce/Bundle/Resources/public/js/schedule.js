@@ -353,6 +353,10 @@ $(document).ready(function () {
                     ? ('0' + t.getMinutes())
                     : t.getMinutes()) + ':00');
         }
+        if(jQuery(this).is('[type="date"]'))
+            jQuery(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', jQuery(this).val());
+        if(jQuery(this).is('.hasDatepicker'))
+            jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val($(this).datepicker('getDate'));
     });
     body.on('keyup', '#schedule .start-time input, #schedule .end-time input, ' +
         '#schedule .start-date input, #schedule .end-date input', function () {
@@ -361,8 +365,10 @@ $(document).ready(function () {
         });
     });
     body.on('keyup', '#schedule .class-name input, #schedule .start-time input, #schedule .end-time input, ' +
-        '#schedule .start-date input, #schedule .end-date input, #schedule .university input', function () {
-        planFunc.apply(jQuery(this).parents('.class-row'));
+        '#schedule .start-date input, #schedule .end-date input, #schedule .university input', planFunc);
+    body.on('focus', '#schedule .start-time input[type="time"], #schedule .end-time input[type="time"]', function () {
+        if($(this).val() == '')
+            $(this).val('12:00:00');
     });
     body.on('change', '#schedule .start-date input, #schedule .end-date input', function () {
         var schedule = $('#schedule'),

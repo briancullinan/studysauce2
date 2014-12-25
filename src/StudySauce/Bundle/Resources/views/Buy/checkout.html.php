@@ -1,7 +1,10 @@
 <?php
+use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var GlobalVariables $app */
+/** @var User $user */
+$user = $app->getUser();
 
 $isPartner =
     $app->getSession()->has('parent') || $app->getUser()->hasRole('ROLE_PARENT') ||
@@ -10,27 +13,13 @@ $isPartner =
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/buy.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/buy.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/buy.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/buy.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -50,6 +39,11 @@ $view['slots']->start('body'); ?>
                 <div class="email">
                     <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
                 </div>
+                <?php if(!is_object($user) || $user->hasRole('ROLE_GUEST')) { ?>
+                    <div class="password">
+                        <label class="input"><span>Password</span><input name="password" type="text" value=""></label>
+                    </div>
+                <?php } ?>
                 <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
                 <label class="input"><input name="street2" type="text" value=""></label>
                 <div class="city">

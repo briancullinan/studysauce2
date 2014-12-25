@@ -67,9 +67,11 @@ class BuyController extends Controller
         {
             /** @var ParentInvite $invite */
             $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
-            $studentfirst = $invite->getFromFirst();
-            $studentlast = $invite->getFromLast();
-            $studentemail = $invite->getFromEmail();
+            if(!empty($invite)) {
+                $studentfirst = $invite->getFromFirst();
+                $studentlast = $invite->getFromLast();
+                $studentemail = $invite->getFromEmail();
+            }
         }
         if(!empty($request->getSession()->get('partner')))
         {
@@ -308,7 +310,7 @@ class BuyController extends Controller
                 // update paid status
                 $user->addRole('ROLE_PAID');
                 // set group for coupon is necessary
-                if(!empty($coupon) && !empty($coupon->getGroup())) {
+                if(!empty($coupon) && !empty($coupon->getGroup()) && !$user->hasGroup($coupon->getGroup()->getName())) {
                     $user->addGroup($coupon->getGroup());
                 }
                 $userManager->updateUser($user, false);
@@ -401,7 +403,6 @@ class BuyController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
-        $session = $request->getSession();
         $user = $this->getUser();
 
         // create a mock invite
@@ -428,99 +429,16 @@ class BuyController extends Controller
         // create a user from checkout only if we are currently logged in as guests
         if($user->hasRole('ROLE_GUEST')) {
             // look up existing user by email address
-            $first = $request->get('first');
-            $last = $request->get('last');
-            $email = $request->get('email');
-            $user = $userManager->findUserByEmail($email);
-
-            $relationSetter = function ($user) {};
-            if(!empty($session->get('group'))) {
-                /** @var GroupInvite $group */
-                $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->getSession()->get('group')]);
-                if(!empty($group->getStudent()))
-                    $user = $group->getStudent();
-                else {
-                    $relationSetter = function (User $user) use ($group, $orm) {
-                        $group->setStudent($user);
-                        $user->addInvitedGroup($group);
-                        $orm->merge($group);
-                    };
-                }
-            }
-            if(!empty($session->get('parent'))) {
-                /** @var ParentInvite $parent */
-                $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
-                if(!empty($parent->getParent()))
-                    $user = $parent->getParent();
-                else {
-                    $relationSetter = function (User $user) use ($parent, $orm) {
-                        $parent->setParent($user);
-                        $user->addInvitedParent($parent);
-                        $orm->merge($parent);
-                    };
-                }
-            }
-            if(!empty($session->get('partner'))) {
-                /** @var PartnerInvite $partner */
-                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
-                if(!empty($partner->getPartner()))
-                    $user = $partner->getPartner();
-                else {
-                    $relationSetter = function (User $user) use ($partner, $orm) {
-                        $partner->setPartner($user);
-                        $user->addInvitedPartner($partner);
-                        $orm->merge($partner);
-                    };
-                }
-            }
-            if(!empty($session->get('student'))) {
-                /** @var StudentInvite $student */
-                $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
-                if(!empty($student->getStudent()))
-                    $user = $student->getStudent();
-                else {
-                    $relationSetter = function (User $user) use ($student, $orm) {
-                        $student->setStudent($user);
-                        $user->addInvitedStudent($student);
-                        $orm->merge($student);
-                    };
-                }
-            }
+            /** @var User $user */
+            $user = $userManager->findUserByEmail($request->get('email'));
 
             // create a user if anonymous
             if(empty($user)) {
-                /** @var User $user */
-                $user = $userManager->createUser();
-                $user->setFirst($first);
-                $user->setLast($last);
-                $user->setEmail($email);
-                $user->setEmailCanonical($email);
-                $encoder_service = $this->get('security.encoder_factory');
-                /** @var $encoder PasswordEncoderInterface */
-                $encoder = $encoder_service->getEncoder($user);
-                $password = $encoder->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt());
-                $user->setPassword($password);
-                $user->addRole('ROLE_USER');
-                if(isset($group))
-                    $user->addGroup($group->getGroup());
-                if(isset($parent))
-                    $user->addRole('ROLE_PARENT');
-                if(isset($partner))
-                    $user->addRole('ROLE_PARTNER');
-                // assign correct group to anonymous users
-                if(!empty($request->getSession()->get('organization'))) {
-                    /** @var Group $group */
-                    $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);
-                    $user->addGroup($group);
-                }
-                $user->setEnabled(true);
-                $user->setUsername($email);
-                $user->setUsernameCanonical($email);
-                $relationSetter($user);
-                $userManager->updateUser($user);
+                $account = new AccountController();
+                $account->setContainer($this->container);
+                $account->createAction($request);
+                $user = $userManager->findUserByEmail($request->get('email'));
             }
-            if(isset($relationSetter))
-                $relationSetter($user);
             // change invite owner to the actual user
             if(isset($invite)) {
                 $invite->setUser($user);
