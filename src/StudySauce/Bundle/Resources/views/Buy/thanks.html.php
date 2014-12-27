@@ -36,6 +36,7 @@ $view['slots']->start('body'); ?>
         <h1>Thank you for your purchase</h1>
         <h2>We have notified your student of the purchase. Please feel free to contact us if you have any questions. Thank you.<br />
             <br />- The Study Sauce Team</h2>
+        <a href="<?php print $view['router']->generate('home'); ?>">Go home</a>
     </div>
 </div>
 <?php $view['slots']->stop();

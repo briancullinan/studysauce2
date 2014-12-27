@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     body.on('show', '.course2.step4', function () {
         // mark lesson completed on the menu
-        var step = $(this).attr('id').replace(/-step[0-9]/ig, ''),
+        var step = $(this).attr('id').replace(/-step[0-9]+/ig, ''),
             path = window.callbackUri[window.callbackKeys.indexOf(step)];
         $('.main-menu a[href*="' + path + '"]').parent('li').addClass('complete');
 

@@ -109,7 +109,7 @@ class PageTracker implements EventSubscriberInterface
                     $visited->setTimezone(new \DateTimeZone(date_default_timezone_get()));
                     $prev->setCreated($visited);
                     $prev->setHash($v['hash']);
-                    $prev->setPath(str_replace($request->getBaseUrl(), '', $v['path']));
+                    $prev->setPath($request->getBaseUrl() != '/' ? str_replace($request->getBaseUrl(), '', $v['path']) : $v['path']);
                     $prevQuery = self::queryToArray($v['query']);
                     $prev->setQuery(empty($prevQuery) ? null : $prevQuery);
                     $this->orm->persist($prev);

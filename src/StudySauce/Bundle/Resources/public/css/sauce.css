@@ -457,7 +457,7 @@ input[type=month],
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-shadow: none;
-    height:28px;
+    height:27px;
     transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
     vertical-align: middle;
     margin:0;

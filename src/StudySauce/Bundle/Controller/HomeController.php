@@ -65,6 +65,8 @@ class HomeController extends Controller
             return [$step, ['_format' => 'funnel']];
         elseif(empty($user->getProperty('first_time')))
             return ['course1_introduction', []];
+        elseif($user->hasRole('ROLE_PARENT'))
+            return ['logout', []];
         return ['home', []];
     }
 }

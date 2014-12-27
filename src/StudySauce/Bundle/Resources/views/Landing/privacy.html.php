@@ -101,7 +101,7 @@ $view['slots']->start('body'); ?>
             85255<br>United States<br><a href="mailto:support@studysauce.com">support@studysauce.com</a><br>(480)
             331-8570<br></p>
 
-        <div class="highlighted-link"><a href="<?php print $view['router']->generate('_welcome'); ?>" class="more">Back</a></div>
+        <div class="highlighted-link"><a href="<?php print $view['router']->generate('_welcome'); ?>" class="more">Go home</a></div>
     </div>
 </div>
 <?php $view['slots']->stop(); ?>

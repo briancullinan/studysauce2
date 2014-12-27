@@ -12,6 +12,7 @@ use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use TorchAndLaurel\Bundle\Controller\EmailsController as TorchEmailsController;
 
 /**
  * Class DialogsController
@@ -250,6 +251,7 @@ class DialogsController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
+        $session = $request->getSession();
 
         // save the invite
         $bill = new ParentInvite();
@@ -275,9 +277,20 @@ class DialogsController extends Controller
         }
         $orm->persist($bill);
         $orm->flush();
-        $email = new EmailsController();
-        $email->setContainer($this->container);
-        $email->parentPayAction($user, $bill);
+        // TODO: generalize this for other groups
+        $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($group) && $group->getGroup()->getName() == 'Torch And Laurel' ||
+            ($session->has('organization') && $session->get('organization') == 'Torch And Laurel') ||
+            $user->hasGroup('Torch And Laurel')) {
+            $email = new TorchEmailsController();
+            $email->setContainer($this->container);
+            $email->parentPayAction($user, $bill);
+        }
+        else {
+            $email = new EmailsController();
+            $email->setContainer($this->container);
+            $email->parentPayAction($user, $bill);
+        }
 
         return new JsonResponse(true);
     }
@@ -308,6 +321,7 @@ class DialogsController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
+        $session = $request->getSession();
 
         // save the invite
         $student = new StudentInvite();
@@ -333,9 +347,20 @@ class DialogsController extends Controller
         }
         $orm->persist($student);
         $orm->flush();
-        $email = new EmailsController();
-        $email->setContainer($this->container);
-        $email->studentInviteAction($user, $student);
+        // TODO: generalize this for other groups
+        $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->get('_code')]);
+        if(!empty($group) && $group->getGroup()->getName() == 'Torch And Laurel' ||
+            ($session->has('organization') && $session->get('organization') == 'Torch And Laurel') ||
+            $user->hasGroup('Torch And Laurel')) {
+            $email = new TorchEmailsController();
+            $email->setContainer($this->container);
+            $email->studentInviteAction($user, $student);
+        }
+        else {
+            $email = new EmailsController();
+            $email->setContainer($this->container);
+            $email->studentInviteAction($user, $student);
+        }
 
         return new JsonResponse(true);
     }

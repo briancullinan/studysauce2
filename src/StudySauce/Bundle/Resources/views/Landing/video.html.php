@@ -1,4 +1,7 @@
 <div class="video clearfix">
+    <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/SMU_blur.jpg'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+        <img width="100%" height="100%" src="<?php echo $view->escape($url) ?>" />
+    <?php endforeach; ?>
     <div class="flexslider">
         <h1>Learn how to learn</h1>
         <ul class="slides clearfix">

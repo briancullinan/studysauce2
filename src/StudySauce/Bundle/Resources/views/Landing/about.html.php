@@ -52,6 +52,7 @@ $view['slots']->start('body'); ?>
                 <a href="https://twitter.com/StudySauce">&nbsp;</a>
                 <a href="<?php print $view['router']->generate('privacy'); ?>">&nbsp;</a>
             </div>
+            <div class="highlighted-link"><br /><a href="<?php print $view['router']->generate('_welcome'); ?>" class="more">Go home</a></div>
         </div>
     </div>
 </div>

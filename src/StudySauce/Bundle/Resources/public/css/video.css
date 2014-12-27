@@ -1,7 +1,18 @@
 .landing-home .video {
-    background: url(../images/SMU_blur.jpg) no-repeat fixed 50% -50px #007799;
     text-align: center;
-    background-size: 100% 100%;
+    position:relative;
+}
+
+.landing-home .video > img {
+    width: auto;
+    height: auto;
+    min-height: 100%;
+    min-width: 100%;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index: -1;
+    max-width: none;
 }
 
 .landing-home .video h1 {
@@ -30,8 +41,6 @@
 {
     text-align: center;
     width:39%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     padding:0;
     overflow:visible;
     display:inline-block;

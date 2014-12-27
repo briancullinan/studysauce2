@@ -3,6 +3,11 @@
     margin-top:30px;
 }
 
+.features
+{
+    background-color: #fff;
+}
+
 .features .two-column-guide .grid_6
 {
     width: 50%;
@@ -71,6 +76,7 @@
     text-align: center;
     clear: both;
     display: block;
+    background-color: #fff;
 }
 
 .support-box a

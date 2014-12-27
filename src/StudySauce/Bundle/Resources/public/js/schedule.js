@@ -6,6 +6,8 @@ $(document).ready(function () {
         var schedule = $('#schedule');
         jQuery(this).each(function () {
             var row = $(this).closest('.class-row');
+            if(row.length == 0)
+                return;
             if(row.find('.class-name input').val().trim() == '' &&
                 row.find('.day-of-the-week input:not([value="Weekly"]):checked').length == 0 &&
                 row.find('.start-date input').val().trim() == '' &&
@@ -322,25 +324,26 @@ $(document).ready(function () {
         var schedule = $('#schedule');
         var row = jQuery(this).closest('.class-row'),
             first = schedule.find('.class-row').first();
-        if(row.find('.class-name input').val() != '' &&
-            row.find('.start-date input').val() == '' &&
-            row.find('.end-date input').val() == '' &&
-            first.find('.start-date input').val() != '' &&
-            first.find('.end-date input').val() != '' &&
-            row[0] != schedule.find('.class-row').first()[0])
-        {
-            // use first rows dates
-            row.find('.start-date input').val(first.find('.start-date input').val());
-            row.find('.end-date input').val(first.find('.end-date input').val());
+        if(first.find('.start-date input').val() != '' &&
+            first.find('.end-date input').val() != '') {
+            schedule.find('.class-row').each(function () {
+                var row = $(this);
+                if (row.find('.class-name input').val() != '' &&
+                    row.find('.start-date input').val() == '' &&
+                    row.find('.end-date input').val() == '' &&
+                    row[0] != first[0]) {
+                    // use first rows dates
+                    row.find('.start-date input').val(first.find('.start-date input').val());
+                    row.find('.end-date input').val(first.find('.end-date input').val());
+                    planFunc.apply(row);
+                }
+            });
         }
     };
     body.on('change', '#schedule .class-name input', autoFillDate);
     body.on('keyup', '#schedule .class-name input', autoFillDate);
     body.on('change', '#schedule .start-time input, #schedule .end-time input, ' +
         '#schedule .start-date input, #schedule .end-date input', function () {
-        jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
-            autoFillDate.apply(this);
-        });
         if(jQuery(this).is('[type="time"]'))
             jQuery(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
         if(jQuery(this).is('.is-timeEntry[type="text"]'))
@@ -357,13 +360,10 @@ $(document).ready(function () {
             jQuery(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', jQuery(this).val());
         if(jQuery(this).is('.hasDatepicker'))
             jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val($(this).datepicker('getDate'));
+        autoFillDate.apply(this);
     });
     body.on('keyup', '#schedule .start-time input, #schedule .end-time input, ' +
-        '#schedule .start-date input, #schedule .end-date input', function () {
-        jQuery(this).parents('.class-row').nextUntil(':not(.class-row)').each(function () {
-            autoFillDate.apply(this);
-        });
-    });
+        '#schedule .start-date input, #schedule .end-date input', autoFillDate);
     body.on('keyup', '#schedule .class-name input, #schedule .start-time input, #schedule .end-time input, ' +
         '#schedule .start-date input, #schedule .end-date input, #schedule .university input', planFunc);
     body.on('focus', '#schedule .start-time input[type="time"], #schedule .end-time input[type="time"]', function () {

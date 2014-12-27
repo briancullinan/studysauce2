@@ -196,8 +196,7 @@ $view['slots']->start('body'); ?>
 
         <p>Effective as of September 09, 2013&nbsp;</p>
 
-        <div class="highlighted-link"><a href="<?php print $view['router']->generate('_welcome'); ?>"
-                                       class="more">Back</a></div>
+        <div class="highlighted-link"><a href="<?php print $view['router']->generate('_welcome'); ?>" class="more">Go home</a></div>
     </div>
 </div>
 <?php $view['slots']->stop(); ?>
