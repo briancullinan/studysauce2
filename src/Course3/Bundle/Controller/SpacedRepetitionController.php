@@ -60,7 +60,9 @@ class SpacedRepetitionController extends Controller
                 return $this->render('Course3Bundle:SpacedRepetition:reward.html.php');
                 break;
             case 4:
-                return $this->render('Course3Bundle:SpacedRepetition:investment.html.php');
+                return $this->render('Course3Bundle:SpacedRepetition:investment.html.php', [
+                        'course' => $course
+                    ]);
                 break;
             default:
                 throw new NotFoundHttpException();
@@ -83,15 +85,21 @@ class SpacedRepetitionController extends Controller
         /** @var Course3 $course */
         $course = $user->getCourse3s()->first();
 
-        // store quiz results
-        $quiz = new SpacedRepetition();
-        $quiz->setCourse($course);
-        $course->addSpacedRepetition($quiz);
-        $quiz->setSpaceOut($request->get('spaceOut'));
-        $quiz->setForgetting($request->get('forgetting'));
-        $quiz->setRevisiting($request->get('revisiting'));
-        $quiz->setAnotherName($request->get('anotherName'));
-        $orm->persist($quiz);
+        if(!empty($request->get('feedback'))) {
+            $course->setFeedback($request->get('feedback'));
+            $orm->merge($course);
+        }
+        else {
+            // store quiz results
+            $quiz = new SpacedRepetition();
+            $quiz->setCourse($course);
+            $course->addSpacedRepetition($quiz);
+            $quiz->setSpaceOut($request->get('spaceOut'));
+            $quiz->setForgetting($request->get('forgetting'));
+            $quiz->setRevisiting($request->get('revisiting'));
+            $quiz->setAnotherName($request->get('anotherName'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course3Bundle:SpacedRepetition:wizard', ['_step' => 2, '_format' => 'tab']);

@@ -130,8 +130,8 @@ $view['slots']->start('body'); ?>
             <fieldset id="payment-pane">
                 <legend>Payment method</legend>
                 <div class="product-option">
-                    <?php if(!empty($coupon) && !empty($coupon['term'])) { ?>
-                        <label class="radio"><input name="reoccurs" type="radio" value="custom" checked="checked"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][0] : '9.99'); ?>/<?php print $coupon['term']; ?> months</span></label>
+                    <?php if(!empty($coupon)) { ?>
+                        <label class="radio"><input name="reoccurs" type="radio" value="custom" checked="checked"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][0] : '9.99'); ?>/<?php print (!empty($coupon['term']) ? ($coupon['term'] . ' months') : ' one time'); ?></span></label>
                         <?php if(!empty($coupon)) {
                             foreach($coupon['lines'] as $i => $line) {
                                 ?><div class="line-item"><?php print $line; ?></div><?php

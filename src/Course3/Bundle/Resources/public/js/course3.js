@@ -358,6 +358,31 @@ $(document).ready(function () {
         });
     });
 
+
+    var feedbackTimeout = null;
+    function saveFeedback() {
+        var step = body.find('#course3_spaced_repetition-step4');
+        if(feedbackTimeout != null) {
+            clearTimeout(feedbackTimeout);
+        }
+        feedbackTimeout = setTimeout(function () {
+            $.ajax({
+                url: window.callbackPaths['course3_spaced_repetition_update'],
+                type: 'POST',
+                dataType: 'text',
+                data: {
+                    feedback: step.find('textarea[name="investment-feedback"]').val().trim()
+                },
+                success: function (data) {
+
+                }
+            });
+        }, 1000);
+    }
+    body.on('change', '#course3_spaced_repetition-step4 textarea', saveFeedback);
+    body.on('keyup', '#course3_spaced_repetition-step4 textarea', saveFeedback);
+    body.on('click', '#course3_spaced_repetition-step4 .highlighted-link a', saveFeedback);
+
 });
 
 

@@ -60,7 +60,9 @@ class UpgradeController extends Controller
                 return $this->render('Course1Bundle:Upgrade:reward.html.php');
                 break;
             case 4:
-                return $this->render('Course1Bundle:Upgrade:investment.html.php');
+                return $this->render('Course1Bundle:Upgrade:investment.html.php', [
+                        'course' => $course
+                    ]);
                 break;
             default:
                 throw new NotFoundHttpException();
@@ -83,7 +85,12 @@ class UpgradeController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
         // store quiz results
-        $course->setEnjoyed($request->get('enjoy'));
+        if(!empty($request->get('enjoy'))) {
+            $course->setEnjoyed($request->get('enjoy'));
+        }
+        if(!empty($request->get('netPromoter'))) {
+            $course->setNetPromoter($request->get('netPromoter'));
+        }
 
         $orm->merge($course);
         $orm->flush();

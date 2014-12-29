@@ -60,6 +60,11 @@ class Course3
     protected $groupGoals;
 
     /**
+     * @ORM\Column(type="text", name="feedback", nullable=true)
+     */
+    protected $feedback;
+
+    /**
      * @ORM\Column(type="integer", name="lesson1", options={"default"=0})
      */
     protected $lesson1 = 0;
@@ -102,11 +107,10 @@ class Course3
      */
     public function __construct()
     {
-        $this->interleaving = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->studyPlan = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->testTaking = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->studyTests = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->studyMetrics = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->activeReading = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groupStudy = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->spacedRepetition = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->teaching = new \Doctrine\Common\Collections\ArrayCollection();
         $this->strategies = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -770,5 +774,28 @@ class Course3
     public function getSpacedRepetition()
     {
         return $this->spacedRepetition;
+    }
+
+    /**
+     * Set feedback
+     *
+     * @param string $feedback
+     * @return Course3
+     */
+    public function setFeedback($feedback)
+    {
+        $this->feedback = $feedback;
+
+        return $this;
+    }
+
+    /**
+     * Get feedback
+     *
+     * @return string 
+     */
+    public function getFeedback()
+    {
+        return $this->feedback;
     }
 }

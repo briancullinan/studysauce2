@@ -56,8 +56,15 @@ class Course
 
     /**
      * @ORM\OneToMany(targetEntity="Checkin", mappedBy="course")
+     * @ORM\OrderBy({"checkin" = "ASC"})
      */
     protected $checkins;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Deadline", mappedBy="course")
+     * @ORM\OrderBy({"dueDate" = "ASC"})
+     */
+    protected $deadlines;
 
     /**
      * @ORM\ManyToOne(targetEntity="Schedule", inversedBy="courses")
@@ -401,5 +408,38 @@ class Course
     public function getEvents()
     {
         return $this->events;
+    }
+
+    /**
+     * Add deadlines
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     * @return Course
+     */
+    public function addDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    {
+        $this->deadlines[] = $deadlines;
+
+        return $this;
+    }
+
+    /**
+     * Remove deadlines
+     *
+     * @param \StudySauce\Bundle\Entity\Deadline $deadlines
+     */
+    public function removeDeadline(\StudySauce\Bundle\Entity\Deadline $deadlines)
+    {
+        $this->deadlines->removeElement($deadlines);
+    }
+
+    /**
+     * Get deadlines
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDeadlines()
+    {
+        return $this->deadlines;
     }
 }

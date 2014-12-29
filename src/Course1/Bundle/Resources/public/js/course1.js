@@ -469,6 +469,25 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    function saveNetPromoter() {
+        var step = body.find('#course1_upgrade-step4');
+        $.ajax({
+            url: window.callbackPaths['course1_upgrade_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                netPromoter: step.find('input[name="investment-net-promoter"]:checked').val()
+            },
+            success: function (data) {
+
+            }
+        });
+    }
+
+    body.on('click', '#course1_upgrade-step4 input, #course1_upgrade-step4 .highlighted-link a', saveNetPromoter);
+    body.on('change', '#course1_upgrade-step4 input', saveNetPromoter);
 });
 
 

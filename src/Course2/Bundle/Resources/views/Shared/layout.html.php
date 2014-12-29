@@ -25,12 +25,9 @@ if (!$courseIncluded) {
     $request = $app->getRequest();
 
     // check for paid account
-    if ($app->getUser() == 'anon.' || !is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
+    if (!is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
         $view['slots']->start('sincludes2');
-        echo $view['actions']->render(
-            new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),
-            ['strategy' => 'sinclude']
-        );
+        echo $view['actions']->render(new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),['strategy' => 'sinclude']);
         $view['slots']->stop();
         $view['slots']->start('sincludes');
         $view['slots']->output('sincludes2');

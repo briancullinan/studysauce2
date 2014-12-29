@@ -470,7 +470,7 @@ class ScheduleController extends Controller
             if($course->getEvents()->exists(function ($k, Event $save) {
                     return !empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
                         !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
-                })) {
+                }) || $course->getCheckins()->count() > 0 || $course->getDeadlines()->count() > 0) {
                 $course->setDeleted(true);
                 $orm->merge($course);
             }

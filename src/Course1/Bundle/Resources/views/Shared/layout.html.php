@@ -24,12 +24,9 @@ if (!$courseIncluded) {
     /** @var Request $request */
     $request = $app->getRequest();
     $controller = $request->get('_controller');
-    if ($app->getUser() == 'anon.' || !is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
+    if (!is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
         $view['slots']->start('sincludes2');
-        echo $view['actions']->render(
-            new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),
-            ['strategy' => 'sinclude']
-        );
+        echo $view['actions']->render(new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),['strategy' => 'sinclude']);
         $view['slots']->stop();
     }
     $view['slots']->start('sincludes');

@@ -346,6 +346,7 @@ body.right-menu #bookmark
         transform:none;
     }
 
+    #plan-empty.modal.in .modal-dialog .modal-content,
     .modal.in .modal-dialog .modal-content
     {
         margin-top:0;

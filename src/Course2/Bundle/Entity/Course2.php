@@ -107,7 +107,6 @@ class Course2
         $this->testTaking = new \Doctrine\Common\Collections\ArrayCollection();
         $this->studyTests = new \Doctrine\Common\Collections\ArrayCollection();
         $this->studyMetrics = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->strategies = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

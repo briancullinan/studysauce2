@@ -178,14 +178,14 @@ class BuyController extends Controller
         // percentage discount
         if(substr($coupon->getType(), 0, 1) == '.') {
             $percent = floatval($coupon->getType());
-            if(!empty($coupon->getTerm()))
+            if($coupon->getTerm() !== null)
                 return ['options' => [number_format(99 * $percent, 2)], 'term' => $coupon->getTerm(), 'lines' => [$coupon->getDescription()]];
             else
                 return ['options' => [number_format(9.99 * $percent, 2), number_format(99 * $percent, 2)], 'lines' => [$coupon->getDescription()]];
         }
         if(substr($coupon->getType(), 0, 1) == '=') {
             $value = floatval(substr($coupon->getType(), 1));
-            if(!empty($coupon->getTerm()))
+            if($coupon->getTerm() !== null)
                 return ['options' => [number_format($value, 2)], 'term' => $coupon->getTerm(), 'lines' => [$coupon->getDescription()]];
             else
                 return ['options' => [number_format($value, 2)], 'term' => 12, 'lines' => [$coupon->getDescription()]];
@@ -265,7 +265,7 @@ class BuyController extends Controller
             }
 
             // only set up reoccurring if the term is greater than zero
-            if($request->get('reoccurs') == 'custom' && isset($options['term']) && $options['term'] > 0) {
+            if($request->get('reoccurs') != 'custom' || (isset($options['term']) && $options['term'] > 0)) {
                 $subscription = new \AuthorizeNet_Subscription();
                 $subscription->name = 'Study Sauce ' . ($request->get(
                         'reoccurs'

@@ -19,7 +19,7 @@ class TeachStrategy
     protected $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Event", inversedBy="other")
+     * @ORM\OneToOne(targetEntity="Event", inversedBy="teach")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
      */
     protected $event;

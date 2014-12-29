@@ -2,6 +2,9 @@
 
 namespace TorchAndLaurel\Bundle\EventListener;
 
+use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\ParentInvite;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Mailer;
 use Swift_Message;
@@ -56,13 +59,21 @@ class OrgEmailNotifier implements EventSubscriberInterface
      */
     public function onCheckoutBegin(GetResponseEvent $event)
     {
-        $session = $event->getRequest()->getSession();
+        $request = $event->getRequest();
+        $session = $request->getSession();
         /** @var SecurityContext $context */
         $context = $this->container->get('security.context');
+        /** @var EntityManager $orm */
+        $this->container->get('doctrine')->getManager();
         if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\BuyController::checkoutAction') {
+            /** @var User $user */
             $user = $context->getToken()->getUser();
-            if ($user->hasGroup('Torch And Laurel') || ($session->has('organization') &&
-                    $session->get('organization') == 'Torch And Laurel')) {
+            $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->get('_code')]);
+            if(!empty($group) && $group->getGroup()->getName() == 'Torch And Laurel' ||
+                $user->hasGroup('Torch And Laurel') || ($session->has('organization') &&
+                $session->get('organization') == 'Torch And Laurel') ||
+                $user->getInvitedPartners()->exists(function (PartnerInvite $p) {return $p->getUser()->hasGroup('Torch And Laurel');}) ||
+                $user->getInvitedParents()->exists(function (ParentInvite $p) {return $p->getUser()->hasGroup('Torch And Laurel');})) {
                 $session->set('coupon', 'TORCHANDLAUREL');
             }
         }
