@@ -13,6 +13,7 @@ use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\EventListener\InviteListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -205,44 +206,7 @@ class AccountController extends Controller
             $user->setEmailCanonical($request->get('email'));
             $user->addRole('ROLE_USER');
             // assign user to partner
-            if(!empty($request->getSession()->get('partner'))) {
-                $user->addRole('ROLE_PARTNER');
-                /** @var PartnerInvite $partner */
-                $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
-                $partner->setPartner($user);
-                $user->addInvitedPartner($partner);
-                $orm->merge($partner);
-            }
-            if(!empty($request->getSession()->get('parent'))) {
-                $user->addRole('ROLE_PARENT');
-                /** @var ParentInvite $parent */
-                $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
-                $parent->setParent($user);
-                $user->addInvitedParent($parent);
-                $orm->merge($parent);
-            }
-            if(!empty($request->getSession()->get('student'))) {
-                /** @var StudentInvite $student */
-                $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
-                $student->setStudent($user);
-                $user->addInvitedStudent($student);
-                $orm->merge($student);
-            }
-            // assign group to group invited users
-            if(!empty($request->getSession()->get('group'))) {
-                /** @var GroupInvite $group */
-                $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['name' => $request->getSession()->get('group')]);
-                $group->setStudent($user);
-                $user->addInvitedGroup($group);
-                $user->addGroup($group->getGroup());
-                $orm->merge($group);
-            }
-            // assign correct group to anonymous users
-            if(!empty($request->getSession()->get('organization'))) {
-                /** @var Group $group */
-                $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);
-                $user->addGroup($group);
-            }
+            InviteListener::setInviteRelationship($orm, $request, $user);
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));
             $user->setLast($request->get('last'));
@@ -266,7 +230,10 @@ class AccountController extends Controller
             // send welcome email
             $email = new EmailsController();
             $email->setContainer($this->container);
-            if($user->hasRole('ROLE_PARTNER'))
+            if($user->hasRole('ROLE_PARENT')) {
+
+            }
+            else if($user->hasRole('ROLE_PARTNER'))
                 $email->welcomePartnerAction($user);
             else
                 $email->welcomeStudentAction($user);

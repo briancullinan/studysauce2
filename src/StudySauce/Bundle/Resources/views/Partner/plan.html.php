@@ -4,35 +4,15 @@ use StudySauce\Bundle\Entity\Course;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use StudySauce\Bundle\Entity\Event;
 
-$isDemo = false;
-if(empty($courses) || !$user->hasRole('ROLE_PAID'))
-{
-    $isDemo = true;
-}
-
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
 
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/fullcalendar/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'],[],['output' => 'bundles/studysauce/js/fullcalendar/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/plan.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/plan.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();

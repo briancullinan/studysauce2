@@ -1,37 +1,39 @@
+
+function videoPoller(fid, eventId) {
+    var plans = $('#plan');
+    var row = plans.find('.session-row.event-id-' + eventId);
+    jQuery.ajax({
+        url: window.callbackPaths['file_status'],
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            fid: fid
+        },
+        success: function (file) {
+            if(file == 'error')
+                return;
+            if(file != null && typeof file['src'] != 'undefined')
+            {
+                row.find('img[src*="empty-play.png"]').remove();
+                var thumb = '<video width="184" height="184" preload="auto" controls="controls" poster="https://s3-us-west-2.amazonaws.com/studysauce/' + file.thumb + '">' +
+                    '<source src="https://s3-us-west-2.amazonaws.com/studysauce/' + file.src + '" type="video/webm" />';
+                row.addClass('uploaded');
+                row.find('.plup-progress').hide();
+                row.find('.plup-filelist').append('<div class="plup-thumb-wrapper">' + thumb + '</div>');
+                if(!row.find('video')[0].canPlayType('video/webm; codecs="vp8, vorbis"'))
+                {
+                    jQuery('<div><a href="https://tools.google.com/dlpage/webmmf/">Can\'t play the video? Click here to install.</a></div>').insertAfter(jQuery('#teach-' + eventId + '-plupload').find('video'));
+                }
+            }
+            else
+                setTimeout('videoPoller("' + fid + '", "' + eventId + '");', 5000);
+        }
+    });
+}
+
+
 $(document).ready(function () {
     var body = $('body');
-
-    function videoPoller(fid, eventId) {
-        var plans = $('#plan');
-        var row = plans.find('.session-row.event-id-' + eventId);
-        jQuery.ajax({
-            url: '/aws/checkstatus',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                fid: fid
-            },
-            success: function (file) {
-                if(file == 'error')
-                    return;
-                if(file != null && typeof file['src'] != 'undefined')
-                {
-                    row.find('img[src*="empty-play.png"]').remove();
-                    var thumb = '<video width="184" height="184" preload="auto" controls="controls" poster="https://s3-us-west-2.amazonaws.com/studysauce/' + file.thumb + '">' +
-                        '<source src="https://s3-us-west-2.amazonaws.com/studysauce/' + file.src + '" type="video/webm" />';
-                    row.addClass('uploaded');
-                    row.find('.plup-progress').hide();
-                    row.find('.plup-list li').append('<div class="plup-thumb-wrapper">' + thumb + '</div>');
-                    if(!row.find('video')[0].canPlayType('video/webm; codecs="vp8, vorbis"'))
-                    {
-                        jQuery('<div><a href="https://tools.google.com/dlpage/webmmf/">Can\'t play the video? Click here to install.</a></div>').insertAfter(jQuery('#teach-' + eventId + '-plupload').find('video'));
-                    }
-                }
-                else
-                    setTimeout('videoPoller("' + fid + '", "' + eventId + '");', 5000);
-            }
-        });
-    }
 
     function renderStrategies()
     {
@@ -152,7 +154,7 @@ $(document).ready(function () {
                             newStrategy.find('.plupload img').attr('src', data.src);
                             newStrategy.removeClass('invalid').addClass('valid');
                             newStrategy.find('a[href="#save-strategy"]').first().trigger('click');
-                            setTimeout('videoPoller("' + fileSaved.fid + '", "' + eventId + '");', 5000);
+                            setTimeout('videoPoller("' + data.fid + '", "' + eventId + '");', 5000);
                         },
                         Error: function(up, err) {
                         }
@@ -166,9 +168,9 @@ $(document).ready(function () {
                 {
                     newStrategy.find('input[name="strategy-title"]').val(window.strategies[eventId]['teach'].title);
                     newStrategy.find('textarea[name="strategy-notes"]').val(window.strategies[eventId]['teach'].notes);
-                    newStrategy.find('.plupload img').attr('scr', window.strategies[eventId]['teach'].uploads);
-                    // TODO: load video
-                    //setTimeout('videoPoller("' + window.strategies[eventId]['teach'].uploads[0].value + '", "' + eventId + '");', 100);
+                    newStrategy.find('.plupload img').attr('scr', window.strategies[eventId]['teach'].url);
+                    // load video
+                    setTimeout('videoPoller("' + window.strategies[eventId]['teach'].fid + '", "' + eventId + '");', 100);
                 }
             }
         }

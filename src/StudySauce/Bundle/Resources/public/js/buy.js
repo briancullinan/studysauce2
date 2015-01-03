@@ -22,11 +22,12 @@ jQuery(document).ready(function($) {
             checkout.find('select[name="cc-month"]').val().trim() != '' &&
             checkout.find('select[name="cc-year"]').val().trim() != '' &&
             checkout.find('input[name="cc-ccv"]').val().trim() != '' &&
-            (checkout.find('input[name="password"]:visible').length == 0 || checkout.find('input[name="password"]:visible"]').val().trim() != ''))
+            (checkout.find('input[name="password"]:visible').length == 0 || checkout.find('input[name="password"]:visible').val().trim() != ''))
             valid = true;
         if(!checkout.find('#gift-pane').is(':visible') ||
             // checked if everything is blank, that's ok too
             (
+                !checkout.find('#gift-pane').is('.shown-by-default') &&
                 checkout.find('#gift-pane .first-name input').val().trim() == '' &&
                 checkout.find('#gift-pane .last-name input').val().trim() == '' &&
                 checkout.find('#gift-pane .email input').val().trim() == ''
@@ -46,7 +47,7 @@ jQuery(document).ready(function($) {
 
     body.on('show', '#checkout', checkoutFunc);
     body.on('change', '#checkout input, #checkout select', checkoutFunc);
-    body.on('keyup', '#checkout input[type="text"]', checkoutFunc);
+    body.on('keyup', '#checkout input[type="text"], #checkout input[type="password"]', checkoutFunc);
 
     body.on('click', '#checkout a[href="#show-coupon"]', function (evt) {
         var checkout = $('#checkout');

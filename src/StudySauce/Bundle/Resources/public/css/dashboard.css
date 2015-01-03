@@ -339,6 +339,7 @@ a[href="#remove-deadline"]:hover
     position:relative;
 }
 
+.plupload video,
 .plupload img
 {
     margin: 0 auto;
@@ -347,6 +348,17 @@ a[href="#remove-deadline"]:hover
     min-width:100%;
     max-width: none;
     min-height: 100%;
+}
+
+.plupload video
+{
+    max-width:100%;
+}
+
+.uploaded .plup-select,
+.uploaded .moxie-shim
+{
+    display: none;
 }
 
 @media all and (max-width: 1300px)

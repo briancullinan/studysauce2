@@ -197,6 +197,57 @@ class FileController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkStatusAction(Request $request)
+    {
+        // 1. Instantiate the client.
+        /** @var $user \StudySauce\Bundle\Entity\User */
+        $user = $this->getUser();
+        
+        /** @var File $file */
+        $file = $user->getFiles()->filter(function (File $f) use ($request) { return $f->getId() == $request->get('fid');})->first();
+        try
+        {
+            $s3 = \Aws\S3\S3Client::factory([
+                    'key'    => 'AKIAIIESK4YKQTWYTU5Q',
+                    'secret' => '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',
+                ]);
+
+            // 2. Check if object exists in bucket
+            $s3->getObject([
+                    'Bucket'       => 'studysauce',
+                    'Key'          => $file->getFilename()
+                ]);
+        }
+        catch(\Exception $ex)
+        {
+            return new JsonResponse('error');
+        }
+
+        try
+        {
+            $result = $s3->getObject([
+                    'Bucket'       => 'studysauce',
+                    'Key'          => substr($file->getFilename(), 0, strrpos($file->getFilename(), '.')) . '.webm'
+                ]);
+
+            $date = $result['LastModified'];
+            if($date)
+                return new JsonResponse([
+                        'thumb' => substr($file->getFilename(), 0, strrpos($file->getFilename(), '.')) . '-00001.png',
+                        'src' => substr($file->getFilename(), 0, strrpos($file->getFilename(), '.')) . '.webm'
+                    ]);
+        }
+        catch(\Exception $ex)
+        {
+            // just ignore because it isn't done generating
+        }
+        return new JsonResponse(true);
+    }
+
+    /**
      * @param $_user
      * @internal param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

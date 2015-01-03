@@ -457,6 +457,19 @@ $collection->add(
     )
 );
 $collection->add(
+    'file_status',
+    new Route(
+        '/file/status',
+        ['_controller' => 'StudySauceBundle:File:checkStatus'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
     'checkout',
     new Route(
         '/checkout/{_format}',

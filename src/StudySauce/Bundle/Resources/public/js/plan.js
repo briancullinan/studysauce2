@@ -48,7 +48,7 @@ $(document).ready(function () {
                 events[events.length] = window.planEvents[i];
             }
         }
-        if (events.length == 0) {
+        if (events.length == 0 && $('#plan-intro-1').length == 0) {
             plans.addClass('empty');
             $('#plan-empty').modal({
                 backdrop:false,
@@ -268,7 +268,16 @@ $(document).ready(function () {
             });
         else
             $('#plan-upgrade').modal('hide');
-        $('#plan-intro-1').modal({show:true});
+        if($('#plan-intro-1').modal({show:true}).length == 0) {
+            if (plan.is('.empty-schedule'))
+                $('#plan-empty-schedule').modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: true
+                });
+            else
+                $('#plan-empty-schedule').modal('hide');
+        }
     });
 
     body.on('click', 'a[href="#bill-parents"]', function () {
@@ -277,6 +286,17 @@ $(document).ready(function () {
 
     body.on('hidden.bs.modal', '#plan-intro-1', function () {
         $(this).remove();
+        var plan = $('#plan');
+        if (!plan.is(':visible'))
+            return;
+        if (plan.is('.empty-schedule'))
+            $('#plan-empty-schedule').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: true
+            });
+        else
+            $('#plan-empty-schedule').modal('hide');
     });
 
     body.on('hidden.bs.modal', '#bill-parents', function () {
@@ -302,10 +322,15 @@ $(document).ready(function () {
                     window.planEvents = [];
                     window.planLoaded = [];
                     ssMergeScripts(content.filter('script:not([src])'));
-                    if(content.find('#metrics').is('.demo'))
+                    if(content.find('#plan').is('.demo'))
                         plan.addClass('demo');
                     else
                         plan.removeClass('demo');
+
+                    if(content.find('#plan').is('.empty-schedule'))
+                        plan.addClass('empty-schedule');
+                    else
+                        plan.removeClass('empty-schedule');
 
                     // reset calendar
                     $('#calendar').fullCalendar('destroy');

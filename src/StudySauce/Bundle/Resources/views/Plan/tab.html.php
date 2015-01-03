@@ -1,31 +1,18 @@
 <?php
-use Doctrine\Common\Collections\ArrayCollection;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use StudySauce\Bundle\Entity\Event;
 
-$isDemo = false;
-if(empty($courses) || !$user->hasRole('ROLE_PAID'))
-{
-    $isDemo = true;
-}
-
 /** @var array $courses */
 /** @var User $user */
+$user = $app->getUser();
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
 
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/fullcalendar/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'],[],['output' => 'bundles/studysauce/js/fullcalendar/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 
@@ -67,7 +54,7 @@ foreach ($view['assetic']->javascripts(['@plan_scripts',],[],['output' => 'bundl
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane <?php print ($isDemo ? ' demo' : ''); ?>" id="plan">
+<div class="panel-pane <?php print ($isDemo ? ' demo' : ''); ?> <?php print ($isEmpty ? ' empty-schedule' : ''); ?>" id="plan">
     <div class="pane-content">
         <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed">
@@ -179,6 +166,9 @@ $view['slots']->start('body'); ?>
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
+if($isEmpty) {
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planEmptySchedule'));
+}
 if($isDemo) {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planUpgrade'));
 }

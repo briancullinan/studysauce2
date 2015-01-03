@@ -250,11 +250,13 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
-     * @param User $student
+     * @param null $studentemail
+     * @param null $studentfirst
+     * @param null $studentlast
      * @param $_code
      * @return Response
      */
-    public function parentPrepayAction(User $user = null, User $student = null, $_code)
+    public function parentPrepayAction(User $user = null, $studentemail = null, $studentfirst = null, $studentlast = null, $_code)
     {
         /** @var $user User */
         if(empty($user))
@@ -265,10 +267,10 @@ class EmailsController extends Controller
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your parent') . ' has prepaid for your study plan')
             ->setFrom($user->getEmail())
-            ->setTo($student->getEmail())
+            ->setTo($studentemail)
             ->setBody($this->renderView('StudySauceBundle:Emails:prepay.html.php', [
                         'user' => $user,
-                        'greeting' => 'Hello ' . $student->getFirst() . ' ' . $student->getLast() . ',',
+                        'greeting' => 'Hello ' . $studentfirst . ' ' . $studentlast . ',',
                         'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();

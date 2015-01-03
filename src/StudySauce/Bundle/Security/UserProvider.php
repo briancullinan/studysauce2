@@ -7,6 +7,9 @@ use FOS\UserBundle\Model\UserManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseUserProvider;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\EventListener\InviteListener;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -17,9 +20,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserProvider extends BaseUserProvider
 {
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var ContainerInterface
      */
-    protected $entityManager;
+    protected $container;
 
     /**
      * @var \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface
@@ -30,13 +33,13 @@ class UserProvider extends BaseUserProvider
      * Constructor
      *
      * @param UserManagerInterface $userManager
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param ContainerInterface $container
      * @param \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface $encoderFactory
      * @param array $properties
      */
-    public function __construct(UserManagerInterface $userManager, EntityManager $entityManager, EncoderFactoryInterface $encoderFactory, array $properties)
+    public function __construct(UserManagerInterface $userManager, ContainerInterface $container, EncoderFactoryInterface $encoderFactory, array $properties)
     {
-        $this->entityManager = $entityManager;
+        $this->container = $container;
         $this->encoderFactory = $encoderFactory;
         parent::__construct($userManager, $properties);
     }
@@ -79,6 +82,10 @@ class UserProvider extends BaseUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
+        /** @var EntityManager $orm */
+        $orm = $this->container->get('doctrine')->getManager();
+        /** @var Request $request */
+        $request = $this->container->get('request');
         /** @var PathUserResponse $response */
         $username = $response->getUsername();
         /** @var User $user */
@@ -113,6 +120,7 @@ class UserProvider extends BaseUserProvider
         $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
         $user->setFirst($response->getFirst());
         $user->setLast($response->getLast());
+        InviteListener::setInviteRelationship($orm, $request, $user);
         $this->userManager->updateUser($user);
         return $user;
     }

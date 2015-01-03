@@ -256,7 +256,7 @@ $(document).ready(function () {
         // reset fields for the new entry
         addClass.attr('class', addClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
-            .removeClass('is-timeEntry hasDatepicker').val('');
+            .removeClass('is-timeEntry hasDatepicker').removeAttr('id').val('');
         addClass.find('.day-of-the-week input').removeAttr('checked').prop('checked', false);
         addClass.find('.class-name input').attr('placeholder', isOther
                 ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
@@ -322,8 +322,10 @@ $(document).ready(function () {
 
     var autoFillDate = function () {
         var schedule = $('#schedule');
-        var row = jQuery(this).closest('.class-row'),
-            first = schedule.find('.class-row').first();
+        var first = $(this).closest('.class-row').add(schedule.find('.class-row')).filter(function () {
+                var row = $(this);
+                return row.find('.start-time input[type="text"]').val().trim() != '' && row.find('.end-time input[type="text"]').val().trim() != ''
+            }).first();
         if(first.find('.start-date input').val() != '' &&
             first.find('.end-date input').val() != '') {
             schedule.find('.class-row').each(function () {
@@ -333,8 +335,16 @@ $(document).ready(function () {
                     row.find('.end-date input').val() == '' &&
                     row[0] != first[0]) {
                     // use first rows dates
-                    row.find('.start-date input').val(first.find('.start-date input').val());
-                    row.find('.end-date input').val(first.find('.end-date input').val());
+                    row.find('.start-date input[type="text"]').val(first.find('.start-date input[type="text"]').val());
+                    row.find('.end-date input[type="text"]').val(first.find('.end-date input[type="text"]').val());
+                    var d = new Date(first.find('.start-date input[type="text"]').val());
+                    var d2 = new Date(first.find('.end-date input[type="text"]').val());
+                    row.find('.start-date input[type="date"]').val(d.getFullYear() + '-' +
+                    (d.getMonth() + 1 < 10 ? ('0' + (d.getMonth() + 1)) : (d.getMonth() + 1)) + '-' +
+                    (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate()));
+                    row.find('.end-date input[type="date"]').val(d2.getFullYear() + '-' +
+                    (d2.getMonth() + 1 < 10 ? ('0' + (d2.getMonth() + 1)) : (d2.getMonth() + 1)) + '-' +
+                    (d2.getDate() < 10 ? ('0' + d2.getDate()) : d2.getDate()));
                     planFunc.apply(row);
                 }
             });
@@ -342,10 +352,10 @@ $(document).ready(function () {
     };
     body.on('change', '#schedule .class-name input', autoFillDate);
     body.on('keyup', '#schedule .class-name input', autoFillDate);
-    body.on('change', '#schedule .start-time input, #schedule .end-time input, ' +
-        '#schedule .start-date input, #schedule .end-date input', function () {
-        if(jQuery(this).is('[type="time"]'))
+    function copyTimes() {
+        if(jQuery(this).is('[type="time"]')) {
             jQuery(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
+        }
         if(jQuery(this).is('.is-timeEntry[type="text"]'))
         {
             var t = jQuery(this).timeEntry('getTime');
@@ -356,12 +366,29 @@ $(document).ready(function () {
                     ? ('0' + t.getMinutes())
                     : t.getMinutes()) + ':00');
         }
-        if(jQuery(this).is('[type="date"]'))
-            jQuery(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', jQuery(this).val());
-        if(jQuery(this).is('.hasDatepicker'))
-            jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val($(this).datepicker('getDate'));
+        if(jQuery(this).is('[type="date"]')) {
+            var date = new Date;
+            date.setFullYear(parseInt($(this).val().substr(0, 4)));
+            date.setMonth(parseInt($(this).val().substr(5, 2))-1);
+            date.setDate(parseInt($(this).val().substr(8, 2)));
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            jQuery(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', date);
+        }
+        if(jQuery(this).is('.hasDatepicker')) {
+            var d = $(this).datepicker('getDate');
+            jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val(d.getFullYear() + '-' +
+            (d.getMonth() + 1 < 10 ? ('0' + (d.getMonth() + 1)) : (d.getMonth() + 1)) + '-' +
+            (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate()));
+        }
         autoFillDate.apply(this);
-    });
+    }
+    body.on('change', '#schedule .start-time input, #schedule .end-time input, ' +
+        '#schedule .start-date input, #schedule .end-date input', copyTimes);
+    body.on('blur', '#schedule .start-time input, #schedule .end-time input, ' +
+        '#schedule .start-date input, #schedule .end-date input', copyTimes);
     body.on('keyup', '#schedule .start-time input, #schedule .end-time input, ' +
         '#schedule .start-date input, #schedule .end-date input', autoFillDate);
     body.on('keyup', '#schedule .class-name input, #schedule .start-time input, #schedule .end-time input, ' +
@@ -370,21 +397,19 @@ $(document).ready(function () {
         if($(this).val() == '')
             $(this).val('12:00:00');
     });
-    body.on('change', '#schedule .start-date input, #schedule .end-date input', function () {
-        var schedule = $('#schedule'),
-            start = schedule.find('.start-date input').datepicker('getDate'),
-            end = schedule.find('.end-date input').datepicker('getDate');
+    body.on('change', '#schedule .start-date input[type="text"], #schedule .end-date input[type="text"]', function () {
+        var row = $(this).parents('.class-row'),
+            start = row.find('.start-date input').datepicker('getDate'),
+            end = row.find('.end-date input').datepicker('getDate');
         if(start != null) {
-            schedule.find('.end-date input').datepicker('option', 'minDate', start);
+            row.find('.end-date input').datepicker('option', 'minDate', start);
         }
         if(end != null) {
-            schedule.find('.start-date input').datepicker('option', 'maxDate', end);
+            row.find('.start-date input').datepicker('option', 'maxDate', end);
         }
     });
     body.on('change', '#schedule .class-name input, #schedule .day-of-the-week input, #schedule .start-time input, ' +
-        '#schedule .end-time input, #schedule .start-date input, #schedule .end-date input, #schedule .university input', function () {
-        planFunc.apply(jQuery(this).parents('.class-row'));
-    });
+        '#schedule .end-time input, #schedule .start-date input, #schedule .end-date input, #schedule .university input', planFunc);
 
     // set default value for university name
     body.on('focus', '#schedule .university input', function () {

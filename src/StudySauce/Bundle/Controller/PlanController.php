@@ -84,15 +84,18 @@ class PlanController extends Controller
 
         // get demo schedule instead
         $showPlanIntro = false; // TODO: false in production
+        $isDemo = false;
         if (empty($schedule) ||
             empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count()) ||
             !$_user->hasRole('ROLE_PAID')) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
             $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
+            $isDemo = true;
         }
+
         // show intro for paid users
-        elseif(empty($_user->getProperty('seen_plan_intro'))) {
+        if($_user->hasRole('ROLE_PAID') && empty($_user->getProperty('seen_plan_intro'))) {
             $showPlanIntro = true;
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
@@ -125,7 +128,9 @@ class PlanController extends Controller
                 'user' => $_user,
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week,
-                'showPlanIntro' => $showPlanIntro
+                'showPlanIntro' => $showPlanIntro,
+                'isDemo' => $isDemo && !$_user->hasRole('ROLE_PAID'),
+                'isEmpty' => $isDemo && $_user->hasRole('ROLE_PAID')
             ]);
     }
 
@@ -1696,7 +1701,30 @@ class PlanController extends Controller
             $event = $schedule->getEvents()->filter(function (Event $e)use($s) {return $e->getId() == $s['eventId'];})->first();
             if(empty($event))
                 continue;
-
+            if(isset($s['remove'])) {
+                if($s['type'] == 'active' && ($active = $event->getActive()) != null) {
+                    $orm->remove($active);
+                    $event->setActive(null);
+                }
+                elseif($s['type'] == 'prework' && ($prework = $event->getPrework()) != null) {
+                    $orm->remove($prework);
+                    $event->setPrework(null);
+                }
+                elseif($s['type'] == 'teach' && ($teach = $event->getTeach()) != null) {
+                    $orm->remove($teach);
+                    $event->setTeach(null);
+                }
+                elseif($s['type'] == 'other' && ($other = $event->getOther()) != null) {
+                    $orm->remove($other);
+                    $event->setOther(null);
+                }
+                elseif($s['type'] == 'spaced' && ($spaced = $event->getSpaced()) != null) {
+                    $orm->remove($spaced);
+                    $event->setSpaced(null);
+                }
+                $orm->merge($event);
+                continue;
+            }
             if($s['type'] == 'active')
             {
                 $new = false;

@@ -64,7 +64,7 @@ class OrgEmailNotifier implements EventSubscriberInterface
         /** @var SecurityContext $context */
         $context = $this->container->get('security.context');
         /** @var EntityManager $orm */
-        $this->container->get('doctrine')->getManager();
+        $orm = $this->container->get('doctrine')->getManager();
         if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\BuyController::checkoutAction') {
             /** @var User $user */
             $user = $context->getToken()->getUser();
@@ -87,7 +87,9 @@ class OrgEmailNotifier implements EventSubscriberInterface
 
         /** @var SecurityContext $context */
         $context = $this->container->get('security.context');
-        if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController::createAction' &&
+        if(($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController::createAction' ||
+                $event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController::payAction') &&
+            // this means it was successful
             $event->getResponse() instanceof RedirectResponse) {
 
             /** @var User $user */

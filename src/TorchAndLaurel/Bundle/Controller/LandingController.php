@@ -29,6 +29,10 @@ class LandingController extends Controller
      */
     public function parentsAction(Request $request)
     {
+        $session = $request->getSession();
+        if(empty($session->get('parent')))
+            $session->set('parent', true);
+
         $request->getSession()->set('organization', 'Torch And Laurel');
         return $this->render('TorchAndLaurelBundle:Landing:parents.html.php');
     }

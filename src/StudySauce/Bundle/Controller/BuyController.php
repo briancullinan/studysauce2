@@ -5,8 +5,6 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Coupon;
-use StudySauce\Bundle\Entity\Group;
-use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\Invite;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -18,7 +16,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use TorchAndLaurel\Bundle\Controller\EmailsController as TorchEmailsController;
+
 
 /**
  * Class BuyController
@@ -85,10 +84,8 @@ class BuyController extends Controller
         {
             $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
         }
-        if(empty($studentfirst) && $user->getInvitedPartners()->exists(
-                function ($k, PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})) {
-            $invite = $user->getInvitedPartners()->filter(
-                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first();
+        if(empty($studentfirst) && !empty($invite = $user->getInvitedPartners()->filter(
+                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
             $studentfirst = $invite->getUser()->getFirst();
             $studentlast = $invite->getUser()->getLast();
             $studentemail = $invite->getUser()->getEmail();
@@ -335,12 +332,13 @@ class BuyController extends Controller
                 (empty(trim($request->get('street2'))) ? '' : ("<br />" . $request->get('street2'))) . '<br />' .
                 $request->get('city') . ' ' . $request->get('state') . '<br />' .
                 $request->get('zip');
+
             $emails = new EmailsController();
             $emails->setContainer($this->container);
             $emails->invoiceAction($user, $payment, $address);
 
             // send partner prepay emails if needed
-            $this->sendPartnerPrepay($user, $emails);
+            $this->sendPartnerPrepay($user, $request);
         }
 
         $loginManager = $this->get('fos_user.security.login_manager');
@@ -350,46 +348,64 @@ class BuyController extends Controller
 
     /**
      * @param User $user
-     * @param EmailsController $emails
+     * @param Request $request
      */
-    private function sendPartnerPrepay(User $user, EmailsController $emails)
+    private function sendPartnerPrepay(User $user, Request $request)
     {
+        $session = $request->getSession();
+        if(($session->has('organization') && $session->get('organization') == 'Torch And Laurel') ||
+            $user->hasGroup('Torch And Laurel')) {
+            $email = new TorchEmailsController();
+            $email->setContainer($this->container);
+        }
+        else {
+            $email = new EmailsController();
+            $email->setContainer($this->container);
+        }
+
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
 
-        if ($user->hasRole('ROLE_PARENT')) {
-            // find connected students
-            /** @var Invite $invite */
-            $invite = $user->getInvitedParents()->first();
-            /** @var User $student */
-            $student = $invite->getUser();
-            // maybe the parent just invited their student
+        /** @var Invite $invite */
+        /** @var User $student */
+        if(!empty($invite = $user->getStudentInvites()->first())) {
+            /** @var StudentInvite $invite */
+            $student = $invite->getStudent();
             if(empty($student)) {
-                /** @var StudentInvite $invite */
-                $invite = $user->getStudentInvites()->first();
-                $student = $invite->getStudent();
+                $studentEmail = $invite->getEmail();
+                $studentFirst = $invite->getFirst();
+                $studentLast = $invite->getLast();
             }
-            $student->addRole('ROLE_PAID');
-            $userManager->updateUser($student);
-            // send student email
-            $emails->parentPrepayAction($user, $student, $invite->getCode());
         }
-        if($user->hasRole('ROLE_PARTNER')) {
+        else if ($user->hasRole('ROLE_PARENT')) {
+            // find connected students
+            /** @var ParentInvite $invite */
+            $invite = $user->getInvitedParents()->first();
+            $student = $invite->getUser();
+            if(empty($student)) {
+                $studentEmail = $invite->getFromEmail();
+                $studentFirst = $invite->getFromFirst();
+                $studentLast = $invite->getFromLast();
+            }
+        }
+        else if($user->hasRole('ROLE_PARTNER')) {
             // find connected students
             /** @var Invite $invite */
             $invite = $user->getInvitedPartners()->first();
-            /** @var User $student */
             $student = $invite->getUser();
-            // maybe the partner just invited their student
-            if(empty($student)) {
-                /** @var StudentInvite $invite */
-                $invite = $user->getStudentInvites()->first();
-                $student = $invite->getStudent();
+        }
+
+        // maybe the parent just invited their student
+        if(!empty($invite)) {
+            // TODO: update student account after registration
+            if(!empty($student)) {
+                $student->addRole('ROLE_PAID');
+                $userManager->updateUser($student);
+                $email->parentPrepayAction($user, $student->getEmail(), $student->getFirst(), $student->getLast(), $invite->getCode());
             }
-            $student->addRole('ROLE_PAID');
-            $userManager->updateUser($student);
-            // send student email
-            $emails->parentPrepayAction($user, $student, $invite->getCode());
+            elseif(isset($studentEmail) && isset($studentFirst) && isset($studentLast)) {
+                $email->parentPrepayAction($user, $studentEmail, $studentFirst, $studentLast, $invite->getCode());
+            }
         }
     }
 

@@ -8,7 +8,9 @@ $user = $app->getUser();
 
 $isPartner =
     $app->getSession()->has('parent') || $app->getUser()->hasRole('ROLE_PARENT') ||
-    $app->getSession()->has('partner') || $app->getUser()->hasRole('ROLE_PARTNER');
+    $app->getSession()->has('partner') || $app->getUser()->hasRole('ROLE_PARTNER') ||
+    // invite information is autofilled
+    !empty($studentfirst);
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -41,7 +43,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <?php if(!is_object($user) || $user->hasRole('ROLE_GUEST')) { ?>
                     <div class="password">
-                        <label class="input"><span>Password</span><input name="password" type="text" value=""></label>
+                        <label class="input"><span>Password</span><input name="password" type="password" value=""></label>
                     </div>
                 <?php } ?>
                 <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
