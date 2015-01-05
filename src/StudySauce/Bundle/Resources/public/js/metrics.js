@@ -11,7 +11,7 @@ $(document).ready(function () {
         xAxis,
         xAxisLine2,
         xAxisTotals,
-        classes,
+        classes = [],
         resizeTimeout = null,
         arc = d3.svg.arc();
 

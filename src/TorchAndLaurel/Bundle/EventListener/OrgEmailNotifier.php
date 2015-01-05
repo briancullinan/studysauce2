@@ -88,17 +88,24 @@ class OrgEmailNotifier implements EventSubscriberInterface
         /** @var SecurityContext $context */
         $context = $this->container->get('security.context');
         if(($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController::createAction' ||
-                $event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\AccountController::payAction') &&
+                $event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\BuyController::payAction') &&
             // this means it was successful
             $event->getResponse() instanceof RedirectResponse) {
 
             /** @var User $user */
             $user = $context->getToken()->getUser();
 
+            if($event->getRequest()->get('_controller') == 'StudySauce\Bundle\Controller\BuyController::payAction') {
+                $subject = $user->getFirst() . ' ' . $user->getLast() . ' has paid.';
+            }
+            else {
+                $subject = $user->getFirst() . ' ' . $user->getLast() . ' has signed up for an account.';
+            }
+
             if ($user->hasGroup('Torch And Laurel')) {
                 /** @var Swift_Mime_SimpleMessage $message */
                 $message = Swift_Message::newInstance()
-                    ->setSubject($user->getFirst() . ' ' . $user->getLast() . ' has signed up for an account.')
+                    ->setSubject($subject)
                     ->setFrom('admin@studysauce.com')
                     ->setTo('torchandlaurel@mailinator.com')
                     ->setBody(
@@ -114,7 +121,7 @@ class OrgEmailNotifier implements EventSubscriberInterface
                 $headers = $message->getHeaders();
                 $headers->addParameterizedHeader(
                     'X-SMTPAPI',
-                    preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => ['welcome-partner']]))
+                    preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => ['torch-notification']]))
                 );
                 $this->mailer->send($message);
             }

@@ -379,9 +379,11 @@ $(document).ready(function () {
         }
         if(jQuery(this).is('.hasDatepicker')) {
             var d = $(this).datepicker('getDate');
-            jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val(d.getFullYear() + '-' +
-            (d.getMonth() + 1 < 10 ? ('0' + (d.getMonth() + 1)) : (d.getMonth() + 1)) + '-' +
-            (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate()));
+            if(d != null) {
+                jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val(d.getFullYear() + '-' +
+                (d.getMonth() + 1 < 10 ? ('0' + (d.getMonth() + 1)) : (d.getMonth() + 1)) + '-' +
+                (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate()));
+            }
         }
         autoFillDate.apply(this);
     }

@@ -38,6 +38,7 @@ $(document).ready(function () {
                 }
             }
         });
+
     }
 
     function filterEvents(s, e) {
@@ -102,8 +103,8 @@ $(document).ready(function () {
         min = morning + ':00:00';
 
         calendar = $('#calendar').fullCalendar({
-            //minTime: min,
-            //maxTime: max,
+            minTime: '06:00:00',
+            maxTime: '26:00:00',
             titleFormat: 'MMMM',
             editable: true,
             draggable: true,
@@ -136,6 +137,23 @@ $(document).ready(function () {
                 else {
                     var events = filterEvents(s, e);
                     callback(events);
+                }
+                if(window.planLoaded.length <= 1) {
+                    var now = new Date(),
+                        w0 = new Date(now.getUTCFullYear(), 0, 1,  0, 0, 0),
+                        week = now.getWeekNumber(),
+                        localOffset = (3600000 * 7) - (new Date()).getTimezoneOffset() * 60000;
+                    w0.setUTCHours(0);
+                    w0.setTime(w0.getTime() + week * 86400 * 7 * 1000 - localOffset);
+                    var dayNr = (w0.getDay() + 6) % 7;
+                    w.setDate(w0.getDate() - dayNr - 2);
+                    loadWeek(w0);
+                    var w2 = new Date(w0.getTime() + 604800 * 1000);
+                    loadWeek(w2);
+                    var w3 = new Date(w2.getTime() + 604800 * 1000);
+                    loadWeek(w3);
+                    var w4 = new Date(w3.getTime() + 604800 * 1000);
+                    loadWeek(w4);
                 }
             },
             eventClick: function (calEvent) {
@@ -230,20 +248,6 @@ $(document).ready(function () {
                 });
             }
         });
-        var now = new Date(),
-            w = new Date(now.getUTCFullYear(), 0, 1,  0, 0, 0),
-            week = now.getWeekNumber();
-        w.setUTCHours(0);
-        w.setTime(w.getTime() + week * 86400 * 7 * 1000 - localOffset);
-        var dayNr = (w.getDay() + 6) % 7;
-        w.setDate(w.getDate() - dayNr - 2);
-        loadWeek(w);
-        var w2 = new Date(w.getTime() + 604800 * 1000);
-        loadWeek(w2);
-        var w3 = new Date(w2.getTime() + 604800 * 1000);
-        loadWeek(w3);
-        var w4 = new Date(w3.getTime() + 604800 * 1000);
-        loadWeek(w4);
     }
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
@@ -331,6 +335,10 @@ $(document).ready(function () {
                         plan.addClass('empty-schedule');
                     else
                         plan.removeClass('empty-schedule');
+
+                    // merge rows
+                    plan.find('.head,.session-row').remove();
+                    content.find('.head,.session-row').insertAfter(plan.find('.sort-by'));
 
                     // reset calendar
                     $('#calendar').fullCalendar('destroy');

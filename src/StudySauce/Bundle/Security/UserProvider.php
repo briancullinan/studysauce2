@@ -49,6 +49,10 @@ class UserProvider extends BaseUserProvider
      */
     public function connect(UserInterface $user, UserResponseInterface $response)
     {
+        /** @var EntityManager $orm */
+        $orm = $this->container->get('doctrine')->getManager();
+        /** @var Request $request */
+        $request = $this->container->get('request');
         /** @var User $user */
         /** @var PathUserResponse $response */
         $property = $this->getProperty($response);
@@ -120,7 +124,7 @@ class UserProvider extends BaseUserProvider
         $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
         $user->setFirst($response->getFirst());
         $user->setLast($response->getLast());
-        InviteListener::setInviteRelationship($orm, $request, $user);
+
         $this->userManager->updateUser($user);
         return $user;
     }

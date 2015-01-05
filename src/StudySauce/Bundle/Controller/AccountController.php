@@ -34,6 +34,7 @@ class AccountController extends Controller
     public function indexAction()
     {
         $user = $this->getUser();
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
             : null;
@@ -103,6 +104,9 @@ class AccountController extends Controller
      */
     public function loginAction(Request $request)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
         // list oauth services
         $services = [];
         /** @var OAuthHelper $oauth */
@@ -111,11 +115,19 @@ class AccountController extends Controller
             $services[$o] = $oauth->getLoginUrl($o);
         }
 
+        /** @var Invite $invite */
+        $invite = InviteListener::getInvite($orm, $request);
+        $email = $request->get('email');
+        if(!empty($invite)) {
+            $email = $invite->getEmail();
+        }
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_login')
             : null;
         return $this->render('StudySauceBundle:Account:login.html.php', [
-                'email' => $request->get('email'),
+                'invite' => $invite,
+                'email' => $email,
                 'csrf_token' => $csrfToken,
                 'services' => $services
             ]);
@@ -143,21 +155,12 @@ class AccountController extends Controller
             : null;
 
         /** @var Invite $invite */
-        if(!empty($request->getSession()->get('partner'))) {
-            $invite = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->getSession()->get('partner')]);
-        }
-        if(!empty($request->getSession()->get('student'))) {
-            $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
-        }
-        if(!empty($request->getSession()->get('parent'))) {
-            $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
-        }
-        if(!empty($request->getSession()->get('group'))) {
-            $invite = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $request->getSession()->get('group')]);
-        }
+        // always auto fill information for the person the invite was sent to
+        $invite = InviteListener::getInvite($orm, $request);
 
         if(!empty($invite)) {
             return $this->render('StudySauceBundle:Account:register.html.php', [
+                    'invite' => $invite,
                     'email' => $invite->getEmail(),
                     'first' => $invite->getFirst(),
                     'last' => $invite->getLast(),
@@ -206,7 +209,6 @@ class AccountController extends Controller
             $user->setEmailCanonical($request->get('email'));
             $user->addRole('ROLE_USER');
             // assign user to partner
-            InviteListener::setInviteRelationship($orm, $request, $user);
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));
             $user->setLast($request->get('last'));

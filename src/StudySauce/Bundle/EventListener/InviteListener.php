@@ -24,6 +24,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
  * Class RedirectListener
@@ -51,7 +53,8 @@ class InviteListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => ['onInviteAccept', -100],
-            KernelEvents::RESPONSE => ['onInviteResponse', -100]
+            KernelEvents::RESPONSE => ['onInviteResponse', -100],
+            SecurityEvents::INTERACTIVE_LOGIN => 'onLogin',
         ];
     }
 
@@ -64,6 +67,7 @@ class InviteListener implements EventSubscriberInterface
         $userManager = $this->container->get('fos_user.user_manager');
         /** @var Request $request */
         $request = $event->getRequest();
+        // TODO: only accept codes from landing pages?
         if(empty($request->get('_code')))
             return;
         /** @var Session $session */
@@ -71,6 +75,7 @@ class InviteListener implements EventSubscriberInterface
         /** @var $orm EntityManager */
         $orm = $this->container->get('doctrine')->getManager();
         /** @var PartnerInvite $partner */
+        // TODO: merge with getInvite?
         $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $request->get('_code')]);
         if(!empty($partner)) {
             $invite = $partner;
@@ -124,31 +129,70 @@ class InviteListener implements EventSubscriberInterface
         }
     }
 
+
+    /**
+     * @param EntityManager $orm
+     * @param Request $request
+     * @return \StudySauce\Bundle\Entity\GroupInvite|\StudySauce\Bundle\Entity\StudentInvite
+     */
+    public static function getInvite(EntityManager $orm, Request $request)
+    {
+        if(!empty($request->get('_code'))) {
+            $code = $request->get('_code');
+        }
+        if(!empty($request->getSession()->get('partner'))) {
+            $code = $request->getSession()->get('partner');
+        }
+        if(!empty($request->getSession()->get('parent'))) {
+            $code = $request->getSession()->get('parent');
+        }
+        if(!empty($request->getSession()->get('student'))) {
+            $code = $request->getSession()->get('student');
+        }
+        if(!empty($request->getSession()->get('group'))) {
+            $code = $request->getSession()->get('group');
+        }
+        if(isset($code)) {
+            /** @var PartnerInvite $partner */
+            $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $code]);
+            if(!empty($partner)) return $partner;
+            /** @var ParentInvite $parent */
+            $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $code]);
+            if(!empty($parent)) return $parent;
+            /** @var GroupInvite $group */
+            $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $code]);
+            if(!empty($group)) return $group;
+            /** @var StudentInvite $student */
+            $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $code]);
+            if(!empty($student)) return $student;
+        }
+        return null;
+    }
+
     /**
      * @param EntityManager $orm
      * @param Request $request
      * @param User $user
      */
     public static function setInviteRelationship(EntityManager $orm, Request $request, User $user) {
-        if(empty($code)) {
-            if(!empty($request->get('_code'))) {
-                $code = $request->get('_code');
-            }
-            if(!empty($request->getSession()->get('partner'))) {
-                $user->addRole('ROLE_PARTNER');
-                $code = $request->getSession()->get('partner');
-            }
-            if(!empty($request->getSession()->get('parent'))) {
-                $user->addRole('ROLE_PARENT');
-                $code = $request->getSession()->get('parent');
-            }
-            if(!empty($request->getSession()->get('student'))) {
-                $code = $request->getSession()->get('student');
-            }
-            if(!empty($request->getSession()->get('group'))) {
-                $code = $request->getSession()->get('group');
-            }
+        if(!empty($request->get('_code'))) {
+            $code = $request->get('_code');
         }
+        if(!empty($request->getSession()->get('partner'))) {
+            $user->addRole('ROLE_PARTNER');
+            $code = $request->getSession()->get('partner');
+        }
+        if(!empty($request->getSession()->get('parent'))) {
+            $user->addRole('ROLE_PARENT');
+            $code = $request->getSession()->get('parent');
+        }
+        if(!empty($request->getSession()->get('student'))) {
+            $code = $request->getSession()->get('student');
+        }
+        if(!empty($request->getSession()->get('group'))) {
+            $code = $request->getSession()->get('group');
+        }
+
         if(isset($code)) {
             /** @var PartnerInvite $partner */
             $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $code]);
@@ -192,6 +236,24 @@ class InviteListener implements EventSubscriberInterface
             $user->addGroup($group);
         }
     }
+
+    /**
+     * @param InteractiveLoginEvent $e
+     */
+    public function onLogin(InteractiveLoginEvent $e) {
+        /** @var $orm EntityManager */
+        $orm = $this->container->get('doctrine')->getManager();
+        /** @var $request Request */
+        $request = $e->getRequest();
+        /** @var User $user */
+        $user = $e->getAuthenticationToken()->getUser();
+
+
+        if($user != null && !$user->hasRole('ROLE_GUEST'))
+            self::setInviteRelationship($orm, $request, $user);
+
+    }
+
 
     /**
      * @param FilterResponseEvent $event

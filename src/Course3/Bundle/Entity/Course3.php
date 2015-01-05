@@ -65,6 +65,11 @@ class Course3
     protected $feedback;
 
     /**
+     * @ORM\Column(type="integer", name="net_promoter", nullable = true)
+     */
+    protected $netPromoter;
+
+    /**
      * @ORM\Column(type="integer", name="lesson1", options={"default"=0})
      */
     protected $lesson1 = 0;
@@ -797,5 +802,28 @@ class Course3
     public function getFeedback()
     {
         return $this->feedback;
+    }
+
+    /**
+     * Set netPromoter
+     *
+     * @param integer $netPromoter
+     * @return Course3
+     */
+    public function setNetPromoter($netPromoter)
+    {
+        $this->netPromoter = $netPromoter;
+
+        return $this;
+    }
+
+    /**
+     * Get netPromoter
+     *
+     * @return integer 
+     */
+    public function getNetPromoter()
+    {
+        return $this->netPromoter;
     }
 }

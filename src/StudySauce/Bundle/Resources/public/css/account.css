@@ -173,6 +173,13 @@ a[href="#sign-in-with-email"]
     border-radius: 5px;
 }
 
+#register .form-actions a[href*="/logout"],
+#login .form-actions a[href*="/logout"] {
+    max-width: 280px;
+    float:left;
+    text-align: center;
+}
+
 @media all and (max-width: 700px)
 {
     #register .first-name, #register .last-name

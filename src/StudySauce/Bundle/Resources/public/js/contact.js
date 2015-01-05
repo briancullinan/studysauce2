@@ -53,7 +53,7 @@ $(document).ready(function () {
             data: data,
             success: function () {
                 contact.removeClass('invalid').addClass('valid').modal('hide');
-                contact.find('.first-name input, .last-name input, .email input' +
+                contact.find('.first-name input, .last-name input, .email input, ' +
                             '.your-first input, .your-last input, .your-email input').val('');
                 $('#bill-parents-confirm').modal({show:true});
             },
@@ -86,7 +86,7 @@ $(document).ready(function () {
             data: data,
             success: function () {
                 contact.removeClass('invalid').addClass('valid').modal('hide');
-                contact.find('.first-name input, .last-name input, .email input' +
+                contact.find('.first-name input, .last-name input, .email input, ' +
                             '.your-first input, .your-last input, .your-email input').val('');
                 $('#student-invite-confirm').modal({show:true});
             },

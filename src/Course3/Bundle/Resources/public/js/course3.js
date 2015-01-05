@@ -254,7 +254,7 @@ $(document).ready(function () {
         var step = body.find('#course3_active_reading-step2'),
             actions = step.find('.highlighted-link'),
             valid = true;
-        if(step.find('input[name="quiz-what-reading"]').val().trim() == '' ||
+        if(step.find('textarea[name="quiz-what-reading"]').val().trim() == '' ||
             step.find('input[name="quiz-highlighting"]:checked').length == 0 ||
             step.find('input[name="quiz-skimming"]:checked').length == 0 ||
             step.find('input[name="quiz-self-explanation"]:checked').length == 0)
@@ -280,7 +280,7 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                whatReading: step.find('input[name="quiz-what-reading"]').val().trim(),
+                whatReading: step.find('textarea[name="quiz-what-reading"]').val().trim(),
                 highlighting: step.find('input[name="quiz-highlighting"]:checked').val(),
                 skimming: step.find('input[name="quiz-skimming"]:checked').val(),
                 selfExplanation: step.find('input[name="quiz-self-explanation"]:checked').val()

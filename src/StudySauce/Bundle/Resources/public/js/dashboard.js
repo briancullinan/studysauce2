@@ -126,6 +126,8 @@ $(document).ready(function () {
     function expandMenu(evt)
     {
         var parent = $(this).parents('#left-panel, #right-panel');
+        if($(this).is('[href="#collapse"]') || $(this).is('[href="#expand"]'))
+            evt.preventDefault();
         if(parent.length > 0 && parent.width() < 150) {
             // record this special case where its not a link, everything else is recorded automatically
             visits[visits.length] = {path: window.location.pathname, query: window.location.search, hash: '#expand', time:(new Date()).toJSON()};
@@ -149,9 +151,9 @@ $(document).ready(function () {
 
     function collapseMenu(evt)
     {
+        if($(this).is('[href="#collapse"]') || $(this).is('[href="#expand"]'))
+            evt.preventDefault();
         if(body.is('.left-menu') || body.is('.right-menu')) {
-            if($(this).is('[href="#collapse"]') || $(this).is('[href="#expand"]'))
-                evt.preventDefault();
             // collapse menus
             body.removeClass('right-menu left-menu');
             var top = body.find('.panel-pane:visible').css('top');

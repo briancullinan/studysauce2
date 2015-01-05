@@ -277,6 +277,7 @@ class DialogsController extends Controller
             $user->setFirst($request->get('yourFirst'));
             $user->setLast($request->get('yourLast'));
             $user->setEmail($request->get('yourEmail'));
+            $session->set('invite', $bill->getCode());
         }
         else {
             $bill->setFromFirst($request->get('yourFirst'));
@@ -347,6 +348,7 @@ class DialogsController extends Controller
             $user->setFirst($request->get('yourFirst'));
             $user->setLast($request->get('yourLast'));
             $user->setEmail($request->get('yourEmail'));
+            $session->set('invite', $student->getCode());
         }
         else {
             $student->setFromFirst($user->getFirst());

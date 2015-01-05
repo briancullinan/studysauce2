@@ -32,9 +32,18 @@ if(!empty($course1) && $course1->getLesson5() === 4) {
 }
 if(!empty($course1) && $course1->getLesson6() === 4) {
     $completed++;
-    if($next === 6) $next = 7;
+    if($next === 6) {
+        if($course1->getUser()->hasRole('ROLE_PAID')) {
+            $next = 1;
+            $course = 2;
+        }
+        else {
+            $next = 7;
+        }
+    }
 }
-if(!empty($course1) && $course1->getLesson7() === 4) {
+// don't include this in the count
+if(!empty($course1) && $course1->getLesson7() === 4 && !$course1->getUser()->hasRole('ROLE_PAID')) {
     $completed++;
     // next go to course 2
     if($next === 7) {
@@ -90,7 +99,10 @@ if(!empty($course3) && $course3->getLesson5() === 4) {
     $completed++;
     // TODO: done?
 }
-$overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
+$overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL
+        // subtract one if paid
+        - ($course1->getUser()->hasRole('ROLE_PAID') ? 1 : 0)
+        + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
 ?>
 <div class="widget-wrapper">
     <div class="widget course-widget">

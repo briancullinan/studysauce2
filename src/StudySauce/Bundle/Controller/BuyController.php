@@ -66,6 +66,7 @@ class BuyController extends Controller
         {
             /** @var ParentInvite $invite */
             $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
+            // set to true when landing anonymously so make sure it actually exists
             if(!empty($invite)) {
                 $studentfirst = $invite->getFromFirst();
                 $studentlast = $invite->getFromLast();
@@ -89,6 +90,45 @@ class BuyController extends Controller
             $studentfirst = $invite->getUser()->getFirst();
             $studentlast = $invite->getUser()->getLast();
             $studentemail = $invite->getUser()->getEmail();
+        }
+        if(empty($studentfirst) && !empty($invite = $user->getInvitedParents()->filter(
+                function (ParentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
+            if(empty($invite->getUser())) {
+                $studentfirst = $invite->getFromFirst();
+                $studentlast = $invite->getFromLast();
+                $studentemail = $invite->getFromEmail();
+            }
+            else {
+                $studentfirst = $invite->getUser()->getFirst();
+                $studentlast = $invite->getUser()->getLast();
+                $studentemail = $invite->getUser()->getEmail();
+            }
+        }
+        if(empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
+                function (StudentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
+            if(empty($invite->getUser())) {
+                $studentfirst = $invite->getFirst();
+                $studentlast = $invite->getLast();
+                $studentemail = $invite->getEmail();
+            }
+            else {
+                $studentfirst = $invite->getUser()->getFirst();
+                $studentlast = $invite->getUser()->getLast();
+                $studentemail = $invite->getUser()->getEmail();
+            }
+        }
+        // set by invite dialogs when invited anonymously
+        if(empty($studentfirst) && !empty($request->getSession()->get('invite'))) {
+            /** @var StudentInvite $student */
+            $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('invite')]);
+            if(!empty($student)) {
+                $studentfirst = $student->getFirst();
+                $studentlast = $student->getLast();
+                $studentemail = $student->getEmail();
+                $first = $student->getFromFirst();
+                $last = $student->getFromLast();
+                $email = $student->getFromEmail();
+            }
         }
         if(!empty($invite))
         {

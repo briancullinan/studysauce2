@@ -13,7 +13,7 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>What is active reading?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-what-reading" type="text" value="<?php print $view->escape($quiz->getWhatReading()); ?>"></label>
+            <label class="input"><textarea name="quiz-what-reading"><?php print $view->escape($quiz->getWhatReading()); ?></textarea>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

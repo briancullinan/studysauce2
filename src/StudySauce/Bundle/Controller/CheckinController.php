@@ -99,24 +99,23 @@ class CheckinController extends Controller
         $course = $schedule->getCourses()->filter(function (Course $b) use ($courseId) {
                 return !$b->getDeleted() && $b->getType() == 'c' && $b->getId() == $courseId;
             })->first();
-        if($request->get('checkedIn'))
-        {
-            /** @var $c Checkin */
-            $c = $course->getCheckins()->first();
-            $c->setCheckout(new \DateTime($request->get('date')));
-            $c->setUtcCheckout(new \DateTime());
-            $orm->merge($c);
+        if(!empty($course)) {
+            if ($request->get('checkedIn')) {
+                /** @var $c Checkin */
+                $c = $course->getCheckins()->first();
+                $c->setCheckout(new \DateTime($request->get('date')));
+                $c->setUtcCheckout(new \DateTime());
+                $orm->merge($c);
+            } else {
+                $c = new Checkin();
+                $c->setCourse($course);
+                $c->setCheckin(new \DateTime($request->get('date')));
+                $c->setUtcCheckin(new \DateTime());
+                $course->addCheckin($c);
+                $orm->persist($c);
+            }
+            $orm->flush();
         }
-        else
-        {
-            $c = new Checkin();
-            $c->setCourse($course);
-            $c->setCheckin(new \DateTime($request->get('date')));
-            $c->setUtcCheckin(new \DateTime());
-            $course->addCheckin($c);
-            $orm->persist($c);
-        }
-        $orm->flush();
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('checkin_update')
