@@ -166,13 +166,9 @@ $(document).ready(function () {
             item.parents('nav').find('ul.collapse.in').removeClass('in');
         item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
         var triggerShow = function () {
-            if (window.sincluding.length > 0) {
-                setTimeout(triggerShow, 100);
-                return;
-            }
             panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
         };
-        setTimeout(triggerShow, 100);
+        setTimeout(triggerShow, 150);
     }
 });
 

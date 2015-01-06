@@ -393,7 +393,7 @@ class PlanController extends Controller
                         $c = isset($e['course']) ? $e['course'] : null;
                         /** @var Deadline $d */
                         $d = isset($e['deadline']) ? $e['deadline'] : null;
-                        return $e['name'] . $e['type'] . (!empty($c) ? $c->getId() : '') . (!empty($d) ? $d->getId() : '');
+                        return $e['name'] . $e['type'] . $e['start']->getTimestamp() . $e['end']->getTimestamp() . (!empty($c) ? $c->getId() : '') . (!empty($d) ? $d->getId() : '');
                     }, $events)) .
             // add configuration used to build plan so it updates when that changes
             $schedule->getGrades() . $schedule->getWeekends() . $schedule->getSharp11am4pm() .
@@ -424,7 +424,7 @@ class PlanController extends Controller
             }, $matchingEvents);
         }
         else {
-            // TODO: reset buckets
+            // reset buckets
             $buckets->buckets = [];
             $buckets->studyTotals = 0;
             $buckets->classTotals = 0;
@@ -519,7 +519,7 @@ class PlanController extends Controller
             foreach(self::$unresolved as $i => $e)
             {
                 /** @var Event $e */
-                $unresolvedEmail[$e->getStart()->format('y-m-d H:i:s') . ' ' . $e->getType()] = $e->getName();
+                $unresolvedEmail[$e['start']->format('y-m-d H:i:s') . ' ' . $e['type']] = $e['name'];
             }
 
             $emails->administratorAction(null, $unresolvedEmail);
@@ -786,8 +786,8 @@ class PlanController extends Controller
             $s = $event['start'];
             /** @var \DateTime $e */
             $e = $event['end'];
-            $startDistance = $s->getTimestamp() - $notBefore;
-            $endDistance = $notAfter - $e->getTimestamp();
+            $startDistance = $e->getTimestamp() - $notBefore;
+            $endDistance = $notAfter - $s->getTimestamp();
             $beforeDistances[$i] = $startDistance;
             $afterDistances[$i] = $endDistance;
         }
@@ -832,6 +832,8 @@ class PlanController extends Controller
         }
 
         $workingEvents = array_intersect_key($workingBefore, $workingAfter);
+
+        self::sortEvents($workingEvents);
 
         return array_values($workingEvents);
     }
@@ -1009,7 +1011,7 @@ class PlanController extends Controller
         }
 
         // send assertion email when we fail to find a spot to place the event
-        if (!empty($workingEvents) && !isset($workingEvents['empty']) && $event['type'] != 'm' && $event['type'] != 'z' && $top == -1) {
+        if (!empty($workingEvents) && !isset($workingEvents['empty']) && $event['type'] != 'm' && $event['type'] != 'z' && $top === null) {
             self::$unresolved[] = $event;
         }
     }

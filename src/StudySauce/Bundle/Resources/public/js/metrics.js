@@ -250,17 +250,12 @@ $(document).ready(function () {
         if (classes.length == 0)
             return;
 
-        var now = new Date().getFirstDayOfWeek();
-        var weeks = now.getWeekNumber() - d3.min(classes, function (c) { return c.minTime; }).getWeekNumber();
-        if (weeks < 5)
-            weeks = 5;
-        if (weeks > 5)
-            weeks = 5;
+        var now = new Date().getFirstDayOfWeek(),
+            weeks = 4,
+            endTime = new Date(now.getTime()),
+            startTime = new Date(now.getTime() - weeks * 604800000);
 
-        var endTime = new Date(Math.floor(now.getTime())).getWeekNumber()+0.5,
-            startTime = endTime - weeks;
-
-        x = d3.scale.linear()
+        x = d3.time.scale()
             .domain([startTime, endTime])
             .range([0, w])
             .nice();
@@ -279,8 +274,7 @@ $(document).ready(function () {
             .scale(x)
             .ticks(5)
             .tickFormat(function (w) {
-                var firstOfTheYear = new Date('1/1/' + new Date().getFullYear()).getTime(),
-                    d = new Date(firstOfTheYear + w * 604800000).getFirstDayOfWeek();
+                var d = w.getFirstDayOfWeek();
                 return (d.getMonth() + 1) + '/' + d.getDate() + ' - ';
             });
         xAxisLine2 = d3.svg.axis()
@@ -288,8 +282,7 @@ $(document).ready(function () {
             .scale(x)
             .ticks(5)
             .tickFormat(function (w) {
-                var firstOfTheYear = new Date('1/1/' + new Date().getFullYear()).getTime(),
-                    d = new Date(firstOfTheYear + w * 604800000).getFirstDayOfWeek();
+                var d = w.getFirstDayOfWeek();
                 var d2 = new Date(d.getTime() + 604800000 - 1);
                 return (d2.getMonth() + 1) + '/' + d2.getDate();
             });
@@ -338,12 +331,8 @@ $(document).ready(function () {
             e.selectAll("rect")
                 .data(function (d) { return d.values; })
                 .enter().append("rect")
-                .attr("x", function (d) {
-                    return x(d.time.getWeekNumber());
-                })
-                .attr("y", function (d) {
-                    return y(d.lengthS + d.length);
-                })
+                .attr("x", function (d) { return x(d.time); })
+                .attr("y", function (d) { return y(d.lengthS + d.length); })
                 .attr("width", 30)
                 .attr("height", function (d) { return h - y(d.length); })
                 .style("fill", color(p.key))

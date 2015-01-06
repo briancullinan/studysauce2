@@ -34,6 +34,8 @@ security:
             logout:
                 path: /logout
                 target: /
+                invalidate_session: true
+                delete_cookies: [PHPSESSID, REMEMBERME]
             anonymous:    true
             remember_me:
                 key:      "%kernel.secret%"

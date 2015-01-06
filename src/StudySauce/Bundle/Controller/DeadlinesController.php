@@ -52,7 +52,7 @@ class DeadlinesController extends Controller
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'csrf_token' => $csrfToken,
                 'deadlines' => $deadlines,
-                'demoDeadlines' => $demoDeadlines,
+                'demoDeadlines' => array_values($demoDeadlines),
                 'demoCourses' => array_values($demoCourses),
                 'courses' => array_values($courses),
                 'user' => $user

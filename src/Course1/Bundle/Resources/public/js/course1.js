@@ -486,7 +486,7 @@ $(document).ready(function () {
         });
     }
 
-    body.on('click', '#course1_upgrade-step4 input, #course1_upgrade-step4 .highlighted-link a', saveNetPromoter);
+    body.on('click', '#course1_upgrade-step4 .highlighted-link a', saveNetPromoter);
     body.on('change', '#course1_upgrade-step4 input', saveNetPromoter);
 });
 

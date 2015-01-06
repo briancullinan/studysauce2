@@ -209,6 +209,7 @@ class AccountController extends Controller
             $user->setEmailCanonical($request->get('email'));
             $user->addRole('ROLE_USER');
             // assign user to partner
+            InviteListener::setInviteRelationship($orm, $request, $user);
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));
             $user->setLast($request->get('last'));

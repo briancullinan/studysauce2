@@ -32,6 +32,7 @@ $(document).ready(function () {
                 content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
                 // TODO: resort rows
                 window.planEvents = $.merge(window.planEvents, tmpEvents);
+                
                 if(callback) {
                     var events = filterEvents(s, e);
                     callback(events);
@@ -148,12 +149,6 @@ $(document).ready(function () {
                     var dayNr = (w0.getDay() + 6) % 7;
                     w.setDate(w0.getDate() - dayNr - 2);
                     loadWeek(w0);
-                    var w2 = new Date(w0.getTime() + 604800 * 1000);
-                    loadWeek(w2);
-                    var w3 = new Date(w2.getTime() + 604800 * 1000);
-                    loadWeek(w3);
-                    var w4 = new Date(w3.getTime() + 604800 * 1000);
-                    loadWeek(w4);
                 }
             },
             eventClick: function (calEvent) {

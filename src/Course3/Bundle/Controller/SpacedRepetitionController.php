@@ -84,7 +84,10 @@ class SpacedRepetitionController extends Controller
 
         /** @var Course3 $course */
         $course = $user->getCourse3s()->first();
-
+        if(!empty($request->get('netPromoter'))) {
+            $course->setNetPromoter($request->get('netPromoter'));
+            $orm->merge($course);
+        }
         if(!empty($request->get('feedback'))) {
             $course->setFeedback($request->get('feedback'));
             $orm->merge($course);

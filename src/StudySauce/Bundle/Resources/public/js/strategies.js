@@ -49,7 +49,7 @@ $(document).ready(function () {
         // add strategy if they haven't used it before
         if(row.find('.strategy-' + strategy).length == 0 && plans.find('.strategy-' + strategy).length > 0)
         {
-            var newStrategy = plans.find('.strategy-' + strategy).first().clone();
+            var newStrategy = plans.find('.strategy-' + strategy).last().clone();
             row.append(newStrategy);
             newStrategy.html(newStrategy.html().replace(/\{classname}/g, classname).replace(/\{eventId}/g, eventId));
             if(strategy == 'active')

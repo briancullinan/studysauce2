@@ -70,9 +70,9 @@ class ScheduleController extends Controller
                 'demo' => $demo,
                 'csrf_token' => $csrfToken,
                 'courses' => array_values($courses),
-                'demoCourses' => $demoCourses,
+                'demoCourses' => array_values($demoCourses),
                 'others' => $others,
-                'demoOthers' => $demoOthers
+                'demoOthers' => array_values($demoOthers)
             ]);
     }
 
@@ -121,7 +121,20 @@ class ScheduleController extends Controller
     private static function getDemoCourses(Schedule $schedule, EntityManager $orm)
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+        $old = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
+            $b->getEndTime() > new \DateTime() && $b->getStartTime() < new \DateTime(); })->toArray();
+        if(count($old) < 8) {
+            foreach ($old as $i => $c) {
+                /** @var Course $c */
+                $c->setDeleted(true);
+                $orm->merge($c);
+            }
+        }
+        $orm->flush();
+
+        // TODO: remap demo functions to studysauce static functions used by testers?
+        $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
+            $b->getType() == 'c';})->toArray();
         if(empty($courses))
         {
             $courses = [];
@@ -139,7 +152,6 @@ class ScheduleController extends Controller
             $course->setStudyType('memorization');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -157,7 +169,6 @@ class ScheduleController extends Controller
             $course->setStudyType('memorization');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -175,7 +186,6 @@ class ScheduleController extends Controller
             $course->setStudyType('conceptual');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -193,7 +203,6 @@ class ScheduleController extends Controller
             $course->setStudyType('conceptual');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -211,7 +220,6 @@ class ScheduleController extends Controller
             $course->setStudyType('reading');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -229,7 +237,6 @@ class ScheduleController extends Controller
             $course->setStudyType('reading');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -247,7 +254,6 @@ class ScheduleController extends Controller
             $course->setStudyType('conceptual');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
@@ -265,11 +271,12 @@ class ScheduleController extends Controller
             $course->setStudyType('memorization');
 
             $orm->persist($course);
-            $orm->flush();
             $courses[] = $course;
             $schedule->addCourse($course);
 
         }
+
+        $orm->flush();
 
         return $courses;
     }

@@ -53,9 +53,9 @@ $view['slots']->start('body'); ?>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="form-actions highlighted-link invalid">
-            <?php if(!empty($invite) && (!empty($invite->getUser() || $invite instanceof ParentInvite || $invite instanceof StudentInvite))) { ?>
+            <?php /* if(!empty($invite) && (!empty($invite->getUser() || $invite instanceof ParentInvite || $invite instanceof StudentInvite))) { ?>
                 <a href="<?php print $view['router']->generate('logout'); ?>" class="cloak">You have been invited by <?php print (!empty($invite) ? $invite->getUser()->getFirst() : $invite->getFromFirst()); ?>.  Click here to decline.</a>
-            <?php } ?>
+            <?php } */ ?>
             <a href="#user-login" class="more">Login</a>
         </div>
     </div>

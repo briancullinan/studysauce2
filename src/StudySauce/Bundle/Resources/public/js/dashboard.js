@@ -319,4 +319,12 @@ $(document).ready(function () {
             });
         }
     }, 10000);
+
+
+
+    // TODO: put this with adviser dashboard code?
+    body.on('show', '.panel-pane[id^="uid-"]', function (evt) {
+        if($(evt.target).is('[id^="uid-"]'))
+            $(this).find('.panel-pane').not(this).trigger('show');
+    });
 });

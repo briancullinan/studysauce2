@@ -54,7 +54,7 @@ class InviteListener implements EventSubscriberInterface
         return [
             KernelEvents::REQUEST => ['onInviteAccept', -100],
             KernelEvents::RESPONSE => ['onInviteResponse', -100],
-            SecurityEvents::INTERACTIVE_LOGIN => 'onLogin',
+            SecurityEvents::INTERACTIVE_LOGIN => ['onLogin', -100],
         ];
     }
 

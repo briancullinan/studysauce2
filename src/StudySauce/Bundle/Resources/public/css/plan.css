@@ -547,4 +547,20 @@ a.fc-event:not([href])
     {
         display: none;
     }
+
+    #plan .strategy-prework,
+    #plan .strategy-teach,
+    #plan .strategy-active,
+    #plan .strategy-spaced,
+    #plan .strategy-other,
+    #plan .field-select-strategy {
+        padding: 0;
+    }
+
+    #plan .selected .mini-checkin {
+        margin: 0 auto;
+        display:block;
+        position:static;
+        float:none;
+    }
 }

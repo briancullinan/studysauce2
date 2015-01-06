@@ -22,6 +22,14 @@ services:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         arguments: ["@pdo", {db_table: session, db_id_col: session_id, db_data_col: session_value, db_time_col: session_time}]
 
+    my_user_provider:
+        class: StudySauce\Bundle\Security\UserProvider
+        #this is the place where the properties are passed to the UserProvider - see config.yml
+        arguments: [@fos_user.user_manager, @service_container, @security.encoder_factory, {facebook: facebook_id, google: google_id}]
+
+    studysauce.drupal_encoder:
+        class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
+
     sinclude:
         class: StudySauce\Bundle\DependencyInjection\SIncludeFragmentRenderer
         arguments: ["@service_container", "@uri_signer", "", "@http_kernel", "@event_dispatcher"]
@@ -54,19 +62,11 @@ services:
             - {name: kernel.event_subscriber}
         arguments: [@service_container]
 
-    studysauce.drupal_encoder:
-        class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
-
     kernel.listener.tracker:
         class: StudySauce\Bundle\EventListener\PageTracker
         tags:
             - {name: kernel.event_subscriber}
         arguments: ["@service_container", "@doctrine.orm.entity_manager", "@session", "@security.context"]
-
-    my_user_provider:
-        class: StudySauce\Bundle\Security\UserProvider
-        #this is the place where the properties are passed to the UserProvider - see config.yml
-        arguments: [@fos_user.user_manager, @service_container, @security.encoder_factory, {facebook: facebook_id, google: google_id}]
 
 framework:
     #esi:             ~

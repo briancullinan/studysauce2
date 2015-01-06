@@ -5514,15 +5514,10 @@ var TimeGrid = Grid.extend({
 
         if(slatCoverage < 0) {
             slatCoverage = (24 * 3600000 / this.slotDuration * this.slotDuration + time - this.minTime) / this.slotDuration;
-            slatCoverage = Math.max(0, slatCoverage);
-            slatCoverage = Math.min(this.slatEls.length, slatCoverage);
         }
-        else {
-            // constrain. because minTime/maxTime might be customized
-            slatCoverage = Math.max(0, slatCoverage);
-            slatCoverage = Math.min(this.slatEls.length, slatCoverage);
-        }
-        
+
+        slatCoverage = Math.max(0, slatCoverage);
+        slatCoverage = Math.min(this.slatEls.length, slatCoverage);
 		slatIndex = Math.floor(slatCoverage); // an integer index of the furthest whole slot
 		slatRemainder = slatCoverage - slatIndex;
 		slatTop = this.slatTops[slatIndex]; // the top position of the furthest whole slot

@@ -1,6 +1,10 @@
 .landing-home .video {
     text-align: center;
     position:relative;
+    overflow:hidden;
+    background: url(../images/SMU_blur.jpg) no-repeat 50% -50px #999999;
+    background-size: auto;
+    background-attachment: fixed;
 }
 
 .landing-home .video > img {
@@ -88,8 +92,26 @@
     color: #ffffff;
 }
 
+
+
+@media all and (min-width:1800px) {
+    .landing-home .video {
+        background-size: auto 110%;
+    }
+}
+
 @media all and (max-width:700px)
 {
+
+    .landing-home .flexslider
+    {
+        padding-bottom: 80px;
+    }
+
+    .landing-home .video {
+        background-size: auto 110%;
+    }
+
     .landing-home .video .slides .highlighted-link
     {
         float:none;
@@ -122,4 +144,5 @@
         width: 100%;
         max-width: 400px;
     }
+
 }

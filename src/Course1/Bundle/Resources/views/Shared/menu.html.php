@@ -5,6 +5,9 @@ use Course2\Bundle\Entity\Course2;
 /** @var Course1 $course1 */
 /** @var Course2 $course2 */
 
+/** @var @var User $user */
+$user = $app->getUser();
+
 $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLesson2() == 4 && $course1->getLesson3() == 4 &&
     $course1->getLesson4() == 4 && $course1->getLesson5() == 4 && $course1->getLesson6() == 4 &&
     $course1->getLesson7() == 4;
@@ -34,8 +37,10 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
                         <a href="<?php print $view['router']->generate('course1_environment', ['_step' => 0]); ?>"><span>&bullet;</span>Study environment</a></li>
                     <li class="<?php print (!empty($course1) && $course1->getLesson6() === 4 ? 'complete' : ''); ?>">
                         <a href="<?php print $view['router']->generate('course1_partners', ['_step' => 0]); ?>"><span>&bullet;</span>Partners</a></li>
+                    <?php if(!$user->hasRole('ROLE_PAID')) { ?>
                     <li class="<?php print (!empty($course1) && $course1->getLesson7() === 4 ? 'complete' : ''); ?>">
                         <a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 0]); ?>"><span>&bullet;</span>End of Level 1</a></li>
+                    <?php } ?>
                 </ul>
             </li>
             <li class="accordion-group panel">
