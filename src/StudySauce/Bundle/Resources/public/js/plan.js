@@ -6,43 +6,47 @@ $(document).ready(function () {
         isInitialized = false,
         d = date.getDate(),
         m = date.getMonth(),
-        calendar;
+        calendar, planTimeout;
 
     function loadWeek(w, callback, s, e)
     {
-        var plans = $('#plan');
-        $.ajax({
-            url: $('.dashboard-home.adviser').length == 1
-                ? window.location.pathname.replace(/adviser\/([0-9]+)(\/.*)?/i, 'adviser/$1/plan/' + w.toJSON() + '/tab')
-                : window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
-            type: 'GET',
-            dataType: 'text',
-            success: function (data) {
-                var tmpEvents = window.planEvents,
-                    content = $(data),
-                    append = window.planLoaded.length <= 1;
-                window.planEvents = [];
-                // merge scripts
-                ssMergeScripts(content.filter('script:not([src])'));
-                for (var i = 0; i < window.planEvents.length; i++) {
-                    window.planEvents[i].start = new Date(window.planEvents[i].start);
-                    window.planEvents[i].end = new Date(window.planEvents[i].end);
-                }
+        if(planTimeout != null)
+            clearTimeout(planTimeout);
+        planTimeout = setTimeout(function () {
+            var plans = $('#plan');
+            $.ajax({
+                url: $('.dashboard-home.adviser').length == 1
+                    ? window.location.pathname.replace(/adviser\/([0-9]+)(\/.*)?/i, 'adviser/$1/plan/' + w.toJSON() + '/tab')
+                    : window.callbackPaths['plan'].replace('/tab', '/' + w.toJSON() + '/tab'),
+                type: 'GET',
+                dataType: 'text',
+                success: function (data) {
+                    var tmpEvents = window.planEvents,
+                        content = $(data),
+                        append = window.planLoaded.length == 1;
+                    window.planEvents = [];
+                    // merge scripts
+                    ssMergeScripts(content.filter('script:not([src])'));
+                    for (var i = 0; i < window.planEvents.length; i++) {
+                        window.planEvents[i].start = new Date(window.planEvents[i].start);
+                        window.planEvents[i].end = new Date(window.planEvents[i].end);
+                    }
 
-                // merge rows
-                if(append) {
-                    content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
-                    // TODO: resort rows
-                }
-                window.planEvents = $.merge(window.planEvents, tmpEvents);
+                    // merge rows
+                    if(append && (window.planLoaded[1] == planLoaded[0] + 1 ||
+                        (planLoaded[0] == 52 && planLoaded[1] == 1))) {
+                        content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                        // TODO: resort rows
+                    }
+                    window.planEvents = $.merge(window.planEvents, tmpEvents);
 
-                if(callback) {
-                    var events = filterEvents(s, e);
-                    callback(events);
+                    if(callback) {
+                        var events = filterEvents(s, e);
+                        callback(events);
+                    }
                 }
-            }
-        });
-
+            });
+        }, 150);
     }
 
     function filterEvents(s, e) {
