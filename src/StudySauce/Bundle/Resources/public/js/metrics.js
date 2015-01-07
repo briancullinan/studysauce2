@@ -2,7 +2,7 @@
 $(document).ready(function () {
     var body = $('body');
 
-    var margins = [25, 0, 45, 0];
+    var margins = [25, 20, 45, 20];
 
     var color = d3.scale.category10().range(["#FF1100", "#FF9900", "#FFDD00", "#BBEE00", "#33DD00",
         "#009999", "#1133AA", "#6611AA", "#BB0088"]);
@@ -132,7 +132,7 @@ $(document).ready(function () {
                 .attr("width", timeline.width())
                 .attr("height", timeline.width() * 12 / 16)
                 .append("g").attr('class', 'bars')
-                .attr("transform", "translate(" + margins[1] + "," + margins[0] + ")");
+                .attr("transform", "translate(5," + margins[0] + ")");
 
         if(piechart.find('svg').length == 0)
             d3.selectAll(piechart.toArray()).append("svg")
@@ -244,7 +244,7 @@ $(document).ready(function () {
     function redraw() {
         var timeline = $('#timeline:visible, .timeline:visible').find('svg'),
             h = (timeline.width() * 12 / 16) - margins[0] - margins[2],
-            w = timeline.width(),
+            w = timeline.width() - margins[1] - margins[3],
             svg = d3.selectAll(timeline.toArray());
 
         if (classes.length == 0)
@@ -252,12 +252,12 @@ $(document).ready(function () {
 
         var now = (new Date()).getFirstDayOfWeek(),
             weeks = 4,
-            endTime = new Date(now.getTime() + 86400),
+            endTime = new Date(now.getTime()),
             startTime = new Date(now.getTime() - weeks * 604800000);
 
         x = d3.time.scale()
             .domain([startTime, endTime])
-            .range([0, w - 20])
+            .range([0, w])
             .nice();
 
         y = d3.scale.linear()
@@ -308,13 +308,11 @@ $(document).ready(function () {
             .attr("transform", "translate(" + margins[1] + "," + (h + margins[0]) + ")")
             .call(xAxis)
             .select('path')
-            .attr('width', w)
-            .select('text')
-            .style('text-anchor', 'start');
+            .attr('d', "M" + (-margins[1]) + ",6V0H" + (w + margins[3]) + "V6");
         if (svg.select('.x.axis2').empty())
             svg.append("g").attr("class", "x axis2");
         svg.select('.x.axis2')
-            .attr("transform", "translate(0," + (h + margins[0] + 18) + ")")
+            .attr("transform", "translate(" + margins[1] + "," + (h + margins[0] + 18) + ")")
             .call(xAxisLine2)
             .select('path').remove();
         if (svg.select('.x.axisT').empty())
@@ -337,7 +335,7 @@ $(document).ready(function () {
                 .enter().append("rect")
                 .attr("x", function (d) { return x(d.time); })
                 .attr("y", function (d) { return y(d.lengthS + d.length); })
-                .attr("width", 25)
+                .attr("width", 30)
                 .attr("height", function (d) { return h - y(d.length); })
                 .style("fill", color(p.key))
                 .style("fill-opacity", 1);
