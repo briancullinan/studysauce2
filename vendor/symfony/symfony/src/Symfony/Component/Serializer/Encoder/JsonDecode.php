@@ -14,7 +14,7 @@ namespace Symfony\Component\Serializer\Encoder;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * Decodes JSON data
+ * Decodes JSON data.
  *
  * @author Sander Coolen <sander@jibber.nl>
  */
@@ -41,8 +41,8 @@ class JsonDecode implements DecoderInterface
     /**
      * Constructs a new JsonDecode instance.
      *
-     * @param bool     $associative True to return the result associative array, false for a nested stdClass hierarchy
-     * @param int      $depth       Specifies the recursion depth
+     * @param bool $associative True to return the result associative array, false for a nested stdClass hierarchy
+     * @param int  $depth       Specifies the recursion depth
      */
     public function __construct($associative = false, $depth = 512)
     {

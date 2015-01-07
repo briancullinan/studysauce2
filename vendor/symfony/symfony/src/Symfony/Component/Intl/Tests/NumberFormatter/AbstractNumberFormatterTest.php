@@ -12,7 +12,6 @@
 namespace Symfony\Component\Intl\Tests\NumberFormatter;
 
 use Symfony\Component\Intl\Globals\IntlGlobals;
-use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Locale;
 use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
 use Symfony\Component\Intl\Util\IntlTestHelper;
@@ -233,6 +232,7 @@ abstract class AbstractNumberFormatterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * The parse() method works differently with integer out of the 32 bit range. format() works fine.
+     *
      * @dataProvider formatTypeInt64Provider
      */
     public function testFormatTypeInt64($formatter, $value, $expected)
@@ -803,8 +803,8 @@ abstract class AbstractNumberFormatterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $locale
-     * @param null $style
-     * @param null $pattern
+     * @param null   $style
+     * @param null   $pattern
      *
      * @return \NumberFormatter
      */
@@ -821,7 +821,7 @@ abstract class AbstractNumberFormatterTest extends \PHPUnit_Framework_TestCase
     abstract protected function getIntlErrorCode();
 
     /**
-     * @param int     $errorCode
+     * @param int $errorCode
      *
      * @return bool
      */

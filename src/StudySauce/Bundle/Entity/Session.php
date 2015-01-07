@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Session
 {
     /**
-     * @ORM\Column(type="string", length=64, name="session_id")
+     * @ORM\Column(type="string", length=128, name="session_id")
      * @ORM\Id
      */
     protected $id;
@@ -25,6 +25,11 @@ class Session
      * @ORM\Column(type="integer", name="session_time")
      */
     protected $time;
+
+    /**
+     * @ORM\Column(type="integer", name="session_lifetime")
+     */
+    protected $lifetime;
 
     /**
      * @ORM\OneToMany(targetEntity="Visit", mappedBy="session")

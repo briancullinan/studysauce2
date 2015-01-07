@@ -12,6 +12,7 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
         <h2>Level 1 complete</h2>
         <div class="grid_6">
             <p>Well done. You have completed the first part of the course. Upgrade to premium or bill your parents to keep going!</p>
+            <p>&nbsp;</p>
             <p>How likely are you to recommend Study Sauce for a friend?</p>
             <div class="net-promoter">
                 <label class="radio"><input type="radio" name="investment-net-promoter" value="0" <?php print ($course->getNetPromoter() === 0 ? 'checked="checked"' : ''); ?>/><i></i><br/><span>0</span></label>

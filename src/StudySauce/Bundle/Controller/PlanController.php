@@ -1590,7 +1590,8 @@ class PlanController extends Controller
         $schedule = $user->getSchedules()->first();
 
         /** @var Event $event */
-        $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
+        if(!empty($schedule))
+            $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
 
         if (!empty($event)) {
             $oldStart = $event->getStart();
@@ -1783,7 +1784,9 @@ class PlanController extends Controller
                 $teach->setIsDefault($request->get('default') == 'teach');
                 $teach->setNotes($s['notes']);
                 $teach->setTitle($s['title']);
-                $teach->setTeaching($user->getFiles()->filter(function (File $f)use($s) {return $f->getId() == $s['fid'];})->first());
+                $file = $user->getFiles()->filter(function (File $f)use($s) {return $f->getId() == $s['fid'];})->first();
+                if(!empty($file))
+                    $teach->setTeaching($file);
                 if($new)
                     $orm->persist($teach);
                 else

@@ -2,7 +2,7 @@
 $(document).ready(function () {
     var body = $('body');
 
-    var margins = [25, -15, 45, 0];
+    var margins = [25, 0, 45, 0];
 
     var color = d3.scale.category10().range(["#FF1100", "#FF9900", "#FFDD00", "#BBEE00", "#33DD00",
         "#009999", "#1133AA", "#6611AA", "#BB0088"]);
@@ -250,14 +250,14 @@ $(document).ready(function () {
         if (classes.length == 0)
             return;
 
-        var now = new Date().getFirstDayOfWeek(),
+        var now = (new Date()).getFirstDayOfWeek(),
             weeks = 4,
-            endTime = new Date(now.getTime()),
+            endTime = new Date(now.getTime() + 86400),
             startTime = new Date(now.getTime() - weeks * 604800000);
 
         x = d3.time.scale()
             .domain([startTime, endTime])
-            .range([0, w])
+            .range([0, w - 20])
             .nice();
 
         y = d3.scale.linear()
@@ -305,8 +305,12 @@ $(document).ready(function () {
         if (svg.select('.x.axis').empty())
             svg.append("g").attr("class", "x axis");
         svg.select('.x.axis')
-            .attr("transform", "translate(0," + (h + margins[0]) + ")")
-            .call(xAxis);
+            .attr("transform", "translate(" + margins[1] + "," + (h + margins[0]) + ")")
+            .call(xAxis)
+            .select('path')
+            .attr('width', w)
+            .select('text')
+            .style('text-anchor', 'start');
         if (svg.select('.x.axis2').empty())
             svg.append("g").attr("class", "x axis2");
         svg.select('.x.axis2')
@@ -333,7 +337,7 @@ $(document).ready(function () {
                 .enter().append("rect")
                 .attr("x", function (d) { return x(d.time); })
                 .attr("y", function (d) { return y(d.lengthS + d.length); })
-                .attr("width", 30)
+                .attr("width", 25)
                 .attr("height", function (d) { return h - y(d.length); })
                 .style("fill", color(p.key))
                 .style("fill-opacity", 1);

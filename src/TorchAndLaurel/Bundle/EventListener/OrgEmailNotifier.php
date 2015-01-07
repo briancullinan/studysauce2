@@ -72,8 +72,8 @@ class OrgEmailNotifier implements EventSubscriberInterface
             if(!empty($group) && $group->getGroup()->getName() == 'Torch And Laurel' ||
                 $user->hasGroup('Torch And Laurel') || ($session->has('organization') &&
                 $session->get('organization') == 'Torch And Laurel') ||
-                $user->getInvitedPartners()->exists(function (PartnerInvite $p) {return $p->getUser()->hasGroup('Torch And Laurel');}) ||
-                $user->getInvitedParents()->exists(function (ParentInvite $p) {return $p->getUser()->hasGroup('Torch And Laurel');})) {
+                $user->getInvitedPartners()->exists(function ($x, PartnerInvite $p) {return $p->getUser()->hasGroup('Torch And Laurel');}) ||
+                $user->getInvitedParents()->exists(function ($x, ParentInvite $p) {return $p->getUser()->hasGroup('Torch And Laurel');})) {
                 $session->set('coupon', 'TORCHANDLAUREL');
             }
         }

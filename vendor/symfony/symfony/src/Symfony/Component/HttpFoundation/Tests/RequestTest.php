@@ -217,7 +217,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(80, $request->getPort());
         $this->assertEquals('test.com', $request->getHttpHost());
         $this->assertEquals('username', $request->getUser());
-        $this->assertSame('',$request->getPassword());
+        $this->assertSame('', $request->getPassword());
         $this->assertFalse($request->isSecure());
 
         $request = Request::create('http://test.com/?foo');
@@ -501,7 +501,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request();
 
-        $request->initialize(array(), array(), array(), array(), array(),$server);
+        $request->initialize(array(), array(), array(), array(), array(), $server);
 
         $this->assertEquals('http://host:8080/index.php/some/path', $request->getUriForPath('/some/path'), '->getUriForPath() with non default port');
 
@@ -885,6 +885,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             array(array('3620:0:1cfe:face:b00c::3'), '1620:0:1cfe:face:b00c::3', '3620:0:1cfe:face:b00c::3,2620:0:1cfe:face:b00c::3', array('1620:0:1cfe:face:b00c::3', '2620:0:1cfe:face:b00c::3')),
             // multiple forwarded for with remote IPv4 addr and some reverse proxies trusted but in the middle
             array(array('2620:0:1cfe:face:b00c::3', '4620:0:1cfe:face:b00c::3'), '1620:0:1cfe:face:b00c::3', '4620:0:1cfe:face:b00c::3,3620:0:1cfe:face:b00c::3,2620:0:1cfe:face:b00c::3', array('1620:0:1cfe:face:b00c::3', '3620:0:1cfe:face:b00c::3')),
+
+            // client IP with port
+            array(array('88.88.88.88'), '127.0.0.1', '88.88.88.88:12345, 127.0.0.1', array('127.0.0.1')),
         );
     }
 

@@ -1,6 +1,10 @@
 Authorize.Net PHP SDK
 ======================
 
+[![Build Status]
+(https://travis-ci.org/AuthorizeNet/sdk-php.png?branch=master)]
+(https://travis-ci.org/AuthorizeNet/sdk-php)
+
 ## License
 Proprietary, see the provided `license.md`.
 
@@ -16,7 +20,7 @@ Proprietary, see the provided `license.md`.
 ## Autoloading
 
 [`Composer`](http://getcomposer.org) currently has a [MITM](https://github.com/composer/composer/issues/1074)
-security vulnerability.  However, if you wish to use it, require it's autoloader in
+security vulnerability.  However, if you wish to use it, require its autoloader in
 your script or bootstrap file:
 ```php
 require 'vendor/autoload.php';
@@ -33,7 +37,18 @@ Alternatively, we provide a custom `SPL` autoloader:
 ```php
 require 'path/to/anet_php_sdk/autoload.php';
 ```
-    
+
+## Authentication
+To authenticate with the Authorize.Net API you will need to retrieve your API Login ID and Transaction Key from the [`Merchant Interface`](https://account.authorize.net/).  You can find these details in the Settings section.
+If you need a sandbox account you can sign up for one really easily [`here`](https://developer.authorize.net/sandbox/).
+
+Once you have your keys simply plug them into the appropriate variables as per the samples below.
+
+````php
+define("AUTHORIZENET_API_LOGIN_ID", "YOURLOGIN");
+define("AUTHORIZENET_TRANSACTION_KEY", "YOURKEY");
+````
+
 ## Usage Examples
 
 See below for basic usage examples. View the `tests/` folder for more examples of

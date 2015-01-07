@@ -87,46 +87,55 @@ class PageTracker implements EventSubscriberInterface
             $this->session->start();
             $id = $this->session->getId();
 
-            if (!empty($id)) {
-                $visit->setSession($id);
-            }
-
             /** @var TokenInterface $token */
             $token = $this->context->getToken();
 
             /** @var User $user */
             $user = $token->getUser();
-            if ($user != 'anon.') {
-                $visit->setUser($user);
-            }
 
             $query = $request->query->all();
-            // record visits leading up to this one
-            if (isset($query['__visits']) && is_array($query['__visits'])) {
-                foreach ($query['__visits'] as $i => $v) {
-                    $prev = clone $visit;
-                    $visited = new \DateTime($v['time']);
-                    $visited->setTimezone(new \DateTimeZone(date_default_timezone_get()));
-                    $prev->setCreated($visited);
-                    $prev->setHash($v['hash']);
-                    $prev->setPath($request->getBaseUrl() != '/' ? str_replace($request->getBaseUrl(), '', $v['path']) : $v['path']);
-                    $prevQuery = self::queryToArray($v['query']);
-                    $prev->setQuery(empty($prevQuery) ? null : $prevQuery);
-                    $this->orm->persist($prev);
-                }
+            if(isset($query['__visits'])) {
+                $visits = $query['__visits'];
                 unset($query['__visits']);
             }
             $visit->setQuery(empty($query) ? null : $query);
             if($path != '/_visit' && $path != '/_fragment') {
-                if (!empty($session)) {
-                    $session->addVisit($visit);
+                if (!empty($id)) {
+                    $visit->setSession($id);
                 }
                 if ($user != 'anon.') {
+                    $visit->setUser($user);
                     $user->addVisit($visit);
                 }
                 $this->orm->persist($visit);
+                $this->orm->flush($visit);
             }
-            $this->orm->flush();
+            // record visits leading up to this one
+            if (isset($visits) && is_array($visits)) {
+                foreach ($visits as $i => $v) {
+                    $prev = new Visit();
+                    $visited = new \DateTime($v['time']);
+                    $visited->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                    $prev->setCreated($visited);
+                    $prev->setHash($v['hash']);
+                    if(!empty($base = $request->getBaseUrl()) && strpos($v['path'], $base) == 0)
+                        $v['path'] = substr($v['path'], strlen($request->getBaseUrl()));
+                    if(substr($v['path'], 0, 1) != '/')
+                        $v['path'] = '/' . $v['path'];
+                    $prev->setPath($v['path']);
+                    $prevQuery = self::queryToArray($v['query']);
+                    $prev->setQuery(empty($prevQuery) ? null : $prevQuery);
+                    if (!empty($id)) {
+                        $prev->setSession($id);
+                    }
+                    if ($user != 'anon.') {
+                        $prev->setUser($user);
+                        $user->addVisit($prev);
+                    }
+                    $this->orm->persist($prev);
+                    $this->orm->flush($prev);
+                }
+            }
             // call visit action
             if($path != '/_visit') {
                 $ctrl = new LandingController();

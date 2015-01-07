@@ -752,7 +752,7 @@ class FilesystemTest extends FilesystemTestCase
             array('/a/aab/bb/', '/a/aa/', '../aab/bb/'),
         );
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if ('\\' === DIRECTORY_SEPARATOR) {
             $paths[] = array('c:\var\lib/symfony/src/Symfony/', 'c:/var/lib/symfony/', 'src/Symfony/');
         }
 
@@ -853,6 +853,31 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertTrue(is_link($targetPath.DIRECTORY_SEPARATOR.'link1'));
     }
 
+    public function testMirrorCopiesRelativeLinkedContents()
+    {
+        $this->markAsSkippedIfSymlinkIsMissing();
+
+        $sourcePath = $this->workspace.DIRECTORY_SEPARATOR.'source'.DIRECTORY_SEPARATOR;
+        $oldPath = getcwd();
+
+        mkdir($sourcePath.'nested/', 0777, true);
+        file_put_contents($sourcePath.'/nested/file1.txt', 'FILE1');
+        // Note: Create relative symlink
+        chdir($sourcePath);
+        symlink('nested', 'link1');
+
+        chdir($oldPath);
+
+        $targetPath = $this->workspace.DIRECTORY_SEPARATOR.'target'.DIRECTORY_SEPARATOR;
+
+        $this->filesystem->mirror($sourcePath, $targetPath);
+
+        $this->assertTrue(is_dir($targetPath));
+        $this->assertFileEquals($sourcePath.'/nested/file1.txt', $targetPath.DIRECTORY_SEPARATOR.'link1/file1.txt');
+        $this->assertTrue(is_link($targetPath.DIRECTORY_SEPARATOR.'link1'));
+        $this->assertEquals($sourcePath.'nested', readlink($targetPath.DIRECTORY_SEPARATOR.'link1'));
+    }
+
     /**
      * @dataProvider providePathsForIsAbsolutePath
      */
@@ -889,7 +914,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertSame('bar', file_get_contents($filename));
 
         // skip mode check on Windows
-        if (!defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if ('\\' !== DIRECTORY_SEPARATOR) {
             $this->assertFilePermissions(753, $filename);
         }
     }
@@ -904,7 +929,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertSame('bar', file_get_contents($filename));
 
         // skip mode check on Windows
-        if (!defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if ('\\' !== DIRECTORY_SEPARATOR) {
             $this->assertFilePermissions(600, $filename);
         }
     }

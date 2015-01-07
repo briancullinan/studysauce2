@@ -537,6 +537,9 @@ class BuyController extends Controller
         foreach($payments as $i => $p)
         {
             /** @var Payment $p */
+            if(empty($p->getSubscription()))
+                continue;
+            /** @var Payment $p */
             try {
                 $arbRequest = new \AuthorizeNetARB(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
                 $arbRequest->setSandbox(false);

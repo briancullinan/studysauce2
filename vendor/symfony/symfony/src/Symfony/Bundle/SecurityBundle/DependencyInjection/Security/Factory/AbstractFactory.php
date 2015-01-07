@@ -12,14 +12,13 @@
 namespace Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory;
 
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
-
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * AbstractFactory is the base class for all classes inheriting from
- * AbstractAuthenticationListener
+ * AbstractAuthenticationListener.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
@@ -146,7 +145,7 @@ abstract class AbstractFactory implements SecurityFactoryInterface
      *
      * @param array $config
      *
-     * @return bool    Whether a possibly configured RememberMeServices should be set for this listener
+     * @return bool Whether a possibly configured RememberMeServices should be set for this listener
      */
     protected function isRememberMeAware($config)
     {

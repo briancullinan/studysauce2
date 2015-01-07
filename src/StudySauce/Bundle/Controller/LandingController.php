@@ -121,6 +121,10 @@ class LandingController extends Controller
         $visits = $request->get('__visits');
         $visits[]['path'] = $request->getPathInfo();
         foreach ($visits as $i => $v) {
+            if(!empty($base = $request->getBaseUrl()) && strpos($v['path'], $base) == 0)
+                    $v['path'] = substr($v['path'], strlen($request->getBaseUrl()));
+            if(substr($v['path'], 0, 1) != '/')
+                $v['path'] = '/' . $v['path'];
             if(substr(str_replace($request->getBaseUrl(), '', $v['path']), 0, 10) == '/course/1/') {
                 // TODO: check for quiz completeness
                 if (preg_match('/lesson\/([0-9]+)\/step\/?([0-9]+)?/', $v['path'], $matches)) {
