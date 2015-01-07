@@ -336,24 +336,6 @@
     text-align: center !important;
 }
 
-#course1_upgrade-step4 header label
-{
-    display:inline-block;
-    width:33.33%;
-    margin:0 -2px;
-    padding: 0 2px;
-}
-
-#course1_upgrade-step4 header label:nth-child(2)
-{
-    text-align: center;
-}
-
-#course1_upgrade-step4 header label:nth-child(3)
-{
-    text-align: right;
-}
-
 @media all and (max-width:1000px)
 {
 

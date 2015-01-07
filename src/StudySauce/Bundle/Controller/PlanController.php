@@ -1678,7 +1678,7 @@ class PlanController extends Controller
         }
         $orm->flush();
 
-        return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab', '_week' => $event->getStart()->format('Y-m-d')]);
+        return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
 
     /**

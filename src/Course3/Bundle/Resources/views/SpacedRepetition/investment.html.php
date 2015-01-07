@@ -15,6 +15,7 @@ $view->extend('Course3Bundle:Shared:layout.html.php');
             <p>We hope you enjoyed the course. You now know how to study effectively. Remember to use your study tools and feel free to revisit some of the videos from time to time.</p>
             <p>Please let us know what you thought of the course. We are particularly interested in your feedback and your suggestions for new videos and study tools that you would like to see us make.</p>
             <label class="input"><textarea name="investment-feedback"><?php print $course->getFeedback(); ?></textarea></label>
+            <p>&nbsp;</p>
             <p>How likely are you to recommend Study Sauce to a friend?</p>
             <div class="net-promoter">
                 <label class="radio"><input type="radio" name="investment-net-promoter" value="0" <?php print ($course->getNetPromoter() === 0 ? 'checked="checked"' : ''); ?>/><i></i><br/><span>0</span></label>
@@ -29,6 +30,11 @@ $view->extend('Course3Bundle:Shared:layout.html.php');
                 <label class="radio"><input type="radio" name="investment-net-promoter" value="9" <?php print ($course->getNetPromoter() == 9 ? 'checked="checked"' : ''); ?>/><i></i><br/><span>9</span></label>
                 <label class="radio"><input type="radio" name="investment-net-promoter" value="10" <?php print ($course->getNetPromoter() == 10 ? 'checked="checked"' : ''); ?>/><i></i><br/><span>10</span></label>
             </div>
+            <header>
+                <label>Not likely at all</label>
+                <label>Neutral</label>
+                <label>Extremely likely</label>
+            </header>
         </div>
         <div class="grid_6">
             <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/complication_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
