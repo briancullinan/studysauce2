@@ -403,7 +403,7 @@ class PlanController extends Controller
         // check to see if there is a matching list of events for another week
         if (($eventWeek = $schedule->getWeeks()->filter(
                 function (Week $w) use ($weekHash, $events) {
-                    return $w->getHash() == $weekHash && $w->getEvents()->count() == count($events);
+                    return $w->getHash() == $weekHash && $w->getEvents()->filter(function (Event $e) {return !$e->getDeleted();})->count() == count($events);
                 }
             )->first()) != null
         ) {
@@ -1075,11 +1075,15 @@ class PlanController extends Controller
             /** @var Event $save */
             if(!empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
                 !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced()))
-                continue;
-
-            $schedule->removeEvent($save);
-            $week->removeEvent($save);
-            $orm->remove($save);
+            {
+                $save->setDeleted(true);
+                $orm->merge($save);
+            }
+            else {
+                $schedule->removeEvent($save);
+                $week->removeEvent($save);
+                $orm->remove($save);
+            }
         }
         $orm->flush();
 

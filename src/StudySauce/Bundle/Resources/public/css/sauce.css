@@ -246,7 +246,7 @@ input[type="button"].more:focus
 
 .net-promoter
 {
-    max-width: 300px;
+    max-width: 400px;
     margin:0 auto;
 }
 
@@ -258,6 +258,12 @@ input[type="button"].more:focus
     padding: 0 2px;
     position:relative;
     text-align: center;
+}
+
+.net-promoter + header
+{
+    max-width: 400px;
+    margin:0 auto;
 }
 
 .net-promoter + header label
