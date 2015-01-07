@@ -244,10 +244,11 @@ input[type="button"].more:focus
     border-color: #004477;
 }
 
+.net-promoter + header,
 .net-promoter
 {
     max-width: 400px;
-    margin:0 auto;
+    margin:0 auto 0 0;
 }
 
 .net-promoter label
@@ -258,12 +259,6 @@ input[type="button"].more:focus
     padding: 0 2px;
     position:relative;
     text-align: center;
-}
-
-.net-promoter + header
-{
-    max-width: 400px;
-    margin:0 auto;
 }
 
 .net-promoter + header label
