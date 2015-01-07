@@ -443,7 +443,7 @@ class BuyController extends Controller
                 $userManager->updateUser($student);
                 $email->parentPrepayAction($user, $student->getEmail(), $student->getFirst(), $student->getLast(), $invite->getCode());
             }
-            elseif(isset($studentEmail) && isset($studentFirst) && isset($studentLast)) {
+            elseif(!empty($studentEmail) && !empty($studentFirst) && !empty($studentLast)) {
                 $email->parentPrepayAction($user, $studentEmail, $studentFirst, $studentLast, $invite->getCode());
             }
         }
