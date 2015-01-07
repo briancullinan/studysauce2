@@ -19,7 +19,8 @@ $(document).ready(function () {
             dataType: 'text',
             success: function (data) {
                 var tmpEvents = window.planEvents,
-                    content = $(data);
+                    content = $(data),
+                    append = window.planLoaded.length <= 1;
                 window.planEvents = [];
                 // merge scripts
                 ssMergeScripts(content.filter('script:not([src])'));
@@ -29,10 +30,12 @@ $(document).ready(function () {
                 }
 
                 // merge rows
-                content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
-                // TODO: resort rows
+                if(append) {
+                    content.find('.head,.session-row').insertAfter(plans.find('.session-row').last());
+                    // TODO: resort rows
+                }
                 window.planEvents = $.merge(window.planEvents, tmpEvents);
-                
+
                 if(callback) {
                     var events = filterEvents(s, e);
                     callback(events);
@@ -140,14 +143,7 @@ $(document).ready(function () {
                     callback(events);
                 }
                 if(window.planLoaded.length <= 1) {
-                    var now = new Date(),
-                        w0 = new Date(now.getUTCFullYear(), 0, 1,  0, 0, 0),
-                        week = now.getWeekNumber(),
-                        localOffset = (3600000 * 7) - (new Date()).getTimezoneOffset() * 60000;
-                    w0.setUTCHours(0);
-                    w0.setTime(w0.getTime() + week * 86400 * 7 * 1000 - localOffset);
-                    var dayNr = (w0.getDay() + 6) % 7;
-                    w.setDate(w0.getDate() - dayNr - 2);
+                    var w0 = new Date(w.getTime() + 604800000);
                     loadWeek(w0);
                 }
             },

@@ -17,7 +17,7 @@ $(document).ready(function () {
         pan = setTimeout(function () {
             var video = $('.landing-home .video');
             var percent = $(this).scrollTop() / video.height();
-            video.stop().animate({'background-position-y': 20 * percent - 50}, 100);
+            video.stop().animate({'background-position-y': 20 * percent - 20}, 100);
         }, 10);
     });
 
