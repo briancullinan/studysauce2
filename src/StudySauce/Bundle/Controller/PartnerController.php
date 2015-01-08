@@ -10,7 +10,6 @@ use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\File;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\GroupInvite;
-use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
@@ -126,7 +125,7 @@ class PartnerController extends Controller
         $user = $this->getUser();
         if(!$user->hasRole('ROLE_ADVISER') && !$user->hasRole('ROLE_MASTER_ADVISER') && !$user->hasRole('ROLE_ADMIN') &&
             !$user->hasRole('ROLE_PARTNER')) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         if($user->hasRole('ROLE_ADMIN')) {
             $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();

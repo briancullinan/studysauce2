@@ -472,7 +472,8 @@ class BuyController extends Controller
         $user = $this->getUser();
 
         // create a mock invite
-        if(!empty($request->get('invite')))
+        if(!empty($request->get('invite')) && !empty($request->get('invite')['first']) &&
+            !empty($request->get('invite')['last']) && !empty($request->get('invite')['email']))
         {
             /** @var User $inviteUser */
             $inviteUser = $userManager->findUserByEmail($request->get('invite')['email']);
