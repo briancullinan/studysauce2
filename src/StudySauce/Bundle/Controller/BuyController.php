@@ -91,13 +91,14 @@ class BuyController extends Controller
         {
             $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
         }
-        if(empty($studentfirst) && !empty($invite = $user->getInvitedPartners()->filter(
-                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
+        if(!$user->hasRole('ROLE_GUEST') && empty($studentfirst) && !empty($invite = $user->getInvitedPartners()->filter(
+                function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID') &&
+                    !$p->getUser()->hasRole('ROLE_GUEST');})->first())) {
             $studentfirst = $invite->getUser()->getFirst();
             $studentlast = $invite->getUser()->getLast();
             $studentemail = $invite->getUser()->getEmail();
         }
-        if(empty($studentfirst) && !empty($invite = $user->getInvitedParents()->filter(
+        if(!$user->hasRole('ROLE_GUEST') && empty($studentfirst) && !empty($invite = $user->getInvitedParents()->filter(
                 function (ParentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
             if(empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST')) {
                 $studentfirst = $invite->getFromFirst();
@@ -110,7 +111,7 @@ class BuyController extends Controller
                 $studentemail = $invite->getUser()->getEmail();
             }
         }
-        if(empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
+        if(!$user->hasRole('ROLE_GUEST') && empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
                 function (StudentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
             /** @var StudentInvite $invite */
             if(empty($invite->getStudent()) || $invite->getStudent()->hasRole('ROLE_GUEST')) {
@@ -125,6 +126,13 @@ class BuyController extends Controller
             }
         }
         /** @var Invite $invite */
+        if(!empty($invite))
+        {
+            $first = $invite->getFirst();
+            $last = $invite->getLast();
+            $email = $invite->getEmail();
+        }
+
         // set by invite dialogs when invited anonymously
         if(!empty($request->getSession()->get('invite'))) {
             /** @var StudentInvite $student */
@@ -137,12 +145,6 @@ class BuyController extends Controller
                 $last = $student->getFromLast();
                 $email = $student->getFromEmail();
             }
-        }
-        if(!empty($invite))
-        {
-            $first = $invite->getFirst();
-            $last = $invite->getLast();
-            $email = $invite->getEmail();
         }
 
         // check for coupon
