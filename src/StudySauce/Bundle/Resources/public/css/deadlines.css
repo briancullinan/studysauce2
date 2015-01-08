@@ -289,7 +289,7 @@ a[href="#save-deadline"],
     #deadlines header,
     #deadlines .sort-by
     {
-        display:none;
+        display:none !important;
     }
 
     .deadline-row.edit > *
