@@ -261,7 +261,7 @@ $(document).ready(function () {
         jp.jPlayer({
             swfPath: window.callbackPaths['_welcome'] + 'bundles/studysauce/js',
             solution: 'html,flash',
-            supplied: 'mp3,m4a,oga',
+            supplied: 'm4a,mp3,oga',
             preload: 'metadata',
             volume: 0.8,
             muted: false,
