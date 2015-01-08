@@ -448,7 +448,7 @@ class BuyController extends Controller
         // maybe the parent just invited their student
         if(!empty($invite)) {
             // TODO: update student account after registration
-            if(!empty($student)) {
+            if(!empty($student) && !empty($student->getEmail())) {
                 $student->addRole('ROLE_PAID');
                 $userManager->updateUser($student);
                 $email->parentPrepayAction($user, $student->getEmail(), $student->getFirst(), $student->getLast(), $invite->getCode());
