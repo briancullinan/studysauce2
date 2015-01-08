@@ -183,10 +183,10 @@ $(document).ready(function () {
     });
 
     body.on('click', '.main-menu a.accordion-toggle', function (evt) {
-        expandMenu.apply(this, [evt]);
         evt.preventDefault();
-        evt.stopPropagation();
+        expandMenu.apply(this, [evt]);
         if($($(this).attr('data-parent')).find($(this).attr('data-target')).is('.in')){
+            evt.stopPropagation();
         }
     });
 
@@ -229,9 +229,9 @@ $(document).ready(function () {
     }
 
     // capture all callback links
-    body.filter('.dashboard-home').on('click', 'a[href]', handleLink);
-    body.filter('.dashboard-home').on('dblclick', 'a[href]', handleLink);
-    body.filter('.dashboard-home').on('dragstart', 'a[href]', handleLink);
+    body.filter('.dashboard-home').on('click', 'a[href]:not(.accordion-toggle)', handleLink);
+    body.filter('.dashboard-home').on('dblclick', 'a[href]:not(.accordion-toggle)', handleLink);
+    body.filter('.dashboard-home').on('dragstart', 'a[href]:not(.accordion-toggle)', handleLink);
 
     // TODO: we no longer need this because our tabs are always first?
     //if(window.callbackUri.indexOf(window.location.pathname) > -1)
