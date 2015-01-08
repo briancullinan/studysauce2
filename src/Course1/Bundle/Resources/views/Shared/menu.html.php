@@ -22,7 +22,7 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
             <li><a href="#collapse">Hide</a><h3>Course</h3></li>
             <li class="accordion-group panel">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-target="#level1" data-parent="#course1-menu"><span>1</span>Level 1</a>
+                    <a href="#level1" class="accordion-toggle" data-toggle="collapse" data-target="#level1" data-parent="#course1-menu"><span>1</span>Level 1</a>
                 </div>
                 <ul id="level1" class="accordion-body collapse <?php print ($complete ? '' : 'in'); ?>">
                     <li class="<?php print (!empty($course1) && $course1->getLesson1() === 4 ? 'complete' : ''); ?>">
@@ -45,7 +45,7 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
             </li>
             <li class="accordion-group panel">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-target="#level2" data-parent="#course1-menu"><span>2</span>Level 2</a>
+                    <a href="#level2" class="accordion-toggle" data-toggle="collapse" data-target="#level2" data-parent="#course1-menu"><span>2</span>Level 2</a>
                 </div>
                 <ul id="level2" class="accordion-body collapse <?php print ($complete ? 'in' : ''); ?>">
                     <li class="<?php print (!empty($course2) && $course2->getLesson1() === 4 ? 'complete' : ''); ?>">
@@ -62,7 +62,7 @@ $complete = !empty($course1) && $course1->getLesson1() == 4 && $course1->getLess
             </li>
             <li class="accordion-group panel">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-target="#level3" data-parent="#course1-menu"><span>3</span>Level 3</a>
+                    <a href="#level3" class="accordion-toggle" data-toggle="collapse" data-target="#level3" data-parent="#course1-menu"><span>3</span>Level 3</a>
                 </div>
                 <ul id="level3" class="accordion-body collapse">
                     <li class="<?php print (!empty($course3) && $course3->getLesson1() === 4 ? 'complete' : ''); ?>">

@@ -182,7 +182,7 @@ $(document).ready(function () {
         $(this).remove();
     });
 
-    body.on('click', '.main-menu a:not([href])', function (evt) {
+    body.on('click', '.main-menu a.accordion-toggle', function (evt) {
         expandMenu.apply(this, [evt]);
         if($($(this).attr('data-parent')).find($(this).attr('data-target')).is('.in')){
             evt.stopPropagation();
