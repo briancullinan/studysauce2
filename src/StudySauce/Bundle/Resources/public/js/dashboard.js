@@ -183,8 +183,10 @@ $(document).ready(function () {
     });
 
     body.on('click', '.main-menu a.accordion-toggle', function (evt) {
-        if(expandMenu.apply(this, [evt]) && $($(this).attr('data-parent')).find($(this).attr('data-target')).is('.in')){
-            evt.stopPropagation();
+        expandMenu.apply(this, [evt]);
+        evt.preventDefault();
+        evt.stopPropagation();
+        if($($(this).attr('data-parent')).find($(this).attr('data-target')).is('.in')){
         }
     });
 
