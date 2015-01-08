@@ -138,7 +138,7 @@ jQuery(document).ready(function($) {
                 first: checkout.find('#billing-pane .first-name input').val().trim(),
                 last: checkout.find('#billing-pane .last-name input').val().trim(),
                 email: checkout.find('#billing-pane .email input').val().trim(),
-                password: checkout.find('input[name="password"]:visible').length == 0 ? null : checkout.find('input[name="password"]:visible').val(),
+                pass: checkout.find('input[name="password"]:visible').length == 0 ? null : checkout.find('input[name="password"]:visible').val(),
                 street1: checkout.find('input[name="street1"]').val().trim(),
                 street2: checkout.find('input[name="street2"]').val().trim(),
                 city: checkout.find('.city input').val().trim(),
