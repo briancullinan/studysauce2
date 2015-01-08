@@ -67,7 +67,7 @@ class BuyController extends Controller
             /** @var ParentInvite $invite */
             $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
             // set to true when landing anonymously so make sure it actually exists
-            if(!empty($invite) || $invite->getUser()->hasRole('ROLE_GUEST')) {
+            if(empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST')) {
                 $studentfirst = $invite->getFromFirst();
                 $studentlast = $invite->getFromLast();
                 $studentemail = $invite->getFromEmail();
@@ -106,7 +106,7 @@ class BuyController extends Controller
         }
         if(empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
                 function (StudentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
-            if(empty($invite->getUser())) {
+            if(empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST')) {
                 $studentfirst = $invite->getFirst();
                 $studentlast = $invite->getLast();
                 $studentemail = $invite->getEmail();
