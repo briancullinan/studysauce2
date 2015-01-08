@@ -118,7 +118,9 @@ $view['slots']->start('body'); ?>
                     $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2() === 4 ? 1 : 0) +
                         ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
                         ($course3->getLesson5() === 4 ? 1 : 0);
-                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
+                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL
+                        - ($s->getUser()->hasRole('ROLE_PAID') ? 1 : 0)
+                        + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
                 /** @var User $adviser */
                 $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 if(!empty($adviser))
@@ -163,9 +165,11 @@ $view['slots']->start('body'); ?>
                     $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2() === 4 ? 1 : 0) +
                         ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
                         ($course3->getLesson5() === 4 ? 1 : 0);
-                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
+                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL
+                        - ($u->hasRole('ROLE_PAID') ? 1 : 0)
+                        + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
                 /** @var User $adviser */
-                $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
+                $adviser = $u->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin()) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M')); ?></td>
