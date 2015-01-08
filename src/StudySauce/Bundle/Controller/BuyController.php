@@ -106,17 +106,19 @@ class BuyController extends Controller
         }
         if(empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
                 function (StudentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
-            if(empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST')) {
+            /** @var StudentInvite $invite */
+            if(empty($invite->getStudent()) || $invite->getStudent()->hasRole('ROLE_GUEST')) {
                 $studentfirst = $invite->getFirst();
                 $studentlast = $invite->getLast();
                 $studentemail = $invite->getEmail();
             }
             else {
-                $studentfirst = $invite->getUser()->getFirst();
-                $studentlast = $invite->getUser()->getLast();
-                $studentemail = $invite->getUser()->getEmail();
+                $studentfirst = $invite->getStudent()->getFirst();
+                $studentlast = $invite->getStudent()->getLast();
+                $studentemail = $invite->getStudent()->getEmail();
             }
         }
+        /** @var Invite $invite */
         // set by invite dialogs when invited anonymously
         if(!empty($request->getSession()->get('invite'))) {
             /** @var StudentInvite $student */
