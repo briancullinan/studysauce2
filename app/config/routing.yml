@@ -15,6 +15,9 @@ _course3:
 _torchandlaurel:
     resource: "@TorchAndLaurelBundle/Resources/config/routing.php"
 
+_admin:
+    resource: "@AdminBundle/Resources/config/routing.php"
+
 #HWIOAuthBundle routes
 hwi_oauth_security:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"

@@ -1,0 +1,103 @@
+
+#userlist .scroller
+{
+    max-height: 400px;
+    overflow: auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+    margin-right:-17px;
+}
+
+#userlist th:nth-child(4),
+#userlist td:nth-child(4),
+#userlist th:nth-child(5),
+#userlist td:nth-child(5),
+#userlist th:nth-child(6),
+#userlist td:nth-child(6)
+{
+    width: 20%;
+}
+
+#userlist .search
+{
+    margin-right: -440px;
+    padding-right: 440px;
+    display: inline-block;
+    width: 100%;
+}
+
+#userlist .headers
+{
+    vertical-align: bottom;
+    display: inline-block;
+    margin: 0 -2px;
+    padding: 0 2px;
+}
+
+#userlist .count-bubble
+{
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    background-color: #555;
+    color: #fff;
+    margin: 20px;
+    position: relative;
+    padding: 30px 0 10px 0;
+    display: inline-block;
+}
+
+#userlist .count-bubble i
+{
+    font-size: 48px;
+    line-height: 110%;
+    width:100%;
+    display:inline-block;
+    text-align: center;
+}
+
+#userlist .count-bubble small
+{
+    position:absolute;
+    top: 0;
+    text-align: center;
+    width: 100%;
+    left:0;
+    padding-top:10px;
+
+}
+
+#userlist th:nth-child(7),
+#userlist td:nth-child(7)
+{
+    width: 10%;
+    text-align: right;
+}
+
+
+a[href="#edit-user"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1552px transparent;
+}
+
+a[href="#edit-user"]:hover
+{
+    background-position: left -1602px;
+}
+
+a[href="#remove-user"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1652px transparent;
+}
+
+a[href="#remove-user"]:hover
+{
+    background-position: left -1702px;
+}
+

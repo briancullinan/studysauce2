@@ -21,5 +21,9 @@ interface Invite
     /** @return User */
     function getUser();
 
+    /**
+     * @param $bool
+     * @return mixed
+     */
     function setActivated($bool);
 }

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /** @var User $user */
 $user = $app->getUser();
-/** @var $partner Partner */
+/** @var $partner PartnerInvite */
 $permissions = !empty($partner) ? $partner->getPermissions() : [
     'goals',
     'metrics',

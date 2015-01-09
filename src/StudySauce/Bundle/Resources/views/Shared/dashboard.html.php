@@ -81,14 +81,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->output('javascripts');
         $view['slots']->stop();
         $view['slots']->start('javascripts');
-        foreach ($view['assetic']->javascripts(
-            [
-                '@dashboard_scripts',
-            ],
-            [],
-            ['output' => 'bundles/studysauce/js/*.js']
-        ) as $url):
-            ?>
+        foreach ($view['assetic']->javascripts(['@dashboard_scripts'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
             <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
         <?php endforeach;
         $view['slots']->output('tmp-javascripts');

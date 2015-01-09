@@ -24,7 +24,7 @@ $(document).ready(function () {
         return 0;
     }
 
-    body.on('show', '#userlist', function () {
+    body.on('show', '#userlist,#admin', function () {
         var userlist = jQuery('#userlist');
         if($(this).data('state') == null) {
             $(this).data('state', '');
