@@ -41,13 +41,7 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $payments;
 
     /**
-     * @ORM\OneToMany(targetEntity="Session", mappedBy="user")
-     * @ORM\OrderBy({"time" = "DESC"})
-     */
-    protected $sessions;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Visit", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Visit", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $visits;

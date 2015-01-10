@@ -130,7 +130,9 @@ class AdminController extends Controller
                 $signups++;
             }
 
-            if(!empty($v = $u->getVisits()->first()) && $v->getCreated() > $yesterday) {
+            /** @var Visit $v */
+            if(!empty($v = $u->getVisits()->slice(0, 1)) && ($v = $v[0])
+                && $v->getCreated() > $yesterday) {
                 $visitors++;
             }
 
