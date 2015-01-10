@@ -59,11 +59,6 @@
     white-space: nowrap;
 }
 
-.deadline-row {
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-}
-
 a[href="#save-deadline"],
 #deadlines .deadline-row.edit + .form-actions a[href="#add-deadline"]
 {

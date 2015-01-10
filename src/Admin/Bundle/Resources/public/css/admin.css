@@ -1,5 +1,18 @@
 
-#userlist .scroller
+#admin .scroller td
+{
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+#admin .scroller tr:hover:not(.selected):not(.edit) {
+    box-shadow: 0 1px 4px rgba(255,255,255,.25);
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background-color: rgba(255,255,255,.50);
+}
+
+#admin .scroller
 {
     max-height: 400px;
     overflow: auto;
@@ -8,33 +21,7 @@
     margin-right:-17px;
 }
 
-#userlist th:nth-child(4),
-#userlist td:nth-child(4),
-#userlist th:nth-child(5),
-#userlist td:nth-child(5),
-#userlist th:nth-child(6),
-#userlist td:nth-child(6)
-{
-    width: 20%;
-}
-
-#userlist .search
-{
-    margin-right: -440px;
-    padding-right: 440px;
-    display: inline-block;
-    width: 100%;
-}
-
-#userlist .headers
-{
-    vertical-align: bottom;
-    display: inline-block;
-    margin: 0 -2px;
-    padding: 0 2px;
-}
-
-#userlist .count-bubble
+#admin .count-bubble
 {
     height: 100px;
     width: 100px;
@@ -47,7 +34,7 @@
     display: inline-block;
 }
 
-#userlist .count-bubble i
+#admin .count-bubble i
 {
     font-size: 48px;
     line-height: 110%;
@@ -56,7 +43,7 @@
     text-align: center;
 }
 
-#userlist .count-bubble small
+#admin .count-bubble small
 {
     position:absolute;
     top: 0;
@@ -66,14 +53,6 @@
     padding-top:10px;
 
 }
-
-#userlist th:nth-child(7),
-#userlist td:nth-child(7)
-{
-    width: 10%;
-    text-align: right;
-}
-
 
 a[href="#edit-user"]
 {
@@ -101,3 +80,128 @@ a[href="#remove-user"]:hover
     background-position: left -1702px;
 }
 
+
+#admin td
+{
+    padding: 5px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    table-layout: fixed;
+}
+
+#admin td.empty
+{
+    white-space: normal;
+}
+
+#admin td a
+{
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#admin table
+{
+    table-layout: fixed;
+    width:100%;
+}
+
+#admin table th
+{
+    background:transparent;
+    position: relative;
+    overflow: hidden;
+    padding:5px;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+#admin th.filtered:after
+{
+    border-top: 3px solid #FF9900;
+    border-bottom: 3px solid #FF9900;
+    border-right: 3px solid #FF9900;
+    height: 24px;
+}
+
+#admin th:nth-child(12),
+#admin td:nth-child(12),
+#admin th:nth-child(11),
+#admin td:nth-child(11),
+#admin th:nth-child(10),
+#admin td:nth-child(10),
+#admin th:nth-child(9),
+#admin td:nth-child(9),
+#admin th:nth-child(8),
+#admin td:nth-child(8),
+#admin th:nth-child(7),
+#admin td:nth-child(7),
+#admin th:nth-child(6),
+#admin td:nth-child(6),
+#admin th:nth-child(5),
+#admin td:nth-child(5),
+#admin th:nth-child(3),
+#admin td:nth-child(3),
+#admin th:nth-child(2),
+#admin td:nth-child(2),
+#admin th:nth-child(1),
+#admin td:nth-child(1)
+{
+    text-align: center;
+    width: 8%;
+}
+
+#admin th:nth-child(4),
+#admin td:nth-child(4)
+{
+    width: 12%;
+}
+
+#admin th:nth-child(12),
+#admin td:nth-child(12)
+{
+    text-align: right;
+}
+
+
+#admin tr.invite-only
+{
+    opacity: .75;
+}
+
+#admin tr.invite-only td:first-child span
+{
+    background-color: transparent;
+}
+
+@media all and (max-width:1000px)
+{
+    #admin table th:nth-child(5),
+    #admin table td:nth-child(5),
+    #admin table th:nth-child(4),
+    #admin table td:nth-child(4)
+    {
+        display:none;
+    }
+}
+
+@media all and (max-width:700px)
+{
+
+    #admin td
+    {
+        padding: 10px;
+    }
+}
+
+
+@media all and (max-width:500px)
+{
+    #admin table th:nth-child(2),
+    #admin table td:nth-child(2)
+    {
+        display:none;
+    }
+}

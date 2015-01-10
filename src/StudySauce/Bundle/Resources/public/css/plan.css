@@ -234,14 +234,6 @@ a.fc-event:not([href])
     border-bottom: 1px solid #555555;
 }
 
-.plan-widget .session-row
-{
-    clear:both;
-    border-top:1px solid transparent;
-    border-bottom:1px solid transparent;
-    position: relative;
-}
-
 #plan .session-row:hover:not(.selected) .assignment,
 #plan .session-row:hover:not(.selected) .class-name,
 #plan .session-row:hover:not(.selected) .percent,
@@ -283,8 +275,6 @@ a.fc-event:not([href])
     vertical-align: top;
     position: relative;
     white-space: nowrap;
-    border-top:1px solid transparent;
-    border-bottom:1px solid transparent;
 }
 
 #plan .session-row.event-type-d .class-name

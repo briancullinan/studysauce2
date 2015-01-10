@@ -2,6 +2,12 @@
 
 namespace StudySauce\Bundle\Entity;
 
+use Course1\Bundle\Course1Bundle;
+use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Course2Bundle;
+use Course2\Bundle\Entity\Course2;
+use Course3\Bundle\Course3Bundle;
+use Course3\Bundle\Entity\Course3;
 use FOS\UserBundle\Model\GroupInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -186,6 +192,46 @@ class User extends BaseUser implements EncoderAwareInterface
     public function setCreatedValue()
     {
         $this->created = new \DateTime();
+    }
+
+    /**
+     * @return float
+     */
+    public function getCompleted() {
+
+        /** @var Course1 $course1 */
+        $course1 = $this->getCourse1s()->first();
+        /** @var Course2 $course2 */
+        $course2 = $this->getCourse2s()->first();
+        /** @var Course3 $course3 */
+        $course3 = $this->getCourse3s()->first();
+        $completed = 0;
+        if (!empty($course1)) {
+            $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2(
+                ) === 4 ? 1 : 0) +
+                ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
+                ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
+                ($course1->getLesson7() === 4 ? 1 : 0);
+        }
+        if (!empty($course2)) {
+            $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2(
+                ) === 4 ? 1 : 0) +
+                ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
+                ($course2->getLesson5() === 4 ? 1 : 0);
+        }
+        if (!empty($course3)) {
+            $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2(
+                ) === 4 ? 1 : 0) +
+                ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
+                ($course3->getLesson5() === 4 ? 1 : 0);
+        }
+        $overall = round(
+            $completed * 100.0 / (Course1Bundle::COUNT_LEVEL
+                - ($this->hasRole('ROLE_PAID') ? 1 : 0)
+                + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL)
+        );
+
+        return $overall;
     }
 
     /**

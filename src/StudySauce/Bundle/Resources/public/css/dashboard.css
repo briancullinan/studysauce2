@@ -204,6 +204,14 @@ aside + .panel-pane,
     vertical-align: middle;
 }
 
+.class-row,
+.deadline-row,
+.session-row
+{
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
 .class-row:hover:not(.selected):not(.edit),
 .session-row:hover:not(.selected),
 .deadline-row:hover:not(.selected):not(.edit) {

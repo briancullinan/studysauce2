@@ -1,4 +1,20 @@
 
+#select-status
+{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 35px;
+    background-color: white;
+    border: 2px solid #555555;
+    z-index: 100;
+}
+
+#select-status a
+{
+    display:block;
+}
+
 #select-status span,
 #userlist tr td:first-child span
 {
@@ -25,6 +41,12 @@
 #userlist tr.status_yellow td:first-child span
 {
     background-color:#FFDD00;
+}
+
+#select-status a[href="#red"] span,
+#userlist tr.status_red td:first-child span
+{
+    background-color:#FF1100;
 }
 
 #userlist th.filtered select
@@ -105,12 +127,6 @@
     width: 23.33%;
 }
 
-#select-status a[href="#red"] span,
-#userlist tr.status_red td:first-child span
-{
-    background-color:#FF1100;
-}
-
 #userlist tr.invite-only
 {
     opacity: .75;
@@ -119,22 +135,6 @@
 #userlist tr.invite-only td:first-child span
 {
     background-color: transparent;
-}
-
-#select-status
-{
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 35px;
-    background-color: white;
-    border: 2px solid #555555;
-    z-index: 100;
-}
-
-#select-status a
-{
-    display:block;
 }
 
 @media all and (max-width:1000px)

@@ -31,18 +31,12 @@ $permissions = !empty($partner) ? $partner->getPermissions() : [
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/userlist.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
-    <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
-<?php endforeach;
 foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/admin.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/userlist.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
-    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
 foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/admin.js'],[],['output' => 'bundles/admin/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
@@ -51,222 +45,121 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
     <div class="panel-pane" id="admin">
         <div class="pane-content">
-            <div id="userlist">
+            <table class="<?php print ($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count(
+            ) > 1 ? 'master' : ''); ?>">
+                <thead>
+                <tr>
+                    <th><label><span>Visitors: <?php print $visitors; ?></span><br />
+                        <select>
+                            <option>Date</option>
+                            <option>Ascending (Now-Then)</option>
+                            <option>Descending (Then-Now)</option>
+                        </select></label></th>
+                    <th><label><span>Parents: <?php print $parents; ?></span><br />
+                            <span>Partners: <?php print $partners; ?></span><br />
+                            <span>Students: <?php print $students; ?></span><br />
+                            <span>Advisers: <?php print $advisers; ?></span><br />
+                        <select>
+                            <option>Role</option>
+                            <option>Ascending (A-Z)</option>
+                            <option>Descending (Z-A)</option>
+                        </select></label></th>
+                    <th><label><span>TAL: <?php print count($users); ?></span><br />
+                            <span>CSA: <?php print count($users); ?></span><br />
+                        <select>
+                            <option>Group</option>
+                            <option>Ascending (A-Z)</option>
+                            <option>Descending (Z-A)</option>
+                        </select></label></th>
+                    <th><label><span>Total: <?php print count($users); ?></span><br />
+                        <select>
+                            <option>Student</option>
+                            <option>Ascending (A-Z)</option>
+                            <option>Descending (Z-A)</option>
+                        </select></label></th>
+                    <th><label><span>Finished: <?php print $completed; ?></span><br />
+                        <select>
+                            <option>Completed</option>
+                            <option>Ascending (0-100)</option>
+                            <option>Descending (100-0)</option>
+                        </select></label></th>
+                    <th><label><span>Sign Ups: <?php print $signups; ?></span><br />
+                        <select>
+                            <option>Sign Up Date</option>
+                            <option>Ascending (Now-Then)</option>
+                            <option>Descending (Then-Now)</option>
+                        </select></label></th>
+                    <th><label><span>Paid: <?php print $paid; ?></span><br />
+                        <select>
+                            <option>Paid</option>
+                            <option>Ascending (Y-N)</option>
+                            <option>Descending (N-Y)</option>
+                        </select></label></th>
+                    <th><label><span>Goals: <?php print $goals; ?></span><br />
+                        <select>
+                            <option>Goals</option>
+                            <option>Ascending (Y-N)</option>
+                            <option>Descending (N-Y)</option>
+                        </select></label></th>
+                    <th><label><span>Deadlines: <?php print $deadlines; ?></span><br />
+                        <select>
+                            <option>Deadlines</option>
+                            <option>Ascending (Y-N)</option>
+                            <option>Descending (N-Y)</option>
+                        </select></label></th>
+                    <th><label><span>Plans: <?php print $plans; ?></span><br />
+                        <select>
+                            <option>Study Plan</option>
+                            <option>Ascending (Y-N)</option>
+                            <option>Descending (N-Y)</option>
+                        </select></label></th>
+                    <th><label><span>Partner: <?php print $partnerTotal; ?></span><br />
+                        <select>
+                            <option>Partner</option>
+                            <option>Ascending (Y-N)</option>
+                            <option>Descending (N-Y)</option>
+                        </select></label></th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+            </table>
+            <div class="scroller">
+                <table>
+                    <tbody>
+                    <?php
+                    foreach ($users as $i => $u) {
+                        /** @var User $u */
+
+                        ?>
+                        <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty(
+                            'adviser_status'
+                        ) ?: 'green'); ?>">
+                        <td data-timestamp="<?php print (empty($u->getLastLogin())
+                            ? $u->getCreated()->getTimestamp()
+                            : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin())
+                                ? $u->getCreated()->format('j M')
+                                : $u->getLastLogin()->format('j M')); ?></td>
+                        <td><?php print implode(', ', array_map(function ($r) {return substr($r, 5);}, $u->getRoles())); ?></td>
+                        <td><?php print implode(', ', $u->getGroups()->map(function (Group $g) {return $g->getName();})->toArray()); ?></td>
+                        <td><a href="<?php print $view['router']->generate(
+                                'adviser',
+                                ['_user' => $u->getId(), '_tab' => 'home']
+                            ); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
+                        <td><?php print $u->getCompleted(); ?>%</td>
+                        <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M'); ?></td>
+                        <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
+                        <td><a href="#edit-user"></a><a href="#remove-user"></a></td>
+                        </tr><?php
+                    } ?>
+                    </tbody>
+                </table>
+            </div>
             <div class="search">
                 <label class="input"><input name="search" type="text" value="" placeholder="Search" /></label>
-            </div>
-            <div class="headers">
-                <div class="count-bubble">
-                    <small>sign ups</small>
-                    <i><?php print $signups; ?></i>
-                </div>
-                <div class="count-bubble">
-                    <small>visitors</small>
-                    <i><?php print $visitors; ?></i>
-                </div>
-                <div class="count-bubble">
-                    <small>total</small>
-                    <i><?php print count($users); ?></i>
-                </div>
-            </div>
-            <div id="select-status" style="display: none;">
-                    <a href="#green"><span>&nbsp;</span></a>
-                    <a href="#yellow"><span>&nbsp;</span></a>
-                    <a href="#red"><span>&nbsp;</span></a></div>
-                <table class="<?php print ($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count(
-                ) > 1 ? 'master' : ''); ?>">
-                    <thead>
-                    <tr>
-                        <th><select>
-                                <option>Status</option>
-                                <option>Ascending</option>
-                                <option>Descending</option>
-                                <option>Red</option>
-                                <option>Yellow</option>
-                                <option>Green</option>
-                            </select></th>
-                        <th><select>
-                                <option>Date</option>
-                                <option>Ascending (A-Z)</option>
-                                <option>Descending (Z-A)</option>
-                            </select></th>
-                        <th><select>
-                                <option>Completion</option>
-                                <option>Ascending (A-Z)</option>
-                                <option>Descending (Z-A)</option>
-                            </select></th>
-                        <th><select>
-                                <option>Student</option>
-                                <option>Ascending (A-Z)</option>
-                                <option>Descending (Z-A)</option>
-                            </select></th>
-                        <th><select>
-                                <option>School</option>
-                                <option>Ascending (A-Z)</option>
-                                <option>Descending (Z-A)</option>
-                            </select></th>
-                        <th><select>
-                                <option>Adviser</option>
-                                <option>Ascending (A-Z)</option>
-                                <option>Descending (Z-A)</option>
-                            </select></th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                </table>
-                <div class="scroller">
-                    <table>
-                        <tbody>
-                        <?php
-                        foreach ($sessions as $i => $s) {
-                            /** @var Visit $s */
-                            $first = strpos($s->getPath(), '/', 1);
-                            $length = ($first ? $first : strlen($s->getPath())) - 1;
-                            $path = empty($length) ? '' : substr($s->getPath(), 1, $length);
-                            /** @var Schedule $schedule */
-                            $schedule = $s->getUser()->getSchedules()->first();
-                            /** @var Course1 $course1 */
-                            $course1 = $s->getUser()->getCourse1s()->first();
-                            /** @var Course2 $course2 */
-                            $course2 = $s->getUser()->getCourse2s()->first();
-                            /** @var Course3 $course3 */
-                            $course3 = $s->getUser()->getCourse3s()->first();
-                            $completed = 0;
-                            if (!empty($course1)) {
-                                $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2(
-                                    ) === 4 ? 1 : 0) +
-                                    ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
-                                    ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
-                                    ($course1->getLesson7() === 4 ? 1 : 0);
-                            }
-                            if (!empty($course2)) {
-                                $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2(
-                                    ) === 4 ? 1 : 0) +
-                                    ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
-                                    ($course2->getLesson5() === 4 ? 1 : 0);
-                            }
-                            if (!empty($course3)) {
-                                $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2(
-                                    ) === 4 ? 1 : 0) +
-                                    ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
-                                    ($course3->getLesson5() === 4 ? 1 : 0);
-                            }
-                            $overall = round(
-                                $completed * 100.0 / (Course1Bundle::COUNT_LEVEL
-                                    - ($s->getUser()->hasRole('ROLE_PAID') ? 1 : 0)
-                                    + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL)
-                            );
-                            /** @var User $adviser */
-                            $adviser = $s->getUser()->getGroups()->map(
-                                function (Group $g) {
-                                    return $g->getUsers()->filter(
-                                        function (User $u) {
-                                            return $u->hasRole('ROLE_ADVISER');
-                                        }
-                                    )->first();
-                                }
-                            )->first();
-                            if (!empty($adviser)) {
-                                $adviser = $s->getUser()->getGroups()->map(
-                                    function (Group $g) {
-                                        return $g->getUsers()->filter(
-                                            function (User $u) {
-                                                return $u->hasRole('ROLE_MASTER_ADVISER');
-                                            }
-                                        )->first();
-                                    }
-                                )->first();
-                            }
-                            ?>
-                            <tr class="user-id-<?php print $s->getUser()->getId(); ?> status_<?php print ($s->getUser(
-                            )->getProperty('adviser_status') ?: 'green'); ?>">
-                            <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                            <td data-timestamp="<?php print $s->getCreated()->getTimestamp(
-                            ); ?>"><?php print $s->getCreated()->format('j M'); ?></td>
-                            <td><?php print $overall; ?>%</td>
-                            <td><a href="<?php print $view['router']->generate(
-                                    'adviser',
-                                    ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]
-                                ); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a>
-                            </td>
-                            <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
-                            <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast(
-                                    )) : 'Not assigned'); ?></td>
-                            <td><a href="#edit-user"></a><a href="#remove-user"></a></td>
-                            </tr><?php
-                        } ?>
-                        <?php
-                        foreach ($users as $i => $u) {
-                            /** @var User $u */
-                            if ($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER')) {
-                                continue;
-                            }
-
-                            /** @var Schedule $schedule */
-                            $schedule = $u->getSchedules()->first();
-                            /** @var Course1 $course1 */
-                            $course1 = $s->getUser()->getCourse1s()->first();
-                            /** @var Course2 $course2 */
-                            $course2 = $s->getUser()->getCourse2s()->first();
-                            /** @var Course3 $course3 */
-                            $course3 = $s->getUser()->getCourse3s()->first();
-                            $completed = 0;
-                            if (!empty($course1)) {
-                                $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2(
-                                    ) === 4 ? 1 : 0) +
-                                    ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
-                                    ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
-                                    ($course1->getLesson7() === 4 ? 1 : 0);
-                            }
-                            if (!empty($course2)) {
-                                $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2(
-                                    ) === 4 ? 1 : 0) +
-                                    ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
-                                    ($course2->getLesson5() === 4 ? 1 : 0);
-                            }
-                            if (!empty($course3)) {
-                                $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2(
-                                    ) === 4 ? 1 : 0) +
-                                    ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
-                                    ($course3->getLesson5() === 4 ? 1 : 0);
-                            }
-                            $overall = round(
-                                $completed * 100.0 / (Course1Bundle::COUNT_LEVEL
-                                    - ($u->hasRole('ROLE_PAID') ? 1 : 0)
-                                    + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL)
-                            );
-                            /** @var User $adviser */
-                            $adviser = $u->getGroups()->map(
-                                function (Group $g) {
-                                    return $g->getUsers()->filter(
-                                        function (User $u) {
-                                            return $u->hasRole('ROLE_ADVISER');
-                                        }
-                                    )->first();
-                                }
-                            )->first();
-                            ?>
-                            <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty(
-                                'adviser_status'
-                            ) ?: 'green'); ?>">
-                            <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                            <td data-timestamp="<?php print (empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp(
-                            ) : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin(
-                                )) ? $u->getCreated()->format('j M') : $u->getLastLogin()->format('j M')); ?></td>
-                            <td><?php print $overall; ?>%</td>
-                            <td><a href="<?php print $view['router']->generate(
-                                    'adviser',
-                                    ['_user' => $u->getId(), '_tab' => 'home']
-                                ); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
-                            <td><?php print (!empty($schedule) ? $schedule->getUniversity() : 'Not set'); ?></td>
-                            <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast(
-                                    )) : 'Not assigned'); ?></td>
-                            <td><a href="#edit-user"></a><a href="#remove-user"></a></td>
-                            </tr><?php
-                        } ?>
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </div>
