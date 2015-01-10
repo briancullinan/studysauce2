@@ -14,11 +14,6 @@
 
 #admin .scroller
 {
-    max-height: 400px;
-    overflow: auto;
-    overflow-x:hidden;
-    overflow-y:auto;
-    margin-right:-17px;
 }
 
 #admin .count-bubble

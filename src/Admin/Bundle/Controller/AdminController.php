@@ -17,6 +17,7 @@ use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -29,7 +30,7 @@ class AdminController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         set_time_limit(0);
         /** @var $orm EntityManager */
@@ -64,18 +65,18 @@ class AdminController extends Controller
             /** @var PartnerInvite $p */
             $users[] = $p->getUser();
         }
+
+        $users = array_unique($users);
+
         // show sessions
+        /*
         $sessions = [];
-        $visitors = 0;
-        $signups = 0;
-        $yesterday = new \DateTime('yesterday');
         $dql = 'SELECT v.time, v.id FROM StudySauceBundle:Session v ORDER BY v.time DESC';
         $query = $orm->createQuery($dql);
         $sids = $query->execute();
         $dql = 'SELECT v.created, v.path, IDENTITY(v.user) AS uid FROM StudySauceBundle:Visit v WHERE v.session IN (\'' . implode('\',\'', array_map(function ($s) {return $s['id'];}, $sids)) . '\') GROUP BY v.session ORDER BY v.created DESC';
         $query = $orm->createQuery($dql);
         $sessions = $query->execute();
-        /*
         foreach($sids as $j => $s)
         {
             $visits = $orm->getRepository('StudySauceBundle:Visit');
@@ -108,6 +109,9 @@ class AdminController extends Controller
         }
         */
 
+        $yesterday = new \DateTime('yesterday');
+        $visitors = 0;
+        $signups = 0;
         $listedUsers = [];
         $parents = 0;
         $partners = 0;
@@ -124,6 +128,10 @@ class AdminController extends Controller
 
             if ($u->getCreated() > $yesterday) {
                 $signups++;
+            }
+
+            if(!empty($v = $u->getVisits()->first()) && $v->getCreated() > $yesterday) {
+                $visitors++;
             }
 
             if($u->hasRole('ROLE_PARENT')) {
@@ -169,14 +177,14 @@ class AdminController extends Controller
 
             $listedUsers[$u->getId()] = $u;
         }
-        krsort($sessions);
 
-        $users = array_unique($users);
         $keys = array_map(function (User $u) {
-                return empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp();}, $users);
-        array_multisort($keys, SORT_DESC, SORT_NUMERIC, $users);
+                return empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp();}, $listedUsers);
+        array_multisort($keys, SORT_DESC, SORT_NUMERIC, $listedUsers);
+
+        $listedUsers = array_splice($listedUsers, $request->get('page') ?: 0, 25);
+
         return $this->render('AdminBundle:Admin:index.html.php', [
-                'sessions' => $sessions,
                 'groups' => $groups,
                 'users' => $listedUsers,
                 'visitors' => $visitors,
