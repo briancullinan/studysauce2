@@ -11,3 +11,4 @@ Thumbs.db
 /vendor/composer/bc22d080/symfony-symfony-f077a23
 /src/Course2/Bundle/Entity/*.php~
 /src/Course3/Bundle/Entity/*.php~
+/app/cache/test

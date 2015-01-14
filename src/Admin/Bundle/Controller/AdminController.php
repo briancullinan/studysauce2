@@ -2,18 +2,9 @@
 
 namespace Admin\Bundle\Controller;
 
-use Course1\Bundle\Course1Bundle;
-use Course1\Bundle\Entity\Course1;
-use Course2\Bundle\Course2Bundle;
-use Course2\Bundle\Entity\Course2;
-use Course3\Bundle\Course3Bundle;
-use Course3\Bundle\Entity\Course3;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
-use StudySauce\Bundle\Entity\Group;
-use StudySauce\Bundle\Entity\PartnerInvite;
-use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,8 +17,151 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  */
 class AdminController extends Controller
 {
+    private static $paidStr = '';
 
     /**
+     * @param EntityManager $orm
+     * @param Request $request
+     * @param $joins
+     * @return QueryBuilder
+     */
+    static function searchBuilder(EntityManager $orm, Request $request, &$joins = [])
+    {
+        $joins = [];
+        /** @var QueryBuilder $qb */
+        $qb = $orm->getRepository('StudySauceBundle:User')->createQueryBuilder('u');
+
+        if(empty(self::$paidStr)) {
+            $paidGroups = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
+                ->select('g.id')
+                ->andWhere('g.roles LIKE \'%s:9:"ROLE_PAID"%\'')
+                ->getQuery()
+                ->getArrayResult();
+            self::$paidStr = implode(', ', array_map(function ($x) { return $x['id']; }, $paidGroups));
+        }
+
+        if(!empty($search = $request->get('search'))) {
+            if(strpos($search, '%') === false) {
+                $search = '%' . $search . '%';
+            }
+            $qb = $qb->andWhere('u.first LIKE :search OR u.last LIKE :search OR u.email LIKE :search')
+                ->setParameter('search', $search);
+        }
+
+        if(!empty($role = $request->get('role'))) {
+            if($role == 'ROLE_STUDENT') {
+                $qb = $qb->andWhere('u.roles NOT LIKE \'%s:12:"ROLE_ADVISER"%\' AND u.roles NOT LIKE \'%s:19:"ROLE_MASTER_ADVISER"%\' AND u.roles NOT LIKE \'%s:12:"ROLE_PARTNER"%\' AND u.roles NOT LIKE \'%s:11:"ROLE_PARENT"%\'');
+            }
+            else if($role == 'ROLE_PAID') {
+                if(!in_array('g', $joins)) {
+                    $qb = $qb->leftJoin('u.groups', 'g');
+                    $joins[] = 'g';
+                }
+                $qb = $qb->andWhere('u.roles LIKE \'%s:9:"ROLE_PAID"%\' OR g.id IN (' . self::$paidStr . ')');
+            }
+            else {
+                $qb = $qb->andWhere('u.roles LIKE \'%s:' . strlen($role) . ':"' . $role . '"%\'');
+            }
+        }
+
+        if(!empty($group = $request->get('group'))) {
+            if(!in_array('g', $joins)) {
+                $qb = $qb->leftJoin('u.groups', 'g');
+                $joins[] = 'g';
+            }
+            $qb = $qb->andWhere('g.id=:gid')->setParameter('gid', intval($group));
+        }
+
+        if(!empty($last = $request->get('last'))) {
+            $qb = $qb->andWhere('u.last LIKE \'' . $last . '\'');
+        }
+
+        if(!empty($completed = $request->get('completed'))) {
+            if(!in_array('c1', $joins)) {
+                $qb = $qb
+                    ->leftJoin('u.course1s', 'c1')
+                    ->leftJoin('u.course2s', 'c2')
+                    ->leftJoin('u.course3s', 'c3');
+                $joins[] = 'c1';
+            }
+            if(strpos($completed, '1') !== false)
+                $qb = $qb->andWhere('c1.lesson1=4 AND c1.lesson2=4 AND c1.lesson3=4 AND c1.lesson4=4 AND c1.lesson5=4 AND c1.lesson6=4');
+            if(strpos($completed, '2') !== false)
+                $qb = $qb->andWhere('c2.lesson1=4 AND c2.lesson2=4 AND c2.lesson3=4 AND c2.lesson4=4 AND c2.lesson5=4');
+            if(strpos($completed, '3') !== false)
+                $qb = $qb->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4');
+        }
+
+        if(!empty($paid = $request->get('paid'))) {
+            if(!in_array('g', $joins)) {
+                $qb = $qb->leftJoin('u.groups', 'g');
+                $joins[] = 'g';
+            }
+            if($paid == 'yes') {
+                $qb = $qb->andWhere('u.roles LIKE \'%s:9:"ROLE_PAID"%\' OR g.id IN (' . self::$paidStr . ')');
+            }
+            else {
+                $qb = $qb->andWhere('u.roles NOT LIKE \'%s:9:"ROLE_PAID"%\' AND g.id NOT IN (' . self::$paidStr . ')');
+            }
+        }
+
+        if(!empty($goals = $request->get('goals'))) {
+            if(!in_array('goals', $joins)) {
+                $qb = $qb->leftJoin('u.goals', 'goals');
+                $joins[] = 'goals';
+            }
+            if($goals == 'yes') {
+                $qb = $qb->andWhere('goals.id IS NOT NULL');
+            }
+            else {
+                $qb = $qb->andWhere('goals.id IS NULL');
+            }
+        }
+
+        if(!empty($deadlines = $request->get('deadlines'))) {
+            if(!in_array('deadlines', $joins)) {
+                $qb = $qb->leftJoin('u.deadlines', 'deadlines');
+                $joins[] = 'deadlines';
+            }
+            if($deadlines == 'yes') {
+                $qb = $qb->andWhere('deadlines.id IS NOT NULL');
+            }
+            else {
+                $qb = $qb->andWhere('deadlines.id IS NULL');
+            }
+        }
+
+        if(!empty($plans = $request->get('plans'))) {
+            if(!in_array('plans', $joins)) {
+                $qb = $qb->leftJoin('u.schedules', 'plans');
+                $joins[] = 'plans';
+            }
+            if($plans == 'yes') {
+                $qb = $qb->andWhere('plans.id IS NOT NULL');
+            }
+            else {
+                $qb = $qb->andWhere('plans.id IS NULL');
+            }
+        }
+
+        if(!empty($partners = $request->get('partners'))) {
+            if(!in_array('partners', $joins)) {
+                $qb = $qb->leftJoin('u.partnerInvites', 'partners');
+                $joins[] = 'partners';
+            }
+            if($partners == 'yes') {
+                $qb = $qb->andWhere('partners.id IS NOT NULL');
+            }
+            else {
+                $qb = $qb->andWhere('partners.id IS NULL');
+            }
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -41,154 +175,178 @@ class AdminController extends Controller
         if(!$user->hasRole('ROLE_ADMIN')) {
             throw new AccessDeniedHttpException();
         }
-        if($user->hasRole('ROLE_ADMIN')) {
-            $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();
-            $users = $orm->getRepository('StudySauceBundle:User')->findAll();
+
+        // count total so we know the max pages
+        $total = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // max pagination to search count
+        if(!empty($page = $request->get('page'))) {
+            if($page == 'last') {
+                $page = $total / 25;
+            }
+            $resultOffset = (min(floor($total / 25) + 1, max(1, intval($page))) - 1) * 25;
         }
-        elseif($user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER')) {
-            $groups = $user->getGroups()->toArray();
-            $users = [];
-            foreach ($groups as $i => $g) {
-                /** @var Group $g */
-                $users = array_merge($users, $g->getUsers()->toArray());
+        else {
+            $resultOffset = 0;
+        }
+
+        // get the actual list of users
+        /** @var QueryBuilder $users */
+        $users = self::searchBuilder($orm, $request, $joins)->distinct(true)->select('u');
+
+        // figure out how to sort
+        if(!empty($order = $request->get('order'))) {
+            $field = explode(' ', $order)[0];
+            $direction = explode(' ', $order)[1];
+            if($direction != 'ASC' && $direction != 'DESC')
+                $direction = 'DESC';
+            // no extra join information needed
+            if($field == 'created' || $field == 'lastLogin' || $field == 'last') {
+                $users = $users->orderBy('u.' . $field, $direction);
+            }
+            if($field == 'completed') {
+                $users = $users
+                    ->leftJoin('u.course1s', 'c1')
+                    ->leftJoin('u.course2s', 'c2')
+                    ->leftJoin('u.course3s', 'c3')
+                    ->addOrderBy('c1.lesson1 + c1.lesson2 + c1.lesson3 + c1.lesson4 + c1.lesson5 + c1.lesson6 + c1.lesson7 + c2.lesson1 + c2.lesson2 + c2.lesson3 + c2.lesson4 + c2.lesson5 + c3.lesson1 + c3.lesson2 + c3.lesson3 + c3.lesson4 + c3.lesson5', $direction)
+                    ->addOrderBy('c1.lesson1 + c1.lesson2 + c1.lesson3 + c1.lesson4 + c1.lesson5 + c1.lesson6 + c1.lesson7', $direction)
+                    ->addOrderBy('c2.lesson1 + c2.lesson2 + c2.lesson3 + c2.lesson4 + c2.lesson5', $direction)
+                    ->addOrderBy('c3.lesson1 + c3.lesson2 + c3.lesson3 + c3.lesson4 + c3.lesson5', $direction);
+                $joins[] = 'c1';
             }
         }
         else {
-            $users = [];
-            $groups = [];
+            $users = $users->orderBy('u.lastLogin', 'DESC');
         }
 
-        /** @var PartnerInvite $partner */
-        $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findBy(['partner' => $user->getId()]);
-        foreach($partner as $j => $p)
-        {
-            /** @var PartnerInvite $p */
-            $users[] = $p->getUser();
-        }
+        $users = $users
+            ->setFirstResult($resultOffset)
+            ->setMaxResults(25)
+            ->getQuery()
+            ->getResult();
 
-        $users = array_unique($users);
 
-        // show sessions
-        /*
-        $sessions = [];
-        $dql = 'SELECT v.time, v.id FROM StudySauceBundle:Session v ORDER BY v.time DESC';
-        $query = $orm->createQuery($dql);
-        $sids = $query->execute();
-        $dql = 'SELECT v.created, v.path, IDENTITY(v.user) AS uid FROM StudySauceBundle:Visit v WHERE v.session IN (\'' . implode('\',\'', array_map(function ($s) {return $s['id'];}, $sids)) . '\') GROUP BY v.session ORDER BY v.created DESC';
-        $query = $orm->createQuery($dql);
-        $sessions = $query->execute();
-        foreach($sids as $j => $s)
-        {
-            $visits = $orm->getRepository('StudySauceBundle:Visit');
-            $criteria = Criteria::create()
-                ->orWhere(Criteria::expr()->contains('path', '/metrics'))
-                ->orWhere(Criteria::expr()->contains('path', '/schedule'))
-                ->orWhere(Criteria::expr()->contains('path', '/account'))
-                ->orWhere(Criteria::expr()->contains('path', '/profile'))
-                ->orWhere(Criteria::expr()->contains('path', '/premium'))
-                ->orWhere(Criteria::expr()->contains('path', '/partner'))
-                ->orWhere(Criteria::expr()->contains('path', '/goals'))
-                ->orWhere(Criteria::expr()->contains('path', '/plan'))
-                ->orWhere(Criteria::expr()->contains('path', '/deadlines'));
-            $v = $visits
-                ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $s['id'])))
-                ->matching($criteria)->first();
-            if(empty($v))
-            {
-                $v = $visits
-                    ->matching(Criteria::create()
-                            ->where(Criteria::expr()->eq('session', $s['id'])))->first();
-                if(!empty($v))
-                    $v->setPath('/');
-            }
-            if(!empty($v)) {
-                if($v->getCreated() > $yesterday)
-                    $visitors++;
-                $sessions[$v->getCreated()->getTimestamp()] = $v;
-            }
-        }
-        */
 
+        // get all the interesting aggregate counts
         $yesterday = new \DateTime('yesterday');
-        $visitors = 0;
-        $signups = 0;
-        $listedUsers = [];
-        $parents = 0;
-        $partners = 0;
-        $advisers = 0;
-        $paid = 0;
-        $students = 0;
-        $completed = 0;
-        $goals = 0;
-        $deadlines = 0;
-        $plans = 0;
-        $partnerTotal = 0;
-        foreach($users as $i => $u) {
-            /** @var User $u */
+        $signups = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.created > :yesterday')
+            ->setParameter('yesterday', $yesterday)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            if ($u->getCreated() > $yesterday) {
-                $signups++;
-            }
+        $visitors = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.lastLogin > :yesterday')
+            ->setParameter('yesterday', $yesterday)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            /** @var Visit $v */
-            if(!empty($v = $u->getVisits()->slice(0, 1)) && ($v = $v[0])
-                && $v->getCreated() > $yesterday) {
-                $visitors++;
-            }
+        $parents = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.roles LIKE \'%s:11:"ROLE_PARENT"%\'')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            if($u->hasRole('ROLE_PARENT')) {
-                $parents++;
-            }
+        $partners = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.roles LIKE \'%s:12:"ROLE_PARTNER"%\'')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            if($u->hasRole('ROLE_PARTNER')) {
-                $partners++;
-            }
+        $advisers = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.roles LIKE \'%s:12:"ROLE_ADVISER"%\' OR u.roles LIKE \'%s:19:"ROLE_MASTER_ADVISER"%\'')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER')) {
-                $advisers++;
-            }
+        $students = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.roles NOT LIKE \'%s:12:"ROLE_ADVISER"%\'')
+            ->andWhere('u.roles NOT LIKE \'%s:19:"ROLE_MASTER_ADVISER"%\'')
+            ->andWhere('u.roles NOT LIKE \'%s:12:"ROLE_PARTNER"%\'')
+            ->andWhere('u.roles NOT LIKE \'%s:11:"ROLE_PARENT"%\'')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            if($u->hasRole('ROLE_PAID')) {
-                $paid++;
-            }
-
-            if(!$u->hasRole('ROLE_PARENT') && !$u->hasRole('ROLE_PARTNER') && !$u->hasRole('ROLE_ADVISER') &&
-                !$u->hasRole('ROLE_MASTER_ADVISER')) {
-                $students++;
-            }
-
-            if($u->getCompleted() == 100) {
-                $completed++;
-            }
-
-            if($u->getGoals()->count() > 0) {
-                $goals++;
-            }
-
-            if($u->getDeadlines()->count() > 0) {
-                $deadlines++;
-            }
-
-            if($u->getSchedules()->count() > 0) {
-                $plans++;
-            }
-
-            if($u->getPartnerInvites()->count() > 0) {
-                $partnerTotal++;
-            }
-
-            $listedUsers[$u->getId()] = $u;
+        /** @var QueryBuilder $paid */
+        $paid = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('g', $joins)) {
+            $paid = $paid->leftJoin('u.groups', 'g');
         }
+        $paid = $paid->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.roles LIKE \'%s:9:"ROLE_PAID"%\' OR g.id IN (' . self::$paidStr . ')')
+            ->getQuery()
+            ->getSingleScalarResult();
+        /** @var int $paid */
 
-        $keys = array_map(function (User $u) {
-                return empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp();}, $listedUsers);
-        array_multisort($keys, SORT_DESC, SORT_NUMERIC, $listedUsers);
+        /** @var QueryBuilder $completed */
+        $completed = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) {
+            $completed = $completed
+                ->leftJoin('u.course1s', 'c1')
+                ->leftJoin('u.course2s', 'c2')
+                ->leftJoin('u.course3s', 'c3');
+        }
+        $completed = $completed->select('COUNT(DISTINCT u.id)')
+            ->andWhere('c1.lesson1=4 AND c1.lesson2=4 AND c1.lesson3=4 AND c1.lesson4=4 AND c1.lesson5=4 AND c1.lesson6=4')
+            ->andWhere('c2.lesson1=4 AND c2.lesson2=4 AND c2.lesson3=4 AND c2.lesson4=4 AND c2.lesson5=4')
+            ->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        $listedUsers = array_splice($listedUsers, $request->get('page') ?: 0, 25);
+        /** @var QueryBuilder $goals */
+        $goals = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('goals', $joins)) {
+            $goals = $goals->leftJoin('u.goals', 'goals');
+        }
+        $goals = $goals->select('COUNT(DISTINCT u.id)')
+            ->andWhere('goals.id IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+
+        /** @var QueryBuilder $deadlines */
+        $deadlines = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('deadlines', $joins)) {
+            $deadlines = $deadlines->leftJoin('u.deadlines', 'deadlines');
+        }
+        $deadlines = $deadlines->select('COUNT(DISTINCT u.id)')
+            ->andWhere('deadlines.id IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        /** @var QueryBuilder $plans */
+        $plans = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('plans', $joins)) {
+            $plans = $plans->leftJoin('u.schedules', 'plans');
+        }
+        $plans = $plans->select('COUNT(DISTINCT u.id)')
+            ->andWhere('plans.id IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        /** @var QueryBuilder $partnerTotal */
+        $partnerTotal = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('partners', $joins)) {
+            $partnerTotal = $partnerTotal->leftJoin('u.partnerInvites', 'partners');
+        }
+        $partnerTotal = $partnerTotal->select('COUNT(DISTINCT u.id)')
+            ->andWhere('partners.id IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // get the groups for use in dropdown
+        $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();
 
         return $this->render('AdminBundle:Admin:index.html.php', [
                 'groups' => $groups,
-                'users' => $listedUsers,
+                'users' => $users,
                 'visitors' => $visitors,
                 'signups' => $signups,
                 'parents' => $parents,
@@ -200,10 +358,107 @@ class AdminController extends Controller
                 'goals' => $goals,
                 'deadlines' => $deadlines,
                 'plans' => $plans,
-                'partnerTotal' => $partnerTotal
+                'partnerTotal' => $partnerTotal,
+                'total' => $total
             ]);
     }
 
 
+    public function removeUserAction(Request $request) {
 
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        /** @var User $u */
+        $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $request->get('userId')]);
+        if(!empty($u)) {
+            // remove all entities attached
+            foreach($u->getVisits()->toArray() as $i => $v) {
+                $u->removeVisit($v);
+                $orm->remove($v);
+            }
+            foreach($u->getCourse1s()->toArray() as $i => $c1) {
+                $u->removeCourse1($c1);
+                $orm->remove($c1);
+            }
+            foreach($u->getCourse2s()->toArray() as $i => $c2) {
+                $u->removeCourse2($c2);
+                $orm->remove($c2);
+            }
+            foreach($u->getCourse3s()->toArray() as $i => $c3) {
+                $u->removeCourse3($c3);
+                $orm->remove($c3);
+            }
+            foreach($u->getMessages()->toArray() as $i => $m) {
+                $u->removeMessage($m);
+                $orm->remove($m);
+            }
+            foreach($u->getDeadlines()->toArray() as $i => $d) {
+                $u->removeDeadline($d);
+                $orm->remove($d);
+            }
+            foreach($u->getFiles()->toArray() as $i => $f) {
+                $u->removeFile($f);
+                $orm->remove($f);
+            }
+            foreach($u->getGoals()->toArray() as $i => $g) {
+                $u->removeGoal($g);
+                $orm->remove($g);
+            }
+            foreach($u->getGroups()->toArray() as $i => $gr) {
+                $u->removeGroup($gr);
+            }
+            foreach($u->getGroupInvites()->toArray() as $i => $gri) {
+                $u->removeGroupInvite($gri);
+                $orm->remove($gri);
+            }
+            foreach($u->getParentInvites()->toArray() as $i => $p) {
+                $u->removeParentInvite($p);
+                $orm->remove($p);
+            }
+            foreach($u->getPartnerInvites()->toArray() as $i => $pa) {
+                $u->removePartnerInvite($pa);
+                $orm->remove($pa);
+            }
+            foreach($u->getPayments()->toArray() as $i => $pay) {
+                $u->removePayment($pay);
+                $orm->remove($pay);
+            }
+            foreach($u->getSchedules()->toArray() as $i => $s) {
+                $u->removeSchedule($s);
+                $orm->remove($s);
+            }
+            foreach($u->getStudentInvites()->toArray() as $i => $st) {
+                $u->removeStudentInvite($st);
+                $orm->remove($st);
+            }
+            foreach($u->getInvitedStudents()->toArray() as $i => $is) {
+                $u->removeInvitedStudent($is);
+                $orm->remove($is);
+            }
+            foreach($u->getInvitedPartners()->toArray() as $i => $ip) {
+                $u->removeInvitedPartner($ip);
+                $orm->remove($ip);
+            }
+            foreach($u->getInvitedParents()->toArray() as $i => $ipa) {
+                $u->removeInvitedParent($ipa);
+                $orm->remove($ipa);
+            }
+            foreach($u->getInvitedGroups()->toArray() as $i => $ig) {
+                $u->removeInvitedGroup($ig);
+                $orm->remove($ig);
+            }
+
+            $orm->remove($u);
+            $orm->flush();
+        }
+
+        return $this->indexAction($request);
+    }
 }

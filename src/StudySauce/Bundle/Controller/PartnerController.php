@@ -151,6 +151,49 @@ class PartnerController extends Controller
             /** @var PartnerInvite $p */
             $users[] = $p->getUser();
         }
+
+        // show sessions
+        /*
+        $sessions = [];
+        $dql = 'SELECT v.time, v.id FROM StudySauceBundle:Session v ORDER BY v.time DESC';
+        $query = $orm->createQuery($dql);
+        $sids = $query->execute();
+        $dql = 'SELECT v.created, v.path, IDENTITY(v.user) AS uid FROM StudySauceBundle:Visit v WHERE v.session IN (\'' . implode('\',\'', array_map(function ($s) {return $s['id'];}, $sids)) . '\') GROUP BY v.session ORDER BY v.created DESC';
+        $query = $orm->createQuery($dql);
+        $sessions = $query->execute();
+        foreach($sids as $j => $s)
+        {
+            $visits = $orm->getRepository('StudySauceBundle:Visit');
+            $criteria = Criteria::create()
+                ->orWhere(Criteria::expr()->contains('path', '/metrics'))
+                ->orWhere(Criteria::expr()->contains('path', '/schedule'))
+                ->orWhere(Criteria::expr()->contains('path', '/account'))
+                ->orWhere(Criteria::expr()->contains('path', '/profile'))
+                ->orWhere(Criteria::expr()->contains('path', '/premium'))
+                ->orWhere(Criteria::expr()->contains('path', '/partner'))
+                ->orWhere(Criteria::expr()->contains('path', '/goals'))
+                ->orWhere(Criteria::expr()->contains('path', '/plan'))
+                ->orWhere(Criteria::expr()->contains('path', '/deadlines'));
+            $v = $visits
+                ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $s['id'])))
+                ->matching($criteria)->first();
+            if(empty($v))
+            {
+                $v = $visits
+                    ->matching(Criteria::create()
+                            ->where(Criteria::expr()->eq('session', $s['id'])))->first();
+                if(!empty($v))
+                    $v->setPath('/');
+            }
+            if(!empty($v)) {
+                if($v->getCreated() > $yesterday)
+                    $visitors++;
+                $sessions[$v->getCreated()->getTimestamp()] = $v;
+            }
+        }
+        */
+
+
         // show sessions
         $sessions = [];
         foreach($users as $i => $u) {

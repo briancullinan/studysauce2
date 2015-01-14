@@ -35,12 +35,6 @@ class Mail implements EmailInterface
     protected $environment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="emails")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $user;
-
-    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;

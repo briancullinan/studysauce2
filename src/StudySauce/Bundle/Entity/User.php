@@ -30,7 +30,7 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="Schedule", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Schedule", mappedBy="user", fetch="EXTRA_LAZY")
      */
     protected $schedules;
 
@@ -47,19 +47,19 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $visits;
 
     /**
-     * @ORM\OneToMany(targetEntity="Goal", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Goal", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $goals;
 
     /**
-     * @ORM\OneToMany(targetEntity="Deadline", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Deadline", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"dueDate" = "ASC"})
      */
     protected $deadlines;
 
     /**
-     * @ORM\OneToMany(targetEntity="PartnerInvite", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="PartnerInvite", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $partnerInvites;
@@ -113,25 +113,25 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $files;
 
     /**
-     * @ORM\OneToMany(targetEntity="Mail", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="ContactMessage", mappedBy="user")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $emails;
+    protected $messages;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Course1", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Course1", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $course1s;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\Course2", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Course2\Bundle\Entity\Course2", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $course2s;
 
     /**
-     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\Course3", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Course3\Bundle\Entity\Course3", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $course3s;
@@ -194,28 +194,28 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getCompleted() {
 
         /** @var Course1 $course1 */
-        $course1 = $this->getCourse1s()->first();
+        $course1 = $this->getCourse1s()->slice(0, 1);
+        if(!empty($course1)) $course1 = $course1[0];
         /** @var Course2 $course2 */
-        $course2 = $this->getCourse2s()->first();
+        $course2 = $this->getCourse2s()->slice(0, 1);
+        if(!empty($course2)) $course2 = $course2[0];
         /** @var Course3 $course3 */
-        $course3 = $this->getCourse3s()->first();
+        $course3 = $this->getCourse3s()->slice(0, 1);
+        if(!empty($course3)) $course3 = $course3[0];
         $completed = 0;
         if (!empty($course1)) {
-            $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2(
-                ) === 4 ? 1 : 0) +
+            $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2() === 4 ? 1 : 0) +
                 ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
                 ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
-                ($course1->getLesson7() === 4 ? 1 : 0);
+                ($course1->getLesson7() && !$this->hasRole('ROLE_PAID') === 4 ? 1 : 0);
         }
         if (!empty($course2)) {
-            $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2(
-                ) === 4 ? 1 : 0) +
+            $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2() === 4 ? 1 : 0) +
                 ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
                 ($course2->getLesson5() === 4 ? 1 : 0);
         }
         if (!empty($course3)) {
-            $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2(
-                ) === 4 ? 1 : 0) +
+            $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2() === 4 ? 1 : 0) +
                 ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
                 ($course3->getLesson5() === 4 ? 1 : 0);
         }
@@ -1163,5 +1163,38 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getCourse3s()
     {
         return $this->course3s;
+    }
+
+    /**
+     * Add messages
+     *
+     * @param \StudySauce\Bundle\Entity\ContactMessage $messages
+     * @return User
+     */
+    public function addMessage(\StudySauce\Bundle\Entity\ContactMessage $messages)
+    {
+        $this->messages[] = $messages;
+
+        return $this;
+    }
+
+    /**
+     * Remove messages
+     *
+     * @param \StudySauce\Bundle\Entity\ContactMessage $messages
+     */
+    public function removeMessage(\StudySauce\Bundle\Entity\ContactMessage $messages)
+    {
+        $this->messages->removeElement($messages);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }
