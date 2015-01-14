@@ -40,6 +40,7 @@ $(document).ready(function () {
 
     function getData()
     {
+        var admin = jQuery('#admin');
         return {
             order: orderBy,
             search: admin.find('input[name="search"]').val().trim(),
@@ -57,7 +58,6 @@ $(document).ready(function () {
     }
 
     function loadResults() {
-        var admin = jQuery('#admin');
         $.ajax({
             url: window.callbackPaths['command_callback'],
             type: 'GET',
@@ -77,12 +77,12 @@ $(document).ready(function () {
         evt.preventDefault();
         var admin = $('#admin'),
             row = $(this).parents('tr'),
-            userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'));
+            userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
         $('#remove-user-name').text(row.find('td').eq('3').text());
         $('#confirm-remove-user').data('userId', userId);
     });
 
-    body.on('click', 'a[href="remove-user"]', function () {
+    body.on('click', 'a[href="#remove-user"]', function () {
         var data = getData();
         data.userId = $('#confirm-remove-user').data('userId');
         $.ajax({

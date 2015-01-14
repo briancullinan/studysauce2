@@ -234,6 +234,12 @@ a.fc-event:not([href])
     border-bottom: 1px solid #555555;
 }
 
+.plan-widget .session-row
+{
+    clear:both;
+    position: relative;
+}
+
 #plan .session-row:hover:not(.selected) .assignment,
 #plan .session-row:hover:not(.selected) .class-name,
 #plan .session-row:hover:not(.selected) .percent,

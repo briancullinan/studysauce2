@@ -113,6 +113,12 @@ a[href="#confirm-remove-user"]:hover
     vertical-align: middle;
 }
 
+#admin td small {
+    font-size: 12px;
+    line-height: 100%;
+    display: block;
+}
+
 #admin table
 {
     table-layout: fixed;

@@ -2,11 +2,17 @@
 
 namespace Admin\Bundle\Controller;
 
+use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Entity\Course2;
+use Course3\Bundle\Entity\Course3;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Event;
+use StudySauce\Bundle\Entity\Goal;
+use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
-use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -187,7 +193,7 @@ class AdminController extends Controller
             if($page == 'last') {
                 $page = $total / 25;
             }
-            $resultOffset = (min(floor($total / 25) + 1, max(1, intval($page))) - 1) * 25;
+            $resultOffset = (min(max(1, ceil($total / 25)), max(1, intval($page))) - 1) * 25;
         }
         else {
             $resultOffset = 0;
@@ -364,6 +370,10 @@ class AdminController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function removeUserAction(Request $request) {
 
         /** @var $orm EntityManager */
@@ -384,14 +394,81 @@ class AdminController extends Controller
                 $orm->remove($v);
             }
             foreach($u->getCourse1s()->toArray() as $i => $c1) {
+                /** @var Course1 $c1 */
+                foreach($c1->getQuiz1s()->toArray() as $j => $q1) {
+                    $c1->removeQuiz1($q1);
+                    $orm->remove($q1);
+                }
+                foreach($c1->getQuiz2s()->toArray() as $j => $q2) {
+                    $c1->removeQuiz2($q2);
+                    $orm->remove($q2);
+                }
+                foreach($c1->getQuiz3s()->toArray() as $j => $q3) {
+                    $c1->removeQuiz3($q3);
+                    $orm->remove($q3);
+                }
+                foreach($c1->getQuiz4s()->toArray() as $j => $q4) {
+                    $c1->removeQuiz4($q4);
+                    $orm->remove($q4);
+                }
+                foreach($c1->getQuiz5s()->toArray() as $j => $q5) {
+                    $c1->removeQuiz5($q5);
+                    $orm->remove($q5);
+                }
+                foreach($c1->getQuiz6s()->toArray() as $j => $q6) {
+                    $c1->removeQuiz6($q6);
+                    $orm->remove($q6);
+                }
                 $u->removeCourse1($c1);
                 $orm->remove($c1);
             }
             foreach($u->getCourse2s()->toArray() as $i => $c2) {
+                /** @var Course2 $c2 */
+                foreach($c2->getInterleaving()->toArray() as $j => $q1) {
+                    $c2->removeInterleaving($q1);
+                    $orm->remove($q1);
+                }
+                foreach($c2->getStudyMetrics()->toArray() as $j => $q2) {
+                    $c2->removeStudyMetric($q2);
+                    $orm->remove($q2);
+                }
+                foreach($c2->getStudyPlan()->toArray() as $j => $q3) {
+                    $c2->removeStudyPlan($q3);
+                    $orm->remove($q3);
+                }
+                foreach($c2->getStudyTests()->toArray() as $j => $q4) {
+                    $c2->removeStudyTest($q4);
+                    $orm->remove($q4);
+                }
+                foreach($c2->getTestTaking()->toArray() as $j => $q5) {
+                    $c2->removeTestTaking($q5);
+                    $orm->remove($q5);
+                }
                 $u->removeCourse2($c2);
                 $orm->remove($c2);
             }
             foreach($u->getCourse3s()->toArray() as $i => $c3) {
+                /** @var Course3 $c3 */
+                foreach($c3->getActiveReading()->toArray() as $j => $q1) {
+                    $c3->removeActiveReading($q1);
+                    $orm->remove($q1);
+                }
+                foreach($c3->getGroupStudy()->toArray() as $j => $q2) {
+                    $c3->removeGroupStudy($q2);
+                    $orm->remove($q2);
+                }
+                foreach($c3->getSpacedRepetition()->toArray() as $j => $q3) {
+                    $c3->removeSpacedRepetition($q3);
+                    $orm->remove($q3);
+                }
+                foreach($c3->getStrategies()->toArray() as $j => $q4) {
+                    $c3->removeStrategy($q4);
+                    $orm->remove($q4);
+                }
+                foreach($c3->getTeaching()->toArray() as $j => $q5) {
+                    $c3->removeTeaching($q5);
+                    $orm->remove($q5);
+                }
                 $u->removeCourse3($c3);
                 $orm->remove($c3);
             }
@@ -399,15 +476,16 @@ class AdminController extends Controller
                 $u->removeMessage($m);
                 $orm->remove($m);
             }
-            foreach($u->getDeadlines()->toArray() as $i => $d) {
-                $u->removeDeadline($d);
-                $orm->remove($d);
-            }
             foreach($u->getFiles()->toArray() as $i => $f) {
                 $u->removeFile($f);
                 $orm->remove($f);
             }
             foreach($u->getGoals()->toArray() as $i => $g) {
+                /** @var Goal $g */
+                foreach($g->getClaims()->toArray() as $j => $c) {
+                    $g->removeClaim($c);
+                    $orm->remove($c);
+                }
                 $u->removeGoal($g);
                 $orm->remove($g);
             }
@@ -431,8 +509,41 @@ class AdminController extends Controller
                 $orm->remove($pay);
             }
             foreach($u->getSchedules()->toArray() as $i => $s) {
+                /** @var Schedule $s */
+                foreach($s->getEvents()->toArray() as $j => $e) {
+                    /** @var Event $e */
+                    if(!empty($ac = $e->getActive()))
+                        $orm->remove($ac);
+                    if(!empty($pr = $e->getPrework()))
+                        $orm->remove($pr);
+                    if(!empty($ot = $e->getOther()))
+                        $orm->remove($ot);
+                    if(!empty($sp = $e->getSpaced()))
+                        $orm->remove($sp);
+                    if(!empty($te = $e->getTeach()))
+                        $orm->remove($te);
+                    $s->removeEvent($e);
+                    $orm->remove($e);
+                }
+                foreach($s->getWeeks()->toArray() as $j => $w) {
+                    $s->removeWeek($w);
+                    $orm->remove($w);
+                }
+                foreach($s->getCourses()->toArray() as $j => $co) {
+                    /** @var Course $co */
+                    foreach($co->getCheckins()->toArray() as $k => $ch) {
+                        $co->removeCheckin($ch);
+                        $orm->remove($ch);
+                    }
+                    $s->removeCourse($co);
+                    $orm->remove($co);
+                }
                 $u->removeSchedule($s);
                 $orm->remove($s);
+            }
+            foreach($u->getDeadlines()->toArray() as $i => $d) {
+                $u->removeDeadline($d);
+                $orm->remove($d);
             }
             foreach($u->getStudentInvites()->toArray() as $i => $st) {
                 $u->removeStudentInvite($st);

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -117,23 +118,28 @@ class RedirectListener implements EventSubscriberInterface
         if(empty($request->get('_format')) || $request->get('_format') == 'index')
             $request->attributes->set('_format', 'funnel');
 
-        if ($exception instanceof NotFoundHttpException) {
-            $response->setContent(
-                $this->templating->render('StudySauceBundle:Exception:error404.html.php', ['exception' => $exception])
-            );
-        }
-        else {
-            $response->setContent(
-                $this->templating->render('StudySauceBundle:Exception:error.html.php', ['exception' => $exception])
-            );
-        }
-
         // HttpExceptionInterface is a special type of exception
         // that holds status code and header details
         if ($exception instanceof HttpExceptionInterface) {
+            /** @var HttpException $exception */
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
-        } else {
+            if($this->templating->exists('StudySauceBundle:Exception:error' . $exception->getStatusCode() . '.html.php')) {
+                $response->setContent(
+                    $this->templating->render('StudySauceBundle:Exception:error' . $exception->getStatusCode() . '.html.php', ['exception' => $exception])
+                );
+            }
+            else {
+                $response->setContent(
+                    $this->templating->render('StudySauceBundle:Exception:error.html.php', ['exception' => $exception])
+                );
+            }
+        }
+        else {
+            /** @var \Exception $exception */
+            $response->setContent(
+                $this->templating->render('StudySauceBundle:Exception:error.html.php', ['exception' => $exception])
+            );
             $response->setStatusCode(500);
         }
 

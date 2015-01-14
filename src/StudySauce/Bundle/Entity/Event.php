@@ -81,32 +81,27 @@ class Event
     protected $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="ActiveStrategy", inversedBy="event")
-     * @ORM\JoinColumn(name="active_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="ActiveStrategy", mappedBy="event")
      */
     protected $active;
 
     /**
-     * @ORM\OneToOne(targetEntity="PreworkStrategy", inversedBy="event")
-     * @ORM\JoinColumn(name="prework_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="PreworkStrategy", mappedBy="event")
      */
     protected $prework;
 
     /**
-     * @ORM\OneToOne(targetEntity="OtherStrategy", inversedBy="event")
-     * @ORM\JoinColumn(name="other_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="OtherStrategy", mappedBy="event")
      */
     protected $other;
 
     /**
-     * @ORM\OneToOne(targetEntity="SpacedStrategy", inversedBy="event")
-     * @ORM\JoinColumn(name="spaced_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="SpacedStrategy", mappedBy="event")
      */
     protected $spaced;
 
     /**
-     * @ORM\OneToOne(targetEntity="TeachStrategy", inversedBy="event")
-     * @ORM\JoinColumn(name="teach_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="TeachStrategy", mappedBy="event")
      */
     protected $teach;
 

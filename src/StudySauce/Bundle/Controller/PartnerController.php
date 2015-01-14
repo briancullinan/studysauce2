@@ -2,7 +2,6 @@
 
 namespace StudySauce\Bundle\Controller;
 
-use Aws\S3\Exception\AccessDeniedException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
@@ -342,7 +341,7 @@ class PartnerController extends Controller
 
         if(!$u->hasRole('ROLE_PARTNER') && !$u->hasRole('ROLE_ADVISER') && !$u->hasRole('ROLE_MASTER_ADVISER') &&
             !$u->hasRole('ROLE_ADMIN'))
-            throw new AccessDeniedException;
+            throw new AccessDeniedHttpException();
         return $this->render('StudySauceBundle:Partner:adviser.html.php', [
                 'user' => $_user,
                 'tab' => $_tab

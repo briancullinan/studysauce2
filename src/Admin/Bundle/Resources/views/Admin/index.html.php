@@ -50,7 +50,7 @@ $view['slots']->start('body'); ?>
             </div>
             <div class="paginate">
                 <a href="?page=first">&lt;&lt;</a> <a href="?page=prev">&lt;</a>
-                <label class="input"><input name="page" type="text" value="1" /> / <span id="page-total"><?php print floor($total / 25) + 1; ?></span></label>
+                <label class="input"><input name="page" type="text" value="1" /> / <span id="page-total"><?php print ceil($total / 25); ?></span></label>
                 <a href="?page=next">&gt;</a> <a href="?page=last">&gt;&gt;</a>
             </div>
             <table class="<?php print ($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count(
@@ -200,7 +200,7 @@ $view['slots']->start('body'); ?>
                                 : $u->getLastLogin()->format('j M')); ?></td>
                         <td><?php print preg_replace('/^USER(,<br \/>)*|(,<br \/>)*USER|^PAID(,<br \/>)*|(,<br \/>)*PAID/i', '', implode(',<br />', array_map(function ($r) {return substr($r, 5);}, $u->getRoles()))); ?></td>
                         <td><?php print implode(',<br />', $u->getGroups()->map(function (Group $g) {return $g->getName();})->toArray()); ?></td>
-                        <td><a href="<?php print $view['router']->generate('adviser',['_user' => $u->getId(), '_tab' => 'home']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
+                        <td><a href="<?php print $view['router']->generate('adviser',['_user' => $u->getId(), '_tab' => 'home']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a><small><a href="mailto:<?php print $u->getEmailCanonical(); ?>"><?php print $u->getEmail(); ?></a></small></td>
                         <td><?php print $u->getCompleted(); ?>%</td>
                         <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M'); ?></td>
                         <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>

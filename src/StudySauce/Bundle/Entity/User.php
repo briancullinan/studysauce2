@@ -271,11 +271,11 @@ class User extends BaseUser implements EncoderAwareInterface
         $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
         $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course1s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course2s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->course3s = new \Doctrine\Common\Collections\ArrayCollection();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->messages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->partnerInvites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->parentInvites = new \Doctrine\Common\Collections\ArrayCollection();
@@ -810,39 +810,6 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getFiles()
     {
         return $this->files;
-    }
-
-    /**
-     * Add emails
-     *
-     * @param \StudySauce\Bundle\Entity\Mail $emails
-     * @return User
-     */
-    public function addEmail(\StudySauce\Bundle\Entity\Mail $emails)
-    {
-        $this->emails[] = $emails;
-
-        return $this;
-    }
-
-    /**
-     * Remove emails
-     *
-     * @param \StudySauce\Bundle\Entity\Mail $emails
-     */
-    public function removeEmail(\StudySauce\Bundle\Entity\Mail $emails)
-    {
-        $this->emails->removeElement($emails);
-    }
-
-    /**
-     * Get emails
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getEmails()
-    {
-        return $this->emails;
     }
 
     /**
