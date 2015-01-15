@@ -381,7 +381,19 @@ $collection->add(
         'request.isXmlHttpRequest()'
     )
 );
-
+$collection->add(
+    'password_reset',
+    new Route(
+        '/reset/{_format}',
+        ['_controller' => 'StudySauceBundle:Account:reset', '_format' => 'funnel'],
+        ['_format' => DASHBOARD_VIEWS],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest() || !request.isXmlHttpRequest()'
+    )
+);
 $collection->add(
     'login',
     new Route(

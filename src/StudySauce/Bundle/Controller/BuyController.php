@@ -541,7 +541,7 @@ class BuyController extends Controller
     public function cancelPaymentAction(User $user = null)
     {
         /** @var $user User */
-        if(empty($user))
+        if(empty($user) || !$this->getUser()->hasRole('ROLE_ADMIN'))
             $user = $this->getUser();
 
         $payments = $user->getPayments()->toArray();

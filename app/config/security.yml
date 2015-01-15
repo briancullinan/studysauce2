@@ -54,6 +54,7 @@ security:
                 default_target_path: /home
                 oauth_user_provider:
                     service: my_user_provider
+            switch_user: { role: ROLE_ADMIN, parameter: _switch_user }
 
     access_control:
         - { path: ^/userlist$, roles: [ROLE_ADVISER, ROLE_PARTNER] }

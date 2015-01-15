@@ -76,7 +76,7 @@
     width:70px;
     left:0;
     top:-6px;
-    background:url(../images/menu_new.png) no-repeat left -102px transparent;
+    background:url(../images/menu_new_compressed.png) no-repeat left -102px transparent;
     font-size:14px;
     color:#555555;
     font-weight: bold;
@@ -241,7 +241,7 @@
 
 #right-panel .main-menu a span
 {
-    background: url(../images/menu_new.png) no-repeat left -605px transparent;
+    background: url(../images/menu_new_compressed.png) no-repeat left -605px transparent;
 }
 
 #right-panel .main-menu a:hover span,
@@ -249,7 +249,7 @@
 #right-panel .main-menu a:active span,
 #right-panel .main-menu a.active span
 {
-    background: url(../images/menu_new.png) no-repeat left -705px transparent;
+    background: url(../images/menu_new_compressed.png) no-repeat left -705px transparent;
 }
 
 #right-panel .main-menu a[href*="/home"] span
@@ -787,7 +787,7 @@
     height:40px;
     line-height: 100%;
     vertical-align: top;
-    background: url("../images/menu_new.png") no-repeat 50% 10px transparent;
+    background: url("../images/menu_new_compressed.png") no-repeat 50% 10px transparent;
     padding:2px 5px 12px 5px;
     margin-top:20px;
     width:auto;
@@ -1042,7 +1042,7 @@
     }
 
     #left-panel .navbar-toggle {
-        background: url("../images/menu_new.png") no-repeat 50% -7412px transparent;
+        background: url("../images/menu_new_compressed.png") no-repeat 50% -7412px transparent;
         padding: 2px 5px 12px 5px;
         height: 40px;
     }

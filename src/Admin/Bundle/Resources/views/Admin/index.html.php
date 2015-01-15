@@ -159,9 +159,9 @@ $view['slots']->start('body'); ?>
                             <option value="yes">Y</option>
                             <option value="no">N</option>
                         </select></label></th>
-                    <th><label><span>Plans: <?php print $plans; ?></span><br />
-                        <select name="hasPlans">
-                            <option value="">Study Plan</option>
+                    <th><label><span>Schedules: <?php print $schedules; ?></span><br />
+                        <select name="hasSchedules">
+                            <option value="">Schedules</option>
                             <option value="yes">Y</option>
                             <option value="no">N</option>
                         </select></label></th>
@@ -171,7 +171,24 @@ $view['slots']->start('body'); ?>
                             <option value="yes">Y</option>
                             <option value="no">N</option>
                         </select></label></th>
-                    <th><label><span>Actions</span><br />
+                    <th><label><span><?php print $c1l1; ?></span><br /><select name="lesson1"><option value="">1-1</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c1l2; ?></span><br /><select name="lesson2"><option value="">1-2</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c1l3; ?></span><br /><select name="lesson3"><option value="">1-3</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c1l4; ?></span><br /><select name="lesson4"><option value="">1-4</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c1l5; ?></span><br /><select name="lesson5"><option value="">1-5</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c1l6; ?></span><br /><select name="lesson6"><option value="">1-6</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c1l7; ?></span><br /><select name="lesson7"><option value="">1-7</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c2l1; ?></span><br /><select name="lesson8"><option value="">2-1</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c2l2; ?></span><br /><select name="lesson9"><option value="">2-2</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c2l3; ?></span><br /><select name="lesson10"><option value="">2-3</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c2l4; ?></span><br /><select name="lesson11"><option value="">2-4</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c2l5; ?></span><br /><select name="lesson12"><option value="">2-5</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c3l1; ?></span><br /><select name="lesson13"><option value="">3-1</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c3l2; ?></span><br /><select name="lesson14"><option value="">3-2</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c3l3; ?></span><br /><select name="lesson15"><option value="">3-3</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c3l4; ?></span><br /><select name="lesson16"><option value="">3-4</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><?php print $c3l5; ?></span><br /><select name="lesson17"><option value="">3-5</option><option value="yes">Y</option><option value="no">N</option></select></label></th>
+                    <th><label><span><a href="#all">All</a></span><br /><span><a href="#tools">Tools</a></span><br /><span><a href="#courses">Courses</a></span><br /><span>Actions</span><br />
                             <select name="actions">
                                 <option value="">Select All</option>
                                 <option value="delete">Delete All</option>
@@ -190,17 +207,30 @@ $view['slots']->start('body'); ?>
                         /** @var User $u */
 
                         ?>
-                        <tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty(
-                            'adviser_status'
-                        ) ?: 'green'); ?>">
+                        <tr class="user-id-<?php print $u->getId(); ?> read-only status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                         <td data-timestamp="<?php print (empty($u->getLastLogin())
                             ? $u->getCreated()->getTimestamp()
                             : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin())
                                 ? $u->getCreated()->format('j M')
                                 : $u->getLastLogin()->format('j M')); ?></td>
-                        <td><?php print preg_replace('/^USER(,<br \/>)*|(,<br \/>)*USER|^PAID(,<br \/>)*|(,<br \/>)*PAID/i', '', implode(',<br />', array_map(function ($r) {return substr($r, 5);}, $u->getRoles()))); ?></td>
-                        <td><?php print implode(',<br />', $u->getGroups()->map(function (Group $g) {return $g->getName();})->toArray()); ?></td>
-                        <td><a href="<?php print $view['router']->generate('adviser',['_user' => $u->getId(), '_tab' => 'home']); ?>"><?php print $u->getFirst() . ' ' . $u->getLast(); ?></a><small><a href="mailto:<?php print $u->getEmailCanonical(); ?>"><?php print $u->getEmail(); ?></a></small></td>
+                        <td>
+                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PAID" <?php print ($u->hasRole('ROLE_PAID') ? 'checked="checked"' : ''); ?> /><i></i><span>PAID</span></label>
+                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADMIN" <?php print ($u->hasRole('ROLE_ADMIN') ? 'checked="checked"' : ''); ?> /><i></i><span>ADMIN</span></label>
+                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARENT" <?php print ($u->hasRole('ROLE_PARENT') ? 'checked="checked"' : ''); ?> /><i></i><span>PARENT</span></label>
+                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARTNER" <?php print ($u->hasRole('ROLE_PARTNER') ? 'checked="checked"' : ''); ?> /><i></i><span>PARTNER</span></label>
+                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADVISER" <?php print ($u->hasRole('ROLE_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>ADVISER</span></label>
+                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_MASTER_ADVISER" <?php print ($u->hasRole('ROLE_MASTER_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>MASTER_ADVISER</span></label>
+                        </td>
+                        <td>
+                            <?php foreach($groups as $i => $g) { ?>
+                                <label class="checkbox"><input type="checkbox" name="groups" value="<?php print $g->getId(); ?>" <?php print ($u->hasGroup($g->getName()) ? 'checked="checked"' : ''); ?> /><i></i><span><?php print $g->getName(); ?></span></label>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <label class="input"><input type="text" name="first-name" value="<?php print $u->getFirst(); ?>" placeholder="First name" /></label>
+                            <label class="input"><input type="text" name="last-name" value="<?php print $u->getLast(); ?>" placeholder="Last name" /></label>
+                            <label class="input"><input type="text" name="email" value="<?php print $u->getEmail(); ?>" placeholder="Email" /></label>
+                        </td>
                         <td><?php print $u->getCompleted(); ?>%</td>
                         <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M'); ?></td>
                         <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>
@@ -208,7 +238,31 @@ $view['slots']->start('body'); ?>
                         <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>
                         <td><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
                         <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
-                        <td><a href="#edit-user"></a><a href="#confirm-remove-user" data-toggle="modal"></a> <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson6() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson7() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+                        <td>
+                            <a href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
+                            <a href="#confirm-password-reset" data-toggle="modal"></a>
+                            <a href="#confirm-cancel-user" data-toggle="modal"></a>
+                            <a href="#edit-user"></a>
+                            <a href="#confirm-remove-user" data-toggle="modal"></a>
+                            <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label>
+                        </td>
                         </tr><?php
                     } ?>
                     </tbody>
@@ -220,4 +274,6 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 print $this->render('AdminBundle:Dialogs:confirm-remove-user.html.php', ['id' => 'confirm-remove-user']);
+print $this->render('AdminBundle:Dialogs:confirm-password-reset.html.php', ['id' => 'confirm-password-reset']);
+print $this->render('AdminBundle:Dialogs:confirm-cancel-user.html.php', ['id' => 'confirm-cancel-user']);
 $view['slots']->stop();

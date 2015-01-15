@@ -6,17 +6,13 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
-use StudySauce\Bundle\Entity\Group;
-use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\Invite;
-use StudySauce\Bundle\Entity\ParentInvite;
-use StudySauce\Bundle\Entity\PartnerInvite;
-use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\EventListener\InviteListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -180,6 +176,60 @@ class AccountController extends Controller
 
     /**
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resetAction(Request $request)
+    {
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+        /** @var User $user */
+        $user = $userManager->findUserByConfirmationToken($request->get('token'));
+
+        if(empty($user))
+            throw new AccessDeniedHttpException();
+        
+        $csrfToken = $this->has('form.csrf_provider')
+            ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
+            : null;
+
+        if(!empty($user) && !$user->hasRole('ROLE_GUEST') && !empty($request->get('newPass'))) {
+
+            // change the password
+            $encoder_service = $this->get('security.encoder_factory');
+            /** @var $encoder PasswordEncoderInterface */
+            $encoder = $encoder_service->getEncoder($user);
+            $password = $encoder->encodePassword($request->get('newPass'), $user->getSalt());
+            $user->setPassword($password);
+
+            $user->setConfirmationToken(null);
+            $user->setPasswordRequestedAt(null);
+            $user->setEnabled(true);
+            $userManager->updateUser($user);
+
+            //log in the user automatically after reset
+            $context = $this->get('security.context');
+            $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
+            $context->setToken($token);
+            $session = $request->getSession();
+            $session->set('_security_main', serialize($token));
+            list($route, $options) = HomeController::getUserRedirect($user);
+            $response = $this->redirect($this->generateUrl($route, $options));
+
+            /** @var LoginManager $loginManager */
+            $loginManager = $this->get('fos_user.security.login_manager');
+            $loginManager->loginUser('main', $user, $response);
+            return $response;
+        }
+
+        return $this->render('StudySauceBundle:Account:reset.html.php', [
+                'token' => $request->get('token'),
+                'email' => $user->getEmail(),
+                'csrf_token' => $csrfToken
+            ]);
+    }
+
+    /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function createAction(Request $request)
@@ -221,10 +271,8 @@ class AccountController extends Controller
             $context->setToken($token);
             $session = $request->getSession();
             $session->set('_security_main', serialize($token));
-            if($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER'))
-                $response = $this->redirect($this->generateUrl('userlist'));
-            else
-                $response = $this->redirect($this->generateUrl('home'));
+            list($route, $options) = HomeController::getUserRedirect($user);
+            $response = $this->redirect($this->generateUrl($route, $options));
 
             /** @var LoginManager $loginManager */
             $loginManager = $this->get('fos_user.security.login_manager');

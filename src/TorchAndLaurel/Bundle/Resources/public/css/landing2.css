@@ -9,6 +9,11 @@
     margin: 20px -75px 70px -75px;
 }
 
+h2, h3, h4, h5
+{
+    font-family: inherit;
+}
+
 @media all and (max-width: 1200px)
 {
     .landing-home .video h1

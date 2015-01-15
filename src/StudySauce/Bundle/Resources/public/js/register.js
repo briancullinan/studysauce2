@@ -77,4 +77,35 @@ jQuery(document).ready(function() {
         })
     });
 
+    body.on('keyup', '#reset input', function () {
+        if($(this).val().trim() != '')
+            $('#reset').find('.form-actions').removeClass('invalid').addClass('valid');
+    });
+    body.on('change', '#reset input', function () {
+        if($(this).val().trim() != '')
+            $('#reset').find('.form-actions').removeClass('invalid').addClass('valid');
+    });
+    body.on('click', '#reset a[href="#save-password"]', function (evt) {
+        var account = jQuery('#reset');
+        evt.preventDefault();
+
+        if(account.find('.form-actions').is('.invalid'))
+            return;
+        account.find('.form-actions').removeClass('valid').addClass('invalid');
+
+        jQuery.ajax({
+            url:window.callbackPaths['password_reset'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                token: account.find('input[name="token"]').val(),
+                newPass: account.find('.password input').val(),
+                csrf_token: account.find('input[name="csrf_token"]').val()
+            },
+            success: function (data) {
+
+            }
+        })
+    });
+
 });

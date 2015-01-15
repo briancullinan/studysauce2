@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use StudySauce\Bundle\Entity\ContactMessage;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\GroupInvite;
@@ -14,6 +15,7 @@ use StudySauce\Bundle\Entity\User;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -479,6 +481,36 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resetPasswordAction(User $user = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        $codeUrl = $this->generateUrl('password_reset', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject('Your Study Sauce password has been reset.')
+            ->setFrom('admin@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:reset-password.html.php', [
+                        'user' => $user,
+                        'greeting' => 'Dear ' . $user->getFirst() . ' ' . $user->getLast() . ',',
+                        'link' => '<a href="' . $codeUrl . '">Create a new password</a>'
+                    ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['reset-password']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
      * @param $properties
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -492,14 +524,31 @@ class EmailsController extends Controller
         //$fields = $orm->getClassMetadata(get_class($properties))->getFieldNames();
         //$associations = $orm->getClassMetadata(get_class($properties))->getAssociationNames();
 
-        if(is_object($properties))
-            $from = get_class($properties);
-        else
-            $from = $this->get('request')->get('_controller');
+        if(is_object($properties)) {
+            if($properties instanceof HttpExceptionInterface) {
+                $subject = 'HTTP Error: ' . $properties->getStatusCode();
+            }
+            elseif ($properties instanceof \Exception) {
+                $subject = 'Error: ' . get_class($properties);
+            }
+            // TODO: separate out contact message
+            elseif ($properties instanceof ContactMessage) {
+                $subject = 'Contact Us: From ' . $properties->getName();
+            }
+            else {
+                $subject = 'Message Type: ' . get_class($properties);
+            }
+        }
+        elseif($this->get('request')->get('_controller') == 'StudySauceBundle:Plan:widget') {
+            $subject = 'Study plan overlap: ' . $properties['student'];
+        }
+        else {
+            $subject = 'Message from ' . $this->get('request')->get('_controller');
+        }
 
         /** @var \Swift_Mime_SimpleMessage $message */
         $message = Swift_Message::newInstance()
-            ->setSubject('Message from ' . $from)
+            ->setSubject($subject)
             ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
             ->setTo('admin@studysauce.com')
             ->setBody(
@@ -518,6 +567,7 @@ class EmailsController extends Controller
                         'category' => ['administrator']])));
 
         /** @var \Swift_Transport_EsmtpTransport $transport */
+        // TODO: skip this if sending a contact message so sendgrid allows us to reply directly
         $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
             ->setUsername('brian@studysauce.com')
             ->setPassword('Da1ddy23');

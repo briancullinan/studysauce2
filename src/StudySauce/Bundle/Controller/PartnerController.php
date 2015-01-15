@@ -122,13 +122,8 @@ class PartnerController extends Controller
 
         /** @var $user User */
         $user = $this->getUser();
-        if(!$user->hasRole('ROLE_ADVISER') && !$user->hasRole('ROLE_MASTER_ADVISER') && !$user->hasRole('ROLE_ADMIN') &&
-            !$user->hasRole('ROLE_PARTNER')) {
+        if(!$user->hasRole('ROLE_ADVISER') && !$user->hasRole('ROLE_MASTER_ADVISER') && !$user->hasRole('ROLE_PARTNER')) {
             throw new AccessDeniedHttpException();
-        }
-        if($user->hasRole('ROLE_ADMIN')) {
-            $groups = $orm->getRepository('StudySauceBundle:Group')->findAll();
-            $users = $orm->getRepository('StudySauceBundle:User')->findAll();
         }
         elseif($user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER')) {
             $groups = $user->getGroups()->toArray();

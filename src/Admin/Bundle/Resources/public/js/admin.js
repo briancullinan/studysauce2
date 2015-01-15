@@ -41,7 +41,7 @@ $(document).ready(function () {
     function getData()
     {
         var admin = jQuery('#admin');
-        return {
+        var result = {
             order: orderBy,
             search: admin.find('input[name="search"]').val().trim(),
             page: admin.find('input[name="page"]').val().trim(),
@@ -52,9 +52,15 @@ $(document).ready(function () {
             paid: admin.find('select[name="hasPaid"]').val().trim(),
             goals: admin.find('select[name="hasGoals"]').val().trim(),
             deadlines: admin.find('select[name="hasDeadlines"]').val().trim(),
-            plans: admin.find('select[name="hasPlans"]').val().trim(),
-            partners: admin.find('select[name="hasPartners"]').val().trim()
+            schedules: admin.find('select[name="hasSchedules"]').val().trim(),
+            partners: admin.find('select[name="hasPartners"]').val().trim(),
         };
+
+        for(var i = 1; i <= 17; i++) {
+            result['lesson' + i] = admin.find('select[name="lesson' + i + '"]').val().trim();
+        }
+
+        return result;
     }
 
     function loadResults() {
@@ -67,10 +73,16 @@ $(document).ready(function () {
         });
     }
 
-    body.on('keyup', '#admin input', function () {
+    body.on('keyup', '#admin input[name="search"], #admin input[name="page"]', function () {
         if(searchTimeout != null)
             clearTimeout(searchTimeout);
         searchTimeout = setTimeout(loadResults, 1000);
+    });
+
+    body.on('click', '#admin a[href="#edit-user"]', function (evt) {
+        evt.preventDefault();
+        var row = $(this).parents('tr');
+        row.removeClass('read-only').addClass('edit');
     });
 
     body.on('click', '#admin a[href="#confirm-remove-user"]', function (evt) {
@@ -78,8 +90,26 @@ $(document).ready(function () {
         var admin = $('#admin'),
             row = $(this).parents('tr'),
             userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
-        $('#remove-user-name').text(row.find('td').eq('3').text());
+        $('#remove-user-name').text(row.find('td').eq('3').find('a').first().text());
         $('#confirm-remove-user').data('userId', userId);
+    });
+
+    body.on('click', '#admin a[href="#confirm-cancel-user"]', function (evt) {
+        evt.preventDefault();
+        var admin = $('#admin'),
+            row = $(this).parents('tr'),
+            userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+        $('#cancel-user-name').text(row.find('td').eq('3').find('a').first().text());
+        $('#confirm-cancel-user').data('userId', userId);
+    });
+
+    body.on('click', '#admin a[href="#confirm-password-reset"]', function (evt) {
+        evt.preventDefault();
+        var admin = $('#admin'),
+            row = $(this).parents('tr'),
+            userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+        $('#reset-user-name').text(row.find('td').eq('3').find('a').first().text());
+        $('#confirm-password-reset').data('userId', userId);
     });
 
     body.on('click', 'a[href="#remove-user"]', function () {
@@ -92,6 +122,37 @@ $(document).ready(function () {
             data: data,
             success: loadContent
         });
+    });
+
+    body.on('click', 'a[href="#cancel-user"]', function () {
+        var data = getData();
+        data.userId = $('#confirm-cancel-user').data('userId');
+        $.ajax({
+            url: window.callbackPaths['cancel_user'],
+            type: 'POST',
+            dataType: 'text',
+            data: data,
+            success: loadContent
+        });
+    });
+
+    body.on('click', 'a[href="#reset-password"]', function () {
+        var data = getData();
+        data.userId = $('#confirm-password-reset').data('userId');
+        $.ajax({
+            url: window.callbackPaths['reset_user'],
+            type: 'POST',
+            dataType: 'text',
+            data: data,
+            success: loadContent
+        });
+    });
+
+    body.on('click', '#admin a[href="#all"], #admin a[href="#courses"], #admin a[href="#tools"]', function (evt) {
+        evt.preventDefault();
+        var admin = $('#admin');
+        admin.removeClass('all courses tools');
+        admin.addClass(this.hash.substr(1));
     });
 
     body.on('click', '#admin .paginate a', function (evt) {
@@ -113,7 +174,12 @@ $(document).ready(function () {
         searchTimeout = setTimeout(loadResults, 100);
     });
 
-    body.on('change', '#admin select, #admin input', function () {
+    body.on('click', '#admin .scroller tr.read-only', function () {
+        $(this).find('input[name="selected"]')
+            .prop('checked', !$(this).find('input[name="selected"]').prop('checked'));
+    });
+
+    body.on('change', '#admin select, #admin input[name="search"], #admin input[name="page"]', function () {
         var admin = jQuery('#admin');
 
         admin.find('select').each(function () {

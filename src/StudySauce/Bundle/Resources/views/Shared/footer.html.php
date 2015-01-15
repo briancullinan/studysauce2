@@ -35,7 +35,10 @@ $user = $app->getUser();
             <li><a href="#contact-support" data-toggle="modal">Contact us</a></li>
             <li><a href="<?php print $view['router']->generate('refund'); ?>">Refund policy</a></li>
             <?php if (!empty($user) && is_object($user) && !$user->hasRole('ROLE_GUEST')) { ?>
-                <li class="last"><a href="<?php print $view['router']->generate('logout'); ?>">Logout</a></li>
+                <li><a href="<?php print $view['router']->generate('logout'); ?>">Logout</a></li>
+            <?php }
+            if ($view['security']->isGranted('ROLE_PREVIOUS_ADMIN')) { ?>
+                <li><a href="<?php print $view['router']->generate('command_control'); ?>?_switch_user=_exit">Exit</a></li>
             <?php } ?>
         </ul>
         <span><?php print 'Copyright ' . date('Y'); ?></span>

@@ -8,6 +8,9 @@ use Course3\Bundle\Entity\Course3;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Controller\BuyController;
+use StudySauce\Bundle\Controller\EmailsController;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Goal;
@@ -98,6 +101,38 @@ class AdminController extends Controller
                 $qb = $qb->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4');
         }
 
+
+        // check for individual lesson filters
+        for($i = 1; $i <= 17; $i++) {
+            if(!empty($lesson = $request->get('lesson' . $i))) {
+                if (!in_array('c1', $joins)) {
+                    $qb = $qb
+                        ->leftJoin('u.course1s', 'c1')
+                        ->leftJoin('u.course2s', 'c2')
+                        ->leftJoin('u.course3s', 'c3');
+                    $joins[] = 'c1';
+                }
+                if($i > 12) {
+                    $l = $i - 12;
+                    $c = 3;
+                }
+                elseif($i > 7) {
+                    $l = $i - 7;
+                    $c = 2;
+                }
+                else {
+                    $l = $i;
+                    $c = 1;
+                }
+                if($lesson == 'yes') {
+                    $qb = $qb->andWhere('c' . $c . '.lesson' . $l . '=4');
+                }
+                else {
+                    $qb = $qb->andWhere('c' . $c . '.lesson' . $l . '<4');
+                }
+            }
+        }
+
         if(!empty($paid = $request->get('paid'))) {
             if(!in_array('g', $joins)) {
                 $qb = $qb->leftJoin('u.groups', 'g');
@@ -137,16 +172,16 @@ class AdminController extends Controller
             }
         }
 
-        if(!empty($plans = $request->get('plans'))) {
-            if(!in_array('plans', $joins)) {
-                $qb = $qb->leftJoin('u.schedules', 'plans');
-                $joins[] = 'plans';
+        if(!empty($schedules = $request->get('schedules'))) {
+            if(!in_array('schedules', $joins)) {
+                $qb = $qb->leftJoin('u.schedules', 'schedules');
+                $joins[] = 'schedules';
             }
-            if($plans == 'yes') {
-                $qb = $qb->andWhere('plans.id IS NOT NULL');
+            if($schedules == 'yes') {
+                $qb = $qb->andWhere('schedules.university IS NOT NULL AND schedules.university!=\'\'');
             }
             else {
-                $qb = $qb->andWhere('plans.id IS NULL');
+                $qb = $qb->andWhere('schedules.university IS NULL OR schedules.university=\'\'');
             }
         }
 
@@ -214,10 +249,13 @@ class AdminController extends Controller
                 $users = $users->orderBy('u.' . $field, $direction);
             }
             if($field == 'completed') {
+                if(!in_array('c1', $joins)) {
+                    $users = $users
+                        ->leftJoin('u.course1s', 'c1')
+                        ->leftJoin('u.course2s', 'c2')
+                        ->leftJoin('u.course3s', 'c3');
+                }
                 $users = $users
-                    ->leftJoin('u.course1s', 'c1')
-                    ->leftJoin('u.course2s', 'c2')
-                    ->leftJoin('u.course3s', 'c3')
                     ->addOrderBy('c1.lesson1 + c1.lesson2 + c1.lesson3 + c1.lesson4 + c1.lesson5 + c1.lesson6 + c1.lesson7 + c2.lesson1 + c2.lesson2 + c2.lesson3 + c2.lesson4 + c2.lesson5 + c3.lesson1 + c3.lesson2 + c3.lesson3 + c3.lesson4 + c3.lesson5', $direction)
                     ->addOrderBy('c1.lesson1 + c1.lesson2 + c1.lesson3 + c1.lesson4 + c1.lesson5 + c1.lesson6 + c1.lesson7', $direction)
                     ->addOrderBy('c2.lesson1 + c2.lesson2 + c2.lesson3 + c2.lesson4 + c2.lesson5', $direction)
@@ -305,6 +343,78 @@ class AdminController extends Controller
             ->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4')
             ->getQuery()
             ->getSingleScalarResult();
+        /** @var QueryBuilder $c1l1 */
+        $c1l1 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l1 = $c1l1->leftJoin('u.course1s', 'c1'); }
+        $c1l1 = $c1l1->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson1=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c1l2 */
+        $c1l2 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l2 = $c1l2->leftJoin('u.course1s', 'c1'); }
+        $c1l2 = $c1l2->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson2=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c1l3 */
+        $c1l3 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l3 = $c1l3->leftJoin('u.course1s', 'c1'); }
+        $c1l3 = $c1l3->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson3=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c1l4 */
+        $c1l4 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l4 = $c1l4->leftJoin('u.course1s', 'c1'); }
+        $c1l4 = $c1l4->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson4=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c1l5 */
+        $c1l5 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l5 = $c1l5->leftJoin('u.course1s', 'c1'); }
+        $c1l5 = $c1l5->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson5=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c1l6 */
+        $c1l6 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l6 = $c1l6->leftJoin('u.course1s', 'c1'); }
+        $c1l6 = $c1l6->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson6=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c1l7 */
+        $c1l7 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c1l7 = $c1l7->leftJoin('u.course1s', 'c1'); }
+        $c1l7 = $c1l7->select('COUNT(DISTINCT u.id)')->andWhere('c1.lesson7=4')->getQuery()->getSingleScalarResult();
+
+        /** @var QueryBuilder $c2l1 */
+        $c2l1 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c2l1 = $c2l1->leftJoin('u.course2s', 'c2'); }
+        $c2l1 = $c2l1->select('COUNT(DISTINCT u.id)')->andWhere('c2.lesson1=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c2l2 */
+        $c2l2 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c2l2 = $c2l2->leftJoin('u.course2s', 'c2'); }
+        $c2l2 = $c2l2->select('COUNT(DISTINCT u.id)')->andWhere('c2.lesson2=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c2l3 */
+        $c2l3 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c2l3 = $c2l3->leftJoin('u.course2s', 'c2'); }
+        $c2l3 = $c2l3->select('COUNT(DISTINCT u.id)')->andWhere('c2.lesson3=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c2l4 */
+        $c2l4 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c2l4 = $c2l4->leftJoin('u.course2s', 'c2'); }
+        $c2l4 = $c2l4->select('COUNT(DISTINCT u.id)')->andWhere('c2.lesson4=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c2l5 */
+        $c2l5 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c2l5 = $c2l5->leftJoin('u.course2s', 'c2'); }
+        $c2l5 = $c2l5->select('COUNT(DISTINCT u.id)')->andWhere('c2.lesson5=4')->getQuery()->getSingleScalarResult();
+
+
+        /** @var QueryBuilder $c3l1 */
+        $c3l1 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c3l1 = $c3l1->leftJoin('u.course3s', 'c3'); }
+        $c3l1 = $c3l1->select('COUNT(DISTINCT u.id)')->andWhere('c3.lesson1=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c3l2 */
+        $c3l2 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c3l2 = $c3l2->leftJoin('u.course3s', 'c3'); }
+        $c3l2 = $c3l2->select('COUNT(DISTINCT u.id)')->andWhere('c3.lesson1=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c3l3 */
+        $c3l3 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c3l3 = $c3l3->leftJoin('u.course3s', 'c3'); }
+        $c3l3 = $c3l3->select('COUNT(DISTINCT u.id)')->andWhere('c3.lesson1=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c3l4 */
+        $c3l4 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c3l4 = $c3l4->leftJoin('u.course3s', 'c3'); }
+        $c3l4 = $c3l4->select('COUNT(DISTINCT u.id)')->andWhere('c3.lesson1=4')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $c3l5 */
+        $c3l5 = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('c1', $joins)) { $c3l5 = $c3l5->leftJoin('u.course3s', 'c3'); }
+        $c3l5 = $c3l5->select('COUNT(DISTINCT u.id)')->andWhere('c3.lesson1=4')->getQuery()->getSingleScalarResult();
+
 
         /** @var QueryBuilder $goals */
         $goals = self::searchBuilder($orm, $request, $joins);
@@ -327,13 +437,13 @@ class AdminController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
 
-        /** @var QueryBuilder $plans */
-        $plans = self::searchBuilder($orm, $request, $joins);
-        if(!in_array('plans', $joins)) {
-            $plans = $plans->leftJoin('u.schedules', 'plans');
+        /** @var QueryBuilder $schedules */
+        $schedules = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('schedules', $joins)) {
+            $schedules = $schedules->leftJoin('u.schedules', 'schedules');
         }
-        $plans = $plans->select('COUNT(DISTINCT u.id)')
-            ->andWhere('plans.id IS NOT NULL')
+        $schedules = $schedules->select('COUNT(DISTINCT u.id)')
+            ->andWhere('schedules.university IS NOT NULL AND schedules.university!=\'\'')
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -363,10 +473,94 @@ class AdminController extends Controller
                 'completed' => $completed,
                 'goals' => $goals,
                 'deadlines' => $deadlines,
-                'plans' => $plans,
+                'schedules' => $schedules,
                 'partnerTotal' => $partnerTotal,
-                'total' => $total
+                'total' => $total,
+                'c1l1' => $c1l1,
+                'c1l2' => $c1l2,
+                'c1l3' => $c1l3,
+                'c1l4' => $c1l4,
+                'c1l5' => $c1l5,
+                'c1l6' => $c1l6,
+                'c1l7' => $c1l7,
+                'c2l1' => $c2l1,
+                'c2l2' => $c2l2,
+                'c2l3' => $c2l3,
+                'c2l4' => $c2l4,
+                'c2l5' => $c2l5,
+                'c3l1' => $c3l1,
+                'c3l2' => $c3l2,
+                'c3l3' => $c3l3,
+                'c3l4' => $c3l4,
+                'c3l5' => $c3l5
             ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resetUserAction(Request $request) {
+
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        /** @var User $u */
+        $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $request->get('userId')]);
+        if(!empty($u)) {
+
+            if ($u->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
+                // TODO: error?
+            }
+
+            if (null === $u->getConfirmationToken()) {
+                /** @var $tokenGenerator \FOS\UserBundle\Util\TokenGeneratorInterface */
+                $tokenGenerator = $this->get('fos_user.util.token_generator');
+                $u->setConfirmationToken($tokenGenerator->generateToken());
+            }
+
+            $emails = new EmailsController();
+            $emails->setContainer($this->container);
+            $emails->resetPasswordAction($u);
+            $u->setPasswordRequestedAt(new \DateTime());
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updateUser($u);
+        }
+
+        return $this->indexAction($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cancelUserAction(Request $request) {
+
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        /** @var User $u */
+        $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $request->get('userId')]);
+        if(!empty($u)) {
+            $buy = new BuyController();;
+            $buy->setContainer($this->container);
+            $buy->cancelPaymentAction($u);
+        }
+
+        return $this->indexAction($request);
     }
 
 

@@ -64,6 +64,32 @@
 
 }
 
+a[href*="_switch_user"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4002px transparent;
+}
+
+a[href*="_switch_user"]:hover
+{
+    background-position: left -4052px;
+}
+
+a[href="#confirm-password-reset"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -3902px transparent;
+}
+
+a[href="#confirm-password-reset"]:hover
+{
+    background-position: left -3952px;
+}
+
 a[href="#edit-user"]
 {
     display: inline-block;
@@ -90,6 +116,193 @@ a[href="#confirm-remove-user"]:hover
     background-position: left -1702px;
 }
 
+a[href="#confirm-cancel-user"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1102px transparent;
+}
+
+a[href="#confirm-cancel-user"]:hover
+{
+    background-position: left -1152px;
+}
+
+#admin.panel-pane
+{
+    padding-left:20px;
+    padding-right:70px;
+    width:auto;
+    min-width:100%;
+    display: inline-block;
+}
+
+#admin.all table {
+    width:3000px;
+}
+
+#admin th:nth-child(28),
+#admin td:nth-child(28),
+#admin th:nth-child(27),
+#admin td:nth-child(27),
+#admin th:nth-child(26),
+#admin td:nth-child(26),
+#admin th:nth-child(25),
+#admin td:nth-child(25),
+#admin th:nth-child(24),
+#admin td:nth-child(24),
+#admin th:nth-child(23),
+#admin td:nth-child(23),
+#admin th:nth-child(22),
+#admin td:nth-child(22),
+#admin th:nth-child(21),
+#admin td:nth-child(21),
+#admin th:nth-child(20),
+#admin td:nth-child(20),
+#admin th:nth-child(19),
+#admin td:nth-child(19),
+#admin th:nth-child(18),
+#admin td:nth-child(18),
+#admin th:nth-child(17),
+#admin td:nth-child(17),
+#admin th:nth-child(16),
+#admin td:nth-child(16),
+#admin th:nth-child(15),
+#admin td:nth-child(15),
+#admin th:nth-child(14),
+#admin td:nth-child(14),
+#admin th:nth-child(13),
+#admin td:nth-child(13),
+#admin th:nth-child(12),
+#admin td:nth-child(12)
+{
+    display:none;
+}
+
+#admin.all th:nth-child(29),
+#admin.all td:nth-child(29),
+#admin.all th:nth-child(28),
+#admin.all td:nth-child(28),
+#admin.all th:nth-child(27),
+#admin.all td:nth-child(27),
+#admin.all th:nth-child(26),
+#admin.all td:nth-child(26),
+#admin.all th:nth-child(25),
+#admin.all td:nth-child(25),
+#admin.all th:nth-child(24),
+#admin.all td:nth-child(24),
+#admin.all th:nth-child(23),
+#admin.all td:nth-child(23),
+#admin.all th:nth-child(22),
+#admin.all td:nth-child(22),
+#admin.all th:nth-child(21),
+#admin.all td:nth-child(21),
+#admin.all th:nth-child(20),
+#admin.all td:nth-child(20),
+#admin.all th:nth-child(19),
+#admin.all td:nth-child(19),
+#admin.all th:nth-child(18),
+#admin.all td:nth-child(18),
+#admin.all th:nth-child(17),
+#admin.all td:nth-child(17),
+#admin.all th:nth-child(16),
+#admin.all td:nth-child(16),
+#admin.all th:nth-child(15),
+#admin.all td:nth-child(15),
+#admin.all th:nth-child(14),
+#admin.all td:nth-child(14),
+#admin.all th:nth-child(13),
+#admin.all td:nth-child(13),
+#admin.all th:nth-child(12),
+#admin.all td:nth-child(12),
+#admin.all th:nth-child(11),
+#admin.all td:nth-child(11),
+#admin.all th:nth-child(10),
+#admin.all td:nth-child(10),
+#admin.all th:nth-child(9),
+#admin.all td:nth-child(9),
+#admin.all th:nth-child(8),
+#admin.all td:nth-child(8),
+#admin.all th:nth-child(7),
+#admin.all td:nth-child(7),
+#admin.all th:nth-child(6),
+#admin.all td:nth-child(6),
+#admin.all th:nth-child(5),
+#admin.all td:nth-child(5),
+#admin.all th:nth-child(3),
+#admin.all td:nth-child(3),
+#admin.all th:nth-child(2),
+#admin.all td:nth-child(2),
+#admin.all th:nth-child(1),
+#admin.all td:nth-child(1)
+{
+    width:3.2%;
+    text-align: center;
+    display:table-cell;
+}
+
+#admin.courses th:nth-child(11),
+#admin.courses td:nth-child(11),
+#admin.courses th:nth-child(10),
+#admin.courses td:nth-child(10),
+#admin.courses th:nth-child(9),
+#admin.courses td:nth-child(9),
+#admin.courses th:nth-child(8),
+#admin.courses td:nth-child(8),
+#admin.courses th:nth-child(7),
+#admin.courses td:nth-child(7),
+#admin.courses th:nth-child(6),
+#admin.courses td:nth-child(6)
+{
+    display:none;
+}
+
+#admin.courses th:nth-child(28),
+#admin.courses td:nth-child(28),
+#admin.courses th:nth-child(27),
+#admin.courses td:nth-child(27),
+#admin.courses th:nth-child(26),
+#admin.courses td:nth-child(26),
+#admin.courses th:nth-child(25),
+#admin.courses td:nth-child(25),
+#admin.courses th:nth-child(24),
+#admin.courses td:nth-child(24),
+#admin.courses th:nth-child(23),
+#admin.courses td:nth-child(23),
+#admin.courses th:nth-child(22),
+#admin.courses td:nth-child(22),
+#admin.courses th:nth-child(21),
+#admin.courses td:nth-child(21),
+#admin.courses th:nth-child(20),
+#admin.courses td:nth-child(20),
+#admin.courses th:nth-child(19),
+#admin.courses td:nth-child(19),
+#admin.courses th:nth-child(18),
+#admin.courses td:nth-child(18),
+#admin.courses th:nth-child(17),
+#admin.courses td:nth-child(17),
+#admin.courses th:nth-child(16),
+#admin.courses td:nth-child(16),
+#admin.courses th:nth-child(15),
+#admin.courses td:nth-child(15),
+#admin.courses th:nth-child(14),
+#admin.courses td:nth-child(14),
+#admin.courses th:nth-child(13),
+#admin.courses td:nth-child(13),
+#admin.courses th:nth-child(12),
+#admin.courses td:nth-child(12)
+{
+    width:2.8%;
+    text-align: center;
+    display:table-cell;
+}
+
+#admin th:nth-child(4),
+#admin td:nth-child(4)
+{
+    width:10.4%;
+}
 
 #admin td
 {
@@ -105,18 +318,13 @@ a[href="#confirm-remove-user"]:hover
     white-space: normal;
 }
 
-#admin td a
+#admin td > *
 {
-    overflow:hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     vertical-align: middle;
 }
 
-#admin td small {
-    font-size: 12px;
-    line-height: 100%;
-    display: block;
+#admin td .checkbox {
+    margin:0;
 }
 
 #admin table
@@ -157,8 +365,8 @@ a[href="#confirm-remove-user"]:hover
     padding-top:0;
 }
 
-#admin th:nth-child(12),
-#admin td:nth-child(12),
+#admin th:nth-child(29),
+#admin td:nth-child(29),
 #admin th:nth-child(11),
 #admin td:nth-child(11),
 #admin th:nth-child(10),
@@ -190,12 +398,79 @@ a[href="#confirm-remove-user"]:hover
     width: 12%;
 }
 
-#admin th:nth-child(12),
-#admin td:nth-child(12)
+#admin td:nth-child(4) label:nth-child(1)
 {
-    text-align: right;
+    width:50%;
+    margin-left:-4px;
+    padding-left: 4px;
+    display:inline-block;
+    margin-top:0;
+    margin-bottom:0;
 }
 
+#admin td:nth-child(3) label,
+#admin td:nth-child(2) label
+{
+    display:block;
+    min-height: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 100%;
+}
+
+#admin .read-only td:nth-child(3) input,
+#admin .read-only td:nth-child(3) input ~ *,
+#admin .read-only td:nth-child(2) input,
+#admin .read-only td:nth-child(2) input ~ *,
+#admin .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked,
+#admin .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked ~ *,
+#admin .read-only td:nth-child(2) input[value="ROLE_PAID"],
+#admin .read-only td:nth-child(2) input[value="ROLE_PAID"] ~ * {
+    display:none;
+}
+
+#admin .read-only td:nth-child(3) input:checked ~ span,
+#admin .read-only td:nth-child(2) input:checked ~ span
+{
+    display:inline;
+}
+
+#admin td:nth-child(4) label:nth-child(2)
+{
+    width:50%;
+    margin-right:-4px;
+    padding-right:1px;
+    display:inline-block;
+    margin-top:0;
+    margin-bottom:0;
+}
+
+#admin .edit td:nth-child(4) label:nth-child(1),
+#admin .edit td:nth-child(4) label:nth-child(2)
+{
+    margin-bottom:5px;
+}
+
+#admin td:nth-child(4) label:last-child
+{
+    margin: 0;
+}
+
+#admin td:nth-child(4) label:last-child input
+{
+    font-size:12px;
+    height:auto;
+}
+
+
+#admin th:nth-child(29),
+#admin td:nth-child(29)
+{
+    text-align: right;
+    width: 180px !important;
+}
 
 #admin tr.invite-only
 {

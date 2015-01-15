@@ -15,7 +15,7 @@ a[href$="/redirect/google"]
     width:150px;
     border-bottom-color:#771100;
     color: #ffffff;
-    background:url("../images/menu_new.png") no-repeat left -5500px #DD4433;
+    background:url("../images/menu_new_compressed.png") no-repeat left -5500px #DD4433;
     padding-left:30px;
 }
 
@@ -31,7 +31,7 @@ a[href$="/redirect/facebook"]
     width:150px;
     border-bottom-color:#224477;
     color: #ffffff;
-    background:url("../images/menu_new.png") no-repeat left -5400px #5577AA;
+    background:url("../images/menu_new_compressed.png") no-repeat left -5400px #5577AA;
     padding-left:30px;
 }
 

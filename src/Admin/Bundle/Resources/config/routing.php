@@ -39,4 +39,32 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'cancel_user',
+    new Route(
+        '/command/cancel/user',
+        ['_controller' => 'AdminBundle:Admin:cancelUser', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'reset_user',
+    new Route(
+        '/command/reset/user',
+        ['_controller' => 'AdminBundle:Admin:resetUser', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
 return $collection;
