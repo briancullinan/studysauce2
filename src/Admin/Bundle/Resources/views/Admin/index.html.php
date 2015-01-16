@@ -227,7 +227,7 @@ $view['slots']->start('body'); ?>
                         <label class="input"><input type="text" name="email" value="<?php print $u->getEmail(); ?>" placeholder="Email" /></label>
                     </td>
                     <td><?php print $u->getCompleted(); ?>%</td>
-                    <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M'); ?></td>
+                    <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M y'); ?></td>
                     <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>
                     <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
                     <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>

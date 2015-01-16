@@ -53,7 +53,9 @@ $(document).ready(function () {
             goals: admin.find('select[name="hasGoals"]').val().trim(),
             deadlines: admin.find('select[name="hasDeadlines"]').val().trim(),
             schedules: admin.find('select[name="hasSchedules"]').val().trim(),
-            partners: admin.find('select[name="hasPartners"]').val().trim()
+            partners: admin.find('select[name="hasPartners"]').val().trim(),
+            lastLogin: admin.find('input[name="lastLogin"]').val().trim(),
+            created: admin.find('input[name="created"]').val().trim()
         };
 
         for(var i = 1; i <= 17; i++) {
@@ -235,8 +237,8 @@ $(document).ready(function () {
                         .insertBefore($(this).find('.ui-datepicker-header'))
                         .on('click', function (evt) {
                             evt.preventDefault();
-                            cur = that.datepicker('option', 'maxDate');
-                            prv = that.datepicker('option', 'minDate');
+                            cur = -1;
+                            prv = -1;
                             that.prev().find('input').val('').trigger('change');
                             that.hide();
                         });
@@ -252,6 +254,7 @@ $(document).ready(function () {
                             var d1 = $.datepicker.formatDate( 'mm/dd/y', new Date(Math.min(prv,cur)), {}),
                                 d2 = $.datepicker.formatDate( 'mm/dd/y', new Date(Math.max(prv,cur)), {} );
                             that.prev().find('input').val( d1+' - '+d2 ).trigger('change');
+                            debugger;
                             that.hide();
                         });
                     $('<a href="#week">This Week</a>')
@@ -453,7 +456,7 @@ $(document).ready(function () {
             .prop('checked', !$(this).find('input[name="selected"]').prop('checked'));
     });
 
-    body.on('change', '#admin table.results > thead > tr > th > label > select, #admin > thead > tr > th > label > input', function () {
+    body.on('change', '#admin table.results > thead > tr > th > label > select, #admin table.results > thead > tr > th > label > input', function () {
         var admin = jQuery('#admin'),
             that = $(this);
 

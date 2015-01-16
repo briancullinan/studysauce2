@@ -496,11 +496,6 @@ input[type=month],
     display:none;
 }
 
-textarea
-{
-    height:8em;
-}
-
 .ui-datepicker table
 {
     margin:0;
@@ -695,6 +690,13 @@ input[type=month][disabled]
     pointer-events:none;
     padding:0;
     resize: none;
+    height: auto;
+}
+
+.read-only textarea,
+textarea
+{
+    height:8em;
 }
 
 .read-only .radio,

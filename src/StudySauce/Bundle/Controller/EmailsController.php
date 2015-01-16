@@ -511,6 +511,43 @@ class EmailsController extends Controller
 
     /**
      * @param User $user
+     * @param $message
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contactMessageAction(User $user = null, ContactMessage $message)
+    {
+        if($user == null)
+            $user = $this->getUser();
+
+        $subject = 'Contact Us: From ' . $message->getName();
+
+        /** @var \Swift_Mime_SimpleMessage $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo('admin@studysauce.com')
+            ->setBody(
+                $this->renderView(
+                    'StudySauceBundle:Emails:contact-message.html.php',
+                    [
+                        'link' => '&nbsp;',
+                        'user' => $user,
+                        'message' => $message
+                    ]
+                ),
+                'text/html'
+            );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+                        'category' => ['contact-message']])));
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
      * @param $properties
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -530,10 +567,6 @@ class EmailsController extends Controller
             }
             elseif ($properties instanceof \Exception) {
                 $subject = 'Error: ' . get_class($properties);
-            }
-            // TODO: separate out contact message
-            elseif ($properties instanceof ContactMessage) {
-                $subject = 'Contact Us: From ' . $properties->getName();
             }
             else {
                 $subject = 'Message Type: ' . get_class($properties);
@@ -567,7 +600,6 @@ class EmailsController extends Controller
                         'category' => ['administrator']])));
 
         /** @var \Swift_Transport_EsmtpTransport $transport */
-        // TODO: skip this if sending a contact message so sendgrid allows us to reply directly
         $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
             ->setUsername('brian@studysauce.com')
             ->setPassword('Da1ddy23');

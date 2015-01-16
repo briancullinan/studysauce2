@@ -4,7 +4,7 @@
         <ul class="slides clearfix">
             <li class="clone">
                 <div class="highlighted-link">
-                    <p><a class="more" href="<?php print $view['router']->generate('register'); ?>">Sign up for free</a><br /><span>or </span><a href="<?php print $view['router']->generate('login'); ?>">Sign in</a></p>
+                    <p><a class="more" href="<?php print $view['router']->generate('register'); ?>">Get the Deal</a><br /><span>or </span><a href="<?php print $view['router']->generate('login'); ?>">Sign in</a></p>
                 </div>
                 <div class="player-divider">
                     <div class="player-wrapper">
@@ -24,6 +24,6 @@
         <div class="one"><h3><span>1</span>Broke? &nbsp; Get sponsored.</h3></div>
         <div class="two"><h3><span>2</span>Buy now at 75% off</h3></div>
         <div class="one"><a class="more" href="#bill-parents" data-toggle="modal">Ask your parents</a></div>
-        <div class="two highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Checkout</a></div>
+        <div class="two highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Get the Deal</a></div>
     </div>
 </div>

@@ -52,6 +52,18 @@ class AdminController extends Controller
             self::$paidStr = implode(', ', array_map(function ($x) { return $x['id']; }, $paidGroups));
         }
 
+        if(!empty($lastLogin = $request->get('lastLogin'))) {
+            $start = new \DateTime(explode(' - ', $lastLogin)[0]);
+            $end = new \DateTime(explode(' - ', $lastLogin)[1]);
+            $qb = $qb->andWhere('u.lastLogin >= \'' . $start->format('Y-m-d 00:00:00') . '\' AND u.lastLogin <= \'' . $end->format('Y-m-d 23:59:59') . '\'');
+        }
+
+        if(!empty($created = $request->get('created'))) {
+            $start = new \DateTime(explode(' - ', $created)[0]);
+            $end = new \DateTime(explode(' - ', $created)[1]);
+            $qb = $qb->andWhere('u.created >= \'' . $start->format('Y-m-d 00:00:00') . '\' AND u.created <= \'' . $end->format('Y-m-d 23:59:59') . '\'');
+        }
+
         if(!empty($search = $request->get('search'))) {
             if(strpos($search, '%') === false) {
                 $search = '%' . $search . '%';

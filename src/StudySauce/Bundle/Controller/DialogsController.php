@@ -69,7 +69,7 @@ class DialogsController extends Controller
 
         $email = new EmailsController();
         $email->setContainer($this->container);
-        $email->administratorAction($user, $contact);
+        $email->contactMessageAction($user, $contact);
 
         return new JsonResponse(true);
     }

@@ -1,3 +1,7 @@
+#admin .pane-content
+{
+    min-height: 800px;
+}
 
 #admin .search {
     display:inline-block;
@@ -385,6 +389,7 @@
 #admin table.results > tbody > tr > td > *
 {
     vertical-align: middle;
+    line-height: 100%;
 }
 
 #group-manager td .checkbox,
@@ -449,7 +454,8 @@
     vertical-align: bottom;
 }
 
-#admin th.filtered select
+#admin table.results > thead > tr > th.filtered > label > input,
+#admin table.results > thead > tr > th.filtered > label > select
 {
     border:3px solid #FF9900;
     padding-top:0;

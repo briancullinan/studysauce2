@@ -43,7 +43,7 @@ $view['slots']->start('body');
 echo $view->render('TorchAndLaurelBundle:Landing:video.html.php');
 echo $view->render('TorchAndLaurelBundle:Landing:scr.html.php');
 echo $view->render('StudySauceBundle:Landing:banner.html.php');
-echo $view->render('StudySauceBundle:Landing:features.html.php');
+echo $view->render('TorchAndLaurelBundle:Landing:features.html.php');
 echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();
 
