@@ -27,6 +27,6 @@
             <h3><span>We make becoming a great studier easy</span></h3>
             <p>We have studied the best scientific research and have incorporated the findings into our site.  Study Sauce automatically detects good and bad study behaviors and teaches you by simply logging in when you study.  You are already putting in the time, use it effectively!  Become a great studier and improve your retention, performance, and your grades.</p>
         </div>
-        <p class="highlighted-link"><a class="more" href="<?php print $view['router']->generate('register'); ?>">Get the Deal</a></p>
+        <p class="highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Get the Deal</a></p>
     </div>
 </div>

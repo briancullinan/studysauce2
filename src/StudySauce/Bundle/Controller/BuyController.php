@@ -314,9 +314,7 @@ class BuyController extends Controller
             // only set up reoccurring if the term is greater than zero
             if($request->get('reoccurs') != 'custom' || (isset($options['term']) && $options['term'] > 0)) {
                 $subscription = new \AuthorizeNet_Subscription();
-                $subscription->name = 'Study Sauce ' . ($request->get(
-                        'reoccurs'
-                    ) == 'yearly' ? 'Monthly' : 'Yearly') . ' Plan';
+                $subscription->name = 'Study Sauce ' . ($request->get('reoccurs') == 'yearly' ? 'Yearly' : 'Monthly') . ' Plan';
                 $subscription->intervalLength = $request->get('reoccurs') == 'custom' && isset($options['term'])
                     ? $options['term']
                     : ($request->get('reoccurs') == 'yearly' ? '12' : '1');

@@ -39,5 +39,5 @@
             <?php endforeach; ?>Still have questions? <span class="reveal">Talk to a study tutor.</span></a>
     </h3>
 
-    <p class="highlighted-link"><a class="more" href="<?php print $view['router']->generate('register'); ?>">Get the Deal</a></p>
+    <p class="highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Get the Deal</a></p>
 </div>
