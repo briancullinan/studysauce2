@@ -53,16 +53,14 @@ $view['slots']->start('body'); ?>
                 <label class="input"><input name="page" type="text" value="1" /> / <span id="page-total"><?php print ceil($total / 25); ?></span></label>
                 <a href="?page=next">&gt;</a> <a href="?page=last">&gt;&gt;</a>
             </div>
-            <table class="<?php print ($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count(
-            ) > 1 ? 'master' : ''); ?>">
+            <table class="results">
                 <thead>
                 <tr>
-                    <th><label><span>Visitors: <?php print $visitors; ?></span><br />
-                        <select name="lastLogin">
-                            <option value="">Date</option>
-                            <option value="_ascending">Ascending (Then-Now)</option>
-                            <option value="_descending">Descending (Now-Then)</option>
-                        </select></label></th>
+                    <th><label class="input">
+                            <span><a href="#add-user" data-toggle="modal">Add User</a></span><br />
+                            <span>Visitors: <?php print $visitors; ?></span><br />
+                            <input type="text" name="lastLogin" value="" placeholder="All Visits" />
+                        </label><div></div></th>
                     <th><label><span>Parents: <?php print $parents; ?></span><br />
                             <span>Partners: <?php print $partners; ?></span><br />
                             <span>Students: <?php print $students; ?></span><br />
@@ -79,7 +77,9 @@ $view['slots']->start('body'); ?>
                             <option value="ROLE_STUDENT">STUDENT</option>
                             <option value="ROLE_MASTER_ADVISER">MASTER_ADVISER</option>
                         </select></label></th>
-                    <th><label><span>TAL: <?php print count($users); ?></span><br />
+                    <th><label>
+                            <span><a href="#group-manager" data-toggle="modal">Manage</a></span><br />
+                            <span>TAL: <?php print count($users); ?></span><br />
                             <span>CSA: <?php print count($users); ?></span><br />
                         <select name="group">
                             <option value="">Group</option>
@@ -89,6 +89,7 @@ $view['slots']->start('body'); ?>
                                 /** @var Group $g */
                                 ?><option value="<?php print $g->getId(); ?>"><?php print $g->getName(); ?></option><?php
                             } ?>
+                            <option value="nogroup">No Groups</option>
                         </select></label></th>
                     <th><label><span>Total: <?php print $total; ?></span><br />
                         <select name="last">
@@ -135,12 +136,9 @@ $view['slots']->start('body'); ?>
                             <option value="2,3">2 &amp; 3</option>
                             <option value="1,2,3">Completed</option>
                         </select></label></th>
-                    <th><label><span>Sign Ups: <?php print $signups; ?></span><br />
-                        <select name="created">
-                            <option value="">Sign Up Date</option>
-                            <option value="_ascending">Ascending (Then-Now)</option>
-                            <option value="_descending">Descending (Now-Then)</option>
-                        </select></label></th>
+                    <th><label class="input"><span>Sign Ups: <?php print $signups; ?></span><br />
+                            <input type="text" name="created" value="" placeholder="All Sign Ups" />
+                        </label><div></div></th>
                     <th><label><span>Paid: <?php print $paid; ?></span><br />
                         <select name="hasPaid">
                             <option value="">Paid</option>
@@ -199,75 +197,73 @@ $view['slots']->start('body'); ?>
                             </select></label></th>
                 </tr>
                 </thead>
-            </table>
-            <div class="scroller">
-                <table>
-                    <tbody>
-                    <?php foreach ($users as $i => $u) {
-                        /** @var User $u */
+                <tbody>
+                <?php foreach ($users as $i => $u) {
+                    /** @var User $u */
 
-                        ?>
-                        <tr class="user-id-<?php print $u->getId(); ?> read-only status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
-                        <td data-timestamp="<?php print (empty($u->getLastLogin())
-                            ? $u->getCreated()->getTimestamp()
-                            : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin())
-                                ? $u->getCreated()->format('j M')
-                                : $u->getLastLogin()->format('j M')); ?></td>
-                        <td>
-                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PAID" <?php print ($u->hasRole('ROLE_PAID') ? 'checked="checked"' : ''); ?> /><i></i><span>PAID</span></label>
-                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADMIN" <?php print ($u->hasRole('ROLE_ADMIN') ? 'checked="checked"' : ''); ?> /><i></i><span>ADMIN</span></label>
-                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARENT" <?php print ($u->hasRole('ROLE_PARENT') ? 'checked="checked"' : ''); ?> /><i></i><span>PARENT</span></label>
-                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARTNER" <?php print ($u->hasRole('ROLE_PARTNER') ? 'checked="checked"' : ''); ?> /><i></i><span>PARTNER</span></label>
-                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADVISER" <?php print ($u->hasRole('ROLE_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>ADVISER</span></label>
-                            <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_MASTER_ADVISER" <?php print ($u->hasRole('ROLE_MASTER_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>MASTER_ADVISER</span></label>
-                        </td>
-                        <td>
-                            <?php foreach($groups as $i => $g) { ?>
-                                <label class="checkbox"><input type="checkbox" name="groups" value="<?php print $g->getId(); ?>" <?php print ($u->hasGroup($g->getName()) ? 'checked="checked"' : ''); ?> /><i></i><span><?php print $g->getName(); ?></span></label>
-                            <?php } ?>
-                        </td>
-                        <td>
-                            <label class="input"><input type="text" name="first-name" value="<?php print $u->getFirst(); ?>" placeholder="First name" /></label>
-                            <label class="input"><input type="text" name="last-name" value="<?php print $u->getLast(); ?>" placeholder="Last name" /></label>
-                            <label class="input"><input type="text" name="email" value="<?php print $u->getEmail(); ?>" placeholder="Email" /></label>
-                        </td>
-                        <td><?php print $u->getCompleted(); ?>%</td>
-                        <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M'); ?></td>
-                        <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson6() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson7() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
-                        <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
-                        <td>
-                            <a href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
-                            <a href="#confirm-password-reset" data-toggle="modal"></a>
-                            <a href="#confirm-cancel-user" data-toggle="modal"></a>
-                            <a href="#edit-user"></a>
-                            <a href="#confirm-remove-user" data-toggle="modal"></a>
-                            <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label>
-                        </td>
-                        </tr><?php
-                    } ?>
-                    </tbody>
-                </table>
-            </div>
+                    ?>
+                    <tr class="user-id-<?php print $u->getId(); ?> read-only status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
+                    <td data-timestamp="<?php print (empty($u->getLastLogin())
+                        ? $u->getCreated()->getTimestamp()
+                        : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin())
+                            ? $u->getCreated()->format('j M')
+                            : $u->getLastLogin()->format('j M')); ?></td>
+                    <td>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PAID" <?php print ($u->hasRole('ROLE_PAID') ? 'checked="checked"' : ''); ?> /><i></i><span>PAID</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADMIN" <?php print ($u->hasRole('ROLE_ADMIN') ? 'checked="checked"' : ''); ?> /><i></i><span>ADMIN</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARENT" <?php print ($u->hasRole('ROLE_PARENT') ? 'checked="checked"' : ''); ?> /><i></i><span>PARENT</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARTNER" <?php print ($u->hasRole('ROLE_PARTNER') ? 'checked="checked"' : ''); ?> /><i></i><span>PARTNER</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADVISER" <?php print ($u->hasRole('ROLE_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>ADVISER</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_MASTER_ADVISER" <?php print ($u->hasRole('ROLE_MASTER_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>MASTER_ADVISER</span></label>
+                    </td>
+                    <td>
+                        <?php foreach($groups as $i => $g) { ?>
+                            <label class="checkbox"><input type="checkbox" name="groups" value="<?php print $g->getId(); ?>" <?php print ($u->hasGroup($g->getName()) ? 'checked="checked"' : ''); ?> /><i></i><span><?php print $g->getName(); ?></span></label>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <label class="input"><input type="text" name="first-name" value="<?php print $u->getFirst(); ?>" placeholder="First name" /></label>
+                        <label class="input"><input type="text" name="last-name" value="<?php print $u->getLast(); ?>" placeholder="Last name" /></label>
+                        <label class="input"><input type="text" name="email" value="<?php print $u->getEmail(); ?>" placeholder="Email" /></label>
+                    </td>
+                    <td><?php print $u->getCompleted(); ?>%</td>
+                    <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format('j M'); ?></td>
+                    <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson6() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson7() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+                    <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+                    <td>
+                        <a href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
+                        <a href="#confirm-password-reset" data-toggle="modal"></a>
+                        <a href="#confirm-cancel-user" data-toggle="modal"></a>
+                        <a href="#edit-user"></a>
+                        <a href="#confirm-remove-user" data-toggle="modal"></a>
+                        <a href="#cancel-edit">Cancel</a>
+                        <a href="#save-user">Save</a>
+                        <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label>
+                    </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
         </div>
     </div>
 <?php $view['slots']->stop();
@@ -276,4 +272,6 @@ $view['slots']->start('sincludes');
 print $this->render('AdminBundle:Dialogs:confirm-remove-user.html.php', ['id' => 'confirm-remove-user']);
 print $this->render('AdminBundle:Dialogs:confirm-password-reset.html.php', ['id' => 'confirm-password-reset']);
 print $this->render('AdminBundle:Dialogs:confirm-cancel-user.html.php', ['id' => 'confirm-cancel-user']);
+print $this->render('AdminBundle:Dialogs:group-manager.html.php', ['id' => 'group-manager', 'groups' => $groups]);
+print $this->render('AdminBundle:Dialogs:add-user.html.php', ['id' => 'add-user']);
 $view['slots']->stop();

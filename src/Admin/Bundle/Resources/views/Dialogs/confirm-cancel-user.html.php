@@ -5,7 +5,7 @@ Are you sure you want to cancel <span id="cancel-user-name">this user</span>?
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<p>If you click yes, they will no longer be automatically billed and the PAID role with be removed.</p>
+<p>If you click yes, they will no longer be automatically billed and the PAID role will be removed.</p>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer'); ?>

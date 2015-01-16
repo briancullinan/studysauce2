@@ -123,6 +123,7 @@ class UserProvider extends BaseUserProvider
         $setter_token = $setter.'AccessToken';
         $user->$setter_token($response->getAccessToken());
         $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
+        $this->userManager->updateCanonicalFields($user);
         $user->setFirst($response->getFirst());
         $user->setLast($response->getLast());
 

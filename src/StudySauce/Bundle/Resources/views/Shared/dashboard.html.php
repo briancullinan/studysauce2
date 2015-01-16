@@ -70,7 +70,10 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->stop();
         $view['slots']->start('body');
         echo $view->render('StudySauceBundle:Shared:header.html.php');
-        echo $view->render('StudySauceBundle:Partner:menu.html.php');
+        if($app->getUser()->hasRole('ROLE_ADMIN'))
+            echo $view->render('AdminBundle:Admin:menu.html.php');
+        else
+            echo $view->render('StudySauceBundle:Partner:menu.html.php');
         $view['slots']->output('tmp-body');
         $view['slots']->stop();
     }

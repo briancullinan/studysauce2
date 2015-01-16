@@ -8,7 +8,11 @@ $collection = new RouteCollection();
 
 $collection->add(
     'command_control',
-    new Route('/command',['_controller' => 'AdminBundle:Admin:index', '_format' => 'adviser'])
+    new Route(
+        '/command',
+        ['_controller' => 'AdminBundle:Admin:index', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
+    )
 );
 
 $collection->add(
@@ -44,6 +48,48 @@ $collection->add(
     new Route(
         '/command/cancel/user',
         ['_controller' => 'AdminBundle:Admin:cancelUser', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'save_user',
+    new Route(
+        '/command/save/user',
+        ['_controller' => 'AdminBundle:Admin:saveUser', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'add_user',
+    new Route(
+        '/command/add/user',
+        ['_controller' => 'AdminBundle:Admin:addUser', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'save_group',
+    new Route(
+        '/command/save/group',
+        ['_controller' => 'AdminBundle:Admin:saveGroup', '_format' => 'tab'],
         [],
         [],
         '',

@@ -47,6 +47,8 @@ class AccountController extends Controller
      */
     public function updateAction(Request $request)
     {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
@@ -70,6 +72,7 @@ class AccountController extends Controller
                     $user->setPassword($password);
                 }
                 $user->setEmail($request->get('email'));
+                $userManager->updateCanonicalFields($user);
                 $orm->merge($user);
                 $orm->flush();
             }
@@ -187,7 +190,7 @@ class AccountController extends Controller
 
         if(empty($user))
             throw new AccessDeniedHttpException();
-        
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
@@ -230,9 +233,11 @@ class AccountController extends Controller
 
     /**
      * @param Request $request
+     * @param bool $login
+     * @param bool $email
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $login = true, $email = true)
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -249,14 +254,13 @@ class AccountController extends Controller
             /** @var $user User */
             $user = $userManager->createUser();
             $user->setUsername($request->get('email'));
-            $user->setUsernameCanonical($request->get('email'));
             $encoder_service = $this->get('security.encoder_factory');
             /** @var $encoder PasswordEncoderInterface */
             $encoder = $encoder_service->getEncoder($user);
             $password = $encoder->encodePassword($request->get('pass'), $user->getSalt());
             $user->setPassword($password);
             $user->setEmail($request->get('email'));
-            $user->setEmailCanonical($request->get('email'));
+            $userManager->updateCanonicalFields($user);
             $user->addRole('ROLE_USER');
             // assign user to partner
             InviteListener::setInviteRelationship($orm, $request, $user);
@@ -266,28 +270,36 @@ class AccountController extends Controller
             $orm->persist($user);
             $orm->flush();
 
-            $context = $this->get('security.context');
-            $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
-            $context->setToken($token);
-            $session = $request->getSession();
-            $session->set('_security_main', serialize($token));
+            // get the path the user should go to after logging in
             list($route, $options) = HomeController::getUserRedirect($user);
             $response = $this->redirect($this->generateUrl($route, $options));
 
-            /** @var LoginManager $loginManager */
-            $loginManager = $this->get('fos_user.security.login_manager');
-            $loginManager->loginUser('main', $user, $response);
+            if($login) {
+                $context = $this->get('security.context');
+                $token = new UsernamePasswordToken($user, $password, 'main', $user->getRoles());
+                $context->setToken($token);
+                $session = $request->getSession();
+                $session->set('_security_main', serialize($token));
 
-            // send welcome email
-            $email = new EmailsController();
-            $email->setContainer($this->container);
-            if($user->hasRole('ROLE_PARENT')) {
-
+                /** @var LoginManager $loginManager */
+                $loginManager = $this->get('fos_user.security.login_manager');
+                $loginManager->loginUser('main', $user, $response);
             }
-            else if($user->hasRole('ROLE_PARTNER'))
-                $email->welcomePartnerAction($user);
-            else
-                $email->welcomeStudentAction($user);
+
+            if($email) {
+                // send welcome email
+                $emails = new EmailsController();
+                $emails->setContainer($this->container);
+                if ($user->hasRole('ROLE_PARENT')) {
+
+                } else {
+                    if ($user->hasRole('ROLE_PARTNER')) {
+                        $emails->welcomePartnerAction($user);
+                    } else {
+                        $emails->welcomeStudentAction($user);
+                    }
+                }
+            }
 
             return $response;
         }

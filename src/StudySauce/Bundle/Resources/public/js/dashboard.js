@@ -219,10 +219,7 @@ $(document).ready(function () {
         {
             evt.preventDefault();
             if(window.callbackKeys[callback] == '_welcome') {
-                if(body.is('.adviser') || body.is('.partner'))
-                    path = window.callbackUri[window.callbackKeys.indexOf('userlist')];
-                else
-                    path = window.callbackUri[window.callbackKeys.indexOf('home')];
+                path = window.callbackUri[window.callbackKeys.indexOf('home')];
             }
             activateMenu.apply(this, [path]);
         }

@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
         if($(this).val().trim() != '')
             $('#reset').find('.form-actions').removeClass('invalid').addClass('valid');
     });
-    body.on('click', '#reset a[href="#save-password"]', function (evt) {
+    body.on('click', '#reset a[href="#reset-password"]', function (evt) {
         var account = jQuery('#reset');
         evt.preventDefault();
 

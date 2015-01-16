@@ -31,7 +31,7 @@ class Group extends BaseGroup implements GroupInterface
     protected $created;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups", fetch="EXTRA_LAZY")
      */
     protected $users;
 

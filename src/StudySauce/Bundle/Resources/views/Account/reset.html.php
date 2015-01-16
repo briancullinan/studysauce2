@@ -38,7 +38,7 @@ $view['slots']->start('body'); ?>
         <input type="hidden" name="token" value="<?php echo $token; ?>"/>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="form-actions highlighted-link invalid">
-            <a href="#save-password" class="more">Set password</a>
+            <a href="#reset-password" class="more">Set password</a>
         </div>
     </div>
 </div>

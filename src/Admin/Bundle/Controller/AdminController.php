@@ -9,11 +9,14 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Controller\AccountController;
 use StudySauce\Bundle\Controller\BuyController;
 use StudySauce\Bundle\Controller\EmailsController;
+use StudySauce\Bundle\Entity\Coupon;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Goal;
+use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -78,7 +81,12 @@ class AdminController extends Controller
                 $qb = $qb->leftJoin('u.groups', 'g');
                 $joins[] = 'g';
             }
-            $qb = $qb->andWhere('g.id=:gid')->setParameter('gid', intval($group));
+            if($group == 'nogroup') {
+                $qb = $qb->andWhere('g.id IS NULL');
+            }
+            else {
+                $qb = $qb->andWhere('g.id=:gid')->setParameter('gid', intval($group));
+            }
         }
 
         if(!empty($last = $request->get('last'))) {
@@ -270,8 +278,9 @@ class AdminController extends Controller
         $users = $users
             ->setFirstResult($resultOffset)
             ->setMaxResults(25)
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
+        $sql = $users->getSql();
+        $users = $users->getResult();
 
 
 
@@ -500,8 +509,160 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    public function addUserAction(Request $request)
+    {
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if (!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $account = new AccountController();
+        $account->setContainer($this->container);
+        $account->createAction($request, false, false);
+
+        return $this->indexAction($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function saveUserAction(Request $request) {
+
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        /** @var User $u */
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $request->get('userId')]);
+        if(!empty($u)) {
+
+            if(!empty($first = $request->get('firstName')))
+                $u->setFirst($first);
+            if(!empty($last = $request->get('lastName')))
+                $u->setLast($last);
+            if(!empty($email = $request->get('email'))) {
+                $u->setEmail($email);
+                $userManager->updateCanonicalFields($user);
+            }
+
+            // add new groups
+            $groups = $u->getGroups()->map(function (Group $g) {return $g->getId();})->toArray();
+            $newGroups = explode(',', $request->get('groups'));
+            // intersection with current groups is a removal, intersection with request is an addition
+            foreach(array_diff($groups, $newGroups) as $i => $id) {
+                $u->removeGroup($u->getGroups()->filter(function (Group $g) use ($id) {return $g->getId() == $id;})->first());
+            }
+            foreach(array_diff($newGroups, $groups) as $i => $id) {
+                /** @var Group $g */
+                $g = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['id' => $id]);
+                if(!empty($g))
+                    $u->addGroup($g);
+            }
+
+            // add new roles
+            $roles = $u->getRoles();
+            $newRoles = explode(',', $request->get('roles'));
+            // intersection with current groups is a removal, intersection with request is an addition
+            foreach(array_diff($roles, $newRoles) as $i => $role) {
+                $u->removeRole($role);
+            }
+            foreach(array_diff($newRoles, $roles) as $i => $role) {
+                $u->addRole($role);
+            }
+            $userManager->updateUser($u);
+        }
+
+        return $this->indexAction($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function saveGroupAction(Request $request) {
+
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        /** @var Group $g */
+        if(empty($request->get('groupId'))) {
+            $g = new Group();
+        }
+        else {
+            $g = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['id' => $request->get('groupId')]);
+        }
+
+        if(!empty($name = $request->get('groupName')))
+            $g->setName($name);
+        if(!empty($description = $request->get('description')))
+            $g->setDescription($description);
+
+        // add new roles
+        $roles = $g->getRoles();
+        $newRoles = explode(',', $request->get('roles'));
+        // intersection with current groups is a removal, intersection with request is an addition
+        foreach(array_diff($roles, $newRoles) as $i => $role) {
+            $g->removeRole($role);
+        }
+        foreach(array_diff($newRoles, $roles) as $i => $role) {
+            $g->addRole($role);
+        }
+
+        if(empty($g->getId()))
+            $orm->persist($g);
+        elseif($g->getName() == '_remove') {
+            // remove group from users
+            foreach($g->getUsers()->toArray() as $i => $u) {
+                /** @var User $u */
+                $u->removeGroup($g);
+                $g->removeUser($u);
+                $userManager->updateUser($u, false);
+            }
+            $invites = $orm->getRepository('StudySauceBundle:GroupInvite')->findBy(['group' => $request->get('groupId')]);
+            foreach($invites as $i => $in) {
+                $orm->remove($in);
+            }
+            $coupons = $orm->getRepository('StudySauceBundle:Coupon')->findBy(['group' => $request->get('groupId')]);
+            foreach($coupons as $i => $c) {
+                /** @var Coupon $c */
+                $c->setGroup(null);
+                $orm->merge($c);
+            }
+            $orm->remove($g);
+        }
+        else
+            $orm->merge($g);
+        $orm->flush();
+
+        return $this->indexAction($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function resetUserAction(Request $request) {
 
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
@@ -529,8 +690,6 @@ class AdminController extends Controller
             $emails->setContainer($this->container);
             $emails->resetPasswordAction($u);
             $u->setPasswordRequestedAt(new \DateTime());
-            /** @var $userManager UserManager */
-            $userManager = $this->get('fos_user.user_manager');
             $userManager->updateUser($u);
         }
 

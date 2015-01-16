@@ -27,10 +27,6 @@
     display:inline-block;
 }
 
-#admin .scroller
-{
-}
-
 #admin .count-bubble
 {
     height: 100px;
@@ -64,7 +60,7 @@
 
 }
 
-a[href*="_switch_user"]
+#admin a[href*="_switch_user"]
 {
     display: inline-block;
     height: 24px;
@@ -72,12 +68,12 @@ a[href*="_switch_user"]
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4002px transparent;
 }
 
-a[href*="_switch_user"]:hover
+#admin a[href*="_switch_user"]:hover
 {
     background-position: left -4052px;
 }
 
-a[href="#confirm-password-reset"]
+#admin a[href="#confirm-password-reset"]
 {
     display: inline-block;
     height: 24px;
@@ -85,12 +81,13 @@ a[href="#confirm-password-reset"]
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -3902px transparent;
 }
 
-a[href="#confirm-password-reset"]:hover
+#admin a[href="#confirm-password-reset"]:hover
 {
     background-position: left -3952px;
 }
 
-a[href="#edit-user"]
+#group-manager a[href="#edit-group"],
+#admin a[href="#edit-user"]
 {
     display: inline-block;
     height: 24px;
@@ -98,12 +95,13 @@ a[href="#edit-user"]
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1552px transparent;
 }
 
-a[href="#edit-user"]:hover
+#group-manager a[href="#edit-group"]:hover,
+#admin a[href="#edit-user"]:hover
 {
     background-position: left -1602px;
 }
 
-a[href="#confirm-remove-user"]
+#admin a[href="#confirm-remove-user"]
 {
     display: inline-block;
     height: 24px;
@@ -111,12 +109,12 @@ a[href="#confirm-remove-user"]
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1652px transparent;
 }
 
-a[href="#confirm-remove-user"]:hover
+#admin a[href="#confirm-remove-user"]:hover
 {
     background-position: left -1702px;
 }
 
-a[href="#confirm-cancel-user"]
+#admin a[href="#confirm-cancel-user"]
 {
     display: inline-block;
     height: 24px;
@@ -124,9 +122,73 @@ a[href="#confirm-cancel-user"]
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1102px transparent;
 }
 
-a[href="#confirm-cancel-user"]:hover
+#admin a[href="#confirm-cancel-user"]:hover
 {
     background-position: left -1152px;
+}
+
+#right-panel .main-menu a[href*="/command"] span
+{
+    background-position: left -4905px;
+}
+
+#right-panel .main-menu a[href*="/command"]:hover span,
+#right-panel .main-menu a[href*="/command"]:focus span,
+#right-panel .main-menu a[href*="/command"]:active span,
+#right-panel .main-menu a[href*="/command"].active span {
+    background-position: left -5005px;
+}
+
+
+#admin .edit a[href="#confirm-remove-user"],
+#admin .edit a[href="#confirm-cancel-user"],
+#admin .edit a[href="#edit-user"],
+#admin .edit a[href="#confirm-password-reset"],
+#admin .edit a[href*="_switch_user"],
+#admin .read-only a[href="#cancel-edit"],
+#admin .read-only a[href="#save-user"],
+#group-manager .edit a[href="#edit-group"],
+#group-manager .read-only a[href="#cancel-edit"],
+#group-manager .read-only a[href="#save-group"]
+{
+    display:none;
+}
+
+#group-manager th:nth-child(5),
+#group-manager td:nth-child(5)
+{
+    width: 100px;
+    text-align: right;
+}
+
+#group-manager th:nth-child(4),
+#group-manager td:nth-child(4)
+{
+    width: 50px;
+    text-align: center;
+}
+
+#add-user .first-name,
+#add-user .last-name
+{
+    margin: 0 -2px;
+    padding-right: 2px;
+    width: 50%;
+    display:inline-block;
+}
+
+#add-user .last-name
+{
+    padding-right:0;
+    padding-left:2px;
+}
+
+#group-manager .edit a[href="#cancel-edit"],
+#group-manager .edit a[href="#save-group"],
+#admin .edit a[href="#cancel-edit"],
+#admin .edit a[href="#save-user"]
+{
+    display:inline;
 }
 
 #admin.panel-pane
@@ -138,173 +200,174 @@ a[href="#confirm-cancel-user"]:hover
     display: inline-block;
 }
 
-#admin.all table {
+#admin.all table.results {
     width:3000px;
 }
 
-#admin th:nth-child(28),
-#admin td:nth-child(28),
-#admin th:nth-child(27),
-#admin td:nth-child(27),
-#admin th:nth-child(26),
-#admin td:nth-child(26),
-#admin th:nth-child(25),
-#admin td:nth-child(25),
-#admin th:nth-child(24),
-#admin td:nth-child(24),
-#admin th:nth-child(23),
-#admin td:nth-child(23),
-#admin th:nth-child(22),
-#admin td:nth-child(22),
-#admin th:nth-child(21),
-#admin td:nth-child(21),
-#admin th:nth-child(20),
-#admin td:nth-child(20),
-#admin th:nth-child(19),
-#admin td:nth-child(19),
-#admin th:nth-child(18),
-#admin td:nth-child(18),
-#admin th:nth-child(17),
-#admin td:nth-child(17),
-#admin th:nth-child(16),
-#admin td:nth-child(16),
-#admin th:nth-child(15),
-#admin td:nth-child(15),
-#admin th:nth-child(14),
-#admin td:nth-child(14),
-#admin th:nth-child(13),
-#admin td:nth-child(13),
-#admin th:nth-child(12),
-#admin td:nth-child(12)
+#admin table.results > thead > tr > th:nth-child(28),
+#admin table.results > tbody > tr > td:nth-child(28),
+#admin table.results > thead > tr > th:nth-child(27),
+#admin table.results > tbody > tr > td:nth-child(27),
+#admin table.results > thead > tr > th:nth-child(26),
+#admin table.results > tbody > tr > td:nth-child(26),
+#admin table.results > thead > tr > th:nth-child(25),
+#admin table.results > tbody > tr > td:nth-child(25),
+#admin table.results > thead > tr > th:nth-child(24),
+#admin table.results > tbody > tr > td:nth-child(24),
+#admin table.results > thead > tr > th:nth-child(23),
+#admin table.results > tbody > tr > td:nth-child(23),
+#admin table.results > thead > tr > th:nth-child(22),
+#admin table.results > tbody > tr > td:nth-child(22),
+#admin table.results > thead > tr > th:nth-child(21),
+#admin table.results > tbody > tr > td:nth-child(21),
+#admin table.results > thead > tr > th:nth-child(20),
+#admin table.results > tbody > tr > td:nth-child(20),
+#admin table.results > thead > tr > th:nth-child(19),
+#admin table.results > tbody > tr > td:nth-child(19),
+#admin table.results > thead > tr > th:nth-child(18),
+#admin table.results > tbody > tr > td:nth-child(18),
+#admin table.results > thead > tr > th:nth-child(17),
+#admin table.results > tbody > tr > td:nth-child(17),
+#admin table.results > thead > tr > th:nth-child(16),
+#admin table.results > tbody > tr > td:nth-child(16),
+#admin table.results > thead > tr > th:nth-child(15),
+#admin table.results > tbody > tr > td:nth-child(15),
+#admin table.results > thead > tr > th:nth-child(14),
+#admin table.results > tbody > tr > td:nth-child(14),
+#admin table.results > thead > tr > th:nth-child(13),
+#admin table.results > tbody > tr > td:nth-child(13),
+#admin table.results > thead > tr > th:nth-child(12),
+#admin table.results > tbody > tr > td:nth-child(12)
 {
     display:none;
 }
 
-#admin.all th:nth-child(29),
-#admin.all td:nth-child(29),
-#admin.all th:nth-child(28),
-#admin.all td:nth-child(28),
-#admin.all th:nth-child(27),
-#admin.all td:nth-child(27),
-#admin.all th:nth-child(26),
-#admin.all td:nth-child(26),
-#admin.all th:nth-child(25),
-#admin.all td:nth-child(25),
-#admin.all th:nth-child(24),
-#admin.all td:nth-child(24),
-#admin.all th:nth-child(23),
-#admin.all td:nth-child(23),
-#admin.all th:nth-child(22),
-#admin.all td:nth-child(22),
-#admin.all th:nth-child(21),
-#admin.all td:nth-child(21),
-#admin.all th:nth-child(20),
-#admin.all td:nth-child(20),
-#admin.all th:nth-child(19),
-#admin.all td:nth-child(19),
-#admin.all th:nth-child(18),
-#admin.all td:nth-child(18),
-#admin.all th:nth-child(17),
-#admin.all td:nth-child(17),
-#admin.all th:nth-child(16),
-#admin.all td:nth-child(16),
-#admin.all th:nth-child(15),
-#admin.all td:nth-child(15),
-#admin.all th:nth-child(14),
-#admin.all td:nth-child(14),
-#admin.all th:nth-child(13),
-#admin.all td:nth-child(13),
-#admin.all th:nth-child(12),
-#admin.all td:nth-child(12),
-#admin.all th:nth-child(11),
-#admin.all td:nth-child(11),
-#admin.all th:nth-child(10),
-#admin.all td:nth-child(10),
-#admin.all th:nth-child(9),
-#admin.all td:nth-child(9),
-#admin.all th:nth-child(8),
-#admin.all td:nth-child(8),
-#admin.all th:nth-child(7),
-#admin.all td:nth-child(7),
-#admin.all th:nth-child(6),
-#admin.all td:nth-child(6),
-#admin.all th:nth-child(5),
-#admin.all td:nth-child(5),
-#admin.all th:nth-child(3),
-#admin.all td:nth-child(3),
-#admin.all th:nth-child(2),
-#admin.all td:nth-child(2),
-#admin.all th:nth-child(1),
-#admin.all td:nth-child(1)
+#admin.all table.results > thead > tr > th:nth-child(29),
+#admin.all table.results > tbody > tr > td:nth-child(29),
+#admin.all table.results > thead > tr > th:nth-child(28),
+#admin.all table.results > tbody > tr > td:nth-child(28),
+#admin.all table.results > thead > tr > th:nth-child(27),
+#admin.all table.results > tbody > tr > td:nth-child(27),
+#admin.all table.results > thead > tr > th:nth-child(26),
+#admin.all table.results > tbody > tr > td:nth-child(26),
+#admin.all table.results > thead > tr > th:nth-child(25),
+#admin.all table.results > tbody > tr > td:nth-child(25),
+#admin.all table.results > thead > tr > th:nth-child(24),
+#admin.all table.results > tbody > tr > td:nth-child(24),
+#admin.all table.results > thead > tr > th:nth-child(23),
+#admin.all table.results > tbody > tr > td:nth-child(23),
+#admin.all table.results > thead > tr > th:nth-child(22),
+#admin.all table.results > tbody > tr > td:nth-child(22),
+#admin.all table.results > thead > tr > th:nth-child(21),
+#admin.all table.results > tbody > tr > td:nth-child(21),
+#admin.all table.results > thead > tr > th:nth-child(20),
+#admin.all table.results > tbody > tr > td:nth-child(20),
+#admin.all table.results > thead > tr > th:nth-child(19),
+#admin.all table.results > tbody > tr > td:nth-child(19),
+#admin.all table.results > thead > tr > th:nth-child(18),
+#admin.all table.results > tbody > tr > td:nth-child(18),
+#admin.all table.results > thead > tr > th:nth-child(17),
+#admin.all table.results > tbody > tr > td:nth-child(17),
+#admin.all table.results > thead > tr > th:nth-child(16),
+#admin.all table.results > tbody > tr > td:nth-child(16),
+#admin.all table.results > thead > tr > th:nth-child(15),
+#admin.all table.results > tbody > tr > td:nth-child(15),
+#admin.all table.results > thead > tr > th:nth-child(14),
+#admin.all table.results > tbody > tr > td:nth-child(14),
+#admin.all table.results > thead > tr > th:nth-child(13),
+#admin.all table.results > tbody > tr > td:nth-child(13),
+#admin.all table.results > thead > tr > th:nth-child(12),
+#admin.all table.results > tbody > tr > td:nth-child(12),
+#admin.all table.results > thead > tr > th:nth-child(11),
+#admin.all table.results > tbody > tr > td:nth-child(11),
+#admin.all table.results > thead > tr > th:nth-child(10),
+#admin.all table.results > tbody > tr > td:nth-child(10),
+#admin.all table.results > thead > tr > th:nth-child(9),
+#admin.all table.results > tbody > tr > td:nth-child(9),
+#admin.all table.results > thead > tr > th:nth-child(8),
+#admin.all table.results > tbody > tr > td:nth-child(8),
+#admin.all table.results > thead > tr > th:nth-child(7),
+#admin.all table.results > tbody > tr > td:nth-child(7),
+#admin.all table.results > thead > tr > th:nth-child(6),
+#admin.all table.results > tbody > tr > td:nth-child(6),
+#admin.all table.results > thead > tr > th:nth-child(5),
+#admin.all table.results > tbody > tr > td:nth-child(5),
+#admin.all table.results > thead > tr > th:nth-child(3),
+#admin.all table.results > tbody > tr > td:nth-child(3),
+#admin.all table.results > thead > tr > th:nth-child(2),
+#admin.all table.results > tbody > tr > td:nth-child(2),
+#admin.all table.results > thead > tr > th:nth-child(1),
+#admin.all table.results > tbody > tr > td:nth-child(1)
 {
     width:3.2%;
     text-align: center;
     display:table-cell;
 }
 
-#admin.courses th:nth-child(11),
-#admin.courses td:nth-child(11),
-#admin.courses th:nth-child(10),
-#admin.courses td:nth-child(10),
-#admin.courses th:nth-child(9),
-#admin.courses td:nth-child(9),
-#admin.courses th:nth-child(8),
-#admin.courses td:nth-child(8),
-#admin.courses th:nth-child(7),
-#admin.courses td:nth-child(7),
-#admin.courses th:nth-child(6),
-#admin.courses td:nth-child(6)
+#admin.courses table.results > thead > tr > th:nth-child(11),
+#admin.courses table.results > tbody > tr > td:nth-child(11),
+#admin.courses table.results > thead > tr > th:nth-child(10),
+#admin.courses table.results > tbody > tr > td:nth-child(10),
+#admin.courses table.results > thead > tr > th:nth-child(9),
+#admin.courses table.results > tbody > tr > td:nth-child(9),
+#admin.courses table.results > thead > tr > th:nth-child(8),
+#admin.courses table.results > tbody > tr > td:nth-child(8),
+#admin.courses table.results > thead > tr > th:nth-child(7),
+#admin.courses table.results > tbody > tr > td:nth-child(7),
+#admin.courses table.results > thead > tr > th:nth-child(6),
+#admin.courses table.results > tbody > tr > td:nth-child(6)
 {
     display:none;
 }
 
-#admin.courses th:nth-child(28),
-#admin.courses td:nth-child(28),
-#admin.courses th:nth-child(27),
-#admin.courses td:nth-child(27),
-#admin.courses th:nth-child(26),
-#admin.courses td:nth-child(26),
-#admin.courses th:nth-child(25),
-#admin.courses td:nth-child(25),
-#admin.courses th:nth-child(24),
-#admin.courses td:nth-child(24),
-#admin.courses th:nth-child(23),
-#admin.courses td:nth-child(23),
-#admin.courses th:nth-child(22),
-#admin.courses td:nth-child(22),
-#admin.courses th:nth-child(21),
-#admin.courses td:nth-child(21),
-#admin.courses th:nth-child(20),
-#admin.courses td:nth-child(20),
-#admin.courses th:nth-child(19),
-#admin.courses td:nth-child(19),
-#admin.courses th:nth-child(18),
-#admin.courses td:nth-child(18),
-#admin.courses th:nth-child(17),
-#admin.courses td:nth-child(17),
-#admin.courses th:nth-child(16),
-#admin.courses td:nth-child(16),
-#admin.courses th:nth-child(15),
-#admin.courses td:nth-child(15),
-#admin.courses th:nth-child(14),
-#admin.courses td:nth-child(14),
-#admin.courses th:nth-child(13),
-#admin.courses td:nth-child(13),
-#admin.courses th:nth-child(12),
-#admin.courses td:nth-child(12)
+#admin.courses table.results > thead > tr > th:nth-child(28),
+#admin.courses table.results > tbody > tr > td:nth-child(28),
+#admin.courses table.results > thead > tr > th:nth-child(27),
+#admin.courses table.results > tbody > tr > td:nth-child(27),
+#admin.courses table.results > thead > tr > th:nth-child(26),
+#admin.courses table.results > tbody > tr > td:nth-child(26),
+#admin.courses table.results > thead > tr > th:nth-child(25),
+#admin.courses table.results > tbody > tr > td:nth-child(25),
+#admin.courses table.results > thead > tr > th:nth-child(24),
+#admin.courses table.results > tbody > tr > td:nth-child(24),
+#admin.courses table.results > thead > tr > th:nth-child(23),
+#admin.courses table.results > tbody > tr > td:nth-child(23),
+#admin.courses table.results > thead > tr > th:nth-child(22),
+#admin.courses table.results > tbody > tr > td:nth-child(22),
+#admin.courses table.results > thead > tr > th:nth-child(21),
+#admin.courses table.results > tbody > tr > td:nth-child(21),
+#admin.courses table.results > thead > tr > th:nth-child(20),
+#admin.courses table.results > tbody > tr > td:nth-child(20),
+#admin.courses table.results > thead > tr > th:nth-child(19),
+#admin.courses table.results > tbody > tr > td:nth-child(19),
+#admin.courses table.results > thead > tr > th:nth-child(18),
+#admin.courses table.results > tbody > tr > td:nth-child(18),
+#admin.courses table.results > thead > tr > th:nth-child(17),
+#admin.courses table.results > tbody > tr > td:nth-child(17),
+#admin.courses table.results > thead > tr > th:nth-child(16),
+#admin.courses table.results > tbody > tr > td:nth-child(16),
+#admin.courses table.results > thead > tr > th:nth-child(15),
+#admin.courses table.results > tbody > tr > td:nth-child(15),
+#admin.courses table.results > thead > tr > th:nth-child(14),
+#admin.courses table.results > tbody > tr > td:nth-child(14),
+#admin.courses table.results > thead > tr > th:nth-child(13),
+#admin.courses table.results > tbody > tr > td:nth-child(13),
+#admin.courses table.results > thead > tr > th:nth-child(12),
+#admin.courses table.results > tbody > tr > td:nth-child(12)
 {
     width:2.8%;
     text-align: center;
     display:table-cell;
 }
 
-#admin th:nth-child(4),
-#admin td:nth-child(4)
+#admin table.results > thead > tr > th:nth-child(4),
+#admin table.results > tbody > tr > td:nth-child(4)
 {
     width:10.4%;
 }
 
-#admin td
+#group-manager td,
+#admin table.results > tbody > tr > td
 {
     padding: 5px;
     overflow: hidden;
@@ -313,21 +376,24 @@ a[href="#confirm-cancel-user"]:hover
     table-layout: fixed;
 }
 
-#admin td.empty
+#admin table.results > tbody > tr > td.empty
 {
     white-space: normal;
 }
 
-#admin td > *
+#group-manager td > *,
+#admin table.results > tbody > tr > td > *
 {
     vertical-align: middle;
 }
 
-#admin td .checkbox {
+#group-manager td .checkbox,
+#admin table.results > tbody > tr > td .checkbox {
     margin:0;
 }
 
-#admin table
+#group-manager table,
+#admin table.results
 {
     table-layout: fixed;
     width:100%;
@@ -335,21 +401,45 @@ a[href="#confirm-cancel-user"]:hover
     border-collapse: separate;
 }
 
-#admin .scroller td
+#group-manager tbody td,
+#admin table.results > tbody > tr > td
 {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     vertical-align: middle;
 }
 
-#admin .scroller tr:hover:not(.selected):not(.edit) td {
+#admin .ui-datepicker a[href="#everything"],
+#admin .ui-datepicker a[href="#yesterday"],
+#admin .ui-datepicker a[href="#week"],
+#admin .ui-datepicker a[href="#month"],
+#admin .ui-datepicker a[href="#year"]
+{
+    display:block;
+    text-align: left;
+    padding-left:10px;
+}
+
+#admin .ui-datepicker a[href="#everything"]:hover,
+#admin .ui-datepicker a[href="#yesterday"]:hover,
+#admin .ui-datepicker a[href="#week"]:hover,
+#admin .ui-datepicker a[href="#month"]:hover,
+#admin .ui-datepicker a[href="#year"]:hover
+{
+    background-color: #09B;
+    color: #fff;
+    font-weight: bold;
+}
+
+#group-manager tbody tr:hover:not(.selected):not(.edit) td,
+#admin table.results > tbody > tr:hover:not(.selected):not(.edit) td {
     box-shadow: 0 1px 4px rgba(255,255,255,.25);
     border-top: 1px solid #DDDDDD;
     border-bottom: 1px solid #DDDDDD;
     background-color: rgba(255,255,255,.50);
 }
 
-#admin table th
+#admin table.results > thead > tr > th
 {
     background:transparent;
     position: relative;
@@ -365,51 +455,88 @@ a[href="#confirm-cancel-user"]:hover
     padding-top:0;
 }
 
-#admin th:nth-child(29),
-#admin td:nth-child(29),
-#admin th:nth-child(11),
-#admin td:nth-child(11),
-#admin th:nth-child(10),
-#admin td:nth-child(10),
-#admin th:nth-child(9),
-#admin td:nth-child(9),
-#admin th:nth-child(8),
-#admin td:nth-child(8),
-#admin th:nth-child(7),
-#admin td:nth-child(7),
-#admin th:nth-child(6),
-#admin td:nth-child(6),
-#admin th:nth-child(5),
-#admin td:nth-child(5),
-#admin th:nth-child(3),
-#admin td:nth-child(3),
-#admin th:nth-child(2),
-#admin td:nth-child(2),
-#admin th:nth-child(1),
-#admin td:nth-child(1)
+#admin table.results > thead > tr > th:nth-child(29),
+#admin table.results > tbody > tr > td:nth-child(29),
+#admin table.results > thead > tr > th:nth-child(11),
+#admin table.results > tbody > tr > td:nth-child(11),
+#admin table.results > thead > tr > th:nth-child(10),
+#admin table.results > tbody > tr > td:nth-child(10),
+#admin table.results > thead > tr > th:nth-child(9),
+#admin table.results > tbody > tr > td:nth-child(9),
+#admin table.results > thead > tr > th:nth-child(8),
+#admin table.results > tbody > tr > td:nth-child(8),
+#admin table.results > thead > tr > th:nth-child(7),
+#admin table.results > tbody > tr > td:nth-child(7),
+#admin table.results > thead > tr > th:nth-child(6),
+#admin table.results > tbody > tr > td:nth-child(6),
+#admin table.results > thead > tr > th:nth-child(5),
+#admin table.results > tbody > tr > td:nth-child(5),
+#admin table.results > thead > tr > th:nth-child(3),
+#admin table.results > tbody > tr > td:nth-child(3),
+#admin table.results > thead > tr > th:nth-child(2),
+#admin table.results > tbody > tr > td:nth-child(2),
+#admin table.results > thead > tr > th:nth-child(1),
+#admin table.results > tbody > tr > td:nth-child(1)
 {
     text-align: center;
     width: 8%;
 }
 
-#admin th:nth-child(4),
-#admin td:nth-child(4)
+#admin table.results > thead > tr > th:nth-child(4),
+#admin table.results > tbody > tr > td:nth-child(4)
 {
     width: 12%;
 }
 
-#admin td:nth-child(4) label:nth-child(1)
+#admin table.results > tbody > tr > td:nth-child(4) label:nth-child(2),
+#admin table.results > tbody > tr > td:nth-child(4) label:nth-child(1)
 {
     width:50%;
-    margin-left:-4px;
-    padding-left: 4px;
+    margin: 0 -2px;
+    padding-left: 2px;
     display:inline-block;
-    margin-top:0;
-    margin-bottom:0;
 }
 
-#admin td:nth-child(3) label,
-#admin td:nth-child(2) label
+
+#admin table.results > thead > tr > th:nth-child(1),
+#admin table.results > thead > tr > th:nth-child(6)
+{
+    overflow:visible;
+}
+
+#admin table.results > thead > tr > th:nth-child(1) .input + div,
+#admin table.results > thead > tr > th:nth-child(6) .input + div
+{
+    position: absolute;
+    z-index: 100;
+}
+
+#admin table.results > tbody > tr > td:nth-child(4) label:nth-child(2)
+{
+    padding-left: 0;
+    padding-right:2px;
+}
+
+#admin table.results .edit td:nth-child(4) label:nth-child(1),
+#admin table.results .edit td:nth-child(4) label:nth-child(2)
+{
+    margin-bottom:5px;
+}
+
+#admin table.results > tbody > tr > td:nth-child(4) label:last-child
+{
+    margin: 0;
+}
+
+#admin table.results > tbody > tr > td:nth-child(4) label:last-child input
+{
+    font-size:12px;
+    height:auto;
+}
+
+#group-manager td:nth-child(3) label,
+#admin table.results > tbody > tr > td:nth-child(3) label,
+#admin table.results > tbody > tr > td:nth-child(2) label
 {
     display:block;
     min-height: 0;
@@ -420,94 +547,50 @@ a[href="#confirm-cancel-user"]:hover
     line-height: 100%;
 }
 
-#admin .read-only td:nth-child(3) input,
-#admin .read-only td:nth-child(3) input ~ *,
-#admin .read-only td:nth-child(2) input,
-#admin .read-only td:nth-child(2) input ~ *,
-#admin .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked,
-#admin .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked ~ *,
-#admin .read-only td:nth-child(2) input[value="ROLE_PAID"],
-#admin .read-only td:nth-child(2) input[value="ROLE_PAID"] ~ * {
+#group-manager .read-only td:nth-child(3) input,
+#group-manager .read-only td:nth-child(3) input ~ *,
+#admin table.results .read-only td:nth-child(3) input,
+#admin table.results .read-only td:nth-child(3) input ~ *,
+#admin table.results .read-only td:nth-child(2) input,
+#admin table.results .read-only td:nth-child(2) input ~ *,
+#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked,
+#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked ~ *,
+#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"],
+#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"] ~ * {
     display:none;
 }
 
-#admin .read-only td:nth-child(3) input:checked ~ span,
-#admin .read-only td:nth-child(2) input:checked ~ span
+#group-manager .read-only td:nth-child(3) input:checked ~ span,
+#admin table.results .read-only td:nth-child(3) input:checked ~ span,
+#admin table.results .read-only td:nth-child(2) input:checked ~ span
 {
     display:inline;
 }
 
-#admin td:nth-child(4) label:nth-child(2)
+#group-manager .read-only textarea
 {
-    width:50%;
-    margin-right:-4px;
-    padding-right:1px;
-    display:inline-block;
-    margin-top:0;
-    margin-bottom:0;
+    height: 1em;
 }
 
-#admin .edit td:nth-child(4) label:nth-child(1),
-#admin .edit td:nth-child(4) label:nth-child(2)
-{
-    margin-bottom:5px;
-}
-
-#admin td:nth-child(4) label:last-child
-{
-    margin: 0;
-}
-
-#admin td:nth-child(4) label:last-child input
-{
-    font-size:12px;
-    height:auto;
-}
-
-
-#admin th:nth-child(29),
-#admin td:nth-child(29)
+#admin table.results > thead > tr > th:nth-child(29),
+#admin table.results > tbody > tr > td:nth-child(29)
 {
     text-align: right;
     width: 180px !important;
 }
 
-#admin tr.invite-only
-{
-    opacity: .75;
-}
-
-#admin tr.invite-only td:first-child span
-{
-    background-color: transparent;
-}
-
 @media all and (max-width:1000px)
 {
-    #admin table th:nth-child(5),
-    #admin table td:nth-child(5),
-    #admin table th:nth-child(4),
-    #admin table td:nth-child(4)
-    {
-        display:none;
-    }
+    
 }
 
 @media all and (max-width:700px)
 {
 
-    #admin td
-    {
-        padding: 10px;
-    }
 }
 
 
 @media all and (max-width:500px)
 {
-    #admin table th:nth-child(2),
-    #admin table td:nth-child(2)
-    {
-        display:none;
-    }
+
 }

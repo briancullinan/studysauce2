@@ -127,16 +127,6 @@
     width: 23.33%;
 }
 
-#userlist tr.invite-only
-{
-    opacity: .75;
-}
-
-#userlist tr.invite-only td:first-child span
-{
-    background-color: transparent;
-}
-
 @media all and (max-width:1000px)
 {
     #userlist table th:nth-child(5),

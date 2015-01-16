@@ -121,11 +121,11 @@ class AnonymousAuthenticationListener implements ListenerInterface
             // generate a new guest user in the database
             $user = $this->userManager->createUser();
             $user->setUsername($username);
-            $user->setUsernameCanonical($username);
             $encoder = $this->encoder->getEncoder($user);
             $password = $encoder->encodePassword($username, $user->getSalt());
             $user->setPassword($password);
             $user->setEmail($this->email);
+            $this->userManager->updateCanonicalFields($user);
             $user->addRole('ROLE_GUEST');
             $user->setEnabled(true);
             $user->setFirst('Guest');
