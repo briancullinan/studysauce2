@@ -25,10 +25,7 @@ class AccountController extends Controller
      */
     public function registerAction(Request $request)
     {
-        $session = $request->getSession();
-        if(empty($session->get('parent')))
-            $session->set('parent', true);
-
+        $request->getSession()->set('organization', 'Torch And Laurel');
         $account = new \StudySauce\Bundle\Controller\AccountController();
         $account->setContainer($this->container);
         return $account->registerAction($request);
