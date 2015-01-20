@@ -9,7 +9,7 @@ $collection = new RouteCollection();
 $collection->add(
     'command_control',
     new Route(
-        '/command',
+        '/command/{_format}',
         ['_controller' => 'AdminBundle:Admin:index', '_format' => 'adviser'],
         ['_format' => DASHBOARD_VIEWS]
     )
