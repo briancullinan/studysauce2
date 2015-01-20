@@ -1,16 +1,16 @@
-#admin .pane-content
+#command_control .pane-content
 {
     min-height: 800px;
 }
 
-#admin .search {
+#command_control .search {
     display:inline-block;
     width:100%;
     margin-right:-300px;
     padding-right:300px;
 }
 
-#admin .paginate {
+#command_control .paginate {
     display: inline-block;
     width: 300px;
     margin: 0 -4px;
@@ -19,19 +19,19 @@
     text-align: center;
 }
 
-#admin .paginate label {
+#command_control .paginate label {
     margin: 0 -50px;
     padding: 0 50px;
     display: inline-block;
 }
 
-#admin .paginate input {
+#command_control .paginate input {
     margin-right: -50px;
     padding-right: 50px;
     display:inline-block;
 }
 
-#admin .count-bubble
+#command_control .count-bubble
 {
     height: 100px;
     width: 100px;
@@ -44,7 +44,7 @@
     display: inline-block;
 }
 
-#admin .count-bubble i
+#command_control .count-bubble i
 {
     font-size: 48px;
     line-height: 110%;
@@ -53,7 +53,7 @@
     text-align: center;
 }
 
-#admin .count-bubble small
+#command_control .count-bubble small
 {
     position:absolute;
     top: 0;
@@ -64,7 +64,7 @@
 
 }
 
-#admin a[href*="_switch_user"]
+#command_control a[href*="_switch_user"]
 {
     display: inline-block;
     height: 24px;
@@ -72,12 +72,12 @@
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4002px transparent;
 }
 
-#admin a[href*="_switch_user"]:hover
+#command_control a[href*="_switch_user"]:hover
 {
     background-position: left -4052px;
 }
 
-#admin a[href="#confirm-password-reset"]
+#command_control a[href="#confirm-password-reset"]
 {
     display: inline-block;
     height: 24px;
@@ -85,13 +85,13 @@
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -3902px transparent;
 }
 
-#admin a[href="#confirm-password-reset"]:hover
+#command_control a[href="#confirm-password-reset"]:hover
 {
     background-position: left -3952px;
 }
 
 #group-manager a[href="#edit-group"],
-#admin a[href="#edit-user"]
+#command_control a[href="#edit-user"]
 {
     display: inline-block;
     height: 24px;
@@ -100,12 +100,12 @@
 }
 
 #group-manager a[href="#edit-group"]:hover,
-#admin a[href="#edit-user"]:hover
+#command_control a[href="#edit-user"]:hover
 {
     background-position: left -1602px;
 }
 
-#admin a[href="#confirm-remove-user"]
+#command_control a[href="#confirm-remove-user"]
 {
     display: inline-block;
     height: 24px;
@@ -113,12 +113,12 @@
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1652px transparent;
 }
 
-#admin a[href="#confirm-remove-user"]:hover
+#command_control a[href="#confirm-remove-user"]:hover
 {
     background-position: left -1702px;
 }
 
-#admin a[href="#confirm-cancel-user"]
+#command_control a[href="#confirm-cancel-user"]
 {
     display: inline-block;
     height: 24px;
@@ -126,7 +126,7 @@
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1102px transparent;
 }
 
-#admin a[href="#confirm-cancel-user"]:hover
+#command_control a[href="#confirm-cancel-user"]:hover
 {
     background-position: left -1152px;
 }
@@ -144,13 +144,13 @@
 }
 
 
-#admin .edit a[href="#confirm-remove-user"],
-#admin .edit a[href="#confirm-cancel-user"],
-#admin .edit a[href="#edit-user"],
-#admin .edit a[href="#confirm-password-reset"],
-#admin .edit a[href*="_switch_user"],
-#admin .read-only a[href="#cancel-edit"],
-#admin .read-only a[href="#save-user"],
+#command_control .edit a[href="#confirm-remove-user"],
+#command_control .edit a[href="#confirm-cancel-user"],
+#command_control .edit a[href="#edit-user"],
+#command_control .edit a[href="#confirm-password-reset"],
+#command_control .edit a[href*="_switch_user"],
+#command_control .read-only a[href="#cancel-edit"],
+#command_control .read-only a[href="#save-user"],
 #group-manager .edit a[href="#edit-group"],
 #group-manager .read-only a[href="#cancel-edit"],
 #group-manager .read-only a[href="#save-group"]
@@ -189,13 +189,13 @@
 
 #group-manager .edit a[href="#cancel-edit"],
 #group-manager .edit a[href="#save-group"],
-#admin .edit a[href="#cancel-edit"],
-#admin .edit a[href="#save-user"]
+#command_control .edit a[href="#cancel-edit"],
+#command_control .edit a[href="#save-user"]
 {
     display:inline;
 }
 
-#admin.panel-pane
+#command_control.panel-pane
 {
     padding-left:20px;
     padding-right:70px;
@@ -204,174 +204,174 @@
     display: inline-block;
 }
 
-#admin.all table.results {
+#command_control.all table.results {
     width:3000px;
 }
 
-#admin table.results > thead > tr > th:nth-child(28),
-#admin table.results > tbody > tr > td:nth-child(28),
-#admin table.results > thead > tr > th:nth-child(27),
-#admin table.results > tbody > tr > td:nth-child(27),
-#admin table.results > thead > tr > th:nth-child(26),
-#admin table.results > tbody > tr > td:nth-child(26),
-#admin table.results > thead > tr > th:nth-child(25),
-#admin table.results > tbody > tr > td:nth-child(25),
-#admin table.results > thead > tr > th:nth-child(24),
-#admin table.results > tbody > tr > td:nth-child(24),
-#admin table.results > thead > tr > th:nth-child(23),
-#admin table.results > tbody > tr > td:nth-child(23),
-#admin table.results > thead > tr > th:nth-child(22),
-#admin table.results > tbody > tr > td:nth-child(22),
-#admin table.results > thead > tr > th:nth-child(21),
-#admin table.results > tbody > tr > td:nth-child(21),
-#admin table.results > thead > tr > th:nth-child(20),
-#admin table.results > tbody > tr > td:nth-child(20),
-#admin table.results > thead > tr > th:nth-child(19),
-#admin table.results > tbody > tr > td:nth-child(19),
-#admin table.results > thead > tr > th:nth-child(18),
-#admin table.results > tbody > tr > td:nth-child(18),
-#admin table.results > thead > tr > th:nth-child(17),
-#admin table.results > tbody > tr > td:nth-child(17),
-#admin table.results > thead > tr > th:nth-child(16),
-#admin table.results > tbody > tr > td:nth-child(16),
-#admin table.results > thead > tr > th:nth-child(15),
-#admin table.results > tbody > tr > td:nth-child(15),
-#admin table.results > thead > tr > th:nth-child(14),
-#admin table.results > tbody > tr > td:nth-child(14),
-#admin table.results > thead > tr > th:nth-child(13),
-#admin table.results > tbody > tr > td:nth-child(13),
-#admin table.results > thead > tr > th:nth-child(12),
-#admin table.results > tbody > tr > td:nth-child(12)
+#command_control table.results > thead > tr > th:nth-child(28),
+#command_control table.results > tbody > tr > td:nth-child(28),
+#command_control table.results > thead > tr > th:nth-child(27),
+#command_control table.results > tbody > tr > td:nth-child(27),
+#command_control table.results > thead > tr > th:nth-child(26),
+#command_control table.results > tbody > tr > td:nth-child(26),
+#command_control table.results > thead > tr > th:nth-child(25),
+#command_control table.results > tbody > tr > td:nth-child(25),
+#command_control table.results > thead > tr > th:nth-child(24),
+#command_control table.results > tbody > tr > td:nth-child(24),
+#command_control table.results > thead > tr > th:nth-child(23),
+#command_control table.results > tbody > tr > td:nth-child(23),
+#command_control table.results > thead > tr > th:nth-child(22),
+#command_control table.results > tbody > tr > td:nth-child(22),
+#command_control table.results > thead > tr > th:nth-child(21),
+#command_control table.results > tbody > tr > td:nth-child(21),
+#command_control table.results > thead > tr > th:nth-child(20),
+#command_control table.results > tbody > tr > td:nth-child(20),
+#command_control table.results > thead > tr > th:nth-child(19),
+#command_control table.results > tbody > tr > td:nth-child(19),
+#command_control table.results > thead > tr > th:nth-child(18),
+#command_control table.results > tbody > tr > td:nth-child(18),
+#command_control table.results > thead > tr > th:nth-child(17),
+#command_control table.results > tbody > tr > td:nth-child(17),
+#command_control table.results > thead > tr > th:nth-child(16),
+#command_control table.results > tbody > tr > td:nth-child(16),
+#command_control table.results > thead > tr > th:nth-child(15),
+#command_control table.results > tbody > tr > td:nth-child(15),
+#command_control table.results > thead > tr > th:nth-child(14),
+#command_control table.results > tbody > tr > td:nth-child(14),
+#command_control table.results > thead > tr > th:nth-child(13),
+#command_control table.results > tbody > tr > td:nth-child(13),
+#command_control table.results > thead > tr > th:nth-child(12),
+#command_control table.results > tbody > tr > td:nth-child(12)
 {
     display:none;
 }
 
-#admin.all table.results > thead > tr > th:nth-child(29),
-#admin.all table.results > tbody > tr > td:nth-child(29),
-#admin.all table.results > thead > tr > th:nth-child(28),
-#admin.all table.results > tbody > tr > td:nth-child(28),
-#admin.all table.results > thead > tr > th:nth-child(27),
-#admin.all table.results > tbody > tr > td:nth-child(27),
-#admin.all table.results > thead > tr > th:nth-child(26),
-#admin.all table.results > tbody > tr > td:nth-child(26),
-#admin.all table.results > thead > tr > th:nth-child(25),
-#admin.all table.results > tbody > tr > td:nth-child(25),
-#admin.all table.results > thead > tr > th:nth-child(24),
-#admin.all table.results > tbody > tr > td:nth-child(24),
-#admin.all table.results > thead > tr > th:nth-child(23),
-#admin.all table.results > tbody > tr > td:nth-child(23),
-#admin.all table.results > thead > tr > th:nth-child(22),
-#admin.all table.results > tbody > tr > td:nth-child(22),
-#admin.all table.results > thead > tr > th:nth-child(21),
-#admin.all table.results > tbody > tr > td:nth-child(21),
-#admin.all table.results > thead > tr > th:nth-child(20),
-#admin.all table.results > tbody > tr > td:nth-child(20),
-#admin.all table.results > thead > tr > th:nth-child(19),
-#admin.all table.results > tbody > tr > td:nth-child(19),
-#admin.all table.results > thead > tr > th:nth-child(18),
-#admin.all table.results > tbody > tr > td:nth-child(18),
-#admin.all table.results > thead > tr > th:nth-child(17),
-#admin.all table.results > tbody > tr > td:nth-child(17),
-#admin.all table.results > thead > tr > th:nth-child(16),
-#admin.all table.results > tbody > tr > td:nth-child(16),
-#admin.all table.results > thead > tr > th:nth-child(15),
-#admin.all table.results > tbody > tr > td:nth-child(15),
-#admin.all table.results > thead > tr > th:nth-child(14),
-#admin.all table.results > tbody > tr > td:nth-child(14),
-#admin.all table.results > thead > tr > th:nth-child(13),
-#admin.all table.results > tbody > tr > td:nth-child(13),
-#admin.all table.results > thead > tr > th:nth-child(12),
-#admin.all table.results > tbody > tr > td:nth-child(12),
-#admin.all table.results > thead > tr > th:nth-child(11),
-#admin.all table.results > tbody > tr > td:nth-child(11),
-#admin.all table.results > thead > tr > th:nth-child(10),
-#admin.all table.results > tbody > tr > td:nth-child(10),
-#admin.all table.results > thead > tr > th:nth-child(9),
-#admin.all table.results > tbody > tr > td:nth-child(9),
-#admin.all table.results > thead > tr > th:nth-child(8),
-#admin.all table.results > tbody > tr > td:nth-child(8),
-#admin.all table.results > thead > tr > th:nth-child(7),
-#admin.all table.results > tbody > tr > td:nth-child(7),
-#admin.all table.results > thead > tr > th:nth-child(6),
-#admin.all table.results > tbody > tr > td:nth-child(6),
-#admin.all table.results > thead > tr > th:nth-child(5),
-#admin.all table.results > tbody > tr > td:nth-child(5),
-#admin.all table.results > thead > tr > th:nth-child(3),
-#admin.all table.results > tbody > tr > td:nth-child(3),
-#admin.all table.results > thead > tr > th:nth-child(2),
-#admin.all table.results > tbody > tr > td:nth-child(2),
-#admin.all table.results > thead > tr > th:nth-child(1),
-#admin.all table.results > tbody > tr > td:nth-child(1)
+#command_control.all table.results > thead > tr > th:nth-child(29),
+#command_control.all table.results > tbody > tr > td:nth-child(29),
+#command_control.all table.results > thead > tr > th:nth-child(28),
+#command_control.all table.results > tbody > tr > td:nth-child(28),
+#command_control.all table.results > thead > tr > th:nth-child(27),
+#command_control.all table.results > tbody > tr > td:nth-child(27),
+#command_control.all table.results > thead > tr > th:nth-child(26),
+#command_control.all table.results > tbody > tr > td:nth-child(26),
+#command_control.all table.results > thead > tr > th:nth-child(25),
+#command_control.all table.results > tbody > tr > td:nth-child(25),
+#command_control.all table.results > thead > tr > th:nth-child(24),
+#command_control.all table.results > tbody > tr > td:nth-child(24),
+#command_control.all table.results > thead > tr > th:nth-child(23),
+#command_control.all table.results > tbody > tr > td:nth-child(23),
+#command_control.all table.results > thead > tr > th:nth-child(22),
+#command_control.all table.results > tbody > tr > td:nth-child(22),
+#command_control.all table.results > thead > tr > th:nth-child(21),
+#command_control.all table.results > tbody > tr > td:nth-child(21),
+#command_control.all table.results > thead > tr > th:nth-child(20),
+#command_control.all table.results > tbody > tr > td:nth-child(20),
+#command_control.all table.results > thead > tr > th:nth-child(19),
+#command_control.all table.results > tbody > tr > td:nth-child(19),
+#command_control.all table.results > thead > tr > th:nth-child(18),
+#command_control.all table.results > tbody > tr > td:nth-child(18),
+#command_control.all table.results > thead > tr > th:nth-child(17),
+#command_control.all table.results > tbody > tr > td:nth-child(17),
+#command_control.all table.results > thead > tr > th:nth-child(16),
+#command_control.all table.results > tbody > tr > td:nth-child(16),
+#command_control.all table.results > thead > tr > th:nth-child(15),
+#command_control.all table.results > tbody > tr > td:nth-child(15),
+#command_control.all table.results > thead > tr > th:nth-child(14),
+#command_control.all table.results > tbody > tr > td:nth-child(14),
+#command_control.all table.results > thead > tr > th:nth-child(13),
+#command_control.all table.results > tbody > tr > td:nth-child(13),
+#command_control.all table.results > thead > tr > th:nth-child(12),
+#command_control.all table.results > tbody > tr > td:nth-child(12),
+#command_control.all table.results > thead > tr > th:nth-child(11),
+#command_control.all table.results > tbody > tr > td:nth-child(11),
+#command_control.all table.results > thead > tr > th:nth-child(10),
+#command_control.all table.results > tbody > tr > td:nth-child(10),
+#command_control.all table.results > thead > tr > th:nth-child(9),
+#command_control.all table.results > tbody > tr > td:nth-child(9),
+#command_control.all table.results > thead > tr > th:nth-child(8),
+#command_control.all table.results > tbody > tr > td:nth-child(8),
+#command_control.all table.results > thead > tr > th:nth-child(7),
+#command_control.all table.results > tbody > tr > td:nth-child(7),
+#command_control.all table.results > thead > tr > th:nth-child(6),
+#command_control.all table.results > tbody > tr > td:nth-child(6),
+#command_control.all table.results > thead > tr > th:nth-child(5),
+#command_control.all table.results > tbody > tr > td:nth-child(5),
+#command_control.all table.results > thead > tr > th:nth-child(3),
+#command_control.all table.results > tbody > tr > td:nth-child(3),
+#command_control.all table.results > thead > tr > th:nth-child(2),
+#command_control.all table.results > tbody > tr > td:nth-child(2),
+#command_control.all table.results > thead > tr > th:nth-child(1),
+#command_control.all table.results > tbody > tr > td:nth-child(1)
 {
     width:3.2%;
     text-align: center;
     display:table-cell;
 }
 
-#admin.courses table.results > thead > tr > th:nth-child(11),
-#admin.courses table.results > tbody > tr > td:nth-child(11),
-#admin.courses table.results > thead > tr > th:nth-child(10),
-#admin.courses table.results > tbody > tr > td:nth-child(10),
-#admin.courses table.results > thead > tr > th:nth-child(9),
-#admin.courses table.results > tbody > tr > td:nth-child(9),
-#admin.courses table.results > thead > tr > th:nth-child(8),
-#admin.courses table.results > tbody > tr > td:nth-child(8),
-#admin.courses table.results > thead > tr > th:nth-child(7),
-#admin.courses table.results > tbody > tr > td:nth-child(7),
-#admin.courses table.results > thead > tr > th:nth-child(6),
-#admin.courses table.results > tbody > tr > td:nth-child(6)
+#command_control.courses table.results > thead > tr > th:nth-child(11),
+#command_control.courses table.results > tbody > tr > td:nth-child(11),
+#command_control.courses table.results > thead > tr > th:nth-child(10),
+#command_control.courses table.results > tbody > tr > td:nth-child(10),
+#command_control.courses table.results > thead > tr > th:nth-child(9),
+#command_control.courses table.results > tbody > tr > td:nth-child(9),
+#command_control.courses table.results > thead > tr > th:nth-child(8),
+#command_control.courses table.results > tbody > tr > td:nth-child(8),
+#command_control.courses table.results > thead > tr > th:nth-child(7),
+#command_control.courses table.results > tbody > tr > td:nth-child(7),
+#command_control.courses table.results > thead > tr > th:nth-child(6),
+#command_control.courses table.results > tbody > tr > td:nth-child(6)
 {
     display:none;
 }
 
-#admin.courses table.results > thead > tr > th:nth-child(28),
-#admin.courses table.results > tbody > tr > td:nth-child(28),
-#admin.courses table.results > thead > tr > th:nth-child(27),
-#admin.courses table.results > tbody > tr > td:nth-child(27),
-#admin.courses table.results > thead > tr > th:nth-child(26),
-#admin.courses table.results > tbody > tr > td:nth-child(26),
-#admin.courses table.results > thead > tr > th:nth-child(25),
-#admin.courses table.results > tbody > tr > td:nth-child(25),
-#admin.courses table.results > thead > tr > th:nth-child(24),
-#admin.courses table.results > tbody > tr > td:nth-child(24),
-#admin.courses table.results > thead > tr > th:nth-child(23),
-#admin.courses table.results > tbody > tr > td:nth-child(23),
-#admin.courses table.results > thead > tr > th:nth-child(22),
-#admin.courses table.results > tbody > tr > td:nth-child(22),
-#admin.courses table.results > thead > tr > th:nth-child(21),
-#admin.courses table.results > tbody > tr > td:nth-child(21),
-#admin.courses table.results > thead > tr > th:nth-child(20),
-#admin.courses table.results > tbody > tr > td:nth-child(20),
-#admin.courses table.results > thead > tr > th:nth-child(19),
-#admin.courses table.results > tbody > tr > td:nth-child(19),
-#admin.courses table.results > thead > tr > th:nth-child(18),
-#admin.courses table.results > tbody > tr > td:nth-child(18),
-#admin.courses table.results > thead > tr > th:nth-child(17),
-#admin.courses table.results > tbody > tr > td:nth-child(17),
-#admin.courses table.results > thead > tr > th:nth-child(16),
-#admin.courses table.results > tbody > tr > td:nth-child(16),
-#admin.courses table.results > thead > tr > th:nth-child(15),
-#admin.courses table.results > tbody > tr > td:nth-child(15),
-#admin.courses table.results > thead > tr > th:nth-child(14),
-#admin.courses table.results > tbody > tr > td:nth-child(14),
-#admin.courses table.results > thead > tr > th:nth-child(13),
-#admin.courses table.results > tbody > tr > td:nth-child(13),
-#admin.courses table.results > thead > tr > th:nth-child(12),
-#admin.courses table.results > tbody > tr > td:nth-child(12)
+#command_control.courses table.results > thead > tr > th:nth-child(28),
+#command_control.courses table.results > tbody > tr > td:nth-child(28),
+#command_control.courses table.results > thead > tr > th:nth-child(27),
+#command_control.courses table.results > tbody > tr > td:nth-child(27),
+#command_control.courses table.results > thead > tr > th:nth-child(26),
+#command_control.courses table.results > tbody > tr > td:nth-child(26),
+#command_control.courses table.results > thead > tr > th:nth-child(25),
+#command_control.courses table.results > tbody > tr > td:nth-child(25),
+#command_control.courses table.results > thead > tr > th:nth-child(24),
+#command_control.courses table.results > tbody > tr > td:nth-child(24),
+#command_control.courses table.results > thead > tr > th:nth-child(23),
+#command_control.courses table.results > tbody > tr > td:nth-child(23),
+#command_control.courses table.results > thead > tr > th:nth-child(22),
+#command_control.courses table.results > tbody > tr > td:nth-child(22),
+#command_control.courses table.results > thead > tr > th:nth-child(21),
+#command_control.courses table.results > tbody > tr > td:nth-child(21),
+#command_control.courses table.results > thead > tr > th:nth-child(20),
+#command_control.courses table.results > tbody > tr > td:nth-child(20),
+#command_control.courses table.results > thead > tr > th:nth-child(19),
+#command_control.courses table.results > tbody > tr > td:nth-child(19),
+#command_control.courses table.results > thead > tr > th:nth-child(18),
+#command_control.courses table.results > tbody > tr > td:nth-child(18),
+#command_control.courses table.results > thead > tr > th:nth-child(17),
+#command_control.courses table.results > tbody > tr > td:nth-child(17),
+#command_control.courses table.results > thead > tr > th:nth-child(16),
+#command_control.courses table.results > tbody > tr > td:nth-child(16),
+#command_control.courses table.results > thead > tr > th:nth-child(15),
+#command_control.courses table.results > tbody > tr > td:nth-child(15),
+#command_control.courses table.results > thead > tr > th:nth-child(14),
+#command_control.courses table.results > tbody > tr > td:nth-child(14),
+#command_control.courses table.results > thead > tr > th:nth-child(13),
+#command_control.courses table.results > tbody > tr > td:nth-child(13),
+#command_control.courses table.results > thead > tr > th:nth-child(12),
+#command_control.courses table.results > tbody > tr > td:nth-child(12)
 {
     width:2.8%;
     text-align: center;
     display:table-cell;
 }
 
-#admin table.results > thead > tr > th:nth-child(4),
-#admin table.results > tbody > tr > td:nth-child(4)
+#command_control table.results > thead > tr > th:nth-child(4),
+#command_control table.results > tbody > tr > td:nth-child(4)
 {
     width:10.4%;
 }
 
 #group-manager td,
-#admin table.results > tbody > tr > td
+#command_control table.results > tbody > tr > td
 {
     padding: 5px;
     overflow: hidden;
@@ -380,25 +380,25 @@
     table-layout: fixed;
 }
 
-#admin table.results > tbody > tr > td.empty
+#command_control table.results > tbody > tr > td.empty
 {
     white-space: normal;
 }
 
 #group-manager td > *,
-#admin table.results > tbody > tr > td > *
+#command_control table.results > tbody > tr > td > *
 {
     vertical-align: middle;
     line-height: 100%;
 }
 
 #group-manager td .checkbox,
-#admin table.results > tbody > tr > td .checkbox {
+#command_control table.results > tbody > tr > td .checkbox {
     margin:0;
 }
 
 #group-manager table,
-#admin table.results
+#command_control table.results
 {
     table-layout: fixed;
     width:100%;
@@ -407,29 +407,29 @@
 }
 
 #group-manager tbody td,
-#admin table.results > tbody > tr > td
+#command_control table.results > tbody > tr > td
 {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     vertical-align: middle;
 }
 
-#admin .ui-datepicker a[href="#everything"],
-#admin .ui-datepicker a[href="#yesterday"],
-#admin .ui-datepicker a[href="#week"],
-#admin .ui-datepicker a[href="#month"],
-#admin .ui-datepicker a[href="#year"]
+#command_control .ui-datepicker a[href="#everything"],
+#command_control .ui-datepicker a[href="#yesterday"],
+#command_control .ui-datepicker a[href="#week"],
+#command_control .ui-datepicker a[href="#month"],
+#command_control .ui-datepicker a[href="#year"]
 {
     display:block;
     text-align: left;
     padding-left:10px;
 }
 
-#admin .ui-datepicker a[href="#everything"]:hover,
-#admin .ui-datepicker a[href="#yesterday"]:hover,
-#admin .ui-datepicker a[href="#week"]:hover,
-#admin .ui-datepicker a[href="#month"]:hover,
-#admin .ui-datepicker a[href="#year"]:hover
+#command_control .ui-datepicker a[href="#everything"]:hover,
+#command_control .ui-datepicker a[href="#yesterday"]:hover,
+#command_control .ui-datepicker a[href="#week"]:hover,
+#command_control .ui-datepicker a[href="#month"]:hover,
+#command_control .ui-datepicker a[href="#year"]:hover
 {
     background-color: #09B;
     color: #fff;
@@ -437,14 +437,14 @@
 }
 
 #group-manager tbody tr:hover:not(.selected):not(.edit) td,
-#admin table.results > tbody > tr:hover:not(.selected):not(.edit) td {
+#command_control table.results > tbody > tr:hover:not(.selected):not(.edit) td {
     box-shadow: 0 1px 4px rgba(255,255,255,.25);
     border-top: 1px solid #DDDDDD;
     border-bottom: 1px solid #DDDDDD;
     background-color: rgba(255,255,255,.50);
 }
 
-#admin table.results > thead > tr > th
+#command_control table.results > thead > tr > th
 {
     background:transparent;
     position: relative;
@@ -454,48 +454,48 @@
     vertical-align: bottom;
 }
 
-#admin table.results > thead > tr > th.filtered > label > input,
-#admin table.results > thead > tr > th.filtered > label > select
+#command_control table.results > thead > tr > th.filtered > label > input,
+#command_control table.results > thead > tr > th.filtered > label > select
 {
     border:3px solid #FF9900;
     padding-top:0;
 }
 
-#admin table.results > thead > tr > th:nth-child(29),
-#admin table.results > tbody > tr > td:nth-child(29),
-#admin table.results > thead > tr > th:nth-child(11),
-#admin table.results > tbody > tr > td:nth-child(11),
-#admin table.results > thead > tr > th:nth-child(10),
-#admin table.results > tbody > tr > td:nth-child(10),
-#admin table.results > thead > tr > th:nth-child(9),
-#admin table.results > tbody > tr > td:nth-child(9),
-#admin table.results > thead > tr > th:nth-child(8),
-#admin table.results > tbody > tr > td:nth-child(8),
-#admin table.results > thead > tr > th:nth-child(7),
-#admin table.results > tbody > tr > td:nth-child(7),
-#admin table.results > thead > tr > th:nth-child(6),
-#admin table.results > tbody > tr > td:nth-child(6),
-#admin table.results > thead > tr > th:nth-child(5),
-#admin table.results > tbody > tr > td:nth-child(5),
-#admin table.results > thead > tr > th:nth-child(3),
-#admin table.results > tbody > tr > td:nth-child(3),
-#admin table.results > thead > tr > th:nth-child(2),
-#admin table.results > tbody > tr > td:nth-child(2),
-#admin table.results > thead > tr > th:nth-child(1),
-#admin table.results > tbody > tr > td:nth-child(1)
+#command_control table.results > thead > tr > th:nth-child(29),
+#command_control table.results > tbody > tr > td:nth-child(29),
+#command_control table.results > thead > tr > th:nth-child(11),
+#command_control table.results > tbody > tr > td:nth-child(11),
+#command_control table.results > thead > tr > th:nth-child(10),
+#command_control table.results > tbody > tr > td:nth-child(10),
+#command_control table.results > thead > tr > th:nth-child(9),
+#command_control table.results > tbody > tr > td:nth-child(9),
+#command_control table.results > thead > tr > th:nth-child(8),
+#command_control table.results > tbody > tr > td:nth-child(8),
+#command_control table.results > thead > tr > th:nth-child(7),
+#command_control table.results > tbody > tr > td:nth-child(7),
+#command_control table.results > thead > tr > th:nth-child(6),
+#command_control table.results > tbody > tr > td:nth-child(6),
+#command_control table.results > thead > tr > th:nth-child(5),
+#command_control table.results > tbody > tr > td:nth-child(5),
+#command_control table.results > thead > tr > th:nth-child(3),
+#command_control table.results > tbody > tr > td:nth-child(3),
+#command_control table.results > thead > tr > th:nth-child(2),
+#command_control table.results > tbody > tr > td:nth-child(2),
+#command_control table.results > thead > tr > th:nth-child(1),
+#command_control table.results > tbody > tr > td:nth-child(1)
 {
     text-align: center;
     width: 8%;
 }
 
-#admin table.results > thead > tr > th:nth-child(4),
-#admin table.results > tbody > tr > td:nth-child(4)
+#command_control table.results > thead > tr > th:nth-child(4),
+#command_control table.results > tbody > tr > td:nth-child(4)
 {
     width: 12%;
 }
 
-#admin table.results > tbody > tr > td:nth-child(4) label:nth-child(2),
-#admin table.results > tbody > tr > td:nth-child(4) label:nth-child(1)
+#command_control table.results > tbody > tr > td:nth-child(4) label:nth-child(2),
+#command_control table.results > tbody > tr > td:nth-child(4) label:nth-child(1)
 {
     width:50%;
     margin: 0 -2px;
@@ -504,45 +504,45 @@
 }
 
 
-#admin table.results > thead > tr > th:nth-child(1),
-#admin table.results > thead > tr > th:nth-child(6)
+#command_control table.results > thead > tr > th:nth-child(1),
+#command_control table.results > thead > tr > th:nth-child(6)
 {
     overflow:visible;
 }
 
-#admin table.results > thead > tr > th:nth-child(1) .input + div,
-#admin table.results > thead > tr > th:nth-child(6) .input + div
+#command_control table.results > thead > tr > th:nth-child(1) .input + div,
+#command_control table.results > thead > tr > th:nth-child(6) .input + div
 {
     position: absolute;
     z-index: 100;
 }
 
-#admin table.results > tbody > tr > td:nth-child(4) label:nth-child(2)
+#command_control table.results > tbody > tr > td:nth-child(4) label:nth-child(2)
 {
     padding-left: 0;
     padding-right:2px;
 }
 
-#admin table.results .edit td:nth-child(4) label:nth-child(1),
-#admin table.results .edit td:nth-child(4) label:nth-child(2)
+#command_control table.results .edit td:nth-child(4) label:nth-child(1),
+#command_control table.results .edit td:nth-child(4) label:nth-child(2)
 {
     margin-bottom:5px;
 }
 
-#admin table.results > tbody > tr > td:nth-child(4) label:last-child
+#command_control table.results > tbody > tr > td:nth-child(4) label:last-child
 {
     margin: 0;
 }
 
-#admin table.results > tbody > tr > td:nth-child(4) label:last-child input
+#command_control table.results > tbody > tr > td:nth-child(4) label:last-child input
 {
     font-size:12px;
     height:auto;
 }
 
 #group-manager td:nth-child(3) label,
-#admin table.results > tbody > tr > td:nth-child(3) label,
-#admin table.results > tbody > tr > td:nth-child(2) label
+#command_control table.results > tbody > tr > td:nth-child(3) label,
+#command_control table.results > tbody > tr > td:nth-child(2) label
 {
     display:block;
     min-height: 0;
@@ -555,20 +555,20 @@
 
 #group-manager .read-only td:nth-child(3) input,
 #group-manager .read-only td:nth-child(3) input ~ *,
-#admin table.results .read-only td:nth-child(3) input,
-#admin table.results .read-only td:nth-child(3) input ~ *,
-#admin table.results .read-only td:nth-child(2) input,
-#admin table.results .read-only td:nth-child(2) input ~ *,
-#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked,
-#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked ~ *,
-#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"],
-#admin table.results .read-only td:nth-child(2) input[value="ROLE_PAID"] ~ * {
+#command_control table.results .read-only td:nth-child(3) input,
+#command_control table.results .read-only td:nth-child(3) input ~ *,
+#command_control table.results .read-only td:nth-child(2) input,
+#command_control table.results .read-only td:nth-child(2) input ~ *,
+#command_control table.results .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked,
+#command_control table.results .read-only td:nth-child(2) input[value="ROLE_PAID"]:checked ~ *,
+#command_control table.results .read-only td:nth-child(2) input[value="ROLE_PAID"],
+#command_control table.results .read-only td:nth-child(2) input[value="ROLE_PAID"] ~ * {
     display:none;
 }
 
 #group-manager .read-only td:nth-child(3) input:checked ~ span,
-#admin table.results .read-only td:nth-child(3) input:checked ~ span,
-#admin table.results .read-only td:nth-child(2) input:checked ~ span
+#command_control table.results .read-only td:nth-child(3) input:checked ~ span,
+#command_control table.results .read-only td:nth-child(2) input:checked ~ span
 {
     display:inline;
 }
@@ -578,8 +578,8 @@
     height: 1em;
 }
 
-#admin table.results > thead > tr > th:nth-child(29),
-#admin table.results > tbody > tr > td:nth-child(29)
+#command_control table.results > thead > tr > th:nth-child(29),
+#command_control table.results > tbody > tr > td:nth-child(29)
 {
     text-align: right;
     width: 180px !important;

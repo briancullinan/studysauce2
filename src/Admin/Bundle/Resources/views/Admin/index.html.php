@@ -43,7 +43,7 @@ foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/admin.
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-    <div class="panel-pane" id="admin">
+    <div class="panel-pane" id="command_control">
         <div class="pane-content">
             <div class="search">
                 <label class="input"><input name="search" type="text" value="" placeholder="Search" /></label>

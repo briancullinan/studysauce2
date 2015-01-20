@@ -27,7 +27,7 @@ $(document).ready(function () {
     }
 
     function loadContent (data) {
-        var admin = jQuery('#admin'),
+        var admin = jQuery('#command_control'),
             content = $(data);
         admin.find('table.results > tbody > tr').remove();
         content.find('table.results > tbody > tr').appendTo(admin.find('table.results > tbody'));
@@ -40,7 +40,7 @@ $(document).ready(function () {
 
     function getData()
     {
-        var admin = jQuery('#admin');
+        var admin = jQuery('#command_control');
         var result = {
             order: orderBy,
             search: admin.find('input[name="search"]').val().trim(),
@@ -75,19 +75,19 @@ $(document).ready(function () {
         });
     }
 
-    body.on('keyup', '#admin input[name="search"], #admin input[name="page"]', function () {
+    body.on('keyup', '#command_control input[name="search"], #command_control input[name="page"]', function () {
         if(searchTimeout != null)
             clearTimeout(searchTimeout);
         searchTimeout = setTimeout(loadResults, 1000);
     });
 
-    body.on('click', '#admin a[href="#edit-user"], #group-manager a[href="#edit-group"]', function (evt) {
+    body.on('click', '#command_control a[href="#edit-user"], #group-manager a[href="#edit-group"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr');
         row.removeClass('read-only').addClass('edit');
     });
 
-    body.on('click', '#admin a[href="#cancel-edit"]', function (evt) {
+    body.on('click', '#command_control a[href="#cancel-edit"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr');
         row.removeClass('edit').addClass('read-only');
@@ -130,7 +130,7 @@ $(document).ready(function () {
             dataType: 'text',
             data: data,
             success: function (response) {
-                var admin = $('#admin'),
+                var admin = $('#command_control'),
                     content = $(response),
                     current = admin.find('th:nth-child(3) select').val();
                 // update group select in heading
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
     body.on('click', '#add-user a[href="#add-user"]', function (evt) {
         evt.preventDefault();
-        var admin = $('#admin'),
+        var admin = $('#command_control'),
             dialog = $('#add-user'),
             data = {
                 first: dialog.find('.first-name input').val().trim(),
@@ -187,8 +187,8 @@ $(document).ready(function () {
         });
     });
 
-    body.on('show', '#admin', function () {
-        var admin = $('#admin'),
+    body.on('show', '#command_control', function () {
+        var admin = $('#command_control'),
             pickers = admin.find('th:nth-child(1) .input + div, th:nth-child(6) .input + div');
         $.datepicker._defaults.onAfterUpdate = null;
 
@@ -343,7 +343,7 @@ $(document).ready(function () {
 
     });
 
-    body.on('click', '#admin a[href="#save-user"]', function (evt) {
+    body.on('click', '#command_control a[href="#save-user"]', function (evt) {
         evt.preventDefault();
         var data = getData(),
             row = $(this).parents('tr');
@@ -365,7 +365,7 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#admin a[href="#confirm-remove-user"]', function (evt) {
+    body.on('click', '#command_control a[href="#confirm-remove-user"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr'),
             userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
@@ -373,7 +373,7 @@ $(document).ready(function () {
         $('#confirm-remove-user').data('userId', userId);
     });
 
-    body.on('click', '#admin a[href="#confirm-cancel-user"]', function (evt) {
+    body.on('click', '#command_control a[href="#confirm-cancel-user"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr'),
             userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
@@ -381,7 +381,7 @@ $(document).ready(function () {
         $('#confirm-cancel-user').data('userId', userId);
     });
 
-    body.on('click', '#admin a[href="#confirm-password-reset"]', function (evt) {
+    body.on('click', '#command_control a[href="#confirm-password-reset"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr'),
             userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
@@ -425,16 +425,16 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#admin a[href="#all"], #admin a[href="#courses"], #admin a[href="#tools"]', function (evt) {
+    body.on('click', '#command_control a[href="#all"], #command_control a[href="#courses"], #command_control a[href="#tools"]', function (evt) {
         evt.preventDefault();
-        var admin = $('#admin');
+        var admin = $('#command_control');
         admin.removeClass('all courses tools');
         admin.addClass(this.hash.substr(1));
     });
 
-    body.on('click', '#admin .paginate a', function (evt) {
+    body.on('click', '#command_control .paginate a', function (evt) {
         evt.preventDefault();
-        var admin = $('#admin'),
+        var admin = $('#command_control'),
             page = this.search.match(/([0-9]*|last|prev|next|first)$/i)[0],
             current = parseInt(admin.find('input[name="page"]').val());
         if(page == 'first')
@@ -451,13 +451,13 @@ $(document).ready(function () {
         searchTimeout = setTimeout(loadResults, 100);
     });
 
-    body.on('click', '#admin table.results > tbody > tr.read-only', function () {
+    body.on('click', '#command_control table.results > tbody > tr.read-only', function () {
         $(this).find('input[name="selected"]')
             .prop('checked', !$(this).find('input[name="selected"]').prop('checked'));
     });
 
-    body.on('change', '#admin table.results > thead > tr > th > label > select, #admin table.results > thead > tr > th > label > input', function () {
-        var admin = jQuery('#admin'),
+    body.on('change', '#command_control table.results > thead > tr > th > label > select, #command_control table.results > thead > tr > th > label > input', function () {
+        var admin = jQuery('#command_control'),
             that = $(this);
 
         if(that.val() == '_ascending' || that.val() == '_descending')
@@ -481,7 +481,7 @@ $(document).ready(function () {
         searchTimeout = setTimeout(loadResults, 100);
     });
 
-    body.on('change', '#admin input[name="search"], #admin input[name="page"]', function () {
+    body.on('change', '#command_control input[name="search"], #command_control input[name="page"]', function () {
         if(searchTimeout != null)
             clearTimeout(searchTimeout);
         searchTimeout = setTimeout(loadResults, 100);
