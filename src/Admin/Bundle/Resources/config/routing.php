@@ -116,7 +116,7 @@ $collection->add(
 $collection->add(
     'validation',
     new Route(
-        '/validation',
+        '/validation/{_format}',
         ['_controller' => 'AdminBundle:Validation:index', '_format' => 'adviser'],
         ['_format' => DASHBOARD_VIEWS]
     )
