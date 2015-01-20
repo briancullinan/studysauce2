@@ -20,6 +20,7 @@ modules:
             browser: 'chrome'
             restart: true
             wait: 1
+            host: 71.36.230.3
 #        Symfony2:
 #            app_path: '../../../app'
 #            var_path: '../../../app'

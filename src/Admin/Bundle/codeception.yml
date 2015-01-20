@@ -2,7 +2,7 @@ namespace: StudySauce\Bundle\Tests
 actor: Tester
 paths:
     tests: Tests
-    log: Tests/_output
+    log: ../../../app/logs
     data: Tests/_data
     helpers: Tests/_support
 settings:
