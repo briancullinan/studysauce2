@@ -122,15 +122,16 @@ class ScheduleController extends Controller
     {
         // TODO: remap demo functions to studysauce static functions used by testers?
         $old = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
-            $b->getEndTime() > new \DateTime() && $b->getStartTime() < new \DateTime(); })->toArray();
+            $b->getEndTime() > new \DateTime(); })->toArray();
         if(count($old) < 8) {
+            $old = $schedule->getCourses()->toArray();
             foreach ($old as $i => $c) {
                 /** @var Course $c */
                 $c->setDeleted(true);
                 $orm->merge($c);
             }
+            $orm->flush();
         }
-        $orm->flush();
 
         // TODO: remap demo functions to studysauce static functions used by testers?
         $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&

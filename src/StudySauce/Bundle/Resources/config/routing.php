@@ -1,4 +1,7 @@
-<?php define('DASHBOARD_VIEWS', 'index|tab|json|funnel|adviser');
+<?php
+if(!defined('DASHBOARD_VIEWS')) {
+    define('DASHBOARD_VIEWS', 'index|tab|json|funnel|adviser');
+}
 // app/config/routing.php
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;

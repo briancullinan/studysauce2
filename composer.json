@@ -23,7 +23,8 @@
         "kriswallsmith/buzz": "~0.13",
         "authorizenet/authorizenet": "~1.8",
         "aws/aws-sdk-php": "2.*",
-        "whiteoctober/swiftmailerdbbundle": "~1.0"
+        "whiteoctober/swiftmailerdbbundle": "~1.0",
+        "codeception/codeception": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

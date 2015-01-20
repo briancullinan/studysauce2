@@ -113,4 +113,27 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'validation',
+    new Route(
+        '/validation',
+        ['_controller' => 'AdminBundle:Validation:index', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
+    )
+);
+
+$collection->add(
+    'validation_test',
+    new Route(
+        '/validation/test',
+        ['_controller' => 'AdminBundle:Validation:test'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
 return $collection;

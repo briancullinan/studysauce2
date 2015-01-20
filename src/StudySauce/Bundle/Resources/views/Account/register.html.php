@@ -45,7 +45,7 @@ $view['slots']->start('body'); ?>
             $isFirst = false;
             ?><a href="<?php print $url; ?>" class="more">Sign in</a><br /><?php
         }?>
-        <a href="#sign-in-with-email" class="cloak">Or register in with <span class="reveal">email</span></a>
+        <a href="#sign-in-with-email" class="cloak">Or register with <span class="reveal">email</span></a>
         <div class="first-name">
             <label class="input"><input type="text" placeholder="First name" value="<?php print (isset($first) ? $first : ''); ?>"></label>
         </div>

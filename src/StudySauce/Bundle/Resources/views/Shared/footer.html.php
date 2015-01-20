@@ -5,7 +5,7 @@ $user = $app->getUser();
     <?php
     if($app->getRequest()->get('_format') == 'funnel') { ?>
         <ul class="menu secondary-menu">
-            <li class="menu-334"><a href="/privacy">Privacy policy</a></li>
+            <li class="menu-334"><a href="<?php print $view['router']->generate('privacy'); ?>">Privacy policy</a></li>
         </ul>
     <?php } else { ?>
         <div style="display:inline-block;">

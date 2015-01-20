@@ -84,8 +84,8 @@ class PageTracker implements EventSubscriberInterface
             $visit = new Visit();
             $visit->setPath($path);
             $visit->setHash('');
-            $this->session->start();
-            $id = $this->session->getId();
+            if($this->session->isStarted())
+                $id = $this->session->getId();
 
             /** @var TokenInterface $token */
             $token = $this->context->getToken();

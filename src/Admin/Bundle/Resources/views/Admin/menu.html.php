@@ -11,7 +11,7 @@ $user = $app->getUser();
             <li><a href="#collapse">Hide</a><h3>Admin Tools</h3></li>
             <li><a href="<?php print $view['router']->generate('command_control'); ?>"><span>&nbsp;</span>Home</a></li>
             <li><a href="<?php print $view['router']->generate('import'); ?>"><span>&nbsp;</span>User Import</a></li>
-            <li><a href="<?php //print $view['router']->generate('validation'); ?>"><span>&nbsp;</span>Validation</a></li>
+            <li><a href="<?php print $view['router']->generate('validation'); ?>"><span>&nbsp;</span>Validation</a></li>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>
         </ul>
     </nav>
