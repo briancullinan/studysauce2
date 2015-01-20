@@ -264,7 +264,7 @@ class EmailsController extends Controller
         if(empty($user))
             $user = $this->getUser();
 
-        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $_code], UrlGeneratorInterface::ABSOLUTE_URL);
+        $codeUrl = $this->generateUrl('register', ['_code' => $_code], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your parent') . ' has prepaid for your study plan')
