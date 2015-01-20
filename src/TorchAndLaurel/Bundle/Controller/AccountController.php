@@ -31,7 +31,7 @@ class AccountController extends Controller
 
         $account = new \StudySauce\Bundle\Controller\AccountController();
         $account->setContainer($this->container);
-        $account->registerAction($request);
+        return $account->registerAction($request);
     }
 
 }
