@@ -16,4 +16,13 @@ $collection->add(
     new Route('/torchandlaurelparents/{_code}', ['_controller' => 'TorchAndLaurelBundle:Landing:parents','_code' => ''])
 );
 
+$collection->add(
+    'torchandlaurel_register',
+    new Route(
+        '/torchandlaurelregister',
+        ['_controller' => 'TorchAndLaurelBundle:Account:register', '_format' => 'funnel'],
+        ['_format' => 'funnel']
+    )
+);
+
 return $collection;
