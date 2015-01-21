@@ -147,12 +147,15 @@ jQuery(document).ready(function() {
         jQuery.ajax({
             url: window.callbackPaths['import_save'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 users: users
             },
             success: function (data)
             {
+                var content = $(data);
+                importTab.find('.import-row').remove();
+                content.find('.import-row').insertBefore(importTab.find('.form-actions'));
             }
         });
     });

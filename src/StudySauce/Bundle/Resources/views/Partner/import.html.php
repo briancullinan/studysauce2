@@ -1,5 +1,7 @@
 <?php
 
+use StudySauce\Bundle\Entity\GroupInvite;
+
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
@@ -22,6 +24,24 @@ $view['slots']->start('body'); ?>
         <h3>2) Your students will receive an invitation with a link that will finish setting up their account.</h3>
         <h3>3) Voila, you are connected.</h3>
         <hr />
+        <?php foreach($app->getUser()->getGroupInvites()->toArray() as $g) {
+        /** @var GroupInvite $g */
+        ?>
+            <div class="import-row read-only invalid">
+            <label class="first-name">
+                <span>First name</span>
+                <input type="text" placeholder="First name" value="<?php print $g->getFirst(); ?>" />
+            </label>
+            <label class="last-name">
+                <span>Last name</span>
+                <input type="text" placeholder="Last name" value="<?php print $g->getLast(); ?>"  />
+            </label>
+            <label class="email">
+                <span>Email</span>
+                <input type="text" placeholder="Email" value="<?php print $g->getEmail(); ?>"  />
+            </label>
+        </div>
+        <?php } ?>
         <div class="import-row edit invalid">
             <label class="first-name">
                 <span>First name</span>
