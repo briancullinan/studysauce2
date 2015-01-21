@@ -303,11 +303,11 @@ class PartnerController extends Controller
                 $invite->setEmail($u['email']);
                 $invite->setCode(md5(microtime()));
                 $user->addGroupInvite($invite);
-                $emails->groupInviteAction($user, $invite);
                 $orm->persist($invite);
+                $orm->flush();
+                $emails->groupInviteAction($user, $invite);
             }
         }
-        $orm->flush();
 
         return $this->importAction();
     }
