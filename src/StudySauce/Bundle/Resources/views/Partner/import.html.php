@@ -28,30 +28,30 @@ $view['slots']->start('body'); ?>
         /** @var GroupInvite $g */
         ?>
             <div class="import-row read-only invalid">
-            <label class="first-name">
+            <label class="input first-name">
                 <span>First name</span>
                 <input type="text" placeholder="First name" value="<?php print $g->getFirst(); ?>" />
             </label>
-            <label class="last-name">
+            <label class="input last-name">
                 <span>Last name</span>
                 <input type="text" placeholder="Last name" value="<?php print $g->getLast(); ?>"  />
             </label>
-            <label class="email">
+            <label class="input email">
                 <span>Email</span>
                 <input type="text" placeholder="Email" value="<?php print $g->getEmail(); ?>"  />
             </label>
         </div>
         <?php } ?>
         <div class="import-row edit invalid">
-            <label class="first-name">
+            <label class="input first-name">
                 <span>First name</span>
                 <input type="text" placeholder="First name" />
             </label>
-            <label class="last-name">
+            <label class="input last-name">
                 <span>Last name</span>
                 <input type="text" placeholder="Last name" />
             </label>
-            <label class="email">
+            <label class="input email">
                 <span>Email</span>
                 <input type="text" placeholder="Email" />
             </label>
