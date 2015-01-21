@@ -467,6 +467,7 @@ class EmailsController extends Controller
             ->setTo($invite->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:group-invite.html.php', [
                         'user' => $user,
+                        'group' => $invite->getGroup(),
                         'greeting' => 'Dear ' . $invite->getFirst() . ' ' . $invite->getLast() . ',',
                         'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
                     ]), 'text/html');

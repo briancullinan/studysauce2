@@ -294,7 +294,7 @@ class PartnerController extends Controller
                 }
             }
             // save the invite
-            if(!isset($invite)) {
+            if(!isset($invite) && !empty($group)) {
                 $invite = new GroupInvite();
                 $invite->setGroup($group);
                 $invite->setUser($user);
@@ -302,10 +302,10 @@ class PartnerController extends Controller
                 $invite->setLast($u['last']);
                 $invite->setEmail($u['email']);
                 $invite->setCode(md5(microtime()));
+                $user->addGroupInvite($invite);
+                $emails->groupInviteAction($user, $invite);
+                $orm->persist($invite);
             }
-            $user->addGroupInvite($invite);
-            $emails->groupInviteAction($user, $invite);
-            $orm->persist($invite);
         }
         $orm->flush();
 
