@@ -309,7 +309,7 @@ class PartnerController extends Controller
             }
         }
 
-        return $this->importAction();
+        return $this->forward('StudySauceBundle:Partner:import', ['_format' => 'tab']);
     }
 
     /**
