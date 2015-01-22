@@ -77,6 +77,9 @@ EOF
                 (empty($p->getReminder()) || $p->getReminder()->getTimestamp() < time() - 86400 * 7)
             ) {
                 $emails->partnerReminderAction($p->getUser(), $p);
+                $p->setReminder(new \DateTime());
+                $orm->merge($p);
+                $orm->flush();
             }
         }
 
@@ -131,6 +134,19 @@ EOF
                     !in_array('1209600', $d->getReminderSent()))
             ) {
                 $deadlines[$d->getUser()->getId()][] = $d;
+                $rem = $d->getReminderSent();
+                if($d->getDueDate()->getTimestamp() > time() + 86400 * 14 && $d->getDueDate()->getTimestamp() < time() + 86400 * 15)
+                    $rem[] = '1209600';
+                if($d->getDueDate()->getTimestamp() > time() + 86400 * 7 && $d->getDueDate()->getTimestamp() < time() + 86400 * 8)
+                    $rem[] = '604800';
+                if($d->getDueDate()->getTimestamp() > time() + 86400 * 4 && $d->getDueDate()->getTimestamp() < time() + 86400 * 5)
+                    $rem[] = '345600';
+                if($d->getDueDate()->getTimestamp() > time() + 86400 * 2 && $d->getDueDate()->getTimestamp() < time() + 86400 * 3)
+                    $rem[] = '172800';
+                if($d->getDueDate()->getTimestamp() > time() + 86400 && $d->getDueDate()->getTimestamp() < time() + 86400 * 2)
+                    $rem[] = '86400';
+                $orm->merge($d);
+                $orm->flush();
             }
         }
 

@@ -1,3 +1,58 @@
+
+
+
 #validation table {
     width:100%;
+    table-layout: fixed;
+}
+
+#validation table td:nth-child(1)
+{
+    width:30%;
+}
+
+#validation table td:nth-child(2)
+{
+}
+
+#validation table td:nth-child(3)
+{
+    width:150px;
+    text-align: right;
+}
+
+#validation h2
+{
+    text-transform: capitalize;
+    margin-right: -150px;
+    padding-right: 150px;
+    width: 100%;
+    display: inline-block;
+    margin-bottom:0;
+}
+
+#validation .host-setting,
+#validation .browser-setting,
+#validation .wait-setting,
+#validation .url-setting
+{
+    width: 50%;
+    margin: 0 -2px;
+    padding: 0 2px;
+    display:inline-block;
+    vertical-align: top;
+}
+
+#validation .suite-actions
+{
+    width: 150px;
+    display: inline-block;
+    margin: 0 -4px;
+    text-align: right;
+    padding: 0 4px;
+}
+
+#validation a[href="#run-all"]
+{
+
 }

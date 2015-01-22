@@ -29,6 +29,23 @@ class PageLoaderCest
     }
 
     // tests
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryContactUs(AcceptanceTester $I)
+    {
+        $I->wantTo('contact the site\'s administrators');
+        $I->wait(5);
+        $I->seeLink('Contact us');
+        $I->click('Contact us');
+        $I->fillField('#contact-support input[name="your-name"]', 'test testers');
+        $I->fillField('#contact-support input[name="your-email"]', 'tester@mailinator.com');
+        $I->fillField('#contact-support textarea', 'I love this site.');
+        $I->click('Send');
+        $I->wait(10);
+    }
+
     /**
      * @param AcceptanceTester $I
      */
@@ -65,15 +82,7 @@ class PageLoaderCest
         $I->wantTo('return to the homepage');
         $I->seeLink('Go home');
         $I->click('Go home');
-        $I->wantTo('send a contact message');
-        $I->wait(5);
-        $I->seeLink('Contact us');
-        $I->click('Contact us');
-        $I->fillField('#contact-support input[name="your-name"]', 'test testers');
-        $I->fillField('#contact-support input[name="your-email"]', 'tester@mailinator.com');
-        $I->fillField('#contact-support textarea', 'I love this site.');
-        $I->click('Send');
-        $I->wait(10);
+        $this->tryContactUs($I);
     }
 
     /**
@@ -155,18 +164,17 @@ class PageLoaderCest
         $I->wait(10);
         $I->click('div[data-value="Arizona State University"]');
         $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
+
     }
 
     /**
      * @param AcceptanceTester $I
      */
-    public function tryFreeCourse(AcceptanceTester $I)
+    public function tryLesson1(AcceptanceTester $I)
     {
-        $this->tryStudentRegister($I);
-        $I->wantTo('complete all the free courses');
-        $I->seeInCurrentUrl('/course/1/lesson/1/step');
-        $I->seeLink('Launch');
         $I->wantTo('complete course 1');
+        $I->amOnPage('/course/1/lesson/1/step');
+        $I->seeLink('Launch');
         $I->click('Launch');
         $I->wait(10);
         $I->executeInSelenium(function (WebDriver $driver) {
@@ -202,11 +210,14 @@ class PageLoaderCest
                 $driver->findElement(WebDriverBy::cssSelector('#course1_introduction-step4 .highlighted-link a'))->click();
             });
         $I->wait(15);
+    }
 
-
-
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryLesson2 (AcceptanceTester $I) {
         $I->wantTo('complete course 2');
-        $I->seeInCurrentUrl('/course/1/lesson/2/step');
+        $I->amOnPage('/course/1/lesson/2/step');
         $I->executeInSelenium(function (WebDriver $driver) {
                 $driver->findElement(WebDriverBy::cssSelector('#course1_setting_goals .highlighted-link a'))->click();
             });
@@ -246,16 +257,38 @@ class PageLoaderCest
         $I->click('Set up my goals');
         $I->wait(15);
 
+    }
 
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryGoals(AcceptanceTester $I) {
 
         $I->wantTo('complete goals');
         $I->seeInCurrentUrl('/goals');
         $I->fillField('input[name="quiz-smart-acronym-T"]', 'time-bound');
         $I->fillField('input[name="quiz-motivation-I"]', 'intrinsic');
         $I->fillField('input[name="quiz-motivation-E"]', 'extrinsic');
-        $I->seeLink('Set up my goals');
-        $I->click('Set up my goals');
+        $I->seeLink('Save');
+        $I->click('Save');
         $I->wait(15);
+
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryFreeCourse(AcceptanceTester $I)
+    {
+        $this->tryStudentRegister($I);
+        $I->wantTo('complete all the free courses');
+        $I->seeInCurrentUrl('/course/1/lesson/1/step');
+        $this->tryLesson1($I);
+        $I->seeInCurrentUrl('/course/1/lesson/2/step');
+        $this->tryLesson2($I);
+        $I->seeInCurrentUrl('/goals');
+        $this->tryGoals($I);
+        // TODO: use the menu to get back to lesson 3
 
     }
 }
