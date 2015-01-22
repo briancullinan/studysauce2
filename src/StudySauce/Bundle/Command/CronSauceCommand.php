@@ -66,7 +66,8 @@ EOF
         foreach ($partners as $i => $p) {
             /** @var PartnerInvite $p */
             // send for 4 weeks
-            if ((($p->getCreated()->getTimestamp() < time() - 86400 * 3 && $p->getCreated()->getTimestamp() > time(
+            if (!$p->getActivated() &&
+                (($p->getCreated()->getTimestamp() < time() - 86400 * 3 && $p->getCreated()->getTimestamp() > time(
                         ) - 86400 * 4) ||
                     ($p->getCreated()->getTimestamp() < time() - 86400 * 10 && $p->getCreated()->getTimestamp() > time(
                         ) - 86400 * 11) ||
@@ -95,7 +96,7 @@ EOF
             // TODO: skip advised users
             if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time() - 86400 * 4) {
                 $u->setProperty('welcome_reminder', true);
-                $emails->marketingReminderAction($u);
+                //$emails->marketingReminderAction($u);
                 $orm->merge($u);
                 $orm->flush();
             }
