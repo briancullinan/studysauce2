@@ -338,9 +338,10 @@ class EmailsController extends Controller
             else
                 $days = 'tomorrow';
 
-            $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . (!empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic') . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment() . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
-            if(array_search(!empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic', $classes) === false)
-                $classes[] = $reminder->getCourse()->getName();
+            $className = !empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic';
+            $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment() . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
+            if(array_search($className, $classes) === false)
+                $classes[] = $className;
 
             // save the sent status of the reminder
             foreach([1,2,4,7,14] as $i => $t)
