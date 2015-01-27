@@ -1,0 +1,26 @@
+
+#emails a[href="#edit-email"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1552px transparent;
+}
+
+#emails a[href="#edit-email"]:hover
+{
+    background-position: left -1602px;
+}
+
+#emails a[href="#send-email"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4102px transparent;
+}
+
+#emails a[href="#send-email"]:hover
+{
+    background-position: left -4152px;
+}
