@@ -158,10 +158,18 @@ $(document).ready(function () {
                     var content = $(data),
                         metrics = $('#metrics');
                     ssMergeScripts(content.filter('script:not([src])'));
-                    if(content.find('#metrics').is('.demo'))
+                    if(content.filter('#metrics').is('.demo')) {
                         metrics.addClass('demo');
-                    else
+                        $('#metrics-empty').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                            show: metrics.is(':visible')
+                        });
+                    }
+                    else {
                         metrics.removeClass('demo');
+                        $('#metrics-empty').modal('hide');
+                    }
                     // update metrics
                     metrics.find('.checkin-row').remove();
                     jQuery('#checkins-list').append(content.find('.checkin-row'));

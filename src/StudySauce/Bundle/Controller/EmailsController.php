@@ -213,7 +213,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['invoice-receipt']])));
+                        'category' => ['invoice']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 
@@ -243,7 +243,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['marketing-reminder']])));
+                        'category' => ['welcome-reminder']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 
@@ -277,7 +277,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['parent-prepay']])));
+                        'category' => ['prepay']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 
@@ -372,7 +372,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['reminders']])));
+                        'category' => ['deadline-reminder']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 
@@ -528,17 +528,11 @@ class EmailsController extends Controller
             ->setSubject($subject)
             ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
             ->setTo('admin@studysauce.com')
-            ->setBody(
-                $this->renderView(
-                    'StudySauceBundle:Emails:contact-message.html.php',
-                    [
+            ->setBody($this->renderView('StudySauceBundle:Emails:contact-message.html.php', [
                         'link' => '&nbsp;',
                         'user' => $user,
                         'message' => $message
-                    ]
-                ),
-                'text/html'
-            );
+                    ]), 'text/html' );
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['contact-message']])));
@@ -586,17 +580,11 @@ class EmailsController extends Controller
             ->setSubject($subject)
             ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
             ->setTo('admin@studysauce.com')
-            ->setBody(
-                $this->renderView(
-                    'StudySauceBundle:Emails:administrator.html.php',
-                    [
+            ->setBody($this->renderView('StudySauceBundle:Emails:administrator.html.php', [
                         'link' => '&nbsp;',
                         'user' => $user,
                         'properties' => self::dump($properties, $properties instanceof \Exception ? 3 : 2)
-                    ]
-                ),
-                'text/html'
-            );
+                    ]), 'text/html' );
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['administrator']])));

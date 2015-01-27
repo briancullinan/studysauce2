@@ -136,4 +136,13 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'emails',
+    new Route(
+        '/emails/{_format}',
+        ['_controller' => 'AdminBundle:Emails:index', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
+    )
+);
+
 return $collection;

@@ -50,8 +50,9 @@ $(document).ready(function () {
                 body.find('.main-menu ul.collapse.in').removeClass('in');
             item.addClass('active').parents('ul.collapse').addClass('in').css('height', '');
         }
-        if(that.is('a') && that.parents('.panel-pane').length > 0)
+        if(that.is('a')) {
             item = item.add(that);
+        }
 
         // download the panel
         if(panel.length == 0) {

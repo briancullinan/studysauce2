@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
@@ -480,6 +481,12 @@ class ScheduleController extends Controller
                         !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
                 }) || $course->getCheckins()->count() > 0 || $course->getDeadlines()->count() > 0) {
                 $course->setDeleted(true);
+                foreach($course->getDeadlines() as $d) {
+                    /** @var Deadline $d */
+                    $d->setDeleted(true);
+                    $orm->merge($d);
+                }
+                // events will be deleted automatically when returning to the plan tab
                 $orm->merge($course);
             }
             else {

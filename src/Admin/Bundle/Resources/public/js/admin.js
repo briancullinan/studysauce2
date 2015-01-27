@@ -66,13 +66,17 @@ $(document).ready(function () {
     }
 
     function loadResults() {
-        $.ajax({
-            url: window.callbackPaths['command_callback'],
-            type: 'GET',
-            dataType: 'text',
-            data: getData(),
-            success: loadContent
-        });
+        if(searchTimeout != null)
+            clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function () {
+            $.ajax({
+                url: window.callbackPaths['command_callback'],
+                type: 'GET',
+                dataType: 'text',
+                data: getData(),
+                success: loadContent
+            });
+        }, 100);
     }
 
     body.on('keyup', '#command_control input[name="search"], #command_control input[name="page"]', function () {
@@ -203,6 +207,7 @@ $(document).ready(function () {
         };
 
         var cur = -1, prv = -1;
+        var hideTimeout = null;
         pickers
             .datepicker({
                 //numberOfMonths: 3,
@@ -242,6 +247,22 @@ $(document).ready(function () {
                             that.prev().find('input').val('').trigger('change');
                             that.hide();
                         });
+                    $('<a href="#asc">Ascending (Then-Now)</a>')
+                        .insertBefore($(this).find('.ui-datepicker-header'))
+                        .on('click', function (evt) {
+                            evt.preventDefault();
+                            orderBy = that.prev().find('input').attr('name') + ' ASC';
+                            loadResults();
+                            that.hide();
+                        });
+                    $('<a href="#desc">Descending (Now-Then)</a>')
+                        .insertBefore($(this).find('.ui-datepicker-header'))
+                        .on('click', function (evt) {
+                            evt.preventDefault();
+                            orderBy = that.prev().find('input').attr('name') + ' DESC';
+                            loadResults();
+                            that.hide();
+                        });
                     $('<a href="#yesterday">Since Yesterday</a>')
                         .insertBefore($(this).find('.ui-datepicker-header'))
                         .on('click', function (evt) {
@@ -254,7 +275,6 @@ $(document).ready(function () {
                             var d1 = $.datepicker.formatDate( 'mm/dd/y', new Date(Math.min(prv,cur)), {}),
                                 d2 = $.datepicker.formatDate( 'mm/dd/y', new Date(Math.max(prv,cur)), {} );
                             that.prev().find('input').val( d1+' - '+d2 ).trigger('change');
-                            debugger;
                             that.hide();
                         });
                     $('<a href="#week">This Week</a>')
@@ -315,9 +335,35 @@ $(document).ready(function () {
                     of: admin.find('th:nth-child(1) input, th:nth-child(6) input').eq(i)
                 });
             })
+            .on('mousedown', function () {
+                setTimeout(function () {
+                    if(hideTimeout)
+                        clearTimeout(hideTimeout);
+                }, 100);
+            })
+            .on('blur', function () {
+                $(this).hide();
+            })
             .hide();
 
-        body.on('focus', 'th:nth-child(1) input, th:nth-child(6) input', function (e) {
+        body.on('mousedown', '#command_control *', function (evt) {
+            if(this == evt.target &&
+                $(evt.target).parents('.ui-datepicker').length == 0 &&
+                $(evt.target).parents('th:nth-child(1), th:nth-child(6)').length == 0) {
+                hideTimeout = setTimeout(function () { admin.find('.ui-datepicker').parent().hide(); }, 500);
+            }
+        });
+
+        body.on('blur', '#command_control th:nth-child(1) input, #command_control th:nth-child(6) input', function (e) {
+            var that = $(this).parent().next();
+            hideTimeout = setTimeout(function () { that.hide(); }, 500);
+        });
+
+        body.on('focus', '#command_control th:nth-child(1) input, #command_control th:nth-child(6) input', function (e) {
+            setTimeout(function () {
+                if(hideTimeout)
+                    clearTimeout(hideTimeout);
+            }, 100);
             var v = this.value,
                 d;
 
@@ -446,9 +492,7 @@ $(document).ready(function () {
         if(page == 'last')
             page = parseInt(admin.find('#page-total').text());
         admin.find('input[name="page"]').val(page);
-        if(searchTimeout != null)
-            clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(loadResults, 100);
+        loadResults();
     });
 
     body.on('click', '#command_control table.results > tbody > tr.read-only', function () {
@@ -476,16 +520,10 @@ $(document).ready(function () {
             that.data('last', that.val());
         }
 
-        if(searchTimeout != null)
-            clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(loadResults, 100);
+        loadResults();
     });
 
-    body.on('change', '#command_control input[name="search"], #command_control input[name="page"]', function () {
-        if(searchTimeout != null)
-            clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(loadResults, 100);
-    });
+    body.on('change', '#command_control input[name="search"], #command_control input[name="page"]', loadResults);
 
 
 });

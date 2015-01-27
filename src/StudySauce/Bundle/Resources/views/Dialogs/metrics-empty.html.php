@@ -5,6 +5,6 @@ $view['slots']->start('modal-header') ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>
-<a href="<?php print $view['router']->generate('checkin'); ?>" class="btn btn-primary" data-dismiss="modal">Checkin</a>
+<a href="<?php print $view['router']->generate('checkin'); ?>" class="btn btn-primary">Checkin</a>
 <?php $view['slots']->stop() ?>
 

@@ -143,6 +143,17 @@
     background-position: left -5005px;
 }
 
+#right-panel .main-menu a[href*="/emails"] span
+{
+    background-position: left -8205px;
+}
+
+#right-panel .main-menu a[href*="/emails"]:hover span,
+#right-panel .main-menu a[href*="/emails"]:focus span,
+#right-panel .main-menu a[href*="/emails"]:active span,
+#right-panel .main-menu a[href*="/emails"].active span {
+    background-position: left -8305px;
+}
 
 #command_control .edit a[href="#confirm-remove-user"],
 #command_control .edit a[href="#confirm-cancel-user"],
@@ -414,22 +425,14 @@
     vertical-align: middle;
 }
 
-#command_control .ui-datepicker a[href="#everything"],
-#command_control .ui-datepicker a[href="#yesterday"],
-#command_control .ui-datepicker a[href="#week"],
-#command_control .ui-datepicker a[href="#month"],
-#command_control .ui-datepicker a[href="#year"]
+#command_control .ui-datepicker > a
 {
     display:block;
     text-align: left;
     padding-left:10px;
 }
 
-#command_control .ui-datepicker a[href="#everything"]:hover,
-#command_control .ui-datepicker a[href="#yesterday"]:hover,
-#command_control .ui-datepicker a[href="#week"]:hover,
-#command_control .ui-datepicker a[href="#month"]:hover,
-#command_control .ui-datepicker a[href="#year"]:hover
+#command_control .ui-datepicker > a:hover
 {
     background-color: #09B;
     color: #fff;

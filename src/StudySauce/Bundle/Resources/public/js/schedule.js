@@ -201,7 +201,6 @@ $(document).ready(function () {
         var that = $(this),
             row = that.parents('.class-row');
         planFunc.apply(row.removeClass('read-only').addClass('edit'));
-        that.parents('.schedule').next('.highlighted-link').find('a[href="#save-class"]').css('visibility', 'visible');
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
@@ -228,16 +227,15 @@ $(document).ready(function () {
     {
         var schedule = $('#schedule');
         var response = $(data);
-        schedule.find('.university input').data('state', schedule.find('.university input').val().trim())
+        schedule.find('.university input').data('state', schedule.find('.university input').val().trim());
         schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
-        schedule.closest('a[href="#save-class"]').css('visibility', 'hidden');
         // update class schedule
         $('.schedule .class-row').remove();
         response.find('.schedule:not(.other) .class-row')
-            .appendTo($('.schedule:not(.other)'));
+            .prependTo($('.schedule:not(.other)'));
 
         response.find('.schedule.other .class-row')
-            .appendTo($('.schedule.other'));
+            .prependTo($('.schedule.other'));
 
         planFunc.apply(schedule.find('.schedule .class-row'));
         schedule.scrollintoview(DASHBOARD_MARGINS);
@@ -252,7 +250,7 @@ $(document).ready(function () {
             otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
             list = schedule.find('.schedule' + (isOther ? '.other' : ':not(.other)')),
             addClass = list.find('.class-row').first().clone().removeAttr('id')
-                .removeClass('read-only').addClass('edit').appendTo(list);
+                .removeClass('read-only').addClass('edit').insertBefore(list.find('.form-actions'));
         // reset fields for the new entry
         addClass.attr('class', addClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
@@ -261,7 +259,6 @@ $(document).ready(function () {
         addClass.find('.class-name input').attr('placeholder', isOther
                 ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
                 : examples[Math.floor(Math.random() * examples.length)]);
-        addClass.parents('.schedule').next('.highlighted-link').find('a[href="#save-class"]').css('visibility', 'visible');
         planFunc.apply(addClass);
     });
 

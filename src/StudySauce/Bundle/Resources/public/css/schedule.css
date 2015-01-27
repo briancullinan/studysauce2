@@ -30,6 +30,17 @@
     border-bottom: 1px solid #555555;
 }
 
+#schedule a[href="#save-class"]
+{
+    visibility:hidden;
+}
+
+#schedule .class-row.edit ~ .highlighted-link a[href="#save-class"],
+.funnel #schedule a[href="#save-class"]
+{
+    visibility:visible;
+}
+
 #schedule .selectize-dropdown .title {
     display: block;
 }

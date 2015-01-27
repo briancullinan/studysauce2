@@ -53,7 +53,7 @@ $(document).ready(function () {
 
     body.on('show', '#deadlines', function () {
         // show empty
-        if($(this).is('.empty'))
+        if($(this).is('.empty-schedule'))
             $('#deadlines-empty').modal({
                 backdrop: 'static',
                 keyboard: false,
@@ -77,17 +77,28 @@ $(document).ready(function () {
     function updateDeadlines(response)
     {
         var deadlines = $('#deadlines');
-        // update key dates list
-        deadlines.find('.deadline-row,.head').remove();
-        response.find('.pane-content .deadline-row,.pane-content .head').insertAfter(deadlines.find('header'));
-        deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row').last());
-        if(deadlines.find('.deadline-row:not(.first):visible,.head:visible').length == 0) {
-            deadlines.find('.deadline-row.first').detach().insertBefore(deadlines.find('.form-actions').first());
-            deadlines.find('.sort-by,header').hide();
+        // update deadlines tab
+        if(response.filter('#deadlines').is('.empty'))
+            deadlines.addClass('empty');
+        else
+            deadlines.removeClass('empty');
+        if(response.filter('#deadlines').is('.empty-schedule')) {
+            deadlines.addClass('empty-schedule');
+            $('#deadlines-empty').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: deadlines.is(':visible')
+            });
         }
         else {
-            deadlines.find('.sort-by,header').show();
+            deadlines.removeClass('empty-schedule');
+            $('#deadlines-empty').modal('hide');
         }
+
+        // update deadlines list
+        deadlines.find('.deadline-row,.head').remove();
+        response.filter('#deadlines').find('header ~ .deadline-row, header ~ .head').insertAfter(deadlines.find('header'));
+        deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row:visible').last());
 
         // update home tab
         $('#home').find('.deadlines-widget').replaceWith(response.find('.deadlines-widget'));
@@ -135,19 +146,17 @@ $(document).ready(function () {
     });
 
     body.on('scheduled', function () {
-        var deadlines = $('#deadlines'),
-            schedule = $('#schedule').find('.schedule:not(.other) .class-row'),
-            options = schedule.map(function () {
-                var row = $(this),
-                    courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
-                    className = row.find('.class-name input').val();
-                return '<option value="' + courseId + '">' + className + '</option>';
-            }).toArray();
-        if(options.length == 0)
-            deadlines.addClass('empty');
-        else
-            deadlines.removeClass('empty');
-        deadlines.find('.class-name select').replaceWith('<select>' + options.join('') + '</select>');
+        setTimeout(function () {
+            $.ajax({
+                url: window.callbackPaths['update_deadlines'],
+                type: 'GET',
+                dataType: 'text',
+                success: function (data) {
+                    var response = $(data);
+                    updateDeadlines(response);
+                }
+            });
+        }, 100);
     });
     body.on('click', '#deadlines .deadline-row:not(.edit) > div:not(.reminder)', function () {
         jQuery(this).parents('.deadline-row').toggleClass('selected');
@@ -162,12 +171,15 @@ $(document).ready(function () {
         var deadlines = $('#deadlines');
         evt.preventDefault();
         var newDeadline = deadlines.find('.deadline-row').first().clone()
-            .removeClass('read-only historic').addClass('edit').insertBefore(deadlines.find('.form-actions').first());
-        newDeadline.attr('class', newDeadline.attr('class').replace(/deadline-id-([0-9]*)(\s|$)/ig, ' deadline-id- '));
+            .removeClass('read-only historic').addClass('edit').insertAfter(deadlines.find('header'));
+        newDeadline.attr('class', newDeadline.attr('class')
+            .replace(/deadline-id-([0-9]*)(\s|$)/ig, ' deadline-id- ')
+            .replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         newDeadline.find('.class-name select, .assignment input, .percent input').val('');
         newDeadline.find('.due-date input').removeClass('hasDatepicker').val('');
         newDeadline.find('.reminder input').removeAttr('checked').prop('checked', false);
         datesFunc.apply(newDeadline);
+        deadlines.find('.highlighted-link').last().detach().insertAfter(newDeadline);
     });
 
     body.on('click', '#deadlines a[href="#remove-deadline"]', function (evt) {
@@ -227,7 +239,7 @@ $(document).ready(function () {
                     keys[keys.length] = window.classIds[i];
 
             for(var k in headings)
-                if(keys.indexOf(k) == -1)
+                if(headings.hasOwnProperty(k) && keys.indexOf(k) == -1)
                     keys[keys.length] = k;
 
             for(var j = 0; j < keys.length; j++)
@@ -239,8 +251,10 @@ $(document).ready(function () {
         else
         {
             var keys2 = [];
-            for(var h2 in headings)
-                keys2[keys2.length] = Date.parse(h2);
+            for(var h2 in headings) {
+                if(headings.hasOwnProperty(h2))
+                    keys2[keys2.length] = Date.parse(h2);
+            }
 
             keys2.sort();
             var monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -256,9 +270,5 @@ $(document).ready(function () {
         }
         jQuery('.sort-by').nextAll('.head').remove();
         jQuery(rows).insertAfter(deadlines.find('.sort-by'));
-        // reassign first row
-        deadlines.find('.first').removeClass('first');
-        deadlines.find('.deadline-row:not(.historic,#new-dates-row)').first().addClass('first');
-        deadlines.find('.deadline-row.historic').first().addClass('first');
     });
 });

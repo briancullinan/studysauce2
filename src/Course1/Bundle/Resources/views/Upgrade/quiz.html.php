@@ -12,8 +12,8 @@ $complete = $course->getEnjoyed() !== null;
         <h2>Now let's see how much you remember</h2>
         <h3>Have you enjoyed the Study Sauce course?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-enjoyed" type="radio" <?php print ($course->getEnjoyed() ? 'checked="checked"' : ''); ?> /><i></i><span>Yes</span></label>
-            <label class="radio"><input name="quiz-enjoyed" type="radio" <?php print ($course->getEnjoyed() === false ? 'checked="checked"' : ''); ?> /><i></i><span>No</span></label>
+            <label class="radio"><input name="quiz-enjoyed" type="radio" value="1" <?php print ($course->getEnjoyed() ? 'checked="checked"' : ''); ?> /><i></i><span>Yes</span></label>
+            <label class="radio"><input name="quiz-enjoyed" type="radio" value="0" <?php print ($course->getEnjoyed() === false ? 'checked="checked"' : ''); ?> /><i></i><span>No</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

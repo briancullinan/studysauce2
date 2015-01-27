@@ -25,10 +25,21 @@
     margin-bottom:20px;
 }
 
+#home .deadlines-widget
+{
+    padding:0;
+}
+
+#home .deadlines-widget h3
+{
+    margin:0;
+}
+
 .deadlines-widget .auto-height
 {
     padding-bottom:100%;
     padding-top:15px;
+    position:relative;
 }
 
 .deadlines-widget .the-list
@@ -39,7 +50,7 @@
     left:0;
     width:100%;
     overflow: auto;
-    padding:42px 10px 10px 10px;
+    padding:10px;
 }
 
 .deadlines-widget .deadline-row > *
@@ -60,12 +71,12 @@
 }
 
 a[href="#save-deadline"],
-#deadlines .deadline-row.edit + .form-actions a[href="#add-deadline"]
+#deadlines .deadline-row.edit ~ .form-actions a[href="#add-deadline"]
 {
     visibility: hidden;
 }
 
-#deadlines .deadline-row.edit + .form-actions a[href="#save-deadline"]
+#deadlines .deadline-row.edit ~ .form-actions a[href="#save-deadline"]
 {
     visibility: visible;
 }

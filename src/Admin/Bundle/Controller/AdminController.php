@@ -54,8 +54,13 @@ class AdminController extends Controller
 
         if(!empty($lastLogin = $request->get('lastLogin'))) {
             $start = new \DateTime(explode(' - ', $lastLogin)[0]);
-            $end = new \DateTime(explode(' - ', $lastLogin)[1]);
-            $qb = $qb->andWhere('u.lastLogin >= \'' . $start->format('Y-m-d 00:00:00') . '\' AND u.lastLogin <= \'' . $end->format('Y-m-d 23:59:59') . '\'');
+            if(count(explode(' - ', $lastLogin)) > 1) {
+                $end = new \DateTime(explode(' - ', $lastLogin)[1]);
+                $qb = $qb->andWhere('u.lastLogin >= \'' . $start->format('Y-m-d 00:00:00') . '\' AND u.lastLogin <= \'' . $end->format('Y-m-d 23:59:59') . '\'');
+            }
+            else {
+                $qb = $qb->andWhere('u.lastLogin >= \'' . $start->format('Y-m-d 00:00:00') . '\'');
+            }
         }
 
         if(!empty($created = $request->get('created'))) {

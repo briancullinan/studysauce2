@@ -18,15 +18,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /** @var User $user */
 $user = $app->getUser();
-/** @var $partner PartnerInvite */
-$permissions = !empty($partner) ? $partner->getPermissions() : [
-    'goals',
-    'metrics',
-    'deadlines',
-    'uploads',
-    'plan',
-    'profile'
-];
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -204,7 +195,7 @@ $view['slots']->start('body'); ?>
                     ?>
                     <tr class="user-id-<?php print $u->getId(); ?> read-only status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                     <td data-timestamp="<?php print (empty($u->getLastLogin())
-                        ? $u->getCreated()->getTimestamp()
+                        ? ''
                         : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin())
                             ? $u->getCreated()->format('j M')
                             : $u->getLastLogin()->format('j M')); ?></td>

@@ -321,15 +321,23 @@ $(document).ready(function () {
                     window.planEvents = [];
                     window.planLoaded = [];
                     ssMergeScripts(content.filter('script:not([src])'));
-                    if(content.find('#plan').is('.demo'))
+                    if(content.filter('#plan').is('.demo'))
                         plan.addClass('demo');
                     else
                         plan.removeClass('demo');
 
-                    if(content.find('#plan').is('.empty-schedule'))
+                    if(content.filter('#plan').is('.empty-schedule')) {
                         plan.addClass('empty-schedule');
-                    else
+                        $('#plan-empty-schedule').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                            show: plan.is(':visible')
+                        });
+                    }
+                    else {
                         plan.removeClass('empty-schedule');
+                        $('#plan-empty-schedule').modal('hide');
+                    }
 
                     // merge rows
                     plan.find('.head,.session-row').remove();

@@ -123,7 +123,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
-                        'category' => ['parent-prepay']])));
+                        'category' => ['prepay']])));
         $mailer = $this->get('mailer');
         $mailer->send($message);
 

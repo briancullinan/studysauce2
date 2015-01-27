@@ -4,9 +4,9 @@
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-namespace StudySauce\Bundle\Tests;
+namespace Admin\Bundle\Tests;
 use Codeception\Module\Asserts;
-use StudySauce\Bundle\Tests\Codeception\Module\UnitHelper;
+use Admin\Bundle\Tests\Codeception\Module\UnitHelper;
 
 /**
  * Inherited Methods

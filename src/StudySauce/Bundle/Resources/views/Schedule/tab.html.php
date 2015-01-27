@@ -197,22 +197,21 @@ $view['slots']->start('body'); ?>
                 <div class="read-only"><a href="#edit-class">&nbsp;</a><a href="#remove-class">&nbsp;</a></div>
             </div>
         <?php } ?>
-    </div>
 
-    <div class="form-actions highlighted-link clearfix invalid">
-        <a href="#add-class" class="big-add">Add <span>+</span> class</a>
-        <div class="invalid-times">Error - invalid class time</div>
-        <div class="overlaps-only">Error - classes cannot overlap</div>
-        <div class="invalid-only">Error - please make sure all class information is filled in</div>
-        <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-            <a href="#save-class" class="more">Next</a>
-        <?php } else { ?>
-            <a href="#save-class" class="more" style="<?php print (!$isDemo ? 'visibility:hidden;' : ''); ?>">Save</a>
-        <?php } ?>
+        <div class="form-actions highlighted-link clearfix invalid">
+            <a href="#add-class" class="big-add">Add <span>+</span> class</a>
+            <div class="invalid-times">Error - invalid class time</div>
+            <div class="overlaps-only">Error - classes cannot overlap</div>
+            <div class="invalid-only">Error - please make sure all class information is filled in</div>
+            <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
+                <a href="#save-class" class="more">Next</a>
+            <?php } else { ?>
+                <a href="#save-class" class="more">Save</a>
+            <?php } ?>
+        </div>
     </div>
     <hr/>
     <h2>Enter work or other recurring obligations here</h2>
-
     <header>
         <label>Class name</label>
 
@@ -346,17 +345,17 @@ $view['slots']->start('body'); ?>
                 <input type="hidden" name="event-type" value="o">
             </div>
         <?php } ?>
-    </div>
-    <div class="form-actions highlighted-link clearfix invalid">
-        <a href="#add-other" class="big-add">Add <span>+</span> other event</a>
-        <div class="invalid-times">Error - invalid class time</div>
-        <div class="overlaps-only">Error - classes cannot overlap</div>
-        <div class="invalid-only">Error - please make sure all class information is filled in</div>
-        <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-            <a href="#save-class" class="more">Next</a>
-        <?php } else { ?>
-            <a href="#save-class" class="more" style="<?php print (!$isDemo ? 'visibility:hidden;' : ''); ?>">Save</a>
-        <?php } ?>
+        <div class="form-actions highlighted-link clearfix invalid">
+            <a href="#add-other" class="big-add">Add <span>+</span> other event</a>
+            <div class="invalid-times">Error - invalid class time</div>
+            <div class="overlaps-only">Error - classes cannot overlap</div>
+            <div class="invalid-only">Error - please make sure all class information is filled in</div>
+            <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
+                <a href="#save-class" class="more">Next</a>
+            <?php } else { ?>
+                <a href="#save-class" class="more">Save</a>
+            <?php } ?>
+        </div>
     </div>
     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
     </div>

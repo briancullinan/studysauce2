@@ -18,9 +18,9 @@ modules:
         WebDriver:
             url: 'http://localhost/Symfony/web/app_dev.php/'
             browser: 'chrome'
-            restart: true
             wait: 1
             host: 71.36.230.3
+            clear_cookies: false
         Symfony2:
             app_path: '../../../app'
             var_path: '../../../app'

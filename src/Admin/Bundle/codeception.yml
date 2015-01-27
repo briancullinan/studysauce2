@@ -1,9 +1,9 @@
-namespace: StudySauce\Bundle\Tests 
+namespace: Admin\Bundle\Tests
 actor: Tester
 paths:
     tests: Tests
-    log: ../../../app/logs
-    data: Tests/_data
+    log: Resources/public/results
+    data: Resourses/public/results
     helpers: Tests/_support
 settings:
     bootstrap: _bootstrap.php

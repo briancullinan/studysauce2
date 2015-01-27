@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
@@ -29,14 +30,11 @@ class DeadlinesController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
-        $demo = ScheduleController::getDemoSchedule($userManager, $orm);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
-        $demoDeadlines = $this->getDemoDeadlines();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         if(empty($user))
             $user = $this->getUser();
-        $deadlines = $user->getDeadlines()->toArray();
+        $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted();});
 
         /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
@@ -45,17 +43,30 @@ class DeadlinesController extends Controller
         else
             $courses = [];
 
+        $isDemo = false;
+        if (empty($courses)) {
+            $demo = ScheduleController::getDemoSchedule($userManager, $orm);
+            $courses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $deadlines = $this->getDemoDeadlines(array_values($courses));
+            $isDemo = true;
+        }
+        // show new deadline and hide headings if all the deadlines are in the past
+        $isEmpty = false;
+        if(!$deadlines->filter(function (Deadline $d) { return $d->getDueDate() >= date_sub(new \Datetime('today'), new \DateInterval('P1D')); })->count()) {
+            $isEmpty = true;
+        }
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_deadlines')
             : null;
 
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'csrf_token' => $csrfToken,
-                'deadlines' => $deadlines,
-                'demoDeadlines' => array_values($demoDeadlines),
-                'demoCourses' => array_values($demoCourses),
+                'deadlines' => $deadlines->toArray(),
                 'courses' => array_values($courses),
-                'user' => $user
+                'user' => $user,
+                'isDemo' => $isDemo,
+                'isEmpty' => $isEmpty
             ]);
     }
 
@@ -81,10 +92,12 @@ class DeadlinesController extends Controller
     {
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
-        $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
+        $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
+            $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
+                $b->getType() == 'c';})->toArray();
         else
             $courses = [];
 
@@ -94,29 +107,61 @@ class DeadlinesController extends Controller
             ]);
     }
 
+    public static $examples = ['Exam', 'Paper', 'Essay'];
+
     /**
-     * @return mixed|Deadline
+     * @return string
      */
-    private function getDemoDeadlines()
+    public static function getRandomAssignment()
     {
+        return self::$examples[array_rand(self::$examples, 1)];
+    }
+
+    /**
+     * @param $courses
+     * @return ArrayCollection
+     */
+    private function getDemoDeadlines($courses)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
 
         /** @var $guest User */
         $guest = $userManager->findUserByUsername("guest");
 
-        $deadline = $guest->getDeadlines()->first();
-        if($deadline == null)
-        {
-            $deadline = new Deadline();
-            $deadline->setUser($guest);
-            $deadline->setAssignment('Paper, exam, project, etc.');
-            $deadline->setDueDate(date_add(new \DateTime(), new \DateInterval('P7D')));
-            $deadline->setPercent(0);
-            $deadline->setReminder([86400,345600,1209600]);
-        }
+        $deadlines = $guest->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
+            $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D'));});
 
-        return [$deadline];
+        for($i = $deadlines->count(); $i < 30; $i++) {
+            $assignment = self::getRandomAssignment();
+            // pick a number between 1 and 10
+            $repeat = rand(1, 10);
+            $course = $courses[array_rand($courses, 1)];
+            $reminders = array_rand(['86400' => '', '172800' => '', '345600' => '', '604800' => '', '1209600' => ''], rand(2, 5));
+            for($j = 0; $j < $repeat; $j++) {
+                $deadline = new Deadline();
+                $deadline->setUser($guest);
+                $deadline->setCourse($course);
+                $deadline->setAssignment($assignment . ' ' . ($j + 1));
+                // evenly space $repeat over the next 4 weeks
+                $space = floor(7.0 * 4.0 / $repeat);
+                $due = new \DateTime();
+                $due->setTime(0, 0, 0);
+                $due->add(new \DateInterval('P' . ($space * $j) . 'D'));
+                $deadline->setDueDate($due);
+                $deadline->setPercent(0);
+                $deadline->setReminder($reminders);
+                $deadlines->add($deadline);
+                $guest->addDeadline($deadline);
+                $orm->persist($deadline);
+            }
+            $i+=$repeat;
+        }
+        $orm->flush();
+
+        return $deadlines;
     }
 
     /**
@@ -215,9 +260,11 @@ class DeadlinesController extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        /** @var Deadline $deadline */
         $deadline = $user->getDeadlines()->filter(function (Deadline $d) use ($request) {return $d->getId() == $request->get('remove');})->first();
         if(!empty($deadline)) {
-            $orm->remove($deadline);
+            $deadline->setDeleted(1);
+            $orm->merge($deadline);
             $orm->flush();
         }
 

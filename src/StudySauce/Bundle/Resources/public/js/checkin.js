@@ -51,10 +51,13 @@ $(document).ready(function () {
                     checkin.find('.classes').replaceWith(content.find('.classes'));
                     if(content.filter('#checkin').is('.demo')) {
                         checkin.addClass('demo');
-                        $('#checkin-empty').modal({show:true});
+                        $('#checkin-empty').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                            show: checkin.is(':visible')
+                        });
                     }
-                    else
-                    {
+                    else {
                         checkin.removeClass('demo');
                         $('#checkin-empty').modal('hide');
                     }
@@ -72,7 +75,7 @@ $(document).ready(function () {
                 $('#checkin-empty').modal({
                     backdrop: 'static',
                     keyboard: false,
-                    show:true
+                    show: true
                 });
             else
                 $('#checkin-empty').modal('hide');

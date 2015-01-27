@@ -31,6 +31,7 @@ class User extends BaseUser implements EncoderAwareInterface
 
     /**
      * @ORM\OneToMany(targetEntity="Schedule", mappedBy="user", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $schedules;
 

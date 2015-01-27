@@ -1,6 +1,7 @@
 <?php
 use Codeception\Configuration;
 use Codeception\TestCase\Cest;
+use Codeception\Util\Annotation;
 use StudySauce\Bundle\Entity\User;
 
 /** @var User $user */
@@ -9,6 +10,9 @@ $user = $app->getUser();
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/admin.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
+    <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
+<?php endforeach;
 foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/validation.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
@@ -26,35 +30,80 @@ $view['slots']->start('body'); ?>
             <h2>Settings</h2>
             <hr/>
             <label class="input host-setting"><span>Selenium Server</span>
-                <input type="text" value="<?php print $view->escape($acceptance['modules']['config']['WebDriver']['host']); ?>" />
-                <small>You must run <a href="http://www.seleniumhq.org/download/">Selenium Server</a> and <a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">ChromeDriver</a> with the command
-                    <code>java -jar selenium-server-standalone-*.jar -Dwebdriver.chrome.driver=.\chromedriver.exe -port 4444</code>
-                </small></label>
+                <input type="text"
+                       value="<?php print $view->escape($acceptance['modules']['config']['WebDriver']['host']); ?>"/>
+                <small>You must run <a href="http://www.seleniumhq.org/download/">Selenium Server</a> and <a
+                        href="https://sites.google.com/a/chromium.org/chromedriver/downloads">ChromeDriver</a> with the
+                    command
+                    <code>java -jar selenium-server-standalone-*.jar -Dwebdriver.chrome.driver=.\chromedriver.exe -port
+                        4444</code>
+                </small>
+            </label>
             <label class="input browser-setting"><span>Browser</span>
                 <select>
-                    <option value="chrome" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'chrome' ? 'checked="checked"' : ''); ?>>Chrome</option>
-                    <option value="firefox" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'firefox' ? 'checked="checked"' : ''); ?>>Firefox</option>
-                    <option value="ie" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'ie' ? 'checked="checked"' : ''); ?>>Internet Explorer</option>
+                    <option
+                        value="chrome" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'chrome' ? 'checked="checked"' : ''); ?>>
+                        Chrome
+                    </option>
+                    <option
+                        value="firefox" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'firefox' ? 'checked="checked"' : ''); ?>>
+                        Firefox
+                    </option>
+                    <option
+                        value="ie" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'ie' ? 'checked="checked"' : ''); ?>>
+                        Internet Explorer
+                    </option>
                 </select>
-                <small></small></label>
+                <small></small>
+            </label>
             <label class="input wait-setting"><span>Wait</span>
-                <input type="text" value="<?php print $view->escape($acceptance['modules']['config']['WebDriver']['wait']); ?>" />
-                <small>Number of seconds between each step.  Some steps require additional wait which will be shown in the results.</small></label>
+                <input type="text"
+                       value="<?php print $view->escape($acceptance['modules']['config']['WebDriver']['wait']); ?>"/>
+                <small>Number of seconds between each step. Some steps require additional wait which will be shown in
+                    the results.
+                </small>
+            </label>
             <label class="input url-setting"><span>StudySauce URL</span>
-                <input type="text" value="<?php print (preg_match('/staging\.studysauce\.com/', $_SERVER['HTTP_HOST']) ? 'https://staging.studysauce.com' : $view->escape($acceptance['modules']['config']['WebDriver']['url'])); ?>" />
-                <small>Path to StudySauce instance to test (e.g. https://staging.studysauce.com or https://studysauce.com). WARNING: database changes will occur on the selected instance.</small></label>
+                <input type="text" value="<?php print (preg_match(
+                    '/staging\.studysauce\.com/',
+                    $_SERVER['HTTP_HOST']
+                ) ? 'https://staging.studysauce.com' : $view->escape(
+                    $acceptance['modules']['config']['WebDriver']['url']
+                )); ?>"/>
+                <small>Path to StudySauce instance to test (e.g. https://staging.studysauce.com or
+                    https://studysauce.com). WARNING: database changes will occur on the selected instance.
+                </small>
+            </label>
             <?php foreach ($suites as $i => $suite) { ?>
                 <h2><?php print $suite; ?></h2>
-                <div class="suite-actions"><a href="#run-all" class=" suite-<?php print $suite; ?> ">Run all</a></div>
+                <div class="suite-actions">
+                    <a href="#run-all" class=" suite-<?php print $suite; ?> ">Run</a>
+                    <label class="checkbox"><input type="checkbox"><i></i></label>
+                </div>
                 <hr/>
                 <table>
                     <?php foreach ($tests[$suite] as $s => $t) {
                         /** @var Cest $t */
+                        $depends = PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName());
+                        $includes = \Admin\Bundle\Controller\ValidationController::getIncludedTests($t);
                         ?>
-                        <tr class=" suite-<?php print $suite; ?> ">
-                        <td><?php print $t->getName(); ?></td>
-                        <td></td>
-                        <td><a href="#run-test">Run</a> <label class="checkbox"><input type="checkbox"><i></i></label></td>
+                        <tr class=" test-id-<?php print $t->getName();
+                        ?> depends-on-<?php print implode(' depends-on-', $depends);
+                        ?> includes-<?php print implode(' includes-', $includes);
+                        ?> suite-<?php print $suite; ?> ">
+                            <td><?php print $t->getName(); ?>
+                                <?php if (!empty($depends)) { ?>
+                                <br /><small>Depends on: <?php print implode(', ', $depends); ?></small>
+                                <?php } ?>
+                                <?php if (!empty($includes)) { ?>
+                                    <br /><small>Includes: <?php print implode(', ', $includes); ?></small>
+                                <?php } ?>
+                            </td>
+                            <td></td>
+                            <td>
+                                <a href="#run-test">Run</a>
+                                <label class="checkbox"><input type="checkbox"><i></i></label>
+                            </td>
                         </tr>
                     <?php } ?>
                 </table>

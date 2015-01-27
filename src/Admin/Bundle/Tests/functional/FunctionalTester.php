@@ -4,9 +4,9 @@
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-namespace StudySauce\Bundle\Tests;
+namespace Admin\Bundle\Tests;
 use Codeception\Module\Filesystem;
-use StudySauce\Bundle\Tests\Codeception\Module\FunctionalHelper;
+use Admin\Bundle\Tests\Codeception\Module\FunctionalHelper;
 
 /**
  * Inherited Methods

@@ -2,12 +2,6 @@
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 
-$isDemo = false;
-if (empty($deadlines) || empty($courses)) {
-    $isDemo = true;
-    $deadlines = $demoDeadlines;
-}
-
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');

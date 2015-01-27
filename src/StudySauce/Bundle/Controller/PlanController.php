@@ -119,7 +119,7 @@ class PlanController extends Controller
         // get events for current week
         $emails = new EmailsController();
         $emails->setContainer($this->container);
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $_user->getDeadlines(), $_week, $orm, $emails);
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $_user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted();}), $_week, $orm, $emails);
         $courses = $schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted() && $c->getType() == 'c';})->toArray();
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
@@ -174,7 +174,7 @@ class PlanController extends Controller
         $emails = new EmailsController();
         $emails->setContainer($this->container);
 
-        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines(), $week, $orm, $emails);
+        $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted();}), $week, $orm, $emails);
 
         $courses = $schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted() && $c->getType() == 'c';})->toArray();
         return $this->render(

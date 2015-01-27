@@ -178,6 +178,7 @@ class RedirectListener implements EventSubscriberInterface
 
         if ($request->isXmlHttpRequest() && $response->isRedirect()) {
             $options = ['redirect' => $response->headers->get('Location')];
+            // repopulate the csrf token for login failures
             if(strpos($response->headers->get('Location'), '/login'))
             {
                 $csrfToken = $this->container->has('form.csrf_provider')

@@ -121,7 +121,7 @@ class OrgEmailNotifier implements EventSubscriberInterface
                 $headers = $message->getHeaders();
                 $headers->addParameterizedHeader(
                     'X-SMTPAPI',
-                    preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => ['torch-notification']]))
+                    preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => ['registration-notification']]))
                 );
                 $this->mailer->send($message);
             }
