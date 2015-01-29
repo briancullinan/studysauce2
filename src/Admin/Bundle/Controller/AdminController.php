@@ -560,43 +560,49 @@ class AdminController extends Controller
         /** @var User $u */
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
-        $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $request->get('userId')]);
-        if(!empty($u)) {
+        if(!empty($request->get('users')))
+        {
+            foreach($request->get('users') as $user) {
+                $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $user['userId']]);
+                if(empty($u)) {
+                    continue;
+                }
 
-            if(!empty($first = $request->get('firstName')))
-                $u->setFirst($first);
-            if(!empty($last = $request->get('lastName')))
-                $u->setLast($last);
-            if(!empty($email = $request->get('email'))) {
-                $u->setEmail($email);
-                $userManager->updateCanonicalFields($user);
-            }
+                if(!empty($first = $user['firstName']))
+                    $u->setFirst($first);
+                if(!empty($last = $user['lastName']))
+                    $u->setLast($last);
+                if(!empty($email = $user['email'])) {
+                    $u->setEmail($email);
+                    $userManager->updateCanonicalFields($u);
+                }
 
-            // add new groups
-            $groups = $u->getGroups()->map(function (Group $g) {return $g->getId();})->toArray();
-            $newGroups = explode(',', $request->get('groups'));
-            // intersection with current groups is a removal, intersection with request is an addition
-            foreach(array_diff($groups, $newGroups) as $i => $id) {
-                $u->removeGroup($u->getGroups()->filter(function (Group $g) use ($id) {return $g->getId() == $id;})->first());
-            }
-            foreach(array_diff($newGroups, $groups) as $i => $id) {
-                /** @var Group $g */
-                $g = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['id' => $id]);
-                if(!empty($g))
-                    $u->addGroup($g);
-            }
+                // add new groups
+                $groups = $u->getGroups()->map(function (Group $g) {return $g->getId();})->toArray();
+                $newGroups = explode(',', $user['groups']);
+                // intersection with current groups is a removal, intersection with request is an addition
+                foreach(array_diff($groups, $newGroups) as $i => $id) {
+                    $u->removeGroup($u->getGroups()->filter(function (Group $g) use ($id) {return $g->getId() == $id;})->first());
+                }
+                foreach(array_diff($newGroups, $groups) as $i => $id) {
+                    /** @var Group $g */
+                    $g = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['id' => $id]);
+                    if(!empty($g))
+                        $u->addGroup($g);
+                }
 
-            // add new roles
-            $roles = $u->getRoles();
-            $newRoles = explode(',', $request->get('roles'));
-            // intersection with current groups is a removal, intersection with request is an addition
-            foreach(array_diff($roles, $newRoles) as $i => $role) {
-                $u->removeRole($role);
+                // add new roles
+                $roles = $u->getRoles();
+                $newRoles = explode(',', $user['roles']);
+                // intersection with current groups is a removal, intersection with request is an addition
+                foreach(array_diff($roles, $newRoles) as $i => $role) {
+                    $u->removeRole($role);
+                }
+                foreach(array_diff($newRoles, $roles) as $i => $role) {
+                    $u->addRole($role);
+                }
+                $userManager->updateUser($u);
             }
-            foreach(array_diff($newRoles, $roles) as $i => $role) {
-                $u->addRole($role);
-            }
-            $userManager->updateUser($u);
         }
 
         return $this->indexAction($request);

@@ -46,7 +46,9 @@ $view['slots']->start('body'); ?>
             ?><a href="<?php print $url; ?>" class="more">Sign in</a><br /><?php
         }?>
         <a href="#sign-in-with-email" class="cloak">Or register with <span class="reveal">email</span></a>
-        <div class="first-name">
+        <form action="<?php print $view['router']->generate('account_create'); ?>" method="post">
+            <input type="hidden" name="_remember_me" value="on" />
+            <div class="first-name">
             <label class="input"><input type="text" placeholder="First name" value="<?php print (isset($first) ? $first : ''); ?>"></label>
         </div>
         <div class="last-name">
@@ -63,8 +65,9 @@ $view['slots']->start('body'); ?>
             <?php /* if(!empty($invite) && (!empty($invite->getUser() || $invite instanceof ParentInvite || $invite instanceof StudentInvite))) { ?>
                 <a href="<?php print $view['router']->generate('logout'); ?>" class="cloak">You have been invited by <?php print (!empty($invite) ? $invite->getUser()->getFirst() : $invite->getFromFirst()); ?>.  Click here to decline.</a>
             <?php } */ ?>
-            <a href="#user-register" class="more">Register</a>
+            <button type="submit" value="#user-register" class="more">Register</button>
         </div>
+        </form>
     </div>
 </div>
 

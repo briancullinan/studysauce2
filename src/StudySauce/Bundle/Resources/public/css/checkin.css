@@ -68,11 +68,11 @@
 #checkin .classes a span {
     display: block;
     max-height: 30px;
-    border-radius: 100%;
     margin-top: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
 }
 
 .checkin-widget .classes .class1,
@@ -350,6 +350,32 @@
     transition: none;
     cursor: pointer;
     display: none;
+}
+
+.checkin-widget h3
+{
+    position:relative;
+}
+
+.checkin-widget .minplayer-default-play,
+.checkin-widget .minplayer-default-pause
+{
+    position:absolute;
+    margin-top:0;
+    left:auto;
+    right:0;
+    width:32px;
+    height:32px;
+    background: url(../images/menu_icons_32.png) no-repeat 0 -1216px transparent;
+    transition: none;
+    cursor: pointer;
+    display: none;
+    top:0;
+}
+
+.checkin-widget .minplayer-default-pause
+{
+    background-position: 0 -1184px;
 }
 
 #checkin .mobile-only

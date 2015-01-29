@@ -95,15 +95,21 @@ a[href="#sign-in-with-email"]
 {
     margin: 0 -2px;
     padding-right: 2px;
-    display:none;
     width: 50%;
     max-width: 300px;
+    display:inline-block;
 }
 
 #register .last-name
 {
     padding-right:0;
     padding-left:2px;
+}
+
+#register form,
+#login form
+{
+    display: none;
 }
 
 #register .email,
@@ -114,7 +120,6 @@ a[href="#sign-in-with-email"]
     width: auto;
     margin: 0 auto;
     max-width: 600px;
-    display:none;
 }
 
 #register .form-actions,
@@ -122,7 +127,6 @@ a[href="#sign-in-with-email"]
 {
     max-width: 600px;
     margin:0 auto;
-    display:none;
 }
 
 #account .password,
@@ -147,6 +151,7 @@ a[href="#sign-in-with-email"]
     vertical-align: bottom;
 }
 
+#account a[href*="/reset"],
 #account a[href="#edit-password"],
 #account a[href="#edit-account"],
 #account a[href="#cancel-confirm"]
@@ -156,7 +161,7 @@ a[href="#sign-in-with-email"]
     text-align: center;
 }
 
-#account a[href="#save-account"]
+#account [value="#save-account"]
 {
     display: none;
 }
@@ -178,6 +183,10 @@ a[href="#sign-in-with-email"]
     max-width: 280px;
     float:left;
     text-align: center;
+}
+
+#login .form-actions a[href*="/reset"] {
+    float:left;
 }
 
 @media all and (max-width: 700px)

@@ -30,13 +30,13 @@
     border-bottom: 1px solid #555555;
 }
 
-#schedule a[href="#save-class"]
+#schedule [value="#save-class"]
 {
     visibility:hidden;
 }
 
-#schedule .class-row.edit ~ .highlighted-link a[href="#save-class"],
-.funnel #schedule a[href="#save-class"]
+#schedule .class-row.edit ~ .highlighted-link [value="#save-class"],
+.funnel #schedule [value="#save-class"]
 {
     visibility:visible;
 }

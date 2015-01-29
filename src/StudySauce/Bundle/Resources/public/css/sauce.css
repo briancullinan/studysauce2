@@ -210,6 +210,7 @@ input[type="button"].more
     background-color: #0099BB;
     border-bottom: 3px solid #004477;
     transition: background-color ease-in-out .15s;
+    position: relative;
 }
 
 .btn-primary,
@@ -405,6 +406,7 @@ a span.reveal
     text-decoration: none;
     color: #0099BB;
     outline:none;
+    position: relative;
 }
 
 a:not([href]),

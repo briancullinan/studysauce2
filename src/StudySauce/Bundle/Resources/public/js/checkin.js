@@ -1,6 +1,6 @@
 const TIMER_SECONDS = 3600;
-const checkinBtn = '#checkin .classes a, #home .checkin-widget a, #plan .mini-checkin a';
-const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget a.checked-in, #plan .mini-checkin a.checked-in';
+const checkinBtn = '#checkin .classes a, #home .checkin-widget .classes a, #plan .mini-checkin a';
+const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget .classes a.checked-in, #plan .mini-checkin a.checked-in';
 
 $(document).ready(function () {
     var hours = -1,
@@ -65,12 +65,10 @@ $(document).ready(function () {
             });
         }, 100);
     });
+
     body.on('show', '#checkin,#home', function () {
+        $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#' + this.id);
         if($(this).is('#checkin')) {
-            if(!$(this).is('.loaded')) {
-                $('#jquery_jplayer').jPlayer('option', 'cssSelectorAncestor', '#checkin');
-                $(this).addClass('loaded');
-            }
             if($(this).is('.demo'))
                 $('#checkin-empty').modal({
                     backdrop: 'static',

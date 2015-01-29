@@ -110,3 +110,11 @@
     border-bottom: 1px solid #AADDAA;
     background-color: rgba(200,255,200,.50);
 }
+
+#validation tbody tr.dependency.included td
+{
+    box-shadow: 0 1px 4px rgba(255,200,200,.25);
+    border-top: 1px solid #DDAAAA;
+    border-bottom: 1px solid #DDAAAA;
+    background-color: rgba(255,200,200,.50);
+}

@@ -50,6 +50,7 @@ $view['slots']->start('body'); ?>
                     struggled to quit smoking). Creating meaningful study rewards dramatically increases the likelihood
                     that a student will adopt effective study habits.</p>
             </div>
+            <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
             <header>
                 <label>&nbsp;</label>
                 <label>Goal</label>
@@ -153,8 +154,10 @@ $view['slots']->start('body'); ?>
                 <?php print (!empty($outcome) && !empty($milestone) && !empty($behavior)
                     ? 'style="visibility:hidden;"'
                     : ''); ?>>
-                <a href="#save-goal" class="more">Save</a>
+                <button type="submit" value="#save-goal" class="more">Save</button>
             </p>
+                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+            </form>
 
             <div id="achievements" class="clearfix">
                 <?php echo $view->render('StudySauceBundle:Goals:claims.html.php', ['claims' => $claims]); ?>
@@ -167,7 +170,6 @@ $view['slots']->start('body'); ?>
                 <a href="#read-more">read more</a>
             </div>
             -->
-            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         </div>
     </div>
 <?php $view['slots']->stop();

@@ -126,6 +126,7 @@ $(document).ready(function () {
     }
 
     body.on('change', '#course2_study_metrics-step2 input', validateStudyMetrics);
+    body.on('keyup', '#course2_study_metrics-step2 input[type="text"]', validateStudyMetrics);
     body.on('show', '#course2_study_metrics-step2', validateStudyMetrics);
     body.on('click', '#course2_study_metrics-step2 a[href="#submit-quiz"]', function (evt) {
         evt.preventDefault();

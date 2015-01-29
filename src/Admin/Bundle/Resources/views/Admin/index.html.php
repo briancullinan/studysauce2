@@ -36,6 +36,7 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
     <div class="panel-pane" id="command_control">
         <div class="pane-content">
+        <form action="<?php print $view['router']->generate('save_group'); ?>" method="post">
             <div class="search">
                 <label class="input"><input name="search" type="text" value="" placeholder="Search" /></label>
             </div>
@@ -241,20 +242,21 @@ $view['slots']->start('body'); ?>
                     <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
                     <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
                     <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
-                    <td>
+                    <td class="highlighted-link">
                         <a href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
                         <a href="#confirm-password-reset" data-toggle="modal"></a>
                         <a href="#confirm-cancel-user" data-toggle="modal"></a>
                         <a href="#edit-user"></a>
                         <a href="#confirm-remove-user" data-toggle="modal"></a>
                         <a href="#cancel-edit">Cancel</a>
-                        <a href="#save-user">Save</a>
+                        <button type="submit" class="more" value="#save-user">Save</button>
                         <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label>
                     </td>
                     </tr>
                 <?php } ?>
                 </tbody>
             </table>
+        </form>
         </div>
     </div>
 <?php $view['slots']->stop();

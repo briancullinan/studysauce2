@@ -29,7 +29,7 @@ $(document).ready(function () {
     body.on('keyup', '#partner .first-name input, #partner .last-name input, #partner .email input', partnerFunc);
     body.on('change', '#partner .permissions input', function () {
         partnerFunc();
-        partner.find('a[href="#partner-save"]').first().trigger('click');
+        setTimeout(submitPartner, 100);
     });
     body.on('show', '#partner', function () {
         var partner = $(this);
@@ -81,28 +81,10 @@ $(document).ready(function () {
                         partner.find('input[name="partner-plupload"]').val(data.fid);
                         partner.find('.plup-filelist .squiggle').stop().remove();
                         partner.find('.plupload img').attr('src', data.src);
+                        // update masthead picture
                         body.find('#partner-message img').attr('src', data.src);
                         partnerFunc();
-                        if(partner.find('.form-actions').is('.invalid'))
-                            return;
-                        partner.find('.form-actions').removeClass('valid').addClass('invalid');
-                        jQuery.ajax({
-                            url: window.callbackPaths['update_partner'],
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                photo: partner.find('input[name="partner-plupload"]').val(),
-                                first: partner.find('.first-name input').val(),
-                                last: partner.find('.last-name input').val(),
-                                email: partner.find('.email input').val(),
-                                permissions: $('#partner').find('.permissions input:checked').map(function (i, o) {
-                                    return jQuery(o).val();
-                                }).toArray().join(',')
-                            },
-                            success: function () {
-
-                            }
-                        });
+                        setTimeout(submitPartner, 100);
                     },
                     Error: function(up, err) {
                     }
@@ -114,15 +96,13 @@ $(document).ready(function () {
         partnerFunc();
     });
 
-    body.on('click', '#partner a[href="#partner-save"]', function (evt) {
+    function submitPartner()
+    {
         var partner = jQuery('#partner');
-        evt.preventDefault();
         if(partner.find('.form-actions').is('.invalid'))
             return;
         partner.find('.form-actions').removeClass('valid').addClass('invalid');
-
         var hash = getHash();
-
         jQuery.ajax({
             url: window.callbackPaths['update_partner'],
             type: 'POST',
@@ -135,16 +115,23 @@ $(document).ready(function () {
                 permissions: $('#partner').find('.permissions input:checked').map(function (i, o) {return jQuery(o).val();}).toArray().join(',')
             },
             success: function () {
+                partner.find('.squiggle').stop().remove();
                 partner.data('state', hash);
                 $('#partner-confirm').modal({show:true});
+                // update masthead
                 body.find('#partner-message > div > span, #partner-message > div > a')
                     .first().replaceWith('<span>' + partner.find('.first-name input').val() + ' ' + partner.find('.last-name input').val() + '</span>');
 
-                // update masthead
-                // update masthead picture
+            },
+            error: function () {
+                partner.find('.squiggle').stop().remove();
             }
         });
-
+    }
+    body.on('submit', '#partner form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#user-login"]'));
+        setTimeout(submitPartner, 100);
     });
 
 });

@@ -23,10 +23,7 @@ $view['slots']->start('body'); ?>
     print ($isDemo ? ' empty-schedule' : ''); ?>" id="deadlines">
     <div class="pane-content">
         <h2>Enter important dates and we will send you email reminders</h2>
-        <div class="highlighted-link form-actions invalid">
-            <a href="#add-deadline" class="big-add">Add <span>+</span> deadline</a>
-            <a href="#save-deadline" class="more">Save</a>
-        </div>
+        <form action="<?php print $view['router']->generate('update_deadlines'); ?>" method="post">
         <div class="sort-by">
             <label>Sort by: </label>
             <label class="radio"><input type="radio" name="deadlines-sort" value="date"
@@ -35,13 +32,6 @@ $view['slots']->start('body'); ?>
             <label class="checkbox" title="Click here to see deadlines that have already passed."><input
                     type="checkbox"><i></i>Past deadlines</label>
         </div>
-        <header>
-            <label>&nbsp;</label>
-            <label>Assignment</label>
-            <label>Reminders</label>
-            <label>Due date</label>
-            <label>% of grade</label>
-        </header>
         <?php if($isEmpty) { ?>
             <div class="deadline-row invalid edit course-id- deadline-id-">
             <div class="class-name">
@@ -90,7 +80,20 @@ $view['slots']->start('body'); ?>
                 <a href="#edit-deadline">&nbsp;</a><a href="#remove-deadline">&nbsp;</a>
             </div>
             </div>
-        <?php }
+        <?php } ?>
+        <div class="highlighted-link form-actions invalid">
+            <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>
+            <a href="#add-deadline" class="big-add">Add <span>+</span> deadline</a>
+            <button type="submit" value="#save-deadline" class="more">Save</button>
+        </div>
+        <header>
+            <label>&nbsp;</label>
+            <label>Assignment</label>
+            <label>Reminders</label>
+            <label>Due date</label>
+            <label>% of grade</label>
+        </header>
+        <?php
         $headStr = '';
         usort($deadlines, function (Deadline $a, Deadline $b) use($courses) {
                 $aI = array_search($a->getCourse(), $courses);
@@ -191,11 +194,8 @@ $view['slots']->start('body'); ?>
             </div>
             </div>
         <?php } ?>
-        <div class="highlighted-link form-actions invalid">
-            <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>
-            <a href="#save-deadline" class="more">Save</a>
-        </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+        </form>
     </div>
 </div>
 <?php $view['slots']->stop();

@@ -12,7 +12,6 @@ use StudySauce\Bundle\EventListener\InviteListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -185,17 +184,16 @@ class AccountController extends Controller
     {
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
-        /** @var User $user */
-        $user = $userManager->findUserByConfirmationToken($request->get('token'));
-
-        if(empty($user))
-            throw new AccessDeniedHttpException();
+        if(!empty($request->get('token'))) {
+            /** @var User $user */
+            $user = $userManager->findUserByConfirmationToken($request->get('token'));
+        }
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
 
-        if(!empty($user) && !$user->hasRole('ROLE_GUEST') && !empty($request->get('newPass'))) {
+        if (!empty($user) && !$user->hasRole('ROLE_GUEST') && !empty($request->get('newPass'))) {
 
             // change the password
             $encoder_service = $this->get('security.encoder_factory');
@@ -221,12 +219,37 @@ class AccountController extends Controller
             /** @var LoginManager $loginManager */
             $loginManager = $this->get('fos_user.security.login_manager');
             $loginManager->loginUser('main', $user, $response);
+
             return $response;
+        }
+        elseif(!empty($request->get('email'))) {
+            $user = $userManager->findUserByEmail($request->get('email'));
+             if(!empty($user)) {
+                // send password reset email
+                if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
+                    // TODO: error?
+                }
+
+                if (null === $user->getConfirmationToken()) {
+                    /** @var $tokenGenerator \FOS\UserBundle\Util\TokenGeneratorInterface */
+                    $tokenGenerator = $this->get('fos_user.util.token_generator');
+                    $user->setConfirmationToken($tokenGenerator->generateToken());
+                }
+
+                $emails = new EmailsController();
+                $emails->setContainer($this->container);
+                $emails->resetPasswordAction($user);
+                $user->setPasswordRequestedAt(new \DateTime());
+                $userManager->updateUser($user);
+            }
+        }
+        else {
+            $user = $this->getUser();
         }
 
         return $this->render('StudySauceBundle:Account:reset.html.php', [
                 'token' => $request->get('token'),
-                'email' => $user->getEmail(),
+                'email' => $user->hasRole('ROLE_GUEST') ? $request->get('email') : $user->getEmail(),
                 'csrf_token' => $csrfToken
             ]);
     }

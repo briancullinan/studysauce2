@@ -262,9 +262,9 @@ $(document).ready(function () {
         planFunc.apply(addClass);
     });
 
-    body.on('click', '#schedule a[href="#save-class"]', function (evt) {
+    function submitSchedule()
+    {
         var schedule = $('#schedule');
-        evt.preventDefault();
         if(schedule.find('.university input').val().trim() == '')
             schedule.find('.university').addClass('error-empty');
         else
@@ -309,11 +309,18 @@ $(document).ready(function () {
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
+                schedule.find('.squiggle').stop().remove();
                 updateSchedule(data);
             },
             error: function () {
+                schedule.find('.squiggle').stop().remove();
             }
         });
+    }
+    body.on('submit', '#schedule form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#save-class"]'));
+        setTimeout(submitSchedule, 100);
     });
 
 
@@ -413,7 +420,7 @@ $(document).ready(function () {
     // set default value for university name
     body.on('focus', '#schedule .university input', function () {
         var schedule = $('#schedule');
-        schedule.find('a[href="#save-class"]').first().css('visibility', 'visible');
+        schedule.find('[value="#save-class"]').first().css('visibility', 'visible');
     });
     body.on('show', '#schedule', function () {
         var schedule = $('#schedule');

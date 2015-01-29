@@ -47,7 +47,7 @@ jQuery(document).ready(function() {
         account.find('.password').css('visibility', 'visible');
         account.find('.new-password').css('visibility', 'hidden');
         account.find('.edit-icons').toggle();
-        account.find('a[href="#save-account"]').toggle();
+        account.find('[value="#save-account"]').show();
     });
 
     body.on('click', '#account a[href="#edit-password"]', function (evt) {
@@ -55,7 +55,7 @@ jQuery(document).ready(function() {
         evt.preventDefault();
         account.find('.password,.new-password').css('visibility', 'visible');
         account.find('.edit-icons').toggle();
-        account.find('a[href="#save-account"]').toggle();
+        account.find('[value="#save-account"]').show();
     });
 
     body.on('click', '#cancel-confirm a[href="#cancel-account"]', function (evt) {
@@ -84,10 +84,9 @@ jQuery(document).ready(function() {
         })
     });
 
-    body.on('click', '#account a[href="#save-account"]', function (evt) {
+    function submitAccount()
+    {
         var account = jQuery('#account');
-        evt.preventDefault();
-
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
@@ -114,12 +113,18 @@ jQuery(document).ready(function() {
                 account.find('.password input').val('');
                 account.find('.new-password input').val('');
                 account.find('.edit-icons').toggle();
-                account.find('a[href="#save-account"]').toggle();
+                account.find('[value="#save-account"]').hide();
                 account.find('.account-info').removeClass('edit').addClass('read-only');
                 account.find('.password').css('visibility', 'hidden');
                 account.find('.new-password').css('visibility', 'hidden');
             }
-        })
+        });
+    }
+
+    body.on('submit', '#account form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#save-account"]'));
+        setTimeout(submitAccount, 100);
     });
 
 });

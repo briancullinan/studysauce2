@@ -361,7 +361,7 @@
         clear:both;
     }
 
-    #goals .form-actions a[href="#save-goal"]
+    #goals .form-actions [value="#save-goal"]
     {
         float:none;
     }

@@ -68,11 +68,6 @@
     border-radius: 0 5px 0 0;
 }
 
-.dashboard-home a
-{
-    position: relative;
-}
-
 .panel-pane
 {
     display:none;

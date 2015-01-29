@@ -22,21 +22,18 @@ jQuery(document).ready(function() {
         var account = jQuery('#login');
         evt.preventDefault();
         $(this).remove();
-        account.find('.email,.password,.form-actions').show();
+        account.find('form').show();
     });
 
     body.on('change', '#login .email input, #login .password input', accountFunc);
     body.on('keyup', '#login .email input, #login .password input', accountFunc);
     body.on('keydown', '#login .email input, #login .password input', accountFunc);
-
-    body.on('click', '#login a[href="#user-login"]', function (evt) {
+    function submitLogin()
+    {
         var account = jQuery('#login');
-        evt.preventDefault();
-
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
-
         jQuery.ajax({
             url:window.callbackPaths['account_auth'],
             type: 'POST',
@@ -48,14 +45,23 @@ jQuery(document).ready(function() {
                 csrf_token: account.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
+                account.find('.squiggle').stop().remove();
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 if(typeof data.redirect != 'undefined' && (/\/login/i).test(data.redirect))
                 {
                     account.find('.form-actions').prepend($('<span class="error">Invalid password</span>'));
                 }
                 account.find('.password input').val('');
+            },
+            error: function () {
+                account.find('.squiggle').stop().remove();
             }
-        })
+        });
+    }
+    body.on('submit', '#login form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#user-login"]'));
+        setTimeout(submitLogin, 100);
     });
 
 });

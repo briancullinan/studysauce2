@@ -389,19 +389,23 @@ $(document).ready(function () {
 
     });
 
-    body.on('click', '#command_control a[href="#save-user"]', function (evt) {
+    body.on('submit', '#command_control form', function (evt) {
         evt.preventDefault();
         var data = getData(),
-            row = $(this).parents('tr');
-        if(row.is('.invalid'))
-            return;
-        row.removeClass('edit').addClass('read-only');
-        data.groups = row.find('input[name="groups"]:checked').map(function () {return $(this).val();}).toArray().join(',');
-        data.roles = row.find('input[name="roles"]:checked').map(function () {return $(this).val();}).toArray().join(',');
-        data.firstName = row.find('input[name="first-name"]').val().trim();
-        data.lastName = row.find('input[name="last-name"]').val().trim();
-        data.email = row.find('input[name="email"]').val().trim();
-        data.userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+            admin = $('#command_control');
+        data['users'] = [];
+        admin.find('table.results > tbody > tr.edit:not(.invalid)').each(function () {
+            var row = $(this);
+            row.removeClass('edit').addClass('read-only');
+            data['users'][data['users'].length] = {
+                groups : row.find('input[name="groups"]:checked').map(function () {return $(this).val();}).toArray().join(','),
+                roles : row.find('input[name="roles"]:checked').map(function () {return $(this).val();}).toArray().join(','),
+                firstName : row.find('input[name="first-name"]').val().trim(),
+                lastName : row.find('input[name="last-name"]').val().trim(),
+                email : row.find('input[name="email"]').val().trim(),
+                userId : (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1]
+            };
+        });
         $.ajax({
             url: window.callbackPaths['save_user'],
             type: 'POST',

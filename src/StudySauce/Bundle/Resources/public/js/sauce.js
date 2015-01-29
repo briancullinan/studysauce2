@@ -3,6 +3,30 @@ var DASHBOARD_MARGINS = {};
 window.sincluding = [];
 window.visits = [];
 window.players = [];
+
+
+
+function loadingAnimation(that)
+{
+    if(typeof that != 'undefined' && that.length > 0 && that.find('.squiggle').length == 0)
+    {
+        return loadingAnimation.call($('<small class="squiggle">&nbsp;</small>').appendTo(that), that);
+    }
+    else if ($(this).is('.squiggle'))
+    {
+        var width = $(this).parent().outerWidth(true);
+        return $(this).css('width', 0).css('left', 0)
+            .animate({width: width}, 1000, 'swing', function () {
+                var width = $(this).parent().outerWidth(true);
+                $(this).css('width', width).css('left', 0)
+                    .animate({left: width, width: 0}, 1000, 'swing', loadingAnimation);
+            });
+    }
+    else if(typeof that != 'undefined')
+        return that.find('.squiggle');
+}
+
+
 function onYouTubeIframeAPIReady() {
     var frames = $(this).find('iframe[src*="youtube.com/embed"]');
     var players = [];

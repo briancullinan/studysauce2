@@ -106,10 +106,9 @@ $(document).ready(function () {
     body.on('keyup', '#goals .goal-row textarea', function () {
         goalsFunc.apply(jQuery(this).parents('.goal-row'));
     });
-
-    body.on('click', '#goals a[href="#save-goal"]', function (evt) {
+    function submitGoals()
+    {
         var goals = $('#goals');
-        evt.preventDefault();
         if(goals.find('.form-actions').is('.invalid'))
             return;
         goals.find('.form-actions').removeClass('valid').addClass('invalid');
@@ -133,6 +132,7 @@ $(document).ready(function () {
                 csrf_token: goals.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
+                goals.find('.squiggle').stop().remove();
                 var response = $(data);
                 goals.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
 
@@ -150,8 +150,14 @@ $(document).ready(function () {
                 goalsFunc.apply(goals.find('.goal-row'));
             },
             error: function () {
+                goals.find('.squiggle').stop().remove();
             }
         });
+    }
+    body.on('submit', '#goals form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#save-goal"]'));
+        setTimeout(submitGoals, 100);
     });
 
     body.on('click', '#claim a[href="#submit-claim"]', function (evt) {

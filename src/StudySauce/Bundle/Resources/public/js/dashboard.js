@@ -1,25 +1,5 @@
 
 
-function loadingAnimation(that)
-{
-    if(typeof that != 'undefined' && that.length > 0 && that.find('.squiggle').length == 0)
-    {
-        return loadingAnimation.call($('<small class="squiggle">&nbsp;</small>').appendTo(that), that);
-    }
-    else if ($(this).is('.squiggle'))
-    {
-        var width = $(this).parent().outerWidth(true);
-        return $(this).css('width', 0).css('left', 0)
-            .animate({width: width}, 1000, 'swing', function () {
-                var width = $(this).parent().outerWidth(true);
-                $(this).css('width', width).css('left', 0)
-                    .animate({left: width, width: 0}, 1000, 'swing', loadingAnimation);
-            });
-    }
-    else if(typeof that != 'undefined')
-        return that.find('.squiggle');
-}
-
 $(document).ready(function () {
 
     // TODO: remove old unused tabs
@@ -264,7 +244,7 @@ $(document).ready(function () {
             preload: 'metadata',
             volume: 0.8,
             muted: false,
-            cssSelectorAncestor: '',
+            cssSelectorAncestor: '#' + $('#checkin:visible,#home:visible').attr('id'),
             cssSelector: {
                 play: '.minplayer-default-play',
                 pause: '.minplayer-default-pause'

@@ -69,10 +69,9 @@ $(document).ready(function () {
     body.on('show', '#customization', customizationFunc);
 
     // TODO: make the next unanswered question visible
-
-    body.on('click', '#profile a[href="#save-profile"]', function (evt) {
+    function submitProfile()
+    {
         var profile = $('#profile');
-        evt.preventDefault();
         if(profile.find('.highlighted-link').is('.invalid'))
             return;
         profile.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -89,19 +88,26 @@ $(document).ready(function () {
         $.ajax({
             url: window.callbackPaths['profile_update'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: scheduleData,
-            success: function (data) {
+            success: function () {
+                profile.find('.squiggle').stop().remove();
                 // TODO update calendar events
                 // TODO: update plan tab
+            },
+            error: function () {
+                profile.find('.squiggle').stop().remove();
             }
         });
-
-    });
-
-    body.on('click', '#customization a[href="#save-profile"]', function (evt) {
-        var customization = $('#customization');
+    }
+    body.on('submit', '#profile form', function (evt) {
         evt.preventDefault();
+        $(this).find('[value="#save-profile"]');
+        setTimeout(submitProfile, 100);
+    });
+    function submitCustomization()
+    {
+        var customization = $('#customization');
         if(customization.find('.highlighted-link').is('.invalid'))
             return;
         customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -117,13 +123,21 @@ $(document).ready(function () {
         $.ajax({
             url: window.callbackPaths['profile_update'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: scheduleData,
-            success: function (data) {
+            success: function () {
+                customization.find('.squiggle').stop().remove();
                 // TODO update calendar events
                 // TODO: update plan tab
+            },
+            error: function () {
+                customization.find('.squiggle').stop().remove();
             }
         });
-
+    }
+    body.on('submit', '#customization form', function (evt) {
+        evt.preventDefault();
+        $(this).find('[value="#save-profile"]');
+        setTimeout(submitCustomization, 100);
     });
 });

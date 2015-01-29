@@ -98,20 +98,18 @@ $(document).ready(function () {
         // update deadlines list
         deadlines.find('.deadline-row,.head').remove();
         response.filter('#deadlines').find('header ~ .deadline-row, header ~ .head').insertAfter(deadlines.find('header'));
-        deadlines.find('.highlighted-link').last().detach().insertAfter(deadlines.find('.deadline-row:visible').last());
+        deadlines.find('.highlighted-link').last().detach().insertBefore(deadlines.find('header'));
 
         // update home tab
         $('#home').find('.deadlines-widget').replaceWith(response.find('.deadlines-widget'));
     }
 
-    body.on('click', '#deadlines a[href="#save-deadline"]', function (evt) {
+    function submitDeadlines()
+    {
         var deadlines = $('#deadlines');
-        evt.preventDefault();
-
         if(deadlines.find('.form-actions').is('.invalid'))
             return;
         deadlines.find('.form-actions').removeClass('valid').addClass('invalid');
-
         var dates = [];
         deadlines.find('.deadline-row.edit.valid, .deadline-row.valid.edit').each(function () {
             var row = $(this),
@@ -136,13 +134,21 @@ $(document).ready(function () {
                 csrf_token: deadlines.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
+                deadlines.find('.squiggle').stop().remove();
                 var response = $(data);
                 deadlines.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
                 updateDeadlines(response);
             },
             error: function () {
+                deadlines.find('.squiggle').stop().remove();
             }
         });
+    }
+
+    body.on('submit', '#deadlines form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#save-deadline"]'));
+        setTimeout(submitDeadlines, 100);
     });
 
     body.on('scheduled', function () {
@@ -171,7 +177,7 @@ $(document).ready(function () {
         var deadlines = $('#deadlines');
         evt.preventDefault();
         var newDeadline = deadlines.find('.deadline-row').first().clone()
-            .removeClass('read-only historic').addClass('edit').insertAfter(deadlines.find('header'));
+            .removeClass('read-only historic').addClass('edit').insertBefore(deadlines.find('header'));
         newDeadline.attr('class', newDeadline.attr('class')
             .replace(/deadline-id-([0-9]*)(\s|$)/ig, ' deadline-id- ')
             .replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));

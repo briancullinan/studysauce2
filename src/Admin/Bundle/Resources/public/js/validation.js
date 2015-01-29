@@ -63,30 +63,34 @@ $(document).ready(function () {
         });
     });
 
-    body.on('mouseover', '#validation tbody tr', function () {
+    function highlight() {
         var validation = $('#validation'),
             re = /depends-on-(.*?)(\s|$)/ig,
             match;
         while(match = re.exec($(this).attr('class'))) {
-            validation.find('tr.test-id-' + match[1]).addClass('dependency');
+            validation.find('tr.test-id-' + match[1]).not('.dependency').addClass('dependency').each(highlight);
         }
         var ire = /includes-(.*?)(\s|$)/ig;
         while(match = ire.exec($(this).attr('class'))) {
-            validation.find('tr.test-id-' + match[1]).addClass('included');
+            validation.find('tr.test-id-' + match[1]).not('.dependency').addClass('included').each(highlight);
         }
-    });
+    }
 
-    body.on('mouseout', '#validation tbody tr', function () {
+    body.on('mouseover', '#validation tbody tr', highlight);
+
+    function removeHighlight() {
         var validation = $('#validation'),
             re = /depends-on-(.*?)(\s|$)/ig,
             match;
         while(match = re.exec($(this).attr('class'))) {
-            validation.find('tr.test-id-' + match[1]).removeClass('dependency');
+            validation.find('tr.test-id-' + match[1]).filter('.dependency').removeClass('dependency').each(removeHighlight);
         }
         var ire = /includes-(.*?)(\s|$)/ig;
         while(match = ire.exec($(this).attr('class'))) {
-            validation.find('tr.test-id-' + match[1]).removeClass('included');
+            validation.find('tr.test-id-' + match[1]).filter('.included').removeClass('included').each(removeHighlight);
         }
-    });
+    }
+
+    body.on('mouseout', '#validation tbody tr', removeHighlight);
 
 });

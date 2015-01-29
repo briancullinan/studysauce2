@@ -16,7 +16,7 @@ use StudySauce\Bundle\Entity\Deadline;
                         $classI = array_search($d->getCourse(), $courses); ?>
                         <div class="deadline-row">
                         <i class="class<?php print $classI; ?>">&nbsp;</i>
-                        <strong><?php print $d->getDueDate()->format('j F'); ?></strong>
+                        <strong><span><?php print $d->getDueDate()->format('j'); ?></span> <?php print $d->getDueDate()->format('M'); ?></strong>
                         <div><?php print $d->getAssignment(); ?></div>
                         </div><?php
                     }

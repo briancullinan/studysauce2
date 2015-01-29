@@ -36,24 +36,18 @@ jQuery(document).ready(function() {
     body.on('change', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
     body.on('keyup', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
     body.on('keydown', '#register .first-name input, #register .last-name input, #register .email input, #register .password input', accountFunc);
-
     body.on('click', '#register a[href="#sign-in-with-email"]', function (evt) {
         var account = jQuery('#register');
         evt.preventDefault();
         $(this).remove();
-        account.find('.email,.password,.form-actions').show();
-        account.find('.first-name,.last-name').css('display', 'inline-block');
+        account.find('form').show();
     });
-
-    body.on('click', '#register a[href="#user-register"]', function (evt) {
+    function submitRegister() {
         var account = jQuery('#register');
-        evt.preventDefault();
-
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
         var hash = getHash();
-
         jQuery.ajax({
             url:window.callbackPaths['account_create'],
             type: 'POST',
@@ -67,45 +61,64 @@ jQuery(document).ready(function() {
                 csrf_token: account.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
+                account.find('.squiggle').stop().remove();
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 account.data('state', hash);
                 if(typeof data.error != 'undefined') {
                     account.find('.form-actions').prepend($('<span class="error">E-mail already registered.</span>'));
                 }
                 account.find('.password input').val('');
+            },
+            error: function () {
+                account.find('.squiggle').stop().remove();
             }
-        })
-    });
-
-    body.on('keyup', '#reset input', function () {
-        if($(this).val().trim() != '')
-            $('#reset').find('.form-actions').removeClass('invalid').addClass('valid');
-    });
-    body.on('change', '#reset input', function () {
-        if($(this).val().trim() != '')
-            $('#reset').find('.form-actions').removeClass('invalid').addClass('valid');
-    });
-    body.on('click', '#reset a[href="#reset-password"]', function (evt) {
-        var account = jQuery('#reset');
+        });
+    }
+    body.on('submit', '#register form', function (evt) {
         evt.preventDefault();
+        loadingAnimation($(this).find('[value="#user-register"]'));
+        setTimeout(submitRegister, 100);
+    });
 
+    function resetFunc() {
+        var reset = $('#reset');
+        if(reset.find(' input').val().trim() != '')
+            reset.find('.form-actions').removeClass('invalid').addClass('valid');
+    }
+
+    body.on('keyup', '#reset input', resetFunc);
+    body.on('change', '#reset input', resetFunc);
+    function submitReset()
+    {
+        var account = jQuery('#reset');
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
-
         jQuery.ajax({
             url:window.callbackPaths['password_reset'],
             type: 'POST',
-            dataType: 'json',
+            dataType: 'text',
             data: {
+                email: account.find('.email input').val().trim(),
                 token: account.find('input[name="token"]').val(),
                 newPass: account.find('.password input').val(),
                 csrf_token: account.find('input[name="csrf_token"]').val()
             },
-            success: function (data) {
-
+            success: function () {
+                account.find('.squiggle').stop().remove();
+                if(account.find('input[name="token"]').val() == '') {
+                    account.find('form').replaceWith($('<h3>Your password recovery email has been sent.</h3>'))
+                }
+            },
+            error: function () {
+                account.find('.squiggle').stop().remove();
             }
-        })
+        });
+    }
+    body.on('submit', '#reset form', function (evt) {
+        evt.preventDefault();
+        loadingAnimation($(this).find('[value="#reset-password"]'));
+        setTimeout(submitReset, 100);
     });
 
 });

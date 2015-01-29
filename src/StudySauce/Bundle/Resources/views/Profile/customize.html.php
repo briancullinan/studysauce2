@@ -6,26 +6,13 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 /** @var Schedule $schedule */
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/profile.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/profile.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/profile.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url): ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/profile.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -39,6 +26,7 @@ $view['slots']->start('body'); ?>
         } else { ?>
             <h2>Please tell us more about your classes</h2>
         <?php } ?>
+        <form action="<?php print $view['router']->generate('profile_update'); ?>" method="post">
         <div class="study-types">
             <h3>What is the primary type of studying you expect to do in this class? <span>Q: 1/2</span></h3>
             <header>
@@ -83,11 +71,12 @@ $view['slots']->start('body'); ?>
         </div>
         <div class="form-actions highlighted-link">
             <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-                <a href="#save-profile" class="more">Next</a>
+                <button type="submit" value="#save-profile" class="more">Next</button>
             <?php } else { ?>
-                <a href="#save-profile" class="more">Save</a>
+                <button type="submit" value="#save-profile" class="more">Save</button>
             <?php } ?>
         </div>
+        </form>
     </div>
 </div>
 

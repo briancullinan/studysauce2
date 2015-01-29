@@ -2,14 +2,10 @@
 $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysauce';
 ?>
 
-<body
-    style="padding:0; margin:0; background: url(<?php print $email_base; ?>/images/noise_white.png) #FFFFFF;">
+<body style="padding:0; margin:0; background: url(<?php print $email_base; ?>/images/noise_white.png) #FFFFFF;">
 <div style="margin: 0 auto; display:block; height: 40px; background-color:#555; color:#FF9900; padding: 5px 15px; width:100%; max-width:600px;">
-    <a title="Home" href="<?php print $view['router']->generate('_welcome', [], true); ?>"
-       style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif;font-size: 32px; color:#FFFFFF; white-space: nowrap; text-decoration: none; display:inline-block;">
-        <img width="40" height="40" alt="" style="margin: 0 5px 0 5px; float: left;"
-             src="<?php print $email_base; ?>/images/Study_Sauce_Logo.png"><strong
-            style="color:#FF9900;">Study</strong> Sauce</a>
+    <a title="Home" href="<?php print $view['router']->generate('_welcome', [], true); ?>" style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif;font-size: 32px; color:#FFFFFF; white-space: nowrap; text-decoration: none; display:inline-block;">
+        <img width="40" height="40" alt="" style="margin: 0 5px 0 5px; float: left;" src="<?php print $email_base; ?>/images/Study_Sauce_Logo.png"><strong style="color:#FF9900;">Study</strong> Sauce</a>
 </div>
 <div style="margin: 0 auto; padding:15px; background: url(<?php print $email_base; ?>/images/noise_gray.png) #EEEEEE; width:100%; max-width:600px;">
     <?php if(!empty($greeting)): ?>
@@ -27,9 +23,7 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
             <?php if (isset($link)): ?>
                 <?php print $link; ?>
             <?php else: ?>
-                To access your account <a style="color:#FF9900;"
-                                          href="<?php print $view['router']->generate('login', [], true); ?>"
-                                          target="_blank">click here.</a>
+                To access your account <a style="color:#FF9900;" href="<?php print $view['router']->generate('login', [], true); ?>" target="_blank">click here.</a>
             <?php endif; ?>
         </p>
     <?php endif; ?>

@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 /** @var GlobalVariables $app */
 /** @var $view TimedPhpEngine */
-/** @var $user User */
 /** @var Invite $invite */
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -28,18 +27,22 @@ $view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="reset">
     <div class="pane-content">
-        <h2>Set a new password.</h2>
-        <div class="email readonly">
-            <label class="input"><input readonly="readonly" type="text" placeholder="Email" value="<?php print (isset($email) ? $email : ''); ?>"></label>
+        <h2><?php if(!empty($token)) { ?>Set a new password<?php } else { ?>Reset your password<?php } ?></h2>
+        <form action="<?php print $view['router']->generate('password_reset'); ?>" method="post">
+        <div class="email <?php print (!empty($token) ? 'read-only' : ''); ?>">
+            <label class="input"><input type="text" placeholder="Email" value="<?php print $email; ?>"></label>
         </div>
+        <?php if(!empty($token)) { ?>
         <div class="password">
             <label class="input"><input type="password" placeholder="New password" value=""></label>
         </div>
+        <?php } ?>
         <input type="hidden" name="token" value="<?php echo $token; ?>"/>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="form-actions highlighted-link invalid">
-            <a href="#reset-password" class="more">Set password</a>
+            <button type="submit" value="#reset-password" class="more"><?php print (empty($token) ? 'Reset password' : 'Set password'); ?></button>
         </div>
+        </form>
     </div>
 </div>
 

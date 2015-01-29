@@ -35,6 +35,7 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane" id="account">
     <div class="pane-content">
         <h2>Account settings</h2>
+        <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
         <div class="type">
             <label><span>Account type</span><?php if(!$user->hasRole('ROLE_PAID')) {
                 print 'Free';
@@ -68,15 +69,17 @@ $view['slots']->start('body'); ?>
             <div class="edit-icons">
                 <a href="#edit-account">Edit information</a>
                 <a href="#edit-password">Change password</a>
+                <a href="<?php print $view['router']->generate('password_reset'); ?>">Forgot password</a>
                 <?php if($user->hasRole('ROLE_PAID')) { ?>
                     <a href="#cancel-confirm" data-toggle="modal">Cancel account</a>
                 <?php } else {
                     ?><a href="<?php print $view['router']->generate('premium'); ?>" class="more">Upgrade</a><?php
                 }?>
             </div>
-            <div class="form-actions"><a href="#save-account" class="more">Save</a></div>
+            <div class="form-actions"><button type="submit" value="#save-account" class="more">Save</button></div>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+            </form>
     </div>
 </div>
 <?php $view['slots']->stop(); ?>

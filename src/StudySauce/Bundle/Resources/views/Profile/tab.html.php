@@ -49,6 +49,7 @@ $view['slots']->start('body'); ?>
             } else { ?>
                 <h2>Please tell us more about your study preferences</h2>
             <?php } ?>
+        <form action="<?php print $view['router']->generate('profile_update'); ?>" method="post">
             <div class="grades">
                 <h3>What kind of grades do you want? <span>Q: 1/3</span></h3>
                 <label class="radio"><input name="profile-grades" type="radio"
@@ -96,12 +97,13 @@ $view['slots']->start('body'); ?>
             </div>
             <div class="form-actions highlighted-link">
                 <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-                    <a href="#save-profile" class="more">Next</a>
+                    <button type="submit" value="#save-profile" class="more">Next</button>
                 <?php } else { ?>
-                    <a href="#save-profile" class="more">Save</a>
+                    <button type="submit" value="#save-profile" class="more">Save</button>
                     <a href="<?php print $view['router']->generate('customization'); ?>">Customize courses</a>
                 <?php } ?>
             </div>
+            </form>
         <?php } ?>
     </div>
 </div>

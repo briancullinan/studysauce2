@@ -36,7 +36,7 @@ $view['slots']->start('body'); ?>
     <div class="panel-pane" id="partner">
         <div class="pane-content">
             <h2>Choosing an accountability partner can be invaluable to achieving your goals</h2>
-
+            <form action="<?php print $view['router']->generate('profile_update'); ?>" method="post">
             <div class="partner-setup">
                 <div class="plupload">
                     <h3>I am accountable to:</h3>
@@ -46,11 +46,7 @@ $view['slots']->start('body'); ?>
                             ?><img width="200" height="200" src="<?php echo $view->escape($partner->getPhoto()->getUrl()) ?>" alt="LOGO" /><?php
                         }
                         else {
-                            foreach ($view['assetic']->image(
-                                ['@StudySauceBundle/Resources/public/images/empty-photo.png'],
-                                [],
-                                ['output' => 'bundles/studysauce/images/*']
-                            ) as $url): ?>
+                            foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
                                 <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="LOGO"/>
                             <?php endforeach;
                             } ?>
@@ -78,7 +74,7 @@ $view['slots']->start('body'); ?>
                         </label>
                     </div>
                     <div class="form-actions highlighted-link invalid">
-                        <a href="#partner-save" class="more">Invite</a>
+                        <button type="submit" value="#partner-save" class="more">Invite</button>
                     </div>
                 </div>
 
@@ -115,6 +111,7 @@ $view['slots']->start('body'); ?>
                     </ul>
                 </div>
             </div>
+            </form>
             <div class="partner-faqs">
                 <h3>FAQs:</h3>
                 <h4>Why do I need an accountability partner?</h4>

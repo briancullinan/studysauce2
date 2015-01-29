@@ -131,20 +131,25 @@ class ValidationController extends Controller
             self::$dispatcher->addSubscriber(new BeforeAfterTest());
             self::$dispatcher->addSubscriber(new AutoRebuild());
 
-            $scenario = null;
-            $feature = '';
+            $features = [];
             $screenDir = $this->container->getParameter('kernel.root_dir') . '/../web/bundles/admin/results/';
-            self::$dispatcher->addListener(Events::STEP_BEFORE, function (StepEvent $x) use (&$steps, &$scenario, &$feature) {
+            self::$dispatcher->addListener(Events::STEP_BEFORE, function (StepEvent $x) use (&$steps, &$features) {
                     if (!isset($steps[$x->getTest()->getName()])) {
                         $steps[$x->getTest()->getName()] = '';
                     }
                     /** @var Scenario $scenario */
-                    if (($scenario = $x->getTest()->getScenario()) && $scenario->getFeature() != $feature) {
-                        $feature = $scenario->getFeature();
-                        $steps[$x->getTest()->getName()] .= '<h3>I want to ' . $feature . '</h3>';
+                    if (($scenario = $x->getTest()->getScenario()) && $scenario->getFeature() != end($features)) {
+                        $steps[$x->getTest()->getName()] .= '<h3>I want to ' . $scenario->getFeature() . '</h3>';
+                        array_push($features, $scenario->getFeature());
                     }
                 });
-            self::$dispatcher->addListener(Events::STEP_AFTER, function (StepEvent $x) use (&$steps, &$scenario, &$feature) {
+            self::$dispatcher->addListener(Events::TEST_BEFORE, function ($x) use (&$features) {
+                    array_push($features, end($features));
+                });
+            self::$dispatcher->addListener(Events::TEST_AFTER, function ($x) use (&$features) {
+                    array_pop($features);
+                });
+            self::$dispatcher->addListener(Events::STEP_AFTER, function (StepEvent $x) use (&$steps) {
                     // check for failures
                     //$x->getTest()->getTestResultObject()->failures()
                     if($x->getStep()->getAction() == 'wait')
@@ -155,7 +160,7 @@ class ValidationController extends Controller
             self::$dispatcher->addListener(Events::TEST_ERROR, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
                     $steps[$x->getTest()->getName()] .= '<pre class="error">' . $x->getFail()->getMessage() . '<br />
-                    <a href="/bundles/admin/results/' . $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a></pre>';
+                    <a target="_blank" href="/bundles/admin/results/' . $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a></pre>';
                     // try to get a screenshot to show in the browser
                     /** @var WebDriver $driver */
                     $driver = SuiteManager::$modules['WebDriver'];
@@ -165,7 +170,7 @@ class ValidationController extends Controller
             self::$dispatcher->addListener(Events::TEST_FAIL, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
                     $steps[$x->getTest()->getName()] .= '<pre class="failure">' . $x->getFail()->getMessage() . '<br />
-                    <a href="/bundles/admin/results/' . $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a></pre>';
+                    <a target="_blank" href="/bundles/admin/results/' . $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a></pre>';
                     // try to get a screenshot to show in the browser
                     /** @var WebDriver $driver */
                     $driver = SuiteManager::$modules['WebDriver'];

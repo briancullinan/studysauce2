@@ -15,27 +15,13 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/schedule.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/schedule.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/schedule.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/schedule.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -48,6 +34,7 @@ $view['slots']->start('body'); ?>
     } else { ?>
         <h2>Enter your class below</h2>
     <?php } ?>
+    <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post">
     <div class="university">
         <label class="input">
             School name
@@ -60,10 +47,8 @@ $view['slots']->start('body'); ?>
                    value="<?php print (!empty($schedule) ? $schedule->getUniversity() : ''); ?>" autocomplete="off">
         </label>
     </div>
-
     <header>
         <label>Class name</label>
-
         <div class="day-of-the-week">
             <label>M</label>
             <label>Tu</label>
@@ -214,7 +199,6 @@ $view['slots']->start('body'); ?>
     <h2>Enter work or other recurring obligations here</h2>
     <header>
         <label>Class name</label>
-
         <div class="day-of-the-week">
             <label>M</label>
             <label>Tu</label>
@@ -351,13 +335,14 @@ $view['slots']->start('body'); ?>
             <div class="overlaps-only">Error - classes cannot overlap</div>
             <div class="invalid-only">Error - please make sure all class information is filled in</div>
             <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-                <a href="#save-class" class="more">Next</a>
+                <button type="submit" value="#save-class" class="more">Next</button>
             <?php } else { ?>
-                <a href="#save-class" class="more">Save</a>
+                <button type="submit" value="#save-class" class="more">Save</button>
             <?php } ?>
         </div>
     </div>
     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+    </form>
     </div>
     </div>
 <?php $view['slots']->stop();
