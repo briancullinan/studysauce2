@@ -24,3 +24,40 @@
 {
     background-position: left -4152px;
 }
+
+#emails table.templates
+{
+    width: 100%;
+    table-layout: fixed;
+}
+
+#send-email .modal-body
+{
+    padding-bottom: 0;
+}
+
+#send-email .preview
+{
+    min-height: 400px;
+}
+
+#send-email .variables
+{
+    width:100%;
+    table-layout: fixed;
+}
+
+#send-email .variables td
+{
+    vertical-align: bottom;
+}
+
+#send-email .modal-dialog
+{
+    width: 800px;
+}
+
+.topbar .buttons-container .button.icon-arrow-expand
+{
+    display:none;
+}

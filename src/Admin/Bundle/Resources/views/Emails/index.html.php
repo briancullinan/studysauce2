@@ -64,8 +64,8 @@ $view['slots']->start('body'); ?>
             <td><?php print $email['id']; ?></td>
             <td><?php print $email['count']; ?></td>
             <td>
-                <a href="#edit-email"></a>
-                <a href="#send-email"></a>
+                <a href="#edit-email" data-toggle="modal"></a>
+                <a href="#send-email" data-toggle="modal"></a>
                 <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label>
             </td>
         </tr>
@@ -77,5 +77,6 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-
+print $this->render('AdminBundle:Dialogs:send-email.html.php', ['id' => 'send-email', 'emails' => $emails, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('AdminBundle:Dialogs:edit-email.html.php', ['id' => 'edit-email', 'emails' => $emails, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 $view['slots']->stop();

@@ -1,7 +1,7 @@
 <?php
 $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysauce';
 ?>
-
+<html>
 <body style="padding:0; margin:0; background: url(<?php print $email_base; ?>/images/noise_white.png) #FFFFFF;">
 <div style="margin: 0 auto; display:block; height: 40px; background-color:#555; color:#FF9900; padding: 5px 15px; width:100%; max-width:600px;">
     <a title="Home" href="<?php print $view['router']->generate('_welcome', [], true); ?>" style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif;font-size: 32px; color:#FFFFFF; white-space: nowrap; text-decoration: none; display:inline-block;">
@@ -59,3 +59,4 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Unsubscribe</a>
 </div>
 </body>
+</html>

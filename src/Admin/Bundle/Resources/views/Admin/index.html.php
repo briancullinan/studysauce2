@@ -243,11 +243,12 @@ $view['slots']->start('body'); ?>
                     <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
                     <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
                     <td class="highlighted-link">
-                        <a href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
-                        <a href="#confirm-password-reset" data-toggle="modal"></a>
-                        <a href="#confirm-cancel-user" data-toggle="modal"></a>
-                        <a href="#edit-user"></a>
-                        <a href="#confirm-remove-user" data-toggle="modal"></a>
+                        <a title="Send email" href="mailto:<?php print $u->getEmail(); ?>"></a>
+                        <a title="Masquerade" href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
+                        <a title="Reset password" href="#confirm-password-reset" data-toggle="modal"></a>
+                        <a title="Cancel payment" href="#confirm-cancel-user" data-toggle="modal"></a>
+                        <a title="Edit" href="#edit-user"></a>
+                        <a title="Remove user" href="#confirm-remove-user" data-toggle="modal"></a>
                         <a href="#cancel-edit">Cancel</a>
                         <button type="submit" class="more" value="#save-user">Save</button>
                         <label class="checkbox"><input type="checkbox" name="selected" /><i></i></label>

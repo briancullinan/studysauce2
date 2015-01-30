@@ -227,23 +227,25 @@ class ValidationController extends Controller
      */
     public static function getIncludedTests(Cest $test)
     {
+        // get a list of all tests
+        $allTests = '';
+        foreach(self::$config['tests'] as $suite)
+        {
+            $allTests .= implode('|', array_map(function (Cest $t) { return $t->getName(); }, $suite));
+        }
+
         $tests = [];
         // get function code
         $reflector = new \ReflectionClass(get_class($test->getTestClass()));
         if($reflector->hasMethod($test->getName())) {
             $method = $reflector->getMethod($test->getName());
-            $line_start     =$method->getStartLine() - 1;
-            $line_end       =$method->getEndLine();
-            $line_count     =$line_end - $line_start;
-            $line_array     =file($method->getFileName());
+            $line_start     = $method->getStartLine() - 1;
+            $line_end       = $method->getEndLine();
+            $line_count     = $line_end - $line_start;
+            $line_array     = file($method->getFileName());
             $text = implode("", array_slice($line_array,$line_start,$line_count));
 
             // find calls to other functions in the class in this test
-            $allTests = '';
-            foreach(self::$config['tests'] as $suite)
-            {
-                $allTests .= implode('|', array_map(function (Cest $t) { return $t->getName(); }, $suite));
-            }
             preg_match_all('/' . $allTests . '/i', $text, $matches);
             foreach($matches[0] as $i => $m) {
                 if($m == $test->getName())

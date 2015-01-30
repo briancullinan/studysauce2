@@ -3,13 +3,11 @@ use StudySauce\Bundle\Entity\ContactMessage;
 
 $view->extend('StudySauceBundle:Emails:layout.html.php');
 
-/** @var ContactMessage $message */
+/** @var ContactMessage $contact */
 
 $view['slots']->start('message'); ?>
-<p>
-    <strong>Name: </strong><?php print $view->escape($message->getName()); ?><br />
-    <strong>Email: </strong><?php print $view->escape($message->getEmail()); ?><br />
-    <strong>Message: </strong>
-    <?php print '<hr />' . $view->escape($message->getMessage()); ?>
-</p>
+<strong>Name: </strong><?php print $view->escape($contact->getName()); ?><br />
+<strong>Email: </strong><?php print $view->escape($contact->getEmail()); ?><br />
+<strong>Message: </strong>
+<?php print '<hr />' . $view->escape($contact->getMessage()); ?>
 <?php $view['slots']->stop(); ?>

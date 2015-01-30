@@ -206,6 +206,19 @@
     display:inline;
 }
 
+#command_control a[href*="mailto:"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4102px transparent;
+}
+
+#command_control a[href*="mailto:"]:hover
+{
+    background-position: left -4152px;
+}
+
 #command_control.panel-pane
 {
     padding-left:20px;

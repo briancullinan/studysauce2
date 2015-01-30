@@ -44,8 +44,7 @@ class EmailsController extends Controller
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => ['welcome-partner']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -71,8 +70,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['welcome-student']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -110,8 +108,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['partner-invite']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -149,8 +146,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['partner-reminder']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -180,8 +176,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['student-invite']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -214,8 +209,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['invoice']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -244,8 +238,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['welcome-reminder']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -278,8 +271,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['prepay']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -373,8 +365,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['deadline-reminder']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -398,7 +389,6 @@ class EmailsController extends Controller
             $logger->error('Achievement called with no partner.');
             return new Response();
         }
-        $codeUrl = $this->generateUrl('goals', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your student') . ' has a study achievement and wanted you to know.')
@@ -407,13 +397,12 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:achievement.html.php', [
                         'user' => $user,
                         'greeting' => 'Dear ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $this->generateUrl('goals', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['achievement']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -443,8 +432,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['parent-invite']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -468,6 +456,7 @@ class EmailsController extends Controller
             ->setTo($invite->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:group-invite.html.php', [
                         'user' => $user,
+                        'invite' => $invite,
                         'group' => $invite->getGroup(),
                         'greeting' => 'Dear ' . $invite->getFirst() . ' ' . $invite->getLast() . ',',
                         'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
@@ -475,8 +464,7 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['group-invite']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -505,39 +493,35 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['reset-password']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
 
     /**
      * @param User $user
-     * @param $message
+     * @param $contact
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contactMessageAction(User $user = null, ContactMessage $message)
+    public function contactMessageAction(User $user = null, ContactMessage $contact)
     {
         if($user == null)
             $user = $this->getUser();
 
-        $subject = 'Contact Us: From ' . $message->getName();
-
         /** @var \Swift_Mime_SimpleMessage $message */
         $message = Swift_Message::newInstance()
-            ->setSubject($subject)
+            ->setSubject('Contact Us: From ' . $contact->getName())
             ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
             ->setTo('admin@studysauce.com')
             ->setBody($this->renderView('StudySauceBundle:Emails:contact-message.html.php', [
                         'link' => '&nbsp;',
                         'user' => $user,
-                        'message' => $message
+                        'contact' => $contact
                     ]), 'text/html' );
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['contact-message']])));
-        $mailer = $this->get('mailer');
-        $mailer->send($message);
+        $this->send($message);
 
         return new Response();
     }
@@ -588,7 +572,26 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['administrator']])));
+        $this->sendToAdmin($message);
 
+        return new Response();
+    }
+
+    /**
+     * @param Swift_Message $message
+     */
+    protected function send(\Swift_Message $message)
+    {
+        /** @var \Swift_Mailer $mailer */
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+    }
+
+    /**
+     * @param Swift_Message $message
+     */
+    protected function sendToAdmin(\Swift_Message $message)
+    {
         /** @var \Swift_Transport_EsmtpTransport $transport */
         $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
             ->setUsername('brian@studysauce.com')
@@ -596,9 +599,8 @@ class EmailsController extends Controller
         /** @var \Swift_Mailer $mailer */
         $mailer = \Swift_Mailer::newInstance($transport);
         $mailer->send($message);
-
-        return new Response();
     }
+
     private static $_objects;
     private static $_output;
     private static $_depth;

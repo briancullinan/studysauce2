@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Controller\AccountController;
 use StudySauce\Bundle\Controller\BuyController;
-use StudySauce\Bundle\Controller\EmailsController;
 use StudySauce\Bundle\Entity\Coupon;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Event;
@@ -709,7 +708,7 @@ class AdminController extends Controller
                 $u->setConfirmationToken($tokenGenerator->generateToken());
             }
 
-            $emails = new EmailsController();
+            $emails = new \StudySauce\Bundle\Controller\EmailsController();
             $emails->setContainer($this->container);
             $emails->resetPasswordAction($u);
             $u->setPasswordRequestedAt(new \DateTime());

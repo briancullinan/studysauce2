@@ -145,4 +145,18 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'emails_template',
+    new Route(
+        '/emails/template/{_email}',
+        ['_controller' => 'AdminBundle:Emails:template', '_email' => ''],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest() || !request.isXmlHttpRequest()'
+    )
+);
+
 return $collection;
