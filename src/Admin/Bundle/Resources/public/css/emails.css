@@ -12,7 +12,7 @@
     background-position: left -1602px;
 }
 
-#emails a[href="#send-email"]
+#emails .templates a[href="#send-email"]
 {
     display: inline-block;
     height: 24px;
@@ -20,7 +20,7 @@
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4102px transparent;
 }
 
-#emails a[href="#send-email"]:hover
+#emails .templates a[href="#send-email"]:hover
 {
     background-position: left -4152px;
 }
@@ -31,7 +31,7 @@
     table-layout: fixed;
 }
 
-#send-email .modal-body
+#emails .pane-content
 {
     padding-bottom: 0;
 }
@@ -52,12 +52,58 @@
     vertical-align: bottom;
 }
 
-#send-email .modal-dialog
-{
-    width: 800px;
-}
-
 .topbar .buttons-container .button.icon-arrow-expand
 {
     display:none;
+}
+
+.variables > tbody > tr > td > label > span
+{
+    display:none;
+}
+
+.variables > tbody > tr:first-child > td > label > span
+{
+    display:block;
+}
+
+.cke
+{
+    opacity: .75;
+    transition:opacity ease-in-out .15s;
+}
+
+
+.cke:hover
+{
+    opacity: 1;
+}
+
+
+#emails .variables .selectize-dropdown .title {
+    display: block;
+}
+
+#emails .variables .selectize-dropdown .name {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+#emails .variables .selectize-dropdown .description {
+    display: block;
+    opacity: 0.5;
+    white-space: nowrap;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#emails .variables .selectize-dropdown .by {
+    opacity: 0.8;
+}
+
+#send-email .nav-tabs
+{
+    float:none;
+    margin:0;
 }

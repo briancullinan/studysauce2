@@ -67,7 +67,7 @@ class ValidationController extends Controller
             self::$config['tests'][$suite] = $testLoader->getTests();
         }
 
-        return $this->render('AdminBundle:Validation:index.html.php', self::$config);
+        return $this->render('AdminBundle:Validation:tab.html.php', self::$config);
     }
 
     /**

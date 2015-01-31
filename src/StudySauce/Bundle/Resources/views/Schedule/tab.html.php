@@ -189,9 +189,9 @@ $view['slots']->start('body'); ?>
             <div class="overlaps-only">Error - classes cannot overlap</div>
             <div class="invalid-only">Error - please make sure all class information is filled in</div>
             <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-                <a href="#save-class" class="more">Next</a>
+                <button type="submit" value="#save-class" class="more">Next</button>
             <?php } else { ?>
-                <a href="#save-class" class="more">Save</a>
+                <button type="submit" value="#save-class" class="more">Save</button>
             <?php } ?>
         </div>
     </div>

@@ -159,4 +159,18 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'emails_search',
+    new Route(
+        '/emails/search',
+        ['_controller' => 'AdminBundle:Emails:search'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
 return $collection;

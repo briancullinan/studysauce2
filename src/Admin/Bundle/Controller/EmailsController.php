@@ -8,6 +8,8 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Swift_Message;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -56,7 +58,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
             ->getSingleScalarResult();
 
 
-        return $this->render('AdminBundle:Emails:index.html.php', [
+        return $this->render('AdminBundle:Emails:tab.html.php', [
                 'emails' => $emails,
                 'total' => 0,
                 'recent' => $recent
@@ -79,6 +81,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
 
         $fullName = 'StudySauceBundle:Emails:' . $_email . '.html.php';
 
+        // get automatic variables requred for ever send
         $params = [];
         $objects = [];
         $subject = '';
@@ -92,12 +95,8 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
         $reflector = new \ReflectionClass('\StudySauce\Bundle\Controller\EmailsController');
         foreach($reflector->getMethods() as $m)
         {
+            $methodText = $this->_getMethodText($m);
             // check if current method has a reference to the template
-            $line_start     = $m->getStartLine() - 1;
-            $line_end       = $m->getEndLine();
-            $line_count     = $line_end - $line_start;
-            $line_array     = file($m->getFileName());
-            $methodText = implode("", array_slice($line_array,$line_start,$line_count));
             if(strpos($methodText, $fullName) !== false) {
 
                 // setup method inputs from function parameters
@@ -173,6 +172,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
         self::$emails[] = $message->getBody();
     }
 
+    protected static $autoInclude = ['user' => ['Email']];
     /**
      * @param $className
      * @param $parameterName
@@ -185,7 +185,9 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
         $params = [];
         $objects = [];
         // if we are dealing with an entity class try to figure out which methods are used
-        if(($classI = array_search(true, array_map(function ($t) use ($className) {return strpos(strtolower($t), strtolower($className)) !== false;}, self::$tables))) !== false) {
+        if(($classI = array_search(true, array_map(function ($t) use ($className) {
+                        return strpos(strtolower($t), strtolower($className)) !== false;
+                    }, self::$tables))) !== false) {
             $namespace = explode('\\', self::$tables[$classI]);
             $className = end($namespace);
             $mockName = 'Mock' . $className;
@@ -197,7 +199,13 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
                 $params[$parameterName]['name'] = $className;
                 $params[$parameterName]['prop'] = '';
             }
-            foreach(array_unique($properties[1]) as $c)
+            if(isset(self::$autoInclude[$parameterName])) {
+                $properties = array_unique(array_merge(self::$autoInclude[$parameterName], $properties[1]));
+                self::$templateVars = array_merge(self::$templateVars, array_map(function ($c) use ($parameterName) {return $parameterName . $c; }, self::$autoInclude[$parameterName]));
+            }
+            else
+                $properties = array_unique($properties[1]);
+            foreach($properties as $c)
             {
                 $params[$parameterName . $c]['name'] = $className;
                 $params[$parameterName . $c]['prop'] = $c;
@@ -222,6 +230,76 @@ return new ' . $mockName . '();');
             $objects[$parameterName] = '{' . $parameterName . '}';
         }
         return [$params, $objects];
+    }
+
+    /**
+     * @param \ReflectionMethod $m
+     * @return string
+     */
+    private function _getMethodText(\ReflectionMethod $m)
+    {
+        // check if current method has a reference to the template
+        $line_start     = $m->getStartLine() - 1;
+        $line_end       = $m->getEndLine();
+        $line_count     = $line_end - $line_start;
+        $line_array     = file($m->getFileName());
+        $methodText = implode("", array_slice($line_array,$line_start,$line_count));
+        return $methodText;
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var EntityManager $orm */
+        $orm = $this->getDoctrine()->getManager();
+        self::$tables = $orm->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+        // look up inputs
+        // also check template file for usages
+        foreach(self::$tables as $t)
+        {
+            $namespace = explode('\\', $t);
+            $parameterName = strtolower(end($namespace));
+            if(strpos(strtolower($request->get('field')), $parameterName) !== 0) {
+                continue;
+            }
+
+            // find setter method that matches field name
+            $getters = [];
+            $default = '';
+            $reflector = new \ReflectionClass($t);
+            foreach($reflector->getMethods() as $c) {
+                if(substr($c->getName(), 0, 3) == 'set')
+                    continue;
+                if($request->get('field') == strtolower(end($namespace)) . substr($c->getName(), 3)) {
+                    $default = lcfirst(substr($c->getName(), 3));
+                    $getters[] = lcfirst(substr($c->getName(), 3));
+                }
+                if(in_array(strtolower(end($namespace)) . substr($c->getName(), 3), explode(',', $request->get('alt')))) {
+
+                    // search database
+                    $getters[] = lcfirst(substr($c->getName(), 3));
+                }
+            }
+
+            $getters = array_unique($getters);
+
+            // do search
+            $search = $orm->getRepository($t)->createQueryBuilder('m')
+                ->select(array_map(function ($g) {return 'm.' . $g;}, $getters))
+                ->andWhere('m.' . implode(' LIKE \'%' . $request->get('q') . '%\' OR m.', $getters) . ' LIKE \'%' . $request->get('q') . '%\'')
+                ->getQuery()
+                ->execute();
+
+            return new JsonResponse(array_map(function ($x) use ($default) {return [
+                        'text' => $x[$default],
+                        'value' => $x[$default]
+                    ] + array_values(array_diff_key($x, [$default => '']));
+                    }, $search));
+        }
+        return new JsonResponse([]);
     }
 }
 

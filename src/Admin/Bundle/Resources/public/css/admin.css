@@ -160,6 +160,7 @@
 #command_control .edit a[href="#edit-user"],
 #command_control .edit a[href="#confirm-password-reset"],
 #command_control .edit a[href*="_switch_user"],
+#command_control .edit a[href*="mailto:"],
 #command_control .read-only a[href="#cancel-edit"],
 #command_control .read-only [value="#save-user"],
 #group-manager .edit a[href="#edit-group"],

@@ -12,6 +12,10 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
         <strong><?php print $greeting; ?></strong>
     </p>
+    <?php elseif(!empty($view['slots']->get('greeting'))): ?>
+        <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
+            <strong><?php $view['slots']->output('greeting'); ?></strong>
+        </p>
     <?php endif; ?>
 
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
@@ -25,13 +29,17 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
             <?php else: ?>
                 To access your account <a style="color:#FF9900;" href="<?php print $view['router']->generate('login', [], true); ?>" target="_blank">click here.</a>
             <?php endif; ?>
+            <br/><br/>
         </p>
     <?php endif; ?>
 
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
-        <br/><br/>
+        <?php if(empty($view['slots']->get('salutation'))) { ?>
         Keep studying!<br/>
         The Study Sauce Team
+        <?php } else {
+            $view['slots']->output('salutation');
+        }?>
     </p>
     <p style="text-align: center; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
         <a href="https://www.facebook.com/pages/Study-Sauce/519825501425670?ref=stream"

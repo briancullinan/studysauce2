@@ -1,7 +1,6 @@
-<div class="preview">
+<div id="preview">
     <?php foreach ($view['assetic']->stylesheets(
         [
-            '@AdminBundle/Resources/public/css/main.css',
             '@AdminBundle/Resources/public/css/ionicons.css',
             '@AdminBundle/Resources/public/css/codemirror.css',
             '@AdminBundle/Resources/public/css/emails.css',
@@ -13,15 +12,11 @@
         ['output' => 'bundles/admin/css/*.css']) as $url): ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
     <?php endforeach; ?>
-    <div id="editor1"><?php print $template; ?></div>
+    <div id="editor1" contenteditable="true"><?php print $template; ?></div>
     <textarea id="markdown" class="full-height" placeholder="Write Markdown"><?php print $view->escape($template); ?></textarea>
-    <?php //print $view->render('AdminBundle:Emails:editor.html.php', ['value' => $template]); ?>
     <?php foreach ($view['assetic']->javascripts(
         [
             '@StudySauceBundle/Resources/public/js/jquery-2.1.1.js',
-            '@AdminBundle/Resources/public/js/utilities.js',
-            '@AdminBundle/Resources/public/js/main.js',
-            '@AdminBundle/Resources/public/js/showdown.js',
             '@AdminBundle/Resources/public/js/ckeditor/ckeditor.js',
             '@AdminBundle/Resources/public/js/codemirror.js',
             '@AdminBundle/Resources/public/js/addon/fold/foldcode.js',

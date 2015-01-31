@@ -1,17 +1,20 @@
 
 
-$document.ready(function () {
+$(document).ready(function () {
     var email = $('#send-email'),
-        preview = email.find('.preview')[0];
+        preview = email.find('#preview')[0];
 
     var emails = $(window.parent.document).find('#send-email'),
         subject = $('.subject');
     emails.find('.variables').remove();
-    $('.variables').insertBefore(emails.find('.highlighted-link'));
+    $('.variables').insertBefore(emails.find('.highlighted-link'))
+        // setupSelectize
+        .find('input').each(window.parent.setupSelectize);
     emails.find('input[name="subject"]').val(subject.text());
     subject.remove();
+    // TODO: recreate rows when variables change
 
-    $('#editor1').find('> div:nth-of-type(2)').attr('contenteditable', true);
+
     CKEDITOR.basePath = window.parent.callbackPaths['_welcome'] + 'bundles/admin/js/ckeditor/';
     CKEDITOR.on( 'instanceCreated', function( event ) {
         var editor = event.editor,
@@ -40,7 +43,22 @@ $document.ready(function () {
                 ];
             });
         }
+
+        editor.on( 'instanceReady', function( ) {
+            var rules = {
+                indent: false,
+                breakBeforeOpen: true,
+                breakAfterOpen: false,
+                breakBeforeClose: false,
+                breakAfterClose: true
+            };
+            editor.dataProcessor.writer.setRules( 'p',rules);
+            editor.dataProcessor.writer.setRules( 'div',rules);
+            editor.dataProcessor.writer.setRules( 'hr',rules);
+            editor.dataProcessor.writer.setRules( 'br',rules);
+        });
     });
+
 
     mirror = CodeMirror.fromTextArea($('#markdown')[0], {
         lineNumbers: true,
@@ -55,68 +73,30 @@ $document.ready(function () {
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
 
-    $('.CodeMirror').hide();
+    if($(window.parent.document.body)
+            .find('#send-email .active a[href="#markdown"], #send-email .active a[href="#editor1"]').first().is('[href="#editor1"]')) {
+        $('.CodeMirror').hide();
+    }
+    else {
+        $('#editor1').hide();
+    }
 
-    $(window.parent.document.body).on('click', '#send-email a[href="#toggle-source"]', function (evt) {
+    $(window.parent.document.body).on('click', '#send-email a[href="#markdown"], #send-email a[href="#editor1"]', function (evt) {
+        evt.preventDefault();
         var email = $('#send-email');
-        if($('.CodeMirror').is(':visible')) {
-            $('#editor1').html(mirror.getDoc().getValue());
-            $('.CodeMirror,#editor1').toggle();
+        $(this).parents('ul').find('.active').removeClass('active');
+        $(this).parents('li').addClass('active');
+        if($(this).is('[href="#editor1"]')) {
+            CKEDITOR.instances.editor1.setData(mirror.getDoc().getValue());
+            $('.CodeMirror').hide();
+            $('#editor1').show();
         }
         else {
-            mirror.getDoc().setValue($('#editor1').html());
-            $('.CodeMirror,#editor1').toggle();
+            mirror.getDoc().setValue(CKEDITOR.instances.editor1.getData());
+            $('.CodeMirror').show();
+            $('#editor1').hide();
             mirror.refresh();
         }
     });
-
-
-    /*
-    window.app = {
-
-        // Web app variables
-        supportsLocalStorage: ("localStorage" in window && window.localStorage !== null),
-
-        init: function() {
-            editor.init();
-        },
-
-        // Save a key/value pair in localStorage (either Markdown text or enabled features)
-        save: function(key, value) {
-            if (!this.supportsLocalStorage) return false;
-
-            // Even if localStorage is supported, using it can still throw an exception if disabled or the quota is exceeded
-            try {
-                localStorage.setItem(key, value);
-            } catch (e) {}
-        },
-
-        // Restore the editor's state from localStorage (saved Markdown and enabled features)
-        restoreState: function(c) {
-            var restoredItems = {};
-
-            if (this.supportsLocalStorage) {
-                // Even if localStorage is supported, using it can still throw an exception if disabled
-                try {
-                    //restoredItems.markdown = localStorage.getItem("markdown");
-                    restoredItems.isAutoScrolling = localStorage.getItem("isAutoScrolling");
-                    restoredItems.isFullscreen = 'y';
-                    restoredItems.activePanel = localStorage.getItem("activePanel");
-                } catch (e) {}
-            }
-
-            c(restoredItems);
-        },
-
-        // Update the preview panel with new HTML
-        updateMarkdownPreview: function(html) {
-            editor.markdownPreview.html(html);
-            editor.updateWordCount(editor.markdownPreview.text());
-        }
-
-    };
-
-    app.init();
-*/
 
 });

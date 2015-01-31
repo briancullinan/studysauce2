@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\ContactMessage;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
+use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -440,15 +441,17 @@ class EmailsController extends Controller
     /**
      * @param User $user
      * @param GroupInvite $invite
+     * @param Group $group
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function groupInviteAction(User $user = null, GroupInvite $invite = null)
+    public function groupInviteAction(User $user = null, GroupInvite $invite = null, Group $group = null)
     {
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
 
-        $codeUrl = $this->generateUrl('student_welcome', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+        if(empty($group))
+            $group = $invite->getGroup();
 
         $message = Swift_Message::newInstance()
             ->setSubject('Welcome to Study Sauce!')
@@ -457,9 +460,9 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:group-invite.html.php', [
                         'user' => $user,
                         'invite' => $invite,
-                        'group' => $invite->getGroup(),
+                        'group' => $group,
                         'greeting' => 'Dear ' . $invite->getFirst() . ' ' . $invite->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $this->generateUrl('student_welcome', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
