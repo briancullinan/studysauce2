@@ -11,7 +11,7 @@ use WebDriverKeys;
  * @backupGlobals false
  * @backupStaticAttributes false
  */
-class PageLoaderCest
+class APageLoaderCest
 {
     /**
      * @param AcceptanceTester $I

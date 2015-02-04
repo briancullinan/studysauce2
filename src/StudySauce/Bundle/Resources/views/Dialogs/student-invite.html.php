@@ -11,29 +11,31 @@ Invite your student to start using Study Sauce.
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<div class="first-name">
-    <label class="input"><span>Student's first name</span><input type="text" value=""></label>
-</div>
-<div class="last-name">
-    <label class="input"><span>Student's last name</span><input type="text" value=""></label>
-</div>
-<div class="email">
-    <label class="input"><span>Student's email</span><input type="email" value=""></label>
-</div>
-<?php
-if(!is_object($user) || $user->hasRole('ROLE_GUEST')) { ?>
-    <div class="your-first">
-        <label class="input"><span>Your first name</span><input type="text" value=""></label>
+<form action="<?php print $view['router']->generate('contact_students'); ?>" method="post">
+    <div class="first-name">
+        <label class="input"><span>Student's first name</span><input type="text" value=""></label>
     </div>
-    <div class="your-last">
-        <label class="input"><span>Your last name</span><input type="text" value=""></label>
+    <div class="last-name">
+        <label class="input"><span>Student's last name</span><input type="text" value=""></label>
     </div>
-    <div class="your-email">
-        <label class="input"><span>Your email</span><input type="email" value=""></label>
+    <div class="email">
+        <label class="input"><span>Student's email</span><input type="email" value=""></label>
     </div>
-<?php }
-$view['slots']->stop();
+    <?php
+    if(!is_object($user) || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) { ?>
+        <div class="your-first">
+            <label class="input"><span>Your first name</span><input type="text" value=""></label>
+        </div>
+        <div class="your-last">
+            <label class="input"><span>Your last name</span><input type="text" value=""></label>
+        </div>
+        <div class="your-email">
+            <label class="input"><span>Your email</span><input type="email" value=""></label>
+        </div>
+    <?php } ?>
+    <div class="highlighted-link">
+        <button type="submit" value="#submit-contact" class="more">Send</button>
+    </div>
+</form>
+<?php $view['slots']->stop();
 
-$view['slots']->start('modal-footer') ?>
-<a href="#submit-contact" class="btn btn-primary">Send</a>
-<?php $view['slots']->stop() ?>

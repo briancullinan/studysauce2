@@ -13,12 +13,12 @@ namespace StudySauce\Bundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use FOS\UserBundle\Security\LoginManager;
+use StudySauce\Bundle\Controller\HomeController;
 use StudySauce\Bundle\Entity\User;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -40,51 +40,25 @@ class AnonymousAuthenticationListener implements ListenerInterface
     private $context;
 
     private $logger;
-    private $email;
 
-    /** @var $userManager \FOS\UserBundle\Doctrine\UserManager */
-    private $userManager;
-
-    /** @var $orm \Doctrine\ORM\EntityManager */
-    private $orm;
-
-    /** @var $encoder \Symfony\Component\Security\Core\Encoder\EncoderFactory */
-    private $encoder;
-
-    /** @var $encoder \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager */
-    private $authenticationManager;
-
-    /** @var  $router */
-    private $router;
+    /** @var ContainerInterface $container */
+    private $container;
 
     /**
      * @param SecurityContextInterface $context
+     * @param $key
      * @param LoggerInterface $logger
-     * @param UserManager $userManager
-     * @param $email
-     * @param EntityManager $orm
-     * @param EncoderFactory $encoder
-     * @param AuthenticationProviderManager $authenticationManager
+     * @param ContainerInterface $container
      */
     public function __construct(
         SecurityContextInterface $context,
         $key,
         LoggerInterface $logger = null,
-        UserManager $userManager,
-        $email,
-        EntityManager $orm,
-        EncoderFactory $encoder,
-        AuthenticationProviderManager $authenticationManager,
-        $router)
+        ContainerInterface $container)
     {
         $this->context          = $context;
-        $this->email            = $email;
         $this->logger           = $logger;
-        $this->userManager      = $userManager;
-        $this->orm              = $orm;
-        $this->encoder          = $encoder;
-        $this->authenticationManager = $authenticationManager;
-        $this->router = $router;
+        $this->container        = $container;
     }
 
     /**
@@ -98,83 +72,68 @@ class AnonymousAuthenticationListener implements ListenerInterface
         /** @var MessageDigestPasswordEncoder $encoder */
 
         $request = $event->getRequest();
-        $controller = $request->get('_controller');
 
         // only handle anonymous users with no context
-        if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() && $token->getUser() != 'anon.') {
+        if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() && $token->getUser() != 'anon.' &&
+            $request->get('_route') != 'demo') {
             // reset Guest User for oauth connections
+            $controller = $request->get('_controller');
             if(($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction' ||
                     $controller == 'StudySauce\Bundle\Controller\AccountController::login' ||
                     $controller == 'StudySauce\Bundle\Controller\AccountController::register' ||
                     $controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::redirectToServiceAction')&&
-                ($user = $token->getUser()) !== null && $user->hasRole('ROLE_GUEST'))
+                ($user = $token->getUser()) !== null && ($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')))
             {
                 $this->context->setToken(new AnonymousToken('main', 'anon.', []));
             }
             return;
         }
 
-        $username = 'guest';
-        $user = $this->userManager->findUserByUsername($username);
-        if($user == null)
+        $username = 'Guest' . ($request->get('_route') == 'demo' ? ('-' . substr(md5(microtime()), -5)) : '');
+        /** @var UserManager $userManager */
+        $userManager = $this->container->get('fos_user.user_manager');
+        /** @var EntityManager $orm */
+        $orm = $this->container->get('doctrine')->getManager();
+        /** @var Router $router */
+        $router = $this->container->get('router');
+        /** @var EncoderFactory $encoder */
+        $encoder = $this->container->get('security.encoder_factory');
+        $user = $userManager->findUserByUsername($username);
+        if($user == null || $request->get('_route') == 'demo')
         {
             // generate a new guest user in the database
-            $user = $this->userManager->createUser();
+            $user = $userManager->createUser();
             $user->setUsername($username);
-            $encoder = $this->encoder->getEncoder($user);
-            $password = $encoder->encodePassword($username, $user->getSalt());
+            $password = $encoder->getEncoder($user)->encodePassword($username, $user->getSalt());
             $user->setPassword($password);
-            $user->setEmail($this->email);
-            $this->userManager->updateCanonicalFields($user);
-            $user->addRole('ROLE_GUEST');
+            $user->setEmail($username . '_studysauce.com@mailinator.com');
+            $userManager->updateCanonicalFields($user);
+            $user->addRole($request->get('_route') == 'demo' ? 'ROLE_DEMO' : 'ROLE_GUEST');
             $user->setEnabled(true);
-            $user->setFirst('Guest');
+            $user->setFirst($username);
             $user->setLast('Account');
-            $this->orm->persist($user);
-            $this->orm->flush();
+            $orm->persist($user);
+            $orm->flush();
         }
 
-        $encoder = $this->encoder->getEncoder($user);
-        $password = $encoder->encodePassword('guest', $user->getSalt());
+        $password = $encoder->getEncoder($user)->encodePassword('guest', $user->getSalt());
         $this->context->setToken(new UsernamePasswordToken($user, $password, 'main', $user->getRoles()));
 
         if (null !== $this->logger) {
             $this->logger->info('Populated SecurityContext with an anonymous Token');
         }
-    }
 
-
-    /**
-     * @return array
-     */
-    /*
-    public static function getSubscribedEvents()
-    {
-        return [
-            KernelEvents::REQUEST => ['onKernelRequest', 33],
-            KernelEvents::RESPONSE => ['onKernelResponse', -128]
-        ];
-    }
-*/
-    /**
-     * @param FilterResponseEvent $event
-     */
-    /*
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        $request = $event->getRequest();
-        $controller = $request->get('_controller');
-        if($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction')
+        if($request->get('_route') == 'demo')
         {
-            if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() && $token->getUser() != 'anon.') {
-                $url = $this->router->generate('home');
-            }
-            else {
-                $url = $this->router->generate('login');
-            }
-            $event->setResponse(new RedirectResponse($url));
-        }
+            list($route, $options) = HomeController::getUserRedirect($user);
+            $response = new RedirectResponse($router->generate($route, $options));
 
+            /** @var LoginManager $loginManager */
+            $loginManager = $this->container->get('fos_user.security.login_manager');
+            $loginManager->loginUser('main', $user, $response);
+
+            $event->setResponse($response);
+        }
     }
-*/
+
 }

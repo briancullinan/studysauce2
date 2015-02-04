@@ -41,7 +41,7 @@ $view['slots']->start('body'); ?>
                 <div class="email">
                     <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
                 </div>
-                <?php if(!is_object($user) || $user->hasRole('ROLE_GUEST')) { ?>
+                <?php if(!is_object($user) || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) { ?>
                     <div class="password">
                         <label class="input"><span>Password</span><input name="password" type="password" value=""></label>
                     </div>

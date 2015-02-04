@@ -129,6 +129,7 @@ $view['slots']->start('body'); ?>
                 <label class="select">
                     <span>Class name</span>
                     <i class="class<?php print $classI; ?>"></i>
+                    <span class="sort-date-label"><?php print $newHeadStr; ?></span>
                     <select>
                         <option value="" <?php print (empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                         <?php

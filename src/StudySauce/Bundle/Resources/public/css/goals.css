@@ -279,6 +279,11 @@
 
 @media all and (max-width:1000px) {
 
+    #goals .goal-row.read-only .highlighted-link
+    {
+        margin-top:-25px;
+    }
+
     #goals .split-description {
         width:auto;
         display:block;

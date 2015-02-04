@@ -117,12 +117,24 @@ class AdminController extends Controller
                     ->leftJoin('u.course3s', 'c3');
                 $joins[] = 'c1';
             }
-            if(strpos($completed, '1') !== false)
-                $qb = $qb->andWhere('c1.lesson1=4 AND c1.lesson2=4 AND c1.lesson3=4 AND c1.lesson4=4 AND c1.lesson5=4 AND c1.lesson6=4');
-            if(strpos($completed, '2') !== false)
-                $qb = $qb->andWhere('c2.lesson1=4 AND c2.lesson2=4 AND c2.lesson3=4 AND c2.lesson4=4 AND c2.lesson5=4');
-            if(strpos($completed, '3') !== false)
-                $qb = $qb->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4');
+            if(($pos = strpos($completed, '1')) !== false) {
+                if(substr($completed, $pos - 1, 1) != '!')
+                    $qb = $qb->andWhere('c1.lesson1=4 AND c1.lesson2=4 AND c1.lesson3=4 AND c1.lesson4=4 AND c1.lesson5=4 AND c1.lesson6=4');
+                else
+                    $qb = $qb->andWhere('(c1.lesson1<4 OR c1.lesson1 IS NULL) OR (c1.lesson2<4 OR c1.lesson2 IS NULL) OR (c1.lesson3<4 OR c1.lesson3 IS NULL) OR (c1.lesson4<4 OR c1.lesson4 IS NULL) OR (c1.lesson5<4 OR c1.lesson5 IS NULL) OR (c1.lesson6<4 OR c1.lesson6 IS NULL)');
+            }
+            if(($pos = strpos($completed, '2')) !== false) {
+                if(substr($completed, $pos - 1, 1) != '!')
+                    $qb = $qb->andWhere('c2.lesson1=4 AND c2.lesson2=4 AND c2.lesson3=4 AND c2.lesson4=4 AND c2.lesson5=4');
+                else
+                    $qb = $qb->andWhere('(c2.lesson1<4 OR c2.lesson1 IS NULL) OR (c2.lesson2<4 OR c2.lesson2 IS NULL) OR (c2.lesson3<4 OR c2.lesson3 IS NULL) OR (c2.lesson4<4 OR c2.lesson4 IS NULL) OR (c2.lesson5<4 OR c2.lesson5 IS NULL)');
+            }
+            if(($pos = strpos($completed, '3')) !== false) {
+                if(substr($completed, $pos - 1, 1) != '!')
+                    $qb = $qb->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4');
+                else
+                    $qb = $qb->andWhere('(c3.lesson1<4 OR c3.lesson1 IS NULL) OR (c3.lesson2<4 OR c3.lesson2 IS NULL) OR (c3.lesson3<4 OR c3.lesson3 IS NULL) OR (c3.lesson4<4 OR c3.lesson4 IS NULL) OR (c3.lesson5<4 OR c3.lesson5 IS NULL)');
+            }
         }
 
 
@@ -152,7 +164,7 @@ class AdminController extends Controller
                     $qb = $qb->andWhere('c' . $c . '.lesson' . $l . '=4');
                 }
                 else {
-                    $qb = $qb->andWhere('c' . $c . '.lesson' . $l . '<4');
+                    $qb = $qb->andWhere('c' . $c . '.lesson' . $l . '<4 OR ' . 'c' . $c . '.lesson' . $l . ' IS NULL');
                 }
             }
         }
@@ -294,10 +306,8 @@ class AdminController extends Controller
         $users = $users
             ->setFirstResult($resultOffset)
             ->setMaxResults(25)
-            ->getQuery();
-        $sql = $users->getSql();
-        $users = $users->getResult();
-
+            ->getQuery()
+            ->getResult();
 
 
         // get all the interesting aggregate counts

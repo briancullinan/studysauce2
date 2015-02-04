@@ -3,7 +3,6 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Checkin;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
@@ -23,11 +22,7 @@ class CheckinController extends Controller
      */
     public function indexAction()
     {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-        $demo = ScheduleController::getDemoSchedule($userManager, $orm);
+        $demo = ScheduleController::getDemoSchedule($this->container);
         $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
@@ -57,11 +52,7 @@ class CheckinController extends Controller
      */
     public function widgetAction()
     {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-        $demo = ScheduleController::getDemoSchedule($userManager, $orm);
+        $demo = ScheduleController::getDemoSchedule($this->container);
         $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */

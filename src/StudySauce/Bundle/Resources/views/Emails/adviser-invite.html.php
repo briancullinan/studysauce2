@@ -1,5 +1,8 @@
 <?php
 use StudySauce\Bundle\Entity\Group;
+
+$view['slots']->set('greeting', 'Hello ' . $user->getFirst() . ',');
+
 /** @var Group $group */
 $view->extend('StudySauceBundle:Emails:layout.html.php');
 

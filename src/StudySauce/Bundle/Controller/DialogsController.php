@@ -58,7 +58,7 @@ class DialogsController extends Controller
 
         // save the invite
         $contact = new ContactMessage();
-        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST')) {
+        if($user != 'anon.' && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO')) {
             $contact->setUser($user);
         }
         $contact->setName($request->get('name'));
@@ -268,7 +268,7 @@ class DialogsController extends Controller
         $bill->setLast($request->get('last'));
         $bill->setEmail($request->get('email'));
         $bill->setCode(md5(microtime()));
-        if(!is_object($user) || $user->hasRole('ROLE_GUEST')) {
+        if(!is_object($user) || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
             $bill->setFromFirst($request->get('yourFirst'));
             $bill->setFromLast($request->get('yourLast'));
             $bill->setFromEmail($request->get('yourEmail'));
@@ -339,7 +339,7 @@ class DialogsController extends Controller
         $student->setLast($request->get('last'));
         $student->setEmail($request->get('email'));
         $student->setCode(md5(microtime()));
-        if(!is_object($user) || $user->hasRole('ROLE_GUEST')) {
+        if(!is_object($user) || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
             $student->setFromFirst($request->get('yourFirst'));
             $student->setFromLast($request->get('yourLast'));
             $student->setFromEmail($request->get('yourEmail'));

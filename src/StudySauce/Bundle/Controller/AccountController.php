@@ -193,7 +193,7 @@ class AccountController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
             : null;
 
-        if (!empty($user) && !$user->hasRole('ROLE_GUEST') && !empty($request->get('newPass'))) {
+        if (!empty($user) && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO') && !empty($request->get('newPass'))) {
 
             // change the password
             $encoder_service = $this->get('security.encoder_factory');
@@ -249,7 +249,7 @@ class AccountController extends Controller
 
         return $this->render('StudySauceBundle:Account:reset.html.php', [
                 'token' => $request->get('token'),
-                'email' => $user->hasRole('ROLE_GUEST') ? $request->get('email') : $user->getEmail(),
+                'email' => $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO') ? $request->get('email') : $user->getEmail(),
                 'csrf_token' => $csrfToken
             ]);
     }

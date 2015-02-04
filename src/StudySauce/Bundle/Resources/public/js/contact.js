@@ -3,7 +3,7 @@ $(document).ready(function () {
     // TODO: bring back chat
     var body = $('body');
 
-    body.on('click', '#contact-support a[href="#submit-contact"], #schedule-demo a[href="#submit-contact"]', function (evt) {
+    body.on('submit', '#contact-support form, #schedule-demo form', function (evt) {
         var contact = $('#contact-support:visible, #schedule-demo:visible');
         evt.preventDefault();
         if(contact.is('.invalid'))
@@ -30,7 +30,7 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#bill-parents a[href="#submit-contact"]', function (evt) {
+    body.on('submit', '#bill-parents form', function (evt) {
         var contact = $('#bill-parents');
         evt.preventDefault();
         if(contact.is('.invalid'))
@@ -63,7 +63,31 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#student-invite a[href="#submit-contact"]', function (evt) {
+    function validateInvite()
+    {
+        var invite = $(this).parents('#student-invite, #bill-parents');
+        var valid = true;
+        if(invite.find('.first-name input').val().trim() == '' ||
+            invite.find('.last-name input').val().trim() == '' ||
+            invite.find('.email input').val().trim() ||
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(invite.find('.email input').val()))
+            valid = false;
+        if(invite.find('.your-first input').length > 0) {
+            if(invite.find('.your-first input').val().trim() == '' ||
+                invite.find('.your-last input').val().trim() == '' ||
+                invite.find('.your-email input').val().trim() ||
+                !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(invite.find('.your-email input').val()))
+                valid = false;
+        }
+        if(valid)
+            invite.removeClass('invalid').addClass('valid');
+        else
+            invite.removeClass('valid').addClass('invalid');
+    }
+
+    body.on('keyup', '#student-invite input, #bill-parents input', validateInvite);
+    body.on('change', '#student-invite input, #bill-parents input', validateInvite);
+    body.on('submit', '#student-invite form', function (evt) {
         var contact = $('#student-invite');
         evt.preventDefault();
         if(contact.is('.invalid'))

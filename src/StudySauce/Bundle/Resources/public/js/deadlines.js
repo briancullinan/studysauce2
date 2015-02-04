@@ -221,28 +221,26 @@ $(document).ready(function () {
         var headings = {},
             that = jQuery(this),
             deadlines = $('#deadlines');
-        deadlines.find('.head').each(function () {
-            var head = jQuery(this);
-            head.nextUntil('*:not(.deadline-row)').each(function () {
-                var row = jQuery(this),
-                    courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1],
-                    that = row.find('.class-name .read-only');
-                // TODO: fix this to not rely on name
-                if(typeof headings[courseId] == 'undefined')
-                    headings[courseId] = row;
-                else
-                    headings[courseId] = jQuery.merge(headings[courseId], row);
-                that.html(that.html().replace(courseId, head.text().trim()));
-            });
-        });
         var rows = [];
         // sort headings by class name
         if(that.val() == 'class')
         {
+            deadlines.find('.head').each(function () {
+                var head = jQuery(this);
+                head.nextUntil('*:not(.deadline-row)').each(function () {
+                    var row = jQuery(this),
+                        courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+                    // TODO: fix this to not rely on name
+                    if(typeof headings[courseId] == 'undefined')
+                        headings[courseId] = row;
+                    else
+                        headings[courseId] = jQuery.merge(headings[courseId], row);
+                });
+            });
             var keys = [];
-            for(var i = 0; i < window.classIds.length; i++)
-                if(typeof headings[window.classIds[i]] != 'undefined')
-                    keys[keys.length] = window.classIds[i];
+            deadlines.find('.deadline-row').first().find('.class-name select option:not([value=""]):not([value="Nonacademic"])').each(function () {
+                keys[keys.length] = $(this).attr('value');
+            });
 
             for(var k in headings)
                 if(headings.hasOwnProperty(k) && keys.indexOf(k) == -1)
@@ -251,11 +249,25 @@ $(document).ready(function () {
             for(var j = 0; j < keys.length; j++)
             {
                 var hidden = headings[keys[j]].filter('.deadline-row:not(.historic)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden ? 'historic' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
+                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden ? 'historic' : '') + '">' +
+                    deadlines.find('.deadline-row').first().find('option[value="' + keys[j] + '"]').text() + '</div>'), headings[keys[j]].detach()));
             }
+            deadlines.addClass('sort-by-class');
         }
         else
         {
+            deadlines.find('.head').each(function () {
+                var head = jQuery(this);
+                head.nextUntil('*:not(.deadline-row)').each(function () {
+                    var row = jQuery(this),
+                        courseId = row.find('.sort-date-label').text();
+                    // TODO: fix this to not rely on name
+                    if(typeof headings[courseId] == 'undefined')
+                        headings[courseId] = row;
+                    else
+                        headings[courseId] = jQuery.merge(headings[courseId], row);
+                });
+            });
             var keys2 = [];
             for(var h2 in headings) {
                 if(headings.hasOwnProperty(h2))
@@ -273,8 +285,9 @@ $(document).ready(function () {
                 var hidden2 = headings[h].filter('.deadline-row:not(.historic)').length == 0;
                 rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden2 ? 'historic' : '') + '">' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' <span>' + d.getFullYear() + '</span></div>'), headings[h].detach()));
             }
+            deadlines.removeClass('sort-by-class');
         }
         jQuery('.sort-by').nextAll('.head').remove();
-        jQuery(rows).insertAfter(deadlines.find('.sort-by'));
+        jQuery(rows).insertAfter(deadlines.find('header'));
     });
 });

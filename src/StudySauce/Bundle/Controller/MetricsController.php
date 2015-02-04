@@ -27,9 +27,6 @@ class MetricsController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
@@ -45,7 +42,7 @@ class MetricsController extends Controller
         }
         if(empty($checkins)) {
             $isDemo = true;
-            $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
+            $schedule = ScheduleController::getDemoSchedule($this->container);
             $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
             list($checkins, $checkouts) = self::demoCheckins($courses, $orm);
         }

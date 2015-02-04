@@ -5,6 +5,7 @@ namespace Admin\Bundle\Controller;
 use Codeception\Configuration;
 use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
+use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Module\Symfony2;
 use Codeception\Module\WebDriver;
@@ -134,19 +135,19 @@ class ValidationController extends Controller
             $features = [];
             $screenDir = $this->container->getParameter('kernel.root_dir') . '/../web/bundles/admin/results/';
             self::$dispatcher->addListener(Events::STEP_BEFORE, function (StepEvent $x) use (&$steps, &$features) {
-                    if (!isset($steps[$x->getTest()->getName()])) {
-                        $steps[$x->getTest()->getName()] = '';
-                    }
                     /** @var Scenario $scenario */
                     if (($scenario = $x->getTest()->getScenario()) && $scenario->getFeature() != end($features)) {
                         $steps[$x->getTest()->getName()] .= '<h3>I want to ' . $scenario->getFeature() . '</h3>';
                         array_push($features, $scenario->getFeature());
                     }
                 });
-            self::$dispatcher->addListener(Events::TEST_BEFORE, function ($x) use (&$features) {
+            self::$dispatcher->addListener(Events::TEST_BEFORE, function (TestEvent $x) use (&$steps, &$features) {
+                    if (!isset($steps[$x->getTest()->getName()])) {
+                        $steps[$x->getTest()->getName()] = '';
+                    }
                     array_push($features, end($features));
                 });
-            self::$dispatcher->addListener(Events::TEST_AFTER, function ($x) use (&$features) {
+            self::$dispatcher->addListener(Events::TEST_AFTER, function (TestEvent $x) use (&$features) {
                     array_pop($features);
                 });
             self::$dispatcher->addListener(Events::STEP_AFTER, function (StepEvent $x) use (&$steps) {
@@ -159,23 +160,37 @@ class ValidationController extends Controller
                 });
             self::$dispatcher->addListener(Events::TEST_ERROR, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
-                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . $x->getFail()->getMessage() . '<br />
-                    <a target="_blank" href="/bundles/admin/results/' . $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a></pre>';
+                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . $x->getFail()->getMessage();
                     // try to get a screenshot to show in the browser
-                    /** @var WebDriver $driver */
-                    $driver = SuiteManager::$modules['WebDriver'];
-                    $driver->makeScreenshot($ss);
-                    rename(codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png', $screenDir . $ss . '.png');
+                    if(isset(SuiteManager::$modules['WebDriver'])) {
+                        /** @var WebDriver $driver */
+                        $driver = SuiteManager::$modules['WebDriver'];
+                        $driver->makeScreenshot($ss);
+                        rename(
+                            codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png',
+                            $screenDir . $ss . '.png'
+                        );
+                        $steps[$x->getTest()->getName()] .= '<br /><a target="_blank" href="/bundles/admin/results/' .
+                            $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a>';
+                    }
+                    $steps[$x->getTest()->getName()] .= '</pre>';
                 });
             self::$dispatcher->addListener(Events::TEST_FAIL, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
-                    $steps[$x->getTest()->getName()] .= '<pre class="failure">' . $x->getFail()->getMessage() . '<br />
-                    <a target="_blank" href="/bundles/admin/results/' . $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a></pre>';
+                    $steps[$x->getTest()->getName()] .= '<pre class="failure">' . $x->getFail()->getMessage();
                     // try to get a screenshot to show in the browser
-                    /** @var WebDriver $driver */
-                    $driver = SuiteManager::$modules['WebDriver'];
-                    $driver->makeScreenshot($ss);
-                    rename(codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png', $screenDir . $ss . '.png');
+                    if(isset(SuiteManager::$modules['WebDriver'])) {
+                        /** @var WebDriver $driver */
+                        $driver = SuiteManager::$modules['WebDriver'];
+                        $driver->makeScreenshot($ss);
+                        rename(
+                            codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png',
+                            $screenDir . $ss . '.png'
+                        );
+                        $steps[$x->getTest()->getName()] .= '<br /><a target="_blank" href="/bundles/admin/results/' .
+                            $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a>';
+                    }
+                    $steps[$x->getTest()->getName()] .= '</pre>';
                 });
 
             $result = new \PHPUnit_Framework_TestResult;

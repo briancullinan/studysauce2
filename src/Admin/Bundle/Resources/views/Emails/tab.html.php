@@ -32,8 +32,11 @@ foreach ($view['assetic']->javascripts(
     ['output' => 'bundles/admin/js/*.js']
 ) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-$view['slots']->stop();
+<?php endforeach; ?>
+<script type="text/javascript">
+    window.entities = JSON.parse('<?php print json_encode($entities); ?>');
+</script>
+<?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
     <div class="panel-pane" id="emails">
@@ -103,23 +106,33 @@ $view['slots']->start('body'); ?>
                             <?php } ?>
                         </select></label>
                     <table class="variables">
+                        <thead>
+                        <tr>
+                            <th><label>User</label></th>
+                            <th><label></label> <a href="#remove-field"></a></th>
+                            <th><label></label> <a href="#remove-field"></a></th>
+                            <th><a href="#add-field">+</a></th>
+                        </tr>
+                        </thead>
                         <tbody>
                         <tr>
-                            <td><label class="input"><span>User</span><input name="userFirst" placeholder="First" type="text"/></label></td>
-                            <td><label class="input"><span></span><input name="userLast" placeholder="Last" type="text"/></label></td>
-                            <td><label class="input"><span></span><input name="userEmail" placeholder="Email" type="text"/></label></td>
+                            <td><label class="input"><input name="userFirst" placeholder="First" type="text"/></label></td>
+                            <td><label class="input"><input name="userLast" placeholder="Last" type="text"/></label></td>
+                            <td><label class="input"><input name="userEmail" placeholder="Email" type="text"/></label></td>
+                            <td><a href="#remove-line"></a></td>
                         </tr>
                         </tbody>
                     </table>
                     <div class="highlighted-link">
                         <a href="#add-line" class="big-add">Add <span>+</span> line</a>
-                        <a href="#close" class="more" data-dismiss="modal">Send now</a>
+                        <a href="#send-confirm" class="more" data-toggle="modal">Send now</a>
                     </div>
                     <label class="input"><span>Subject</span><input type="text" name="subject"/></label>
                     <label class="input">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#editor1">Preview</a></li>
                             <li><a href="#markdown">Source</a></li>
+                            <li><a href="#headers">Headers</a></li>
                         </ul>
                         <div class="preview"></div>
                     </label>
@@ -131,4 +144,5 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 print $this->render('AdminBundle:Dialogs:edit-email.html.php',['id' => 'edit-email', 'emails' => $emails, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('AdminBundle:Dialogs:send-confirm.html.php',['id' => 'send-confirm']);
 $view['slots']->stop();

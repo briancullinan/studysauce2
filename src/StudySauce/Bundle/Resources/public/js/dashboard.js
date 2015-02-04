@@ -144,7 +144,7 @@ $(document).ready(function () {
         }
     }
 
-    body.on('mouseenter', '*[title]:not([original-title])', function () {
+    body.on('mouseenter', '*[title]:not([original-title]):not(iframe)', function () {
         $('.tipsy').remove();
         $(this).tipsy().trigger('mouseenter');
     });

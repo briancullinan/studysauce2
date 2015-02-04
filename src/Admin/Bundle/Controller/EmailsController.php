@@ -2,15 +2,22 @@
 
 namespace Admin\Bundle\Controller;
 
+use Admin\Bundle\Helpers\CustomPhpEngine;
+use Admin\Bundle\Helpers\StringLoader;
 use Codeception\TestCase;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use StudySauce\Bundle\Entity\User;
 use Swift_Message;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Swift_Mime_Message;
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Templating\PhpEngine;
+use Symfony\Component\Templating\TemplateNameParserInterface;
 
 /**
  * Class ValidationController
@@ -20,12 +27,19 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
 {
 
     /**
+     * @throws AccessDeniedHttpException
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
 
         $emails = [];
         $templatesDir = new \DirectoryIterator($this->container->getParameter('kernel.root_dir') . '/../src/StudySauce/Bundle/Resources/views/Emails/');
@@ -57,11 +71,27 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
             ->getQuery()
             ->getSingleScalarResult();
 
+        self::$tables = $orm->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+        $entities = [];
+        foreach(self::$tables as $t)
+        {
+            $namespace = explode('\\', $t);
+            $className = end($namespace);
+            $data = $orm->getClassMetadata($t);
+            foreach($data->getFieldNames() as $f) {
+                $entities[] = [
+                    'value' => strtolower($className) . ucfirst($f),
+                    'text' => $className,
+                    '0' => ':' . ucfirst($f)
+                ];
+            }
+        }
 
         return $this->render('AdminBundle:Emails:tab.html.php', [
                 'emails' => $emails,
                 'total' => 0,
-                'recent' => $recent
+                'recent' => $recent,
+                'entities' => $entities
             ]);
     }
 
@@ -75,23 +105,49 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
      */
     public function templateAction($_email = '')
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        self::$tables = $em->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
 
+        /** @var \Swift_Message $template */
+        $template = $this->buildEmail($_email, [], $params, $objects);
+
+        return $this->render('AdminBundle:Emails:template.html.php', [
+                'headers' => $template->getHeaders(),
+                'template' => $template->getBody(),
+                'params' => $params,
+                'objects' => $objects,
+                'subject' => $template->getSubject()
+            ]);
+    }
+
+    /**
+     * @param $_email
+     * @param $variables
+     * @param $params
+     * @param $objects
+     * @return Swift_Message
+     */
+    public function buildEmail($_email, $variables = [], &$params = [], &$objects = [])
+    {
+        /** @var EntityManager $orm */
+        $orm = $this->getDoctrine()->getManager();
         $fullName = 'StudySauceBundle:Emails:' . $_email . '.html.php';
 
         // get automatic variables requred for ever send
         $params = [];
         $objects = [];
-        $subject = '';
         if($_email == '') {
             return new Response('');
         }
+        self::$tables = $orm->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
 
         // look up inputs
         // also check template file for usages
         $templateText = implode("", file($this->getPathFromName($fullName)));
+        // TODO: make this class work with torch and laurel and other bundles
         $reflector = new \ReflectionClass('\StudySauce\Bundle\Controller\EmailsController');
         foreach($reflector->getMethods() as $m)
         {
@@ -104,43 +160,62 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
                 {
                     $parameterName = $p->getName();
                     $className = !empty($p->getClass()) ? basename($p->getClass()->getFileName(), '.php') : $p->getName();
-                    list($classParams, $classObjects) = $this->generateParams($className, $parameterName, $methodText . $templateText);
+                    list($classParams, $classObjects) = $this->generateParams($className, $parameterName, $methodText . $templateText, $variables);
                     $params = array_merge($params, $classParams);
                     $objects = array_merge($objects, $classObjects);
                 }
-
-                if(preg_match('/setSubject\((([\'"]*).*?\2)\)\s*->/i', $methodText, $match)) {
-                    $getSubject = function ($vars, $match) {
-                        extract($vars);
-                        $subject = eval('return ' . $match[1] . ';');
-                        return $subject;
-                    };
-                    $subject = $getSubject($objects, $match);
-                }
-
-                // mock send the email
+                // mock the email send using this class
+                $this->evalSubject($objects);
                 call_user_func_array([$this, $m->getName()], $objects);
-                $template = self::$emails[0];
                 break;
             }
         }
-        if(!isset($template)) {
+        if(empty($params)) {
             // derive variables from template alone without types
             preg_match_all('/\$([a-z0-9]*)/i', $templateText, $matches);
             foreach(array_unique($matches[1]) as $p) {
-                list($classParams, $classObjects) = $this->generateParams($p, $p, $templateText, true);
+                list($classParams, $classObjects) = $this->generateParams($p, $p, $templateText, $variables, true);
                 $params = array_merge($params, $classParams);
                 $objects = array_merge($objects, $classObjects);
             }
-            $template = $this->render($fullName, $objects)->getContent();
+        }
+        if(empty(self::$emails)) {
+            // generate email send function
+            /** @var User $user */
+            $user = $objects['user'];
+            /** @var \Swift_Message $message */
+            $message = Swift_Message::newInstance()
+                ->setFrom('admin@studysauce.com')
+                ->setTo($user->getEmail())
+                ->setBody($this->render($fullName, $objects)->getContent(), 'text/html');
+            $headers = $message->getHeaders();
+            $headers->addParameterizedHeader(
+                'X-SMTPAPI',
+                preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode(['category' => [$_email]]))
+            );
+            $this->evalSubject($objects);
+            call_user_func_array([$this, 'send'], [$message]);
         }
 
-        return $this->render('AdminBundle:Emails:template.html.php', [
-                'template' => $template,
-                'params' => $params,
-                'objects' => $objects,
-                'subject' => $subject
-            ]);
+        /** @var \Swift_Message $template */
+        $template = self::$emails[0];
+        return $template;
+    }
+
+
+    /**
+     * @param $objects
+     */
+    private function evalSubject($objects)
+    {
+        extract($objects);
+        // alter subject line
+        if(!empty($this->subject)) {
+            $newSubject = 'return "' . preg_replace_callback('/\{([a-z0-9_]*?)(\:[a-z0-9_]*?)*\}/i', function ($m) {
+                        return '" . $' . lcfirst($m[1]) . (!empty($m[2]) ? ('->get' . substr($m[2], 1) . '()') : '') . ' . "';
+                    }, $this->subject) . '";';
+            $this->subject = eval($newSubject);
+        }
     }
 
     /**
@@ -157,77 +232,195 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
     }
 
     /**
-     * @param Swift_Message $message
+     * @param string $view
+     * @param array $parameters
+     * @param Response $response
+     * @return Response
      */
-    protected function send(\Swift_Message $message)
+    public function render($view, array $parameters = [], Response $response = null)
     {
-        self::$emails[] = $message->getBody();
+        /** @var PhpEngine $template */
+        $template = $this->container->get('templating');
+        // render submitted template instead
+        if(!empty($this->template))
+        {
+            // replace variables in template
+            $newTemplate = preg_replace_callback('/\{([a-z0-9_]*?)(\:[a-z0-9_]*?)*\}/i', function ($m) {
+                        return '<?php print $' . lcfirst($m[1]) . (!empty($m[2]) ? ('->get' . substr($m[2], 1) . '()') : '') . '; ?>';
+                    }, $this->template);
+            $this->template = $newTemplate;
+            /** @var TemplateNameParserInterface $parser */
+            $parser = $this->container->get('templating.name_parser');
+            /** @var GlobalVariables $globals */
+            $globals = $this->container->get('templating.globals');
+            $custom = new CustomPhpEngine($parser, $this->container, new StringLoader($this->template), $globals);
+            $text = $custom->render($view, $parameters);
+        }
+        else
+        {
+            $text = $template->render($view, $parameters);
+        }
+        if (null === $response) {
+            $response = new Response();
+        }
+
+        $response->setContent($text);
+        return $response;
     }
 
     /**
-     * @param Swift_Message $message
+     * @param $_email
+     * @param Request $request
+     * @return JsonResponse
      */
-    protected function sendToAdmin(\Swift_Message $message)
+    public function sendAction($_email, Request $request)
     {
-        self::$emails[] = $message->getBody();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if(!empty($request->get('confirm'))) {
+            $this->confirm = true;
+        }
+
+        if(!empty($request->get('template'))) {
+            $this->template = $request->get('template');
+        }
+
+        if(!empty($request->get('subject'))) {
+            $this->subject = $request->get('subject');
+        }
+
+        /** @var \Swift_Message $template */
+        if(!empty($request->get('variables'))) {
+            foreach ($request->get('variables') as $line) {
+                if(empty($line['userEmail']))
+                    continue;
+                self::$emails = [];
+                $this->buildEmail($_email, $line, $params, $objects);
+            }
+        }
+
+        return new JsonResponse(true);
+    }
+
+    public $template = '';
+    public $confirm = false;
+    public $subject = '';
+    /**
+     * @param Swift_Mime_Message $message
+     */
+    protected function send(\Swift_Mime_Message $message)
+    {
+        if(!empty($this->subject))
+        {
+            $message->setSubject($this->subject);
+        }
+        if($this->confirm) {
+            parent::send($message);
+        }
+        self::$emails[] = $message;
+    }
+
+    /**
+     * @param Swift_Mime_Message $message
+     */
+    protected function sendToAdmin(\Swift_Mime_Message $message)
+    {
+        if(!empty($this->subject))
+        {
+            $message->setSubject($this->subject);
+        }
+        if($this->confirm) {
+            parent::sendToAdmin($message);
+        }
+        self::$emails[] = $message;
     }
 
     protected static $autoInclude = ['user' => ['Email']];
+
     /**
      * @param $className
      * @param $parameterName
      * @param $subject
+     * @param $variables
      * @param bool $entitiesOnly
      * @return array
      */
-    private function generateParams($className, $parameterName, $subject, $entitiesOnly = false)
+    private function generateParams($className, $parameterName, $subject, $variables = [], $entitiesOnly = false)
     {
+        /** @var EntityManager $orm */
+        $orm = $this->getDoctrine()->getManager();
+
         $params = [];
         $objects = [];
         // if we are dealing with an entity class try to figure out which methods are used
         if(($classI = array_search(true, array_map(function ($t) use ($className) {
                         return strpos(strtolower($t), strtolower($className)) !== false;
                     }, self::$tables))) !== false) {
+            $data = $orm->getClassMetadata(self::$tables[$classI]);
             $namespace = explode('\\', self::$tables[$classI]);
             $className = end($namespace);
             $mockName = 'Mock' . $className;
             $instance = 'class ' . $mockName . ' extends ' . self::$tables[$classI] . ' {
+private $variables;
+public function __construct($variables) { $this->variables = $variables;
+if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
+    parent::__construct();}}
 ';
             preg_match_all('/' . $parameterName . '\s*->\s*get([a-z0-9_]*?)\s*\(/i', $subject, $properties);
             // use the entity for the field if no inputs are detected
-            if(!count($properties[1])) {
+            if (!count($properties[1])) {
                 $params[$parameterName]['name'] = $className;
                 $params[$parameterName]['prop'] = '';
             }
-            if(isset(self::$autoInclude[$parameterName])) {
+            if (isset(self::$autoInclude[$parameterName])) {
                 $properties = array_unique(array_merge(self::$autoInclude[$parameterName], $properties[1]));
-                self::$templateVars = array_merge(self::$templateVars, array_map(function ($c) use ($parameterName) {return $parameterName . $c; }, self::$autoInclude[$parameterName]));
-            }
-            else
+                self::$templateVars = array_merge(
+                    self::$templateVars,
+                    array_map(
+                        function ($c) use ($parameterName) {
+                            return $parameterName . $c;
+                        },
+                        self::$autoInclude[$parameterName]
+                    )
+                );
+            } else {
                 $properties = array_unique($properties[1]);
-            foreach($properties as $c)
-            {
+            }
+            foreach ($properties as $c) {
+                if(!in_array(lcfirst($c), $data->getFieldNames()))
+                    continue;
                 $params[$parameterName . $c]['name'] = $className;
                 $params[$parameterName . $c]['prop'] = $c;
-                if(strpos(strtolower($c), 'email') !== false) {
-                    $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return "' . $className . '_' . $c . '@mailinator.com"; }
+                if (strpos(strtolower($c), 'email') !== false) {
+                    $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return isset($this->variables["' . $parameterName . $c . '"]) ? $this->variables["' . $parameterName . $c . '"] : "' . $className . '_' . $c . '@mailinator.com"; }
 ';
-                }
-                else {
-                    $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return "{' . $className . ':' . $c . '}"; }
+                } else {
+                    $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return isset($this->variables["' . $parameterName . $c . '"]) ? $this->variables["' . $parameterName . $c . '"] : "{' . $className . ':' . $c . '}"; }
 ';
                 }
             }
-            $objects[$parameterName] = eval($instance . '
-};
-return new ' . $mockName . '();');
+            if(!class_exists($mockName)) {
+                eval($instance . '
+};');
+            }
+            $objects[$parameterName] = eval('return new ' . $mockName . '($variables);');
         }
         elseif(!$entitiesOnly)
         {
             self::$templateVars[] = $parameterName;
             $params[$parameterName]['name'] = $parameterName;
             $params[$parameterName]['prop'] = '';
-            $objects[$parameterName] = '{' . $parameterName . '}';
+            if (strpos(strtolower($parameterName), 'email') !== false) {
+                $objects[$parameterName] = isset($variables[$parameterName]) ? $variables[$parameterName] : ($parameterName . '@mailinator.com');
+            }
+            else {
+                $objects[$parameterName] = isset($variables[$parameterName]) ? $variables[$parameterName] : '{' . $parameterName . '}';
+            }
         }
         return [$params, $objects];
     }
@@ -255,6 +448,13 @@ return new ' . $mockName . '();');
     {
         /** @var EntityManager $orm */
         $orm = $this->getDoctrine()->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
         self::$tables = $orm->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
         // look up inputs
         // also check template file for usages
@@ -267,6 +467,7 @@ return new ' . $mockName . '();');
             }
 
             // find setter method that matches field name
+            // TODO: check table meta data instead?  It is smart enough to distinguish associated fields
             $getters = [];
             $default = '';
             $reflector = new \ReflectionClass($t);
@@ -293,9 +494,10 @@ return new ' . $mockName . '();');
                 ->getQuery()
                 ->execute();
 
-            return new JsonResponse(array_map(function ($x) use ($default) {return [
+            return new JsonResponse(array_map(function ($x) use ($default, $namespace) {return [
                         'text' => $x[$default],
-                        'value' => $x[$default]
+                        'value' => $x[$default],
+                        'alt' => array_combine(array_map(function ($k) use ($namespace) {return strtolower(end($namespace)) . ucfirst($k);}, array_diff(array_keys($x), [$default])), array_diff_key($x, [$default => '']))
                     ] + array_values(array_diff_key($x, [$default => '']));
                     }, $search));
         }

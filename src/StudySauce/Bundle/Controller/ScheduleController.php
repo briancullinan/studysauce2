@@ -12,10 +12,13 @@ use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\StudySauceBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class ScheduleController
@@ -31,10 +34,7 @@ class ScheduleController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
-        $demo = self::getDemoSchedule($userManager, $orm);
+        $demo = self::getDemoSchedule($this->container);
         $demoCourses = self::getDemoCourses($demo, $orm);
         $demoOthers = self::getDemoOthers($demo, $orm);
 
@@ -78,14 +78,26 @@ class ScheduleController extends Controller
     }
 
     /**
-     * @param $userManager
-     * @param $orm
+     * @param ContainerInterface $container
      * @return mixed|\StudySauce\Bundle\Entity\Schedule
      */
-    public static function getDemoSchedule(UserManager $userManager, EntityManager $orm)
+    public static function getDemoSchedule(ContainerInterface $container)
     {
-        /** @var $guest User */
-        $guest = $userManager->findUserByUsername('guest');
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $container->get('fos_user.user_manager');
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
+            $guest = $user;
+        }
+        else {
+            $guest = $userManager->findUserByUsername('guest');
+        }
 
         $schedule = $guest->getSchedules()->first();
         // TODO: generate valid schedules and courses

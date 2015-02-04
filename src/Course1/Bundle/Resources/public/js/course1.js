@@ -93,6 +93,12 @@ $(document).ready(function () {
         {
             $(this).addClass('loaded');
             onYouTubeIframeAPIReady.apply(this);
+            for(var i = 0; i < window.players.length; i++) {
+                if($(window.players[i].d).parents($(this)).length > 0) {
+                    window.players[i].playVideo();
+                    break;
+                }
+            }
         }
     });
 

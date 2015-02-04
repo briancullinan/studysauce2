@@ -44,7 +44,7 @@ class BuyController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('checkout')
             : null;
 
-        if(!$user->hasRole('ROLE_GUEST')) {
+        if(!$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO')) {
             $first = $user->getFirst();
             $last = $user->getLast();
             $email = $user->getEmail();
@@ -68,7 +68,8 @@ class BuyController extends Controller
             $invite = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $request->getSession()->get('parent')]);
             // set to true when landing anonymously so make sure it actually exists
             if(!empty($invite)) {
-                if (empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST')) {
+
+                if (empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST') || $invite->getUser()->hasRole('ROLE_DEMO')) {
                     $studentfirst = $invite->getFromFirst();
                     $studentlast = $invite->getFromLast();
                     $studentemail = $invite->getFromEmail();
@@ -91,16 +92,17 @@ class BuyController extends Controller
         {
             $invite = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $request->getSession()->get('student')]);
         }
-        if(!$user->hasRole('ROLE_GUEST') && empty($studentfirst) && !empty($invite = $user->getInvitedPartners()->filter(
+        if(!$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO') && empty($studentfirst) && !empty($invite = $user->getInvitedPartners()->filter(
                 function (PartnerInvite $p) {return !$p->getUser()->hasRole('ROLE_PAID') &&
-                    !$p->getUser()->hasRole('ROLE_GUEST');})->first())) {
+                    !$p->getUser()->hasRole('ROLE_GUEST') && !$p->getUser()->hasRole('ROLE_DEMO');})->first())) {
             $studentfirst = $invite->getUser()->getFirst();
             $studentlast = $invite->getUser()->getLast();
             $studentemail = $invite->getUser()->getEmail();
         }
-        if(!$user->hasRole('ROLE_GUEST') && empty($studentfirst) && !empty($invite = $user->getInvitedParents()->filter(
+        if(!$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO') && empty($studentfirst) && !empty($invite = $user->getInvitedParents()->filter(
                 function (ParentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
-            if(empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST')) {
+
+            if(empty($invite->getUser()) || $invite->getUser()->hasRole('ROLE_GUEST') || $invite->getUser()->hasRole('ROLE_DEMO')) {
                 $studentfirst = $invite->getFromFirst();
                 $studentlast = $invite->getFromLast();
                 $studentemail = $invite->getFromEmail();
@@ -111,10 +113,11 @@ class BuyController extends Controller
                 $studentemail = $invite->getUser()->getEmail();
             }
         }
-        if(!$user->hasRole('ROLE_GUEST') && empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
+        if(!$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO') && empty($studentfirst) && !empty($invite = $user->getStudentInvites()->filter(
                 function (StudentInvite $p) {return empty($p->getUser()) || !$p->getUser()->hasRole('ROLE_PAID');})->first())) {
+
             /** @var StudentInvite $invite */
-            if(empty($invite->getStudent()) || $invite->getStudent()->hasRole('ROLE_GUEST')) {
+            if(empty($invite->getStudent()) || $invite->getStudent()->hasRole('ROLE_GUEST') || $invite->getStudent()->hasRole('ROLE_DEMO')) {
                 $studentfirst = $invite->getFirst();
                 $studentlast = $invite->getLast();
                 $studentemail = $invite->getEmail();
@@ -492,7 +495,7 @@ class BuyController extends Controller
         }
 
         // create a user from checkout only if we are currently logged in as guests
-        if($user->hasRole('ROLE_GUEST')) {
+        if($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
             // look up existing user by email address
             /** @var User $user */
             $user = $userManager->findUserByEmail($request->get('email'));

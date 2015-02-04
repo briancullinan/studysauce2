@@ -112,7 +112,7 @@ class InviteListener implements EventSubscriberInterface
             $invite->setActivated(true);
             /** @var User $user */
             $user = $userManager->findUserByEmail($invite->getEmail());
-            if($user != null && !$user->hasRole('ROLE_GUEST'))
+            if($user != null && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO'))
                 self::setInviteRelationship($orm, $request, $user);
             $orm->flush();
             /** @var SecurityContext $context */
@@ -249,7 +249,7 @@ class InviteListener implements EventSubscriberInterface
         $user = $e->getAuthenticationToken()->getUser();
 
 
-        if($user != null && !$user->hasRole('ROLE_GUEST'))
+        if($user != null && !$user->hasRole('ROLE_GUEST')&& !$user->hasRole('ROLE_DEMO'))
             self::setInviteRelationship($orm, $request, $user);
 
     }

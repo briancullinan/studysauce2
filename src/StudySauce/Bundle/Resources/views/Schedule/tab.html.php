@@ -63,7 +63,7 @@ $view['slots']->start('body'); ?>
     </header>
     <div class="schedule clearfix">
         <?php
-        $isDemo = false; // || $app->getUser()->hasRole('ROLE_GUEST');
+        $isDemo = false;
         if (empty($courses)) {
             $isDemo = true;
             $courses = $demoCourses;

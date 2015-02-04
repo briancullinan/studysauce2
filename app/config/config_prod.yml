@@ -12,6 +12,7 @@ imports:
 #        query_cache_driver: apc
 parameters:
     authorize_test_mode: false
+    defer_all_emails: false
 
 monolog:
     handlers:

@@ -160,6 +160,20 @@ $collection->add(
 );
 
 $collection->add(
+    'emails_send',
+    new Route(
+        '/emails/send/{_email}',
+        ['_controller' => 'AdminBundle:Emails:send', '_email' => ''],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest() || !request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'emails_search',
     new Route(
         '/emails/search',

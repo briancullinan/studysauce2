@@ -14,8 +14,13 @@ $(document).ready(function () {
     subject.remove();
     // TODO: recreate rows when variables change
 
-
-    CKEDITOR.basePath = window.parent.callbackPaths['_welcome'] + 'bundles/admin/js/ckeditor/';
+    CKEDITOR.on('dialogDefinition', function(e) {
+        var dialogName = e.data.name;
+        var dialogDefinition = e.data.definition;
+        dialogDefinition.onShow = function() {
+            this.move($(window).width() - this.getSize().width,0); // Top center
+        }
+    });
     CKEDITOR.on( 'instanceCreated', function( event ) {
         var editor = event.editor,
             element = editor.element;
@@ -29,6 +34,7 @@ $(document).ready(function () {
             // configurations before the editor initialization takes place.
             editor.on( 'configLoaded', function() {
 
+                debugger;
                 // Remove unnecessary plugins to make the editor simpler.
                 editor.config.removePlugins = 'colorbutton,find,flash,font,' +
                 'forms,iframe,image,newpage,removeformat,' +
@@ -73,29 +79,45 @@ $(document).ready(function () {
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
 
-    if($(window.parent.document.body)
-            .find('#send-email .active a[href="#markdown"], #send-email .active a[href="#editor1"]').first().is('[href="#editor1"]')) {
+    var startView = $(window.parent.document.body)
+        .find('#send-email .active a[href="#markdown"], #send-email .active a[href="#editor1"]')
+        .first();
+    if(startView.is('[href="#markdown"]')) {
+        $('#editor1').hide();
+        $('.headers').hide();
+    }
+    else if(startView.is('[href="#editor1"]')) {
+        $('.CodeMirror').hide();
+        $('.headers').hide();
+    }
+    else if(startView.is('[href="#headers"]')) {
+        $('#editor1').hide();
         $('.CodeMirror').hide();
     }
-    else {
-        $('#editor1').hide();
-    }
 
-    $(window.parent.document.body).on('click', '#send-email a[href="#markdown"], #send-email a[href="#editor1"]', function (evt) {
+    $(window.parent.document.body).on('click', '#send-email a[href="#markdown"], #send-email a[href="#editor1"], #send-email a[href="#headers"]', function (evt) {
         evt.preventDefault();
-        var email = $('#send-email');
-        $(this).parents('ul').find('.active').removeClass('active');
-        $(this).parents('li').addClass('active');
-        if($(this).is('[href="#editor1"]')) {
+        var email = $('#send-email'),
+            that = $(this);
+        that.parents('ul').find('.active').removeClass('active');
+        that.parents('li').addClass('active');
+        if(that.is('[href="#editor1"]')) {
             CKEDITOR.instances.editor1.setData(mirror.getDoc().getValue());
             $('.CodeMirror').hide();
             $('#editor1').show();
+            $('.headers').hide();
         }
-        else {
+        else if(that.is('[href="#markdown"]')) {
             mirror.getDoc().setValue(CKEDITOR.instances.editor1.getData());
             $('.CodeMirror').show();
             $('#editor1').hide();
+            $('.headers').hide();
             mirror.refresh();
+        }
+        else if(that.is('[href="#headers"]')) {
+            $('.CodeMirror').hide();
+            $('#editor1').hide();
+            $('.headers').show();
         }
     });
 

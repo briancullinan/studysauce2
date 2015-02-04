@@ -4,6 +4,7 @@ imports:
 
 parameters:
     authorize_test_mode: true
+    defer_all_emails: "marketing@studysauce.com"
 
 services:
     pdo:
@@ -42,7 +43,7 @@ services:
         class: StudySauce\Bundle\EventListener\AnonymousAuthenticationListener
         tags:
             - {name: monolog.logger, channel: security}
-        arguments: ["@security.context", "", "@?logger", "@fos_user.user_manager", "guest@studysauce.com", "@doctrine.orm.entity_manager", "@security.encoder_factory", "@security.authentication.manager", "@router"]
+        arguments: ["@security.context", "", "@?logger", "@service_container"]
 
     kernel.listener.redirect:
         class: StudySauce\Bundle\EventListener\RedirectListener

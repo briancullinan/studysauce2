@@ -146,93 +146,26 @@ class PartnerController extends Controller
             $users[] = $p->getUser();
         }
 
+        $users = array_unique($users);
         // show sessions
-        /*
-        $sessions = [];
-        $dql = 'SELECT v.time, v.id FROM StudySauceBundle:Session v ORDER BY v.time DESC';
-        $query = $orm->createQuery($dql);
-        $sids = $query->execute();
-        $dql = 'SELECT v.created, v.path, IDENTITY(v.user) AS uid FROM StudySauceBundle:Visit v WHERE v.session IN (\'' . implode('\',\'', array_map(function ($s) {return $s['id'];}, $sids)) . '\') GROUP BY v.session ORDER BY v.created DESC';
-        $query = $orm->createQuery($dql);
-        $sessions = $query->execute();
-        foreach($sids as $j => $s)
-        {
-            $visits = $orm->getRepository('StudySauceBundle:Visit');
-            $criteria = Criteria::create()
-                ->orWhere(Criteria::expr()->contains('path', '/metrics'))
-                ->orWhere(Criteria::expr()->contains('path', '/schedule'))
-                ->orWhere(Criteria::expr()->contains('path', '/account'))
-                ->orWhere(Criteria::expr()->contains('path', '/profile'))
-                ->orWhere(Criteria::expr()->contains('path', '/premium'))
-                ->orWhere(Criteria::expr()->contains('path', '/partner'))
-                ->orWhere(Criteria::expr()->contains('path', '/goals'))
-                ->orWhere(Criteria::expr()->contains('path', '/plan'))
-                ->orWhere(Criteria::expr()->contains('path', '/deadlines'));
-            $v = $visits
-                ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $s['id'])))
-                ->matching($criteria)->first();
-            if(empty($v))
-            {
-                $v = $visits
-                    ->matching(Criteria::create()
-                            ->where(Criteria::expr()->eq('session', $s['id'])))->first();
-                if(!empty($v))
-                    $v->setPath('/');
-            }
-            if(!empty($v)) {
-                if($v->getCreated() > $yesterday)
-                    $visitors++;
-                $sessions[$v->getCreated()->getTimestamp()] = $v;
-            }
+        $yesterday = new \DateTime('yesterday');
+        $sessions = $orm->getRepository('StudySauceBundle:Visit')->createQueryBuilder('v')
+            ->leftJoin('v.user', 'u')
+            ->select(['v', 'u'])
+            ->andWhere('v.user IN (\'' . implode('\',\'', array_map(function (User $u) {return $u->getId();}, $users)) . '\')')
+            ->andWhere('v.path LIKE \'/schedule%\' OR v.path LIKE \'/metrics%\' OR v.path LIKE \'/goals%\' OR v.path LIKE \'/plan%\' OR v.path LIKE \'/course%\' OR v.path LIKE \'/account%\' OR v.path LIKE \'/premium%\' OR v.path LIKE \'/deadlines%\' OR v.path LIKE \'/checkin%\' OR v.path LIKE \'/home%\' OR v.path LIKE \'/partner%\' OR v.path LIKE \'/profile%\'')
+            ->groupBy('v.session')
+            ->orderBy('v.created', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        // group sessions by day
+        $groups = [];
+        foreach($sessions as $v) {
+            /** @var Visit $v */
+            $groups[$v->getCreated()->format('Y-m-d')][$v->getUser()->getId()] = $v;
         }
-        */
-
-
-        // show sessions
-        $sessions = [];
-        foreach($users as $i => $u) {
-            /** @var User $u */
-            if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER'))
-                continue;
-
-            $dql = 'SELECT DISTINCT SUBSTRING(v.created,1,10) AS created, v.session FROM StudySauceBundle:Visit v WHERE v.user=' . $u->getId() . ' GROUP BY v.session ORDER BY v.created DESC';
-            $query = $orm->createQuery($dql);
-            $sids = $query->execute();
-            $count = 0;
-            foreach($sids as $j => $s)
-            {
-                if($count == 10)
-                    break;
-                /** @var ArrayCollection $visits */
-                $visits = $u->getVisits();
-                $criteria = Criteria::create()
-                    ->orWhere(Criteria::expr()->contains('path', '/metrics'))
-                    ->orWhere(Criteria::expr()->contains('path', '/schedule'))
-                    ->orWhere(Criteria::expr()->contains('path', '/account'))
-                    ->orWhere(Criteria::expr()->contains('path', '/profile'))
-                    ->orWhere(Criteria::expr()->contains('path', '/premium'))
-                    ->orWhere(Criteria::expr()->contains('path', '/partner'))
-                    ->orWhere(Criteria::expr()->contains('path', '/goals'))
-                    ->orWhere(Criteria::expr()->contains('path', '/plan'))
-                    ->orWhere(Criteria::expr()->contains('path', '/deadlines'));
-                /** @var Visit $v */
-                $v = $visits
-                    ->matching(Criteria::create()->where(Criteria::expr()->eq('session', $s['session'])))
-                    ->matching($criteria)->first();
-                if(empty($v))
-                {
-                    $v = $visits
-                        ->matching(Criteria::create()
-                                ->where(Criteria::expr()->eq('session', $s['session'])))->first();
-                    if(!empty($v))
-                        $v->setPath('/');
-                }
-                if(!empty($v))
-                    $sessions[$v->getCreated()->getTimestamp()] = $v;
-                $count++;
-            }
-        }
-        krsort($sessions);
+        $sessions = call_user_func_array('array_merge', $groups);
 
         $showPartnerIntro = false;
         if(count($users) && empty($user->getProperty('seen_partner_intro'))) {
@@ -243,10 +176,6 @@ class PartnerController extends Controller
             $userManager->updateUser($user);
         }
 
-        $users = array_unique($users);
-        $signups = array_map(function (User $u) {
-                return empty($u->getLastLogin()) ? $u->getCreated()->getTimestamp() : $u->getLastLogin()->getTimestamp();}, $users);
-        array_multisort($signups, SORT_DESC, SORT_NUMERIC, $users);
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
             'sessions' => $sessions,
             'groups' => $groups,

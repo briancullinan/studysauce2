@@ -5,7 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 /** @var $view TimedPhpEngine */
 /** @var $user User */
 $user = $app->getUser();
-$isDemo = $user == 'anon.' || $user->hasRole('ROLE_GUEST');
+$isDemo = $user == 'anon.' || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO');
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 

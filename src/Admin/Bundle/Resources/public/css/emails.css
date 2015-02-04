@@ -47,6 +47,32 @@
     table-layout: fixed;
 }
 
+#emails a[href="#add-field"]
+{
+    font-size: 50px;
+    font-weight: 700;
+}
+
+#emails a[href="#remove-field"]
+{
+    vertical-align: middle;
+}
+
+#emails a[href="#remove-field"],
+#emails a[href="#remove-line"]
+{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1652px transparent;
+}
+
+#emails a[href="#remove-field"]:hover,
+#emails a[href="#remove-line"]:hover
+{
+    background-position: left -1702px;
+}
+
 #send-email .variables td
 {
     vertical-align: bottom;
@@ -57,14 +83,14 @@
     display:none;
 }
 
-.variables > tbody > tr > td > label > span
+.variables > tbody > tr > td
 {
-    display:none;
+    padding:0 4px 0 0;
 }
 
-.variables > tbody > tr:first-child > td > label > span
+.variables > tbody > tr > td:last-child
 {
-    display:block;
+    padding: 0;
 }
 
 .cke
@@ -79,6 +105,28 @@
     opacity: 1;
 }
 
+#add-field
+{
+    right: 50%;
+    top: 100px;
+    position: absolute;
+    left: auto;
+    bottom: auto;
+}
+
+#emails .templates > thead > tr > th:last-child,
+#emails .templates > tbody > tr > td:last-child
+{
+    text-align: right;
+    width: 100px;
+}
+
+#emails .variables > thead > tr > th:last-child,
+#emails .variables > tbody > tr > td:last-child
+{
+    text-align: right;
+    width: 50px;
+}
 
 #emails .variables .selectize-dropdown .title {
     display: block;
@@ -96,6 +144,25 @@
     width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.variables
+{
+    display:none;
+}
+
+#emails .variables > thead > tr > th > label
+{
+    padding-right:30px;
+    margin-right:-30px;
+    display:inline-block;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#emails .variables
+{
+    display:table;
 }
 
 #emails .variables .selectize-dropdown .by {

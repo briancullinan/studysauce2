@@ -200,14 +200,19 @@
 {
     background-color:#555555;
     color: #eeeeee;
-    margin-top:30px;
     padding:5px;
     clear:both;
 }
 
-#deadlines header + .head
+#deadlines.sort-by-class .read-only .class-name select,
+#deadlines .sort-date-label
 {
-    margin-top:0;
+    display:none;
+}
+
+#deadlines.sort-by-class .sort-date-label
+{
+    display:inline;
 }
 
 #deadlines .head span

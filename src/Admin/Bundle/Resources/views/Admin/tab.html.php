@@ -66,8 +66,10 @@ $view['slots']->start('body'); ?>
                             <option value="ROLE_PARENT">PARENT</option>
                             <option value="ROLE_PARTNER">PARTNER</option>
                             <option value="ROLE_ADVISER">ADVISER</option>
-                            <option value="ROLE_STUDENT">STUDENT</option>
                             <option value="ROLE_MASTER_ADVISER">MASTER_ADVISER</option>
+                            <option value="ROLE_STUDENT">STUDENT</option>
+                            <option value="ROLE_GUEST">GUEST</option>
+                            <option value="ROLE_DEMO">DEMO</option>
                         </select></label></th>
                     <th><label>
                             <span><a href="#group-manager" data-toggle="modal">Manage</a></span><br />
@@ -123,10 +125,17 @@ $view['slots']->start('body'); ?>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
+                            <option value="!1">Not 1</option>
+                            <option value="!2">Not 2</option>
+                            <option value="!3">Not 3</option>
                             <option value="1,2">1 &amp; 2</option>
                             <option value="1,3">1 &amp; 3</option>
                             <option value="2,3">2 &amp; 3</option>
+                            <option value="!1,!2">Not 1 &amp; 2</option>
+                            <option value="!1,!3">Not 1 &amp; 3</option>
+                            <option value="!2,!3">Not 2 &amp; 3</option>
                             <option value="1,2,3">Completed</option>
+                            <option value="!1,!2,!3">Not Completed</option>
                         </select></label></th>
                     <th><label class="input"><span>Sign Ups: <?php print $signups; ?></span><br />
                             <input type="text" name="created" value="" placeholder="All Sign Ups" />
@@ -207,6 +216,8 @@ $view['slots']->start('body'); ?>
                         <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PARTNER" <?php print ($u->hasRole('ROLE_PARTNER') ? 'checked="checked"' : ''); ?> /><i></i><span>PARTNER</span></label>
                         <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_ADVISER" <?php print ($u->hasRole('ROLE_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>ADVISER</span></label>
                         <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_MASTER_ADVISER" <?php print ($u->hasRole('ROLE_MASTER_ADVISER') ? 'checked="checked"' : ''); ?> /><i></i><span>MASTER_ADVISER</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_DEMO" <?php print ($u->hasRole('ROLE_DEMO') ? 'checked="checked"' : ''); ?> /><i></i><span>DEMO</span></label>
+                        <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_GUEST" <?php print ($u->hasRole('ROLE_GUEST') ? 'checked="checked"' : ''); ?> /><i></i><span>GUEST</span></label>
                     </td>
                     <td>
                         <?php foreach($groups as $i => $g) { ?>

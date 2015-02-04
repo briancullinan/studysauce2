@@ -14,6 +14,7 @@ use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\StudentInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Message;
+use Swift_Mime_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -35,6 +36,7 @@ class EmailsController extends Controller
         if(empty($user))
             $user = $this->getUser();
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Welcome to Study Sauce')
             ->setFrom('admin@studysauce.com')
@@ -60,6 +62,7 @@ class EmailsController extends Controller
         if(empty($user))
             $user = $this->getUser();
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Welcome to Study Sauce')
             ->setFrom('admin@studysauce.com')
@@ -97,6 +100,7 @@ class EmailsController extends Controller
         }
         $codeUrl = $this->generateUrl('partner_welcome', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your student') . ' needs your help with school.')
             ->setFrom($user->getEmail())
@@ -135,6 +139,7 @@ class EmailsController extends Controller
         }
         $codeUrl = $this->generateUrl('partner_welcome', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Your invitation' . (!empty($user->getFirst()) ? (' from ' . $user->getFirst()) : '') . ' to join Study Sauce is still pending')
             ->setFrom($user->getEmail())
@@ -165,6 +170,7 @@ class EmailsController extends Controller
 
         $codeUrl = $this->generateUrl('student_welcome', ['_code' => $student->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your parent') . ' has asked for you to join Study Sauce')
             ->setFrom($user->getEmail())
@@ -196,6 +202,7 @@ class EmailsController extends Controller
 
         $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Thank you for your purchase!')
             ->setFrom('admin@studysauce.com')
@@ -227,6 +234,7 @@ class EmailsController extends Controller
 
         $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Get the most out of your Study Sauce account')
             ->setFrom('admin@studysauce.com')
@@ -260,6 +268,7 @@ class EmailsController extends Controller
 
         $codeUrl = $this->generateUrl('student_welcome', ['_code' => $_code], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your parent') . ' has prepaid for your study plan')
             ->setFrom($user->getEmail())
@@ -294,65 +303,70 @@ class EmailsController extends Controller
             $courses = [];
         $reminderOutput = count($reminders) > 1 ? 'Below are your reminders.<br /><br />' : 'Below is your reminder.<br /><br />';
         $classes = [];
-        foreach($reminders as $reminder)
-        {
-            /** @var Deadline $reminder */
-            $classI = array_search($reminder->getCourse(), array_values($courses));
+        if(is_array($reminders) && !empty($reminders)) {
+            foreach ($reminders as $reminder) {
+                /** @var Deadline $reminder */
+                $classI = array_search($reminder->getCourse(), array_values($courses));
 
-            if($classI === false)
-                $classI = -1;
+                if ($classI === false) {
+                    $classI = -1;
+                }
 
-            if($classI == 0)
-                $color = '#FF0D00';
-            elseif($classI == 1)
-                $color = '#FF8900';
-            elseif($classI == 2)
-                $color = '#FFD700';
-            elseif($classI == 3)
-                $color = '#BAF300';
-            elseif($classI == 4)
-                $color = '#2DD700';
-            elseif($classI == 5)
-                $color = '#009999';
-            elseif($classI == 6)
-                $color = '#162EAE';
-            elseif($classI == 7)
-                $color = '#6A0AAB';
-            elseif($classI == 8)
-                $color = '#BE008A';
-            else
-                $color = '#DDDDDD';
+                if ($classI == 0) {
+                    $color = '#FF0D00';
+                } elseif ($classI == 1) {
+                    $color = '#FF8900';
+                } elseif ($classI == 2) {
+                    $color = '#FFD700';
+                } elseif ($classI == 3) {
+                    $color = '#BAF300';
+                } elseif ($classI == 4) {
+                    $color = '#2DD700';
+                } elseif ($classI == 5) {
+                    $color = '#009999';
+                } elseif ($classI == 6) {
+                    $color = '#162EAE';
+                } elseif ($classI == 7) {
+                    $color = '#6A0AAB';
+                } elseif ($classI == 8) {
+                    $color = '#BE008A';
+                } else {
+                    $color = '#DDDDDD';
+                }
 
-            $timespan = floor(($reminder->getDueDate()->getTimestamp() - time()) / 86400);
-            if($timespan <= 0)
-                $days = 'today';
-            elseif($timespan > 1)
-                $days = $timespan . ' days';
-            else
-                $days = 'tomorrow';
+                $timespan = floor(($reminder->getDueDate()->getTimestamp() - time()) / 86400);
+                if ($timespan <= 0) {
+                    $days = 'today';
+                } elseif ($timespan > 1) {
+                    $days = $timespan . ' days';
+                } else {
+                    $days = 'tomorrow';
+                }
 
-            $className = !empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic';
-            $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment() . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
-            if(array_search($className, $classes) === false)
-                $classes[] = $className;
+                $className = !empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic';
+                $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment(
+                    ) . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
+                if (array_search($className, $classes) === false) {
+                    $classes[] = $className;
+                }
 
-            // save the sent status of the reminder
-            foreach([1,2,4,7,14] as $i => $t)
-            {
-                if($timespan - $t <= 0)
-                {
-                    $sent = $reminder->getReminderSent();
-                    $sent[] = $t * 86400;
-                    $reminder->setReminderSent($sent);
-                    $orm->merge($reminder);
-                    $orm->flush();
-                    break;
+                // save the sent status of the reminder
+                foreach ([1, 2, 4, 7, 14] as $i => $t) {
+                    if ($timespan - $t <= 0) {
+                        $sent = $reminder->getReminderSent();
+                        $sent[] = $t * 86400;
+                        $reminder->setReminderSent($sent);
+                        $orm->merge($reminder);
+                        $orm->flush();
+                        break;
+                    }
                 }
             }
         }
 
         $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('You have a notification for ' . implode(', ', $classes))
             ->setFrom('admin@studysauce.com')
@@ -391,6 +405,7 @@ class EmailsController extends Controller
             return new Response();
         }
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your student') . ' has a study achievement and wanted you to know.')
             ->setFrom($user->getEmail())
@@ -421,6 +436,7 @@ class EmailsController extends Controller
 
         $codeUrl = $this->generateUrl('parent_welcome', ['_code' => $parent->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject(($user->getFirst() ?: 'Your student') . ' has asked for your help with school.')
             ->setFrom($user->getEmail())
@@ -453,6 +469,7 @@ class EmailsController extends Controller
         if(empty($group))
             $group = $invite->getGroup();
 
+        /** @var Swift_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Welcome to Study Sauce!')
             ->setFrom($user->getEmail())
@@ -484,6 +501,7 @@ class EmailsController extends Controller
 
         $codeUrl = $this->generateUrl('password_reset', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Your Study Sauce password has been reset.')
             ->setFrom('admin@studysauce.com')
@@ -511,7 +529,7 @@ class EmailsController extends Controller
         if($user == null)
             $user = $this->getUser();
 
-        /** @var \Swift_Mime_SimpleMessage $message */
+        /** @var \Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
             ->setSubject('Contact Us: From ' . $contact->getName())
             ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
@@ -581,20 +599,48 @@ class EmailsController extends Controller
     }
 
     /**
-     * @param Swift_Message $message
+     * @param Swift_Mime_Message $message
      */
-    protected function send(\Swift_Message $message)
+    protected function send(\Swift_Mime_Message $message)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        if($this->container->getParameter('defer_all_emails') !== false) {
+            $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
+        }
+
+        // check to make sure the limit hasn't been reached
+        $to = $message->getTo();
+        reset($to);
+        $count = $orm->getRepository('StudySauceBundle:Mail')->createQueryBuilder('m')
+            ->select('COUNT(DISTINCT m.id)')
+            ->andWhere('m.message LIKE \'%s:' . (strlen(key($to))) . ':"' . key($to) . '"%\'')
+            ->andWhere('m.message LIKE \'%s:' . strlen($message->getHeaders()->get('X-SMTPAPI')->getFieldBody()) . ':"' . $message->getHeaders()->get('X-SMTPAPI')->getFieldBody() . '"%\'')
+            ->andWhere('m.created > :today')
+            ->setParameter('today', new \DateTime('today'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if($count >= 2)
+        {
+            $message->setSubject('CANCELLED: ' . $message->getSubject());
+            $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
+        }
+
         /** @var \Swift_Mailer $mailer */
         $mailer = $this->get('mailer');
         $mailer->send($message);
     }
 
     /**
-     * @param Swift_Message $message
+     * @param Swift_Mime_Message $message
      */
-    protected function sendToAdmin(\Swift_Message $message)
+    protected function sendToAdmin(\Swift_Mime_Message $message)
     {
+        if($this->container->getParameter('defer_all_emails') !== false) {
+            $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
+        }
         /** @var \Swift_Transport_EsmtpTransport $transport */
         $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
             ->setUsername('brian@studysauce.com')

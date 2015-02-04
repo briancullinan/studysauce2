@@ -22,7 +22,6 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class PlanController
@@ -88,9 +87,7 @@ class PlanController extends Controller
         if (empty($schedule) ||
             empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count()) ||
             !$_user->hasRole('ROLE_PAID')) {
-            /** @var $userManager UserManager */
-            $userManager = $this->get('fos_user.user_manager');
-            $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
+            $schedule = ScheduleController::getDemoSchedule($this->container);
             $isDemo = true;
         }
 
@@ -159,10 +156,7 @@ class PlanController extends Controller
         // get events for current week
         if (empty($schedule) ||
             empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count())) {
-            /** @var $userManager UserManager */
-            $userManager = $this->get('fos_user.user_manager');
-
-            $schedule = ScheduleController::getDemoSchedule($userManager, $orm);
+            $schedule = ScheduleController::getDemoSchedule($this->container);
         }
 
         $week = strtotime('last Sunday');
@@ -393,7 +387,11 @@ class PlanController extends Controller
                         $c = isset($e['course']) ? $e['course'] : null;
                         /** @var Deadline $d */
                         $d = isset($e['deadline']) ? $e['deadline'] : null;
-                        return $e['name'] . $e['type'] . $e['start']->getTimestamp() . $e['end']->getTimestamp() . (!empty($c) ? $c->getId() : '') . (!empty($d) ? $d->getId() : '');
+                        /** @var \DateTime $start */
+                        $start = $e['start'];
+                        /** @var \DateTime $end */
+                        $end = $e['end'];
+                        return $e['name'] . $e['type'] . $start->getTimestamp() . $end->getTimestamp() . (!empty($c) ? $c->getId() : '') . (!empty($d) ? $d->getId() : '');
                     }, $events)) .
             // add configuration used to build plan so it updates when that changes
             $schedule->getGrades() . $schedule->getWeekends() . $schedule->getSharp11am4pm() .
@@ -518,8 +516,9 @@ class PlanController extends Controller
             $unresolvedEmail = ['student' => $schedule->getUser()->getEmail()];
             foreach(self::$unresolved as $i => $e)
             {
-                /** @var Event $e */
-                $unresolvedEmail[$e['start']->format('y-m-d H:i:s') . ' ' . $e['type']] = $e['name'];
+                /** @var \DateTime $start */
+                $start = $e['start'];
+                $unresolvedEmail[$start->format('y-m-d H:i:s') . ' ' . $e['type']] = $e['name'];
             }
 
             $emails->administratorAction(null, $unresolvedEmail);
