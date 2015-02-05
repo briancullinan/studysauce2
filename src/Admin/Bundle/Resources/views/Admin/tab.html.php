@@ -195,7 +195,9 @@ $view['slots']->start('body'); ?>
                                 <option value="email">Email All</option>
                                 <option value="export">Export All</option>
                                 <option value="export">Clear All</option>
-                            </select></label></th>
+                            </select></label>
+                        <label class="checkbox"><input type="checkbox" name="select-all" /><i></i></label>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -255,7 +257,7 @@ $view['slots']->start('body'); ?>
                     <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
                     <td class="highlighted-link">
                         <a title="Send email" href="mailto:<?php print $u->getEmail(); ?>"></a>
-                        <a title="Masquerade" href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getUsername(); ?>"></a>
+                        <a title="Masquerade" href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getEmail(); ?>"></a>
                         <a title="Reset password" href="#confirm-password-reset" data-toggle="modal"></a>
                         <a title="Cancel payment" href="#confirm-cancel-user" data-toggle="modal"></a>
                         <a title="Edit" href="#edit-user"></a>

@@ -3,8 +3,19 @@ var DASHBOARD_MARGINS = {};
 window.sincluding = [];
 window.visits = [];
 window.players = [];
+window.jsErrors = [];
 
-
+window.onerror = function (errorMessage, url, lineNumber) {
+    var dialog = $('#error-dialog');
+    if(dialog.length > 0)
+    {
+        dialog.find('.modal-body').html(errorMessage);
+        dialog.modal({show:true});
+    }
+    var message = "Error: [" + errorMessage + "], url: [" + url + "], line: [" + lineNumber + "]";
+    window.jsErrors.push(message);
+    return false;
+};
 
 function loadingAnimation(that)
 {
@@ -25,7 +36,6 @@ function loadingAnimation(that)
     else if(typeof that != 'undefined')
         return that.find('.squiggle');
 }
-
 
 function onYouTubeIframeAPIReady() {
     var frames = $(this).find('iframe[src*="youtube.com/embed"]');
@@ -62,27 +72,55 @@ function onYouTubeIframeAPIReady() {
 
 function ssMergeStyles(content)
 {
-    var styles = $.merge(content.filter('link[type="text/css"]'), content.find('link[type="text/css"]'));
+    var styles = $.merge(content.filter('link[type*="css"], style[type*="css"]'), content.find('link[type*="css"], style[type*="css"]'));
 
+    var any = false;
     $(styles).each(function () {
         var url = $(this).attr('href');
-        if (typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0)
+        if (typeof url != 'undefined' && $('link[href="' + url + '"]').length == 0) {
             $('head').append('<link href="' + url + '" type="text/css" rel="stylesheet" />');
+            any = true;
+        }
         else {
             var re = (/url\("(.*?)"\)/ig),
                 match,
-                media = $(this).attr('media');
+                media = $(this).attr('media'),
+                imports = false;
             while (match = re.exec($(this).html())) {
+                imports = true;
                 if ($('link[href="' + match[1] + '"]').length == 0 &&
                     $('style:contains("' + match[1] + '")').length == 0) {
-                    if (typeof media == 'undefined' || media == 'all')
+                    if (typeof media == 'undefined' || media == 'all') {
                         $('head').append('<link href="' + match[1] + '" type="text/css" rel="stylesheet" />');
-                    else
+                        any = true;
+                    }
+                    else {
                         $('head').append('<style media="' + media + '">@import url("' + match[1] + '");');
+                        any = true;
+                    }
                 }
             }
+            if(!imports)
+                $('head').append($(this));
         }
     });
+
+    // queue stylesheets if we are loading for a tab
+    var pane;
+    if (any && (pane = content.filter('.panel-pane').first()).length > 0) {
+
+        //Wait for style to be loaded
+        var wait = setInterval(function(){
+            //Check for the style to be applied to the body
+            if($('.css-loaded').css('content') === 'loading-' + pane.attr('id')) {
+                clearInterval(wait);
+                //CSS ready
+                window.sincluding.splice(window.sincluding.indexOf('loading-' + pane.attr('id')), 1);
+            }
+        }, 100);
+
+        window.sincluding.push('loading-' + pane.attr('id'))
+    }
 
     return styles;
 }
@@ -98,7 +136,7 @@ function ssMergeScripts(content)
             // only load script if it hasn't already been loaded
             if ($('script[src^="' + url + '"]').length == 0 && alreadyLoadedScripts.indexOf(url) == -1) {
                 console.log(url);
-                setTimeout(function () {window.sincluding[window.sincluding.length] = url;}, 15);
+                window.sincluding.push(url);
                 $.getScript(url);
                 alreadyLoadedScripts[alreadyLoadedScripts.length] = url;
             }
@@ -128,7 +166,7 @@ $(document).ready(function () {
     $('.sinclude').each(function () {
         var that = $(this),
             url = that.attr('data-src');
-        setTimeout(function () {window.sincluding[window.sincluding.length] = url;}, 15);
+        window.sincluding.push(url);
         $.ajax({
             url: url,
             type: 'GET',
@@ -220,6 +258,7 @@ if(typeof window.jqAjax == 'undefined') {
     window.jqAjax = $.ajax;
     $.ajax = function (settings) {
         var success = settings.success,
+            error = settings.error,
             url = settings.url;
         settings.success = function (data, textStatus, jqXHR) {
             window.sincluding.splice(window.sincluding.indexOf(url), 1);
@@ -240,6 +279,11 @@ if(typeof window.jqAjax == 'undefined') {
             }
             if (typeof success != 'undefined')
                 success(data, textStatus, jqXHR);
+        };
+        settings.error = function ( jqXHR, textStatus, errorThrown) {
+            window.sincluding.splice(window.sincluding.indexOf(url), 1);
+            if (typeof error != 'undefined')
+                success(jqXHR, textStatus, errorThrown);
         };
         window.jqAjax(settings);
     };
@@ -265,12 +309,7 @@ $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
     }
 });
 
-$(document).ajaxStop(function () {
-    window.sincluding = [];
-});
-
 // set some extra utility functions globally
-
 Date.prototype.getWeekNumber = function () {
 // Create a copy of this date object
     var target  = new Date(this.valueOf());

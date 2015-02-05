@@ -230,6 +230,7 @@ class APageLoaderCest
         $I->fillField('.password input', 'password');
         $I->click('Register');
         $I->wait(10);
+        $I->seeInCurrentUrl('/course/1/lesson/1/step');
     }
 
     /**
@@ -367,6 +368,7 @@ class APageLoaderCest
     }
 
     /**
+     * @depends tryNewSchedule
      * @param AcceptanceTester $I
      */
     public function tryNewCheckin (AcceptanceTester $I)

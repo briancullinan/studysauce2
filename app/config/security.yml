@@ -83,6 +83,7 @@ security:
         - { path: ^/authenticate,    roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/login,    roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/register, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/account/create, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/torchandlaurelregister, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/reset,    roles: [ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         # protected pages

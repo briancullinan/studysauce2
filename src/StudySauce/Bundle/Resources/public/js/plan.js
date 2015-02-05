@@ -286,9 +286,7 @@ $(document).ready(function () {
     body.on('hidden.bs.modal', '#plan-intro-1', function () {
         $(this).remove();
         var plan = $('#plan');
-        if (!plan.is(':visible'))
-            return;
-        if (plan.is('.empty-schedule'))
+        if (plan.is(':visible') && plan.is('.empty-schedule'))
             $('#plan-empty-schedule').modal({
                 backdrop: 'static',
                 keyboard: false,

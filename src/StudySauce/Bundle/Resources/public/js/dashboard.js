@@ -91,18 +91,27 @@ $(document).ready(function () {
     function activatePanel(panel)
     {
         collapseMenu.apply(this);
-        body.find('.modal:visible').modal('hide');
-        body.find('.panel-pane:visible').fadeOut(75).delay(75).trigger('hide');
-        panel.delay(75).fadeIn(75);
-        var triggerShow = function () {
-            if(window.sincluding.length > 0) {
-                setTimeout(triggerShow, 100);
-                return;
+        // animate panels
+        var triggerShow = setInterval(function () {
+            if(window.sincluding.length == 0) {
+                var panels = body.find('.panel-pane:visible').fadeOut(75);
+                // poll for panel visibility and fire events
+                var triggerHide = setInterval(function () {
+                    if(panels.is(':visible'))
+                        return;
+                    panels.trigger('hide');
+                    panel.fadeIn(75).scrollintoview(DASHBOARD_MARGINS).trigger('show');
+                    clearInterval(triggerHide);
+                }, 50);
+                clearInterval(triggerShow);
             }
-            panel.scrollintoview(DASHBOARD_MARGINS).trigger('show');
-        };
-        setTimeout(triggerShow, 100);
+        }, 50);
     }
+
+    // hide any visible modals when panel changes
+    body.on('hide', '.panel-pane', function () {
+        body.find('.modal:visible').modal('hide');
+    });
 
     function expandMenu(evt)
     {
@@ -298,7 +307,6 @@ $(document).ready(function () {
             });
         }
     }, 10000);
-
 
 
     // TODO: put this with adviser dashboard code?

@@ -12,7 +12,7 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>Why is using the teaching to learn strategy similar to learning a new language?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-new-language" type="text" value="<?php print ($quiz->getNewLanguage() ? 'checked="checked"' : ''); ?>"></label>
+            <label class="input"><input name="quiz-new-language" type="text" value="<?php print $view->escape($quiz->getNewLanguage()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

@@ -334,23 +334,15 @@ class EmailsController extends Controller
                     $color = '#DDDDDD';
                 }
 
-                $timespan = floor(($reminder->getDueDate()->getTimestamp() - time()) / 86400);
-                if ($timespan <= 0) {
-                    $days = 'today';
-                } elseif ($timespan > 1) {
-                    $days = $timespan . ' days';
-                } else {
-                    $days = 'tomorrow';
-                }
-
                 $className = !empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic';
-                $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment(
-                    ) . '<br /><br /><strong>Days until due date:</strong><br />' . $days . '<br /><br />';
+                $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;vertical-align: middle;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment(
+                    ) . '<br /><br /><strong>Days until due date:</strong><br />' . $reminder->getDaysUntilDue() . '<br /><br />';
                 if (array_search($className, $classes) === false) {
                     $classes[] = $className;
                 }
 
                 // save the sent status of the reminder
+                $timespan = floor(($reminder->getDueDate()->getTimestamp() - time()) / 86400);
                 foreach ([1, 2, 4, 7, 14] as $i => $t) {
                     if ($timespan - $t <= 0) {
                         $sent = $reminder->getReminderSent();

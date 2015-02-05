@@ -160,9 +160,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
                 {
                     $parameterName = $p->getName();
                     $className = !empty($p->getClass()) ? basename($p->getClass()->getFileName(), '.php') : $p->getName();
-                    list($classParams, $classObjects) = $this->generateParams($className, $parameterName, $methodText . $templateText, $variables);
-                    $params = array_merge($params, $classParams);
-                    $objects = array_merge($objects, $classObjects);
+                    $this->generateParams($className, $parameterName, $methodText . $templateText, $variables, $params, $objects);
                 }
                 // mock the email send using this class
                 $this->evalSubject($objects);
@@ -174,9 +172,8 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
             // derive variables from template alone without types
             preg_match_all('/\$([a-z0-9]*)/i', $templateText, $matches);
             foreach(array_unique($matches[1]) as $p) {
-                list($classParams, $classObjects) = $this->generateParams($p, $p, $templateText, $variables, true);
-                $params = array_merge($params, $classParams);
-                $objects = array_merge($objects, $classObjects);
+                // don't bother with made up variable names
+                $this->generateParams($p, $p, $templateText, $variables, $params, $objects, true);
             }
         }
         if(empty(self::$emails)) {
@@ -346,17 +343,16 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
      * @param $className
      * @param $parameterName
      * @param $subject
-     * @param $variables
+     * @param array $variables
+     * @param array $params
+     * @param array $objects
      * @param bool $entitiesOnly
-     * @return array
      */
-    private function generateParams($className, $parameterName, $subject, $variables = [], $entitiesOnly = false)
+    private function generateParams($className, $parameterName, $subject, &$variables = [], &$params = [], &$objects = [], $entitiesOnly = false)
     {
         /** @var EntityManager $orm */
         $orm = $this->getDoctrine()->getManager();
 
-        $params = [];
-        $objects = [];
         // if we are dealing with an entity class try to figure out which methods are used
         if(($classI = array_search(true, array_map(function ($t) use ($className) {
                         return strpos(strtolower($t), strtolower($className)) !== false;
@@ -366,8 +362,8 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
             $className = end($namespace);
             $mockName = 'Mock' . $className;
             $instance = 'class ' . $mockName . ' extends ' . self::$tables[$classI] . ' {
-private $variables;
-public function __construct($variables) { $this->variables = $variables;
+private $variables; private $objects;
+public function __construct(&$variables, &$objects) { $this->variables = $variables;
 if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
     parent::__construct();}}
 ';
@@ -392,11 +388,17 @@ if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
                 $properties = array_unique($properties[1]);
             }
             foreach ($properties as $c) {
-                if(!in_array(lcfirst($c), $data->getFieldNames()))
+                if(!in_array(lcfirst($c), $data->getFieldNames()) && !in_array(lcfirst($c), $data->getAssociationNames())) {
                     continue;
+                }
                 $params[$parameterName . $c]['name'] = $className;
                 $params[$parameterName . $c]['prop'] = $c;
-                if (strpos(strtolower($c), 'email') !== false) {
+                // TODO: if it an associated field return the object at runtime
+                if(in_array(lcfirst($c), $data->getAssociationNames())) {
+                    $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return isset($this->objects["' . lcfirst($c) . '"]) ? $this->objects["' . lcfirst($c) . '"] : "{' . $className . ':' . $c . '}"; }
+';
+                }
+                else if (strpos(strtolower($c), 'email') !== false) {
                     $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return isset($this->variables["' . $parameterName . $c . '"]) ? $this->variables["' . $parameterName . $c . '"] : "' . $className . '_' . $c . '@mailinator.com"; }
 ';
                 } else {
@@ -408,7 +410,7 @@ if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
                 eval($instance . '
 };');
             }
-            $objects[$parameterName] = eval('return new ' . $mockName . '($variables);');
+            $objects[$parameterName] = eval('return new ' . $mockName . '($variables, $objects);');
         }
         elseif(!$entitiesOnly)
         {
@@ -422,7 +424,6 @@ if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
                 $objects[$parameterName] = isset($variables[$parameterName]) ? $variables[$parameterName] : '{' . $parameterName . '}';
             }
         }
-        return [$params, $objects];
     }
 
     /**
@@ -494,11 +495,14 @@ if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
                 ->getQuery()
                 ->execute();
 
-            return new JsonResponse(array_map(function ($x) use ($default, $namespace) {return [
-                        'text' => $x[$default],
-                        'value' => $x[$default],
-                        'alt' => array_combine(array_map(function ($k) use ($namespace) {return strtolower(end($namespace)) . ucfirst($k);}, array_diff(array_keys($x), [$default])), array_diff_key($x, [$default => '']))
-                    ] + array_values(array_diff_key($x, [$default => '']));
+            return new JsonResponse(array_map(function ($x) use ($default, $namespace) {
+                        $x = array_map(function ($x) {return $x instanceof \DateTime ? $x->format('r') : $x;}, $x);
+                        $value = [
+                            'text' => $x[$default],
+                            'value' => $x[$default]];
+                        $alt = array_diff_key($x, [$default => '']);
+                        $value['alt'] = array_combine(array_map(function ($k) use ($namespace) {return strtolower(end($namespace)) . ucfirst($k);}, array_keys($alt)), $alt);
+                        return $value + array_values($alt);
                     }, $search));
         }
         return new JsonResponse([]);

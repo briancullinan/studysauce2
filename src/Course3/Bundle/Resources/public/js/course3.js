@@ -13,11 +13,20 @@ $(document).ready(function () {
     });
 
     body.on('show', '.course3.step1', function () {
-        if(!$(this).is('.loaded'))
+        var step = $(this);
+        if(!step.is('.loaded'))
         {
-            $(this).addClass('loaded');
+            step.addClass('loaded');
             onYouTubeIframeAPIReady.apply(this);
         }
+        setTimeout(function () {
+            for(var i = 0; i < window.players.length; i++) {
+                if($(window.players[i].d).parents().is(step)) {
+                    window.players[i].playVideo();
+                    break;
+                }
+            }
+        }, 1000);
     });
 
     body.on('show', '.course3.step4', function () {
@@ -53,9 +62,9 @@ $(document).ready(function () {
     });
 
     body.on('hide', '.course3.step1', function () {
-        var step = $(this).parents('.course3');
+        var step = $(this);
         $(window.players).each(function () {
-            if($(this.d).parents(step).length > 0)
+            if($(this.d).parents().is(step))
                 this.pauseVideo();
         });
     });

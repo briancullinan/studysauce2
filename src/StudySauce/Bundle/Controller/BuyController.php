@@ -504,7 +504,8 @@ class BuyController extends Controller
             if(empty($user)) {
                 $account = new AccountController();
                 $account->setContainer($this->container);
-                $account->createAction($request);
+                // don't send welcome email if we are inviting a student
+                $account->createAction($request, true, !isset($invite));
                 $user = $userManager->findUserByEmail($request->get('email'));
             }
             // change invite owner to the actual user

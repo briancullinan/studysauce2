@@ -30,7 +30,7 @@ class Course2Cest
     // tests
 
     /**
-     * @depends tryStudentRegister
+     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryAllCourse2(AcceptanceTester $I)
@@ -45,7 +45,7 @@ class Course2Cest
         $I->click('Level 2');
         $I->click('Study plan');
         $I->wait(5);
-        $I->seeInCurrentUrl('/course/1/lesson/2/step');
+        $I->seeInCurrentUrl('/course/2/lesson/2/step');
         $I->test('tryCourse2StudyPlan');
         $I->seeInCurrentUrl('/plan');
         $I->test('tryNewPlan');
@@ -58,7 +58,6 @@ class Course2Cest
         $I->test('tryCourse2Interleaving');
         $I->seeInCurrentUrl('/checkin');
         $I->test('tryNewCheckin');
-        $I->seeInCurrentUrl('/metrics');
         // use the menu to get to lesson 5
         $I->click('#left-panel a[href="#expand"]');
         $I->click('Level 2');
@@ -66,7 +65,6 @@ class Course2Cest
         $I->wait(5);
         $I->seeInCurrentUrl('/course/2/lesson/4/step');
         $I->test('tryCourse2StudyTests');
-        $I->seeInCurrentUrl('/home');
         $I->test('tryNewHome');
         // use the menu to get to lesson 6
         $I->click('#left-panel a[href="#expand"]');
@@ -75,7 +73,6 @@ class Course2Cest
         $I->wait(5);
         $I->seeInCurrentUrl('/course/2/lesson/5/step');
         $I->test('tryCourse2TestTaking');
-        $I->seeInCurrentUrl('/home');
         $I->test('tryNewHome');
     }
 
@@ -86,28 +83,20 @@ class Course2Cest
     {
         $I->wantTo('complete study metrics course');
         $I->seeAmOnUrl('/course/2/lesson/1/step');
-        $I->seeLink('Launch');
-        $I->click('Launch');
-        $I->wait(10);
-        $I->executeInSelenium(function (WebDriver $driver) {
-                $driver->switchTo()->defaultContent();
-                $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('#course1_study_metrics-step1 iframe')));
-            });
-        $I->click('.ytp-thumbnail');
-        $I->switchToIFrame();
-        $I->wait(15);
-        $I->click('#course1_study_metrics-step1 .highlighted-link a');
+        $I->click('#course2_study_metrics .highlighted-link a');
+        $I->wait(25);
+        $I->click('#course2_study_metrics-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[value="procrastination"] + i');
         $I->click('input[name="quiz-doing-well"][value="1"] + i');
-        $I->fillField('input[value="quiz-all-together"]', 'they don\'t');
-        $I->click('#course1_study_metrics-step2 .highlighted-link a:first-child');
+        $I->fillField('input[name="quiz-all-together"]', 'they don\'t');
+        $I->click('#course2_study_metrics-step2 .highlighted-link a:first-child');
         $I->wait(15);
-        $I->click('#course1_study_metrics-step2 .highlighted-link a:last-child');
+        $I->click('#course2_study_metrics-step2 .highlighted-link a:last-child');
         $I->wait(5);
-        $I->click('#course1_study_metrics-step3 .highlighted-link a');
+        $I->click('#course2_study_metrics-step3 .highlighted-link a');
         $I->wait(5);
-        $I->click('#course1_study_metrics-step4 .highlighted-link a');
+        $I->click('#course2_study_metrics-step4 .highlighted-link a');
         $I->wait(15);
     }
 
@@ -117,26 +106,19 @@ class Course2Cest
     public function tryCourse2StudyPlan (AcceptanceTester $I) {
         $I->wantTo('complete course 2');
         $I->seeAmOnUrl('/course/2/lesson/2/step');
-        $I->click('#course1_study_plan .highlighted-link a');
-        $I->wait(10);
-        $I->executeInSelenium(function (WebDriver $driver) {
-                $driver->switchTo()->defaultContent();
-                $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('#course1_study_plan-step1 iframe')));
-            });
-        $I->click('.ytp-thumbnail');
-        $I->switchToIFrame();
-        $I->wait(15);
-        $I->click('#course1_study_plan-step1 .highlighted-link a');
+        $I->click('#course2_study_plan .highlighted-link a');
+        $I->wait(25);
+        $I->click('#course2_study_plan-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[name="quiz-multiply"][value="3"] + i');
-        $I->fillField('input[name="quiz-procrastination"]', 'helps your commit time');
-        $I->fillField('input[name="quiz-study-sessions"]', 'good for projects');
-        $I->fillField('input[name="quiz-stick-plan"]', 'start immediately');
-        $I->click('#course1_study_plan-step2 .highlighted-link a:first-child');
+        $I->fillField('textarea[name="quiz-procrastination"]', 'helps your commit time');
+        $I->fillField('textarea[name="quiz-study-sessions"]', 'good for projects');
+        $I->fillField('textarea[name="quiz-stick-plan"]', 'start immediately');
+        $I->click('#course2_study_plan-step2 .highlighted-link a:first-child');
         $I->wait(15);
-        $I->click('#course1_study_plan-step2 .highlighted-link a:last-child');
+        $I->click('#course2_study_plan-step2 .highlighted-link a:last-child');
         $I->wait(5);
-        $I->click('#course1_study_plan-step3 .highlighted-link a');
+        $I->click('#course2_study_plan-step3 .highlighted-link a');
         $I->wait(5);
         $I->seeLink('Study plan');
         $I->click('Study plan');
@@ -151,15 +133,7 @@ class Course2Cest
         $I->wantTo('complete course 3');
         $I->seeAmOnUrl('/course/2/lesson/3/step');
         $I->click('#course2_interleaving .highlighted-link a');
-        $I->wait(10);
-        //$I->switchToIFrame($I->)
-        $I->executeInSelenium(function (WebDriver $driver) {
-                $driver->switchTo()->defaultContent();
-                $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('#course2_interleaving-step1 iframe')));
-            });
-        $I->click('.ytp-thumbnail');
-        $I->switchToIFrame();
-        $I->wait(15);
+        $I->wait(25);
         $I->click('#course2_interleaving-step1 .highlighted-link a');
         $I->wait(5);
         $I->fillField('input[name="quiz-multiple-sessions"]', 'blocked practice');
@@ -183,15 +157,7 @@ class Course2Cest
         $I->wantTo('complete course 4');
         $I->seeAmOnUrl('/course/2/lesson/4/step');
         $I->click('#course2_study_tests .highlighted-link a');
-        $I->wait(10);
-        //$I->switchToIFrame($I->)
-        $I->executeInSelenium(function (WebDriver $driver) {
-                $driver->switchTo()->defaultContent();
-                $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('#course2_study_tests-step1 iframe')));
-            });
-        $I->click('.ytp-thumbnail');
-        $I->switchToIFrame();
-        $I->wait(15);
+        $I->wait(25);
         $I->click('#course2_study_tests-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[name="quiz-types-tests"][value="essay"] + i');
@@ -204,6 +170,7 @@ class Course2Cest
         $I->wait(5);
         $I->click('#course2_study_tests-step3 .highlighted-link a');
         $I->wait(5);
+        $I->fillField('#course2_study_tests-step4 textarea', 'they are all subjective, I\'m and art major');
         $I->seeLink('Go home');
         $I->click('Go home');
         $I->wait(15);
@@ -216,15 +183,7 @@ class Course2Cest
         $I->wantTo('complete course 5');
         $I->seeAmOnUrl('/course/2/lesson/5/step');
         $I->click('#course2_test_taking .highlighted-link a');
-        $I->wait(10);
-        //$I->switchToIFrame($I->)
-        $I->executeInSelenium(function (WebDriver $driver) {
-                $driver->switchTo()->defaultContent();
-                $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('#course2_test_taking-step1 iframe')));
-            });
-        $I->click('.ytp-thumbnail');
-        $I->switchToIFrame();
-        $I->wait(15);
+        $I->wait(25);
         $I->click('#course2_test_taking-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[name="quiz-idea-cram"][value="0"] + i');

@@ -88,7 +88,6 @@ $view['slots']->start('body'); ?>
                                 <td><?php print $email['id']; ?></td>
                                 <td><?php print $email['count']; ?></td>
                                 <td>
-                                    <a href="#edit-email" data-toggle="modal"></a>
                                     <a href="#send-email" data-toggle="tab"></a>
                                     <label class="checkbox"><input type="checkbox" name="selected"/><i></i></label>
                                 </td>

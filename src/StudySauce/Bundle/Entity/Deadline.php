@@ -70,6 +70,23 @@ class Deadline
      */
     protected $deleted = false;
 
+    /**
+     * @return string
+     */
+    public function getDaysUntilDue()
+    {
+        if(empty($this->getDueDate()))
+            return '';
+        $timespan = floor(($this->getDueDate()->getTimestamp() - time()) / 86400);
+        if ($timespan <= 0) {
+            $days = 'today';
+        } elseif ($timespan > 1) {
+            $days = $timespan . ' days';
+        } else {
+            $days = 'tomorrow';
+        }
+        return $days;
+    }
 
     /**
      * @ORM\PrePersist

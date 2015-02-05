@@ -4,36 +4,14 @@ $(document).ready(function () {
         orderBy = 'lastLogin DESC',
         searchTimeout = null;
 
-    function sortSelect(a, b) {
-        if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date' || a == 'Completion')
-            return -1;
-        if(b == 'Student' || b == 'Status' || b == 'Adviser' || b == 'School' || b == 'Date' || a == 'Completion')
-            return 1;
-        if(a == 'Ascending (A-Z)' && b == 'Descending (Z-A)')
-            return -1;
-        if(b == 'Ascending (A-Z)' && a == 'Descending (Z-A)')
-            return 1;
-        if(a == 'Ascending (A-Z)' || a == 'Descending (Z-A)')
-            return -1;
-        if(b == 'Ascending (A-Z)' || b == 'Descending (Z-A)')
-            return 1;
-
-        if (a.toUpperCase() > b.toUpperCase())
-            return 1;
-        if (a.toUpperCase() < b.toUpperCase())
-            return -1;
-        // a must be equal to b
-        return 0;
-    }
-
     function loadContent (data) {
         var admin = jQuery('#command_control'),
             content = $(data);
         admin.find('table.results > tbody > tr').remove();
         content.find('table.results > tbody > tr').appendTo(admin.find('table.results > tbody'));
         admin.find('table.results > thead > tr > th').each(function (i) {
-            $(this).find('label > *:not(select):not(input)').remove();
-            content.find('.pane-content th').eq(i).find('label > *:not(select):not(input)').prependTo($(this).find('label'));
+            $(this).find('label:first-child > *:not(select):not(input)').remove();
+            content.find('.pane-content th').eq(i).find('label:first-child > *:not(select):not(input)').prependTo($(this).find('label:first-child'));
         });
         admin.find('#page-total').text(content.find('#page-total').text());
     }
@@ -354,12 +332,12 @@ $(document).ready(function () {
             }
         });
 
-        body.on('blur', '#command_control th:nth-child(1) input, #command_control th:nth-child(6) input', function (e) {
+        body.on('blur', '#command_control th:nth-child(1) input, #command_control th:nth-child(6) input', function () {
             var that = $(this).parent().next();
             hideTimeout = setTimeout(function () { that.hide(); }, 500);
         });
 
-        body.on('focus', '#command_control th:nth-child(1) input, #command_control th:nth-child(6) input', function (e) {
+        body.on('focus', '#command_control th:nth-child(1) input, #command_control th:nth-child(6) input', function () {
             setTimeout(function () {
                 if(hideTimeout)
                     clearTimeout(hideTimeout);
@@ -504,9 +482,8 @@ $(document).ready(function () {
             .prop('checked', !$(this).find('input[name="selected"]').prop('checked'));
     });
 
-    body.on('change', '#command_control table.results > thead > tr > th > label > select, #command_control table.results > thead > tr > th > label > input', function () {
-        var admin = jQuery('#command_control'),
-            that = $(this);
+    body.on('change', '#command_control table.results > thead > tr > th:not(:last-child) > label > select, #command_control table.results > thead > tr > th:not(:last-child) > label > input', function () {
+        var that = $(this);
 
         if(that.val() == '_ascending' || that.val() == '_descending')
         {

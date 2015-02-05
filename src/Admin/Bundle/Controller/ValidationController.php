@@ -23,6 +23,7 @@ use Codeception\TestCase;
 use Codeception\TestCase\Cest;
 use Codeception\TestLoader;
 use Doctrine\ORM\Query;
+use PHP_Timer;
 use PHPUnit_Framework_TestFailure;
 use PHPUnit_Util_Test;
 use StudySauce\Bundle\Entity\User;
@@ -91,15 +92,19 @@ class ValidationController extends Controller
             $settings = Configuration::suiteSettings($suite, Configuration::config());
             $testLoader = new TestLoader($settings['path']);
             $testLoader->loadTests();
+            $allTests = $testLoader->getTests();
             // get the path of the test
             $options = ['verbosity' => 3, 'colors' => false];
             if(!empty($request->get('test'))) {
                 $tests = explode('|', $request->get('test'));
-                foreach($testLoader->getTests() as $i => $t) {
+                foreach($allTests as $i => $t) {
                     /** @var Cest $t */
                     if (in_array($t->getName(), $tests)) {
                         // automatically include dependencies
-                        $depends = PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName());
+                        $depends = array_map(function ($d) {
+                                $test = explode('::', $d);
+                                return count($test) == 1 ? $test[0] : $test[1];
+                            }, PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName()));
                         $options['filter'] = $request->get('test') . (count($depends) ? ('|' . implode('|', $depends)) : '');
                         break;
                     }
@@ -151,6 +156,19 @@ class ValidationController extends Controller
                     array_pop($features);
                 });
             self::$dispatcher->addListener(Events::STEP_AFTER, function (StepEvent $x) use (&$steps) {
+                    // look for javascript errors
+                    if(isset(SuiteManager::$modules['WebDriver'])) {
+                        /** @var WebDriver $driver */
+                        $driver = SuiteManager::$modules['WebDriver'];
+                        $jsErrors = $driver->executeJS('return (function () {var tmpErrors = window.jsErrors; window.jsErrors = []; return tmpErrors || [];})();');
+                        try {
+                            $x->getTest()->assertEmpty($jsErrors, 'Javascript errors: ' . (is_array($jsErrors) ? implode($jsErrors) : $jsErrors));
+                        }
+                        catch(\PHPUnit_Framework_AssertionFailedError $e) {
+                            $x->getTest()->getTestResultObject()->addFailure($x->getTest(), $e, PHP_Timer::stop());
+                        }
+                   }
+
                     // check for failures
                     //$x->getTest()->getTestResultObject()->failures()
                     if($x->getStep()->getAction() == 'wait')
@@ -160,7 +178,7 @@ class ValidationController extends Controller
                 });
             self::$dispatcher->addListener(Events::TEST_ERROR, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
-                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . $x->getFail()->getMessage();
+                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . htmlspecialchars($x->getFail()->getMessage(), ENT_QUOTES);
                     // try to get a screenshot to show in the browser
                     if(isset(SuiteManager::$modules['WebDriver'])) {
                         /** @var WebDriver $driver */
@@ -177,7 +195,7 @@ class ValidationController extends Controller
                 });
             self::$dispatcher->addListener(Events::TEST_FAIL, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
-                    $steps[$x->getTest()->getName()] .= '<pre class="failure">' . $x->getFail()->getMessage();
+                    $steps[$x->getTest()->getName()] .= '<pre class="failure">' . htmlspecialchars($x->getFail()->getMessage(), ENT_QUOTES);
                     // try to get a screenshot to show in the browser
                     if(isset(SuiteManager::$modules['WebDriver'])) {
                         /** @var WebDriver $driver */
@@ -213,7 +231,23 @@ class ValidationController extends Controller
             $symfony->kernel = $this->container->get( 'kernel' );
             $suiteManager->getSuite()->setBackupGlobals(false);
             $suiteManager->getSuite()->setBackupStaticAttributes(false);
-            $suiteManager->loadTests(isset($t) ? $t->getFileName() : null);
+            if(isset($t) && isset($depends)) {
+                // load tests for dependencies too
+                foreach($depends as $d) {
+                    foreach($allTests as $subT)
+                    {
+                        /** @var Cest $subT */
+                        if($subT->getName() == $d && $subT->getFileName() != $t->getFileName()) {
+                            $suiteManager->loadTests($subT->getFileName());
+                            break;
+                        }
+                    }
+                }
+                $suiteManager->loadTests($t->getFileName());
+            }
+            else {
+                $suiteManager->loadTests(isset($t) ? $t->getFileName() : null);
+            }
             $suiteManager->run($runner, $result, $options);
         }
         if(isset($result) && isset($runner)) {
@@ -246,7 +280,7 @@ class ValidationController extends Controller
         $allTests = '';
         foreach(self::$config['tests'] as $suite)
         {
-            $allTests .= implode('|', array_map(function (Cest $t) { return $t->getName(); }, $suite));
+            $allTests .= (!empty($allTests) ? '|' : '') . implode('|', array_map(function (Cest $t) { return $t->getName(); }, $suite));
         }
 
         $tests = [];
@@ -268,7 +302,7 @@ class ValidationController extends Controller
                 $tests[] = $m;
             }
         }
-        return $tests;
+        return array_unique($tests);
     }
 
 }

@@ -14,6 +14,20 @@ $(document).ready(function () {
     subject.remove();
     // TODO: recreate rows when variables change
 
+    function autoFitFrame()
+    {
+        var margin = $(window).outerHeight() - $('body').height();
+        var fit = $('.CodeMirror-sizer:visible, .headers:visible, #editor1:visible').first();
+        $(window.parent.document).find('#send-email iframe').height(fit.outerHeight() + margin);
+    }
+
+    $(window).on('resize', autoFitFrame);
+    $(window).on('scroll', autoFitFrame);
+    $(window).on('keydown', autoFitFrame);
+    $(window).on('keypress', autoFitFrame);
+    $(window).on('keyup', autoFitFrame);
+    setTimeout(autoFitFrame, 500);
+
     CKEDITOR.on('dialogDefinition', function(e) {
         var dialogName = e.data.name;
         var dialogDefinition = e.data.definition;
@@ -119,6 +133,7 @@ $(document).ready(function () {
             $('#editor1').hide();
             $('.headers').show();
         }
+        autoFitFrame();
     });
 
 });

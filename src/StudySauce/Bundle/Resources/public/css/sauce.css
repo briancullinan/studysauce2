@@ -102,6 +102,12 @@ h4, h2
     visibility: hidden;
 }
 
+.css-loaded
+{
+    display:none;
+    content: "";
+}
+
 .highlighted-link
 {
     text-align: right;

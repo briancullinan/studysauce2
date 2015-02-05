@@ -48,7 +48,9 @@ Selectize.define('continue_editing', function(options) {
                 var option = this.options[this.items[index]];
                 var currentValue = options.text.apply(this, [option]);
                 if (this.deleteSelection({keyCode: 8})) {
-                    this.removeItem(currentValue);
+                    // only remove item if it is made up and not from the server
+                    if(typeof option.alt == 'undefined')
+                        this.removeItem(currentValue);
                     this.setTextboxValue(option[this.settings.valueField]);
                     this.refreshOptions(true);
                 }
@@ -224,6 +226,11 @@ $(document).ready(function () {
             $(this).parents('tr').remove();
         else
             $(this).parents('tr').find('input').val('');
+    });
+
+    body.on('click', '#send-email a[href="#remove-field"]', function (evt) {
+        var index = $(this).parents('th').index();
+        $(this).parents('.variables').find('thead > tr > th:eq(' + index + '), tbody > tr > td:eq(' + index + ')').remove();
     });
 
     body.on('click', '#send-email a[href="#add-field"]', function (evt) {

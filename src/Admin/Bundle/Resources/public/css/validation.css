@@ -5,6 +5,7 @@
 }
 
 #validation .error,
+#validation .failure,
 #validation .failure + .step
 {
     background-color:#CC9999;

@@ -1,3 +1,8 @@
+<html>
+<head>
+
+</head>
+<body style="overflow: hidden;">
 <div id="preview">
     <?php foreach ($view['assetic']->stylesheets(
         [
@@ -12,9 +17,9 @@
         ['output' => 'bundles/admin/css/*.css']) as $url): ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
     <?php endforeach; ?>
-    <pre class="headers"><?php print $headers; ?></pre>
     <div id="editor1" contenteditable="true"><?php print $template; ?></div>
     <textarea id="markdown" class="full-height" placeholder="Write Markdown"><?php print $view->escape($template); ?></textarea>
+    <pre class="headers"><?php print $headers; ?></pre>
     <script type="text/javascript">
         CKEDITOR_BASEPATH = '<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/ckeditor/';
     </script>
@@ -58,15 +63,21 @@
             <th><label><?php print (!in_array($p['name'], $labeled) ? $p['name'] : ''); ?></label>
             <?php if(!$first) { ?><a href="#remove-field"></a><?php } ?></th>
             <?php $first = false; $labeled[] = $p['name']; } ?>
+        <th><a href="#add-field">+</a></th>
     </tr>
     </thead>
 <tbody>
 <tr>
     <?php
-    foreach($params as $k => $p) { ?>
+    foreach($params as $k => $p) {
+        if(!in_array($k, Admin\Bundle\Controller\EmailsController::$templateVars))
+            continue; ?>
         <td><label class="input"><span></span><input placeholder="<?php print $p['prop']; ?>" name="<?php print $k; ?>" type="text" /></label></td>
     <?php } ?>
     <td><a href="#remove-line"></a></td>
 </tr>
 </tbody>
 </table>
+
+</body>
+</html>

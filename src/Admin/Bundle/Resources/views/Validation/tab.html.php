@@ -75,7 +75,7 @@ $view['slots']->start('body'); ?>
                 </small>
             </label>
             <?php foreach ($suites as $i => $suite) { ?>
-                <h2><?php print $suite; ?></h2>
+                <h2><?php print $suite; ?> <small>(<?php print count($tests[$suite]); ?>)</small></h2>
                 <div class="suite-actions">
                     <a href="#run-all" class=" suite-<?php print $suite; ?> ">Run</a>
                     <label class="checkbox"><input type="checkbox"><i></i></label>
@@ -84,7 +84,10 @@ $view['slots']->start('body'); ?>
                 <table>
                     <?php foreach ($tests[$suite] as $s => $t) {
                         /** @var Cest $t */
-                        $depends = PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName());
+                        $depends = array_map(function ($d) {
+                                $test = explode('::', $d);
+                                return count($test) == 1 ? $test[0] : $test[1];
+                            }, PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName()));
                         $includes = \Admin\Bundle\Controller\ValidationController::getIncludedTests($t);
                         ?>
                         <tr class=" test-id-<?php print $t->getName();
