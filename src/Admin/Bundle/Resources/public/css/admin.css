@@ -170,6 +170,17 @@
     display:none;
 }
 
+#right-panel .main-menu a[href*="/activity"]:hover span,
+#right-panel .main-menu a[href*="/activity"]:focus span,
+#right-panel .main-menu a[href*="/activity"]:active span,
+#right-panel .main-menu a[href*="/activity"].active span {
+    background-position: left -1305px;
+}
+
+#right-panel .main-menu a[href*="/activity"] span {
+    background-position: left -1205px;
+}
+
 #group-manager th:nth-child(5),
 #group-manager td:nth-child(5)
 {
@@ -207,7 +218,7 @@
     display:inline;
 }
 
-#command_control a[href*="mailto:"]
+#command_control .read-only a[href*="mailto:"]
 {
     display: inline-block;
     height: 24px;
@@ -215,7 +226,7 @@
     background: url(../../studysauce/images/menu_new_half.png) no-repeat left -4102px transparent;
 }
 
-#command_control a[href*="mailto:"]:hover
+#command_control .read-only a[href*="mailto:"]:hover
 {
     background-position: left -4152px;
 }

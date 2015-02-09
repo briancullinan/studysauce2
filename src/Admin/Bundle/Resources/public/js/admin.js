@@ -170,19 +170,11 @@ $(document).ready(function () {
     });
 
     body.on('show', '#command_control', function () {
+        if($(this).is('.loaded'))
+            return;
+        $(this).addClass('loaded');
         var admin = $('#command_control'),
             pickers = admin.find('th:nth-child(1) .input + div, th:nth-child(6) .input + div');
-        $.datepicker._defaults.onAfterUpdate = null;
-
-        var datepicker__updateDatepicker = $.datepicker._updateDatepicker;
-        $.datepicker._updateDatepicker = function( inst ) {
-            datepicker__updateDatepicker.call( this, inst );
-
-            var onAfterUpdate = this._get(inst, 'onAfterUpdate');
-            if (onAfterUpdate)
-                onAfterUpdate.apply((inst.input ? inst.input[0] : null),
-                    [(inst.input ? inst.input.val() : ''), inst]);
-        };
 
         var cur = -1, prv = -1;
         var hideTimeout = null;
@@ -505,6 +497,5 @@ $(document).ready(function () {
     });
 
     body.on('change', '#command_control input[name="search"], #command_control input[name="page"]', loadResults);
-
 
 });

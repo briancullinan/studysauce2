@@ -84,11 +84,15 @@ class PlanController extends Controller
         // get demo schedule instead
         $showPlanIntro = false; // TODO: false in production
         $isDemo = false;
+        $isEmpty = false;
         if (empty($schedule) ||
             empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count()) ||
             !$_user->hasRole('ROLE_PAID')) {
             $schedule = ScheduleController::getDemoSchedule($this->container);
-            $isDemo = true;
+            if($_user->hasRole('ROLE_PAID'))
+                $isEmpty = true;
+            else
+                $isDemo = true;
         }
 
         // show intro for paid users
@@ -126,8 +130,8 @@ class PlanController extends Controller
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week,
                 'showPlanIntro' => $showPlanIntro,
-                'isDemo' => $isDemo && !$_user->hasRole('ROLE_PAID'),
-                'isEmpty' => $isDemo && $_user->hasRole('ROLE_PAID')
+                'isDemo' => $isDemo,
+                'isEmpty' => $isEmpty
             ]);
     }
 

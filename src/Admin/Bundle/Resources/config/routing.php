@@ -16,6 +16,20 @@ $collection->add(
 );
 
 $collection->add(
+    'activity',
+    new Route(
+        '/activity/{_format}',
+        ['_controller' => 'AdminBundle:Admin:activity', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest() || !request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'command_callback',
     new Route(
         '/command/control',

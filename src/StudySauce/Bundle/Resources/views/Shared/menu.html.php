@@ -17,6 +17,7 @@ $user = $app->getUser();
             <li><a href="<?php print $view['router']->generate('checkin'); ?>"><span>&nbsp;</span>Check in</a></li>
             <li><a href="<?php print $view['router']->generate('metrics'); ?>"><span>&nbsp;</span>Study metrics</a></li>
             <li><a href="<?php print $view['router']->generate('partner'); ?>"><span>&nbsp;</span>Accountability partner</a></li>
+            <li><a href="<?php print $view['router']->generate('calculator'); ?>"><span>&nbsp;</span>Grade calculator</a></li>
             <?php if(!$user->hasRole('ROLE_PAID')) { ?>
                 <li><a href="<?php print $view['router']->generate('premium'); ?>"><span>&nbsp;</span>Premium</a></li>
             <?php } ?>
@@ -25,7 +26,6 @@ $user = $app->getUser();
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>
             <li><h3>Coming soon</h3></li>
             <li><a href="#midterm"><span>&nbsp;</span>Midterm/final planner</a></li>
-            <li><a href="#calculator"><span>&nbsp;</span>Grade calculator</a></li>
             <li><a href="#quizlet"><span>&nbsp;</span>Quizlet</a></li>
             <li><a href="#drive"><span>&nbsp;</span>Google Drive</a></li>
             <li><a href="#evernote"><span>&nbsp;</span>Evernote</a></li>

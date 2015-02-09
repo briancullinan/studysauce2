@@ -308,6 +308,9 @@ $(document).ready(function () {
 
     body.on('scheduled', function () {
         var plan = $('#plan');
+        // this page will be reloaded after going through the buy funnel
+        if(plan.is('.demo'))
+            return;
         // update classes
         setTimeout(function () {
             $.ajax({

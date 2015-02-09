@@ -9,28 +9,16 @@ $user = $app->getUser();
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    ['@AdminBundle/Resources/public/css/admin.css'],
-    [],
-    ['output' => 'bundles/admin/css/*.css']
-) as $url): ?>
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/admin.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
-foreach ($view['assetic']->stylesheets(
-    ['@AdminBundle/Resources/public/css/emails.css'],
-    [],
-    ['output' => 'bundles/admin/css/*.css']
-) as $url): ?>
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/emails.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    ['@AdminBundle/Resources/public/js/emails.js'],
-    [],
-    ['output' => 'bundles/admin/js/*.js']
-) as $url): ?>
+foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/emails.js'],[],['output' => 'bundles/admin/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
 <script type="text/javascript">

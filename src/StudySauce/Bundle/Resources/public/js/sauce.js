@@ -17,6 +17,19 @@ window.onerror = function (errorMessage, url, lineNumber) {
     return false;
 };
 
+// datepicker modifications to turn onAfterUpdate in to a settable event callback
+$.datepicker._defaults.onAfterUpdate = null;
+
+var datepicker__updateDatepicker = $.datepicker._updateDatepicker;
+$.datepicker._updateDatepicker = function( inst ) {
+    datepicker__updateDatepicker.call( this, inst );
+
+    var onAfterUpdate = this._get(inst, 'onAfterUpdate');
+    if (onAfterUpdate)
+        onAfterUpdate.apply((inst.input ? inst.input[0] : null),
+            [(inst.input ? inst.input.val() : ''), inst]);
+};
+
 function loadingAnimation(that)
 {
     if(typeof that != 'undefined' && that.length > 0 && that.find('.squiggle').length == 0)
@@ -185,10 +198,6 @@ $(document).ready(function () {
                         newStuff = newStuff.not('#' + id);
                 });
                 that.replaceWith(newStuff);
-                setTimeout(function () {
-                    newStuff.filter('[id]').trigger('loaded');
-                    $('.panel-pane:visible').not(visible).trigger('show');
-                }, 100);
             },
             error: function () {
             }

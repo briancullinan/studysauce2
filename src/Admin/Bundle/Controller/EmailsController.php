@@ -393,11 +393,12 @@ if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
                 }
                 $params[$parameterName . $c]['name'] = $className;
                 $params[$parameterName . $c]['prop'] = $c;
-                // TODO: if it an associated field return the object at runtime
+                // if its an associated field return the object at runtime
                 if(in_array(lcfirst($c), $data->getAssociationNames())) {
                     $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return isset($this->objects["' . lcfirst($c) . '"]) ? $this->objects["' . lcfirst($c) . '"] : "{' . $className . ':' . $c . '}"; }
 ';
                 }
+                // if it's an email field
                 else if (strpos(strtolower($c), 'email') !== false) {
                     $instance .= 'public function get' . $c . '() { \Admin\Bundle\Controller\EmailsController::$templateVars[] = "' . $parameterName . $c . '"; return isset($this->variables["' . $parameterName . $c . '"]) ? $this->variables["' . $parameterName . $c . '"] : "' . $className . '_' . $c . '@mailinator.com"; }
 ';

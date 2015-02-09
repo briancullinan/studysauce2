@@ -100,7 +100,10 @@ $(document).ready(function () {
                     if(panels.is(':visible'))
                         return;
                     panels.trigger('hide');
-                    panel.fadeIn(75).scrollintoview(DASHBOARD_MARGINS).trigger('show');
+                    panel.fadeIn(75);
+                    setTimeout(function () {
+                        panel.scrollintoview(DASHBOARD_MARGINS).trigger('show')
+                    }, 75);
                     clearInterval(triggerHide);
                 }, 50);
                 clearInterval(triggerShow);
@@ -308,10 +311,4 @@ $(document).ready(function () {
         }
     }, 10000);
 
-
-    // TODO: put this with adviser dashboard code?
-    body.on('show', '.panel-pane[id^="uid-"]', function (evt) {
-        if($(evt.target).is('[id^="uid-"]'))
-            $(this).find('.panel-pane').not(this).trigger('show');
-    });
 });

@@ -598,13 +598,15 @@ class EmailsController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
+        $to = $message->getTo();
+        reset($to);
+
         if($this->container->getParameter('defer_all_emails') !== false) {
+            $message->getHeaders()->addParameterizedHeader('X-Original-To', key($to));
             $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
         }
 
         // check to make sure the limit hasn't been reached
-        $to = $message->getTo();
-        reset($to);
         $count = $orm->getRepository('StudySauceBundle:Mail')->createQueryBuilder('m')
             ->select('COUNT(DISTINCT m.id)')
             ->andWhere('m.message LIKE \'%s:' . (strlen(key($to))) . ':"' . key($to) . '"%\'')
@@ -616,6 +618,7 @@ class EmailsController extends Controller
 
         if($count >= 2)
         {
+            $message->getHeaders()->addParameterizedHeader('X-Original-To', key($to));
             $message->setSubject('CANCELLED: ' . $message->getSubject());
             $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
         }

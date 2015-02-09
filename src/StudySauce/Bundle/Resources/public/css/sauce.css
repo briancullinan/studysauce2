@@ -618,7 +618,6 @@ input[type=month],
     left:0;
     opacity:1;
     display:inline-block;
-    width:auto!important;
 }
 
 .selectize-control.single .selectize-input.focus,

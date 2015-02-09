@@ -408,15 +408,15 @@
     background-position: left -2705px;
 }
 
-#right-panel .main-menu a[href*="#calculator"] span
+#right-panel .main-menu a[href*="/calculator"] span
 {
     background-position: left -3605px;
 }
 
-#right-panel .main-menu a[href*="#calculator"]:hover span,
-#right-panel .main-menu a[href*="#calculator"]:focus span,
-#right-panel .main-menu a[href*="#calculator"]:active span,
-#right-panel .main-menu a[href*="#calculator"].active span {
+#right-panel .main-menu a[href*="/calculator"]:hover span,
+#right-panel .main-menu a[href*="/calculator"]:focus span,
+#right-panel .main-menu a[href*="/calculator"]:active span,
+#right-panel .main-menu a[href*="/calculator"].active span {
     background-position: left -3705px;
 }
 
@@ -1261,7 +1261,7 @@
         background-position: left -6805px;
     }
 
-    #right-panel .main-menu a[href*="#calculator"] span
+    #right-panel .main-menu a[href*="/calculator"] span
     {
         background-position: left -6705px;
     }

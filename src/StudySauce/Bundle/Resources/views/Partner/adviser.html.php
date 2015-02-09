@@ -23,9 +23,19 @@ $view['slots']->start('stylesheets');
 
 $view['slots']->stop();
 
-$view['slots']->start('javascripts');
+$view['slots']->start('javascripts'); ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var body = $('body');
 
-$view['slots']->stop();
+        // activate all panels because they show up within the tab
+        body.on('show', '.panel-pane[id^="uid-"]', function (evt) {
+            if($(evt.target).is('[id^="uid-"]'))
+                $(this).find('.panel-pane').not(this).trigger('show');
+        });
+    });
+</script>
+<?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
 $view['slots']->output('userBody');

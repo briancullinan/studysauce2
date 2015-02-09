@@ -179,7 +179,7 @@ class Visit
     /**
      * Get session
      *
-     * @return \StudySauce\Bundle\Entity\Session 
+     * @return string
      */
     public function getSession()
     {

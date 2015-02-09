@@ -8,7 +8,7 @@
         Below is your reminder.<br /><br /><br />
 
         <strong>Subject:</strong><br />
-        <span style="height:24px;width:24px;background-image:url(https://staging.studysauce.com/bundles/studysauce/images/course_icon.png);display:inline-block;vertical-align: middle;">&nbsp;</span> <?php print $course->getName(); ?><br /><br />
+        <span style="height:24px;width:24px;background-image:url(https://studysauce.com/bundles/studysauce/images/course_icon.png);display:inline-block;vertical-align: middle;">&nbsp;</span> <?php print $course->getName(); ?><br /><br />
         <?php
         if(empty($course)) {
             $course = $deadline->getCourse();
