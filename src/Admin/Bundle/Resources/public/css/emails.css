@@ -208,3 +208,22 @@
 {
     outline: none;
 }
+
+#send-email .save-template
+{
+    clear:both;
+}
+
+#send-email .save-template .input
+{
+    width: 50%;
+    display:inline-block;
+    margin: 0 -2px;
+    padding: 0 2px;
+}
+
+#send-email .save-template .input.save
+{
+    margin-right: -100px;
+    padding-right: 100px;
+}

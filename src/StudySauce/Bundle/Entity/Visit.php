@@ -48,6 +48,11 @@ class Visit
     protected $hash;
 
     /**
+     * @ORM\Column(type="string", length=8, name="method")
+     */
+    protected $method;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -138,6 +143,29 @@ class Visit
     public function getHash()
     {
         return $this->hash;
+    }
+
+    /**
+     * Set method
+     *
+     * @param string $method
+     * @return Visit
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * Get method
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
     }
 
     /**

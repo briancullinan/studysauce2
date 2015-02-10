@@ -201,4 +201,18 @@ $collection->add(
     )
 );
 
+$collection->add(
+    'emails_save',
+    new Route(
+        '/emails/save',
+        ['_controller' => 'AdminBundle:Emails:save'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
 return $collection;

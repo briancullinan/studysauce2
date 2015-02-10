@@ -1,0 +1,192 @@
+
+#calculator .nav small
+{
+    font-weight: bold;
+}
+
+#calculator .nav strong
+{
+    font-size: 20px;
+    height: 16px;
+    vertical-align: baseline;
+    display: inline-block;
+    margin-top: -6px;
+}
+
+#calculator .cumulative,
+#calculator .projected
+{
+    margin-right:5px;
+}
+
+#calculator .cumulative + span,
+#calculator .projected + span
+{
+    display:inline-block;
+    width:50%;
+    margin-left:-50px;
+    padding-left:50px;
+}
+
+#calculator .class-row.selected .grade-editor
+{
+    width: auto;
+    display: block;
+    font-weight: normal;
+    position: relative;
+}
+
+#calculator .class-row.selected .grade-editor .highlighted-link
+{
+    padding-left:20px;
+}
+
+#calculator .term-row.selected .term-editor
+{
+    width: auto;
+    display: block;
+    min-height: 200px;
+    font-weight: normal;
+    position: relative;
+    padding-bottom:30px;
+}
+
+#calculator .pane-content {
+    padding-bottom: 40px;
+}
+
+#calculator a[href*="/schedule"]
+{
+    position:absolute;
+    left:0;
+    bottom:5px;
+}
+
+#calculator a[href="#grade-scale"]
+{
+    position:absolute;
+    left:10px;
+    bottom:10px;
+}
+
+#calculator .grade-row,
+#calculator .class-row,
+#calculator .term-row
+{
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+#calculator .class-row.selected {
+    font-weight: bold;
+}
+
+#calculator .term-row.selected
+{
+    font-weight: bold;
+    background: url(../images/noise_white.png) #FFFFFF;
+    border: 1px solid #555;
+    border-radius: 10px;
+    padding: 0 10px;
+    margin: 0 -10px;
+}
+
+#calculator .grade-row:hover:not(.selected):not(.edit),
+#calculator .class-row:hover:not(.selected):not(.edit),
+#calculator .term-row:hover:not(.selected):not(.edit)
+{
+    box-shadow: 0 1px 4px rgba(255,255,255,.25);
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background-color: rgba(255,255,255,.50);
+    cursor: pointer;
+}
+
+#calculator .term-row header > *,
+#calculator .grade-row > *,
+#calculator .class-row > *,
+#calculator .term-row > *
+{
+    vertical-align: top;
+    display:inline-block;
+    margin:0 -2px;
+    padding: 5px 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+#calculator .term-row header > *,
+#calculator .class-row > *,
+#calculator .term-row > *,
+#calculator .grade-row > *
+{
+    width: 15%;
+}
+
+#calculator .term-row header
+{
+    border-bottom: 2px solid #555;
+}
+
+#calculator .term-row .grade span
+{
+    width:30px;
+    text-align: left;
+    display: inline-block;
+    margin-right:-15px;
+}
+
+#calculator .term-row header > *:first-child,
+#calculator .class-row .class-name,
+#calculator .grade-row .class-name
+{
+    width:25%;
+    text-align: left;
+}
+
+#calculator .grade-row .assignment
+{
+    width: 25%;
+    padding-left:20px;
+    text-align: left;
+}
+
+#calculator .term-row .term-name
+{
+    width: 55%;
+    text-align: left;
+}
+
+#calculator [value="#save-grades"]
+{
+    visibility: hidden;
+}
+
+.pane-content a[href="#grade-scale"]:not(.more)
+{
+    padding-left:30px;
+    position:relative;
+}
+
+.pane-content a[href="#grade-scale"]:not(.more):before
+{
+    background: url(../images/menu_new_half.png) no-repeat -3px -4206px transparent;
+    content: " ";
+    display:block;
+    height:20px;
+    width:20px;
+    margin-top:-12px;
+    position:absolute;
+    left:2px;
+    top:50%;
+}
+
+.pane-content a[href="#grade-scale"]:not(.more):hover:before,
+.pane-content a[href="#grade-scale"]:not(.more):focus:before,
+.pane-content a[href="#grade-scale"]:not(.more):active:before,
+.pane-content a[href="#grade-scale"].active:not(.more):before
+{
+    background-position: -3px -4256px;
+}

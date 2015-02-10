@@ -12,6 +12,8 @@ use StudySauce\Bundle\Entity\User;
 use Swift_Message;
 use Swift_Mime_Message;
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +27,20 @@ use Symfony\Component\Templating\TemplateNameParserInterface;
  */
 class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
 {
+    private static $emailsDir;
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     *
+     * @api
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        parent::setContainer($container);
+        self::$emailsDir = $this->container->getParameter('kernel.root_dir') . '/../src/StudySauce/Bundle/Resources/views/Emails/';
+    }
 
     /**
      * @throws AccessDeniedHttpException
@@ -42,7 +58,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
         }
 
         $emails = [];
-        $templatesDir = new \DirectoryIterator($this->container->getParameter('kernel.root_dir') . '/../src/StudySauce/Bundle/Resources/views/Emails/');
+        $templatesDir = new \DirectoryIterator(self::$emailsDir);
         foreach($templatesDir as $f) {
             /** @var \DirectoryIterator $f */
             if($f->getFilename() == 'layout.html.php')
@@ -507,6 +523,29 @@ if((new \ReflectionClass(get_parent_class($this)))->getConstructor() != null) {
                     }, $search));
         }
         return new JsonResponse([]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function saveAction(Request $request)
+    {
+        try {
+            if(!empty($request->get('name'))) {
+                $fh = fopen(self::$emailsDir . DIRECTORY_SEPARATOR . $request->get('name') . '.html.php', 'w+');
+                $newTemplate = preg_replace_callback('/\{([a-z0-9_]*?)(\:[a-z0-9_]*?)*\}/i', function ($m) {
+                    return '<?php print $' . lcfirst($m[1]) . (!empty($m[2]) ? ('->get' . substr($m[2], 1) . '()') : '') . '; ?>';
+                }, $request->get('template'));
+                fwrite($fh, $newTemplate);
+                fclose($fh);
+            }
+        }
+        catch (Exception $ex) {
+
+        }
+
+        return new JsonResponse(true);
     }
 }
 

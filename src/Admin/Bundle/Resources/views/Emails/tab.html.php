@@ -85,13 +85,15 @@ $view['slots']->start('body'); ?>
                     </table>
                 </div>
                 <div id="send-email" class="tab-pane">
-                    <label class="input"><span>Template</span>
-                        <select name="template">
-                            <option value="">Select email template</option>
-                            <?php foreach ($emails as $i => $email) { ?>
-                                <option value="<?php print $email['id']; ?>"><?php print $email['id']; ?></option>
-                            <?php } ?>
-                        </select></label>
+                    <div class="save-template">
+                        <label class="input"><span>Template</span>
+                            <select name="template">
+                                <option value="">Select email template</option>
+                                <?php foreach ($emails as $i => $email) { ?>
+                                    <option value="<?php print $email['id']; ?>"><?php print $email['id']; ?></option>
+                                <?php } ?>
+                            </select></label>
+                        <label class="input save"><input type="text" name="template-name" placeholder="Template name" /></label> <a href="#save-template" class="more">Save</a></div>
                     <table class="variables">
                         <thead>
                         <tr>

@@ -844,6 +844,7 @@ textarea
 {
     border-radius: 100%;
 }
+
 .radio input[type=radio]:checked~i:after,
 .radio-inline input[type=radio]:checked~i:after,
 .checkbox input[type=checkbox]:checked~i:after,
@@ -884,6 +885,7 @@ sup.premium
 .nav-tabs>li
 {
     border: none;
+    margin-bottom:0;
 }
 
 .nav-tabs>li>a
@@ -903,8 +905,7 @@ sup.premium
 .nav-tabs>li.active>a:hover,
 .nav-tabs>li.active>a:focus
 {
-    border: 1px solid #eee;
-    border-top-width: 0;
+    border: none;
     border-bottom: 3px solid #FF9900;
 }
 

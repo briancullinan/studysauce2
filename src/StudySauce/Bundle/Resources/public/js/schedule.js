@@ -462,7 +462,7 @@ $(document).ready(function () {
                 }
             });
             select.ready(function () {
-                select[0].selectize.setValue(schedule.find('.university input').val());
+                select[0].selectize.setValue(schedule.find('.university input').data('state'));
             });
             if(schedule.find('.university input').val().trim() == '')
                 select[0].selectize.focus();

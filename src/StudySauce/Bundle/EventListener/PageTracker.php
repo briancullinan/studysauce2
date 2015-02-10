@@ -84,6 +84,7 @@ class PageTracker implements EventSubscriberInterface
             $visit = new Visit();
             $visit->setPath($path);
             $visit->setHash('');
+            $visit->setMethod($request->getMethod());
             if($this->session->isStarted())
                 $id = $this->session->getId();
 
@@ -99,6 +100,7 @@ class PageTracker implements EventSubscriberInterface
                 unset($query['__visits']);
             }
             $visit->setQuery(empty($query) ? null : $query);
+            // don't bother saving requests to save the requests
             if($path != '/_visit' && $path != '/_fragment') {
                 if (!empty($id)) {
                     $visit->setSession($id);
@@ -117,6 +119,7 @@ class PageTracker implements EventSubscriberInterface
                     $visited = new \DateTime($v['time']);
                     $visited->setTimezone(new \DateTimeZone(date_default_timezone_get()));
                     $prev->setCreated($visited);
+                    $prev->setMethod($request->getMethod());
                     $prev->setHash($v['hash']);
                     if(!empty($base = $request->getBaseUrl()) && strpos($v['path'], $base) == 0)
                         $v['path'] = substr($v['path'], strlen($request->getBaseUrl()));

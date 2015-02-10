@@ -231,6 +231,9 @@
     background-position: left -4152px;
 }
 
+#validation.panel-pane,
+#emails.panel-pane,
+#activity.panel-pane,
 #command_control.panel-pane
 {
     padding-left:20px;

@@ -305,6 +305,24 @@ $(document).ready(function () {
         });
     });
 
+    body.on('click', '#send-email a[href="#save-template"]', function (evt) {
+        evt.preventDefault();
+        var email = $('#send-email');
+        $.ajax({
+            url: window.callbackPaths['emails_save'],
+            dataType: 'text',
+            type: 'POST',
+            data: {
+                template: email.find('iframe.preview')[0].contentWindow.CKEDITOR.instances.editor1.getData(),
+                name: email.find('input[name="template-name"]').val().trim()
+            },
+            success: function (response) {
+                // clear list
+
+            }
+        });
+    });
+
     body.find('#send-email .variables input').each(setupSelectize);
 
 });
