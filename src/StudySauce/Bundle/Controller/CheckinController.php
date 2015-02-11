@@ -23,7 +23,7 @@ class CheckinController extends Controller
     public function indexAction()
     {
         $demo = ScheduleController::getDemoSchedule($this->container);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+        $demoCourses = $demo->getClasses()->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -31,7 +31,7 @@ class CheckinController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getClasses()->toArray();
         else
             $courses = [];
 
@@ -53,7 +53,7 @@ class CheckinController extends Controller
     public function widgetAction()
     {
         $demo = ScheduleController::getDemoSchedule($this->container);
-        $demoCourses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+        $demoCourses = $demo->getClasses()->toArray();
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
@@ -61,7 +61,7 @@ class CheckinController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getClasses()->toArray();
         else
             $courses = [];
 
@@ -87,9 +87,7 @@ class CheckinController extends Controller
         $schedule = $user->getSchedules()->first();
 
         /** @var $course Course */
-        $course = $schedule->getCourses()->filter(function (Course $b) use ($courseId) {
-                return !$b->getDeleted() && $b->getType() == 'c' && $b->getId() == $courseId;
-            })->first();
+        $course = $schedule->getClasses()->filter(function (Course $b) use ($courseId) {return $b->getId() == $courseId;})->first();
         if(!empty($course)) {
             if ($request->get('checkedIn')) {
                 /** @var $c Checkin */

@@ -127,13 +127,7 @@ class DialogsController extends Controller
         /** @var $schedule Schedule */
         $schedule = $user->getSchedules()->first() ?: new Schedule();
 
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return $b->getType() == 'c';})->toArray();
-        $count = 0;
-        foreach($courses as $i => $c)
-        {
-            /** @var Course $c */
-            $count += $c->getCheckins()->count();
-        }
+        $count = array_sum($schedule->getClasses()->map(function (Course $c) {return $c->getCheckins()->count();})->toArray());
         return $this->render('StudySauceBundle:Dialogs:sds-messages.html.php', ['id' => 'sds-messages', 'count' => $count]);
     }
 

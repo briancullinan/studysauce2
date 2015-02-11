@@ -45,16 +45,8 @@ class ScheduleController extends Controller
         $schedule = $user->getSchedules()->first();
 
         if(!empty($schedule)) {
-            $courses = $schedule->getCourses()->filter(
-                function (Course $b) {
-                    return !$b->getDeleted() && $b->getType() == 'c';
-                }
-            )->toArray();
-            $others = $schedule->getCourses()->filter(
-                function (Course $b) {
-                    return !$b->getDeleted() && $b->getType() == 'o';
-                }
-            )->toArray();
+            $courses = $schedule->getClasses()->toArray();
+            $others = $schedule->getOthers()->toArray();
         }
         else
         {
@@ -147,8 +139,7 @@ class ScheduleController extends Controller
         }
 
         // TODO: remap demo functions to studysauce static functions used by testers?
-        $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
-            $b->getType() == 'c';})->toArray();
+        $courses = $schedule->getClasses()->toArray();
         if(empty($courses))
         {
             $courses = [];
@@ -313,7 +304,7 @@ class ScheduleController extends Controller
 
         $birthdayUsers = $userCollection->matching($criteria);
         */
-        $others = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'o';})->toArray();
+        $others = $schedule->getOthers()->toArray();
         if(empty($others))
         {
             $others = [];

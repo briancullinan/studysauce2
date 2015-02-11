@@ -217,6 +217,7 @@ aside + .panel-pane,
     background-color: rgba(255,255,255,.50);
 }
 
+a[href="#edit-grade"],
 a[href="#edit-class"],
 a[href="#goal-edit"],
 a[href="#edit-deadline"] {
@@ -226,6 +227,7 @@ a[href="#edit-deadline"] {
     background: url(../images/menu_new_half.png) no-repeat left -1552px transparent;
 }
 
+a[href="#edit-grade"]:hover,
 a[href="#edit-class"]:hover,
 a[href="#goal-edit"]:hover,
 a[href="#edit-deadline"]:hover
@@ -233,6 +235,7 @@ a[href="#edit-deadline"]:hover
     background-position: left -1602px;
 }
 
+a[href="#remove-grade"],
 a[href="#remove-class"],
 a[href="#remove-deadline"] {
     display: inline-block;
@@ -241,6 +244,7 @@ a[href="#remove-deadline"] {
     background: url(../images/menu_new_half.png) no-repeat left -1652px transparent;
 }
 
+a[href="#remove-grade"]:hover,
 a[href="#remove-class"]:hover,
 a[href="#remove-deadline"]:hover
 {

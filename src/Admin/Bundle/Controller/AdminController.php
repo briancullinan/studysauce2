@@ -74,7 +74,11 @@ class AdminController extends Controller
             if(strpos($search, '%') === false) {
                 $search = '%' . $search . '%';
             }
-            $qb = $qb->andWhere('u.first LIKE :search OR u.last LIKE :search OR u.email LIKE :search')
+            if(!in_array('g', $joins)) {
+                $qb = $qb->leftJoin('u.groups', 'g');
+                $joins[] = 'g';
+            }
+            $qb = $qb->andWhere('u.first LIKE :search OR u.last LIKE :search OR u.email LIKE :search OR g.name LIKE :search OR g.description LIKE :search')
                 ->setParameter('search', $search);
         }
 

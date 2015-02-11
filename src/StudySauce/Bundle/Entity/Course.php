@@ -55,16 +55,27 @@ class Course
     protected $endTime;
 
     /**
-     * @ORM\OneToMany(targetEntity="Checkin", mappedBy="course")
+     * @ORM\Column(type="integer", name="credit_hours", nullable=true)
+     */
+    protected $creditHours;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Checkin", mappedBy="course", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"checkin" = "ASC"})
      */
     protected $checkins;
 
     /**
-     * @ORM\OneToMany(targetEntity="Deadline", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Deadline", mappedBy="course", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"dueDate" = "ASC"})
      */
     protected $deadlines;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Grade", mappedBy="course", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"created" = "ASC"})
+     */
+    protected $grades;
 
     /**
      * @ORM\ManyToOne(targetEntity="Schedule", inversedBy="courses")
@@ -441,5 +452,61 @@ class Course
     public function getDeadlines()
     {
         return $this->deadlines;
+    }
+
+    /**
+     * Add grades
+     *
+     * @param \StudySauce\Bundle\Entity\Grade $grades
+     * @return Course
+     */
+    public function addGrade(\StudySauce\Bundle\Entity\Grade $grades)
+    {
+        $this->grades[] = $grades;
+
+        return $this;
+    }
+
+    /**
+     * Remove grades
+     *
+     * @param \StudySauce\Bundle\Entity\Grade $grades
+     */
+    public function removeGrade(\StudySauce\Bundle\Entity\Grade $grades)
+    {
+        $this->grades->removeElement($grades);
+    }
+
+    /**
+     * Get grades
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGrades()
+    {
+        return $this->grades;
+    }
+
+    /**
+     * Set creditHours
+     *
+     * @param integer $creditHours
+     * @return Course
+     */
+    public function setCreditHours($creditHours)
+    {
+        $this->creditHours = $creditHours;
+
+        return $this;
+    }
+
+    /**
+     * Get creditHours
+     *
+     * @return integer 
+     */
+    public function getCreditHours()
+    {
+        return $this->creditHours;
     }
 }

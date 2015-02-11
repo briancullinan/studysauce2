@@ -294,7 +294,7 @@ if(typeof window.jqAjax == 'undefined') {
             if (typeof error != 'undefined')
                 success(jqXHR, textStatus, errorThrown);
         };
-        window.jqAjax(settings);
+        return window.jqAjax(settings);
     };
 }
 

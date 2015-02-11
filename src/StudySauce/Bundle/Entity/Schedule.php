@@ -113,6 +113,22 @@ class Schedule
     protected $weeks;
 
     /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClasses()
+    {
+        return $this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';});
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOthers()
+    {
+        return $this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'o';});
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()

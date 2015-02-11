@@ -2,7 +2,8 @@ $(document).ready(function () {
 
     var body = $('body'),
         orderBy = 'lastLogin DESC',
-        searchTimeout = null;
+        searchTimeout = null,
+        searchRequest = null;
 
     function loadContent (data) {
         var admin = jQuery('#command_control'),
@@ -44,10 +45,12 @@ $(document).ready(function () {
     }
 
     function loadResults() {
+        if(searchRequest != null)
+            searchRequest.abort();
         if(searchTimeout != null)
             clearTimeout(searchTimeout);
         searchTimeout = setTimeout(function () {
-            $.ajax({
+            searchRequest = $.ajax({
                 url: window.callbackPaths['command_callback'],
                 type: 'GET',
                 dataType: 'text',
@@ -126,6 +129,11 @@ $(document).ready(function () {
                 loadContent(response);
             }
         });
+    });
+
+    body.on('click', '#command_control a[href*="_switch_user"]', function () {
+        if(searchRequest != null)
+            searchRequest.abort();
     });
 
     body.on('click', '#add-user a[href="#add-user"]', function (evt) {
@@ -315,6 +323,16 @@ $(document).ready(function () {
                 $(this).hide();
             })
             .hide();
+
+        $(window).resize(function () {
+            pickers.each(function (i) {
+                $(this).position({
+                    my: 'left top',
+                    at: 'left bottom',
+                    of: admin.find('th:nth-child(1) input, th:nth-child(6) input').eq(i)
+                });
+            });
+        });
 
         body.on('mousedown', '#command_control *', function (evt) {
             if(this == evt.target &&

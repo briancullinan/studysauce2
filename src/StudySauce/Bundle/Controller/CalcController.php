@@ -32,6 +32,13 @@ class CalcController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('StudySauceBundle:Calc:tab.html.php');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $schedules = $user->getSchedules()->toArray();
+
+        return $this->render('StudySauceBundle:Calc:tab.html.php', [
+            'schedules' => $schedules
+        ]);
     }
 }

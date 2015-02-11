@@ -152,10 +152,20 @@ $(document).ready(function () {
             })
             .hide();
 
+        $(window).resize(function () {
+            pickers.each(function (i) {
+                $(this).position({
+                    my: 'left top',
+                    at: 'left bottom',
+                    of: admin.find('input[name="range"]')
+                });
+            });
+        });
+
         body.on('mousedown', '#activity *', function (evt) {
             if(this == evt.target &&
-                $(evt.target).parents('.ui-datepicker').length == 0 &&
-                $(evt.target).parents('th:nth-child(1), th:nth-child(6)').length == 0) {
+                $(evt.target).parents('.range').length == 0) {
+                pickers.parent().find('input').blur();
                 hideTimeout = setTimeout(function () { admin.find('.ui-datepicker').parent().hide(); }, 500);
             }
         });
@@ -280,7 +290,7 @@ $(document).ready(function () {
         }
         var d1 = new Date(Math.min(prv,cur) -  60 * 60 * 1000),
             d2 = new Date(Math.max(prv,cur) + 60 * 60 * 24 * 1000);
-        timeLine.setWindow(d1, d2);
+        timeLine.setWindow(d1, d2, {animate:false});
     });
 
     body.on('change', '#activity input[name="search"]', function () {

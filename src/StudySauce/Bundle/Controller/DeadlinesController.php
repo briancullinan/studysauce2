@@ -36,14 +36,14 @@ class DeadlinesController extends Controller
         /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getClasses()->toArray();
         else
             $courses = [];
 
         $isDemo = false;
         if (empty($courses)) {
             $demo = ScheduleController::getDemoSchedule($this->container);
-            $courses = $demo->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray();
+            $courses = $demo->getClasses()->toArray();
             $deadlines = $this->getDemoDeadlines(array_values($courses));
             $isDemo = true;
         }
@@ -93,8 +93,7 @@ class DeadlinesController extends Controller
             $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
-            $courses = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
-                $b->getType() == 'c';})->toArray();
+            $courses = $schedule->getClasses()->toArray();
         else
             $courses = [];
 
@@ -224,8 +223,7 @@ class DeadlinesController extends Controller
             }
 
             if(!empty($d['courseId']) && $d['courseId'] != 'Nonacademic')
-                $course = $schedule->getCourses()->filter(function (Course $c)use($d) {
-                        return !$c->getDeleted() && $c->getId() == $d['courseId'];})->first();
+                $course = $schedule->getClasses()->filter(function (Course $c)use($d) {return $c->getId() == $d['courseId'];})->first();
             $deadline->setCourse(empty($course) ? null : $course);
             $deadline->setAssignment($d['assignment']);
             $deadline->setReminder(explode(',', $d['reminders']));
