@@ -636,4 +636,27 @@ class Schedule
     {
         return $this->weeks;
     }
+
+    /**
+     * Set gradeScale
+     *
+     * @param boolean $gradeScale
+     * @return Schedule
+     */
+    public function setGradeScale($gradeScale)
+    {
+        $this->gradeScale = $gradeScale;
+
+        return $this;
+    }
+
+    /**
+     * Get gradeScale
+     *
+     * @return boolean 
+     */
+    public function getGradeScale()
+    {
+        return $this->gradeScale;
+    }
 }

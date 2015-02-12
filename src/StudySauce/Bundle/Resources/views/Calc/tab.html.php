@@ -87,10 +87,10 @@ $view['slots']->start('body'); ?>
                                     ?>
                                 <div class="class-row selected">
                                     <div class="class-name"><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></div>
-                                    <div class="score">94.5</div>
-                                    <div class="grade"><span>A</span></div>
-                                    <div class="gpa">4.0</div>
-                                    <div class="percent">60%</div>
+                                    <div class="score"><?php print (empty($c->getScore()) ? '&bullet;' : $c->getScore()); ?></div>
+                                    <div class="grade"><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
+                                    <div class="gpa"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
+                                    <div class="percent"><?php print (empty($c->getPercent()) ? '&bullet;' : $c->getPercent()); ?></div>
                                     <div class="hours"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="<?php print $c->getLength() * count($c->getDotw()) / 3600; ?>" /></label></div>
                                     <div class="grade-editor">
                                         <?php
@@ -114,8 +114,8 @@ $view['slots']->start('body'); ?>
                                                 <div class="assignment">
                                                     <label class="input"><input type="text" value="<?php print (!$isDemo ? $d->getAssignment() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getAssignment()) ? $d->getAssignment() : 'Assignment'); ?>" /></label></div>
                                                 <div class="score"><label class="input"><input type="text" value="" /></label></div>
-                                                <div class="grade"><span>A-</span></div>
-                                                <div class="gpa">3.7</div>
+                                                <div class="grade"><span><?php print ($d instanceof Deadline || empty($d->getGrade()) ? '&bullet;' : $d->getGrade()); ?></span></div>
+                                                <div class="gpa"><?php print ($d instanceof Deadline || empty($d->getGPA()) ? '&bullet;' : $d->getGPA()); ?></div>
                                                 <div class="percent"><label class="input"><input type="text" value="<?php print (!$isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" /></label></div>
                                                 <div class="read-only"><a href="#edit-grade">&nbsp;</a><a href="#remove-grade">&nbsp;</a></div>
                                             </div>
@@ -136,6 +136,7 @@ $view['slots']->start('body'); ?>
                             <a href="#grade-scale" data-toggle="modal">Change grade scale</a>
                             <button type="submit" value="#save-grades" class="more">Save</button>
                         </div>
+                        <div>Note: if you would like to store individual assignment grades, divide the total percent of all assignments by the number of assignments in the class (i.e. Assignments are worth 20% and there are 10 of them, you would enter 2% for each assignment entered).</div>
                     </form>
                 </div>
                 <div id="what-if" class="tab-pane">

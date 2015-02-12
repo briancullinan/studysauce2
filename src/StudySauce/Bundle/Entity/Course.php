@@ -123,6 +123,134 @@ class Course
     }
 
     /**
+     * @return float
+     */
+    public function getScore()
+    {
+        $sum = array_sum($this->getGrades()->map(function (Grade $g) {
+            return $g->getPercent() * $g->getScore();
+        })->toArray());
+        $percent = $this->getPercent();
+        if(!empty($percent))
+            return $sum / $percent;
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGrade()
+    {
+        $score = $this->getScore();
+        if($score === null)
+            return null;
+        if($this->getSchedule()->getGradeScale())
+        {
+            if($score >= 97)
+                return 'A+';
+            elseif($score >= 93)
+                return 'A';
+            elseif($score >= 90)
+                return 'A-';
+            elseif($score >= 87)
+                return 'B+';
+            elseif($score >= 83)
+                return 'B';
+            elseif($score >= 80)
+                return 'B-';
+            elseif($score >= 77)
+                return 'C+';
+            elseif($score >= 73)
+                return 'C';
+            elseif($score >= 70)
+                return 'C-';
+            elseif($score >= 67)
+                return 'D+';
+            elseif($score >= 63)
+                return 'D';
+            elseif($score >= 60)
+                return 'D-';
+            else
+                return 'F';
+        }
+        else
+        {
+            if($score >= 90)
+                return 'A';
+            elseif($score >= 80)
+                return 'B';
+            elseif($score >= 70)
+                return 'C';
+            elseif($score >= 60)
+                return 'D';
+            else
+                return 'F';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getGPA()
+    {
+        $score = $this->getScore();
+        if($score === null)
+            return null;
+        if($this->getSchedule()->getGradeScale())
+        {
+            if($score >= 97)
+                return '4.0';
+            elseif($score >= 93)
+                return '4.0';
+            elseif($score >= 90)
+                return '3.7';
+            elseif($score >= 87)
+                return '3.3';
+            elseif($score >= 83)
+                return '3.0';
+            elseif($score >= 80)
+                return '2.7';
+            elseif($score >= 77)
+                return '2.3';
+            elseif($score >= 73)
+                return '2.0';
+            elseif($score >= 70)
+                return '1.7';
+            elseif($score >= 67)
+                return '1.3';
+            elseif($score >= 63)
+                return '1.0';
+            elseif($score >= 60)
+                return '0.7';
+            else
+                return '0.0';
+        }
+        else
+        {
+            if($score >= 90)
+                return '4.0';
+            elseif($score >= 80)
+                return '3.0';
+            elseif($score >= 70)
+                return '2.0';
+            elseif($score >= 60)
+                return '1.0';
+            else
+                return '0.0';
+        }
+    }
+
+    /**
+     * @return number
+     */
+    public function getPercent()
+    {
+        return array_sum($this->getGrades()->map(function (Grade $g) use (&$percent) {
+            return $g->getPercent();
+        })->toArray());
+    }
+
+    /**
      * Constructor
      */
     public function __construct()
