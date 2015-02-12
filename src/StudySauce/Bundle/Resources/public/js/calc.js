@@ -11,7 +11,7 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '#calculator .class-row > *:not(.grade-editor)', function () {
+    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours)', function () {
         var row = $(this).parents('.class-row');
         row.toggleClass('selected');
     });

@@ -66,6 +66,11 @@ class Schedule
     protected $sharp9pm2am;
 
     /**
+     * @ORM\Column(type="boolean", name="grade_scale", nullable = true)
+     */
+    protected $gradeScale = true;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;

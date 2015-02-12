@@ -108,6 +108,21 @@ class Course
     }
 
     /**
+     * @return int
+     */
+    public function getLength()
+    {
+        $classStart = $this->getStartTime();
+        $classEnd = $this->getEndTime();
+
+        $length = strtotime($classEnd->format('1/1/1970 H:i:s')) - strtotime($classStart->format('1/1/1970 H:i:s'));
+        if ($length <= 0) {
+            $length += 86400;
+        }
+        return $length;
+    }
+
+    /**
      * Constructor
      */
     public function __construct()

@@ -1186,11 +1186,7 @@ class PlanController extends Controller
         $events = [];
         $classStart = $course->getStartTime();
         $classEnd = $course->getEndTime();
-
-        $length = strtotime($classEnd->format('1/1/1970 H:i:s')) - strtotime($classStart->format('1/1/1970 H:i:s'));
-        if ($length <= 0) {
-            $length += 86400;
-        }
+        $length = $course->getLength();
 
         // if class is easy only study for 30 minutes
         if ($course->getStudyDifficulty() == 'easy') {
@@ -1242,11 +1238,7 @@ class PlanController extends Controller
         $events = [];
         $classStart = $course->getStartTime();
         $classEnd = $course->getEndTime();
-
-        $length = strtotime($classEnd->format('1/1/1970 H:i:s')) - strtotime($classStart->format('1/1/1970 H:i:s'));
-        if ($length <= 0) {
-            $length += 86400;
-        }
+        $length = $course->getLength();
         $fullLength = $length;
 
         // if class is easy only study for 30 minutes
@@ -1390,11 +1382,7 @@ class PlanController extends Controller
 
         $classStart = $course->getStartTime();
         $classEnd = $course->getEndTime();
-
-        $length = strtotime($classEnd->format('1/1/1970 H:i:s')) - strtotime($classStart->format('1/1/1970 H:i:s'));
-        if ($length <= 0) {
-            $length += 86400;
-        }
+        $length = $course->getLength();
         foreach ($course->getDotw() as $j => $d) {
             if (!isset(self::$weekConversion[$d])) {
                 continue;

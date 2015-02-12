@@ -91,7 +91,7 @@ $view['slots']->start('body'); ?>
                                     <div class="grade"><span>A</span></div>
                                     <div class="gpa">4.0</div>
                                     <div class="percent">60%</div>
-                                    <div class="hours">3</div>
+                                    <div class="hours"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="<?php print $c->getLength() * count($c->getDotw()) / 3600; ?>" /></label></div>
                                     <div class="grade-editor">
                                         <?php
                                         $isDemo = false;
@@ -133,7 +133,7 @@ $view['slots']->start('body'); ?>
                         <?php $first = false; } ?>
                         <div class="highlighted-link form-actions invalid">
                             <a href="#add-schedule" class="big-add">Add <span>+</span> semester</a>
-                            <a href="#grade-scale">Change grade scale</a>
+                            <a href="#grade-scale" data-toggle="modal">Change grade scale</a>
                             <button type="submit" value="#save-grades" class="more">Save</button>
                         </div>
                     </form>
@@ -145,4 +145,8 @@ $view['slots']->start('body'); ?>
             </div>
         </div>
     </div>
-<?php $view['slots']->stop(); ?>
+<?php $view['slots']->stop();
+
+$view['slots']->start('sincludes');
+print $this->render('StudySauceBundle:Dialogs:grade-scale.html.php', ['id' => 'grade-scale', 'scale' => empty($schedules) ? reset($schedules)->getGradeScale() : true]);
+$view['slots']->stop();
