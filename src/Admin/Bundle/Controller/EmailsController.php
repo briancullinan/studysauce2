@@ -368,6 +368,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
     {
         /** @var EntityManager $orm */
         $orm = $this->getDoctrine()->getManager();
+        $factory = $this->get('annotation_reader');
 
         // if we are dealing with an entity class try to figure out which methods are used
         if(($classI = array_search(true, array_map(function ($t) use ($className) {

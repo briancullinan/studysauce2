@@ -109,6 +109,7 @@ $(document).ready(function () {
         var deadlines = $('#deadlines');
         if(deadlines.find('.form-actions').is('.invalid'))
             return;
+        loadingAnimation($(this).find('[value="#save-deadline"]'));
         deadlines.find('.form-actions').removeClass('valid').addClass('invalid');
         var dates = [];
         deadlines.find('.deadline-row.edit.valid, .deadline-row.valid.edit').each(function () {
@@ -145,11 +146,7 @@ $(document).ready(function () {
         });
     }
 
-    body.on('submit', '#deadlines form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#save-deadline"]'));
-        setTimeout(submitDeadlines, 100);
-    });
+    body.on('submit', '#deadlines form', submitDeadlines);
 
     body.on('scheduled', function () {
         setTimeout(function () {

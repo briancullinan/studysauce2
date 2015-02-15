@@ -34,6 +34,7 @@ jQuery(document).ready(function() {
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#user-login"]'));
         jQuery.ajax({
             url:window.callbackPaths['account_auth'],
             type: 'POST',
@@ -58,10 +59,6 @@ jQuery(document).ready(function() {
             }
         });
     }
-    body.on('submit', '#login form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#user-login"]'));
-        setTimeout(submitLogin, 100);
-    });
+    body.on('submit', '#login form', submitLogin);
 
 });

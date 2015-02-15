@@ -112,6 +112,7 @@ $(document).ready(function () {
         if(goals.find('.form-actions').is('.invalid'))
             return;
         goals.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#save-goal"]'));
 
         var goalRows = [];
         goals.find('.goal-row.edit.valid:visible, .class-row.valid.edit:visible').each(function () {
@@ -154,11 +155,7 @@ $(document).ready(function () {
             }
         });
     }
-    body.on('submit', '#goals form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#save-goal"]'));
-        setTimeout(submitGoals, 100);
-    });
+    body.on('submit', '#goals form', submitGoals);
 
     body.on('click', '#claim a[href="#submit-claim"]', function (evt) {
         evt.preventDefault();

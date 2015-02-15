@@ -90,6 +90,7 @@ jQuery(document).ready(function() {
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#save-account"]'));
         var hash = getHash();
 
         jQuery.ajax({
@@ -121,10 +122,6 @@ jQuery(document).ready(function() {
         });
     }
 
-    body.on('submit', '#account form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#save-account"]'));
-        setTimeout(submitAccount, 100);
-    });
+    body.on('submit', '#account form', submitAccount);
 
 });

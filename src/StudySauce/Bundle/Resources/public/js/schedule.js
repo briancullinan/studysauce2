@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     function planFunc() {
         var schedule = $('#schedule');
-        jQuery(this).each(function () {
+        $(this).each(function () {
             var row = $(this).closest('.class-row');
             if(row.length == 0)
                 return;
@@ -55,7 +55,7 @@ $(document).ready(function () {
                     timeSteps: [1,1,"1"]
                 })
                 .on('keypress', function (event) {
-                    var that = jQuery(this),
+                    var that = $(this),
                         row = that.parents('.class-row'),
                         from = row.find('.start-time input[type="text"]').timeEntry('getTime'),
                         to = row.find('.end-time input[type="text"]').timeEntry('getTime');
@@ -118,7 +118,7 @@ $(document).ready(function () {
             var overlaps = row.is('.overlaps');
             row.removeClass('overlaps');
             schedule.find('.class-row').not(row).each(function () {
-                var that = jQuery(this);
+                var that = $(this);
                 // check if dates overlap
                 var startDate2 = new Date(that.find('.start-date input').val());
                 var endDate2 = new Date(that.find('.end-date input').val());
@@ -160,27 +160,17 @@ $(document).ready(function () {
             }
         });
 
-        /*if(window.location.pathname == '/schedule2' &&
-            schedule.find('.class-row.edit.invalid:visible').length == 0 &&
-            schedule.find('.class-row.overlaps:visible').length == 0 &&
-            schedule.find('.class-row.invalid-time:visible').length == 0)
-            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
-        else if(window.location.pathname == '/schedule' &&
-            schedule.find('.class-row.edit.invalid:visible').length == 0 &&
-            schedule.find('.class-row.overlaps:visible').length == 0 &&
-            schedule.find('.class-row.invalid-time:visible').length == 0 &&
-            schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 &&
-            schedule.find('.university input').val().trim() != '')
-            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
-        else */
         if(schedule.find('.class-row.edit.invalid:visible').length == 0 &&
             schedule.find('.class-row.overlaps:visible').length == 0 &&
             schedule.find('.class-row.invalid-time:visible').length == 0 &&
-            schedule.find('.university input').val().trim() != '' &&
-            (schedule.find('.class-row.edit.valid:visible').not('.blank').length > 0 ||
-            (schedule.find('.class-row.valid').not('.blank').length > 0 &&
-            schedule.find('.university input').val().trim() !=
-            schedule.find('.university input').data('state'))))
+            schedule.find('.class-row.valid:not(.blank)').length > 0 &&
+            schedule.find('.university input').val().trim() != '' && (
+                // make sure there are rows to save that are not blank
+                schedule.find('.class-row.edit.valid:visible:not(.blank)').length > 0 ||
+                // rows can be read-only and still need to save if university name changes
+                schedule.find('.university input').val().trim() != schedule.find('.university input').data('state') ||
+                // we may need to save deleted rows
+                schedule.find('.class-row.blank:not(.course-id-):not(:visible)').length > 0))
             schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
             schedule.find('.form-actions').removeClass('valid').addClass('invalid');
@@ -205,22 +195,23 @@ $(document).ready(function () {
     });
 
     body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
-        var schedule = $('#schedule');
         evt.preventDefault();
-        var row = jQuery(this).parents('.class-row'),
-            courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
-        $.ajax({
-            url: window.callbackPaths['remove_schedule'],
-            type: 'POST',
-            dataType: 'text',
-            data: {
-                remove: courseId,
-                csrf_token: schedule.find('input[name="csrf_token"]').val()
-            },
-            success: function (data) {
-                updateSchedule(data);
-            }
-        });
+        var row = $(this).parents('.class-row'),
+            schedule = $('#schedule'),
+            container = row.parents('.schedule');
+        // clear and hide the class row
+        row.find('.class-name input, .start-date input, .end-date input').val('');
+        row.find('.day-of-the-week input').prop('checked', false);
+        row.removeClass('invalid').addClass('blank').hide();
+        schedule.find('[value="#save-class"]').css('visibility', 'visible');
+        if(container.find('.class-row:visible').length == 0)
+        {
+            if(container.is('.other'))
+                container.find('a[href="#add-class"]').trigger('click');
+            else
+                container.find('a[href="#add-class"]').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click');
+        }
+        planFunc.apply(row);
     });
 
     function updateSchedule(data)
@@ -245,12 +236,12 @@ $(document).ready(function () {
     body.on('click', '#schedule a[href="#add-class"], #schedule a[href="#add-other"]', function (evt) {
         var schedule = $('#schedule');
         evt.preventDefault();
-        var isOther = jQuery(this).is('[href="#add-other"]'),
+        var isOther = $(this).is('[href="#add-other"]'),
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
             otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
             list = schedule.find('.schedule' + (isOther ? '.other' : ':not(.other)')),
             addClass = list.find('.class-row').first().clone().removeAttr('id')
-                .removeClass('read-only').addClass('edit').insertBefore(list.find('.form-actions'));
+                .removeClass('read-only').addClass('edit').show().insertBefore(list.find('.form-actions'));
         // reset fields for the new entry
         addClass.attr('class', addClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
@@ -262,8 +253,9 @@ $(document).ready(function () {
         planFunc.apply(addClass);
     });
 
-    function submitSchedule()
+    function submitSchedule(evt)
     {
+        evt.preventDefault();
         var schedule = $('#schedule');
         if(schedule.find('.university input').val().trim() == '')
             schedule.find('.university').addClass('error-empty');
@@ -282,20 +274,31 @@ $(document).ready(function () {
             return;
         }
         schedule.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#save-class"]'));
 
         var classes = [];
-        schedule.find('.class-row.edit:visible:not(.invalid):not(.blank)').each(function () {
+        schedule.find('.class-row.edit:visible:not(.invalid):not(.blank), .class-row.blank:not(.course-id-):not(:visible)').each(function () {
             var row = $(this),
                 courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
                 dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
-            classes[classes.length] = {
-                courseId: courseId,
-                className: row.find('.class-name input').val(),
-                dotw: dotw.join(','),
-                start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
-                end: row.find('.end-time input').val() + ' ' + row.find('.end-date input').val(),
-                type: row.find('input[name="event-type"]').val()
-            };
+            // remove blank rows
+            if(row.is('.blank')) {
+                classes[classes.length] = {
+                    courseId: courseId,
+                    remove: true
+                };
+            }
+            else {
+                classes[classes.length] = {
+                    courseId: courseId,
+                    className: row.find('.class-name input').val(),
+                    dotw: dotw.join(','),
+                    start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
+                    end: row.find('.end-time input').val() + ' ' + row.find('.end-date input').val(),
+                    type: row.find('input[name="event-type"]').val(),
+                    remove: false
+                };
+            }
         });
 
         $.ajax({
@@ -317,11 +320,7 @@ $(document).ready(function () {
             }
         });
     }
-    body.on('submit', '#schedule form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#save-class"]'));
-        setTimeout(submitSchedule, 100);
-    });
+    body.on('submit', '#schedule form', submitSchedule);
 
 
     var autoFillDate = function () {
@@ -357,20 +356,20 @@ $(document).ready(function () {
     body.on('change', '#schedule .class-name input', autoFillDate);
     body.on('keyup', '#schedule .class-name input', autoFillDate);
     function copyTimes() {
-        if(jQuery(this).is('[type="time"]')) {
-            jQuery(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', jQuery(this).val());
+        if($(this).is('[type="time"]')) {
+            $(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', $(this).val());
         }
-        if(jQuery(this).is('.is-timeEntry[type="text"]'))
+        if($(this).is('.is-timeEntry[type="text"]'))
         {
-            var t = jQuery(this).timeEntry('getTime');
+            var t = $(this).timeEntry('getTime');
             if(typeof t != 'undefined' && t != null)
-                jQuery(this).parents('.start-time, .end-time').find('input[type="time"]').val((t.getHours() < 10
+                $(this).parents('.start-time, .end-time').find('input[type="time"]').val((t.getHours() < 10
                     ? ('0' + t.getHours())
                     : t.getHours()) + ':' + (t.getMinutes() < 10
                     ? ('0' + t.getMinutes())
                     : t.getMinutes()) + ':00');
         }
-        if(jQuery(this).is('[type="date"]')) {
+        if($(this).is('[type="date"]')) {
             var date = new Date;
             date.setFullYear(parseInt($(this).val().substr(0, 4)));
             date.setMonth(parseInt($(this).val().substr(5, 2))-1);
@@ -379,12 +378,12 @@ $(document).ready(function () {
             date.setMinutes(0);
             date.setSeconds(0);
             date.setMilliseconds(0);
-            jQuery(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', date);
+            $(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', date);
         }
-        if(jQuery(this).is('.hasDatepicker')) {
+        if($(this).is('.hasDatepicker')) {
             var d = $(this).datepicker('getDate');
             if(d != null) {
-                jQuery(this).parents('.start-date, .end-date').find('input[type="date"]').val(d.getFullYear() + '-' +
+                $(this).parents('.start-date, .end-date').find('input[type="date"]').val(d.getFullYear() + '-' +
                 (d.getMonth() + 1 < 10 ? ('0' + (d.getMonth() + 1)) : (d.getMonth() + 1)) + '-' +
                 (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate()));
             }
@@ -420,8 +419,9 @@ $(document).ready(function () {
     // set default value for university name
     body.on('focus', '#schedule .university input', function () {
         var schedule = $('#schedule');
-        schedule.find('[value="#save-class"]').first().css('visibility', 'visible');
+        schedule.find('[value="#save-class"]').css('visibility', 'visible');
     });
+
     body.on('show', '#schedule', function () {
         var schedule = $('#schedule');
         if(schedule.find('.university input').data('state') == null) {

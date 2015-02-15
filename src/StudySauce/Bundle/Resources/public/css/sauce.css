@@ -219,6 +219,35 @@ input[type="button"].more
     position: relative;
 }
 
+#plan .fc-button,
+a.subtle,
+button.subtle
+{
+    background-clip: border-box;
+    background-origin: padding-box;
+    background: #eee;
+    border:none;
+    border-bottom:2px solid #ddd;
+    box-shadow: none;
+    display:inline-block;
+    margin:0;
+    float:none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    height:auto;
+    color:#555;
+}
+
+#plan .fc-button.fc-state-disabled,
+#plan .fc-button.fc-state-disabled:hover,
+#plan .fc-button.fc-state-disabled:active,
+#plan .fc-button.fc-state-disabled:focus
+{
+    margin-top:0;
+    background-color: #eeeeee;
+    border-bottom:2px solid #ddd;
+}
+
 .btn-primary,
 .highlighted-link .more
 {
@@ -250,6 +279,18 @@ input[type="button"].more:focus
     color: #ffffff;
     background-color: #0088BB;
     border-color: #004477;
+}
+
+#plan .fc-button:focus,
+a.subtle:focus,
+#plan .fc-button:focus,
+#plan .fc-button:hover,
+a.subtle:hover,
+#plan .fc-button:hover
+{
+    background: #dddddd;
+    border-bottom:2px solid #bbb;
+    color:#555;
 }
 
 .net-promoter label
@@ -286,6 +327,7 @@ input[type="button"].more:focus
     border-bottom: 3px solid #116600;
     padding-right: 65px;
 }
+
 .btn:active,
 a.more:active,
 button.more:active,
@@ -301,6 +343,15 @@ input[type="button"].more:active
     color: #ffffff;
     background-color: #0088BB;
     border-color: #004477;
+}
+
+#plan .fc-button:active,
+a.subtle:active,
+#plan .fc-button:active
+{
+    margin-top:1px;
+    border-bottom-width: 1px;
+    color:#555;
 }
 
 .btn-primary:hover,

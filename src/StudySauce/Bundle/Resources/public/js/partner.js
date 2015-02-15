@@ -25,12 +25,9 @@ $(document).ready(function () {
             partner.find('.form-actions').removeClass('valid').addClass('invalid');
     }
 
-    body.on('change', '#partner .first-name input, #partner .last-name input, #partner .email input', partnerFunc);
+    body.on('change', '#partner .first-name input, #partner .last-name input, #partner .email input, #partner .permissions input', partnerFunc);
     body.on('keyup', '#partner .first-name input, #partner .last-name input, #partner .email input', partnerFunc);
-    body.on('change', '#partner .permissions input', function () {
-        partnerFunc();
-        setTimeout(submitPartner, 100);
-    });
+    body.on('change', '#partner .permissions input', submitPartner);
     body.on('show', '#partner', function () {
         var partner = $(this);
         if(partner.data('state') == null) {
@@ -84,7 +81,7 @@ $(document).ready(function () {
                         // update masthead picture
                         body.find('#partner-message img').attr('src', data.src);
                         partnerFunc();
-                        setTimeout(submitPartner, 100);
+                        submitPartner();
                     },
                     Error: function(up, err) {
                     }
@@ -102,6 +99,7 @@ $(document).ready(function () {
         if(partner.find('.form-actions').is('.invalid'))
             return;
         partner.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#partner-save"]'));
         var hash = getHash();
         jQuery.ajax({
             url: window.callbackPaths['update_partner'],
@@ -128,10 +126,6 @@ $(document).ready(function () {
             }
         });
     }
-    body.on('submit', '#partner form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#user-login"]'));
-        setTimeout(submitPartner, 100);
-    });
+    body.on('submit', '#partner form', submitPartner);
 
 });

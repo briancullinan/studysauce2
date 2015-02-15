@@ -36,6 +36,7 @@ class Schedule
     protected $university;
 
     /**
+     * What kind of grades do you want?
      * @ORM\Column(type="string", length=10, name="grades", nullable = true)
      */
     protected $grades;
@@ -66,7 +67,7 @@ class Schedule
     protected $sharp9pm2am;
 
     /**
-     * @ORM\Column(type="boolean", name="grade_scale", nullable = true)
+     * @ORM\Column(type="boolean", name="grade_scale")
      */
     protected $gradeScale = true;
 
@@ -131,6 +132,44 @@ class Schedule
     public function getOthers()
     {
         return $this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'o';});
+    }
+
+    /**
+     * @return string
+     */
+    public function getGPA()
+    {
+        $hours = $this->getCreditHours();
+        if(empty($hours))
+            return null;
+        $score = array_sum($this->getCourses()->map(function (Course $c) {
+            return $c->getScore() * $c->getCreditHours();
+        })->toArray());
+        return number_format($score / $hours, 2);
+    }
+
+    /**
+     * @return number
+     */
+    public function getPercent()
+    {
+        $hours = $this->getCreditHours();
+        if(empty($hours))
+            return null;
+        $score = array_sum($this->getCourses()->map(function (Course $c) {
+            return $c->getPercent() * $c->getCreditHours();
+        })->toArray());
+        return round($score / $hours);
+    }
+
+    /**
+     * @return number
+     */
+    public function getCreditHours()
+    {
+        return array_sum($this->getCourses()->map(function (Course $c) {
+            return $c->getCreditHours();
+        })->toArray());
     }
 
     /**

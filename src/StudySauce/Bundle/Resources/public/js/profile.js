@@ -75,7 +75,7 @@ $(document).ready(function () {
         if(profile.find('.highlighted-link').is('.invalid'))
             return;
         profile.find('.highlighted-link').removeClass('valid').addClass('invalid');
-
+        loadingAnimation($(this).find('[value="#save-profile"]'));
         var scheduleData = { };
         //university: profile.find('.field-name-field-university input').val(),
         scheduleData['grades'] = profile.find('.grades input:checked').val();
@@ -100,18 +100,14 @@ $(document).ready(function () {
             }
         });
     }
-    body.on('submit', '#profile form', function (evt) {
-        evt.preventDefault();
-        $(this).find('[value="#save-profile"]');
-        setTimeout(submitProfile, 100);
-    });
+    body.on('submit', '#profile form', submitProfile);
     function submitCustomization()
     {
         var customization = $('#customization');
         if(customization.find('.highlighted-link').is('.invalid'))
             return;
         customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
-
+        loadingAnimation($(this).find('[value="#save-profile"]'));
         var scheduleData = { };
         customization.find('.study-types input:checked').each(function () {
             scheduleData[$(this).attr('name')] = $(this).val();
@@ -135,9 +131,5 @@ $(document).ready(function () {
             }
         });
     }
-    body.on('submit', '#customization form', function (evt) {
-        evt.preventDefault();
-        $(this).find('[value="#save-profile"]');
-        setTimeout(submitCustomization, 100);
-    });
+    body.on('submit', '#customization form', submitCustomization);
 });

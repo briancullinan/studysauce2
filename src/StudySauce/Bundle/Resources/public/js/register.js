@@ -47,6 +47,7 @@ jQuery(document).ready(function() {
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#user-register"]'));
         var hash = getHash();
         jQuery.ajax({
             url:window.callbackPaths['account_create'],
@@ -74,11 +75,7 @@ jQuery(document).ready(function() {
             }
         });
     }
-    body.on('submit', '#register form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#user-register"]'));
-        setTimeout(submitRegister, 100);
-    });
+    body.on('submit', '#register form', submitRegister);
 
     function resetFunc() {
         var reset = $('#reset');
@@ -94,6 +91,7 @@ jQuery(document).ready(function() {
         if(account.find('.form-actions').is('.invalid'))
             return;
         account.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#reset-password"]'));
         jQuery.ajax({
             url:window.callbackPaths['password_reset'],
             type: 'POST',
@@ -115,10 +113,6 @@ jQuery(document).ready(function() {
             }
         });
     }
-    body.on('submit', '#reset form', function (evt) {
-        evt.preventDefault();
-        loadingAnimation($(this).find('[value="#reset-password"]'));
-        setTimeout(submitReset, 100);
-    });
+    body.on('submit', '#reset form', submitReset);
 
 });

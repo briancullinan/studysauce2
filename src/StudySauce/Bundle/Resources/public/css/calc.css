@@ -117,7 +117,14 @@
     border-top: 1px solid #DDDDDD;
     border-bottom: 1px solid #DDDDDD;
     background-color: rgba(255,255,255,.50);
+}
+
+#calculator .grade-row:hover:not(.selected):not(.edit),
+#calculator .class-row:hover:not(.selected):not(.edit),
+#calculator .term-row:hover:not(.selected):not(.edit)
+{
     cursor: pointer;
+    color:#00CCEE;
 }
 
 #calculator .term-row header > *,

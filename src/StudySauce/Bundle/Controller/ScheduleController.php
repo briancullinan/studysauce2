@@ -35,37 +35,23 @@ class ScheduleController extends Controller
         $orm = $this->get('doctrine')->getManager();
 
         $demo = self::getDemoSchedule($this->container);
-        $demoCourses = self::getDemoCourses($demo, $orm);
-        $demoOthers = self::getDemoOthers($demo, $orm);
+        self::getDemoCourses($demo, $orm);
+        self::getDemoOthers($demo, $orm);
 
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
-
-        /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
-        $schedule = $user->getSchedules()->first();
-
-        if(!empty($schedule)) {
-            $courses = $schedule->getClasses()->toArray();
-            $others = $schedule->getOthers()->toArray();
-        }
-        else
-        {
-            $courses = [];
-            $others = [];
-        }
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
             : null;
 
         return $this->render('StudySauceBundle:Schedule:tab.html.php', [
-                'schedule' => $schedule,
-                'demo' => $demo,
-                'csrf_token' => $csrfToken,
-                'courses' => array_values($courses),
-                'demoCourses' => array_values($demoCourses),
-                'others' => $others,
-                'demoOthers' => array_values($demoOthers)
+                'schedules' => $user->getSchedules()->isEmpty() || $user->getSchedules()->first()->getCourses()->isEmpty()
+                    ? [new Schedule()]
+                    : $user->getSchedules()->toArray(),
+                'demoSchedules' => [$demo],
+                'isDemo' => $user->getSchedules()->isEmpty() || $user->getSchedules()->first()->getCourses()->isEmpty(),
+                'csrf_token' => $csrfToken
             ]);
     }
 
@@ -400,9 +386,10 @@ class ScheduleController extends Controller
             ];
         }
 
-        $added = [];
-        $renamed = [];
         foreach ($classes as $j => $c) {
+            if(empty($c['courseId']) && $c['remove'] == 'true')
+                continue;
+
             // check if class entity already exists
             if (empty($c['courseId'])) {
                 $course = new Course();
@@ -411,36 +398,57 @@ class ScheduleController extends Controller
             } else {
                 /** @var $course Course */
                 $course = $schedule->getCourses()->filter(function (Course $x) use($c) {return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
-                // figure out what changed
-                if ($course->getName() != $c['className']) {
-                    // remove old reoccurring events
-                    $renamed[$c['courseId']] = $course->getName();
-                    $course->setName($c['className']);
+            }
+
+            // remove course
+            if($c['remove'] == 'true') {
+                if($course->getEvents()->exists(function ($k, Event $save) {
+                        return !empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
+                        !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
+                    }) || $course->getCheckins()->count() > 0 || $course->getDeadlines()->count() > 0) {
+                    $course->setDeleted(true);
+                    foreach($course->getDeadlines() as $d) {
+                        /** @var Deadline $d */
+                        $d->setDeleted(true);
+                        $orm->merge($d);
+                    }
+                    // events will be deleted automatically when returning to the plan tab
+                    $orm->merge($course);
+                }
+                else {
+                    $events = $course->getEvents()->toArray();
+                    foreach($events as $event) {
+                        $course->removeEvent($event);
+                        $schedule->removeEvent($event);
+                        $orm->remove($event);
+                    }
+                    $schedule->removeCourse($course);
+                    $orm->remove($course);
                 }
             }
-            $dotw = explode(',', $c['dotw']);
-            if(empty($dotw[0]))
-                $dotw = [];
+            // save course settings
+            else {
+                $dotw = explode(',', $c['dotw']);
+                if(empty($dotw[0]))
+                    $dotw = [];
 
-            $dotw = array_unique($dotw);
-            sort($dotw);
+                $dotw = array_unique($dotw);
+                sort($dotw);
 
-            $course->setDotw($dotw);
-            $course->setType($c['type']);
-            $course->setStartTime(new \DateTime($c['start']));
-            $course->setEndTime(new \DateTime($c['end']));
+                $course->setName($c['className']);
+                $course->setDotw($dotw);
+                $course->setType($c['type']);
+                $course->setStartTime(new \DateTime($c['start']));
+                $course->setEndTime(new \DateTime($c['end']));
 
-            if (empty($c['courseId'])) {
-                // save course
-                $schedule->addCourse($course);
-
-                // we don't need manage removal of new entries
-                $added['new' . count($added)] = $course;
-
-                $orm->persist($course);
+                if (empty($c['courseId'])) {
+                    // save course
+                    $schedule->addCourse($course);
+                    $orm->persist($course);
+                }
+                else
+                    $orm->merge($course);
             }
-            else
-                $orm->merge($course);
 
             $orm->flush();
         }
@@ -452,57 +460,6 @@ class ScheduleController extends Controller
             }
             else
                 return new RedirectResponse($this->generateUrl('plan'));
-        }
-
-        return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function removeAction(Request $request)
-    {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-
-        /** @var $user User */
-        $user = $this->getUser();
-
-        /** @var Schedule $schedule */
-        $schedule = $user->getSchedules()->first();
-
-        /** @var Course $course */
-        $course = $schedule->getCourses()
-            ->filter(function (Course $c) use($request) {return !$c->getDeleted() && $c->getId() == $request->get('remove');})
-            ->first();
-
-        if(!empty($course))
-        {
-            if($course->getEvents()->exists(function ($k, Event $save) {
-                    return !empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
-                        !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
-                }) || $course->getCheckins()->count() > 0 || $course->getDeadlines()->count() > 0) {
-                $course->setDeleted(true);
-                foreach($course->getDeadlines() as $d) {
-                    /** @var Deadline $d */
-                    $d->setDeleted(true);
-                    $orm->merge($d);
-                }
-                // events will be deleted automatically when returning to the plan tab
-                $orm->merge($course);
-            }
-            else {
-                $events = $course->getEvents()->toArray();
-                foreach($events as $event) {
-                    $course->removeEvent($event);
-                    $schedule->removeEvent($event);
-                    $orm->remove($event);
-                }
-                $schedule->removeCourse($course);
-                $orm->remove($course);
-            }
-            $orm->flush();
         }
 
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);

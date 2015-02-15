@@ -11,6 +11,18 @@
 {
     z-index: 10;
     position:relative;
+    display:inline-block;
+    margin-bottom:0;
+    float:right;
+    margin-top:-50px;
+}
+
+#plan h2
+{
+    margin-right: -175px;
+    display: inline-block;
+    width: 100%;
+    padding-right:175px;
 }
 
 .fc-event
@@ -184,38 +196,9 @@ a.fc-event:not([href])
     display:none;
 }
 
-#plan .fc-button
+#plan .fc-toolbar .fc-right
 {
-    background-clip: border-box;
-    background-origin: padding-box;
-    background: rgb(245, 245, 245) linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230)) repeat-x scroll;
-    background-size: auto;
-}
-
-#plan .fc-button:hover
-{
-    background-clip: border-box;
-    background-origin: padding-box;
-    background: rgb(230, 230, 230) linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230)) repeat-x scroll 0 -15px;
-    background-size: auto;
-}
-
-#plan .fc-button-group > *.fc-button:active
-{
-    margin: 0 0 0 -1px;
-    box-shadow: none;
-}
-
-#plan .fc-button:active
-{
-    margin: 0 0 0 .75em;
-    box-shadow: none;
-}
-
-#plan .fc-button.fc-state-disabled
-{
-    background-image: none;
-    background-color: #e6e6e6;
+    float:none;
 }
 
 #plan .fc-resizer

@@ -17,8 +17,31 @@
     left:10px;
 }
 
-#schedule .highlighted-link:last-of-type {
-    margin-bottom: -20px;
+#schedule h2:first-child
+{
+    margin-right: -220px;
+    padding-right: 220px;
+    display:inline-block;
+    width:100%;
+}
+
+#schedule .schedule-history
+{
+    display:inline-block;
+}
+
+#schedule.single a[href="#next-schedule"],
+#schedule.single a[href="#prev-schedule"],
+#schedule.multi a[href="#create-schedule"]:nth-child(2)
+{
+    display:none;
+}
+
+#schedule a[href="#create-schedule"]:first-child
+{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 #schedule .pane-content {
@@ -192,7 +215,7 @@
     display:none;
     clear: both;
     position: relative;
-    padding: 2px 3px;
+    padding: 2px 3px 2px 30px;
     border: 2px solid #CC0000;
     color:#660000;
     border-radius: 5px;
@@ -202,6 +225,11 @@
 #schedule.invalid-only .invalid-only,
 #schedule.overlaps .overlaps-only {
     display:inline-block;
+}
+
+.schedule .class-row.overlaps .class-name
+{
+    padding-left:40px;
 }
 
 .schedule .class-row.overlaps .class-name i

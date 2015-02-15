@@ -125,19 +125,6 @@ $collection->add(
     )
 );
 $collection->add(
-    'remove_schedule',
-    new Route(
-        '/schedule/remove',
-        ['_controller' => 'StudySauceBundle:Schedule:remove'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
-    )
-);
-$collection->add(
     'goals',
     new Route(
         '/goals/{_format}',
@@ -644,5 +631,19 @@ $collection->add(
         ['_controller' => 'StudySauceBundle:Calc:index', '_format' => 'index'],
         ['_format' => DASHBOARD_VIEWS]
     )
-);/*$collection->add('course', new Route('/course/{_course}/{_format}', array(            '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',            '_format'     => 'dashboard'        )));$collection->add('default', new Route('/{_controller}'));$acmeHello = $loader->import('@StudySauceBundle/Resources/public/images/', 'directory');$acmeHello->addPrefix('/bundles/studysauce/images/');$collection->addCollection($acmeHello);*/
+);
+$collection->add(
+    'calculator_update',
+    new Route(
+        '/calculator/update',
+        ['_controller' => 'StudySauceBundle:Calc:update'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+/*$collection->add('course', new Route('/course/{_course}/{_format}', array(            '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',            '_format'     => 'dashboard'        )));$collection->add('default', new Route('/{_controller}'));$acmeHello = $loader->import('@StudySauceBundle/Resources/public/images/', 'directory');$acmeHello->addPrefix('/bundles/studysauce/images/');$collection->addCollection($acmeHello);*/
 return $collection;
