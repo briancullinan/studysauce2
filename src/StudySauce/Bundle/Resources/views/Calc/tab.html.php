@@ -23,6 +23,7 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/c
 <?php endforeach; ?>
 <script type="text/javascript">
     <?php print $scale_converter; ?>
+    window.convertToScale = convertToScale;
 </script>
 <?php $view['slots']->stop();
 

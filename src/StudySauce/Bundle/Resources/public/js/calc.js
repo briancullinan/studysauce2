@@ -11,7 +11,7 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours), #calculator .class-row:not(.edit) > *.hours', function () {
+    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours), #calculator .class-row:not(.selected) > *.hours', function () {
         var row = $(this).parents('.class-row');
         if(row.is('.selected')) {
             row.removeClass('selected');
@@ -113,7 +113,21 @@ $(document).ready(function () {
         else
             calc.find('.cumulative').html(Math.round(overallGPA / overallHours * 100) / 100);
 
+        if(calc.find('.cumulative').html().length == 3) {
+            calc.find('.cumulative').html(calc.find('.cumulative').html() + '0');
+        }
+        if(calc.find('.projected').html().length == 3) {
+            calc.find('.projected').html(calc.find('.projected').html() + '0');
+        }
     }
+
+    body.on('click', '#calculator a[href="#add-schedule"]', function (evt) {
+        evt.preventDefault();
+        body.one('show', '#schedule', function () {
+            $('#schedule').find('a[href="#create-schedule"]').first().trigger('click');
+        });
+        $('#calculator').find('a[href*="/schedule"]').first().trigger('click');
+    });
 
     body.on('click', '#calculator a[href="#add-grade"]', function (evt) {
         evt.preventDefault();

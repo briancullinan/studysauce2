@@ -3,7 +3,7 @@ $(document).ready(function () {
     var body = $('body');
 
     function planFunc() {
-        var schedule = $('#schedule');
+        var schedule = $('#schedule').find('.term-row:visible').first();
         $(this).each(function () {
             var row = $(this).closest('.class-row');
             if(row.length == 0)
@@ -216,30 +216,31 @@ $(document).ready(function () {
 
     function updateSchedule(data)
     {
-        var schedule = $('#schedule');
-        var response = $(data);
-        schedule.find('.university input').data('state', schedule.find('.university input').val().trim());
+        var schedule = $('#schedule'),
+            term = schedule.find('.term-row:visible').first();
+        var response = $(data),
+            responseTerm = response.find('.term-row').eq(term.index(schedule.find('.term-row')));
+        term.find('.university input').data('state', term.find('.university input').val().trim());
         schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
         // update class schedule
-        $('.schedule .class-row').remove();
-        response.find('.schedule:not(.other) .class-row')
-            .prependTo($('.schedule:not(.other)'));
+        term.find('.schedule .class-row').remove();
+        responseTerm.find('.schedule:not(.other) .class-row')
+            .prependTo(term.find('.schedule:not(.other)'));
 
-        response.find('.schedule.other .class-row')
-            .prependTo($('.schedule.other'));
+        responseTerm.find('.schedule.other .class-row')
+            .prependTo(term.find('.schedule.other'));
 
-        planFunc.apply(schedule.find('.schedule .class-row'));
-        schedule.scrollintoview(DASHBOARD_MARGINS);
+        planFunc.apply(term.find('.schedule .class-row'));
+        term.scrollintoview(DASHBOARD_MARGINS);
         body.trigger('scheduled');
     }
 
-    body.on('click', '#schedule a[href="#add-class"], #schedule a[href="#add-other"]', function (evt) {
+    body.on('click', '#schedule a[href="#add-class"]', function (evt) {
         var schedule = $('#schedule');
         evt.preventDefault();
-        var isOther = $(this).is('[href="#add-other"]'),
+        var list = $(this).parents('.schedule'),
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
             otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
-            list = schedule.find('.schedule' + (isOther ? '.other' : ':not(.other)')),
             addClass = list.find('.class-row').first().clone().removeAttr('id')
                 .removeClass('read-only').addClass('edit').show().insertBefore(list.find('.form-actions'));
         // reset fields for the new entry
@@ -247,24 +248,53 @@ $(document).ready(function () {
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
             .removeClass('is-timeEntry hasDatepicker').removeAttr('id').val('');
         addClass.find('.day-of-the-week input').removeAttr('checked').prop('checked', false);
-        addClass.find('.class-name input').attr('placeholder', isOther
+        addClass.find('.class-name input').attr('placeholder', list.is('.other')
                 ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
                 : examples[Math.floor(Math.random() * examples.length)]);
         planFunc.apply(addClass);
     });
 
+    body.on('click', '#schedule a[href="#prev-schedule"]', function (evt) {
+        evt.preventDefault();
+        if($(this).is('.disabled'))
+            return;
+        var schedule = $('#schedule');
+        schedule.find('.term-row:has(+ .term-row:visible)').show().next().hide();
+        schedule.find('a[href="#next-schedule"]').removeClass('disabled');
+        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').first()))
+            $(this).addClass('disabled');
+        else
+            $(this).removeClass('disabled');
+    });
+
+    body.on('click', '#schedule a[href="#next-schedule"]', function (evt) {
+        evt.preventDefault();
+        if($(this).is('.disabled'))
+            return;
+        var schedule = $('#schedule');
+        schedule.find('.term-row:visible').hide().next('.term-row').show();
+        schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
+        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').last()))
+            $(this).addClass('disabled');
+        else
+            $(this).removeClass('disabled');
+    });
+
     function submitSchedule(evt)
     {
         evt.preventDefault();
-        var schedule = $('#schedule');
-        if(schedule.find('.university input').val().trim() == '')
-            schedule.find('.university').addClass('error-empty');
+        var schedule = $('#schedule'),
+            term = schedule.find('.term-row:visible').first(),
+            scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(term.attr('class'))[1];
+
+        if(term.find('.university input').val().trim() == '')
+            term.find('.university').addClass('error-empty');
         else
-            schedule.find('.university').removeClass('error-empty');
-        if(schedule.find('.form-actions').is('.invalid'))
+            term.find('.university').removeClass('error-empty');
+        if(term.find('.form-actions').is('.invalid'))
         {
-            schedule.addClass('invalid-only');
-            schedule.find('.class-row.edit.invalid .start-time input,' +
+            term.addClass('invalid-only');
+            term.find('.class-row.edit.invalid .start-time input,' +
             ' .class-row.edit.invalid .end-time input,' +
             ' .class-row.edit.invalid .start-date input,' +
             ' .class-row.edit.invalid .end-date input').each(function () {
@@ -273,11 +303,11 @@ $(document).ready(function () {
             });
             return;
         }
-        schedule.find('.form-actions').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this).find('[value="#save-class"]'));
+        term.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation(term.find('[value="#save-class"]'));
 
         var classes = [];
-        schedule.find('.class-row.edit:visible:not(.invalid):not(.blank), .class-row.blank:not(.course-id-):not(:visible)').each(function () {
+        term.find('.class-row.edit:visible:not(.invalid):not(.blank), .class-row.blank:not(.course-id-):not(:visible)').each(function () {
             var row = $(this),
                 courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
                 dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
@@ -307,21 +337,33 @@ $(document).ready(function () {
             dataType: 'text',
             data: {
                 // skip building the schedule if we are in the middle of the buy funnel
-                university: schedule.find('.university input').val(),
+                scheduleId: scheduleId,
+                university: term.find('.university input').val(),
                 classes: classes,
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                schedule.find('.squiggle').stop().remove();
+                term.find('.squiggle').stop().remove();
                 updateSchedule(data);
             },
             error: function () {
-                schedule.find('.squiggle').stop().remove();
+                term.find('.squiggle').stop().remove();
             }
         });
     }
     body.on('submit', '#schedule form', submitSchedule);
 
+    body.on('click', '#schedule a[href*="#create-schedule"]', function (evt) {
+        evt.preventDefault();
+        var schedule = $('#schedule'),
+            newTerm = schedule.find('.term-row').first().clone().insertBefore(schedule.find('.term-row').first()),
+            oldRows = newTerm.find('.class-row');
+        schedule.removeClass('single').addClass('multi');
+        newTerm.attr('class', newTerm.attr('class').replace(/schedule-id-([0-9]*)(\s|$)/ig, ' schedule-id- '));
+        newTerm.find('.schedule:not(.other) a[href="#add-class"]').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click');
+        newTerm.find('.schedule.other a[href="#add-class"]').trigger('click');
+        oldRows.remove();
+    });
 
     var autoFillDate = function () {
         var schedule = $('#schedule');
@@ -423,50 +465,51 @@ $(document).ready(function () {
     });
 
     body.on('show', '#schedule', function () {
-        var schedule = $('#schedule');
-        if(schedule.find('.university input').data('state') == null) {
-            schedule.find('.university input').data('state', schedule.find('.university input').val().trim());
-            var select = schedule.find('.university input').selectize({
-                valueField: 'institution',
-                labelField: 'institution',
-                searchField: ['institution', 'link', 'state'],
-                maxItems: 1,
-                create: true,
-                options: [schedule.find('.university input').data('data')],
-                render: {
-                    option: function(item) {
-                        return '<div>' +
-                        '<span class="title">' +
-                        '<span class="name"><i class="icon source"></i>' + item.institution + '</span>' +
-                        '<span class="by">' + item.state + '</span>' +
-                        '</span>' +
-                        '<span class="description">' + item.link + '</span>' +
-                        '</div>';
-                    }
-                },
-                load: function(query, callback) {
-                    if (query.length < 2) return callback();
-                    $.ajax({
-                        url: window.callbackPaths['institutions'],
-                        dataType:'json',
-                        data: {
-                            q: query
-                        },
-                        error: function() {
-                            callback();
-                        },
-                        success: function(res) {
-                            callback(res.slice(0, 100));
+        $('#schedule').find('.term-row').each(function () {
+            var schedule = $(this);
+            if(schedule.find('.university input').data('state') == null) {
+                schedule.find('.university input').data('state', schedule.find('.university input').val().trim());
+                var select = schedule.find('.university input').selectize({
+                    valueField: 'institution',
+                    labelField: 'institution',
+                    searchField: ['institution', 'link', 'state'],
+                    maxItems: 1,
+                    create: true,
+                    options: [schedule.find('.university input').data('data')],
+                    render: {
+                        option: function(item) {
+                            return '<div>' +
+                                '<span class="title">' +
+                                '<span class="name"><i class="icon source"></i>' + item.institution + '</span>' +
+                                '<span class="by">' + item.state + '</span>' +
+                                '</span>' +
+                                '<span class="description">' + item.link + '</span>' +
+                                '</div>';
                         }
-                    });
-                }
-            });
-            select.ready(function () {
-                select[0].selectize.setValue(schedule.find('.university input').data('state'));
-            });
-            if(schedule.find('.university input').val().trim() == '')
-                select[0].selectize.focus();
-        }
-        planFunc.apply(schedule.find('.schedule .class-row'));
+                    },
+                    load: function(query, callback) {
+                        if (query.length < 2) return callback();
+                        $.ajax({
+                            url: window.callbackPaths['institutions'],
+                            dataType:'json',
+                            data: {
+                                q: query
+                            },
+                            error: function() {
+                                callback();
+                            },
+                            success: function(res) {
+                                callback(res.slice(0, 100));
+                            }
+                        });
+                    }
+                });
+                select.ready(function () {
+                    select[0].selectize.setValue(schedule.find('.university input').data('state'));
+                });
+                if(schedule.find('.university input').val().trim() == '')
+                    select[0].selectize.focus();
+            }
+        });
     });
 });

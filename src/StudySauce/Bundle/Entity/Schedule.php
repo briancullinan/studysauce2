@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use StudySauce\Bundle\Controller\CalcController;
 
 /**
  * @ORM\Entity
@@ -142,8 +143,8 @@ class Schedule
         $hours = $this->getCreditHours();
         if(empty($hours))
             return null;
-        $score = array_sum($this->getCourses()->map(function (Course $c) {
-            return $c->getScore() * $c->getCreditHours();
+        $score = array_sum($this->getClasses()->map(function (Course $c) {
+            return floatval($c->getGPA()) * $c->getCreditHours();
         })->toArray());
         return number_format($score / $hours, 2);
     }
@@ -156,7 +157,7 @@ class Schedule
         $hours = $this->getCreditHours();
         if(empty($hours))
             return null;
-        $score = array_sum($this->getCourses()->map(function (Course $c) {
+        $score = array_sum($this->getClasses()->map(function (Course $c) {
             return $c->getPercent() * $c->getCreditHours();
         })->toArray());
         return round($score / $hours);
@@ -167,7 +168,7 @@ class Schedule
      */
     public function getCreditHours()
     {
-        return array_sum($this->getCourses()->map(function (Course $c) {
+        return array_sum($this->getClasses()->map(function (Course $c) {
             return $c->getCreditHours();
         })->toArray());
     }

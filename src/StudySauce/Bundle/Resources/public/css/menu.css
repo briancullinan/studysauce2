@@ -510,17 +510,31 @@
 .pane-content a[href*="/tips"]:not(.more):before,
 .pane-content a[href*="/premium"]:not(.more):before,
 .pane-content a[href*="/account"]:not(.more):before,
-.pane-content a[href*="/schedule"]:not(.more):before
+.pane-content a[href*="/schedule"]:not(.more):before,
+.pane-content a[href="#grade-scale"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
     content: " ";
     display:block;
-    height:20px;
-    width:20px;
+    height:25px;
+    width:25px;
     margin-top:-12px;
     position:absolute;
     left:2px;
     top:50%;
+}
+
+.pane-content a[href*="#grade-scale"]:not(.more):before
+{
+    background-position: left -4204px;
+}
+
+.pane-content a[href*="#grade-scale"]:not(.more):hover:before,
+.pane-content a[href*="#grade-scale"]:not(.more):focus:before,
+.pane-content a[href*="#grade-scale"]:not(.more):active:before,
+.pane-content a[href*="#grade-scale"].active:not(.more):before
+{
+    background-position: left -4254px;
 }
 
 .pane-content a[href*="/home"]:not(.more):before

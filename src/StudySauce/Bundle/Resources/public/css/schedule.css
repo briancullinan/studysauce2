@@ -30,6 +30,32 @@
     display:inline-block;
 }
 
+#schedule .term-row ~ .term-row
+{
+    display:none;
+}
+
+#schedule a[href="#prev-schedule"] span,
+#schedule a[href="#next-schedule"] span
+{
+    display: inline-block;
+    font-size: 2em;
+    line-height: .5em;
+    height: .5em; /* will make the total height 1em */
+    font-family: "Courier New", Courier, monospace;
+}
+
+#schedule a[href="#prev-schedule"] span:after {
+    content: "\02039";
+    font-weight: bold;
+}
+
+#schedule a[href="#next-schedule"] span:after {
+    content: "\0203A";
+    font-weight: bold;
+}
+
+
 #schedule.single a[href="#next-schedule"],
 #schedule.single a[href="#prev-schedule"],
 #schedule.multi a[href="#create-schedule"]:nth-child(2)
@@ -37,11 +63,12 @@
     display:none;
 }
 
-#schedule a[href="#create-schedule"]:first-child
+#schedule a[href*="#create-schedule"]:first-child
 {
     position: absolute;
     bottom: 10px;
     left: 10px;
+    padding-left:30px;
 }
 
 #schedule .pane-content {
@@ -261,12 +288,12 @@
     display:block;
 }
 
-.class-row .read-only
+#schedule .class-row .read-only
 {
     display:none;
 }
 
-.class-row.read-only .read-only
+#schedule .class-row.read-only .read-only
 {
     display:inline-block;
 }

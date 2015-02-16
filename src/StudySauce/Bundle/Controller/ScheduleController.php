@@ -348,26 +348,25 @@ class ScheduleController extends Controller
         $user = $this->getUser();
 
         /** @var $schedule Schedule */
-        $schedule = $user->getSchedules()->first();
+        if(!empty($request->get('scheduleId')))
+            $schedule = $user->getSchedules()->filter(function (Schedule $s) use($request) {
+                return $s->getId() == $request->get('scheduleId');})->first();
         // create new schedule if one does not exist
-        if($schedule == null)
-        {
+        else {
             $schedule = new Schedule();
-            // set all default on new schedule
             $schedule->setUser($user);
-            if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
-                $schedule->setUniversity($request->get('university'));
             $user->addSchedule($schedule);
-            $orm->persist($schedule);
-            $orm->flush();
         }
-        // set school name
-        elseif(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
-        {
+
+        if(!empty($request->get('university')) && $request->get('university') != $schedule->getUniversity())
             $schedule->setUniversity($request->get('university'));
+
+        // save the schedule first
+        if(empty($request->get('scheduleId')))
+            $orm->persist($schedule);
+        else
             $orm->merge($schedule);
-            $orm->flush();
-        }
+        $orm->flush();
 
         $classes = $request->get('classes');
         if (empty($classes))
@@ -397,7 +396,8 @@ class ScheduleController extends Controller
                 $course->setName($c['className']);
             } else {
                 /** @var $course Course */
-                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
+                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {
+                    return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
             }
 
             // remove course

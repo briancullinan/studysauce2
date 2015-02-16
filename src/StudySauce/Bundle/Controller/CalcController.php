@@ -63,8 +63,11 @@ class CalcController extends Controller
                         $s->setGradeScale($request->get('scale') == 'true');
                         $orm->merge($s);
                     }
+                    $first = false;
                     /** @var Course $course */
                     $course->setCreditHours(intval($c['creditHours']));
+                    if(empty($c['grades']))
+                        break;
                     foreach($c['grades'] as $g) {
                         if(empty($g['gradeId']) && $g['remove'] == 'true')
                             continue;
@@ -93,7 +96,6 @@ class CalcController extends Controller
                             }
                         }
                     }
-                    $first = false;
                     break;
                 }
             }

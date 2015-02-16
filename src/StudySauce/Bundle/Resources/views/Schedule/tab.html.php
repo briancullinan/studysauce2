@@ -34,19 +34,21 @@ $view['slots']->start('body'); ?>
     } else { ?>
         <h2>Enter your class below</h2>
         <div class="schedule-history">
-            <a href="#create-schedule">Create a new schedule</a>
+            <a href="<?php print $view['router']->generate('schedule'); ?>#create-schedule">Create a new schedule</a>
             <a href="#create-schedule" class="subtle">Create a new schedule</a>
-            <a href="#prev-schedule" class="subtle"><span class="fc-icon fc-icon-left-single-arrow"></span> Previous</a>
-            <a href="#next-schedule" class="subtle">Next <span class="fc-icon fc-icon-right-single-arrow"></span></a>
+            <a href="#prev-schedule" class="subtle disabled"><span></span> Previous</a>
+            <a href="#next-schedule" class="subtle">Next <span></span></a>
         </div>
     <?php } ?>
     <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post">
         <?php foreach($schedules as $schedule) {
-        $courses = array_values($schedule->getClasses()->toArray());
-        $others = array_values($schedule->getOthers()->toArray());
+            $isDemo = false;
+            $courses = array_values($schedule->getClasses()->toArray());
+            $others = array_values($schedule->getOthers()->toArray());
             if(empty($courses)) {
                 $isDemo = true;
                 $schedule = $demoSchedules[0];
+                $courses = array_values($schedule->getClasses()->toArray());
             }
         ?>
             <div class="term-row schedule-id-<?php print (!$isDemo ? $schedule->getId() : ''); ?>">
@@ -219,9 +221,10 @@ $view['slots']->start('body'); ?>
                 </header>
                 <div class="schedule other">
                     <?php
-                    if (empty($others)) {
+                    if(empty($others)) {
                         $isDemo = true;
-                        $others = $demoOthers;
+                        $schedule = $demoSchedules[0];
+                        $others = array_values($schedule->getOthers()->toArray());
                     }
                     foreach ($others as $i => $c) {
                         if ($isDemo && $i > 0) {
@@ -336,7 +339,7 @@ $view['slots']->start('body'); ?>
                         </div>
                     <?php } ?>
                     <div class="form-actions highlighted-link clearfix invalid">
-                        <a href="#add-other" class="big-add">Add <span>+</span> other event</a>
+                        <a href="#add-class" class="big-add">Add <span>+</span> other event</a>
                         <div class="invalid-times">Error - invalid class time</div>
                         <div class="overlaps-only">Error - classes cannot overlap</div>
                         <div class="invalid-only">Error - please make sure all class information is filled in</div>
