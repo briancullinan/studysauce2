@@ -3,194 +3,192 @@ $(document).ready(function () {
     var body = $('body');
 
     function planFunc() {
-        var schedule = $('#schedule').find('.term-row:visible').first();
-        $(this).each(function () {
-            var row = $(this).closest('.class-row');
-            if(row.length == 0)
-                return;
-            if(row.find('.class-name input').val().trim() == '' &&
-                row.find('.day-of-the-week input:not([value="Weekly"]):checked').length == 0 &&
-                row.find('.start-date input').val().trim() == '' &&
-                row.find('.end-date input').val().trim() == '')
-                row.removeClass('invalid').addClass('valid blank');
-            else if(row.find('.class-name input').val().trim() == '' ||
-                (row.parent().not('.schedule.other') &&
-                row.find('.day-of-the-week input:checked').length == 0) ||
-                row.find('.start-time input').val().trim() == '' ||
-                row.find('.end-time input').val().trim() == '' ||
-                row.find('.start-date input').val().trim() == '' ||
-                row.find('.end-date input').val().trim() == '')
-                row.removeClass('valid blank').addClass('invalid');
-            else
-                row.removeClass('invalid blank').addClass('valid');
-
-            row.find('.start-date input[type="text"], .end-date input[type="text"]')
-                .datepicker({
-                    showOtherMonths: true,
-                    selectOtherMonths: true,
-                    autoPopUp:'focus',
-                    changeMonth: true,
-                    changeYear: true,
-                    closeAtTop: false,
-                    dateFormat: 'mm/dd/y',
-                    defaultDate:'0y',
-                    firstDay:0,
-                    fromTo:false,
-                    speed:'immediate',
-                    yearRange: '-3:+3'
-                }).on('focus', function () {
-                    setTimeout(function () {
-                        $('#ui-datepicker-div').scrollintoview(DASHBOARD_MARGINS);
-                    }, 50);
-                });
-            row.find('.start-time input[type="text"]:not(.is-timeEntry), .end-time input[type="text"]:not(.is-timeEntry)')
-                .timeEntry({
-                    defaultTime: new Date(0, 0, 0, 6, 0, 0),
-                    ampmNames: ['AM', 'PM'],
-                    ampmPrefix: ' ',
-                    fromTo: false,
-                    show24Hours: false,
-                    showSeconds: false,
-                    spinnerImage: '',
-                    timeSteps: [1,1,"1"]
-                })
-                .on('keypress', function (event) {
-                    var that = $(this),
-                        row = that.parents('.class-row'),
-                        from = row.find('.start-time input[type="text"]').timeEntry('getTime'),
-                        to = row.find('.end-time input[type="text"]').timeEntry('getTime');
-
-                    if(that.data('processing'))
-                        return;
-                    that.data('processing', true);
-
-                    var chr = String.fromCharCode(event.charCode === undefined ? event.keyCode : event.charCode);
-                    if (chr < ' ') {
-                        return;
-                    }
-                    var ampmSet = that.data('ampmSet') || false;
-                    if(chr.toLowerCase() == 'a' || chr.toLowerCase() == 'p')
-                        that.data('ampmSet', true);
-                    else if (chr >= '0' && chr <= '9' && !ampmSet)
-                    {
-                        var time = that.timeEntry('getTime');
-                        var hours = time.getHours();
-                        var newTime = time;
-                        if(hours < 7)
-                            newTime = new Date(0, 0, 0, hours + 12, time.getMinutes(), 0);
-                        // check the length in between to see if its longer than 12 hours
-                        else if(hours >= 19)
-                            newTime = new Date(0, 0, 0, hours - 12, time.getMinutes(), 0);
-
-                        if((that.parents('.start-time') && to == null || newTime.getTime() < to.getTime()) ||
-                            (that.parents('.end-time') && from == null || newTime.getTime() > from.getTime()))
-                            that.timeEntry('setTime', newTime);
-                    }
-
-                    that.data('processing', false);
-                });
-
-            // check for invalid time entry
-            var from = row.find('.start-time input').timeEntry('getTime'),
-                to = row.find('.end-time input').timeEntry('getTime');
-            if(from != null && to != null) {
-                var length = (to.getTime() - from.getTime()) / 1000;
-                if (length < 0)
-                    length += 86400;
-                // check if the length is less than 8 hours
-                if (from.getTime() == to.getTime() || length > 8 * 60 * 60)
-                    row.addClass('invalid-time');
+        var schedule = $('#schedule');
+        schedule.find('.term-row').each(function () {
+            var term = $(this);
+            term.find('.class-row').each(function () {
+                var row = $(this).closest('.class-row');
+                if(row.length == 0)
+                    return;
+                if(row.find('.class-name input').val().trim() == '' &&
+                    row.find('.day-of-the-week input:not([value="Weekly"]):checked').length == 0 &&
+                    row.find('.start-date input').val().trim() == '' &&
+                    row.find('.end-date input').val().trim() == '')
+                    row.removeClass('invalid').addClass('valid blank');
+                else if(row.find('.class-name input').val().trim() == '' ||
+                    (row.parent().not('.schedule.other') &&
+                    row.find('.day-of-the-week input:checked').length == 0) ||
+                    row.find('.start-time input').val().trim() == '' ||
+                    row.find('.end-time input').val().trim() == '' ||
+                    row.find('.start-date input').val().trim() == '' ||
+                    row.find('.end-date input').val().trim() == '')
+                    row.removeClass('valid blank').addClass('invalid');
                 else
-                    row.removeClass('invalid-time');
-            }
+                    row.removeClass('invalid blank').addClass('valid');
 
-            // check if there are any overlaps with the other rows
-            var startDate = new Date(row.find('.start-date input').val());
-            var endDate = new Date(row.find('.end-time input').val());
-            var startTime = new Date('1/1/1970 ' + row.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
-            if(row.find('.start-time input').val().match(/pm$/i) != null)
-                startTime = startTime.addHours(12);
-            var endTime = new Date('1/1/1970 ' + row.find('.end-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
-            if(row.find('.end-time input').val().match(/pm$/i) != null)
-                endTime = endTime.addHours(12);
-            var dotw = row.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
-            // reset overlaps tag to start
-            var overlaps = row.is('.overlaps');
-            row.removeClass('overlaps');
-            schedule.find('.class-row').not(row).each(function () {
-                var that = $(this);
-                // check if dates overlap
-                var startDate2 = new Date(that.find('.start-date input').val());
-                var endDate2 = new Date(that.find('.end-date input').val());
-                if(isNaN(startDate.getTime()) || isNaN(endDate.getTime()) ||
-                    isNaN(startDate2.getTime()) || isNaN(endDate2.getTime()) ||
-                    startDate < endDate2 || endDate > startDate2)
-                {
-                    // check if weekdays overlap
-                    var dotwOverlaps = false,
-                        dotw2 = that.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
-                    for(var i in dotw)
-                        if(dotw.hasOwnProperty(i) && dotw2.indexOf(dotw[i]) > -1)
-                        {
-                            dotwOverlaps = true;
-                            break;
+                row.find('.start-date input[type="text"], .end-date input[type="text"]')
+                    .datepicker({
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        autoPopUp:'focus',
+                        changeMonth: true,
+                        changeYear: true,
+                        closeAtTop: false,
+                        dateFormat: 'mm/dd/y',
+                        defaultDate:'0y',
+                        firstDay:0,
+                        fromTo:false,
+                        speed:'immediate',
+                        yearRange: '-3:+3'
+                    }).on('focus', function () {
+                        setTimeout(function () {
+                            $('#ui-datepicker-div').scrollintoview(DASHBOARD_MARGINS);
+                        }, 50);
+                    });
+                row.find('.start-time input[type="text"]:not(.is-timeEntry), .end-time input[type="text"]:not(.is-timeEntry)')
+                    .timeEntry({
+                        defaultTime: new Date(0, 0, 0, 6, 0, 0),
+                        ampmNames: ['AM', 'PM'],
+                        ampmPrefix: ' ',
+                        fromTo: false,
+                        show24Hours: false,
+                        showSeconds: false,
+                        spinnerImage: '',
+                        timeSteps: [1,1,"1"]
+                    })
+                    .on('keypress', function (event) {
+                        var that = $(this),
+                            row = that.parents('.class-row'),
+                            from = row.find('.start-time input[type="text"]').timeEntry('getTime'),
+                            to = row.find('.end-time input[type="text"]').timeEntry('getTime');
+
+                        if(that.data('processing'))
+                            return;
+                        that.data('processing', true);
+
+                        var chr = String.fromCharCode(event.charCode === undefined ? event.keyCode : event.charCode);
+                        if (chr < ' ') {
+                            return;
                         }
-                    if(dotwOverlaps)
-                    {
-                        // check if times overlap
-                        var startTime2 = new Date('1/1/1970 ' + that.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
-                        if(that.find('.start-time input').val().match(/pm$/i) != null)
-                            startTime2 = startTime2.addHours(12);
-                        var endTime2 = new Date('1/1/1970 ' + that.find('.end-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
-                        if(that.find('.end-time input').val().match(/pm$/i) != null)
-                            endTime2 = endTime2.addHours(12);
-                        if(startTime < endTime2 && endTime > startTime2)
+                        var ampmSet = that.data('ampmSet') || false;
+                        if(chr.toLowerCase() == 'a' || chr.toLowerCase() == 'p')
+                            that.data('ampmSet', true);
+                        else if (chr >= '0' && chr <= '9' && !ampmSet)
                         {
-                            that.addClass('overlaps');
-                            row.addClass('overlaps');
+                            var time = that.timeEntry('getTime');
+                            var hours = time.getHours();
+                            var newTime = time;
+                            if(hours < 7)
+                                newTime = new Date(0, 0, 0, hours + 12, time.getMinutes(), 0);
+                            // check the length in between to see if its longer than 12 hours
+                            else if(hours >= 19)
+                                newTime = new Date(0, 0, 0, hours - 12, time.getMinutes(), 0);
+
+                            if((that.parents('.start-time') && to == null || newTime.getTime() < to.getTime()) ||
+                                (that.parents('.end-time') && from == null || newTime.getTime() > from.getTime()))
+                                that.timeEntry('setTime', newTime);
+                        }
+
+                        that.data('processing', false);
+                    });
+
+                // check for invalid time entry
+                var from = row.find('.start-time input').timeEntry('getTime'),
+                    to = row.find('.end-time input').timeEntry('getTime');
+                if(from != null && to != null) {
+                    var length = (to.getTime() - from.getTime()) / 1000;
+                    if (length < 0)
+                        length += 86400;
+                    // check if the length is less than 8 hours
+                    if (from.getTime() == to.getTime() || length > 8 * 60 * 60)
+                        row.addClass('invalid-time');
+                    else
+                        row.removeClass('invalid-time');
+                }
+
+                // check if there are any overlaps with the other rows
+                var startDate = new Date(row.find('.start-date input').val());
+                var endDate = new Date(row.find('.end-time input').val());
+                var startTime = new Date('1/1/1970 ' + row.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
+                if(row.find('.start-time input').val().match(/pm$/i) != null)
+                    startTime = startTime.addHours(12);
+                var endTime = new Date('1/1/1970 ' + row.find('.end-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
+                if(row.find('.end-time input').val().match(/pm$/i) != null)
+                    endTime = endTime.addHours(12);
+                var dotw = row.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
+                // reset overlaps tag to start
+                var overlaps = row.is('.overlaps');
+                row.removeClass('overlaps');
+                term.find('.class-row').not(row).each(function () {
+                    var that = $(this);
+                    // check if dates overlap
+                    var startDate2 = new Date(that.find('.start-date input').val());
+                    var endDate2 = new Date(that.find('.end-date input').val());
+                    if(isNaN(startDate.getTime()) || isNaN(endDate.getTime()) ||
+                        isNaN(startDate2.getTime()) || isNaN(endDate2.getTime()) ||
+                        startDate < endDate2 || endDate > startDate2)
+                    {
+                        // check if weekdays overlap
+                        var dotwOverlaps = false,
+                            dotw2 = that.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
+                        for(var i in dotw)
+                            if(dotw.hasOwnProperty(i) && dotw2.indexOf(dotw[i]) > -1)
+                            {
+                                dotwOverlaps = true;
+                                break;
+                            }
+                        if(dotwOverlaps)
+                        {
+                            // check if times overlap
+                            var startTime2 = new Date('1/1/1970 ' + that.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
+                            if(that.find('.start-time input').val().match(/pm$/i) != null)
+                                startTime2 = startTime2.addHours(12);
+                            var endTime2 = new Date('1/1/1970 ' + that.find('.end-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
+                            if(that.find('.end-time input').val().match(/pm$/i) != null)
+                                endTime2 = endTime2.addHours(12);
+                            if(startTime < endTime2 && endTime > startTime2)
+                            {
+                                that.addClass('overlaps');
+                                row.addClass('overlaps');
+                            }
                         }
                     }
-                }
+                });
             });
-
-            // if it changed, remove other overlaps
-            if(overlaps && !row.is('.overlaps'))
-            {
-                planFunc.apply(schedule.find('.class-row.overlaps'));
-            }
         });
 
-        if(schedule.find('.class-row.edit.invalid:visible').length == 0 &&
-            schedule.find('.class-row.overlaps:visible').length == 0 &&
-            schedule.find('.class-row.invalid-time:visible').length == 0 &&
-            schedule.find('.class-row.valid:not(.blank)').length > 0 &&
-            schedule.find('.university input').val().trim() != '' && (
+        var term = schedule.find('.term-row:visible').first();
+        if(term.find('.class-row.edit.invalid:visible').length == 0 &&
+            term.find('.class-row.overlaps:visible').length == 0 &&
+            term.find('.class-row.invalid-time:not(.blank):visible').length == 0 &&
+            term.find('.class-row.valid:not(.blank)').length > 0 &&
+            term.find('.university input').val().trim() != '' && (
                 // make sure there are rows to save that are not blank
-                schedule.find('.class-row.edit.valid:visible:not(.blank)').length > 0 ||
+                term.find('.class-row.edit.valid:visible:not(.blank)').length > 0 ||
                 // rows can be read-only and still need to save if university name changes
-                schedule.find('.university input').val().trim() != schedule.find('.university input').data('state') ||
+                term.find('.university input').val().trim() != term.find('.university input').data('state') ||
                 // we may need to save deleted rows
-                schedule.find('.class-row.blank:not(.course-id-):not(:visible)').length > 0))
-            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
+                term.find('.class-row.deleted').length > 0))
+            term.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
-            schedule.find('.form-actions').removeClass('valid').addClass('invalid');
+            term.find('.form-actions').removeClass('valid').addClass('invalid');
 
-        if(schedule.find('.class-row.overlaps:visible').length > 1)
-            schedule.addClass('overlaps');
+        if(term.find('.class-row.overlaps:visible').length > 1)
+            term.addClass('overlaps');
         else
-            schedule.removeClass('overlaps');
+            term.removeClass('overlaps');
 
-        if(schedule.find('.class-row.invalid-time:visible').length > 0)
-            schedule.addClass('invalid-time');
+        if(term.find('.class-row.invalid-time:visible').length > 0)
+            term.addClass('invalid-time');
         else
-            schedule.removeClass('invalid-time');
+            term.removeClass('invalid-time');
     }
 
     body.on('click', '#schedule a[href="#edit-class"]', function (evt) {
         evt.preventDefault();
         var that = $(this),
-            row = that.parents('.class-row');
-        planFunc.apply(row.removeClass('read-only').addClass('edit'));
+            row = that.parents('.class-row').removeClass('read-only').addClass('edit');
+        planFunc();
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
@@ -202,7 +200,7 @@ $(document).ready(function () {
         // clear and hide the class row
         row.find('.class-name input, .start-date input, .end-date input').val('');
         row.find('.day-of-the-week input').prop('checked', false);
-        row.removeClass('invalid').addClass('blank').hide();
+        row.removeClass('invalid').addClass('blank deleted').hide();
         schedule.find('[value="#save-class"]').css('visibility', 'visible');
         if(container.find('.class-row:visible').length == 0)
         {
@@ -211,27 +209,27 @@ $(document).ready(function () {
             else
                 container.find('a[href="#add-class"]').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click');
         }
-        planFunc.apply(row);
     });
 
     function updateSchedule(data)
     {
+        // update all terms because there is a check for unsaved changes
         var schedule = $('#schedule'),
-            term = schedule.find('.term-row:visible').first();
-        var response = $(data),
-            responseTerm = response.find('.term-row').eq(term.index(schedule.find('.term-row')));
-        term.find('.university input').data('state', term.find('.university input').val().trim());
+            response = $(data);
         schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
-        // update class schedule
-        term.find('.schedule .class-row').remove();
-        responseTerm.find('.schedule:not(.other) .class-row')
-            .prependTo(term.find('.schedule:not(.other)'));
+        response.find('.term-row').each(function (j) {
+            var responseTerm = $(this),
+                term = schedule.find('.term-row').eq(j);
+            term.find('.university input').data('state', term.find('.university input').val().trim());
+            term.find('.schedule .class-row.valid').remove();
+            responseTerm.find('.schedule:not(.other) .class-row')
+                .prependTo(term.find('.schedule:not(.other)'));
 
-        responseTerm.find('.schedule.other .class-row')
-            .prependTo(term.find('.schedule.other'));
-
-        planFunc.apply(term.find('.schedule .class-row'));
-        term.scrollintoview(DASHBOARD_MARGINS);
+            responseTerm.find('.schedule.other .class-row')
+                .prependTo(term.find('.schedule.other'));
+        });
+        schedule.scrollintoview(DASHBOARD_MARGINS);
+        planFunc();
         body.trigger('scheduled');
     }
 
@@ -242,7 +240,7 @@ $(document).ready(function () {
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
             otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
             addClass = list.find('.class-row').first().clone().removeAttr('id')
-                .removeClass('read-only').addClass('edit').show().insertBefore(list.find('.form-actions'));
+                .removeClass('read-only deleted').addClass('edit').show().insertBefore(list.find('.form-actions'));
         // reset fields for the new entry
         addClass.attr('class', addClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         addClass.find('.class-name input, .start-date input, .end-date input, .start-time input, .end-time input')
@@ -251,7 +249,7 @@ $(document).ready(function () {
         addClass.find('.class-name input').attr('placeholder', list.is('.other')
                 ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
                 : examples[Math.floor(Math.random() * examples.length)]);
-        planFunc.apply(addClass);
+        planFunc();
     });
 
     body.on('click', '#schedule a[href="#prev-schedule"]', function (evt) {
@@ -284,17 +282,13 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var schedule = $('#schedule'),
-            term = schedule.find('.term-row:visible').first(),
-            scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(term.attr('class'))[1];
+            terms = [];
 
-        if(term.find('.university input').val().trim() == '')
-            term.find('.university').addClass('error-empty');
-        else
-            term.find('.university').removeClass('error-empty');
-        if(term.find('.form-actions').is('.invalid'))
+        // cancel save if the visible term has an invalid entry
+        if(schedule.find('.form-actions:visible').is('.invalid'))
         {
-            term.addClass('invalid-only');
-            term.find('.class-row.edit.invalid .start-time input,' +
+            schedule.addClass('invalid-only');
+            schedule.find('.class-row.edit.invalid .start-time input,' +
             ' .class-row.edit.invalid .end-time input,' +
             ' .class-row.edit.invalid .start-date input,' +
             ' .class-row.edit.invalid .end-date input').each(function () {
@@ -303,32 +297,50 @@ $(document).ready(function () {
             });
             return;
         }
-        term.find('.form-actions').removeClass('valid').addClass('invalid');
-        loadingAnimation(term.find('[value="#save-class"]'));
 
-        var classes = [];
-        term.find('.class-row.edit:visible:not(.invalid):not(.blank), .class-row.blank:not(.course-id-):not(:visible)').each(function () {
-            var row = $(this),
-                courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
-                dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
-            // remove blank rows
-            if(row.is('.blank')) {
-                classes[classes.length] = {
-                    courseId: courseId,
-                    remove: true
-                };
-            }
-            else {
-                classes[classes.length] = {
-                    courseId: courseId,
-                    className: row.find('.class-name input').val(),
-                    dotw: dotw.join(','),
-                    start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
-                    end: row.find('.end-time input').val() + ' ' + row.find('.end-date input').val(),
-                    type: row.find('input[name="event-type"]').val(),
-                    remove: false
-                };
-            }
+        schedule.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation(schedule.find('[value="#save-class"]'));
+
+        schedule.find('.term-row').each(function () {
+            var term = $(this);
+            if(term.find('.university input').val().trim() == '')
+                term.find('.university').addClass('error-empty');
+            else
+                term.find('.university').removeClass('error-empty');
+
+            var classes = [],
+                scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(term.attr('class'))[1];
+            term.find('.class-row.edit:not(.invalid):not(.blank), .class-row.deleted').each(function () {
+                var row = $(this),
+                    courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
+                    dotw = row.find('.day-of-the-week input:checked').map(function (i, x) {return $(x).val();}).get();
+                // remove blank rows
+                if(row.is('.deleted')) {
+                    classes[classes.length] = {
+                        courseId: courseId,
+                        remove: true
+                    };
+                }
+                else {
+                    classes[classes.length] = {
+                        courseId: courseId,
+                        className: row.find('.class-name input').val(),
+                        dotw: dotw.join(','),
+                        start: row.find('.start-time input').val() + ' ' + row.find('.start-date input').val(),
+                        end: row.find('.end-time input').val() + ' ' + row.find('.end-date input').val(),
+                        type: row.find('input[name="event-type"]').val(),
+                        remove: false
+                    };
+                }
+            });
+
+            var termData = {
+                university : term.find('.university input').val(),
+                scheduleId : scheduleId,
+                classes : classes
+            };
+            termData['remove'] = term.find('.class-row:not(.blank)').length == 0;
+            terms[terms.length] = termData;
         });
 
         $.ajax({
@@ -337,13 +349,11 @@ $(document).ready(function () {
             dataType: 'text',
             data: {
                 // skip building the schedule if we are in the middle of the buy funnel
-                scheduleId: scheduleId,
-                university: term.find('.university input').val(),
-                classes: classes,
+                terms: terms,
                 csrf_token: schedule.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                term.find('.squiggle').stop().remove();
+                schedule.find('.squiggle').stop().remove();
                 updateSchedule(data);
             },
             error: function () {
@@ -390,7 +400,7 @@ $(document).ready(function () {
                     row.find('.end-date input[type="date"]').val(d2.getFullYear() + '-' +
                     (d2.getMonth() + 1 < 10 ? ('0' + (d2.getMonth() + 1)) : (d2.getMonth() + 1)) + '-' +
                     (d2.getDate() < 10 ? ('0' + d2.getDate()) : d2.getDate()));
-                    planFunc.apply(row);
+                    planFunc();
                 }
             });
         }
@@ -466,16 +476,16 @@ $(document).ready(function () {
 
     body.on('show', '#schedule', function () {
         $('#schedule').find('.term-row').each(function () {
-            var schedule = $(this);
-            if(schedule.find('.university input').data('state') == null) {
-                schedule.find('.university input').data('state', schedule.find('.university input').val().trim());
-                var select = schedule.find('.university input').selectize({
+            var term = $(this);
+            if(term.find('.university input').data('state') == null) {
+                term.find('.university input').data('state', term.find('.university input').val().trim());
+                var select = term.find('.university input').selectize({
                     valueField: 'institution',
                     labelField: 'institution',
                     searchField: ['institution', 'link', 'state'],
                     maxItems: 1,
                     create: true,
-                    options: [schedule.find('.university input').data('data')],
+                    options: [term.find('.university input').data('data')],
                     render: {
                         option: function(item) {
                             return '<div>' +
@@ -505,9 +515,9 @@ $(document).ready(function () {
                     }
                 });
                 select.ready(function () {
-                    select[0].selectize.setValue(schedule.find('.university input').data('state'));
+                    select[0].selectize.setValue(term.find('.university input').data('state'));
                 });
-                if(schedule.find('.university input').val().trim() == '')
+                if(term.find('.university input').val().trim() == '')
                     select[0].selectize.focus();
             }
         });

@@ -985,6 +985,10 @@ class AdminController extends Controller
                         $co->removeCheckin($ch);
                         $orm->remove($ch);
                     }
+                    foreach($co->getGrades()->toArray() as $gr) {
+                        $co->removeGrade($gr);
+                        $orm->remove($gr);
+                    }
                     $s->removeCourse($co);
                     $orm->remove($co);
                 }

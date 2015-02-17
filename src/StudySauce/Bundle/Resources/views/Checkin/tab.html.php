@@ -74,17 +74,8 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'));
-echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'),
-    ['strategy' => 'sinclude']
-);
-echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:checklist'),
-    ['strategy' => 'sinclude']
-);
-echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:timerExpire'),
-    ['strategy' => 'sinclude']
-);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'),['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'),['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'),['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
 $view['slots']->stop();

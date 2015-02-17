@@ -17,6 +17,62 @@
 #calculator .projected
 {
     margin-right:5px;
+    width:60px;
+    z-index: 2;
+    position:relative;
+}
+
+#calculator .what-if label
+{
+    margin: 0 -2px;
+    padding: 0 2px;
+    display:inline-block;
+    width:50%;
+}
+
+#calculator .what-if,
+#calculator .class-row > *.what-if,
+#calculator.what-if-only .term-row header > *:nth-child(2),
+#calculator.what-if-only .class-row > *:nth-child(2),
+#calculator.what-if-only .term-row header > *:nth-child(4),
+#calculator.what-if-only .class-row > *:nth-child(5),
+#calculator.what-if-only .term-row header > *:nth-child(5),
+#calculator.what-if-only .class-row > *:nth-child(6),
+#calculator.what-if-only .not-what-if
+{
+    display:none;
+}
+
+#calculator.what-if-only .term-row header > *:nth-child(3)
+{
+    width: 60%;
+}
+
+#calculator.what-if-only .class-row > *.what-if
+{
+    width:45%;
+    display:inline-block;
+    text-align: left;
+}
+
+#calculator.what-if-only .what-if
+{
+    display:block;
+}
+
+#calculator select.cumulative + span,
+#calculator select.projected + span
+{
+    width:auto;
+    display:inline;
+}
+
+#calculator.what-if-only .class-row > *.what-if:before,
+#calculator select.cumulative + span:before,
+#calculator select.projected + span:before
+{
+    content: "\02039";
+    font-weight: bold;
 }
 
 #calculator .cumulative + span,
@@ -26,6 +82,8 @@
     width:50%;
     margin-left:-60px;
     padding-left:60px;
+    z-index: 1;
+    position:relative;
 }
 
 #calculator .class-row .grade-editor
@@ -121,7 +179,8 @@
 
 #calculator .grade-row:hover:not(.selected):not(.edit),
 #calculator .class-row:hover:not(.selected):not(.edit),
-#calculator .term-row:hover:not(.selected):not(.edit)
+#calculator .term-row:hover:not(.selected):not(.edit),
+#calculator .class-row:hover:not(.selected):not(.edit) .grade select
 {
     cursor: pointer;
     color:#00CCEE;
@@ -161,6 +220,24 @@
     width:30px;
     text-align: left;
     display: inline-block;
+    margin-right:-15px;
+}
+
+#calculator .term-row .grade label
+{
+    text-align: center;
+}
+
+#calculator .term-row .grade select
+{
+    width:55px;
+    text-align: left;
+    display: inline-block;
+    margin-right:-30px;
+}
+
+#calculator.what-if-only .term-row .grade select
+{
     margin-right:-15px;
 }
 

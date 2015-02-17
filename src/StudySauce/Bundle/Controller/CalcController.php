@@ -116,7 +116,7 @@ class CalcController extends Controller
         $hours = 0;
         $score = array_sum($user->getSchedules()->map(function (Schedule $s) use (&$hours) {
             $hours += $s->getCreditHours();
-            return $s->getGPA() * $hours;
+            return $s->getGPA() * $s->getCreditHours();
         })->toArray());
         if(empty($hours))
             return null;

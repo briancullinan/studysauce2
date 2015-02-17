@@ -40,7 +40,7 @@ $view['slots']->start('body'); ?>
             <a href="#next-schedule" class="subtle">Next <span></span></a>
         </div>
     <?php } ?>
-    <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post">
+    <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post" novalidate="novalidate">
         <?php foreach($schedules as $schedule) {
             $isDemo = false;
             $courses = array_values($schedule->getClasses()->toArray());
