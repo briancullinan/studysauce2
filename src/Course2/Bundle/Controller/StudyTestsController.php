@@ -19,6 +19,7 @@ class StudyTestsController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -89,7 +90,8 @@ class StudyTestsController extends Controller
             $course->setTestTypes($request->get('testTypes'));
             $orm->merge($course);
         }
-        else {
+        if(!empty($request->get('typesTests')) && !empty($request->get('mostImportant')) &&
+            !empty($request->get('openTips1')) && !empty($request->get('openTips2'))) {
             // store quiz results
             $quiz = new StudyTests();
             $quiz->setCourse($course);

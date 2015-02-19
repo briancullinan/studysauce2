@@ -97,29 +97,6 @@ $view['slots']->start('body'); ?>
                 $path = implode('', explode('/', $s->getPath()));
                 /** @var Schedule $schedule */
                 $schedule = $s->getUser()->getSchedules()->first();
-                /** @var Course1 $course1 */
-                $course1 = $s->getUser()->getCourse1s()->first();
-                /** @var Course2 $course2 */
-                $course2 = $s->getUser()->getCourse2s()->first();
-                /** @var Course3 $course3 */
-                $course3 = $s->getUser()->getCourse3s()->first();
-                $completed = 0;
-                if(!empty($course1))
-                    $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2() === 4 ? 1 : 0) +
-                        ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
-                        ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
-                        ($course1->getLesson7() === 4 ? 1 : 0);
-                if(!empty($course2))
-                    $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2() === 4 ? 1 : 0) +
-                        ($course2->getLesson3() === 4 ? 1 : 0) + ($course2->getLesson4() === 4 ? 1 : 0) +
-                        ($course2->getLesson5() === 4 ? 1 : 0);
-                if(!empty($course3))
-                    $completed += ($course3->getLesson1() === 4 ? 1 : 0) + ($course3->getLesson2() === 4 ? 1 : 0) +
-                        ($course3->getLesson3() === 4 ? 1 : 0) + ($course3->getLesson4() === 4 ? 1 : 0) +
-                        ($course3->getLesson5() === 4 ? 1 : 0);
-                $overall = round($completed * 100.0 / (Course1Bundle::COUNT_LEVEL
-                        - ($s->getUser()->hasRole('ROLE_PAID') ? 1 : 0)
-                        + Course2Bundle::COUNT_LEVEL + Course3Bundle::COUNT_LEVEL));
                 /** @var User $adviser */
                 $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
                 if(!empty($adviser))
@@ -127,7 +104,7 @@ $view['slots']->start('body'); ?>
                 ?><tr class="user-id-<?php print $s->getUser()->getId(); ?> status_<?php print ($s->getUser()->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print $s->getCreated()->getTimestamp(); ?>"><?php print $s->getCreated()->format('j M'); ?></td>
-                <td><?php print $overall; ?>%</td>
+                <td><?php print $s->getUser()->getCompleted(); ?>%</td>
                 <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
                 <td><?php print (empty($schedule) || empty($schedule->getUniversity()) ? 'Not set' : $schedule->getUniversity()); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>

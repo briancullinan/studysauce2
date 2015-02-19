@@ -1,4 +1,6 @@
-<?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
+<?php use StudySauce\Bundle\Controller\CalcController;
+
+$view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
 Grade Scale at your school
@@ -6,147 +8,45 @@ Grade Scale at your school
 
 $view['slots']->start('modal-body') ?>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="#extended-scale" data-target="#extended-scale" data-toggle="tab">A +/-</a></li>
-    <li><a href="#abbreviated-scale" data-target="#abbreviated-scale" data-toggle="tab">A</a></li>
+    <?php
+    $first = true;
+    foreach(array_keys(CalcController::$presets) as $k) { ?>
+        <li class="<?php print ($first ? 'active' : ''); ?>"><a href="#scale-preset"><?php print $k; ?></a></li>
+    <?php $first = false; } ?>
 </ul>
-<div class="tab-content">
-    <div id="extended-scale" class="tab-pane active">
-        <table>
-            <thead>
+<table>
+    <thead>
+    <tr>
+        <th></th>
+        <th>High</th>
+        <th>Low</th>
+        <th>Grade point</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
+        $scale = CalcController::$presets['A +/-'];
+    for($i = 0; $i < 15; $i++) {
+        if (empty($scale[$i]) || empty($scale[$i][3])) { ?>
             <tr>
-                <th></th>
-                <th>High</th>
-                <th>Low</th>
-                <th>Grade point</th>
+                <td><label class="input"><input type="text" value=""/></label></td>
+                <td><label class="input"><input type="text" value=""/></label></td>
+                <td><label class="input"><input type="text" value=""/></label></td>
+                <td><label class="input"><input type="text" value=""/></label></td>
             </tr>
-            </thead>
-            <tbody>
+        <?php } else { ?>
             <tr>
-                <td><span>A+</span></td>
-                <td>100</td>
-                <td>97</td>
-                <td>4.0</td>
+                <td><label class="input"><input type="text" value="<?php print $scale[$i][0]; ?>"/></label></td>
+                <td><label class="input"><input type="text" value="<?php print $scale[$i][1]; ?>"/></label></td>
+                <td><label class="input"><input type="text" value="<?php print $scale[$i][2]; ?>"/></label></td>
+                <td><label class="input"><input type="text"
+                                                value="<?php print number_format($scale[$i][3], 2); ?>"/></label></td>
             </tr>
-            <tr>
-                <td><span>A</span></td>
-                <td>96</td>
-                <td>93</td>
-                <td>4.0</td>
-            </tr>
-            <tr>
-                <td><span>A-</span></td>
-                <td>92</td>
-                <td>90</td>
-                <td>3.7</td>
-            </tr>
-            <tr>
-                <td><span>B+</span></td>
-                <td>89</td>
-                <td>87</td>
-                <td>3.3</td>
-            </tr>
-            <tr>
-                <td><span>B</span></td>
-                <td>86</td>
-                <td>83</td>
-                <td>3.0</td>
-            </tr>
-            <tr>
-                <td><span>B-</span></td>
-                <td>82</td>
-                <td>80</td>
-                <td>2.7</td>
-            </tr>
-            <tr>
-                <td><span>C+</span></td>
-                <td>79</td>
-                <td>77</td>
-                <td>2.3</td>
-            </tr>
-            <tr>
-                <td><span>C</span></td>
-                <td>76</td>
-                <td>73</td>
-                <td>2.0</td>
-            </tr>
-            <tr>
-                <td><span>C-</span></td>
-                <td>72</td>
-                <td>70</td>
-                <td>1.7</td>
-            </tr>
-            <tr>
-                <td><span>D+</span></td>
-                <td>69</td>
-                <td>67</td>
-                <td>1.3</td>
-            </tr>
-            <tr>
-                <td><span>D</span></td>
-                <td>66</td>
-                <td>63</td>
-                <td>1.0</td>
-            </tr>
-            <tr>
-                <td><span>D-</span></td>
-                <td>62</td>
-                <td>60</td>
-                <td>0.7</td>
-            </tr>
-            <tr>
-                <td><span>F</span></td>
-                <td>59</td>
-                <td>0</td>
-                <td>0.0</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="abbreviated-scale" class="tab-pane">
-        <table>
-            <thead>
-            <tr>
-                <th></th>
-                <th>High</th>
-                <th>Low</th>
-                <th>Grade point</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>A</td>
-                <td>100</td>
-                <td>90</td>
-                <td>4.0</td>
-            </tr>
-            <tr>
-                <td>B</td>
-                <td>89</td>
-                <td>80</td>
-                <td>3.0</td>
-            </tr>
-            <tr>
-                <td>C</td>
-                <td>79</td>
-                <td>70</td>
-                <td>2.0</td>
-            </tr>
-            <tr>
-                <td>D</td>
-                <td>69</td>
-                <td>60</td>
-                <td>1.0</td>
-            </tr>
-            <tr>
-                <td>F</td>
-                <td>59</td>
-                <td>0</td>
-                <td>0.0</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+        <?php }
+    } ?>
+    </tbody>
+</table>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

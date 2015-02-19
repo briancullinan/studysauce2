@@ -230,6 +230,28 @@ class User extends BaseUser implements EncoderAwareInterface
     }
 
     /**
+     * @return PartnerInvite|User
+     */
+    public function getPartnerOrAdviser()
+    {
+        /** @var PartnerInvite $partner */
+        $partner = $this->getPartnerInvites()->first();
+        $advisers = array_values($this->getGroups()
+                ->map(function (Group $g) {return $g->getUsers()->filter(function (User $u) {
+                    return $u->hasRole('ROLE_ADVISER');})->toArray();})
+                ->filter(function ($c) {return !empty($c);})
+                ->toArray());
+        if(count($advisers) > 1)
+            $advisers = call_user_func_array('array_merge', $advisers);
+        elseif(count($advisers) > 0)
+            $advisers = $advisers[0];
+        usort($advisers, function (User $a, User $b) {return $a->hasRole('ROLE_MASTER_ADVISER') - $b->hasRole('ROLE_MASTER_ADVISER');});
+        /** @var User $adviser */
+        $adviser = reset($advisers);
+        return !empty($adviser) ? $adviser : $partner;
+    }
+
+    /**
      * @return null|string
      */
     public function getEncoderName() {

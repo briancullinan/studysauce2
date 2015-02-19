@@ -3,7 +3,6 @@
 namespace Course1\Bundle\Controller;
 
 use Course1\Bundle\Entity\Course1;
-use Course1\Bundle\Entity\Quiz2;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,6 +18,7 @@ class UpgradeController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -85,7 +85,7 @@ class UpgradeController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
         // store quiz results
-        if(!empty($request->get('enjoy'))) {
+        if($request->get('enjoy') !== null) {
             $course->setEnjoyed($request->get('enjoy'));
         }
         if(!empty($request->get('netPromoter'))) {

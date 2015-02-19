@@ -45,6 +45,7 @@ class Strategies
 
 
 
+
     /**
      * Get id
      *

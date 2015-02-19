@@ -19,6 +19,7 @@ class DistractionsController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -84,22 +85,17 @@ class DistractionsController extends Controller
         $course = $user->getCourse1s()->first();
 
         // store quiz results
-        $quiz = new Quiz4();
-        $quiz->setCourse($course);
-        $course->addQuiz4($quiz);
-        if(!empty($request->get('multitask')))
+        if(!empty($request->get('multitask')) && !empty($request->get('downside')) &&
+            !empty($request->get('lowerScore')) && !empty($request->get('distraction'))) {
+            $quiz = new Quiz4();
+            $quiz->setCourse($course);
+            $course->addQuiz4($quiz);
             $quiz->setMultitask($request->get('multitask'));
-
-        if(!empty($request->get('downside')))
             $quiz->setDownside($request->get('downside'));
-
-        if(!empty($request->get('lowerScore')))
             $quiz->setLowerScore($request->get('lowerScore'));
-
-        if(!empty($request->get('distraction')))
             $quiz->setDistraction($request->get('distraction'));
-
-        $orm->persist($quiz);
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course1Bundle:Distractions:wizard', ['_step' => 2, '_format' => 'tab']);

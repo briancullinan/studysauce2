@@ -19,6 +19,7 @@ class StudyPlanController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -83,14 +84,17 @@ class StudyPlanController extends Controller
         /** @var Course2 $course */
         $course = $user->getCourse2s()->first();
         // store quiz results
-        $quiz = new StudyPlan();
-        $quiz->setCourse($course);
-        $course->addStudyPlan($quiz);
-        $quiz->setMultiply($request->get('multiply'));
-        $quiz->setProcrastination($request->get('procrastination'));
-        $quiz->setStudySessions($request->get('studySessions'));
-        $quiz->setStickPlan($request->get('stickPlan'));
-        $orm->persist($quiz);
+        if(!empty($request->get('multiply')) && !empty($request->get('procrastination')) &&
+            !empty($request->get('studySessions')) && !empty($request->get('stickPlan'))) {
+            $quiz = new StudyPlan();
+            $quiz->setCourse($course);
+            $course->addStudyPlan($quiz);
+            $quiz->setMultiply($request->get('multiply'));
+            $quiz->setProcrastination($request->get('procrastination'));
+            $quiz->setStudySessions($request->get('studySessions'));
+            $quiz->setStickPlan($request->get('stickPlan'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course2Bundle:StudyPlan:wizard', ['_step' => 2, '_format' => 'tab']);

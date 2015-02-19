@@ -104,8 +104,9 @@ $(document).ready(function () {
         $('#home').find('.deadlines-widget').replaceWith(response.find('.deadlines-widget'));
     }
 
-    function submitDeadlines()
+    function submitDeadlines(evt)
     {
+        evt.preventDefault();
         var deadlines = $('#deadlines');
         if(deadlines.find('.form-actions').is('.invalid'))
             return;

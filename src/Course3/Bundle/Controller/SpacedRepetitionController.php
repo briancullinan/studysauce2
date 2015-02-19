@@ -19,6 +19,7 @@ class SpacedRepetitionController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -92,7 +93,8 @@ class SpacedRepetitionController extends Controller
             $course->setFeedback($request->get('feedback'));
             $orm->merge($course);
         }
-        else {
+        if($request->get('spaceOut') !== null && !empty($request->get('forgetting')) &&
+            !empty($request->get('revisiting')) && !empty($request->get('anotherName'))) {
             // store quiz results
             $quiz = new SpacedRepetition();
             $quiz->setCourse($course);

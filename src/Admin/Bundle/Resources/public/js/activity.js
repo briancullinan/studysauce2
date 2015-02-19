@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     var body = $('body'),
-        updateTimeout = null,
         processing = false,
         timeLine;
 
@@ -29,11 +28,6 @@ $(document).ready(function () {
 
         timeLine.setWindow(new Date((new Date).getTime() - 60 * 60 * 5 * 1000), new Date((new Date).getTime() + 60 * 60 * 1000));
 
-        timeLine.on('rangechange', function (props) {
-            if(updateTimeout)
-                clearTimeout(updateTimeout);
-            updateTimeout = setTimeout('updateTimeline("' + Math.floor(props.start.getTime() / 1000) + '","' + Math.floor(props.end.getTime() / 1000) + '")', 200);
-        });
         var admin = $('#activity'),
             pickers = admin.find('.range .input + div');
 
@@ -67,8 +61,8 @@ $(document).ready(function () {
                     //prv = cur = -1;
                 },
 
-                onAfterUpdate: function ( inst ) {
-                    var that = $(this)
+                onAfterUpdate: function () {
+                    var that = $(this);
                     $('<a href="#yesterday">Since Yesterday</a>')
                         .insertBefore($(this).find('.ui-datepicker-header'))
                         .on('click', function (evt) {
@@ -153,7 +147,7 @@ $(document).ready(function () {
             .hide();
 
         $(window).resize(function () {
-            pickers.each(function (i) {
+            pickers.each(function () {
                 $(this).position({
                     my: 'left top',
                     at: 'left bottom',
@@ -204,9 +198,10 @@ $(document).ready(function () {
         });
     });
 
-    function updateTimeline(start, end) {
+    function updateTimeline() {
+        var start = Math.floor(timeLine.range.start / 1000),
+            end = Math.floor(timeLine.range.end / 1000);
         if(processing) {
-            updateTimeout = setTimeout('updateTimeline("' + start + '","' + end + '")', 200);
             return;
         }
         processing = true;
@@ -242,7 +237,7 @@ $(document).ready(function () {
             }
         })
     }
-    window.updateTimeline = updateTimeline;
+    setInterval(updateTimeline, 500);
 
     body.on('mouseover', '.vis.timeline .item.box', function () {
         $(this).addClass('related-hover');
@@ -260,9 +255,10 @@ $(document).ready(function () {
 
     body.on('keyup', '#activity input[name="search"]', function () {
         timeLine.itemsData.clear();
-        if(updateTimeout)
-            clearTimeout(updateTimeout);
-        updateTimeout = setTimeout('updateTimeline("' + Math.floor(timeLine.range.start / 1000) + '","' + Math.floor(timeLine.range.end / 1000) + '")', 200);
+    });
+
+    body.on('change', '#activity input[name="search"]', function () {
+        timeLine.itemsData.clear();
     });
 
     body.on('change', '#activity input[name="range"]', function () {
@@ -291,13 +287,6 @@ $(document).ready(function () {
         var d1 = new Date(Math.min(prv,cur) -  60 * 60 * 1000),
             d2 = new Date(Math.max(prv,cur) + 60 * 60 * 24 * 1000);
         timeLine.setWindow(d1, d2, {animate:false});
-    });
-
-    body.on('change', '#activity input[name="search"]', function () {
-        timeLine.itemsData.clear();
-        if(updateTimeout)
-            clearTimeout(updateTimeout);
-        updateTimeout = setTimeout('updateTimeline("' + Math.floor(timeLine.range.start / 1000) + '","' + Math.floor(timeLine.range.end / 1000) + '")', 200);
     });
 
 });

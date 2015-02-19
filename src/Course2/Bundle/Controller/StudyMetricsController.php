@@ -19,6 +19,7 @@ class StudyMetricsController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -83,13 +84,16 @@ class StudyMetricsController extends Controller
         /** @var Course2 $course */
         $course = $user->getCourse2s()->first();
         // store quiz results
-        $quiz = new StudyMetrics();
-        $quiz->setCourse($course);
-        $quiz->setTrackHours(explode(',', $request->get('trackHours')));
-        $quiz->setDoingWell($request->get('doingWell'));
-        $quiz->setAllTogether($request->get('allTogether'));
-        $course->addStudyMetric($quiz);
-        $orm->persist($quiz);
+        if(!empty($request->get('trackHours')) && $request->get('doingWell') !== null &&
+            !empty($request->get('allTogether'))) {
+            $quiz = new StudyMetrics();
+            $quiz->setCourse($course);
+            $quiz->setTrackHours(explode(',', $request->get('trackHours')));
+            $quiz->setDoingWell($request->get('doingWell'));
+            $quiz->setAllTogether($request->get('allTogether'));
+            $course->addStudyMetric($quiz);
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course2Bundle:StudyMetrics:wizard', ['_step' => 2, '_format' => 'tab']);

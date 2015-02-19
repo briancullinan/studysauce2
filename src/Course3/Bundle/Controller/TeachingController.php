@@ -19,6 +19,7 @@ class TeachingController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -84,13 +85,16 @@ class TeachingController extends Controller
         $course = $user->getCourse3s()->first();
 
         // store quiz results
-        $quiz = new Teaching();
-        $quiz->setCourse($course);
-        $course->addTeaching($quiz);
-        $quiz->setMemorizing($request->get('memorizing'));
-        $quiz->setNewLanguage($request->get('newLanguage'));
-        $quiz->setVideotaping($request->get('videotaping'));
-        $orm->persist($quiz);
+        if(!empty($request->get('newLanguage')) && $request->get('memorizing') !== null &&
+            !empty($request->get('videotaping'))) {
+            $quiz = new Teaching();
+            $quiz->setCourse($course);
+            $course->addTeaching($quiz);
+            $quiz->setMemorizing($request->get('memorizing'));
+            $quiz->setNewLanguage($request->get('newLanguage'));
+            $quiz->setVideotaping($request->get('videotaping'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course3Bundle:Teaching:wizard', ['_step' => 2, '_format' => 'tab']);

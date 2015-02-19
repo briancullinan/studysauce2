@@ -57,40 +57,40 @@ security:
 
     access_control:
         # anonymous pages
-        - { path: ^$,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/$,        roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/denied,   roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/_visit,   roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/_fragment,roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/refund,   roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/about,    roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/contact,  roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/privacy,  roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/terms,    roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/checkout, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/thanks,   roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^$,               roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/$,              roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/denied,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/_visit,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/_fragment,      roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/refund,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/about,          roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/contact,        roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/privacy,        roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/terms,          roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/checkout,       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/thanks,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         # landing pages
-        - { path: ^/parents,  roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/students, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/partners, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
-        - { path: ^/scholars, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/parents,        roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/students,       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/partners,       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/scholars,       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         - { path: ^/torchandlaurel, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         - { path: ^/torchandlaurelparents, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         # authentication pages
-        - { path: ^/redirect, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
-        - { path: ^/connect,  roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
-        - { path: ^/logout,   roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
-        - { path: ^/authenticate,    roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
-        - { path: ^/login,    roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
-        - { path: ^/register, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/redirect,       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
+        - { path: ^/connect,        roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
+        - { path: ^/logout,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
+        - { path: ^/authenticate,   roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/login,          roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/register,       roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/account/create, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/torchandlaurelregister, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
-        - { path: ^/reset,    roles: [ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/reset,          roles: [ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         # protected pages
-        - { path: ^/userlist, roles: [ROLE_MASTER_ADVISER, ROLE_ADVISER, ROLE_PARTNER] }
-        - { path: ^/import,   roles: [ROLE_MASTER_ADVISER, ROLE_ADVISER, ROLE_PARTNER, ROLE_ADMIN] }
-        - { path: ^/command,  role: ROLE_ADMIN }
-        - { path: ^/emails,   role: ROLE_ADMIN }
-        - { path: ^/validation, role: ROLE_ADMIN }
+        - { path: ^/userlist,       roles: [ROLE_MASTER_ADVISER, ROLE_ADVISER, ROLE_PARTNER] }
+        - { path: ^/import,         roles: [ROLE_MASTER_ADVISER, ROLE_ADVISER, ROLE_PARTNER, ROLE_ADMIN] }
+        - { path: ^/command,        role: ROLE_ADMIN }
+        - { path: ^/emails,         role: ROLE_ADMIN }
+        - { path: ^/validation,     role: ROLE_ADMIN }
         - { path: ^/, allow_if: "!has_role('ROLE_GUEST')" }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

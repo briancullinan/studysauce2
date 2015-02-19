@@ -131,8 +131,8 @@
 {
     #userlist table th:nth-child(5),
     #userlist table td:nth-child(5),
-    #userlist table th:nth-child(4),
-    #userlist table td:nth-child(4)
+    #userlist table th:nth-child(2),
+    #userlist table td:nth-child(2)
     {
         display:none;
     }
@@ -150,8 +150,8 @@
 
 @media all and (max-width:500px)
 {
-    #userlist table th:nth-child(2),
-    #userlist table td:nth-child(2)
+    #userlist table th:nth-child(1),
+    #userlist table td:nth-child(1)
     {
         display:none;
     }

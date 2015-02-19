@@ -34,8 +34,12 @@ class PartnerController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('partner_update')
             : null;
 
+        $partner = $user->getPartnerOrAdviser();
+
         return $this->render('StudySauceBundle:Partner:tab.html.php', [
-                'partner' => $user->getPartnerInvites()->first(),
+                'partner' => $partner,
+                'isAdviser' => $partner instanceof User && $partner->hasRole('ROLE_ADVISER') ||
+                    $partner->hasRole('ROLE_MASTER_ADVISER'),
                 'csrf_token' => $csrfToken
             ]);
     }
@@ -126,16 +130,14 @@ class PartnerController extends Controller
             throw new AccessDeniedHttpException();
         }
         elseif($user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER')) {
-            $groups = $user->getGroups()->toArray();
             $users = [];
-            foreach ($groups as $i => $g) {
+            foreach ($user->getGroups()->toArray() as $i => $g) {
                 /** @var Group $g */
                 $users = array_merge($users, $g->getUsers()->toArray());
             }
         }
         else {
             $users = [];
-            $groups = [];
         }
 
         /** @var PartnerInvite $partner */
@@ -148,12 +150,12 @@ class PartnerController extends Controller
 
         $users = array_unique($users);
         // show sessions
-        $yesterday = new \DateTime('yesterday');
         $sessions = $orm->getRepository('StudySauceBundle:Visit')->createQueryBuilder('v')
             ->leftJoin('v.user', 'u')
             ->select(['v', 'u'])
             ->andWhere('v.user IN (\'' . implode('\',\'', array_map(function (User $u) {return $u->getId();}, $users)) . '\')')
             ->andWhere('v.path LIKE \'/schedule%\' OR v.path LIKE \'/metrics%\' OR v.path LIKE \'/goals%\' OR v.path LIKE \'/plan%\' OR v.path LIKE \'/course%\' OR v.path LIKE \'/account%\' OR v.path LIKE \'/premium%\' OR v.path LIKE \'/deadlines%\' OR v.path LIKE \'/checkin%\' OR v.path LIKE \'/home%\' OR v.path LIKE \'/partner%\' OR v.path LIKE \'/profile%\'')
+            ->andWhere('u.roles NOT LIKE \'%ADVISER%\' AND u.roles NOT LIKE \'%ADMIN%\'')
             ->groupBy('v.session')
             ->orderBy('v.created', 'DESC')
             ->getQuery()
@@ -178,7 +180,6 @@ class PartnerController extends Controller
 
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
             'sessions' => $sessions,
-            'groups' => $groups,
             'users' => $users,
             'showPartnerIntro' => $showPartnerIntro
         ]);

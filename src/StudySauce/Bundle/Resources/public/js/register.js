@@ -42,7 +42,8 @@ jQuery(document).ready(function() {
         $(this).remove();
         account.find('form').show();
     });
-    function submitRegister() {
+    function submitRegister(evt) {
+        evt.preventDefault();
         var account = jQuery('#register');
         if(account.find('.form-actions').is('.invalid'))
             return;
@@ -85,8 +86,9 @@ jQuery(document).ready(function() {
 
     body.on('keyup', '#reset input', resetFunc);
     body.on('change', '#reset input', resetFunc);
-    function submitReset()
+    function submitReset(evt)
     {
+        evt.preventDefault();
         var account = jQuery('#reset');
         if(account.find('.form-actions').is('.invalid'))
             return;

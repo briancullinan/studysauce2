@@ -28,8 +28,9 @@ jQuery(document).ready(function() {
     body.on('change', '#login .email input, #login .password input', accountFunc);
     body.on('keyup', '#login .email input, #login .password input', accountFunc);
     body.on('keydown', '#login .email input, #login .password input', accountFunc);
-    function submitLogin()
+    function submitLogin(evt)
     {
+        evt.preventDefault();
         var account = jQuery('#login');
         if(account.find('.form-actions').is('.invalid'))
             return;

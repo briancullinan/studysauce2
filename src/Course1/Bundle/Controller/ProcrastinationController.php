@@ -19,6 +19,7 @@ class ProcrastinationController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -84,28 +85,20 @@ class ProcrastinationController extends Controller
         $course = $user->getCourse1s()->first();
 
         // store quiz results
-        $quiz = new Quiz3();
-        $quiz->setCourse($course);
-        $course->addQuiz3($quiz);
-        if(!empty($request->get('memoryA')))
+        if(!empty($request->get('memoryA')) && !empty($request->get('memoryR')) && !empty($request->get('studyGoal')) &&
+            !empty($request->get('procrastinating')) && !empty($request->get('procrastinationD')) &&
+            !empty($request->get('procrastinationP'))) {
+            $quiz = new Quiz3();
+            $quiz->setCourse($course);
+            $course->addQuiz3($quiz);
             $quiz->setActiveMemory($request->get('memoryA'));
-
-        if(!empty($request->get('memoryR')))
             $quiz->setReferenceMemory($request->get('memoryR'));
-
-        if(!empty($request->get('studyGoal')))
             $quiz->setStudyGoal($request->get('studyGoal'));
-
-        if(!empty($request->get('procrastinating')))
             $quiz->setProcrastinating($request->get('procrastinating'));
-
-        if(!empty($request->get('procrastinationD')))
             $quiz->setDeadlines($request->get('procrastinationD'));
-
-        if(!empty($request->get('procrastinationP')))
             $quiz->setPlan($request->get('procrastinationP'));
-
-        $orm->persist($quiz);
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course1Bundle:Procrastination:wizard', ['_step' => 2, '_format' => 'tab']);

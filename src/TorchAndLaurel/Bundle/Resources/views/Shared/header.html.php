@@ -22,22 +22,6 @@ $view['slots']->stop();
 /** @var User $user */
 $user = $app->getUser();
 
-/** @var PartnerInvite $partner */
-$partner = !empty($user) ? $user->getPartnerInvites()->first() : null;
-$advisers = !empty($user)
-    ? array_values($user->getGroups()
-            ->map(function (Group $g) {return $g->getUsers()->filter(function (User $u) {
-                        return $u->hasRole('ROLE_ADVISER');})->toArray();})
-            ->filter(function ($c) {return !empty($c);})
-            ->toArray())
-    : [];
-if(count($advisers) > 1)
-    $advisers = call_user_func_array('array_merge', $advisers);
-elseif(count($advisers) > 0)
-    $advisers = $advisers[0];
-usort($advisers, function (User $a, User $b) {return $a->hasRole('ROLE_MASTER_ADVISER') - $b->hasRole('ROLE_MASTER_ADVISER');});
-/** @var User $adviser */
-$adviser = reset($advisers);
 ?>
 <div class="header-wrapper navbar navbar-inverse">
     <div class="header">
@@ -56,28 +40,16 @@ $adviser = reset($advisers);
                         <a href="<?php print $view['router']->generate('checkout'); ?>" class="more">Upgrade</a>
                     </div>
                 <?php }
-                } elseif(!empty($adviser)) { ?>
+                } elseif(!empty($user) && !empty($partner = $user->getPartnerOrAdviser())) { ?>
                     <div class="partner-icon">
-                        <?php if (empty($adviser->getPhoto())) {
+                        <?php if (empty($partner->getPhoto())) {
                             foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
                                 <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>"/>
                             <?php endforeach;
                         } else {
-                            ?><img width="48" height="48" src="<?php echo $view->escape($adviser->getPhoto()->getUrl()) ?>"
+                            ?><img width="48" height="48" src="<?php echo $view->escape($partner->getPhoto()->getUrl()) ?>"
                                    alt="LOGO" />
                         <?php } ?>
-                    </div>
-                    <div>I am accountable to: <br><span><?php print $adviser->getFirst(); ?> <?php print $adviser->getLast(); ?></span></div>
-                <?php } elseif(!empty($partner)) { ?>
-                    <div class="partner-icon">
-                    <?php if (empty($partner->getPhoto())) {
-                        foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/empty-photo.png'],[],['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                            <img width="48" height="48" alt="Partner" src="<?php echo $view->escape($url) ?>"/>
-                        <?php endforeach;
-                    } else {
-                        ?><img width="48" height="48" src="<?php echo $view->escape($partner->getPhoto()->getUrl()) ?>"
-                               alt="LOGO" />
-                    <?php } ?>
                     </div>
                     <div>I am accountable to: <br><span><?php print $partner->getFirst(); ?> <?php print $partner->getLast(); ?></span></div>
                 <?php } else { ?>

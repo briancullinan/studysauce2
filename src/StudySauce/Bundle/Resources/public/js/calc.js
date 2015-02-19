@@ -6,12 +6,12 @@ $(document).ready(function () {
         var calc = body.find('#calculator'),
             row = $(this).parents('.term-row');
         if(!row.is('.selected')) {
-            calc.find('.selected').removeClass('selected');
+            calc.find('.term-row.selected').removeClass('selected');
             row.addClass('selected');
         }
     });
 
-    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours), #calculator .class-row:not(.selected) > *.hours', function () {
+    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours),#calculator .class-row:not(.selected) > *.hours', function () {
         var row = $(this).parents('.class-row');
         if(row.is('.selected')) {
             row.removeClass('selected');
@@ -22,6 +22,20 @@ $(document).ready(function () {
             row.find('.hours').removeClass('read-only');
         }
     });
+
+    function convertToScale(score)
+    {
+        var scaled = [null, null];
+        $('#grade-scale').find('tbody tr').each(function () {
+            if(score <= parseInt($(this).find('td:nth-child(2) input').val()) &&
+                    score >= parseInt($(this).find('td:nth-child(3) input').val()))
+            {
+                scaled = [$(this).find('td:nth-child(1) input').val(), $(this).find('td:nth-child(4) input').val()];
+                return false;
+            }
+        });
+        return scaled;
+    }
 
     function validateGrades()
     {
@@ -39,7 +53,7 @@ $(document).ready(function () {
                     percent = 0,
                     sum = 0,
                     courseHours = parseInt(row.find('.hours input').val().trim());
-                row.find('.grade-row').each(function () {
+                row.find('.grade-row:not(.deleted)').each(function () {
                     var that = $(this),
                         score = parseInt(that.find('.score input').val().trim()),
                         rowPercent = parseInt(that.find('.percent input').val().trim());
@@ -61,20 +75,19 @@ $(document).ready(function () {
                             sum += score * rowPercent;
                         }
 
-                        var scaled = window.convertToScale($('#grade-scale').find('.nav-tabs li.active').index() == 0, score);
+                        var scaled = convertToScale(score);
                         that.find('.grade span').html(scaled[0]);
                         that.find('.gpa').html(scaled[1]);
                     }
                 });
                 if(percent == 0) {
-                    row.find('> .score, > .gpa, > .percent').html('&bullet;');
-                    row.find('> .grade span').val('');
+                    row.find('> .score, > .gpa, > .percent, > .grade span').html('&bullet;');
                 }
                 else {
                     var classScore = sum / percent,
-                        scaled = window.convertToScale($('#grade-scale').find('.nav-tabs li.active').index() == 0, classScore);
+                        scaled = convertToScale(classScore);
                     row.find('> .score').html(Math.round(classScore * 10) / 10);
-                    row.find('> .grade select').val(scaled[0]);
+                    row.find('> .grade span').html(scaled[0]);
                     row.find('> .gpa').html(scaled[1]);
                     row.find('> .percent').html(percent + '%');
 
@@ -87,7 +100,7 @@ $(document).ready(function () {
             });
 
             if(hours == 0) {
-                term.find('> .gpa, > .percent, > .hours').html('&bullet;');
+                term.find('> .gpa span, > .percent, > .hours').html('&bullet;');
                 calc.find('.projected').html('&bullet;');
             }
             else {
@@ -97,7 +110,7 @@ $(document).ready(function () {
                 if(term.find('> .gpa span').html().length == 3) {
                     term.find('> .gpa span').html(term.find('> .gpa span').html() + '0');
                 }
-                if(term.find('> .gpa span').html().length == 1) {
+                if(term.find('> .gpa span').html().length == 1 && !isNaN(parseInt(term.find('> .gpa span').html()))) {
                     term.find('> .gpa span').html(term.find('> .gpa span').html() + '.00');
                 }
                 term.find('> .percent').html((Math.round(termPercent / hours * 10) / 10) + '%');
@@ -123,13 +136,13 @@ $(document).ready(function () {
         if(calc.find('.cumulative').html().length == 3) {
             calc.find('.cumulative').html(calc.find('.cumulative').html() + '0');
         }
-        if(calc.find('.cumulative').html().length == 1) {
+        if(calc.find('.cumulative').html().length == 1 && !isNaN(parseInt(calc.find('.cumulative').html()))) {
             calc.find('.cumulative').html(calc.find('.cumulative').html() + '.00');
         }
         if(calc.find('.projected').html().length == 3) {
             calc.find('.projected').html(calc.find('.projected').html() + '0');
         }
-        if(calc.find('.projected').html().length == 1) {
+        if(calc.find('.projected').html().length == 1 && !isNaN(parseInt(calc.find('.projected').html()))) {
             calc.find('.projected').html(calc.find('.projected').html() + '.00');
         }
     }
@@ -142,17 +155,11 @@ $(document).ready(function () {
         $('#calculator').find('a[href*="/schedule"]').first().trigger('click');
     });
 
-    body.on('click', '#calculator a[href="#gpa-calc"]', function () {
+    body.on('click', '#calculator a[href="#what-if"]', function () {
         var calc = $('#calculator');
         if($(this).parent().index() == 1) {
-            calc.addClass('what-if-only');
-            calc.find('.class-row.selected').removeClass('selected');
-            calc.find('.class-row .hours').addClass('read-only');
-            calc.find('.class-row > .grade').removeClass('read-only');
-        }
-        else {
-            calc.removeClass('what-if-only');
-            calc.find('.class-row > .grade').addClass('read-only');
+            // set the fields to their current value
+            calc.find('#what-if select:first-child').val(Math.round(parseFloat(calc.find('.projected').html()) * 10) / 10);
         }
     });
 
@@ -179,7 +186,7 @@ $(document).ready(function () {
         var editor = $(this).parents('.grade-editor'),
             row = editor.find('.grade-row').first()
                 .clone().show()
-                .removeClass('read-only').addClass('edit')
+                .removeClass('read-only').addClass('edit deleted')
                 .insertAfter(editor.find('.grade-row').last());
         row.attr('class', row.attr('class').replace(/grade-id-([0-9]*)(\s|$)/ig, ' grade-id- '));
         row.find('.grade span, .gpa').html('&bullet;');
@@ -231,7 +238,12 @@ $(document).ready(function () {
         calc.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation(calc.find('[value="#save-grades"]'));
 
-        var data = {courses: [], scale: $('#grade-scale').find('.nav-tabs li.active').index() == 0};
+        var data = {courses: [], scale: $('#grade-scale').find('tbody tr').map(function () { return [[
+                $(this).find('td:nth-child(1) input').val(),
+                $(this).find('td:nth-child(2) input').val(),
+                $(this).find('td:nth-child(3) input').val(),
+                $(this).find('td:nth-child(4) input').val()
+            ]]; }).toArray()};
         calc.find('.class-row').each(function (i) {
             var row = $(this),
                 courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1],
@@ -249,8 +261,8 @@ $(document).ready(function () {
                     score: that.find('.score input').val().trim(),
                     percent: that.find('.percent input').val().trim(),
                     remove: that.find('.score input').val().trim() == '' &&
-                    that.find('.percent input').val().trim() == '' &&
-                    that.find('.assignment input').val().trim() == ''
+                            that.find('.percent input').val().trim() == '' &&
+                            that.find('.assignment input').val().trim() == ''
                 }
             });
             data.courses[i] = courseData;
@@ -277,17 +289,69 @@ $(document).ready(function () {
         evt.preventDefault();
         var row = $(this).parents('.grade-row'),
             classRow = row.parents('.class-row');
-        row.hide();
+        row.addClass('edit').hide();
         row.find('.score input, .percent input, .assignment input').val('');
         // create 4 empty rows if this is the last one
         if(classRow.find('.grade-row:visible').length == 0)
             classRow.find('a[href="#add-grade"]').trigger('click').trigger('click').trigger('click').trigger('click');
-        classRow.find('.form-actions button').css('visibility', 'visible');
         validateGrades();
     });
 
+    body.on('click', '#grade-scale a[href="#scale-preset"]', function (evt) {
+        evt.preventDefault();
+        var preset = window.presetScale[$(this).html()],
+            dialog = $('#grade-scale');
+        dialog.find('li.active').removeClass('active');
+        $(this).parent().addClass('active');
+        dialog.find('tbody input').val('');
+        for(var i = 0; i < preset.length; i++) {
+            var gpa = preset[i][3] + '';
+            if(gpa.length == 1)
+                gpa += '.00';
+            if(gpa.length == 3)
+                gpa += '0';
+            dialog.find('tbody tr').eq(i).find('input').eq(0).val(preset[i][0]);
+            dialog.find('tbody tr').eq(i).find('input').eq(1).val(preset[i][1]);
+            dialog.find('tbody tr').eq(i).find('input').eq(2).val(preset[i][2]);
+            dialog.find('tbody tr').eq(i).find('input').eq(3).val(gpa);
+        }
+    });
+
+    body.on('click', '#calculator a[href="#what-if"]', function () {
+        // update course list in dialog
+        var calc = $('#calculator'),
+            dialog = $('#what-if'),
+            firstRow = dialog.find('.class-row').first(),
+            classes = calc.find('.term-row').first().find('.class-row');
+        dialog.find('select.class-name').find('option').remove();
+        dialog.find('.class-row').not(firstRow).remove();
+        classes.each(function (i) {
+            var row = $(this),
+                courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+            $('<option value="' + courseId + '">' + row.find('.class-name').text() + '</option>')
+                .appendTo(dialog.find('select.class-name'));
+            firstRow.find('.class-name').html(row.find('.class-name').html());
+            firstRow.find('.hours').text(row.find('.hours input').val());
+            firstRow.find('select').val(row.find('> .grade span').text());
+            if(i < classes.length - 1)
+                firstRow.clone().insertAfter(firstRow);
+        });
+        dialog.find('.overall-gpa').val(Math.round(parseFloat(calc.find('.cumulative').text()) * 10) / 10);
+    });
+
+    body.on('click', '#grade-scale a[href="#save-scale"]', validateGrades);
     body.on('keyup', '#calculator .grade-row input, #calculator .class-row input', validateGrades);
     body.on('change', '#calculator .grade-row input, #calculator .class-row input', validateGrades);
 
-    //body.on('show', '#calculator', validateGrades)
+    body.on('show', '#calculator', function () {
+        if($(this).is('.empty'))
+            $('#calc-empty').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: true
+            });
+        else
+            $('#calc-empty').modal('hide');
+        validateGrades();
+    })
 });

@@ -19,6 +19,7 @@ class TestTakingController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -84,13 +85,16 @@ class TestTakingController extends Controller
         $course = $user->getCourse2s()->first();
 
         // store quiz results
-        $quiz = new TestTaking();
-        $quiz->setCourse($course);
-        $course->addTestTaking($quiz);
-        $quiz->setIdeaCram($request->get('ideaCram'));
-        $quiz->setBreathing($request->get('breathing'));
-        $quiz->setSkimming($request->get('skimming'));
-        $orm->persist($quiz);
+        if(!empty($request->get('ideaCram')) && !empty($request->get('breathing')) &&
+            !empty($request->get('skimming'))) {
+            $quiz = new TestTaking();
+            $quiz->setCourse($course);
+            $course->addTestTaking($quiz);
+            $quiz->setIdeaCram($request->get('ideaCram'));
+            $quiz->setBreathing($request->get('breathing'));
+            $quiz->setSkimming($request->get('skimming'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course2Bundle:TestTaking:wizard', ['_step' => 2, '_format' => 'tab']);

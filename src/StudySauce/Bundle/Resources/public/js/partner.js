@@ -93,8 +93,9 @@ $(document).ready(function () {
         partnerFunc();
     });
 
-    function submitPartner()
+    function submitPartner(evt)
     {
+        evt.preventDefault();
         var partner = jQuery('#partner');
         if(partner.find('.form-actions').is('.invalid'))
             return;

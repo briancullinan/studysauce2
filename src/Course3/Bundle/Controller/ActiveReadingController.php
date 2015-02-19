@@ -19,6 +19,7 @@ class ActiveReadingController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -84,14 +85,17 @@ class ActiveReadingController extends Controller
         $course = $user->getCourse3s()->first();
 
         // store quiz results
-        $quiz = new ActiveReading();
-        $quiz->setCourse($course);
-        $course->addActiveReading($quiz);
-        $quiz->setWhatReading($request->get('whatReading'));
-        $quiz->setSelfExplanation($request->get('selfExplanation'));
-        $quiz->setSkimming($request->get('skimming'));
-        $quiz->setHighlighting($request->get('highlighting'));
-        $orm->persist($quiz);
+        if(!empty($request->get('whatReading')) && $request->get('selfExplanation') !== null &&
+            $request->get('skimming') !== null && $request->get('highlighting') !== null) {
+            $quiz = new ActiveReading();
+            $quiz->setCourse($course);
+            $course->addActiveReading($quiz);
+            $quiz->setWhatReading($request->get('whatReading'));
+            $quiz->setSelfExplanation($request->get('selfExplanation'));
+            $quiz->setSkimming($request->get('skimming'));
+            $quiz->setHighlighting($request->get('highlighting'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course3Bundle:ActiveReading:wizard', ['_step' => 2, '_format' => 'tab']);

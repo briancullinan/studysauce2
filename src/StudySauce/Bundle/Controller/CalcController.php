@@ -18,6 +18,32 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CalcController extends Controller
 {
+    public static $presets = [
+        'A +/-' => [
+            ['A+',100,97,4],
+            ['A',96,93,4.0],
+            ['A-',92,90,3.7],
+            ['B+',89,87,3.3],
+            ['B',86,83,3.0],
+            ['B-',82,80,2.7],
+            ['C+',79,77,2.3],
+            ['C',76,73,2.0],
+            ['C-',72,70,1.7],
+            ['D+',69,67,1.3],
+            ['D',66,63,1.0],
+            ['D-',62,60,0.7],
+            ['F',59,0,0.0]
+        ],
+        'A' => [
+            ['A',100,90,4.0],
+            ['B',89,80,3.0],
+            ['C',79,70,2.0],
+            ['D',69,60,1.0],
+            ['F',59,0,0.0]
+        ]
+    ];
+
+
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -30,8 +56,7 @@ class CalcController extends Controller
 
         return $this->render('StudySauceBundle:Calc:tab.html.php', [
             'schedules' => $schedules,
-            'scale_converter' => str_replace('public static', '', $this->_getMethodText(new \ReflectionMethod(get_class($this), 'convertToScale'))),
-            'scale' => !empty($schedules) ? reset($schedules)->getGradeScale() : true,
+            'scale' => !empty($schedules) ? reset($schedules)->getGradeScale() : [],
             'termGPA' => !empty($schedules) ? reset($schedules)->getGPA() : null,
             'overallGPA' => $this->getOverallGPA()
         ]);
@@ -60,7 +85,7 @@ class CalcController extends Controller
                 if(!empty($course)) {
                     // set the scale
                     if($first) {
-                        $s->setGradeScale($request->get('scale') == 'true');
+                        $s->setGradeScale($request->get('scale'));
                         $orm->merge($s);
                     }
                     $first = false;
@@ -124,89 +149,21 @@ class CalcController extends Controller
     }
 
     /**
-     * @param $isExtended
+     * @param $scale
      * @param $score
      * @return array
      */
-    public static function convertToScale($isExtended, $score)
+    public static function convertToScale($scale, $score)
     {
+        if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
+            $scale = self::$presets['A +/-'];
         if($score === null)
             return [null, null];
-        if($isExtended)
-        {
-            if($score >= 97) {
-                return ['A+', '4.0'];
-            }
-            else if($score >= 93) {
-                return ['A', '4.0'];
-            }
-            else if($score >= 90) {
-                return ['A-', '3.7'];
-            }
-            else if($score >= 87) {
-                return ['B+', '3.3'];
-            }
-            else if($score >= 83) {
-                return ['B', '3.0'];
-            }
-            else if($score >= 80) {
-                return ['B-', '2.7'];
-            }
-            else if($score >= 77) {
-                return ['C+', '2.3'];
-            }
-            else if($score >= 73) {
-                return ['C', '2.0'];
-            }
-            else if($score >= 70) {
-                return ['C-', '1.7'];
-            }
-            else if($score >= 67) {
-                return ['D+', '1.3'];
-            }
-            else if($score >= 63) {
-                return ['D', '1.0'];
-            }
-            else if($score >= 60) {
-                return ['D-', '0.7'];
-            }
-            else {
-                return ['F', '0.0'];
-            }
+        foreach($scale as $s) {
+            if($score <= $s[1] && $score >= $s[2])
+                return [$s[0], $s[3]];
         }
-        else
-        {
-            if($score >= 90) {
-                return ['A', '4.0'];
-            }
-            else if($score >= 80) {
-                return ['B', '3.0'];
-            }
-            else if($score >= 70) {
-                return ['C', '2.0'];
-            }
-            else if($score >= 60) {
-                return ['D', '1.0'];
-            }
-            else {
-                return ['F', '0.0'];
-            }
-        }
-    }
-
-    /**
-     * @param \ReflectionMethod $m
-     * @return string
-     */
-    private function _getMethodText(\ReflectionMethod $m)
-    {
-        // check if current method has a reference to the template
-        $line_start     = $m->getStartLine() - 1;
-        $line_end       = $m->getEndLine();
-        $line_count     = $line_end - $line_start;
-        $line_array     = file($m->getFileName());
-        $methodText = implode("", array_slice($line_array,$line_start,$line_count));
-        return $methodText;
+        return [null, null];
     }
 
 }

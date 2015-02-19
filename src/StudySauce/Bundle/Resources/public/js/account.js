@@ -84,8 +84,9 @@ jQuery(document).ready(function() {
         })
     });
 
-    function submitAccount()
+    function submitAccount(evt)
     {
+        evt.preventDefault();
         var account = jQuery('#account');
         if(account.find('.form-actions').is('.invalid'))
             return;

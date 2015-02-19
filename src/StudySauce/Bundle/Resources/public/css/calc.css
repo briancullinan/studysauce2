@@ -1,10 +1,18 @@
 
-#calculator .nav small
+#calculator h2
+{
+    margin-right:-120px;
+    padding-right:120px;
+    display:inline-block;
+    width:100%;
+}
+
+#calculator a[href="#what-if"] small
 {
     font-weight: bold;
 }
 
-#calculator .nav strong
+#calculator a[href="#what-if"] strong
 {
     font-size: 20px;
     height: 16px;
@@ -20,59 +28,6 @@
     width:60px;
     z-index: 2;
     position:relative;
-}
-
-#calculator .what-if label
-{
-    margin: 0 -2px;
-    padding: 0 2px;
-    display:inline-block;
-    width:50%;
-}
-
-#calculator .what-if,
-#calculator .class-row > *.what-if,
-#calculator.what-if-only .term-row header > *:nth-child(2),
-#calculator.what-if-only .class-row > *:nth-child(2),
-#calculator.what-if-only .term-row header > *:nth-child(4),
-#calculator.what-if-only .class-row > *:nth-child(5),
-#calculator.what-if-only .term-row header > *:nth-child(5),
-#calculator.what-if-only .class-row > *:nth-child(6),
-#calculator.what-if-only .not-what-if
-{
-    display:none;
-}
-
-#calculator.what-if-only .term-row header > *:nth-child(3)
-{
-    width: 60%;
-}
-
-#calculator.what-if-only .class-row > *.what-if
-{
-    width:45%;
-    display:inline-block;
-    text-align: left;
-}
-
-#calculator.what-if-only .what-if
-{
-    display:block;
-}
-
-#calculator select.cumulative + span,
-#calculator select.projected + span
-{
-    width:auto;
-    display:inline;
-}
-
-#calculator.what-if-only .class-row > *.what-if:before,
-#calculator select.cumulative + span:before,
-#calculator select.projected + span:before
-{
-    content: "\02039";
-    font-weight: bold;
 }
 
 #calculator .cumulative + span,
@@ -139,6 +94,14 @@
     position:absolute;
     left:10px;
     bottom:10px;
+    padding-left:30px;
+}
+
+#calculator a[href="#calc-info"]
+{
+    position:absolute;
+    right:10px;
+    bottom:10px;
 }
 
 #calculator .grade-row,
@@ -161,8 +124,8 @@
     background: url(../images/noise_white.png) #FFFFFF;
     border: 1px solid #555;
     border-radius: 10px;
-    padding: 0 10px;
-    margin: 0 -10px;
+    padding: 0 20px;
+    margin: 0;
 }
 
 #grade-scale table tr:hover th,
@@ -186,6 +149,13 @@
     color:#00CCEE;
 }
 
+#calculator .term-row header
+{
+    display:inline-block;
+    width:75%;
+}
+
+#calculator .term-editor > *:first-child,
 #calculator .term-row header > *,
 #calculator .grade-row > *,
 #calculator .class-row > *,
@@ -201,7 +171,11 @@
     text-align: center;
 }
 
-#calculator .term-row header > *,
+#calculator .term-row header > *
+{
+    width: 20%;
+}
+
 #calculator .class-row > *,
 #calculator .term-row > *,
 #calculator .grade-row > *
@@ -236,12 +210,7 @@
     margin-right:-30px;
 }
 
-#calculator.what-if-only .term-row .grade select
-{
-    margin-right:-15px;
-}
-
-#calculator .term-row header > *:first-child,
+#calculator .term-editor > *:first-child,
 #calculator .class-row .class-name,
 #calculator .grade-row .class-name
 {
@@ -292,12 +261,6 @@
     visibility: visible;
 }
 
-.pane-content a[href="#grade-scale"]:not(.more)
-{
-    padding-left:30px;
-    position:relative;
-}
-
 #grade-scale .modal-dialog
 {
     width:400px;
@@ -324,5 +287,40 @@
     margin-right: -15px;
 }
 
+#what-if .nav-tabs
+{
+    margin: -15px -15px 15px -15px;
+    float: none;
+    width: auto;
+    max-width: none;
+}
 
+#what-if .nav-tabs>li
+{
+    width:33.33%;
+}
 
+#what-if .nav-tabs>li>a
+{
+    display:block;
+}
+
+#what-if .result
+{
+    border:2px solid #09B;
+    background: #FFF;
+    border-radius: 5px;
+    padding:0 10px;
+    display:inline-block;
+}
+
+#what-if .input
+{
+    display:inline-block;
+    width:auto;
+}
+
+#what-if .tab-content
+{
+    line-height: 200%;
+}

@@ -19,6 +19,7 @@ class EnvironmentController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -83,15 +84,17 @@ class EnvironmentController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
         // store quiz results
-        $quiz = new Quiz5();
-        $quiz->setCourse($course);
-        $course->addQuiz5($quiz);
-        $quiz->setBed($request->get('bed'));
-        $quiz->setMozart($request->get('mozart'));
-        $quiz->setNature($request->get('nature'));
-        $quiz->setBreaks($request->get('breaks'));
-
-        $orm->persist($quiz);
+        if($request->get('bed') !== null && $request->get('mozart') !== null && $request->get('nature') !== null &&
+            $request->get('breaks') !== null) {
+            $quiz = new Quiz5();
+            $quiz->setCourse($course);
+            $course->addQuiz5($quiz);
+            $quiz->setBed($request->get('bed'));
+            $quiz->setMozart($request->get('mozart'));
+            $quiz->setNature($request->get('nature'));
+            $quiz->setBreaks($request->get('breaks'));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course1Bundle:Environment:wizard', ['_step' => 2, '_format' => 'tab']);

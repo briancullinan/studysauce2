@@ -19,6 +19,7 @@ class GroupStudyController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -88,7 +89,8 @@ class GroupStudyController extends Controller
             $course->setGroupGoals($request->get('groupGoals'));
             $orm->merge($course);
         }
-        else {
+        if(!empty($request->get('badTimes')) && !empty($request->get('building')) &&
+            !empty($request->get('groupRole')) && $request->get('groupBreaks') !== null) {
             // store quiz results
             $quiz = new GroupStudy();
             $quiz->setCourse($course);

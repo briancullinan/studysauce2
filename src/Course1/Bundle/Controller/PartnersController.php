@@ -19,6 +19,7 @@ class PartnersController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -83,22 +84,17 @@ class PartnersController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
         // store quiz results
-        $quiz = new Quiz6();
-        $quiz->setCourse($course);
-        $course->addQuiz6($quiz);
-        if(!empty($request->get('help')))
+        if(!empty($request->get('help')) && !empty($request->get('attribute')) &&
+            !empty($request->get('often')) && !empty($request->get('usage'))) {
+            $quiz = new Quiz6();
+            $quiz->setCourse($course);
+            $course->addQuiz6($quiz);
             $quiz->setHelp(explode(',', $request->get('help')));
-
-        if(!empty($request->get('attribute')))
             $quiz->setAttribute($request->get('attribute'));
-
-        if(!empty($request->get('often')))
             $quiz->setOften($request->get('often'));
-
-        if(!empty($request->get('usage')))
             $quiz->setUsage(explode(',', $request->get('usage')));
-
-        $orm->persist($quiz);
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course1Bundle:Partners:wizard', ['_step' => 2, '_format' => 'tab']);

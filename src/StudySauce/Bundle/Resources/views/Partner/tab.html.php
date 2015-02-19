@@ -1,9 +1,17 @@
 <?php
 use StudySauce\Bundle\Entity\Partner;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-/** @var $partner Partner */
-$permissions = !empty($partner) ? $partner->getPermissions() : ['goals', 'metrics', 'deadlines', 'uploads', 'plan', 'profile'];
+/** @var $partner PartnerInvite */
+$permissions = !empty($partner) && $partner instanceof PartnerInvite ? $partner->getPermissions() : [
+    'goals',
+    'metrics', 
+    'deadlines',
+    'uploads',
+    'plan',
+    'profile'
+];
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -54,7 +62,7 @@ $view['slots']->start('body'); ?>
                     <input type="hidden" name="partner-plupload">
                 </div>
 
-                <div id="partner-invite">
+                <div id="partner-invite" class="<?php print ($isAdviser ? 'read-only' : 'edit'); ?>">
                     <div class="first-name">
                         <label class="input">
                             <input type="text" value="<?php print (!empty($partner) ? $partner->getFirst() : ''); ?>"

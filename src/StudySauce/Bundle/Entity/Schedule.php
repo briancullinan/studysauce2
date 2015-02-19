@@ -68,9 +68,9 @@ class Schedule
     protected $sharp9pm2am;
 
     /**
-     * @ORM\Column(type="boolean", name="grade_scale")
+     * @ORM\Column(type="json_array", name="grade_scale")
      */
-    protected $gradeScale = true;
+    protected $gradeScale = [];
 
     /**
      * @ORM\Column(type="datetime", name="created")
@@ -141,7 +141,7 @@ class Schedule
     public function getGPA()
     {
         $hours = $this->getCreditHours();
-        if(empty($hours))
+        if(empty($hours) || !$this->getClasses()->exists(function ($x, Course $c) {return $c->getGPA() !== null;}))
             return null;
         $score = array_sum($this->getClasses()->map(function (Course $c) {
             return floatval($c->getGPA()) * $c->getCreditHours();
@@ -680,7 +680,7 @@ class Schedule
     /**
      * Set gradeScale
      *
-     * @param boolean $gradeScale
+     * @param array $gradeScale
      * @return Schedule
      */
     public function setGradeScale($gradeScale)
@@ -693,7 +693,7 @@ class Schedule
     /**
      * Get gradeScale
      *
-     * @return boolean 
+     * @return array
      */
     public function getGradeScale()
     {

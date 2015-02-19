@@ -19,6 +19,7 @@ class StrategiesController extends Controller
 {
     /**
      * @param $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -84,11 +85,13 @@ class StrategiesController extends Controller
         $course = $user->getCourse3s()->first();
 
         // store quiz results
-        $quiz = new Strategies();
-        $quiz->setCourse($course);
-        $course->addStrategy($quiz);
-        $quiz->setSelfTesting(explode(',', $request->get('selfTesting')));
-        $orm->persist($quiz);
+        if(!empty($request->get('selfTesting'))) {
+            $quiz = new Strategies();
+            $quiz->setCourse($course);
+            $course->addStrategy($quiz);
+            $quiz->setSelfTesting(explode(',', $request->get('selfTesting')));
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course3Bundle:Strategies:wizard', ['_step' => 2, '_format' => 'tab']);

@@ -19,6 +19,7 @@ class SettingGoalsController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -83,34 +84,23 @@ class SettingGoalsController extends Controller
         /** @var Course1 $course */
         $course = $user->getCourse1s()->first();
         // store quiz results
-        $quiz = new Quiz2();
-        $quiz->setCourse($course);
-        $course->addQuiz2($quiz);
-        if(!empty($request->get('performance')))
+        if(!empty($request->get('performance')) && !empty($request->get('acronymS')) &&
+            !empty($request->get('acronymM')) && !empty($request->get('acronymA')) &&
+            !empty($request->get('acronymR')) && !empty($request->get('acronymT')) &&
+            !empty($request->get('motivationI')) && !empty($request->get('motivationE'))) {
+            $quiz = new Quiz2();
+            $quiz->setCourse($course);
+            $course->addQuiz2($quiz);
             $quiz->setGoalPerformance($request->get('performance'));
-
-        if(!empty($request->get('acronymS')))
             $quiz->setSpecific($request->get('acronymS'));
-
-        if(!empty($request->get('acronymM')))
             $quiz->setMeasurable($request->get('acronymM'));
-
-        if(!empty($request->get('acronymA')))
             $quiz->setAchievable($request->get('acronymA'));
-
-        if(!empty($request->get('acronymR')))
             $quiz->setRelevant($request->get('acronymR'));
-
-        if(!empty($request->get('acronymT')))
             $quiz->setTimeBound($request->get('acronymT'));
-
-        if(!empty($request->get('motivationI')))
             $quiz->setIntrinsic($request->get('motivationI'));
-
-        if(!empty($request->get('motivationE')))
             $quiz->setExtrinsic($request->get('motivationE'));
-
-        $orm->persist($quiz);
+            $orm->persist($quiz);
+        }
         $orm->flush();
 
         return $this->forward('Course1Bundle:SettingGoals:wizard', ['_step' => 2, '_format' => 'tab']);

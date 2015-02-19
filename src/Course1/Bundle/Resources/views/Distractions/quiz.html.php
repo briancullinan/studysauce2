@@ -4,8 +4,8 @@ use Course1\Bundle\Entity\Quiz4;
 $view->extend('Course1Bundle:Shared:layout.html.php');
 
 /** @var Quiz4 $quiz */
-$complete = !empty($quiz->getMultitask()) &&
-    !empty($quiz->getLowerScore()) && !empty($quiz->getDistraction()) && !empty($quiz->getDownside());
+$complete = !empty($quiz->getMultitask()) && !empty($quiz->getLowerScore()) &&
+    !empty($quiz->getDistraction()) && !empty($quiz->getDownside());
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course1 step2 <?php print ($complete ? ' right' : ''); ?>" id="course1_distractions-step2">

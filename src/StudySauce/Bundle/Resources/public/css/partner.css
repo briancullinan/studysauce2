@@ -61,6 +61,11 @@
     width: 100%;
 }
 
+#partner-invite.read-only .form-actions
+{
+    display:none;
+}
+
 #partner .permissions
 {
     width: 300px;

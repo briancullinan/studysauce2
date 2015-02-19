@@ -53,6 +53,11 @@
     z-index:1;
 }
 
+#calc-empty .close,
+#checkin-empty .close,
+#profile-upgrade .close,
+#plan-upgrade .close,
+#metrics-empty .close,
 #plan-empty .close
 {
     display:none;
@@ -61,26 +66,6 @@
 #plan-empty.modal.in .modal-dialog .modal-content
 {
     margin-top:-25%;
-}
-
-#metrics-empty .close
-{
-    display: none;
-}
-
-#plan-upgrade .close
-{
-    display: none;
-}
-
-#profile-upgrade .close
-{
-    display: none;
-}
-
-#checkin-empty .close
-{
-    display: none;
 }
 
 #bookmark .modal-body

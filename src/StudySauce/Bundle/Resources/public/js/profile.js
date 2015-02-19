@@ -69,8 +69,9 @@ $(document).ready(function () {
     body.on('show', '#customization', customizationFunc);
 
     // TODO: make the next unanswered question visible
-    function submitProfile()
+    function submitProfile(evt)
     {
+        evt.preventDefault();
         var profile = $('#profile');
         if(profile.find('.highlighted-link').is('.invalid'))
             return;
@@ -101,8 +102,9 @@ $(document).ready(function () {
         });
     }
     body.on('submit', '#profile form', submitProfile);
-    function submitCustomization()
+    function submitCustomization(evt)
     {
+        evt.preventDefault();
         var customization = $('#customization');
         if(customization.find('.highlighted-link').is('.invalid'))
             return;

@@ -106,8 +106,9 @@ $(document).ready(function () {
     body.on('keyup', '#goals .goal-row textarea', function () {
         goalsFunc.apply(jQuery(this).parents('.goal-row'));
     });
-    function submitGoals()
+    function submitGoals(evt)
     {
+        evt.preventDefault();
         var goals = $('#goals');
         if(goals.find('.form-actions').is('.invalid'))
             return;

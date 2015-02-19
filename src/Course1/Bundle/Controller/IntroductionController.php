@@ -20,6 +20,7 @@ class IntroductionController extends Controller
 {
     /**
      * @param int $_step
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function wizardAction($_step = 0)
     {
@@ -97,34 +98,18 @@ class IntroductionController extends Controller
             $orm->merge($course);
         }
 
-        if(!empty($request->get('education')) || !empty($request->get('mindset')) || !empty($request->get('time')) ||
-            !empty($request->get('devices')) || !empty($request->get('study'))) {
+        if(!empty($request->get('education')) && !empty($request->get('mindset')) && !empty($request->get('time')) &&
+            !empty($request->get('devices')) && !empty($request->get('study'))) {
 
             // store quiz results
             $quiz = new Quiz1();
             $quiz->setCourse($course);
             $course->addQuiz1($quiz);
-
-            if (!empty($request->get('education'))) {
-                $quiz->setEducation($request->get('education'));
-            }
-
-            if (!empty($request->get('mindset'))) {
-                $quiz->setMindset($request->get('mindset'));
-            }
-
-            if (!empty($request->get('time'))) {
-                $quiz->setTimeManagement($request->get('time'));
-            }
-
-            if (!empty($request->get('devices'))) {
-                $quiz->setDevices($request->get('devices'));
-            }
-
-            if (!empty($request->get('study'))) {
-                $quiz->setStudyMuch($request->get('study'));
-            }
-
+            $quiz->setEducation($request->get('education'));
+            $quiz->setMindset($request->get('mindset'));
+            $quiz->setTimeManagement($request->get('time'));
+            $quiz->setDevices($request->get('devices'));
+            $quiz->setStudyMuch($request->get('study'));
             $orm->persist($quiz);
         }
         $orm->flush();

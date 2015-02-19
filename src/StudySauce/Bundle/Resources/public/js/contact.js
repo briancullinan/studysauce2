@@ -4,8 +4,8 @@ $(document).ready(function () {
     var body = $('body');
 
     body.on('submit', '#contact-support form, #schedule-demo form', function (evt) {
-        var contact = $('#contact-support:visible, #schedule-demo:visible');
         evt.preventDefault();
+        var contact = $('#contact-support:visible, #schedule-demo:visible');
         if(contact.is('.invalid'))
             return;
         contact.removeClass('valid').addClass('invalid');
@@ -88,8 +88,8 @@ $(document).ready(function () {
     body.on('keyup', '#student-invite input, #bill-parents input', validateInvite);
     body.on('change', '#student-invite input, #bill-parents input', validateInvite);
     body.on('submit', '#student-invite form', function (evt) {
-        var contact = $('#student-invite');
         evt.preventDefault();
+        var contact = $('#student-invite');
         if(contact.is('.invalid'))
             return;
         contact.removeClass('valid').addClass('invalid');
