@@ -7,7 +7,7 @@ $(document).ready(function () {
         schedule.find('.term-row').each(function () {
             var term = $(this);
             term.find('.class-row').each(function () {
-                var row = $(this).closest('.class-row');
+                var row = $(this);
                 if(row.length == 0)
                     return;
                 if(row.find('.class-name input').val().trim() == '' &&
@@ -93,8 +93,8 @@ $(document).ready(function () {
                     });
 
                 // check for invalid time entry
-                var from = row.find('.start-time input').timeEntry('getTime'),
-                    to = row.find('.end-time input').timeEntry('getTime');
+                var from = row.find('.start-time input.is-timeEntry').timeEntry('getTime'),
+                    to = row.find('.end-time input.is-timeEntry').timeEntry('getTime');
                 if(from != null && to != null) {
                     var length = (to.getTime() - from.getTime()) / 1000;
                     if (length < 0)
@@ -107,8 +107,8 @@ $(document).ready(function () {
                 }
 
                 // check if there are any overlaps with the other rows
-                var startDate = new Date(row.find('.start-date input').val());
-                var endDate = new Date(row.find('.end-time input').val());
+                var startDate = new Date(row.find('.start-date input.hasDatepicker').val());
+                var endDate = new Date(row.find('.end-time input.hasDatepicker').val());
                 var startTime = new Date('1/1/1970 ' + row.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
                 if(row.find('.start-time input').val().match(/pm$/i) != null)
                     startTime = startTime.addHours(12);
@@ -217,9 +217,20 @@ $(document).ready(function () {
         var schedule = $('#schedule'),
             response = $(data);
         schedule.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
+        // remove blank terms
+        schedule.find('.term-row').each(function () {
+            if($(this).find('.class-row:not(.blank)').length == 0)
+                $(this).remove();
+        });
+
+        // update remainging terms
         response.find('.term-row').each(function (j) {
             var responseTerm = $(this),
+                responseId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(responseTerm.attr('class'))[1],
                 term = schedule.find('.term-row').eq(j);
+            // update schedule id if newly added
+            term.removeClass('.schedule-id-').addClass('schedule-id-' + responseId);
+
             term.find('.university input').data('state', term.find('.university input').val().trim());
             term.find('.schedule .class-row.valid').remove();
             responseTerm.find('.schedule:not(.other) .class-row')
@@ -228,14 +239,15 @@ $(document).ready(function () {
             responseTerm.find('.schedule.other .class-row')
                 .prependTo(term.find('.schedule.other'));
         });
+        if(schedule.find('.term-row').length == 1)
+            schedule.removeClass('multi').addClass('single');
         schedule.scrollintoview(DASHBOARD_MARGINS);
         planFunc();
         body.trigger('scheduled');
     }
 
-    body.on('click', '#schedule a[href="#add-class"]', function (evt) {
-        var schedule = $('#schedule');
-        evt.preventDefault();
+    function addClass()
+    {
         var list = $(this).parents('.schedule'),
             examples = ['HIST 101', 'CALC 120', 'MAT 200', 'PHY 110', 'BUS 300', 'ANT 350', 'GEO 400', 'BIO 250', 'CHM 180', 'PHIL 102', 'ENG 100'],
             otherExamples = ['Work', 'Practice', 'Gym', 'Meeting'],
@@ -247,8 +259,13 @@ $(document).ready(function () {
             .removeClass('is-timeEntry hasDatepicker').removeAttr('id').val('');
         addClass.find('.day-of-the-week input').removeAttr('checked').prop('checked', false);
         addClass.find('.class-name input').attr('placeholder', list.is('.other')
-                ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
-                : examples[Math.floor(Math.random() * examples.length)]);
+            ? otherExamples[Math.floor(Math.random() * otherExamples.length)]
+            : examples[Math.floor(Math.random() * examples.length)]);
+    }
+
+    body.on('click', '#schedule a[href="#add-class"]', function (evt) {
+        evt.preventDefault();
+        addClass.apply(this);
         planFunc();
     });
 
@@ -370,13 +387,17 @@ $(document).ready(function () {
             oldRows = newTerm.find('.class-row');
         schedule.removeClass('single').addClass('multi');
         newTerm.attr('class', newTerm.attr('class').replace(/schedule-id-([0-9]*)(\s|$)/ig, ' schedule-id- '));
-        newTerm.find('.schedule:not(.other) a[href="#add-class"]').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click');
-        newTerm.find('.schedule.other a[href="#add-class"]').trigger('click');
+        for(var i = 0; i < 6; i++)
+        {
+            addClass.apply(newTerm.find('.schedule:not(.other) a[href="#add-class"]'));
+        }
+        addClass.apply(newTerm.find('.schedule.other a[href="#add-class"]'));
         oldRows.remove();
+        planFunc();
     });
 
     var autoFillDate = function () {
-        var schedule = $('#schedule');
+        var schedule = $(this).parents('.term-row');
         var first = $(this).closest('.class-row').add(schedule.find('.class-row')).filter(function () {
                 var row = $(this);
                 return row.find('.start-time input[type="text"]').val().trim() != '' && row.find('.end-time input[type="text"]').val().trim() != ''

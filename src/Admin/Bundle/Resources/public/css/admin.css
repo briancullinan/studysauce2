@@ -131,30 +131,6 @@
     background-position: left -1152px;
 }
 
-#right-panel .main-menu a[href*="/command"] span
-{
-    background-position: left -4905px;
-}
-
-#right-panel .main-menu a[href*="/command"]:hover span,
-#right-panel .main-menu a[href*="/command"]:focus span,
-#right-panel .main-menu a[href*="/command"]:active span,
-#right-panel .main-menu a[href*="/command"].active span {
-    background-position: left -5005px;
-}
-
-#right-panel .main-menu a[href*="/emails"] span
-{
-    background-position: left -8205px;
-}
-
-#right-panel .main-menu a[href*="/emails"]:hover span,
-#right-panel .main-menu a[href*="/emails"]:focus span,
-#right-panel .main-menu a[href*="/emails"]:active span,
-#right-panel .main-menu a[href*="/emails"].active span {
-    background-position: left -8305px;
-}
-
 #command_control .edit a[href="#confirm-remove-user"],
 #command_control .edit a[href="#confirm-cancel-user"],
 #command_control .edit a[href="#edit-user"],
@@ -168,17 +144,6 @@
 #group-manager .read-only a[href="#save-group"]
 {
     display:none;
-}
-
-#right-panel .main-menu a[href*="/activity"]:hover span,
-#right-panel .main-menu a[href*="/activity"]:focus span,
-#right-panel .main-menu a[href*="/activity"]:active span,
-#right-panel .main-menu a[href*="/activity"].active span {
-    background-position: left -1305px;
-}
-
-#right-panel .main-menu a[href*="/activity"] span {
-    background-position: left -1205px;
 }
 
 #group-manager th:nth-child(5),
@@ -229,18 +194,6 @@
 #command_control .read-only a[href*="mailto:"]:hover
 {
     background-position: left -4152px;
-}
-
-#validation.panel-pane,
-#emails.panel-pane,
-#activity.panel-pane,
-#command_control.panel-pane
-{
-    padding-left:20px;
-    padding-right:70px;
-    width:auto;
-    min-width:100%;
-    display: inline-block;
 }
 
 #command_control.all table.results {

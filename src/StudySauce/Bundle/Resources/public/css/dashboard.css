@@ -176,6 +176,7 @@ aside + .panel-pane,
     margin-bottom:0;
 }
 
+#what-if .class-row .class-name span,
 #calculator .class-row .class-name span,
 #customization .study-types h4 span,
 #customization .study-difficulty h4 span,

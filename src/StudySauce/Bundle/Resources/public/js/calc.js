@@ -276,7 +276,6 @@ $(document).ready(function () {
         });
     }
 
-
     body.on('submit', '#calculator form', submitCalc);
 
     body.on('click', '#calculator a[href="#edit-grade"]', function (evt) {
@@ -318,25 +317,120 @@ $(document).ready(function () {
     });
 
     body.on('click', '#calculator a[href="#what-if"]', function () {
-        // update course list in dialog
         var calc = $('#calculator'),
             dialog = $('#what-if'),
             firstRow = dialog.find('.class-row').first(),
-            classes = calc.find('.term-row').first().find('.class-row');
+            classes = calc.find('.term-row').first().find('.class-row'),
+            firstGrade = classes.first().find('> .grade span').text();
+
         dialog.find('select.class-name').find('option').remove();
         dialog.find('.class-row').not(firstRow).remove();
+
+        // update course list in dialog
         classes.each(function (i) {
             var row = $(this),
                 courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
             $('<option value="' + courseId + '">' + row.find('.class-name').text() + '</option>')
                 .appendTo(dialog.find('select.class-name'));
             firstRow.find('.class-name').html(row.find('.class-name').html());
-            firstRow.find('.hours').text(row.find('.hours input').val());
+            firstRow.find('.hours').text(row.find('.hours input').val() + ' hrs');
             firstRow.find('select').val(row.find('> .grade span').text());
             if(i < classes.length - 1)
                 firstRow.clone().insertAfter(firstRow);
         });
+
+        // update grade scale in dialog to match selected grade scale
+        dialog.find('#class-grade select:not(.class-name) option, #term-gpa select option').remove();
+        $('#grade-scale').find('tbody tr').each(function () {
+            if($(this).find('td:nth-child(1) input').val().trim() == '')
+                return true;
+
+            // class grade uses the score
+            $('<option value="' + $(this).find('td:nth-child(3) input').val() + '">' +
+            $(this).find('td:nth-child(1) input').val() +
+            '</option>').appendTo(dialog.find('#class-grade select:not(.class-name)'));
+            if(firstGrade == $(this).find('td:nth-child(1) input').val())
+                dialog.find('#class-grade select:not(.class-name)').val($(this).find('td:nth-child(3) input').val());
+
+            // term gpa uses the gpa result
+            $('<option value="' + $(this).find('td:nth-child(4) input').val() + '">' +
+            $(this).find('td:nth-child(1) input').val() +
+            '</option>').appendTo(dialog.find('#term-gpa select'));
+        });
+
+        // set some defaults to their current scores
+        dialog.find('#term-gpa .class-row').each(function (i) {
+            $(this).find('select').val(classes.eq(i).find('> .gpa').text());
+        });
+
+        dialog.find('#class-grade select:not(.class-name)').val();
         dialog.find('.overall-gpa').val(Math.round(parseFloat(calc.find('.cumulative').text()) * 10) / 10);
+
+        // process the current results
+        dialog.find('#class-grade select:not(.class-name)').trigger('change');
+        dialog.find('#term-gpa select').first().trigger('change');
+        dialog.find('#overall-gpa select').first().trigger('change');
+    });
+
+    body.on('change', '#what-if #class-grade select', function () {
+        /*
+        Grade = (Assignment * Percent + Assignment * Remaining Percent) / Total Percent
+
+        Backwards:
+        (Grade * Total Percent - Assignment * Percent) / Remaining Percent = Assignment
+
+         */
+        var that = $(this),
+            calc = $('#calculator'),
+            grade = that.parents('#class-grade'),
+            row = calc.find('.class-row.course-id-' + grade.find('.class-name').val()),
+            result = grade.find('.result'),
+            completed = row.find('> .percent').text(),
+            wants = grade.find('select:not(.class-name)').val();
+        completed = parseInt(completed.substr(0, completed.length - 1));
+        var score = (wants * 100 - parseInt(row.find('> .score').text()) * completed) / (100 - completed);
+        score = Math.round(score * 10) / 10;
+        result.text(score + '%');
+    });
+
+    body.on('change', '#what-if #term-gpa select', function () {
+        var term = $(this).parents('#term-gpa'),
+            gpa = 0,
+            total = 0;
+        term.find('.class-row').each(function () {
+            var hours = $(this).find('.hours').text();
+            hours = parseInt(hours.substr(0, hours.length - 4));
+            gpa += $(this).find('select').val() * hours;
+            total += hours;
+        });
+        term.find('.result').text(Math.round(gpa / total * 100) / 100);
+    });
+
+    body.on('change', '#overall-gpa select', function () {
+        /*
+         Overall GPA = (Term GPA * Hours + Past GPA * Past Hours) / Total Hours
+
+         Backwards:
+         (Overall GPA * Total Hours - Past GPA * Past Hours) / Hours = Term GPA
+
+         */
+        var calc = $('#calculator'),
+            overall = $(this).parents('#overall-gpa'),
+            result = overall.find('.result'),
+            current = calc.find('.term-row').first(),
+            currentHours = current.find('> .hours').text(),
+            totalHours = 0,
+            pastGPA = 0;
+        currentHours = parseInt(currentHours.substr(0, currentHours.length - 4));
+        calc.find('.term-row').not(current).each(function () {
+            var hours = $(this).find('> .hours');
+            hours = parseInt(hours.substr(0, hours.length - 4));
+            totalHours += hours;
+            pastGPA = floatVal($(this).find('> .gpa span').text()) * hours;
+        });
+        totalHours += currentHours;
+        var termGPA = (overall.find('select').val() * totalHours - pastGPA) / currentHours;
+        result.text(Math.round(termGPA * 100) / 100);
     });
 
     body.on('click', '#grade-scale a[href="#save-scale"]', validateGrades);

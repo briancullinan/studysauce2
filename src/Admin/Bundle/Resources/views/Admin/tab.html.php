@@ -22,11 +22,10 @@ $user = $app->getUser();
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    ['@AdminBundle/Resources/public/css/admin.css'],
-    [],
-    ['output' => 'bundles/admin/css/*.css']
-) as $url): ?>
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/menu.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
+    <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
+<?php endforeach;
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/admin.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
@@ -86,8 +85,8 @@ $view['slots']->start('body'); ?>
                 </select></label></th>
         <th><label>
                 <span><a href="#group-manager" data-toggle="modal">Manage</a></span><br/>
-                <span>TAL: <?php print count($users); ?></span><br/>
-                <span>CSA: <?php print count($users); ?></span><br/>
+                <span>TAL: <?php print $torch; ?></span><br/>
+                <span>CSA: <?php print $csa; ?></span><br/>
                 <select name="group">
                     <option value="">Group</option>
                     <option value="_ascending">Ascending (A-Z)</option>

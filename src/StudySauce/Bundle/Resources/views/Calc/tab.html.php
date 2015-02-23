@@ -33,8 +33,8 @@ $view['slots']->start('body'); ?>
             <a href="#what-if" data-toggle="modal" class="subtle">What if <small>?</small>?<strong>?</strong></a>
             <form action="<?php print $view['router']->generate('calculator_update'); ?>" method="post">
                 <p>
-                    <strong class="projected"><?php print (empty($termGPA) ? '&bullet;' : $termGPA); ?></strong><span> Projected GPA (this term)</span>
-                    <strong class="cumulative"><?php print (empty($overallGPA) ? '&bullet;' : $overallGPA); ?></strong><span> Cumulative GPA (all past terms)</span>
+                    <strong class="projected" title="Your GPA for the current term based on your grades to date."><?php print (empty($termGPA) ? '&bullet;' : $termGPA); ?></strong><span> Projected GPA (this term)</span>
+                    <strong class="cumulative" title="Your GPA to date which excludes the current term."><?php print (empty($overallGPA) ? '&bullet;' : $overallGPA); ?></strong><span> Cumulative GPA (all past terms)</span>
                 </p>
                 <?php
                 $first = true;
@@ -64,11 +64,11 @@ $view['slots']->start('body'); ?>
                     <div class="term-editor">
                         <label></label>
                         <header>
-                            <label>Score</label>
-                            <label>Grade</label>
-                            <label>Grade point</label>
-                            <label>% of grade</label>
-                            <label>Hours</label>
+                            <label title="Your grade on the assignment">Score</label>
+                            <label title="Your letter grade based on your grading scale">Grade</label>
+                            <label title="Your grade point for the class (calculates your GPA)">Grade point</label>
+                            <label title="How much of your course grade the assignment is worth">% of grade</label>
+                            <label title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)">Hours</label>
                         </header>
                         <?php
                         $courses = array_values($s->getClasses()->toArray());
@@ -77,11 +77,11 @@ $view['slots']->start('body'); ?>
                             ?>
                         <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
                             <div class="class-name"><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></div>
-                            <div class="score"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
-                            <div class="grade"><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
-                            <div class="gpa"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
-                            <div class="percent"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
-                            <div class="hours <?php print ($first ? 'edit' : 'read-only'); ?>"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="<?php print $c->getLength() * count($c->getDotw()) / 3600; ?>" /></label></div>
+                            <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
+                            <div class="grade" title="Your letter grade based on your grading scale"><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
+                            <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
+                            <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
+                            <div class="hours <?php print ($first ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="<?php print $c->getLength() * count($c->getDotw()) / 3600; ?>" /></label></div>
                             <div class="grade-editor">
                                 <?php
                                 $isDemo = false;
@@ -103,10 +103,10 @@ $view['slots']->start('body'); ?>
                                     <div class="grade-row grade-id-<?php print (!$isDemo ? $d->getId() : ''); ?> <?php print ($isDemo || $d->getScore() === null || $d->getPercent() === null ? ' edit' : 'read-only'); ?>">
                                         <div class="assignment">
                                             <label class="input"><input type="text" value="<?php print (!$isDemo ? $d->getAssignment() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getAssignment()) ? $d->getAssignment() : 'Assignment'); ?>" /></label></div>
-                                        <div class="score"><label class="input"><input type="text" value="<?php print ($d instanceof Deadline ? '' : $d->getScore()); ?>" /></label></div>
-                                        <div class="grade"><span><?php print ($d instanceof Deadline || empty($d->getGrade()) ? '&bullet;' : $d->getGrade()); ?></span></div>
-                                        <div class="gpa"><?php print ($d instanceof Deadline || empty($d->getGPA()) ? '&bullet;' : $d->getGPA()); ?></div>
-                                        <div class="percent"><label class="input"><input type="text" value="<?php print (!$isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" /></label></div>
+                                        <div class="score" title="Your grade on the assignment"><label class="input"><input type="text" value="<?php print ($d instanceof Deadline ? '' : $d->getScore()); ?>" /></label></div>
+                                        <div class="grade" title="Your letter grade based on your grading scale"><span><?php print ($d instanceof Deadline || empty($d->getGrade()) ? '&bullet;' : $d->getGrade()); ?></span></div>
+                                        <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print ($d instanceof Deadline || empty($d->getGPA()) ? '&bullet;' : $d->getGPA()); ?></div>
+                                        <div class="percent" title="How much of your course grade the assignment is worth"><label class="input"><input type="text" value="<?php print (!$isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" /></label></div>
                                         <div class="read-only"><a href="#edit-grade">&nbsp;</a><a href="#remove-grade">&nbsp;</a></div>
                                     </div>
                                 <?php } ?>

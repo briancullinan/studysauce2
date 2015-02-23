@@ -214,7 +214,7 @@ $(document).ready(function () {
                     //prv = cur = -1;
                 },
 
-                onAfterUpdate: function ( inst ) {
+                onAfterUpdate: function () {
                     var that = $(this);
                     $('<a href="#everything">All</a>')
                         .insertBefore($(this).find('.ui-datepicker-header'))

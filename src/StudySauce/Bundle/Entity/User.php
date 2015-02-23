@@ -208,7 +208,7 @@ class User extends BaseUser implements EncoderAwareInterface
             $completed += ($course1->getLesson1() === 4 ? 1 : 0) + ($course1->getLesson2() === 4 ? 1 : 0) +
                 ($course1->getLesson3() === 4 ? 1 : 0) + ($course1->getLesson4() === 4 ? 1 : 0) +
                 ($course1->getLesson5() === 4 ? 1 : 0) + ($course1->getLesson6() === 4 ? 1 : 0) +
-                ($course1->getLesson7() && !$this->hasRole('ROLE_PAID') === 4 ? 1 : 0);
+                ($course1->getLesson7() === 4 && !$this->hasRole('ROLE_PAID') ? 1 : 0);
         }
         if (!empty($course2)) {
             $completed += ($course2->getLesson1() === 4 ? 1 : 0) + ($course2->getLesson2() === 4 ? 1 : 0) +

@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Controller\AccountController;
 use StudySauce\Bundle\Controller\BuyController;
+use StudySauce\Bundle\Controller\EmailsController;
 use StudySauce\Bundle\Entity\Coupon;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Event;
@@ -18,9 +19,7 @@ use StudySauce\Bundle\Entity\Goal;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
-use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -359,6 +358,28 @@ class AdminController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
 
+        /** @var QueryBuilder $torch */
+        $torch = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('g', $joins)) {
+            $torch = $torch->leftJoin('u.groups', 'g');
+        }
+        $torch = $torch->select('COUNT(DISTINCT u.id)')
+            ->andWhere('g.name LIKE \'%torch%\'')
+            ->getQuery()
+            ->getSingleScalarResult();
+        /** @var int $torch */
+
+        /** @var QueryBuilder $csa */
+        $csa = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('g', $joins)) {
+            $csa = $csa->leftJoin('u.groups', 'g');
+        }
+        $csa = $csa->select('COUNT(DISTINCT u.id)')
+            ->andWhere('g.name LIKE \'%csa%\'')
+            ->getQuery()
+            ->getSingleScalarResult();
+        /** @var int $csa */
+
         /** @var QueryBuilder $paid */
         $paid = self::searchBuilder($orm, $request, $joins);
         if(!in_array('g', $joins)) {
@@ -384,6 +405,7 @@ class AdminController extends Controller
             ->andWhere('c3.lesson1=4 AND c3.lesson2=4 AND c3.lesson3=4 AND c3.lesson4=4 AND c3.lesson5=4')
             ->getQuery()
             ->getSingleScalarResult();
+
         /** @var QueryBuilder $c1l1 */
         $c1l1 = self::searchBuilder($orm, $request, $joins);
         if(!in_array('c1', $joins)) { $c1l1 = $c1l1->leftJoin('u.course1s', 'c1'); }
@@ -511,6 +533,8 @@ class AdminController extends Controller
                 'advisers' => $advisers,
                 'paid' => $paid,
                 'students' => $students,
+                'torch' => $torch,
+                'csa' => $csa,
                 'completed' => $completed,
                 'goals' => $goals,
                 'deadlines' => $deadlines,
@@ -534,65 +558,6 @@ class AdminController extends Controller
                 'c3l3' => $c3l3,
                 'c3l4' => $c3l4,
                 'c3l5' => $c3l5
-            ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function activityAction(Request $request)
-    {
-
-        /** @var $user User */
-        $user = $this->getUser();
-        if(!$user->hasRole('ROLE_ADMIN')) {
-            throw new AccessDeniedHttpException();
-        }
-
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-        $start = new \DateTime('today');
-        if(!empty($request->get('start')))
-            $start->setTimestamp(intval($request->get('start')));
-        $end = new \DateTime('now');
-        if(!empty($request->get('end')))
-            $end->setTimestamp(intval($request->get('end')));
-        /** @var QueryBuilder $entities */
-        $entities = $orm->getRepository('StudySauceBundle:Visit')->createQueryBuilder('v')
-            ->distinct()
-            ->select(['v', 'u'])
-            ->leftJoin('v.user', 'u')
-            ->leftJoin('u.groups', 'g')
-            ->where('v.created > :start AND v.created < :end' . (!empty($request->get('not')) ? (' AND v.id NOT IN (' . $request->get('not') . ')') : ''))
-            ->andWhere('u.roles NOT LIKE \'%s:10:"ROLE_ADMIN"%\' AND v.path != \'/cron\'');
-        if(!empty($request->get('search')))
-            $entities = $entities->andWhere('v.session LIKE \'%' . $request->get('search') . '%\' OR u.email LIKE \'%' . $request->get('search') . '%\' OR u.first LIKE \'%' . $request->get('search') . '%\' OR u.last LIKE \'%' . $request->get('search') . '%\' OR u.id LIKE \'%' . $request->get('search') . '%\' OR g.name LIKE \'%' . $request->get('search') . '%\' OR g.description LIKE \'%' . $request->get('search') . '%\'');
-        $entities = $entities
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->orderBy('v.created', 'DESC')
-            ->setFirstResult(0)
-            ->setMaxResults(100)
-            ->getQuery()
-            ->getResult();
-        /** @var array $entities */
-
-        $visits = array_map(function (Visit $v) {
-                return [
-                    'id' => $v->getId(),
-                    'start' => $v->getCreated()->format('r'),
-                    'content' => '<a href="#visit-id-' . $v->getId() . '"><strong>Path:</strong><span> ' . $v->getMethod() . ' ' . $v->getPath() . '</span><br /><strong>User:</strong><span> ' . (!empty($v->getUser()) ? $v->getUser()->getEmail() : 'Guest') . '</span><br /><strong>Session Id:</strong><span> ' . (!empty($v->getSession()) ? $v->getSession() : 'New session') . '</span></a>',
-                    'className' => 'session-id-' . (!empty($v->getSession()) ? $v->getSession() : '') . ' user-id-' . (!empty($v->getUser()) && !$v->getUser()->hasRole('ROLE_GUEST') && !$v->getUser()->hasRole('ROLE_DEMO') ? $v->getUser()->getId() : '')
-                ];
-            }, $entities);
-
-        if($request->isXmlHttpRequest() && !empty($request->get('start')) && !empty($request->get('end'))) {
-            return new JsonResponse($visits);
-        }
-
-        return $this->render('AdminBundle:Admin:activity.html.php', [
-                'visits' => $visits
             ]);
     }
 
@@ -783,7 +748,7 @@ class AdminController extends Controller
                 $u->setConfirmationToken($tokenGenerator->generateToken());
             }
 
-            $emails = new \StudySauce\Bundle\Controller\EmailsController();
+            $emails = new EmailsController();
             $emails->setContainer($this->container);
             $emails->resetPasswordAction($u);
             $u->setPasswordRequestedAt(new \DateTime());

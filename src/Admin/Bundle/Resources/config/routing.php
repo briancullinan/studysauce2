@@ -16,10 +16,24 @@ $collection->add(
 );
 
 $collection->add(
+    'command_callback',
+    new Route(
+        '/command/list',
+        ['_controller' => 'AdminBundle:Admin:index', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'activity',
     new Route(
         '/activity/{_format}',
-        ['_controller' => 'AdminBundle:Admin:activity', '_format' => 'adviser'],
+        ['_controller' => 'AdminBundle:Activity:index', '_format' => 'adviser'],
         ['_format' => DASHBOARD_VIEWS],
         [],
         '',
@@ -30,10 +44,24 @@ $collection->add(
 );
 
 $collection->add(
-    'command_callback',
+    'results',
     new Route(
-        '/command/control',
-        ['_controller' => 'AdminBundle:Admin:index', '_format' => 'tab'],
+        '/results/{_format}',
+        ['_controller' => 'AdminBundle:Results:index', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest() || !request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
+    'results_callback',
+    new Route(
+        '/results/list',
+        ['_controller' => 'AdminBundle:Results:index', '_format' => 'tab'],
         [],
         [],
         '',
