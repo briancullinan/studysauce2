@@ -109,7 +109,7 @@ class InviteListener implements EventSubscriberInterface
         }
         /** @var Invite $invite */
         if(!empty($invite)) {
-            $invite->setActivated(true);
+            // set associations if user already exists
             /** @var User $user */
             $user = $userManager->findUserByEmail($invite->getEmail());
             if($user != null && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO')) {
@@ -176,42 +176,48 @@ class InviteListener implements EventSubscriberInterface
      * @param User $user
      */
     public static function setInviteRelationship(EntityManager $orm, Request $request, User $user) {
+        if(!$user->hasRole('ROLE_DEMO') && !$user->hasRole('ROLE_GUEST')) {
+            $criteria = ['email' => $user->getEmail()];
+        }
         if(!empty($request->get('_code'))) {
-            $code = $request->get('_code');
+            $criteria = ['code' => $request->get('_code')];
         }
         if(!empty($request->getSession()->get('partner'))) {
             $user->addRole('ROLE_PARTNER');
-            $code = $request->getSession()->get('partner');
+            $criteria = ['code' => $request->getSession()->get('partner')];
         }
         if(!empty($request->getSession()->get('parent'))) {
             $user->addRole('ROLE_PARENT');
-            $code = $request->getSession()->get('parent');
+            $criteria = ['code' => $request->getSession()->get('parent')];
         }
         if(!empty($request->getSession()->get('student'))) {
-            $code = $request->getSession()->get('student');
+            $criteria = ['code' => $request->getSession()->get('student')];
         }
         if(!empty($request->getSession()->get('group'))) {
-            $code = $request->getSession()->get('group');
+            $criteria = ['code' => $request->getSession()->get('group')];
         }
 
-        if(isset($code)) {
+        if(isset($criteria)) {
             /** @var PartnerInvite $partner */
-            $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy(['code' => $code]);
+            $partner = $orm->getRepository('StudySauceBundle:PartnerInvite')->findOneBy($criteria);
             if (!empty($partner)) {
+                $partner->setActivated(true);
                 $partner->setPartner($user);
                 $user->addInvitedPartner($partner);
                 $orm->merge($partner);
             }
             /** @var ParentInvite $parent */
-            $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy(['code' => $code]);
+            $parent = $orm->getRepository('StudySauceBundle:ParentInvite')->findOneBy($criteria);
             if (!empty($parent)) {
+                $parent->setActivated(true);
                 $parent->setParent($user);
                 $user->addInvitedParent($parent);
                 $orm->merge($parent);
             }
             /** @var GroupInvite $group */
-            $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['code' => $code]);
+            $group = $orm->getRepository('StudySauceBundle:GroupInvite')->findOneBy($criteria);
             if (!empty($group)) {
+                $group->setActivated(true);
                 $group->setStudent($user);
                 $user->addInvitedGroup($group);
                 if(!$user->hasGroup($group->getGroup()->getName()))
@@ -219,8 +225,9 @@ class InviteListener implements EventSubscriberInterface
                 $orm->merge($group);
             }
             /** @var StudentInvite $student */
-            $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy(['code' => $code]);
+            $student = $orm->getRepository('StudySauceBundle:StudentInvite')->findOneBy($criteria);
             if (!empty($student)) {
+                $student->setActivated(true);
                 $student->setStudent($user);
                 $user->addInvitedStudent($student);
                 if ($student->getUser()->hasRole('ROLE_PARENT') || $student->getUser()->hasRole('ROLE_PARTNER')) {

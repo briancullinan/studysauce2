@@ -290,8 +290,7 @@ class AccountController extends Controller
             $user->setEnabled(true);
             $user->setFirst($request->get('first'));
             $user->setLast($request->get('last'));
-            $orm->persist($user);
-            $orm->flush();
+            $userManager->updateUser($user);
 
             // get the path the user should go to after logging in
             list($route, $options) = HomeController::getUserRedirect($user);

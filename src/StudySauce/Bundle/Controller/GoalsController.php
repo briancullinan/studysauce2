@@ -38,6 +38,11 @@ class GoalsController extends Controller
 
         /** @var  $goals ArrayCollection */
         $goals = $user->getGoals();
+        if(!$goals->count() && ($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')))
+        {
+            $this->getDemoGoals($user);
+            $goals = $user->getGoals();
+        }
 
         $claims = [];
         foreach($goals->toArray() as $g)
@@ -59,6 +64,47 @@ class GoalsController extends Controller
                 'csrf_token' => $csrfToken,
                 'user' => $user
             ]);
+    }
+
+    /**
+     * @param User $user
+     */
+    private function getDemoGoals(User $user)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        $behaviorGoals = ['25', '30', '35', '40', '45', '50'];
+        $behaviorRewards = ['Lunch with parents', 'That new sweater I always wanted', 'Pat on the back'];
+        $behavior = new Goal();
+        $behavior->setType('behavior');
+        $behavior->setGoal($behaviorGoals[array_rand($behaviorGoals, 1)]);
+        $behavior->setReward($behaviorRewards[array_rand($behaviorRewards, 1)]);
+        $behavior->setUser($user);
+        $user->addGoal($behavior);
+        $orm->persist($behavior);
+
+        $milestoneGoals = ['B', 'B+', 'A-', 'A', 'A+'];
+        $milestoneRewards = ['$50 gift card', 'Fancy dinner with parents', 'Shopping spree'];
+        $milestone = new Goal();
+        $milestone->setType('milestone');
+        $milestone->setGoal($milestoneGoals[array_rand($milestoneGoals, 1)]);
+        $milestone->setReward($milestoneRewards[array_rand($milestoneRewards, 1)]);
+        $milestone->setUser($user);
+        $user->addGoal($milestone);
+        $orm->persist($milestone);
+
+        $outcomeGoals = ['3.00', '3.25', '3.50', '3.75', '4.00'];
+        $outcomeRewards = ['Vacation for spring break instead of studying', 'A gold star for effort', 'A day off.'];
+        $outcome = new Goal();
+        $outcome->setType('outcome');
+        $outcome->setGoal($outcomeGoals[array_rand($outcomeGoals, 1)]);
+        $outcome->setReward($outcomeRewards[array_rand($outcomeRewards, 1)]);
+        $outcome->setUser($user);
+        $user->addGoal($outcome);
+        $orm->persist($outcome);
+
+        $orm->flush();
     }
 
     /**

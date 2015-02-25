@@ -3,10 +3,8 @@
 namespace StudySauce\Bundle\Controller;
 
 use FOS\UserBundle\Doctrine\UserManager;
-use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class HomeController
@@ -54,7 +52,7 @@ class HomeController extends Controller
      */
     public static function getUserRedirect(User $user)
     {
-        if($user == 'anon.' || !is_object($user) || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO'))
+        if($user == 'anon.' || !is_object($user) || $user->hasRole('ROLE_GUEST'))
             return ['_welcome', []];
             // TODO: split this in to separate pages
         elseif($user->hasRole('ROLE_PARTNER') && $user->getInvitedPartners()->count() > 1)

@@ -82,10 +82,10 @@ security:
         - { path: ^/logout,         roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER], requires_channel: https }
         - { path: ^/authenticate,   roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/login,          roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
-        - { path: ^/register,       roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/register,       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         - { path: ^/account/create, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
-        - { path: ^/torchandlaurelregister, roles: [ROLE_GUEST, ROLE_DEMO], requires_channel: https }
-        - { path: ^/reset,          roles: [ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/torchandlaurelregister, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
+        - { path: ^/reset,          roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER, ROLE_GUEST, ROLE_DEMO], requires_channel: https }
         # protected pages
         - { path: ^/userlist,       roles: [ROLE_MASTER_ADVISER, ROLE_ADVISER, ROLE_PARTNER] }
         - { path: ^/import,         roles: [ROLE_MASTER_ADVISER, ROLE_ADVISER, ROLE_PARTNER, ROLE_ADMIN] }

@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
 use StudySauce\Bundle\Controller\HomeController;
+use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -130,6 +131,8 @@ class AnonymousAuthenticationListener implements ListenerInterface
 
         if($request->get('_route') == 'demo')
         {
+            if($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO'))
+                ScheduleController::getDemoSchedule($this->container);
             list($route, $options) = HomeController::getUserRedirect($user);
             $response = new RedirectResponse($router->generate($route, $options));
 
