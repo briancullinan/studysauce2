@@ -46,12 +46,12 @@ class Course
     protected $dotw = [];
 
     /**
-     * @ORM\Column(type="datetime", name="start_time")
+     * @ORM\Column(type="datetime", name="start_time", nullable=true)
      */
     protected $startTime;
 
     /**
-     * @ORM\Column(type="datetime", name="end_time")
+     * @ORM\Column(type="datetime", name="end_time", nullable=true)
      */
     protected $endTime;
 
@@ -115,7 +115,8 @@ class Course
     {
         $classStart = $this->getStartTime();
         $classEnd = $this->getEndTime();
-
+        if(empty($classStart) || empty($classEnd))
+            return 0;
         $length = strtotime($classEnd->format('1/1/1970 H:i:s')) - strtotime($classStart->format('1/1/1970 H:i:s'));
         if ($length <= 0) {
             $length += 86400;
@@ -171,6 +172,9 @@ class Course
     public function __construct()
     {
         $this->checkins = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->grades = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

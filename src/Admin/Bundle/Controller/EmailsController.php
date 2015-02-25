@@ -93,7 +93,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
         {
             $namespace = explode('\\', $t);
             $className = end($namespace);
-            $data = $orm->getClassMetadata($t);
+            $data = $orm->getMetadataFactory()->getMetadataFor($t);
             foreach($data->getFieldNames() as $f) {
                 $entities[] = [
                     'value' => strtolower($className) . ucfirst($f),
@@ -368,13 +368,12 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
     {
         /** @var EntityManager $orm */
         $orm = $this->getDoctrine()->getManager();
-        $factory = $this->get('annotation_reader');
 
         // if we are dealing with an entity class try to figure out which methods are used
         if(($classI = array_search(true, array_map(function ($t) use ($className) {
                         return strpos(strtolower($t), strtolower($className)) !== false;
                     }, self::$tables))) !== false) {
-            $data = $orm->getClassMetadata(self::$tables[$classI]);
+            $data = $orm->getMetadataFactory()->getMetadataFor(self::$tables[$classI]);
             $namespace = explode('\\', self::$tables[$classI]);
             $className = end($namespace);
             $mockName = 'Mock' . $className;

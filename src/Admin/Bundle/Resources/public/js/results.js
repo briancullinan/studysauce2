@@ -102,6 +102,37 @@ $(document).ready(function () {
         loadResults();
     });
 
+    body.on('click', '#results table.results > tbody > tr.read-only', function () {
+        var row = $(this),
+            userId = (/user-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+        if(row.is('.selected')) {
+            row.removeClass('selected');
+        }
+        else {
+            row.addClass('selected');
+            if(row.next().is('.loading') && !row.next().is('.processing')) {
+                row.next().addClass('processing');
+                $.ajax({
+                    url: window.callbackPaths['results_user'],
+                    type: 'GET',
+                    dataType: 'text',
+                    data: {
+                        userId: userId
+                    },
+                    success: function (response) {
+                        var cell = row.next().find('> td'),
+                            content = $(response);
+                        cell.find('*').remove();
+                        content.appendTo(cell);
+                        row.next().removeClass('loading processing');
+                    },
+                    error: function () {
+                        row.next().removeClass('processing')
+                    }
+                });
+            }
+        }
+    });
 
     body.on('change', '#results input[name="search"], #results input[name="page"]', loadResults);
 

@@ -471,7 +471,7 @@ class EmailsController extends Controller
                         'invite' => $invite,
                         'group' => $group,
                         'greeting' => 'Dear ' . $invite->getFirst() . ' ' . $invite->getLast() . ',',
-                        'link' => '<a href="' . $this->generateUrl('student_welcome', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $this->generateUrl('register', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -550,10 +550,6 @@ class EmailsController extends Controller
             $user = $this->getUser();
 
         /** @var $orm EntityManager */
-        //$orm = $this->get('doctrine')->getManager();
-        //$fields = $orm->getClassMetadata(get_class($properties))->getFieldNames();
-        //$associations = $orm->getClassMetadata(get_class($properties))->getAssociationNames();
-
         if(is_object($properties)) {
             if($properties instanceof HttpExceptionInterface) {
                 $subject = 'HTTP Error: ' . $properties->getStatusCode();

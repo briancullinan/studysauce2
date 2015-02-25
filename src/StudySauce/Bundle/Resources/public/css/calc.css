@@ -72,6 +72,11 @@
     transition: height ease-in-out .15s, min-height ease-in-out .15s;
 }
 
+#calculator .term-row.schedule-id- .term-editor
+{
+    padding-bottom:10px;
+}
+
 #calculator .term-row.selected .term-editor
 {
     display: block;
@@ -161,7 +166,7 @@
 #calculator .class-row > *,
 #calculator .term-row > *
 {
-    vertical-align: top;
+    vertical-align: middle;
     display:inline-block;
     margin:0 -2px;
     padding: 5px 2px;
@@ -249,6 +254,32 @@
 #calculator .grade-row.edit .read-only
 {
     visibility: hidden;
+}
+
+#calculator .class-name label
+{
+    margin-left: -40px;
+    padding-left: 40px;
+    display: inline-block;
+    width: 100%;
+}
+
+#calculator .schedule-id- a[href*="/schedule"],
+#calculator a[href="#add-class"],
+#calculator .term-editor > .highlighted-link [value="#save-grades"]
+{
+    display:none;
+}
+
+#calculator .schedule-id- a[href="#add-class"]
+{
+    display:inline;
+}
+
+#calculator .schedule-id- .term-editor > .highlighted-link [value="#save-grades"]
+{
+    visibility: visible;
+    display:inline-block;
 }
 
 #calculator [value="#save-grades"]

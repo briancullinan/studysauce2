@@ -27,7 +27,7 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/s
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane <?php print (count($schedules) <= 1 ? 'single' : 'multi'); ?>" id="schedule">
+<div class="panel-pane <?php print (count($schedules) <= 1 ? 'single' : 'multi'); ?> <?php print ($needsNew ? 'needs-new-schedule' : ''); ?>" id="schedule">
     <div class="pane-content">
     <?php if($app->getRequest()->get('_format') == 'funnel') {
         echo $view->render('StudySauceBundle:Buy:funnel.html.php');
@@ -56,8 +56,8 @@ $view['slots']->start('body'); ?>
                     <label class="input">
                         School name
                         <input type="text" placeholder="Enter the full name" data-data="<?php print (!empty($schedule)
-                            ? htmlentities(json_encode(ScheduleController::getInstitutions($schedule->getUniversity())->first()),ENT_QUOTES)
-                            : ''); ?>" value="<?php print (!empty($schedule) ? $schedule->getUniversity() : ''); ?>" autocomplete="off">
+                            ? htmlentities(json_encode(ScheduleController::getInstitutions(!$isDemo ? $schedule->getUniversity() : '')->first()), ENT_QUOTES)
+                            : ''); ?>" value="<?php print (!empty($schedule) && !$isDemo ? $schedule->getUniversity() : ''); ?>" autocomplete="off">
                     </label>
                 </div>
                 <header>
@@ -357,4 +357,8 @@ $view['slots']->start('body'); ?>
     </div>
     </div>
 <?php $view['slots']->stop();
+
+$view['slots']->start('sincludes');
+print $this->render('StudySauceBundle:Dialogs:new-schedule.html.php', ['id' => 'new-schedule']);
+$view['slots']->stop();
 

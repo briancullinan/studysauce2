@@ -9,30 +9,16 @@ $user = $app->getUser();
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets'); ?>
-    <link type="text/css" rel="stylesheet"
-          href="<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/vis/vis.css"/>
-<?php foreach ($view['assetic']->stylesheets(
-    ['@AdminBundle/Resources/public/css/menu.css'],
-    [],
-    ['output' => 'bundles/admin/css/*.css']
-) as $url): ?>
+<?php foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/menu.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
-foreach ($view['assetic']->stylesheets(
-    ['@AdminBundle/Resources/public/css/results.css'],
-    [],
-    ['output' => 'bundles/admin/css/*.css']
-) as $url): ?>
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/results.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts'); ?>
-<?php foreach ($view['assetic']->javascripts(
-    ['@AdminBundle/Resources/public/js/results.js'],
-    [],
-    ['output' => 'bundles/admin/js/*.js']
-) as $url): ?>
+<?php foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/results.js'],[],['output' => 'bundles/admin/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
 <?php $view['slots']->stop();

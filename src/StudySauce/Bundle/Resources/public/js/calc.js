@@ -7,11 +7,15 @@ $(document).ready(function () {
             row = $(this).parents('.term-row');
         if(!row.is('.selected')) {
             calc.find('.term-row.selected').removeClass('selected');
+            calc.find('.term-row .term-name').addClass('read-only');
             row.addClass('selected');
+            row.find('.term-name').removeClass('read-only');
         }
     });
 
-    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours),#calculator .class-row:not(.selected) > *.hours', function () {
+    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours):not(.class-name),' +
+                     '#calculator .class-row:not(.selected) > *.hours,' +
+                     '#calculator .term-row:not(.schedule-id-) .class-row > *.class-name', function () {
         var row = $(this).parents('.class-row');
         if(row.is('.selected')) {
             row.removeClass('selected');
@@ -37,6 +41,59 @@ $(document).ready(function () {
         return scaled;
     }
 
+    function validateGrade()
+    {
+        var that = $(this);
+        // valid if assignment is filled in or all fields are blank is the same as remove
+        if(that.find('.assignment input').val().trim() != '' || (
+            that.find('.score input').val().trim() == '' &&
+            that.find('.percent input').val().trim() == '' &&
+            that.find('.assignment input').val().trim() == ''))
+            that.removeClass('invalid').addClass('valid');
+        else
+            that.removeClass('valid').addClass('invalid');
+
+    }
+
+    function calculateClassGrade()
+    {
+        var row = $(this),
+            percent = 0,
+            sum = 0;
+        row.find('.grade-row:not(.deleted)').each(function () {
+            var that = $(this),
+                score = parseInt(that.find('.score input').val().trim()),
+                rowPercent = parseInt(that.find('.percent input').val().trim());
+
+            validateGrade.apply(this);
+
+            if(isNaN(score)) {
+                that.find('.grade span, .gpa').html('&bullet;');
+            }
+            else {
+                if(!isNaN(rowPercent)) {
+                    percent += rowPercent;
+                    sum += score * rowPercent;
+                }
+
+                var scaled = convertToScale(score);
+                that.find('.grade span').html(scaled[0]);
+                that.find('.gpa').html(scaled[1]);
+            }
+        });
+        if(percent == 0) {
+            row.find('> .score, > .gpa, > .percent, > .grade span').html('&bullet;');
+        }
+        else {
+            var classScore = sum / percent,
+                scaled = convertToScale(classScore);
+            row.find('> .score').html(Math.round(classScore * 10) / 10);
+            row.find('> .grade span').html(scaled[0]);
+            row.find('> .gpa').html(scaled[1]);
+            row.find('> .percent').html(percent + '%');
+        }
+    }
+
     function validateGrades()
     {
         var calc = body.find('#calculator'),
@@ -50,58 +107,26 @@ $(document).ready(function () {
 
             term.find('.class-row').each(function () {
                 var row = $(this),
-                    percent = 0,
-                    sum = 0,
                     courseHours = parseInt(row.find('.hours input').val().trim());
-                row.find('.grade-row:not(.deleted)').each(function () {
-                    var that = $(this),
-                        score = parseInt(that.find('.score input').val().trim()),
-                        rowPercent = parseInt(that.find('.percent input').val().trim());
-                    // valid if assignment is filled in or all fields are blank is the same as remove
-                    if(that.find('.assignment input').val().trim() != '' || (
-                        that.find('.score input').val().trim() == '' &&
-                        that.find('.percent input').val().trim() == '' &&
-                        that.find('.assignment input').val().trim() == ''))
-                        that.removeClass('invalid').addClass('valid');
-                    else
-                        that.removeClass('valid').addClass('invalid');
 
-                    if(isNaN(score)) {
-                        that.find('.grade span, .gpa').html('&bullet;');
-                    }
-                    else {
-                        if(!isNaN(rowPercent)) {
-                            percent += rowPercent;
-                            sum += score * rowPercent;
-                        }
+                calculateClassGrade.apply(this);
 
-                        var scaled = convertToScale(score);
-                        that.find('.grade span').html(scaled[0]);
-                        that.find('.gpa').html(scaled[1]);
-                    }
-                });
-                if(percent == 0) {
-                    row.find('> .score, > .gpa, > .percent, > .grade span').html('&bullet;');
-                }
-                else {
-                    var classScore = sum / percent,
-                        scaled = convertToScale(classScore);
-                    row.find('> .score').html(Math.round(classScore * 10) / 10);
-                    row.find('> .grade span').html(scaled[0]);
-                    row.find('> .gpa').html(scaled[1]);
-                    row.find('> .percent').html(percent + '%');
+                var percent = row.find('> .percent').html(),
+                    score = parseFloat(row.find('> .score').html()),
+                    scaled = convertToScale(score);
+                percent = parseInt(percent.substr(0, percent.length - 1));
 
-                    if(!isNaN(courseHours)) {
-                        hours += courseHours;
-                        termGPA += parseFloat(scaled[1] * courseHours);
-                        termPercent += percent * courseHours;
-                    }
+                if(!isNaN(courseHours) && !isNaN(percent) && !isNaN(score)) {
+                    hours += courseHours;
+                    termGPA += parseFloat(scaled[1] * courseHours);
+                    termPercent += percent * courseHours;
                 }
             });
 
             if(hours == 0) {
                 term.find('> .gpa span, > .percent, > .hours').html('&bullet;');
-                calc.find('.projected').html('&bullet;');
+                if(term.index(calc.find('.term-row')) == 0)
+                    calc.find('.projected').html('&bullet;');
             }
             else {
                 if(term.index(calc.find('.term-row')) == 0)
@@ -149,10 +174,51 @@ $(document).ready(function () {
 
     body.on('click', '#calculator a[href="#add-schedule"]', function (evt) {
         evt.preventDefault();
-        body.one('show', '#schedule', function () {
-            $('#schedule').find('a[href="#create-schedule"]').first().trigger('click');
-        });
-        $('#calculator').find('a[href*="/schedule"]').first().trigger('click');
+        // copy first schedule
+        var calc = $('#calculator'),
+            newTerm = calc.find('.term-row').first().clone().insertAfter(calc.find('.term-row').last()),
+            classes = newTerm.find('.class-row').hide();
+        newTerm.attr('class', newTerm.attr('class').replace(/schedule-id-([0-9]*)(\s|$)/ig, ' schedule-id- '));
+        // add new classes to new term
+        for(var i = 0; i < 6; i++) {
+            addCourse.apply(newTerm.find('a[href="#add-class"]'));
+        }
+        calc.find('.term-row.selected').removeClass('selected');
+        calc.find('.term-row .term-name').addClass('read-only');
+        newTerm.find('> .gpa').html('<span>&bullet;</span>');
+        newTerm.find('> .percent, > .hours').html('&bullet;');
+        newTerm.find('.term-name').removeClass('read-only').find('option[value=""]').html('Select term');
+        newTerm.addClass('selected');
+        // remove existing classes
+        classes.remove();
+        validateGrades();
+    });
+
+    function addCourse()
+    {
+        // copy first class row
+        var editor = $(this).parents('.term-editor'),
+            newClass = editor.find('.class-row').first().clone().insertBefore(editor.find('> .highlighted-link').last()),
+            grades = newClass.find('.grade-row');
+        newClass.removeClass('selected').show();
+        newClass.attr('class', newClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
+        newClass.find('.hours').removeClass('read-only').find('input').val('');
+        newClass.find('.class-name').removeClass('read-only');
+        newClass.find('.class-name input').val('');
+        newClass.find('.class-name span').attr('class', 'class' + (editor.find('.class-row.course-id-').length - 1));
+        newClass.find('> .score, > .grade span, > .gpa, > .percent').html('&bullet;');
+        // insert new grades
+        for(var i = 0; i < 4; i++) {
+            addGrade.apply(newClass.find('a[href="#add-grade"]'));
+        }
+        // remove existing grades
+        grades.remove();
+        validateGrades();
+    }
+
+    body.on('click', '#calculator a[href="#add-class"]', function (evt) {
+        evt.preventDefault();
+        addCourse.apply(this);
     });
 
     body.on('click', '#calculator a[href="#what-if"]', function () {
@@ -181,8 +247,8 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#calculator a[href="#add-grade"]', function (evt) {
-        evt.preventDefault();
+    function addGrade()
+    {
         var editor = $(this).parents('.grade-editor'),
             row = editor.find('.grade-row').first()
                 .clone().show()
@@ -192,6 +258,11 @@ $(document).ready(function () {
         row.find('.grade span, .gpa').html('&bullet;');
         row.find('input').val('').attr('placeholder', '');
         row.find('.assignment input').attr('placeholder', 'Assignment')
+    }
+
+    body.on('click', '#calculator a[href="#add-grade"]', function (evt) {
+        evt.preventDefault();
+        addGrade.apply(this);
     });
 
     body.on('scheduled', function () {
@@ -238,35 +309,45 @@ $(document).ready(function () {
         calc.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation(calc.find('[value="#save-grades"]'));
 
-        var data = {courses: [], scale: $('#grade-scale').find('tbody tr').map(function () { return [[
+        var data = {terms: [], scale: $('#grade-scale').find('tbody tr').map(function () { return [[
                 $(this).find('td:nth-child(1) input').val(),
                 $(this).find('td:nth-child(2) input').val(),
                 $(this).find('td:nth-child(3) input').val(),
                 $(this).find('td:nth-child(4) input').val()
             ]]; }).toArray()};
-        calc.find('.class-row').each(function (i) {
-            var row = $(this),
-                courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1],
-                courseData = {
-                    courseId: courseId,
-                    creditHours: parseInt(row.find('.hours input').val().trim()),
-                    grades: {}
-                };
-            row.find('.grade-row.edit.valid').each(function (j) {
-                var that = $(this),
-                    gradeId = (/grade-id-([0-9]*)(\s|$)/ig).exec(that.attr('class'))[1];
-                courseData.grades[j] = {
-                    gradeId: gradeId,
-                    assignment: that.find('.assignment input').val().trim(),
-                    score: that.find('.score input').val().trim(),
-                    percent: that.find('.percent input').val().trim(),
-                    remove: that.find('.score input').val().trim() == '' &&
-                            that.find('.percent input').val().trim() == '' &&
-                            that.find('.assignment input').val().trim() == ''
-                }
+        calc.find('.term-row').each(function (k) {
+            var term = $(this),
+                courses = [];
+            term.find('.class-row').each(function (i) {
+                var row = $(this),
+                    courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
+                    courseData = {
+                        courseId: courseId,
+                        className: row.find('.class-name input').val().trim(),
+                        creditHours: parseInt(row.find('.hours input').val().trim()),
+                        grades: {}
+                    };
+                row.find('.grade-row.edit.valid').each(function (j) {
+                    var that = $(this),
+                        gradeId = (/grade-id-([0-9]*)(\s|$)/ig).exec(that.attr('class'))[1];
+                    courseData.grades[j] = {
+                        gradeId: gradeId,
+                        assignment: that.find('.assignment input').val().trim(),
+                        score: that.find('.score input').val().trim(),
+                        percent: that.find('.percent input').val().trim(),
+                        remove: that.find('.score input').val().trim() == '' &&
+                                that.find('.percent input').val().trim() == '' &&
+                                that.find('.assignment input').val().trim() == ''
+                    }
+                });
+                courses[i] = courseData;
             });
-            data.courses[i] = courseData;
+            data.terms[k] = {
+                courses: courses,
+                scheduleId: (/schedule-id-([0-9]*)(\s|$)/ig).exec($(this).attr('class'))[1]
+            }
         });
+
         $.ajax({
             url: window.callbackPaths['calculator_update'],
             type: 'POST',
@@ -291,8 +372,11 @@ $(document).ready(function () {
         row.addClass('edit').hide();
         row.find('.score input, .percent input, .assignment input').val('');
         // create 4 empty rows if this is the last one
-        if(classRow.find('.grade-row:visible').length == 0)
-            classRow.find('a[href="#add-grade"]').trigger('click').trigger('click').trigger('click').trigger('click');
+        if(classRow.find('.grade-row:visible').length == 0) {
+            for(var i = 0; i < 4; i++) {
+                addGrade.apply(classRow.find('a[href="#add-grade"]'));
+            }
+        }
         validateGrades();
     });
 
@@ -329,14 +413,14 @@ $(document).ready(function () {
         // update course list in dialog
         classes.each(function (i) {
             var row = $(this),
-                courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+                courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
             $('<option value="' + courseId + '">' + row.find('.class-name').text() + '</option>')
                 .appendTo(dialog.find('select.class-name'));
             firstRow.find('.class-name').html(row.find('.class-name').html());
             firstRow.find('.hours').text(row.find('.hours input').val() + ' hrs');
             firstRow.find('select').val(row.find('> .grade span').text());
             if(i < classes.length - 1)
-                firstRow.clone().insertAfter(firstRow);
+                firstRow.clone().insertAfter(dialog.find('.class-row').last());
         });
 
         // update grade scale in dialog to match selected grade scale

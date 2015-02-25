@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    var body = $('body');
+    var body = $('body'),
+        deleteCount = 0;
 
     function planFunc() {
         var schedule = $('#schedule');
@@ -194,14 +195,24 @@ $(document).ready(function () {
 
     body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
         evt.preventDefault();
+        deleteCount++;
         var row = $(this).parents('.class-row'),
             schedule = $('#schedule'),
             container = row.parents('.schedule');
+        if(deleteCount == 4) {
+            $('#new-schedule').modal({show:true});
+        }
         // clear and hide the class row
         row.find('.class-name input, .start-date input, .end-date input').val('');
         row.find('.day-of-the-week input').prop('checked', false);
         row.removeClass('invalid').addClass('blank deleted').hide();
         schedule.find('[value="#save-class"]').css('visibility', 'visible');
+        // reset color bubbles
+        if(container.is(':not(.other)')) {
+            container.find('.class-row:visible').each(function (i) {
+                $(this).find('.class-name i').attr('class', 'class' + i);
+            });
+        }
         if(container.find('.class-row:visible').length == 0)
         {
             if(container.is('.other'))
@@ -242,6 +253,7 @@ $(document).ready(function () {
         if(schedule.find('.term-row').length == 1)
             schedule.removeClass('multi').addClass('single');
         schedule.scrollintoview(DASHBOARD_MARGINS);
+        schedule.find('[value="#save-class"]').css('visibility', 'hidden');
         planFunc();
         body.trigger('scheduled');
     }
@@ -393,6 +405,16 @@ $(document).ready(function () {
         }
         addClass.apply(newTerm.find('.schedule.other a[href="#add-class"]'));
         oldRows.remove();
+        schedule.find('.term-row').hide();
+        newTerm.show();
+        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').last()))
+            schedule.find('a[href="#next-schedule"]').addClass('disabled');
+        else
+            schedule.find('a[href="#next-schedule"]').removeClass('disabled');
+        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').first()))
+            schedule.find('a[href="#prev-schedule"]').addClass('disabled');
+        else
+            schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
         planFunc();
     });
 
@@ -496,7 +518,8 @@ $(document).ready(function () {
     });
 
     body.on('show', '#schedule', function () {
-        $('#schedule').find('.term-row').each(function () {
+        var schedule = $('#schedule');
+        schedule.find('.term-row').each(function () {
             var term = $(this);
             if(term.find('.university input').data('state') == null) {
                 term.find('.university input').data('state', term.find('.university input').val().trim());
@@ -542,5 +565,14 @@ $(document).ready(function () {
                     select[0].selectize.focus();
             }
         });
+        if(schedule.is('.needs-new-schedule')) {
+            $('#new-schedule').modal({show:true});
+        }
     });
+
+    body.on('hidden.bs.modal', '#new-schedule', function () {
+        $(this).remove();
+    });
+
+
 });

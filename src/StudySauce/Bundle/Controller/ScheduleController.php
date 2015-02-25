@@ -45,7 +45,19 @@ class ScheduleController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
             : null;
 
+        $needsNew = !empty($user->getSchedules()->first()) && !empty($user->getSchedules()->first()->getCourses())
+            && !$user->getSchedules()->first()->getCourses()->exists(function ($_, Course $c) {
+                    return $c->getEndTime() > new \DateTime();})
+            && empty($user->getProperty('needs_new'));
+        if($needsNew) {
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $user->setProperty('needs_new', true);
+            $userManager->updateUser($user);
+        }
+
         return $this->render('StudySauceBundle:Schedule:tab.html.php', [
+                'needsNew' => $needsNew,
                 'schedules' => $user->getSchedules()->isEmpty() || $user->getSchedules()->first()->getCourses()->isEmpty()
                     ? [new Schedule()]
                     : $user->getSchedules()->toArray(),

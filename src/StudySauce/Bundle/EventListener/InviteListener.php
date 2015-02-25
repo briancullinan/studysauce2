@@ -112,9 +112,10 @@ class InviteListener implements EventSubscriberInterface
             $invite->setActivated(true);
             /** @var User $user */
             $user = $userManager->findUserByEmail($invite->getEmail());
-            if($user != null && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO'))
+            if($user != null && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO')) {
                 self::setInviteRelationship($orm, $request, $user);
-            $orm->flush();
+                $userManager->updateUser($user);
+            }
             /** @var SecurityContext $context */
             $context = $this->container->get('security.context');
             $context->setToken(null);
@@ -213,7 +214,8 @@ class InviteListener implements EventSubscriberInterface
             if (!empty($group)) {
                 $group->setStudent($user);
                 $user->addInvitedGroup($group);
-                $user->addGroup($group->getGroup());
+                if(!$user->hasGroup($group->getGroup()->getName()))
+                    $user->addGroup($group->getGroup());
                 $orm->merge($group);
             }
             /** @var StudentInvite $student */
@@ -233,7 +235,8 @@ class InviteListener implements EventSubscriberInterface
         if(!empty($request->getSession()->get('organization'))) {
             /** @var Group $group */
             $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);
-            $user->addGroup($group);
+            if(!$user->hasGroup($group->getName()))
+                $user->addGroup($group);
         }
     }
 

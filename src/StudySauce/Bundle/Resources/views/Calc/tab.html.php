@@ -40,12 +40,12 @@ $view['slots']->start('body'); ?>
                 $first = true;
                 foreach($schedules as $s) {
                     /** @var Schedule $s */
-                    $name = 'Current term';
+                    $name = '';
                     if(!$first) {
                         if(empty($s->getClasses()->count()))
                             $start = $s->getCreated();
                         else
-                            $start = date_timestamp_set(new \DateTime(), array_sum($s->getClasses()->map(function (Course $c) {return $c->getStartTime()->getTimestamp();})->toArray()) / $s->getClasses()->count());
+                            $start = date_timestamp_set(new \DateTime(), array_sum($s->getClasses()->map(function (Course $c) {return empty($c->getStartTime()) ? 0 : $c->getStartTime()->getTimestamp();})->toArray()) / $s->getClasses()->count());
                         if($start->format('n') >= 11)
                             $name = 'Winter ' . $start->format('Y');
                         elseif($start->format('n') >= 8)
@@ -57,7 +57,18 @@ $view['slots']->start('body'); ?>
                     }
                     ?>
                 <div class="term-row schedule-id-<?php print $s->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
-                    <div class="term-name"><?php print $name; ?></div>
+                    <div class="term-name read-only"><label class="input"><select>
+                                <option value="" <?php print (empty($name) ? 'selected="selected"' : ''); ?>>Current term</option><?php
+                        for($y = intval(date('Y')); $y > intval(date('Y')) - 20; $y--)
+                        {
+                            foreach([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 5 => 'Summer'] as $m => $t)
+                            {
+                                ?><option value="<?php print $m; ?>/<?php print $y; ?>" <?php
+                                print ($name == $t . ' ' . $y ? 'selected="selected"' : ''); ?>><?php
+                                print $t; ?> <?php print $y; ?></option><?php
+                            }
+                        }
+                        ?></select></label></div>
                     <div class="gpa"><span><?php print (empty($s->getGPA()) ? '&bullet;' : $s->getGPA()); ?></span><?php print ($first ? ' (projected)' : ''); ?></div>
                     <div class="percent"><?php print (empty($s->getPercent()) ? '&bullet;' : ($s->getPercent() . '%')); ?></div>
                     <div class="hours"><?php print (empty($s->getCreditHours()) ? '&bullet;' : ($s->getCreditHours() . ' hrs')); ?></div>
@@ -76,7 +87,7 @@ $view['slots']->start('body'); ?>
                             /** @var Course $c */
                             ?>
                         <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
-                            <div class="class-name"><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></div>
+                            <div class="class-name read-only"><span class="class<?php print $i; ?>"></span><label class="input"><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name" /></label></div>
                             <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
                             <div class="grade" title="Your letter grade based on your grading scale"><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
                             <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
@@ -117,7 +128,11 @@ $view['slots']->start('body'); ?>
                             </div>
                         </div>
                         <?php } ?>
-                        <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>
+                        <div class="highlighted-link form-actions invalid">
+                            <a href="#add-class" class="big-add">Add <span>+</span> class</a>
+                            <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>
+                            <button type="submit" value="#save-grades" class="more">Save</button>
+                        </div>
                     </div>
                 </div>
                 <?php $first = false; } ?>

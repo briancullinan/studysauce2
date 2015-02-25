@@ -63,6 +63,62 @@ class CalcController extends Controller
     }
 
     /**
+     * @param Schedule $s
+     * @param $c
+     * @param EntityManager $orm
+     */
+    private function saveCourseGrades(Schedule $s, $c, EntityManager $orm)
+    {
+        if(empty($c['className']) && empty($c['courseId']))
+            return;
+
+        $course = $s->getClasses()->filter(function (Course $x) use($c) {return $x->getId() == $c['courseId'];})->first();
+        if(empty($course)) {
+            $course = new Course();
+            $course->setSchedule($s);
+            $course->setName($c['className']);
+            $course->setType('c');
+            $s->addCourse($course);
+            $orm->persist($course);
+        }
+
+        /** @var Course $course */
+        $course->setCreditHours(intval($c['creditHours']));
+        if(empty($c['grades']))
+            return;
+        foreach($c['grades'] as $g) {
+            if(empty($g['gradeId']) && $g['remove'] == 'true')
+                continue;
+            if(empty($g['gradeId'])) {
+                $grade = new Grade();
+                $grade->setScore(intval($g['score']));
+                $grade->setPercent(intval($g['percent']));
+                $grade->setCourse($course);
+                $grade->setAssignment($g['assignment']);
+                $course->addGrade($grade);
+                $orm->persist($grade);
+            }
+            else {
+                $grade = $course->getGrades()->filter(function (Grade $x) use ($g) {return $x->getId() == $g['gradeId'];})->first();
+                if(!empty($grade)) {
+                    if($g['remove'] == 'true') {
+                        $course->removeGrade($grade);
+                        $orm->remove($grade);
+                    }
+                    else {
+                        $grade->setScore(intval($g['score']));
+                        $grade->setPercent(intval($g['percent']));
+                        $grade->setAssignment($g['assignment']);
+                        $orm->merge($grade);
+                    }
+                }
+            }
+        }
+
+        $orm->flush();
+    }
+
+    /**
      * @param Request $request
      * @return Response
      */
@@ -73,59 +129,30 @@ class CalcController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        $schedules = $user->getSchedules()->toArray();
-
         $first = true;
-        foreach($request->get('courses') as $c)
+        foreach($request->get('terms') as $t)
         {
             // find the correct course to modify
-            foreach($schedules as $s) {
-                /** @var Schedule $s */
-                $course = $s->getClasses()->filter(function (Course $x) use($c) {return $x->getId() == $c['courseId'];})->first();
-                if(!empty($course)) {
-                    // set the scale
-                    if($first) {
-                        $s->setGradeScale($request->get('scale'));
-                        $orm->merge($s);
-                    }
-                    $first = false;
-                    /** @var Course $course */
-                    $course->setCreditHours(intval($c['creditHours']));
-                    if(empty($c['grades']))
-                        break;
-                    foreach($c['grades'] as $g) {
-                        if(empty($g['gradeId']) && $g['remove'] == 'true')
-                            continue;
-                        if(empty($g['gradeId'])) {
-                            $grade = new Grade();
-                            $grade->setScore(intval($g['score']));
-                            $grade->setPercent(intval($g['percent']));
-                            $grade->setCourse($course);
-                            $grade->setAssignment($g['assignment']);
-                            $course->addGrade($grade);
-                            $orm->persist($grade);
-                        }
-                        else {
-                            $grade = $course->getGrades()->filter(function (Grade $x) use ($g) {return $x->getId() == $g['gradeId'];})->first();
-                            if(!empty($grade)) {
-                                if($g['remove'] == 'true') {
-                                    $course->removeGrade($grade);
-                                    $orm->remove($grade);
-                                }
-                                else {
-                                    $grade->setScore(intval($g['score']));
-                                    $grade->setPercent(intval($g['percent']));
-                                    $grade->setAssignment($g['assignment']);
-                                    $orm->merge($grade);
-                                }
-                            }
-                        }
-                    }
-                    break;
-                }
+            /** @var Schedule $s */
+            $s = $user->getSchedules()->filter(function (Schedule $s) use ($t) {return $s->getId() == $t['scheduleId'];})->first();
+            if(empty($s)) {
+                $s = new Schedule();
+                $s->setUser($user);
+                $user->addSchedule($s);
+                $orm->persist($s);
+                $orm->flush();
+            }
+            // set the scale
+            if($first) {
+                $s->setGradeScale($request->get('scale'));
+                $orm->merge($s);
+                $first = false;
+            }
+            // save the course grades
+            foreach($t['courses'] as $c) {
+                $this->saveCourseGrades($s, $c, $orm);
             }
         }
-        $orm->flush();
 
         return $this->forward('StudySauceBundle:Calc:index', ['_format' => 'tab']);
     }

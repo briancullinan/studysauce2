@@ -328,4 +328,23 @@ class ResultsController extends Controller
             'total' => $total,
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->render('AdminBundle:Results:result.html.php', [
+            'orm' => $orm,
+            'course1' => $user->getCourse1s()->first(),
+            'course2' => $user->getCourse2s()->first(),
+            'course3' => $user->getCourse3s()->first()
+        ]);
+    }
 }

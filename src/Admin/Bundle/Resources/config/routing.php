@@ -72,6 +72,20 @@ $collection->add(
 );
 
 $collection->add(
+    'results_user',
+    new Route(
+        '/results/user',
+        ['_controller' => 'AdminBundle:Results:user', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'remove_user',
     new Route(
         '/command/remove/user',

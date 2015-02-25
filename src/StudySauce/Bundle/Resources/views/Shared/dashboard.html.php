@@ -112,9 +112,14 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
 }
 
 if($app->getRequest()->get('_format') == 'tab') {
-    $view['slots']->output('stylesheets'); ?>
-    <style type="text/css">.css-loaded { content: "loading-<?php print $app->getRequest()->get('_route'); ?>"; }</style>
+    $view['slots']->output('stylesheets');
+    if(!empty($app->getRequest()->get('_route'))) {
+        ?>
+        <style type="text/css">.css-loaded {
+                content: "loading-<?php print $app->getRequest()->get('_route'); ?>";
+            }</style>
     <?php
+    }
     $view['slots']->output('body');
     $view['slots']->output('javascripts');
     $view['slots']->output('sincludes');
