@@ -84,8 +84,6 @@ $view['slots']->start('body'); ?>
                     }
                 }
 
-                $classI = array_search($d->getCourse(), $courses);
-
                 ?>
                 <div class="deadline-row first valid <?php
                 print ($isDemo ? ' edit' : ' read-only');
@@ -95,7 +93,7 @@ $view['slots']->start('body'); ?>
                     <div class="class-name">
                         <label class="select">
                             <span>Class name</span>
-                            <i class="class<?php print $classI; ?>"></i>
+                            <i class="class<?php print $d->getCourse()->getIndex(); ?>"></i>
                             <select>
                                 <option value="" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                                 <?php

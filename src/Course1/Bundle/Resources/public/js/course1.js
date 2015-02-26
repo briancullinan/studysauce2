@@ -75,7 +75,6 @@ $(document).ready(function () {
         else
             actions.removeClass('invalid').addClass('valid');
     }
-    // TODO: remove course 1 tabs when course 2 is selected
 
     body.on('show', '.course1.step0', function () {
         body.find('.course1.step0 h3').textfill({widthOnly: true});
@@ -194,7 +193,6 @@ $(document).ready(function () {
                 step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
                 step.addClass('right');
                 actions.removeClass('invalid').addClass('valid');
-                // TODO: update study plan
                 step.scrollintoview(DASHBOARD_MARGINS);
             }
         });

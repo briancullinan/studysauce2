@@ -23,10 +23,6 @@ use StudySauce\Bundle\Entity\Event;
                     continue;
                 }
 
-                $classI = array_search($event->getName(), $classes);
-                if ($classI === false) {
-                    $classI = '';
-                }
                 if ($event->getStart() > new \DateTime('today') && $event->getStart() < new \DateTime('tomorrow')) {
                     ?>
                 <div class="session-row <?php
@@ -34,7 +30,7 @@ use StudySauce\Bundle\Entity\Event;
                 print ' event-id-' . $event->getId();
                 print ($event->getCompleted() ? ' done' : ''); ?>">
                     <div class="class-name">
-                        <span class="class<?php print $classI; ?>">&nbsp;</span> <?php print $event->getName(); ?>
+                        <span class="class<?php print $event->getCourse()->getIndex(); ?>">&nbsp;</span> <?php print $event->getName(); ?>
                     </div>
                     <div class="date">
                         <div class="read-only"><?php print $event->getStart()->format(

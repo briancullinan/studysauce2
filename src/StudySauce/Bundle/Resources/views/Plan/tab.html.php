@@ -96,13 +96,9 @@ $view['slots']->start('body'); ?>
 
             /** @var Course $course */
             $course = $event->getCourse();
-            $classI = array_search($course, $courses);
-            if ($classI === false) {
-                $classI = '';
-            }
 
             $session = '';
-            if ($event->getType() == 'd' || $classI === '') {
+            if ($event->getType() == 'd' || $course->getIndex() === false) {
                 $session = 'other';
             } elseif ($event->getType() == 'p') {
                 $session = 'prework';
@@ -141,14 +137,14 @@ $view['slots']->start('body'); ?>
             <div class="session-row <?php
             print ($first && !($first = false) ? ' first' : '');
             print ' event-type-' . $event->getType();
-            print ' checkin' . $classI;
+            print ' checkin' . $course->getIndex();
             print ($event->getStart() < $yesterday || $event->getDeleted() ? ' historic' : '');
             print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
             print (!empty($course) ? (' course-id-' . $course->getId()) : '');
             print (' default-' . $session);
             print ($event->getCompleted() ? ' done' : '');
             print (' event-id-' . $event->getId()); ?>">
-                <div class="class-name"><span class="class<?php print $classI; ?>">&nbsp;</span><?php print $event->getName(); ?></div>
+                <div class="class-name"><span class="class<?php print $course->getIndex(); ?>">&nbsp;</span><?php print $event->getName(); ?></div>
                 <div class="assignment"><?php print $title; ?></div>
                 <div class="percent"><?php print (!empty($event->getDeadline())
                         ? ($event->getDeadline()->getPercent() . '%')

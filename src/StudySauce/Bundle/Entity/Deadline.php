@@ -89,6 +89,57 @@ class Deadline
     }
 
     /**
+     * @return bool
+     */
+    public function shouldSend()
+    {
+        // due in one day
+        if(in_array('86400', $this->getReminder()) && $this->getDueDate()->getTimestamp() > time() + 86400 && $this->getDueDate()->getTimestamp() < time() + 86400 * 2 &&
+            !in_array('86400', $this->getReminderSent()))
+            return true;
+        // due in two days
+        if(in_array('172800', $this->getReminder()) && $this->getDueDate()->getTimestamp() > time() + 86400 * 2 && $this->getDueDate()->getTimestamp() < time() + 86400 * 3 &&
+                !in_array('86400', $this->getReminderSent()) &&
+                !in_array('172800', $this->getReminderSent()))
+            return true;
+        // due in four days
+        if(in_array('345600', $this->getReminder()) && $this->getDueDate()->getTimestamp() > time() + 86400 * 4 && $this->getDueDate()->getTimestamp() < time() + 86400 * 5 &&
+                !in_array('86400',$this->getReminderSent()) &&
+                !in_array('172800', $this->getReminderSent()) &&
+                !in_array('345600', $this->getReminderSent()))
+            return true;
+        // due in a week
+        if(in_array('604800', $this->getReminder()) && $this->getDueDate()->getTimestamp() > time() + 86400 * 7 && $this->getDueDate()->getTimestamp() < time() + 86400 * 8 &&
+                !in_array('86400', $this->getReminderSent()) &&
+                !in_array('172800', $this->getReminderSent()) &&
+                !in_array('345600', $this->getReminderSent()) &&
+                !in_array('604800', $this->getReminderSent()))
+            return true;
+        // due in two weeks
+        if(in_array('1209600', $this->getReminder()) && $this->getDueDate()->getTimestamp() > time() + 86400 * 14 && $this->getDueDate()->getTimestamp() < time() + 86400 * 15 &&
+                !in_array('86400',$this->getReminderSent()) &&
+                !in_array('172800', $this->getReminderSent()) &&
+                !in_array('345600', $this->getReminderSent()) &&
+                !in_array('604800', $this->getReminderSent()) &&
+                !in_array('1209600', $this->getReminderSent()))
+            return true;
+        return false;
+    }
+    
+    public function markSent()
+    {
+        $timeSpan = floor(($this->getDueDate()->getTimestamp() - time()) / 86400);
+        foreach ([1, 2, 4, 7, 14] as $i => $t) {
+            if ($timeSpan - $t <= 0) {
+                $sent = $this->getReminderSent();
+                $sent[] = $t * 86400;
+                $this->setReminderSent(array_unique($sent));
+                break;
+            }
+        }
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()

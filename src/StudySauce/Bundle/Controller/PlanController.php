@@ -125,7 +125,7 @@ class PlanController extends Controller
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
                 'courses' => array_values($courses),
-                'jsonEvents' =>  self::getJsonEvents($events, array_values($courses)),
+                'jsonEvents' =>  self::getJsonEvents($events),
                 'user' => $_user,
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week,
@@ -185,12 +185,10 @@ class PlanController extends Controller
 
     /**
      * @param $events
-     * @param $courses
      * @return array
      */
-    public static function getJsonEvents($events, $courses)
+    public static function getJsonEvents($events)
     {
-        $classes = array_map(function (Course $c) {return $c->getId();}, $courses);
         $jsEvents = [];
         foreach ($events as $i => $x) {
             /** @var Event $x */
@@ -198,11 +196,6 @@ class PlanController extends Controller
             if ($x->getDeleted()) {
                 continue;
             }
-
-            if (!empty($x->getCourse()))
-                $classI = array_search($x->getCourse()->getId(), $classes);
-            else
-                $classI = '';
 
             $label = '';
             $skip = false;
@@ -264,7 +257,10 @@ class PlanController extends Controller
                 'title' => '<h4>' . $label . '</h4>' . $x->getName(),
                 'start' => $x->getStart()->format('r'),
                 'end' => $x->getEnd()->format('r'),
-                'className' => 'event-type-' . $x->getType() . ' ' . ($classI !== '' ? ('class' . $classI) : ''),
+                'className' => 'event-type-' . $x->getType() . ' ' . (!empty($x->getCourse()) &&
+                    $x->getCourse()->getIndex() !== false
+                        ? ('class' . $x->getCourse()->getIndex())
+                        : ''),
                 // all day for deadlines, reminders, and holidays
                 'allDay' => $x->getType() == 'd' || $x->getType() == 'h' ||
                     $x->getType() == 'r',

@@ -13,9 +13,9 @@ use StudySauce\Bundle\Entity\Deadline;
                 <?php } else { ?>
                     <?php foreach ($deadlines as $i => $d) {
                         /** @var $d Deadline */
-                        $classI = array_search($d->getCourse(), $courses); ?>
+                        ?>
                         <div class="deadline-row">
-                        <i class="class<?php print $classI; ?>">&nbsp;</i>
+                        <i class="class<?php print (!empty($d->getCourse()) ? $d->getCourse()->getIndex() : ''); ?>">&nbsp;</i>
                         <strong><span><?php print $d->getDueDate()->format('j'); ?></span> <?php print $d->getDueDate()->format('M'); ?></strong>
                         <div><?php print $d->getAssignment(); ?></div>
                         </div><?php

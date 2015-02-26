@@ -167,6 +167,46 @@ class Course
     }
 
     /**
+     * @return mixed
+     */
+    public function getIndex()
+    {
+        return array_search($this, array_values($this->getSchedule()->getClasses()->toArray()));
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor()
+    {
+        $classI = $this->getIndex();
+
+        if ($classI === 0) {
+            $color = '#FF0D00';
+        } elseif ($classI == 1) {
+            $color = '#FF8900';
+        } elseif ($classI == 2) {
+            $color = '#FFD700';
+        } elseif ($classI == 3) {
+            $color = '#BAF300';
+        } elseif ($classI == 4) {
+            $color = '#2DD700';
+        } elseif ($classI == 5) {
+            $color = '#009999';
+        } elseif ($classI == 6) {
+            $color = '#162EAE';
+        } elseif ($classI == 7) {
+            $color = '#6A0AAB';
+        } elseif ($classI == 8) {
+            $color = '#BE008A';
+        } else {
+            $color = '#DDDDDD';
+        }
+
+        return $color;
+    }
+
+    /**
      * Constructor
      */
     public function __construct()

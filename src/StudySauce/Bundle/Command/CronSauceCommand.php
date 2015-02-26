@@ -7,6 +7,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use StudySauce\Bundle\Controller\EmailsController;
 use StudySauce\Bundle\Entity\Deadline;
+use StudySauce\Bundle\Entity\Group;
+use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Swift_Mailer;
@@ -106,46 +108,75 @@ EOF
         $futureReminders = Criteria::create()->where(Criteria::expr()->gt('dueDate', new \DateTime()));
         $reminders = $orm->getRepository('StudySauceBundle:Deadline')->matching($futureReminders)->toArray();
         $deadlines = [];
+
+        // create a list of adviser deadlines
+        $reminderRecipients = [];
         foreach ($reminders as $i => $d) {
             /** @var Deadline $d */
+            if(($d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER')) &&
+                $d->shouldSend() && $d->getAssignment() == 'Course completion')
+            {
+                // get a list of all users in the group
+                $addresses = [];
+                $incomplete = [];
+                $complete = [];
+                foreach($d->getUser()->getGroups()->toArray() as $g)
+                {
+                    /** @var Group $g */
+                    foreach($g->getUsers()->toArray() as $u)
+                    {
+                        /** @var User $u */
+                        $addresses[] = $u->getEmail();
+
+                        if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER') ||
+                            $u->hasRole('ROLE_ADMIN') || $u->hasRole('ROLE_PARTNER') || $u->hasRole('ROLE_PARENT'))
+                            continue;
+
+                        $r = md5($u->getId());
+                        if($u->getCompleted() < 100) {
+                            $incomplete[$r] = $u;
+                            $deadlines[$r][] = $d;
+                            $reminderRecipients[$r] = $u;
+                        }
+                        else {
+                            $complete[$r] = $u;
+                        }
+                    }
+                }
+
+                // also send reminder to users that haven't even signed up
+                $nosignup = [];
+                foreach($d->getUser()->getGroupInvites() as $gi)
+                {
+                    /** @var GroupInvite $gi */
+                    if(array_search($gi->getEmail(), $addresses) === false)
+                    {
+                        $r = md5($gi->getEmail());
+                        $reminderRecipients[$r] = $gi;
+                        $deadlines[$r][] = $d;
+                        $nosignup[] = $gi;
+                    }
+                }
+
+                // send adviser updates
+                $emails->adviserCompletionAction($d->getUser(), $d, $incomplete, $nosignup, $complete);
+
+                $d->markSent();
+                $orm->merge($d);
+                $orm->flush();
+            }
+        }
+
+        // user deadlines
+        foreach ($reminders as $i => $d) {
+            /** @var Deadline $d */
+            // don't send advisers their own reminders, only send them to students above
+            if($d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER'))
+                continue;
             // due tomorrow
-            if ((in_array('86400', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 && $d->getDueDate()->getTimestamp() < time() + 86400 * 2 &&
-                    !in_array('86400', $d->getReminderSent())) ||
-                // due in two days
-                (in_array('172800', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 2 && $d->getDueDate()->getTimestamp() < time() + 86400 * 3 &&
-                    !in_array('86400', $d->getReminderSent()) &&
-                    !in_array('172800', $d->getReminderSent())) ||
-                // due in four days
-                (in_array('345600', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 4 && $d->getDueDate()->getTimestamp() < time() + 86400 * 5 &&
-                    !in_array('86400',$d->getReminderSent()) &&
-                    !in_array('172800', $d->getReminderSent()) &&
-                    !in_array('345600', $d->getReminderSent())) ||
-                // due in a week
-                (in_array('604800', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 7 && $d->getDueDate()->getTimestamp() < time() + 86400 * 8 &&
-                    !in_array('86400', $d->getReminderSent()) &&
-                    !in_array('172800', $d->getReminderSent()) &&
-                    !in_array('345600', $d->getReminderSent()) &&
-                    !in_array('604800', $d->getReminderSent())) ||
-                // due in two weeks
-                (in_array('1209600', $d->getReminder()) && $d->getDueDate()->getTimestamp() > time() + 86400 * 14 && $d->getDueDate()->getTimestamp() < time() + 86400 * 15 &&
-                    !in_array('86400',$d->getReminderSent()) &&
-                    !in_array('172800', $d->getReminderSent()) &&
-                    !in_array('345600', $d->getReminderSent()) &&
-                    !in_array('604800', $d->getReminderSent()) &&
-                    !in_array('1209600', $d->getReminderSent()))
-            ) {
+            if ($d->shouldSend()) {
                 $deadlines[$d->getUser()->getId()][] = $d;
-                $rem = $d->getReminderSent();
-                if($d->getDueDate()->getTimestamp() > time() + 86400 * 14 && $d->getDueDate()->getTimestamp() < time() + 86400 * 15)
-                    $rem[] = '1209600';
-                if($d->getDueDate()->getTimestamp() > time() + 86400 * 7 && $d->getDueDate()->getTimestamp() < time() + 86400 * 8)
-                    $rem[] = '604800';
-                if($d->getDueDate()->getTimestamp() > time() + 86400 * 4 && $d->getDueDate()->getTimestamp() < time() + 86400 * 5)
-                    $rem[] = '345600';
-                if($d->getDueDate()->getTimestamp() > time() + 86400 * 2 && $d->getDueDate()->getTimestamp() < time() + 86400 * 3)
-                    $rem[] = '172800';
-                if($d->getDueDate()->getTimestamp() > time() + 86400 && $d->getDueDate()->getTimestamp() < time() + 86400 * 2)
-                    $rem[] = '86400';
+                $d->markSent();
                 $orm->merge($d);
                 $orm->flush();
             }
@@ -155,7 +186,11 @@ EOF
         foreach ($deadlines as $i => $all) {
             /** @var Deadline $d */
             $d = $all[0];
-            $emails->deadlineReminderAction($d->getUser(), $all);
+            if(is_string($i))
+                $user = $reminderRecipients[$i];
+            else
+                $user = $d->getUser();
+            $emails->deadlineReminderAction($user, $all);
         }
 
         // clear mail spool

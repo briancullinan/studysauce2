@@ -4,7 +4,6 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\ContactMessage;
-use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\GroupInvite;
@@ -291,66 +290,27 @@ class EmailsController extends Controller
      * @param $reminders
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deadlineReminderAction(User $user, $reminders)
+    public function deadlineReminderAction($user, $reminders)
     {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-
-        $schedule = $user->getSchedules()->first();
-        if(!empty($schedule))
-            $courses = $schedule->getClasses()->toArray();
-        else
-            $courses = [];
         $reminderOutput = count($reminders) > 1 ? 'Below are your reminders.<br /><br />' : 'Below is your reminder.<br /><br />';
         $classes = [];
         if(is_array($reminders) && !empty($reminders)) {
             foreach ($reminders as $reminder) {
                 /** @var Deadline $reminder */
-                $classI = array_search($reminder->getCourse(), array_values($courses));
+                $color = !empty($reminder->getCourse()) ? $reminder->getCourse()->getColor() : '#DDDDDD';
 
-                if ($classI === false) {
-                    $classI = -1;
+                if($reminder->getAssignment() == 'Course completion' && ($reminder->getUser()->hasRole('ROLE_ADVISER')
+                        ||  $reminder->getUser()->hasRole('ROLE_MASTER_ADVISER')))
+                {
+                    $reminderOutput .= '<br /><strong>Assignment:</strong><br /><span style="height:24px;width:24px;background-image:url(https://studysauce.com/bundles/studysauce/images/course_icon.png);display:inline-block;vertical-align: middle;">&nbsp;</span> Complete the Study Sauce course<br /><br /><strong>Days until due date:</strong><br />' . $reminder->getDaysUntilDue() . '<br /><br />';
+                    $classes[] = 'the Study Sauce course';
                 }
-
-                if ($classI == 0) {
-                    $color = '#FF0D00';
-                } elseif ($classI == 1) {
-                    $color = '#FF8900';
-                } elseif ($classI == 2) {
-                    $color = '#FFD700';
-                } elseif ($classI == 3) {
-                    $color = '#BAF300';
-                } elseif ($classI == 4) {
-                    $color = '#2DD700';
-                } elseif ($classI == 5) {
-                    $color = '#009999';
-                } elseif ($classI == 6) {
-                    $color = '#162EAE';
-                } elseif ($classI == 7) {
-                    $color = '#6A0AAB';
-                } elseif ($classI == 8) {
-                    $color = '#BE008A';
-                } else {
-                    $color = '#DDDDDD';
-                }
-
-                $className = !empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic';
-                $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;vertical-align: middle;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment(
-                    ) . '<br /><br /><strong>Days until due date:</strong><br />' . $reminder->getDaysUntilDue() . '<br /><br />';
-                if (array_search($className, $classes) === false) {
-                    $classes[] = $className;
-                }
-
-                // save the sent status of the reminder
-                $timespan = floor(($reminder->getDueDate()->getTimestamp() - time()) / 86400);
-                foreach ([1, 2, 4, 7, 14] as $i => $t) {
-                    if ($timespan - $t <= 0) {
-                        $sent = $reminder->getReminderSent();
-                        $sent[] = $t * 86400;
-                        $reminder->setReminderSent($sent);
-                        $orm->merge($reminder);
-                        $orm->flush();
-                        break;
+                else {
+                    $className = !empty($reminder->getCourse()) ? $reminder->getCourse()->getName() : 'Nonacademic';
+                    $reminderOutput .= '<br /><strong>Subject:</strong><br /><span style="height:24px;width:24px;background-color:' . $color . ';display:inline-block;border-radius:100%;border: 3px solid #555555;vertical-align: middle;">&nbsp;</span> ' . $className . '<br /><br /><strong>Assignment:</strong><br />' . $reminder->getAssignment(
+                        ) . '<br /><br /><strong>Days until due date:</strong><br />' . $reminder->getDaysUntilDue() . '<br /><br />';
+                    if (array_search($className, $classes) === false) {
+                        $classes[] = $className;
                     }
                 }
             }
@@ -364,7 +324,6 @@ class EmailsController extends Controller
             ->setFrom('admin@studysauce.com')
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:deadline-reminder.html.php', [
-                        'user' => $user,
                         'reminders' => $reminderOutput,
                         'greeting' => 'Hi ' . $user->getFirst() . ',',
                         'link' => '<a href="' . $codeUrl . '">Click here to log in to Study Sauce and edit your deadlines</a>'
@@ -372,6 +331,35 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['deadline-reminder']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param Deadline $deadline
+     * @param $incomplete
+     * @param $complete
+     * @return Response
+     */
+    public function adviserCompletionAction(User $user, Deadline $deadline, $incomplete, $nosignup, $complete)
+    {
+
+        /** @var Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Student completion ' . $deadline->getDaysUntilDue())
+            ->setFrom('admin@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:adviser-completion.html.php', [
+                'incomplete' => $incomplete,
+                'nosignup' => $nosignup,
+                'complete' => $complete,
+                'greeting' => 'Hi ' . $user->getFirst() . ',',
+            ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['adviser-completion']])));
         $this->send($message);
 
         return new Response();
@@ -614,8 +602,8 @@ class EmailsController extends Controller
 
         if($count >= 2)
         {
-            $message->getHeaders()->addParameterizedHeader('X-Original-To', key($to));
             $message->setSubject('CANCELLED: ' . $message->getSubject());
+            $message->getHeaders()->addParameterizedHeader('X-Original-To', key($to));
             $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
         }
 

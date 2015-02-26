@@ -163,7 +163,7 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
         // look up inputs
         // also check template file for usages
         $templateText = implode("", file($this->getPathFromName($fullName)));
-        // TODO: make this class work with torch and laurel and other bundles
+        // TODO: make this class work with torch and laurel and other bundles and group contracts
         $reflector = new \ReflectionClass('\StudySauce\Bundle\Controller\EmailsController');
         foreach($reflector->getMethods() as $m)
         {
