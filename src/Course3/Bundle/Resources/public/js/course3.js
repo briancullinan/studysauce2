@@ -19,14 +19,19 @@ $(document).ready(function () {
             step.addClass('loaded');
             onYouTubeIframeAPIReady.apply(this);
         }
-        setTimeout(function () {
+        var autoPlay = function () {
             for(var i = 0; i < window.players.length; i++) {
                 if($(window.players[i].d).parents().is(step)) {
+                    if(typeof window.players[i].playVideo == 'undefined') {
+                        setTimeout(autoPlay, 1000);
+                        return;
+                    }
                     window.players[i].playVideo();
                     break;
                 }
             }
-        }, 1000);
+        };
+        setTimeout(autoPlay, 1000);
     });
 
     body.on('show', '.course3.step4', function () {

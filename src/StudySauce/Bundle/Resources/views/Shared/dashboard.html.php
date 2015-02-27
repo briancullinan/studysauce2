@@ -113,10 +113,36 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
 
 if($app->getRequest()->get('_format') == 'tab') {
     $view['slots']->output('stylesheets');
-    if(!empty($app->getRequest()->get('_route'))) {
-        ?>
-        <style type="text/css">.css-loaded {
-                content: "loading-<?php print $app->getRequest()->get('_route'); ?>";
+    $request = $app->getRequest();
+    if(empty($request->get('_route')) && $request->get('_format') == 'tab') {
+        /** @var $router \Symfony\Component\Routing\Router */
+        $router = $this->container->get('router');
+        /** @var $collection \Symfony\Component\Routing\RouteCollection */
+        $collection = $router->getRouteCollection();
+        if(strpos($request->get('_controller'), '::') === false) {
+            $parser = new \Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser(
+                $this->container->get('kernel')
+            );
+            $name = $parser->parse($request->get('_controller'));
+        }
+        else {
+            $name = $request->get('_controller');
+        }
+        foreach ($collection->all() as $route => $params) {
+            /** @var $params \Symfony\Component\Routing\Route */
+            if ($params->getDefault('_controller') == $name &&
+                strpos($params->getRequirement('_format'), 'tab') > -1) {
+                $pane = $route;
+                break;
+            }
+        }
+    }
+    if(!empty($request->get('_route'))) {
+        $pane = $request->get('_route');
+    }
+    if(!empty($pane)) { ?>
+        <style type="text/css">.css-loaded.<?php print $pane; ?> {
+                content: "loading-<?php print $pane ?>";
             }</style>
     <?php
     }

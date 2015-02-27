@@ -227,7 +227,7 @@ $(document).ready(function () {
                 var head = jQuery(this);
                 head.nextUntil('*:not(.deadline-row)').each(function () {
                     var row = jQuery(this),
-                        courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class'))[1];
+                        courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
                     // TODO: fix this to not rely on name
                     if(typeof headings[courseId] == 'undefined')
                         headings[courseId] = row;
@@ -236,7 +236,9 @@ $(document).ready(function () {
                 });
             });
             var keys = [];
-            deadlines.find('.deadline-row').first().find('.class-name select option:not([value=""]):not([value="Nonacademic"])').each(function () {
+            deadlines.find('.deadline-row').first().find('.class-name select option').each(function () {
+                if($(this).attr('value') == '' || $(this).attr('value') == 'Nonacademic')
+                    return true;
                 keys[keys.length] = $(this).attr('value');
             });
 
@@ -246,9 +248,11 @@ $(document).ready(function () {
 
             for(var j = 0; j < keys.length; j++)
             {
+                if(typeof headings[keys[j]] == 'undefined')
+                    continue;
                 var hidden = headings[keys[j]].filter('.deadline-row:not(.historic)').length == 0;
                 rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (hidden ? 'historic' : '') + '">' +
-                    deadlines.find('.deadline-row').first().find('option[value="' + keys[j] + '"]').text() + '</div>'), headings[keys[j]].detach()));
+                    deadlines.find('.deadline-row').first().find('option[value="' + (keys[j] == '' ? 'Nonacademic' : keys[j]) + '"]').text() + '</div>'), headings[keys[j]].detach()));
             }
             deadlines.addClass('sort-by-class');
         }

@@ -52,7 +52,6 @@ function loadingAnimation(that)
 
 function onYouTubeIframeAPIReady() {
     var frames = $(this).find('iframe[src*="youtube.com/embed"]');
-    var players = [];
     var load = function () {
         var ytPlayer = new YT.Player($(this).attr('id'), {
             events: {
@@ -71,7 +70,7 @@ function onYouTubeIframeAPIReady() {
                 }
             }
         });
-        players[players.length] = ytPlayer;
+        window.players[window.players.length] = ytPlayer;
     };
     var delayed = function () {
         if(typeof YT != 'undefined' && typeof YT.Player != 'undefined')
@@ -80,7 +79,6 @@ function onYouTubeIframeAPIReady() {
             setTimeout(delayed, 100);
     };
     delayed();
-    window.players = $.merge(window.players, players);
 }
 
 function ssMergeStyles(content)
@@ -125,13 +123,22 @@ function ssMergeStyles(content)
         //Wait for style to be loaded
         var wait = setInterval(function(){
             //Check for the style to be applied to the body
-            if($('.css-loaded').css('content') === 'loading-' + pane.attr('id')) {
-                clearInterval(wait);
+            if($('.css-loaded.' + pane.attr('id')).css('content') === 'loading-' + pane.attr('id')) {
                 //CSS ready
                 window.sincluding.splice(window.sincluding.indexOf('loading-' + pane.attr('id')), 1);
             }
+            // clear loading if done loading all css
+            var loading = 0;
+            for(var i = 0; i < window.sincluding.length; i++) {
+                if(window.sincluding[i].substr(0, 8) == 'loading-')
+                    loading++;
+            }
+            if(loading == 0) {
+                clearInterval(wait);
+            }
         }, 100);
 
+        $('<div class="css-loaded ' + pane.attr('id') + '"></div>').appendTo($('body'));
         window.sincluding.push('loading-' + pane.attr('id'))
     }
 
@@ -292,7 +299,7 @@ if(typeof window.jqAjax == 'undefined') {
         settings.error = function ( jqXHR, textStatus, errorThrown) {
             window.sincluding.splice(window.sincluding.indexOf(url), 1);
             if (typeof error != 'undefined')
-                success(jqXHR, textStatus, errorThrown);
+                error(jqXHR, textStatus, errorThrown);
         };
         return window.jqAjax(settings);
     };

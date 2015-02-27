@@ -89,6 +89,11 @@
     visibility: visible;
 }
 
+#deadlines .deadline-row.edit ~ .form-actions a[href="#add-deadline"]
+{
+    display:none;
+}
+
 #deadlines .form-actions a[href*="/schedule"] {
     position:absolute;
     bottom:10px;
@@ -205,7 +210,8 @@
 }
 
 #deadlines.sort-by-class .read-only .class-name select,
-#deadlines .sort-date-label
+#deadlines .sort-date-label,
+#deadlines.sort-by-class .edit .sort-date-label
 {
     display:none;
 }

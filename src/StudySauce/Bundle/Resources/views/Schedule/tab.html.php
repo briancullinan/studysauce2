@@ -34,11 +34,12 @@ $view['slots']->start('body'); ?>
     } else { ?>
         <h2>Enter your class below</h2>
         <div class="schedule-history">
-            <a href="<?php print $view['router']->generate('schedule'); ?>#create-schedule">Create a new schedule</a>
             <a href="#create-schedule" class="subtle">Create a new schedule</a>
             <a href="#prev-schedule" class="subtle disabled"><span></span> Previous</a>
+            <h3 class="term-label"></h3>
             <a href="#next-schedule" class="subtle">Next <span></span></a>
         </div>
+        <a href="<?php print $view['router']->generate('schedule'); ?>#manage-terms" data-toggle="modal">Manage terms</a>
     <?php } ?>
     <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post" novalidate="novalidate">
         <?php foreach($schedules as $schedule) {
@@ -50,8 +51,24 @@ $view['slots']->start('body'); ?>
                 $schedule = $demoSchedules[0];
                 $courses = array_values($schedule->getClasses()->toArray());
             }
-        ?>
+
+            // figure out term label
+            if(empty($schedule->getClasses()->count()))
+                $start = $schedule->getCreated();
+            else
+                $start = date_timestamp_set(new \DateTime(), array_sum($schedule->getClasses()->map(function (Course $c) {return empty($c->getStartTime()) ? 0 : $c->getStartTime()->getTimestamp();})->toArray()) / $schedule->getClasses()->count());
+            if($start->format('n') >= 11)
+                $name = 'Winter ' . $start->format('Y');
+            elseif($start->format('n') >= 8)
+                $name = 'Fall ' . $start->format('Y');
+            elseif($start->format('n') <= 5)
+                $name = 'Spring ' . $start->format('Y');
+            else
+                $name = 'Summer ' . $start->format('Y');
+
+            ?>
             <div class="term-row schedule-id-<?php print (!$isDemo ? $schedule->getId() : ''); ?>">
+                <input type="hidden" name="term-label" value="<?php print $name; ?>" />
                 <div class="university">
                     <label class="input">
                         School name
@@ -360,5 +377,6 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 print $this->render('StudySauceBundle:Dialogs:new-schedule.html.php', ['id' => 'new-schedule']);
+print $this->render('StudySauceBundle:Dialogs:manage-terms.html.php', ['id' => 'manage-terms', 'schedules' => $schedules]);
 $view['slots']->stop();
 

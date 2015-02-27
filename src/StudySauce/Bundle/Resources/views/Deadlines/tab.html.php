@@ -120,7 +120,7 @@ $view['slots']->start('body'); ?>
 
             ?>
             <div class="deadline-row invalid read-only <?php
-            print (!empty($d->getCourse()) ? (' course-id-' . $d->getCourse()->getId()) : '');
+            print ' course-id-' . (!empty($d->getCourse()) ? $d->getCourse()->getId() : '');
             print ($d->getDueDate() < date_sub(new \Datetime('today'), new \DateInterval('P1D')) ? ' historic' : '');
             print ' deadline-id-' . $d->getId(); ?>">
             <div class="class-name">

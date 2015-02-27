@@ -38,8 +38,8 @@ class PartnerController extends Controller
 
         return $this->render('StudySauceBundle:Partner:tab.html.php', [
                 'partner' => $partner,
-                'isAdviser' => $partner instanceof User && $partner->hasRole('ROLE_ADVISER') ||
-                    $partner->hasRole('ROLE_MASTER_ADVISER'),
+                'isAdviser' => $partner instanceof User && ($partner->hasRole('ROLE_ADVISER') ||
+                    $partner->hasRole('ROLE_MASTER_ADVISER')),
                 'csrf_token' => $csrfToken
             ]);
     }

@@ -355,14 +355,14 @@ class APageLoaderCest
     {
         $I->wantTo('set up a deadline');
         $I->seeAmOnUrl('/deadlines');
-        $I->selectOption('header + .deadline-row .class-name select', 'PHIL 101');
-        $I->fillField('header + .deadline-row .assignment input', 'Exam 1');
-        $I->checkOption('header + .deadline-row input[value="86400"]');
-        $I->checkOption('header + .deadline-row input[value="172800"]');
-        $I->checkOption('header + .deadline-row input[value="345600"]');
-        $I->click('header + .deadline-row .due-date input');
+        $I->selectOption('.deadline-row .class-name select', 'PHIL 101');
+        $I->fillField('.deadline-row .assignment input', 'Exam 1');
+        $I->checkOption('.deadline-row input[value="86400"]');
+        $I->checkOption('.deadline-row input[value="172800"]');
+        $I->checkOption('.deadline-row input[value="345600"]');
+        $I->click('.deadline-row .due-date input');
         $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
-        $I->fillField('header + .deadline-row .percent input', '10');
+        $I->fillField('.deadline-row .percent input', '10');
         $I->click('#deadlines .highlighted-link [value="#save-deadline"]');
         $I->wait(10);
     }

@@ -292,6 +292,56 @@ $(document).ready(function () {
             $(this).addClass('disabled');
         else
             $(this).removeClass('disabled');
+        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row:visible input[name="term-label"]').val());
+    });
+
+    body.on('change', '#manage-terms select', function () {
+        // reorder terms
+        var dialog = $('#manage-terms');
+        dialog.find('.term-row').sort(function (a, b) {
+            var timeA = $(a).find('select').val().split('/'),
+                timeB = $(b).find('select').val().split('/');
+            if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) > parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
+                return -1;
+            }
+            if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) < parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
+                return 1;
+            }
+            return 0;
+        }).detach().insertBefore(dialog.find('a[href="#add-term"]'));
+        dialog.find('.term-row').each(function (i) {
+            $(this).find('.term-count').html((i + 1) + '.');
+        });
+    });
+
+    function addTerm()
+    {
+        var dialog = $('#manage-terms'),
+            newTerm = dialog.find('.term-row').first().clone().insertAfter(dialog.find('.term-row').last());
+        newTerm.removeClass('read-only');
+        newTerm.find('.term-count').html(dialog.find('.term-row:not(.deleted)').length + '.');
+        newTerm.find('option:first-child').html('Select term');
+        newTerm.find('select').val('');
+        newTerm.attr('class', newTerm.attr('class').replace(/schedule-id-([0-9]*)(\s|$)/ig, ' schedule-id- '));
+    }
+
+    body.on('click', '#manage-terms a[href="#add-term"]', function (evt) {
+        evt.preventDefault();
+        addTerm();
+    });
+
+    body.on('click', '#manage-terms a[href="#remove-term"]', function (evt) {
+        evt.preventDefault();
+        var dialog = $('#manage-terms'),
+            row = $(this).parents('.term-row');
+        row.addClass('deleted');
+        if(row.is('.schedule-id-'))
+            row.remove();
+        else
+            row.hide();
+        dialog.find('.term-row').each(function (i) {
+            $(this).find('.term-count').html((i + 1) + '.');
+        });
     });
 
     body.on('click', '#schedule a[href="#next-schedule"]', function (evt) {
@@ -305,6 +355,7 @@ $(document).ready(function () {
             $(this).addClass('disabled');
         else
             $(this).removeClass('disabled');
+        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row:visible input[name="term-label"]').val());
     });
 
     function submitSchedule(evt)
@@ -392,8 +443,8 @@ $(document).ready(function () {
     }
     body.on('submit', '#schedule form', submitSchedule);
 
-    body.on('click', '#schedule a[href*="#create-schedule"]', function (evt) {
-        evt.preventDefault();
+    function createSchedule()
+    {
         var schedule = $('#schedule'),
             newTerm = schedule.find('.term-row').first().clone().insertBefore(schedule.find('.term-row').first()),
             oldRows = newTerm.find('.class-row');
@@ -415,10 +466,25 @@ $(document).ready(function () {
             schedule.find('a[href="#prev-schedule"]').addClass('disabled');
         else
             schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
+        newTerm.find('input[name="term-label"]').val('New term');
         planFunc();
+    }
+
+    body.on('click', '#schedule a[href*="#create-schedule"]', function (evt) {
+        evt.preventDefault();
+        var schedule = $('#schedule');
+        createSchedule.apply(this);
+        // add new term to term manager
+        addTerm();
+        var dialog = $('#manage-terms');
+        dialog.find('.schedule-id-').detach().insertBefore(dialog.find('.term-row').first());
+        dialog.find('.term-row').each(function (i) {
+            $(this).find('.term-count').html((i + 1) + '.');
+        });
+        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row input[name="term-label"]').val());
     });
 
-    var autoFillDate = function () {
+    function autoFillDate() {
         var schedule = $(this).parents('.term-row');
         var first = $(this).closest('.class-row').add(schedule.find('.class-row')).filter(function () {
                 var row = $(this);
@@ -447,9 +513,11 @@ $(document).ready(function () {
                 }
             });
         }
-    };
+    }
+
     body.on('change', '#schedule .class-name input', autoFillDate);
     body.on('keyup', '#schedule .class-name input', autoFillDate);
+
     function copyTimes() {
         if($(this).is('[type="time"]')) {
             $(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', $(this).val());
