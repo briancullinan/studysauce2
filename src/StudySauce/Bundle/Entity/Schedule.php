@@ -78,6 +78,11 @@ class Schedule
     protected $created;
 
     /**
+     * @ORM\Column(type="datetime", name="term", nullable=true)
+     */
+    protected $term;
+
+    /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="schedule")
      * @ORM\OrderBy({"start" = "DESC"})
      */
@@ -388,6 +393,29 @@ class Schedule
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Set term
+     *
+     * @param \DateTime $term
+     * @return User
+     */
+    public function setTerm($term)
+    {
+        $this->term = $term;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getTerm()
+    {
+        return $this->term;
     }
 
     /**

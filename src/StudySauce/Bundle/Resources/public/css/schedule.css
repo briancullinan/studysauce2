@@ -375,6 +375,16 @@
     display:inline-block;
 }
 
+#manage-terms .modal-body .highlighted-link
+{
+    text-align: left;
+}
+
+#manage-terms .big-add
+{
+    float:none;
+}
+
 @media all and (max-width: 1000px)
 {
 

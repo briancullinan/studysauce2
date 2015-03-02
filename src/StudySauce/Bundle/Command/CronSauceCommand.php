@@ -91,7 +91,8 @@ EOF
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('p')
             ->where('p.created > \'' . date_timestamp_set(new \DateTime(), time() - 86400 * 4)->format('Y-m-d 00:00:00') . '\'')
-            ->andWhere('p.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\' OR p.properties IS NULL');
+            ->andWhere('p.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\' OR p.properties IS NULL')
+            ->andWhere('p.roles NOT LIKE \'%GUEST%\' AND p.roles NOT LIKE \'%DEMO%\'');
         $users = $qb->getQuery()->execute();
         foreach ($users as $i => $u) {
             /** @var User $u */

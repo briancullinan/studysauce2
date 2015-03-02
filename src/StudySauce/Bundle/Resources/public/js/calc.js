@@ -236,14 +236,7 @@ $(document).ready(function () {
             var schedule = $('#schedule');
             schedule.find('.term-row').hide();
             schedule.find('.schedule-id-' + scheduleId).show();
-            if(schedule.find('.term-row:visible').is(schedule.find('.term-row').last()))
-                schedule.find('a[href="#next-schedule"]').addClass('disabled');
-            else
-                schedule.find('a[href="#next-schedule"]').removeClass('disabled');
-            if(schedule.find('.term-row:visible').is(schedule.find('.term-row').first()))
-                schedule.find('a[href="#prev-schedule"]').addClass('disabled');
-            else
-                schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
+            updateTermControls();
         });
     });
 

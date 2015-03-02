@@ -127,7 +127,7 @@ $(document).ready(function () {
                     var endDate2 = new Date(that.find('.end-date input').val());
                     if(isNaN(startDate.getTime()) || isNaN(endDate.getTime()) ||
                         isNaN(startDate2.getTime()) || isNaN(endDate2.getTime()) ||
-                        startDate < endDate2 || endDate > startDate2)
+                        startDate <= endDate2 || endDate >= startDate2)
                     {
                         // check if weekdays overlap
                         var dotwOverlaps = false,
@@ -193,15 +193,11 @@ $(document).ready(function () {
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
-    body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
-        evt.preventDefault();
-        deleteCount++;
+    function removeClass()
+    {
         var row = $(this).parents('.class-row'),
             schedule = $('#schedule'),
             container = row.parents('.schedule');
-        if(deleteCount == 4) {
-            $('#new-schedule').modal({show:true});
-        }
         // clear and hide the class row
         row.find('.class-name input, .start-date input, .end-date input').val('');
         row.find('.day-of-the-week input').prop('checked', false);
@@ -220,6 +216,15 @@ $(document).ready(function () {
             else
                 container.find('a[href="#add-class"]').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click').trigger('click');
         }
+    }
+
+    body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
+        evt.preventDefault();
+        deleteCount++;
+        if(deleteCount == 4) {
+            $('#new-schedule').modal({show:true});
+        }
+        removeClass.apply(this);
     });
 
     function updateSchedule(data)
@@ -234,7 +239,7 @@ $(document).ready(function () {
                 $(this).remove();
         });
 
-        // update remainging terms
+        // update remaining terms
         response.find('.term-row').each(function (j) {
             var responseTerm = $(this),
                 responseId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(responseTerm.attr('class'))[1],
@@ -287,12 +292,7 @@ $(document).ready(function () {
             return;
         var schedule = $('#schedule');
         schedule.find('.term-row:has(+ .term-row:visible)').show().next().hide();
-        schedule.find('a[href="#next-schedule"]').removeClass('disabled');
-        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').first()))
-            $(this).addClass('disabled');
-        else
-            $(this).removeClass('disabled');
-        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row:visible input[name="term-label"]').val());
+        updateTermControls();
     });
 
     body.on('change', '#manage-terms select', function () {
@@ -308,21 +308,45 @@ $(document).ready(function () {
                 return 1;
             }
             return 0;
-        }).detach().insertBefore(dialog.find('a[href="#add-term"]'));
-        dialog.find('.term-row').each(function (i) {
+        }).detach().insertAfter(dialog.find('a[href="#add-term"]'));
+        relabelManager();
+    });
+
+    function relabelManager()
+    {
+        var dialog = $('#manage-terms');
+        dialog.find('.term-row:not(.deleted)').each(function (i) {
             $(this).find('.term-count').html((i + 1) + '.');
         });
-    });
+        // TODO: add a bullet to select boxes with selected terms
+        dialog.find('option').each(function () {
+            $(this).html($(this).html().replace(/[^a-z0-9 ]*/ig, ''));
+        });
+        dialog.find('.term-row:not(.deleted) select').each(function () {
+            var options = dialog.find('option[value="' + $(this).val() + '"]'),
+                html = options.first().html();
+            options.html('&bullet;' + html.replace(/[^a-z0-9 ]*/ig, ''));
+        });
+    }
 
     function addTerm()
     {
         var dialog = $('#manage-terms'),
-            newTerm = dialog.find('.term-row').first().clone().insertAfter(dialog.find('.term-row').last());
+            newTerm = dialog.find('.term-row').first().clone().insertBefore(dialog.find('.term-row').first());
         newTerm.removeClass('read-only');
-        newTerm.find('.term-count').html(dialog.find('.term-row:not(.deleted)').length + '.');
-        newTerm.find('option:first-child').html('Select term');
-        newTerm.find('select').val('');
+        var d = new Date(),
+            termMonth = (d.getMonth() + 1);
+        if(termMonth >= 11)
+            termMonth = 11;
+        else if (termMonth >= 8)
+            termMonth = 8;
+        else if (termMonth <= 5)
+            termMonth = 1;
+        else
+            termMonth = 6;
+        newTerm.find('select').val(termMonth + '/' + d.getFullYear());
         newTerm.attr('class', newTerm.attr('class').replace(/schedule-id-([0-9]*)(\s|$)/ig, ' schedule-id- '));
+        relabelManager();
     }
 
     body.on('click', '#manage-terms a[href="#add-term"]', function (evt) {
@@ -330,18 +354,77 @@ $(document).ready(function () {
         addTerm();
     });
 
+    body.on('click', '#schedule a[href*="#manage-terms"]', function () {
+        relabelManager();
+    });
+
+    body.on('click', '#manage-terms a[href="#save-schedule"]', function (evt) {
+        // clear deleted terms
+        var dialog = $('#manage-terms'),
+            schedule = $('#schedule');
+        dialog.find('.term-row.deleted').each(function () {
+            var scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec($(this).attr('class'))[1],
+                term = schedule.find('.term-row.schedule-id-' + scheduleId);
+            term.find('.class-row').each(removeClass);
+            term.addClass('deleted');
+        });
+
+        // add new schedules
+        dialog.find('.term-row').each(function () {
+            if($(this).is('.schedule-id-')) {
+                createSchedule();
+                schedule.find('.term-row').first().find('input[name="term-label"]').val($(this).find('select').val());
+            }
+            else {
+                var scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec($(this).attr('class'))[1];
+                schedule.find('.term-row.schedule-id-' + scheduleId)
+                    .find('input[name="term-label"]').val($(this).find('select').val());
+            }
+        });
+
+        // reorder schedules
+        schedule.find('.term-row').sort(function (a, b) {
+            var timeA = $(a).find('input[name="term-label"]').val().split('/'),
+                timeB = $(b).find('input[name="term-label"]').val().split('/');
+            if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) > parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
+                return -1;
+            }
+            if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) < parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
+                return 1;
+            }
+            return 0;
+        }).detach().appendTo(schedule.find('form'));
+
+        // reset prev and next buttons
+        schedule.find('.term-row').hide();
+        schedule.find('.term-row').first().show();
+        updateTermControls();
+    });
+
+    function updateTermControls()
+    {
+        var schedule = $('#schedule');
+        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').last()))
+            schedule.find('a[href="#next-schedule"]').addClass('disabled');
+        else
+            schedule.find('a[href="#next-schedule"]').removeClass('disabled');
+        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').first()))
+            schedule.find('a[href="#prev-schedule"]').addClass('disabled');
+        else
+            schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
+        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row:visible input[name="term-label"]').val());
+    }
+    window.updateTermControls = updateTermControls;
+
     body.on('click', '#manage-terms a[href="#remove-term"]', function (evt) {
         evt.preventDefault();
-        var dialog = $('#manage-terms'),
-            row = $(this).parents('.term-row');
+        var row = $(this).parents('.term-row');
         row.addClass('deleted');
         if(row.is('.schedule-id-'))
             row.remove();
         else
             row.hide();
-        dialog.find('.term-row').each(function (i) {
-            $(this).find('.term-count').html((i + 1) + '.');
-        });
+        relabelManager();
     });
 
     body.on('click', '#schedule a[href="#next-schedule"]', function (evt) {
@@ -350,12 +433,7 @@ $(document).ready(function () {
             return;
         var schedule = $('#schedule');
         schedule.find('.term-row:visible').hide().next('.term-row').show();
-        schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
-        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').last()))
-            $(this).addClass('disabled');
-        else
-            $(this).removeClass('disabled');
-        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row:visible input[name="term-label"]').val());
+        updateTermControls()
     });
 
     function submitSchedule(evt)
@@ -458,15 +536,8 @@ $(document).ready(function () {
         oldRows.remove();
         schedule.find('.term-row').hide();
         newTerm.show();
-        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').last()))
-            schedule.find('a[href="#next-schedule"]').addClass('disabled');
-        else
-            schedule.find('a[href="#next-schedule"]').removeClass('disabled');
-        if(schedule.find('.term-row:visible').is(schedule.find('.term-row').first()))
-            schedule.find('a[href="#prev-schedule"]').addClass('disabled');
-        else
-            schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
         newTerm.find('input[name="term-label"]').val('New term');
+        updateTermControls();
         planFunc();
     }
 
@@ -476,11 +547,6 @@ $(document).ready(function () {
         createSchedule.apply(this);
         // add new term to term manager
         addTerm();
-        var dialog = $('#manage-terms');
-        dialog.find('.schedule-id-').detach().insertBefore(dialog.find('.term-row').first());
-        dialog.find('.term-row').each(function (i) {
-            $(this).find('.term-count').html((i + 1) + '.');
-        });
         schedule.find('.schedule-history .term-label').html(schedule.find('.term-row input[name="term-label"]').val());
     });
 
