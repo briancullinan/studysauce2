@@ -11,10 +11,13 @@ use StudySauce\Bundle\Entity\Goal;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class GoalsController
@@ -38,11 +41,6 @@ class GoalsController extends Controller
 
         /** @var  $goals ArrayCollection */
         $goals = $user->getGoals();
-        if(!$goals->count() && ($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')))
-        {
-            $this->getDemoGoals($user);
-            $goals = $user->getGoals();
-        }
 
         $claims = [];
         foreach($goals->toArray() as $g)
@@ -67,12 +65,26 @@ class GoalsController extends Controller
     }
 
     /**
-     * @param User $user
+     * @param ContainerInterface $container
      */
-    private function getDemoGoals(User $user)
+    public static function getDemoGoals($container)
     {
         /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
+        $orm = $container->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $container->get('fos_user.user_manager');
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
+            $guest = $user;
+
+        }
+        else {
+            $guest = $userManager->findUserByUsername('guest');
+        }
 
         $behaviorGoals = ['25', '30', '35', '40', '45', '50'];
         $behaviorRewards = ['Lunch with parents', 'That new sweater I always wanted', 'Pat on the back'];
@@ -80,8 +92,8 @@ class GoalsController extends Controller
         $behavior->setType('behavior');
         $behavior->setGoal($behaviorGoals[array_rand($behaviorGoals, 1)]);
         $behavior->setReward($behaviorRewards[array_rand($behaviorRewards, 1)]);
-        $behavior->setUser($user);
-        $user->addGoal($behavior);
+        $behavior->setUser($guest);
+        $guest->addGoal($behavior);
         $orm->persist($behavior);
 
         $milestoneGoals = ['B', 'B+', 'A-', 'A', 'A+'];
@@ -90,8 +102,8 @@ class GoalsController extends Controller
         $milestone->setType('milestone');
         $milestone->setGoal($milestoneGoals[array_rand($milestoneGoals, 1)]);
         $milestone->setReward($milestoneRewards[array_rand($milestoneRewards, 1)]);
-        $milestone->setUser($user);
-        $user->addGoal($milestone);
+        $milestone->setUser($guest);
+        $guest->addGoal($milestone);
         $orm->persist($milestone);
 
         $outcomeGoals = ['3.00', '3.25', '3.50', '3.75', '4.00'];
@@ -100,8 +112,8 @@ class GoalsController extends Controller
         $outcome->setType('outcome');
         $outcome->setGoal($outcomeGoals[array_rand($outcomeGoals, 1)]);
         $outcome->setReward($outcomeRewards[array_rand($outcomeRewards, 1)]);
-        $outcome->setUser($user);
-        $user->addGoal($outcome);
+        $outcome->setUser($guest);
+        $guest->addGoal($outcome);
         $orm->persist($outcome);
 
         $orm->flush();

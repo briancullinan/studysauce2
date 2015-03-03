@@ -10,6 +10,7 @@ use StudySauce\Bundle\Entity\Goal;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class MetricsController
@@ -42,9 +43,7 @@ class MetricsController extends Controller
         }
         if(empty($checkins)) {
             $isDemo = true;
-            $schedule = ScheduleController::getDemoSchedule($this->container);
-            $courses = $schedule->getClasses()->toArray();
-            list($checkins, $checkouts) = self::demoCheckins($courses, $orm);
+            list($checkins, $checkouts) = self::getDemoCheckins($this->container);
         }
         list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
 
@@ -188,11 +187,15 @@ class MetricsController extends Controller
     private static $randomLengths = [30,45,50,60];
 
     /**
-     * @param $courses
-     * @param EntityManager $orm
+     * @param ContainerInterface $container
+     * @return array
      */
-    public static function demoCheckins($courses, EntityManager $orm)
+    public static function getDemoCheckins($container)
     {
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        $demo = ScheduleController::getDemoSchedule($container);
+        $courses = array_values($demo->getCourses()->toArray());
         $_week = strtotime('last Sunday');
         if ($_week + 604800 == strtotime('today')) {
             $_week += 604800;

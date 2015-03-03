@@ -240,14 +240,14 @@ $(document).ready(function () {
         });
 
         // update remaining terms
-        response.find('.term-row').each(function (j) {
+        response.find('.pane-content .term-row').each(function (j) {
             var responseTerm = $(this),
                 responseId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(responseTerm.attr('class'))[1],
                 term = schedule.find('.term-row').eq(j);
             // update schedule id if newly added
             term.removeClass('.schedule-id-').addClass('schedule-id-' + responseId);
 
-            term.find('.university input').data('state', term.find('.university input').val().trim());
+            term.find('.university input').data('state', responseTerm.find('.university input').val().trim());
             term.find('.schedule .class-row.valid').remove();
             responseTerm.find('.schedule:not(.other) .class-row')
                 .prependTo(term.find('.schedule:not(.other)'));
@@ -283,6 +283,7 @@ $(document).ready(function () {
     body.on('click', '#schedule a[href="#add-class"]', function (evt) {
         evt.preventDefault();
         addClass.apply(this);
+        $(this).parents('.schedule').find('.class-row').last().find('.class-name input').focus();
         planFunc();
     });
 
@@ -373,19 +374,19 @@ $(document).ready(function () {
         dialog.find('.term-row').each(function () {
             if($(this).is('.schedule-id-')) {
                 createSchedule();
-                schedule.find('.term-row').first().find('input[name="term-label"]').val($(this).find('select').val());
+                schedule.find('.term-row').first().find('input[name="term-name"]').val($(this).find('select').val());
             }
             else {
                 var scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec($(this).attr('class'))[1];
                 schedule.find('.term-row.schedule-id-' + scheduleId)
-                    .find('input[name="term-label"]').val($(this).find('select').val());
+                    .find('input[name="term-name"]').val($(this).find('select').val());
             }
         });
 
         // reorder schedules
         schedule.find('.term-row').sort(function (a, b) {
-            var timeA = $(a).find('input[name="term-label"]').val().split('/'),
-                timeB = $(b).find('input[name="term-label"]').val().split('/');
+            var timeA = $(a).find('input[name="term-name"]').val().split('/'),
+                timeB = $(b).find('input[name="term-name"]').val().split('/');
             if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) > parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
                 return -1;
             }
@@ -412,7 +413,17 @@ $(document).ready(function () {
             schedule.find('a[href="#prev-schedule"]').addClass('disabled');
         else
             schedule.find('a[href="#prev-schedule"]').removeClass('disabled');
-        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row:visible input[name="term-label"]').val());
+        var termName =  schedule.find('.term-row:visible input[name="term-name"]').val(),
+            termMonth = termName.split('/')[0];
+        if(termMonth >= 11)
+            termMonth = 'Winter';
+        else if (termMonth >= 8)
+            termMonth = 'Fall';
+        else if (termMonth <= 5)
+            termMonth = 'Spring';
+        else
+            termMonth = 'Summer';
+        schedule.find('.schedule-history .term-label').html(termMonth + ' ' + termName.split('/')[1]);
     }
     window.updateTermControls = updateTermControls;
 
@@ -494,6 +505,7 @@ $(document).ready(function () {
 
             var termData = {
                 university : term.find('.university input').val(),
+                term: term.find('input[name="term-name"]').val(),
                 scheduleId : scheduleId,
                 classes : classes
             };
@@ -536,7 +548,7 @@ $(document).ready(function () {
         oldRows.remove();
         schedule.find('.term-row').hide();
         newTerm.show();
-        newTerm.find('input[name="term-label"]').val('New term');
+        newTerm.find('input[name="term-name"]').val('New term');
         updateTermControls();
         planFunc();
     }
@@ -547,7 +559,7 @@ $(document).ready(function () {
         createSchedule.apply(this);
         // add new term to term manager
         addTerm();
-        schedule.find('.schedule-history .term-label').html(schedule.find('.term-row input[name="term-label"]').val());
+        updateTermControls();
     });
 
     function autoFillDate() {
@@ -702,6 +714,7 @@ $(document).ready(function () {
         if(schedule.is('.needs-new-schedule')) {
             $('#new-schedule').modal({show:true});
         }
+        updateTermControls();
     });
 
     body.on('hidden.bs.modal', '#new-schedule', function () {

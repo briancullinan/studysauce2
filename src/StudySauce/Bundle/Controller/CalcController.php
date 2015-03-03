@@ -83,7 +83,7 @@ class CalcController extends Controller
         }
 
         /** @var Course $course */
-        $course->setCreditHours(intval($c['creditHours']));
+        $course->setCreditHours(!empty(intval($c['creditHours'])) ? intval($c['creditHours']) : null);
         if(empty($c['grades']))
             return;
         foreach($c['grades'] as $g) {
@@ -133,24 +133,28 @@ class CalcController extends Controller
         foreach($request->get('terms') as $t)
         {
             // find the correct course to modify
-            /** @var Schedule $s */
-            $s = $user->getSchedules()->filter(function (Schedule $s) use ($t) {return $s->getId() == $t['scheduleId'];})->first();
-            if(empty($s)) {
-                $s = new Schedule();
-                $s->setUser($user);
-                $user->addSchedule($s);
-                $orm->persist($s);
+            /** @var Schedule $schedule */
+            $schedule = $user->getSchedules()->filter(function (Schedule $s) use ($t) {return $s->getId() == $t['scheduleId'];})->first();
+            if(empty($schedule)) {
+                $schedule = new Schedule();
+                $schedule->setUser($user);
+                $user->addSchedule($schedule);
+                $orm->persist($schedule);
                 $orm->flush();
             }
+
             // set the scale
             if($first) {
-                $s->setGradeScale($request->get('scale'));
-                $orm->merge($s);
+                $schedule->setGradeScale($request->get('scale'));
                 $first = false;
             }
+
+            $schedule->setTerm(date_create_from_format('!n/Y', $t['term']));
+            $orm->merge($schedule);
+
             // save the course grades
             foreach($t['courses'] as $c) {
-                $this->saveCourseGrades($s, $c, $orm);
+                $this->saveCourseGrades($schedule, $c, $orm);
             }
         }
 
@@ -182,6 +186,7 @@ class CalcController extends Controller
      */
     public static function convertToScale($scale, $score)
     {
+        $score = round($score);
         if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
             $scale = self::$presets['A +/-'];
         if($score === null)

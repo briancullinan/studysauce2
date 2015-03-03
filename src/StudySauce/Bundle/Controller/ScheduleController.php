@@ -388,6 +388,7 @@ class ScheduleController extends Controller
 
             if(!empty($t['university']) && $t['university'] != $schedule->getUniversity())
                 $schedule->setUniversity($t['university']);
+            $schedule->setTerm(date_create_from_format('!n/Y', $t['term']));
 
             // save the schedule first
             if(empty($t['scheduleId']))

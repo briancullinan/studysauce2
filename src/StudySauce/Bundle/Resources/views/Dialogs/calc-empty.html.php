@@ -6,7 +6,7 @@ $view['slots']->start('modal-header') ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-Then use the calculator to figure out what grades to need to succeed.
+Then use the calculator to figure out what grades you need to succeed.
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

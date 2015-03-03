@@ -281,7 +281,7 @@
 
     #goals .goal-row.read-only .highlighted-link
     {
-        margin-top:-25px;
+        display:block;
     }
 
     #goals .split-description {
@@ -344,7 +344,8 @@
     #goals .behavior,
     #goals .milestone,
     #goals .outcome,
-    #goals .reward
+    #goals .reward,
+    #goals .goal-row.read-only .reward
     {
         display: block;
         width: auto;

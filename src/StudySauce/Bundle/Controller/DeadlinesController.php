@@ -10,6 +10,7 @@ use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,7 +45,7 @@ class DeadlinesController extends Controller
         if (empty($courses)) {
             $demo = ScheduleController::getDemoSchedule($this->container);
             $courses = $demo->getClasses()->toArray();
-            $deadlines = $this->getDemoDeadlines(array_values($courses));
+            $deadlines = $this->getDemoDeadlines($this->container);
             $isDemo = true;
         }
         // show new deadline and hide headings if all the deadlines are in the past
@@ -114,26 +115,29 @@ class DeadlinesController extends Controller
     }
 
     /**
-     * @param $courses
+     * @param ContainerInterface $container
      * @return ArrayCollection
      */
-    private function getDemoDeadlines($courses)
+    public static function getDemoDeadlines($container)
     {
         /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
+        $orm = $container->get('doctrine')->getManager();
         /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
+        $userManager = $container->get('fos_user.user_manager');
         /** @var SecurityContext $context */
         /** @var TokenInterface $token */
         /** @var User $user */
         /** @var User $guest */
-        if(!empty($context = $this->container->get('security.context')) && !empty($token = $context->getToken()) &&
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
             !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
             $guest = $user;
+
         }
         else {
             $guest = $userManager->findUserByUsername('guest');
         }
+        $demo = ScheduleController::getDemoSchedule($container);
+        $courses = array_values($demo->getCourses()->toArray());
 
         $deadlines = $guest->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
             $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D'));});

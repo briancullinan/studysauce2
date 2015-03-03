@@ -42,33 +42,18 @@ $view['slots']->start('body'); ?>
         <a href="<?php print $view['router']->generate('schedule'); ?>#manage-terms" data-toggle="modal">Manage terms</a>
     <?php } ?>
     <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post" novalidate="novalidate">
-        <?php foreach($schedules as $schedule) {
-            $isDemo = false;
-            $courses = array_values($schedule->getClasses()->toArray());
-            $others = array_values($schedule->getOthers()->toArray());
-            if(empty($courses)) {
-                $isDemo = true;
-                $schedule = $demoSchedules[0];
+        <?php foreach($schedules as $schedule) { ?>
+            <div class="term-row schedule-id-<?php print $schedule->getId(); ?>">
+                <?php
+                $isDemo = false;
                 $courses = array_values($schedule->getClasses()->toArray());
-            }
-
-            // figure out term label
-            if(empty($schedule->getClasses()->count()))
-                $start = $schedule->getCreated();
-            else
-                $start = date_timestamp_set(new \DateTime(), array_sum($schedule->getClasses()->map(function (Course $c) {return empty($c->getStartTime()) ? 0 : $c->getStartTime()->getTimestamp();})->toArray()) / $schedule->getClasses()->count());
-            if($start->format('n') >= 11)
-                $name = 'Winter ' . $start->format('Y');
-            elseif($start->format('n') >= 8)
-                $name = 'Fall ' . $start->format('Y');
-            elseif($start->format('n') <= 5)
-                $name = 'Spring ' . $start->format('Y');
-            else
-                $name = 'Summer ' . $start->format('Y');
-
-            ?>
-            <div class="term-row schedule-id-<?php print (!$isDemo ? $schedule->getId() : ''); ?>">
-                <input type="hidden" name="term-label" value="<?php print $name; ?>" />
+                $others = array_values($schedule->getOthers()->toArray());
+                if(empty($courses)) {
+                    $isDemo = true;
+                    $schedule = $demoSchedules[0];
+                    $courses = array_values($schedule->getClasses()->toArray());
+                } ?>
+                <input type="hidden" name="term-name" value="<?php print (empty($schedule->getTerm()) ? $schedule->getCreated()->format('n/Y') : $schedule->getTerm()->format('n/Y')); ?>" />
                 <div class="university">
                     <label class="input">
                         School name
@@ -78,7 +63,7 @@ $view['slots']->start('body'); ?>
                     </label>
                 </div>
                 <header>
-                    <label>Class name</label>
+                    <label>&nbsp;</label>
                     <div class="day-of-the-week">
                         <label>M</label>
                         <label>Tu</label>
@@ -223,7 +208,7 @@ $view['slots']->start('body'); ?>
                 <hr/>
                 <h2>Enter work or other recurring obligations here</h2>
                 <header>
-                    <label>Class name</label>
+                    <label>&nbsp;</label>
                     <div class="day-of-the-week">
                         <label>M</label>
                         <label>Tu</label>

@@ -10,7 +10,7 @@
     white-space: nowrap;
 }
 
-#schedule .highlighted-link a[href$="/customization"]
+#schedule .highlighted-link a[href*="/customization"]
 {
     position:absolute;
     bottom:10px;
@@ -173,6 +173,12 @@
     overflow: hidden;
     margin: 0 -2px;
     padding: 0 2px;
+    height:16px;
+}
+
+.schedule .edit .day-of-the-week label
+{
+    height:auto;
 }
 
 .schedule .class-row label span

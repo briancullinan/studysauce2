@@ -399,6 +399,15 @@ class APageLoaderCest
         $I->wait(15);
     }
 
+    /**
+     * @param AcceptanceTester $I
+     * @depends tryStudentRegister
+     */
+    public function tryDetailedSchedule(AcceptanceTester $I)
+    {
+        $I->wantTo('invite a new accountability partner');
+        $I->seeAmOnUrl('/schedule');
+    }
 }
 
 

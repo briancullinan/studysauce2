@@ -108,12 +108,14 @@ aside + .panel-pane,
     margin-bottom:20px;
 }
 
+/*
 .big-add:active,
 .big-add:focus,
 .big-add:hover
 {
     color:#555555;
 }
+*/
 
 .big-add:active span,
 .big-add:focus span,

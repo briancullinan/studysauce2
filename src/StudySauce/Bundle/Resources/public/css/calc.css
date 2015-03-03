@@ -58,7 +58,8 @@
 
 #calculator .class-row.selected .grade-editor .highlighted-link
 {
-    padding-left:45px;
+    padding-left:65px;
+    margin-bottom:20px;
 }
 
 #calculator .term-row .term-editor
@@ -68,7 +69,7 @@
     width: auto;
     font-weight: normal;
     position: relative;
-    padding-bottom:30px;
+    padding-bottom:50px;
     transition: height ease-in-out .15s, min-height ease-in-out .15s;
 }
 
@@ -102,13 +103,6 @@
     padding-left:30px;
 }
 
-#calculator a[href="#calc-info"]
-{
-    position:absolute;
-    right:10px;
-    bottom:10px;
-}
-
 #calculator .grade-row,
 #calculator .class-row,
 #calculator .term-row,
@@ -119,7 +113,16 @@
     border-bottom: 1px solid transparent;
 }
 
-#calculator .class-row.selected {
+#calculator .term-row
+{
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    margin: 0 -20px;
+    padding: 0 20px;
+}
+
+#calculator .class-row.selected,
+#calculator .class-row.selected .class-name input {
     font-weight: bold;
 }
 
@@ -127,10 +130,15 @@
 {
     font-weight: bold;
     background: url(../images/noise_white.png) #FFFFFF;
-    border: 1px solid #555;
-    border-radius: 10px;
     padding: 0 20px;
-    margin: 0;
+    margin: 0 -20px;
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+#calculator .term-row.selected .term-name select
+{
+    font-weight: bold;
 }
 
 #grade-scale table tr:hover th,
@@ -148,10 +156,25 @@
 #calculator .grade-row:hover:not(.selected):not(.edit),
 #calculator .class-row:hover:not(.selected):not(.edit),
 #calculator .term-row:hover:not(.selected):not(.edit),
-#calculator .class-row:hover:not(.selected):not(.edit) .grade select
+#calculator .term-row:hover:not(.selected):not(.edit) .term-name select,
+#calculator .class-row:hover:not(.selected):not(.edit) .grade select,
+#calculator .class-row:hover:not(.selected):not(.edit) .class-name.read-only input,
+#calculator .class-row:hover:not(.selected):not(.edit) .hours.read-only input
 {
     cursor: pointer;
     color:#00CCEE;
+}
+
+#calculator a[href="#edit-grade"],
+#calculator a[href="#remove-grade"]
+{
+    visibility: hidden;
+}
+
+#calculator .grade-row:hover a[href="#edit-grade"],
+#calculator .grade-row:hover a[href="#remove-grade"]
+{
+    visibility: visible;
 }
 
 #calculator .term-row header
@@ -226,7 +249,7 @@
 #calculator .grade-row .assignment
 {
     width: 25%;
-    padding-left:45px;
+    padding-left:65px;
     text-align: left;
 }
 
@@ -264,13 +287,25 @@
     width: 100%;
 }
 
+#calculator .grade-editor .big-add
+{
+    font-size:16px;
+}
+
+#calculator .grade-editor .big-add span
+{
+    font-size: 30px;
+}
+
 #calculator .schedule-id- a[href*="/schedule"],
+#calculator .term-row ~ .term-row a[href*="/schedule"],
 #calculator a[href="#add-class"],
 #calculator .term-editor > .highlighted-link [value="#save-grades"]
 {
     display:none;
 }
 
+#calculator .term-row ~ .term-row a[href="#add-class"],
 #calculator .schedule-id- a[href="#add-class"]
 {
     display:inline;

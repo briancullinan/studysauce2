@@ -91,11 +91,14 @@
     vertical-align: top;
     text-align: left;
     width: auto;
+    max-width: 100%;
 }
 
 #metrics ol li {
     padding: 5px 0;
     list-style: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .metrics-widget a[href*="/checkin"]

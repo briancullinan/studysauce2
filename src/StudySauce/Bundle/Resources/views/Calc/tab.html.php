@@ -30,44 +30,28 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/c
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-    <div class="panel-pane <?php print (empty($schedules) || empty($schedules[0]->getClasses()) ? 'empty' : ''); ?>" id="calculator">
+    <div class="panel-pane <?php print (empty($schedules) || empty($schedules[0]->getClasses()->count()) ? 'empty' : ''); ?>" id="calculator">
         <div class="pane-content">
             <h2>Grade calculator</h2>
             <a href="#what-if" data-toggle="modal" class="subtle">What if <small>?</small>?<strong>?</strong></a>
             <form action="<?php print $view['router']->generate('calculator_update'); ?>" method="post">
                 <p>
                     <strong class="projected" title="Your GPA for the current term based on your grades to date."><?php print (empty($termGPA) ? '&bullet;' : $termGPA); ?></strong><span> Projected GPA (this term)</span>
-                    <strong class="cumulative" title="Your GPA to date which excludes the current term."><?php print (empty($overallGPA) ? '&bullet;' : $overallGPA); ?></strong><span> Cumulative GPA (all past terms)</span>
+                    <strong class="cumulative" title="Your GPA to date which excludes the current term."><?php print (empty($overallGPA) ? '&bullet;' : $overallGPA); ?></strong><span> Cumulative GPA</span>
                 </p>
                 <?php
                 $first = true;
                 foreach($schedules as $s) {
                     /** @var Schedule $s */
-                    $name = '';
-                    if(!$first) {
-                        if(empty($s->getClasses()->count()))
-                            $start = $s->getCreated();
-                        else
-                            $start = date_timestamp_set(new \DateTime(), array_sum($s->getClasses()->map(function (Course $c) {return empty($c->getStartTime()) ? 0 : $c->getStartTime()->getTimestamp();})->toArray()) / $s->getClasses()->count());
-                        if($start->format('n') >= 11)
-                            $name = 'Winter ' . $start->format('Y');
-                        elseif($start->format('n') >= 8)
-                            $name = 'Fall ' . $start->format('Y');
-                        elseif($start->format('n') <= 5)
-                            $name = 'Spring ' . $start->format('Y');
-                        else
-                            $name = 'Summer ' . $start->format('Y');
-                    }
                     ?>
                 <div class="term-row schedule-id-<?php print $s->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
-                    <div class="term-name read-only"><label class="input"><select>
-                                <option value="" <?php print (empty($name) ? 'selected="selected"' : ''); ?>>Current term</option><?php
+                    <div class="term-name <?php print ($first ? '' : 'read-only'); ?>"><label class="input"><select><?php
                         for($y = intval(date('Y')); $y > intval(date('Y')) - 20; $y--)
                         {
                             foreach([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 5 => 'Summer'] as $m => $t)
                             {
                                 ?><option value="<?php print $m; ?>/<?php print $y; ?>" <?php
-                                print ($name == $t . ' ' . $y ? 'selected="selected"' : ''); ?>><?php
+                                print (!empty($s->getTerm()) && $s->getTerm()->format('n/Y') == $m . '/' . $y ? 'selected="selected"' : ''); ?>><?php
                                 print $t; ?> <?php print $y; ?></option><?php
                             }
                         }
@@ -95,7 +79,7 @@ $view['slots']->start('body'); ?>
                             <div class="grade" title="Your letter grade based on your grading scale"><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
                             <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
                             <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
-                            <div class="hours <?php print ($first ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="<?php print $c->getLength() * count($c->getDotw()) / 3600; ?>" /></label></div>
+                            <div class="hours <?php print ($first && empty($c->getCreditHours()) ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="&bullet;" /></label></div>
                             <div class="grade-editor">
                                 <?php
                                 $isDemo = false;
@@ -142,7 +126,6 @@ $view['slots']->start('body'); ?>
                 <div class="highlighted-link form-actions invalid">
                     <a href="#add-schedule" class="big-add">Add <span>+</span> semester</a>
                     <a href="#grade-scale" data-toggle="modal">Change grade scale</a>
-                    <a href="#calc-info" data-toggle="modal">How to use</a>
                     <button type="submit" value="#save-grades" class="more">Save</button>
                 </div>
             </form>
@@ -154,5 +137,4 @@ $view['slots']->start('sincludes');
 print $this->render('StudySauceBundle:Dialogs:grade-scale.html.php', ['id' => 'grade-scale', 'scale' => $scale]);
 print $this->render('StudySauceBundle:Dialogs:calc-empty.html.php', ['id' => 'calc-empty']);
 print $this->render('StudySauceBundle:Dialogs:what-if.html.php', ['id' => 'what-if']);
-print $this->render('StudySauceBundle:Dialogs:calc-info.html.php', ['id' => 'calc-info']);
 $view['slots']->stop();

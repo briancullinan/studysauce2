@@ -1121,8 +1121,10 @@ class PlanController extends Controller
     {
         $events = [];
         // no free study before first or after last classes
-        if($week < min($schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted();})->map(function (Course $c) {return $c->getStartTime()->getTimestamp();})->toArray()) ||
-            $week > max($schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted();})->map(function (Course $c) {return $c->getEndTime()->getTimestamp();})->toArray()))
+        $filtered = $schedule->getClasses()->filter(function (Course $c) {return !empty($c->getStartTime());});
+        if(empty($filtered->count()) ||
+            $week < min($filtered->map(function (Course $c) {return $c->getStartTime()->getTimestamp();})->toArray()) ||
+            $week > max($filtered->map(function (Course $c) {return $c->getEndTime()->getTimestamp();})->toArray()))
             return $events;
         // add free study to every
         $totalLength = $buckets->classTotals;

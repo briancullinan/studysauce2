@@ -1,5 +1,5 @@
 
-#profile .highlighted-link a[href$="/customization"]
+#profile .highlighted-link a[href*="/customization"]
 {
     position:absolute;
     bottom:10px;

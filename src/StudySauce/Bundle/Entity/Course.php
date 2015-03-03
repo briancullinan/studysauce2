@@ -134,7 +134,7 @@ class Course
         })->toArray());
         $percent = $this->getPercent();
         if(!empty($percent))
-            return $sum / $percent;
+            return round($sum / $percent, 2);
         return null;
     }
 

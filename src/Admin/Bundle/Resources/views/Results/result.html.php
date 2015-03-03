@@ -1,5 +1,4 @@
 <?php
-/** @var Course1 $course1 */
 use Course1\Bundle\Entity\Course1;
 use Course1\Bundle\Entity\Quiz1;
 use Course1\Bundle\Entity\Quiz2;
@@ -7,6 +6,10 @@ use Course1\Bundle\Entity\Quiz3;
 use Course1\Bundle\Entity\Quiz4;
 use Course1\Bundle\Entity\Quiz5;
 use Course1\Bundle\Entity\Quiz6;
+use Course2\Bundle\Entity\Course2;
+
+/** @var Course1 $course1 */
+/** @var Course2 $course2 */
 
 ?>
 <table>
@@ -66,6 +69,58 @@ use Course1\Bundle\Entity\Quiz6;
                 <tr>
                     <td class="read-only">
                         <?php $view->render('Course1Bundle:Partners:quiz.html.php', ['quiz' => $course1->getQuiz6s()->first() ?: new Quiz6(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+            </table>
+        </td></tr>
+    <tr>
+        <td>Course 2</td>
+    </tr>
+    <tr><td>
+            <table>
+                <tr>
+                    <td>Study metrics</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course2Bundle:StudyMetrics:quiz.html.php', ['quiz' => $course2->getStudyMetrics()->first() ?: new \Course2\Bundle\Entity\StudyMetrics(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Study plans</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course2Bundle:StudyPlan:quiz.html.php', ['quiz' => $course2->getStudyPlan()->first() ?: new \Course2\Bundle\Entity\StudyPlan(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Interleaving</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course2Bundle:Interleaving:quiz.html.php', ['quiz' => $course2->getInterleaving()->first() ?: new \Course2\Bundle\Entity\Interleaving(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Studying for tests</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course2Bundle:StudyTests:quiz.html.php', ['quiz' => $course2->getStudyTests()->first() ?: new \Course2\Bundle\Entity\StudyTests(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Test taking</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course2Bundle:TestTaking:quiz.html.php', ['quiz' => $course2->getTestTaking()->first() ?: new \Course2\Bundle\Entity\TestTaking(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>

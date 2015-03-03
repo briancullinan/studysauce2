@@ -14,7 +14,10 @@ namespace StudySauce\Bundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
+use StudySauce\Bundle\Controller\DeadlinesController;
+use StudySauce\Bundle\Controller\GoalsController;
 use StudySauce\Bundle\Controller\HomeController;
+use StudySauce\Bundle\Controller\MetricsController;
 use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -131,8 +134,12 @@ class AnonymousAuthenticationListener implements ListenerInterface
 
         if($request->get('_route') == 'demo')
         {
-            if($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO'))
+            if($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
                 ScheduleController::getDemoSchedule($this->container);
+                DeadlinesController::getDemoDeadlines($this->container);
+                MetricsController::getDemoCheckins($this->container);
+                GoalsController::getDemoGoals($this->container);
+            }
             list($route, $options) = HomeController::getUserRedirect($user);
             $response = new RedirectResponse($router->generate($route, $options));
 

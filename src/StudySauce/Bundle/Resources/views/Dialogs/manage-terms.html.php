@@ -16,7 +16,10 @@ $count = 0;
 foreach ($schedules as $s) {
     /** @var Schedule $s */
     $name = '';
-    if (empty($s->getClasses()->count())) {
+    if(empty($s->getCreated())) {
+        $start = new \DateTime();
+    }
+    elseif (empty($s->getClasses()->count())) {
         $start = $s->getCreated();
     } else {
         $start = date_timestamp_set(

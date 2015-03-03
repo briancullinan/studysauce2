@@ -2,6 +2,9 @@
 
 namespace Admin\Bundle\Controller;
 
+use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Entity\Course2;
+use Course3\Bundle\Entity\Course3;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
@@ -342,9 +345,9 @@ class ResultsController extends Controller
 
         return $this->render('AdminBundle:Results:result.html.php', [
             'orm' => $orm,
-            'course1' => $user->getCourse1s()->first(),
-            'course2' => $user->getCourse2s()->first(),
-            'course3' => $user->getCourse3s()->first()
+            'course1' => $user->getCourse1s()->first() ?: new Course1(),
+            'course2' => $user->getCourse2s()->first() ?: new Course2(),
+            'course3' => $user->getCourse3s()->first() ?: new Course3()
         ]);
     }
 }
