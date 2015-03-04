@@ -188,6 +188,9 @@ class AccountController extends Controller
             /** @var User $user */
             $user = $userManager->findUserByConfirmationToken($request->get('token'));
         }
+        else {
+            $user = $this->getUser();
+        }
 
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_register')
@@ -243,9 +246,7 @@ class AccountController extends Controller
                 $userManager->updateUser($user);
             }
         }
-        else {
-            $user = $this->getUser();
-        }
+
 
         return $this->render('StudySauceBundle:Account:reset.html.php', [
                 'token' => $request->get('token'),

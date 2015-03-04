@@ -73,8 +73,8 @@
 
 
 #schedule.single .schedule-history h3,
-#schedule.single a[href="#next-schedule"],
-#schedule.single a[href="#prev-schedule"],
+#schedule a[href="#next-schedule"],
+#schedule a[href="#prev-schedule"],
 #schedule.multi a[href="#create-schedule"]
 {
     display:none;

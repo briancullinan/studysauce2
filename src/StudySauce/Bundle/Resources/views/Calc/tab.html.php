@@ -51,7 +51,9 @@ $view['slots']->start('body'); ?>
                             foreach([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 5 => 'Summer'] as $m => $t)
                             {
                                 ?><option value="<?php print $m; ?>/<?php print $y; ?>" <?php
-                                print (!empty($s->getTerm()) && $s->getTerm()->format('n/Y') == $m . '/' . $y ? 'selected="selected"' : ''); ?>><?php
+                                print (!empty($s->getTerm()) && $s->getTerm()->format('n/Y') == $m . '/' . $y
+                                    ? 'selected="selected"'
+                                    : ''); ?>><?php
                                 print $t; ?> <?php print $y; ?></option><?php
                             }
                         }

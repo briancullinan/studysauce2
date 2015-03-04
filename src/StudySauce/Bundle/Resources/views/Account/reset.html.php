@@ -33,9 +33,12 @@ $view['slots']->start('body'); ?>
             <label class="input"><input type="text" placeholder="Email" value="<?php print $email; ?>"></label>
         </div>
         <?php if(!empty($token)) { ?>
-        <div class="password">
-            <label class="input"><input type="password" placeholder="New password" value=""></label>
-        </div>
+            <div class="password">
+                <label class="input"><input type="password" placeholder="New password" value=""></label>
+            </div>
+            <div class="confirm-password">
+                <label class="input"><input type="password" placeholder="Confirm password" value=""></label>
+            </div>
         <?php } ?>
         <input type="hidden" name="token" value="<?php echo $token; ?>"/>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>

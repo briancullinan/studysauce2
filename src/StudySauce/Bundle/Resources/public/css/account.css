@@ -109,7 +109,9 @@ a[href="#sign-in-with-email"]
 #register form,
 #login form
 {
+    max-width: 600px;
     display: none;
+    margin:0 auto;
 }
 
 #register .email,
@@ -120,13 +122,6 @@ a[href="#sign-in-with-email"]
     width: auto;
     margin: 0 auto;
     max-width: 600px;
-}
-
-#register .form-actions,
-#login .form-actions
-{
-    max-width: 600px;
-    margin:0 auto;
 }
 
 #account .password,

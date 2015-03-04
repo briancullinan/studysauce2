@@ -555,7 +555,6 @@ $(document).ready(function () {
 
     body.on('click', '#schedule a[href*="#create-schedule"]', function (evt) {
         evt.preventDefault();
-        var schedule = $('#schedule');
         createSchedule.apply(this);
         // add new term to term manager
         addTerm();
@@ -566,7 +565,8 @@ $(document).ready(function () {
         var schedule = $(this).parents('.term-row');
         var first = $(this).closest('.class-row').add(schedule.find('.class-row')).filter(function () {
                 var row = $(this);
-                return row.find('.start-time input[type="text"]').val().trim() != '' && row.find('.end-time input[type="text"]').val().trim() != ''
+                return row.find('.start-date input[type="text"]').val().trim() != '' &&
+                    row.find('.end-date input[type="text"]').val().trim() != '';
             }).first();
         if(first.find('.start-date input').val() != '' &&
             first.find('.end-date input').val() != '') {

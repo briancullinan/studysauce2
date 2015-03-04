@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Checkin;
@@ -25,9 +26,6 @@ class MetricsController extends Controller
      */
     public function indexAction(User $user = null, $template = ['Metrics', 'tab'])
     {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
-
         /** @var $user User */
         if(empty($user))
             $user = $this->getUser();
@@ -188,7 +186,7 @@ class MetricsController extends Controller
 
     /**
      * @param ContainerInterface $container
-     * @return array
+     * @return ArrayCollection
      */
     public static function getDemoCheckins($container)
     {
@@ -235,7 +233,7 @@ class MetricsController extends Controller
         }
         $orm->flush();
 
-        return self::cleanCheckins($courses);
+        return new ArrayCollection(self::cleanCheckins($courses));
     }
 
     /**

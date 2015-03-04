@@ -80,10 +80,15 @@ jQuery(document).ready(function() {
 
     function resetFunc() {
         var reset = $('#reset');
-        if(reset.find(' input').val().trim() != '')
+        if(reset.find('.email input').val().trim() != '' &&
+            (reset.find('.password input:visible').length == 0 || (reset.find('.password input').val().trim() != '' &&
+            reset.find('.password input').val() == reset.find('.confirm-password input').val())))
             reset.find('.form-actions').removeClass('invalid').addClass('valid');
+        else
+            reset.find('.form-actions').removeClass('valid').addClass('invalid');
     }
 
+    body.on('show', '#reset', resetFunc);
     body.on('keyup', '#reset input', resetFunc);
     body.on('change', '#reset input', resetFunc);
     function submitReset(evt)

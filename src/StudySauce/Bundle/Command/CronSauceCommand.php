@@ -89,10 +89,10 @@ EOF
         // send 3 day signup reminder
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
-        $qb = $users->createQueryBuilder('p')
-            ->where('p.created > \'' . date_timestamp_set(new \DateTime(), time() - 86400 * 4)->format('Y-m-d 00:00:00') . '\'')
-            ->andWhere('p.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\' OR p.properties IS NULL')
-            ->andWhere('p.roles NOT LIKE \'%GUEST%\' AND p.roles NOT LIKE \'%DEMO%\'');
+        $qb = $users->createQueryBuilder('u')
+            ->andWhere('u.created > \'' . date_timestamp_set(new \DateTime(), time() - 86400 * 4)->format('Y-m-d 00:00:00') . '\'')
+            ->andWhere('u.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\' OR u.properties IS NULL')
+            ->andWhere('u.roles NOT LIKE \'%GUEST%\' AND u.roles NOT LIKE \'%DEMO%\'');
         $users = $qb->getQuery()->execute();
         foreach ($users as $i => $u) {
             /** @var User $u */
@@ -172,7 +172,8 @@ EOF
         foreach ($reminders as $i => $d) {
             /** @var Deadline $d */
             // don't send advisers their own reminders, only send them to students above
-            if($d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER'))
+            if($d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER') ||
+                $d->getUser()->hasRole('ROLE_DEMO') || $d->getUser()->hasRole('ROLE_GUEST'))
                 continue;
             // due tomorrow
             if ($d->shouldSend()) {

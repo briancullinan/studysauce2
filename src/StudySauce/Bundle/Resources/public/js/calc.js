@@ -286,18 +286,30 @@ $(document).ready(function () {
     function updateCalc(data)
     {
         var response = $(data),
-            calc = $('#calculator');
-        calc.find('.term-row').remove();
+            calc = $('#calculator'),
+            oldTerms = calc.find('.term-row').detach();
         response.find('.term-row').insertBefore(calc.find('.form-actions').last());
         calc.find('.projected').html(response.find('.projected').html());
         calc.find('.cumulative').html(response.find('.cumulative').html());
         // make hours read only
-        calc.find('.class-row').each(function () {
-            if($(this).find('> .hours input').val().trim() != '' &&
-                parseInt($(this).find('> .hours input').val().trim()) != 0 &&
-                !isNaN(parseInt($(this).find('> .hours input').val().trim())))
-                $(this).find('> .hours').addClass('read-only');
+        calc.find('.term-row').each(function (j) {
+            var termRow = $(this);
+            if(oldTerms.eq(j).is('.selected'))
+                termRow.addClass('selected');
+            else
+                termRow.removeClass('selected');
+            termRow.find('.class-row').each(function (k) {
+                if(oldTerms.eq(j).find('.class-row').eq(k).is('.selected'))
+                    $(this).addClass('selected');
+                else
+                    $(this).removeClass('selected');
+                if($(this).find('> .hours input').val().trim() != '' &&
+                    parseInt($(this).find('> .hours input').val().trim()) != 0 &&
+                    !isNaN(parseInt($(this).find('> .hours input').val().trim())))
+                    $(this).find('> .hours').addClass('read-only');
+            });
         });
+        oldTerms.remove();
         if(response.filter('#calculator').is('.empty')) {
             calc.addClass('empty');
             $('#calc-empty').modal({
@@ -484,9 +496,15 @@ $(document).ready(function () {
             row = calc.find('.class-row.course-id-' + grade.find('.class-name').val()),
             result = grade.find('.result'),
             completed = row.find('> .percent').text(),
-            wants = grade.find('select:not(.class-name)').val();
+            wants = parseInt(grade.find('select:not(.class-name)').val());
         completed = parseInt(completed.substr(0, completed.length - 1));
         var score = (wants * 100 - parseInt(row.find('> .score').text()) * completed) / (100 - completed);
+        if(100-completed == 0) {
+            if(score > 0)
+                score = 100;
+            else if(score < 0)
+                score = 0;
+        }
         score = Math.round(score);
         result.text(score + '%');
     });
@@ -523,8 +541,10 @@ $(document).ready(function () {
         calc.find('.term-row').not(current).each(function () {
             var hours = $(this).find('> .hours').html();
             hours = parseInt(hours.substr(0, hours.length - 4));
-            totalHours += hours;
-            pastGPA = parseFloat($(this).find('> .gpa span').text()) * hours;
+            if(!isNaN(hours)) {
+                totalHours += hours;
+                pastGPA = parseFloat($(this).find('> .gpa span').text()) * hours;
+            }
         });
         totalHours += currentHours;
         var termGPA = (overall.find('select').val() * totalHours - pastGPA) / currentHours;

@@ -14,6 +14,7 @@ namespace StudySauce\Bundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
+use StudySauce\Bundle\Controller\CalcController;
 use StudySauce\Bundle\Controller\DeadlinesController;
 use StudySauce\Bundle\Controller\GoalsController;
 use StudySauce\Bundle\Controller\HomeController;
@@ -139,6 +140,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
                 DeadlinesController::getDemoDeadlines($this->container);
                 MetricsController::getDemoCheckins($this->container);
                 GoalsController::getDemoGoals($this->container);
+                CalcController::getDemoCalculations($this->container);
             }
             list($route, $options) = HomeController::getUserRedirect($user);
             $response = new RedirectResponse($router->generate($route, $options));

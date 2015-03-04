@@ -3,14 +3,17 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Grade;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class ScheduleController
@@ -67,7 +70,7 @@ class CalcController extends Controller
      * @param $c
      * @param EntityManager $orm
      */
-    private function saveCourseGrades(Schedule $s, $c, EntityManager $orm)
+    private static function saveCourseGrades(Schedule $s, $c, EntityManager $orm)
     {
         if(empty($c['className']) && empty($c['courseId']))
             return;
@@ -154,7 +157,7 @@ class CalcController extends Controller
 
             // save the course grades
             foreach($t['courses'] as $c) {
-                $this->saveCourseGrades($schedule, $c, $orm);
+                self::saveCourseGrades($schedule, $c, $orm);
             }
         }
 
@@ -177,6 +180,108 @@ class CalcController extends Controller
         if(empty($hours))
             return null;
         return number_format($score / $hours, 2);
+    }
+
+    public static $examples = ['Exam', 'Paper', 'Essay'];
+
+    /**
+     * @return string
+     */
+    public static function getRandomAssignment()
+    {
+        return self::$examples[array_rand(self::$examples, 1)];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public static function getDemoCalculations($container)
+    {
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $container->get('fos_user.user_manager');
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
+            $guest = $user;
+
+        }
+        else {
+            $guest = $userManager->findUserByUsername('guest');
+        }
+        $schedules = [];
+        $demo = ScheduleController::getDemoSchedule($container);
+        $schedules[] = $demo;
+        $terms = [11, 6, 5, 1];
+        $term = array_rand($terms, 1);
+        $demo->setTerm(date_create_from_format('!n/Y', $terms[$term] . '/' . (intval(date('Y')))));
+
+        // add some past schedules
+        for($i = 0; $i < 3; $i++)
+        {
+            $schedule = new Schedule();
+            $schedule->setUser($guest);
+            $terms = [11, 6, 5, 1];
+            $term = array_rand($terms, 1);
+            $schedule->setTerm(date_create_from_format('!n/Y', $terms[$term] . '/' . (intval(date('Y')) - $i - 1)));
+            $guest->addSchedule($schedule);
+            $orm->persist($schedule);
+            $orm->flush();
+            $schedules[] = $schedule;
+        }
+
+        foreach($schedules as $demo)
+        {
+            /** @var Schedule $demo */
+            $courses = $demo->getClasses()->toArray();
+            for($k = 0; $k < max(5, count($courses)); $k++)
+            {
+                /** @var Course $course */
+                if(isset($courses[$k]))
+                    $course = $courses[$k];
+                else
+                    unset($course);
+                if (isset($course) && $course->getGrades()->count() > 0) {
+                    continue;
+                }
+
+                $typeCount = rand(1, 4);
+                $grades = [];
+                $assignmentCount = [];
+                for ($i = 0; $i < $typeCount; $i++) {
+                    $gradeCount = rand(1, 4);
+                    $assignment = self::getRandomAssignment();
+                    $assignmentCount[$assignment] = isset($assignmentCount[$assignment])
+                        ? $assignmentCount[$assignment]
+                        : 0;
+                    for ($j = 0; $j < $gradeCount; $j++) {
+                        $assignmentCount[$assignment]++;
+                        $grades[] = [
+                            'remove' => false,
+                            'score' => rand(50, 100),
+                            'percent' => 100 / $typeCount / $gradeCount,
+                            'assignment' => $assignment . ' ' . $assignmentCount[$assignment]
+                        ];
+                    }
+                }
+                self::saveCourseGrades(
+                    $demo,
+                    [
+                        'courseId' => isset($course) ? $course->getId() : '',
+                        'creditHours' => isset($course) ? count($course->getDotw()) : 3,
+                        'className' => isset($course) ? $course->getName() : ScheduleController::getRandomName(),
+                            'grades' => $grades
+                    ],
+                    $orm
+                );
+            }
+        }
+
+        // TODO: add past schedules
     }
 
     /**
