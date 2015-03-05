@@ -245,9 +245,8 @@ $(document).ready(function () {
         });
     }
 
-    // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
-    //   we will activate the calendar only once, when the menu is clicked
-    body.on('show', '#plan', function () {
+    function setupPlan()
+    {
         var plan = $('#plan'),
             callback = function () {
                 if ($('#calendar:visible').length > 0) {
@@ -277,6 +276,12 @@ $(document).ready(function () {
             else
                 $('#plan-empty-schedule').modal('hide');
         }
+    }
+
+    // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
+    //   we will activate the calendar only once, when the menu is clicked
+    body.on('show', '#plan', function () {
+        setupPlan();
     });
 
     body.on('click', 'a[href="#bill-parents"]', function () {

@@ -71,6 +71,7 @@
     position: relative;
     padding-bottom:50px;
     transition: height ease-in-out .15s, min-height ease-in-out .15s;
+    overflow: visible;
 }
 
 #calculator .term-row.schedule-id- .term-editor
@@ -111,6 +112,60 @@
 {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
+    position: relative;
+}
+
+#calculator .term-row:after,
+#calculator .class-row:after
+{
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    -moz-transform-origin: center center;
+    -ms-transform-origin: center center;
+    -o-transform-origin: center center;
+    content: " ";
+    display:block;
+    position:absolute;
+    top: 10px;
+    right: -10px;
+    left:auto;
+    background: url(../images/menu_new_half.png) no-repeat -4px -3px transparent;
+    height: 16px;
+    width:16px;
+    transition: transform ease-in-out .15s, -webkit-transform ease-in-out .15s, -moz-transform ease-in-out .15s, -ms-transform ease-in-out .15s, -o-transform ease-in-out .15s, filter ease-in-out .15s;
+}
+
+#calculator .term-row:after
+{
+    right:10px;
+}
+
+#calculator .term-row:hover:not(.selected):not(.edit):after,
+#calculator .class-row:hover:not(.selected):not(.edit):after
+{
+    background-position: -4px -153px;
+}
+
+#calculator .term-row.selected:after,
+#calculator .class-row.selected:after
+{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+}
+
+#calculator .class-row
+{
+    margin-right: -20px;
 }
 
 #calculator .term-row
@@ -118,7 +173,7 @@
     border-top: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     margin: 0 -20px;
-    padding: 0 20px;
+    padding: 0 40px 0 20px;
 }
 
 #calculator .class-row.selected,
@@ -130,8 +185,6 @@
 {
     font-weight: bold;
     background: url(../images/noise_white.png) #FFFFFF;
-    padding: 0 20px;
-    margin: 0 -20px;
     border-top: 1px solid #DDDDDD;
     border-bottom: 1px solid #DDDDDD;
 }
@@ -373,20 +426,71 @@
 
 #what-if .result
 {
-    border:2px solid #09B;
-    background: #FFF;
+    border-radius: 5px;
+    padding:3px 10px;
+    display:inline-block;
+    width:100px;
+    text-align: center;
+    margin: 5px 0;
+    background: #09B;
+    color:#fff;
+    font-weight: bold;
+}
+
+#what-if .hours
+{
+    display: none;
+}
+
+#what-if .current-grade
+{
+    border: 2px solid #09B;
+    background-color: #fff;
     border-radius: 5px;
     padding:0 10px;
     display:inline-block;
+    margin: 5px 0;
+    width:100px;
+    font-weight: bold;
 }
 
 #what-if .input
 {
     display:inline-block;
-    width:auto;
+    width:100px;
+    position: relative;
+    z-index: 2;
 }
 
-#what-if .tab-content
+#what-if .tab-pane
 {
-    line-height: 200%;
+    max-width: 350px;
+    margin:0 auto;
+    padding: 20px 0;
+}
+
+#what-if .description
+{
+    display:inline-block;
+    width:100%;
+    padding:5px 0 5px 120px;
+    vertical-align: top;
+    margin:3px 0 3px -104px;
+    position: relative;
+    z-index: 0;
+    text-align: left;
+}
+
+#what-if .calc-unk
+{
+    color:#300;
+    display:none;
+    font-weight: bold;
+}
+
+#what-if.grade-incomplete .calc-unk,
+#what-if.overall-incomplete .calc-unk,
+#what-if.term-incomplete .calc-unk
+{
+    display:block;
 }

@@ -71,21 +71,11 @@
     font-weight: bold;
 }
 
-
-#schedule.single .schedule-history h3,
+#schedule .schedule-history h3,
 #schedule a[href="#next-schedule"],
-#schedule a[href="#prev-schedule"],
-#schedule.multi a[href="#create-schedule"]
+#schedule a[href="#prev-schedule"]
 {
     display:none;
-}
-
-#schedule a[href*="#manage-terms"]
-{
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    padding-left:30px;
 }
 
 #schedule .pane-content {
@@ -331,6 +321,11 @@
 {
     background-color: #FFFFFF;
     border-color: #0099BB;
+}
+
+#manage-terms label
+{
+    display:inline-block;
 }
 
 #manage-terms .term-row

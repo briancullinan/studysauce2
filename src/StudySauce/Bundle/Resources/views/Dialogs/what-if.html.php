@@ -12,7 +12,10 @@ $view['slots']->start('modal-body') ?>
 </ul>
 <div class="tab-content">
     <div id="class-grade" class="tab-pane active">
-        To finish with a grade of
+        <label class="input">
+            <select class="class-name"></select>
+        </label><div class="description">Class name</div>
+        <span class="current-grade">C-</span><div class="description">Current grade</div>
         <label class="input"><select>
                 <option value="A+">A+</option>
                 <option value="A">A</option>
@@ -27,16 +30,12 @@ $view['slots']->start('modal-body') ?>
                 <option value="D">D</option>
                 <option value="D-">D-</option>
                 <option value="F">F</option>
-            </select></label>
-        in <label class="input">
-            <select class="class-name"></select>
-        </label>
-        I need to average <span class="result">98%</span> on my remaining assignments.
+            </select></label><div class="description">Grade I want</div>
+        <span class="result">98%</span><div class="description">Grade I need on my remaining assignments.</div>
     </div>
     <div id="term-gpa" class="tab-pane">
         If I make these grades,
         <div class="class-row">
-            <div class="class-name"></div>
             <label class="input"><select>
                     <option value="A+">A+</option>
                     <option value="A">A</option>
@@ -52,23 +51,26 @@ $view['slots']->start('modal-body') ?>
                     <option value="D-">D-</option>
                     <option value="F">F</option>
                 </select></label>
+            <div class="class-name description"></div>
             <div class="hours"></div>
         </div>
-        my GPA will be <span class="result">3.0</span>.
+        <span class="result">3.0</span><div class="description">This will be my GPA.</div>
     </div>
     <div id="overall-gpa" class="tab-pane">
-        To improve my overall GPA to
+        <span class="current-grade">3.00</span><div class="description">Current GPA</div>
         <label class="input"><select class="overall-gpa">
+                <option value="">-Select-</option>
                 <?php for($i = 40; $i >= 0; $i--) { ?>
                     <option value="<?php print round($i / 10, 1); ?>"><?php print number_format($i / 10, 1); ?></option>
                 <?php } ?>
-            </select></label>
-        I need this term's GPA to be <span class="result">4.0</span>.
+            </select></label><div class="description">Target overall GPA</div>
+        <span class="result">4.0</span><div class="description">GPA needed this term</div>
     </div>
+    <div class="calc-unk">* To calculate you must designate hours for each class.</div>
 </div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>
-<a href="#save-scale" data-dismiss="modal" class="btn btn-primary">Done</a>
+
 <?php $view['slots']->stop() ?>
 

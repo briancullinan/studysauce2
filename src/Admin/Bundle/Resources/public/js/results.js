@@ -134,6 +134,10 @@ $(document).ready(function () {
         }
     });
 
+    body.on('click', '#results table.results table tr:nth-child(odd)', function () {
+        $(this).toggleClass('selected');
+    });
+
     body.on('change', '#results input[name="search"], #results input[name="page"]', loadResults);
 
 });

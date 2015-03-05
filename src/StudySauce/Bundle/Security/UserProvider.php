@@ -111,10 +111,8 @@ class UserProvider extends BaseUserProvider
             $factory = $this->encoderFactory->getEncoder($user);
             $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
             $user->setEnabled(true);
-            // TODO: reconnect social users to adviser invites
+            // reconnect social users to adviser invites
             InviteListener::setInviteRelationship($orm, $request, $user);
-            // https://bitbucket.org/StudySauce/studysauce2/src/e6387ffee6d036426699aed7cc7f10828aae62ef/src/StudySauce/Bundle/Controller/AccountController.php?at=master#cl-191
-
         }
 
         // these fields can always be updated and sync from the service

@@ -118,6 +118,11 @@ class CalcController extends Controller
             }
         }
 
+        if($course->getGrades()->count() == 0 && empty($course->getName())) {
+            $orm->remove($course);
+            $s->removeCourse($course);
+        }
+
         $orm->flush();
     }
 
@@ -143,7 +148,6 @@ class CalcController extends Controller
                 $schedule->setUser($user);
                 $user->addSchedule($schedule);
                 $orm->persist($schedule);
-                $orm->flush();
             }
 
             // set the scale
@@ -152,14 +156,22 @@ class CalcController extends Controller
                 $first = false;
             }
 
-            $schedule->setTerm(date_create_from_format('!n/Y', $t['term']));
+            $schedule->setTerm(empty($t['term']) ? null : date_create_from_format('!n/Y', $t['term']));
             $orm->merge($schedule);
 
             // save the course grades
-            foreach($t['courses'] as $c) {
-                self::saveCourseGrades($schedule, $c, $orm);
+            if(!empty($t['courses'])) {
+                foreach ($t['courses'] as $c) {
+                    self::saveCourseGrades($schedule, $c, $orm);
+                }
+            }
+
+            if($schedule->getCourses()->count() == 0) {
+                $orm->remove($schedule);
+                $user->removeSchedule($schedule);
             }
         }
+        $orm->flush();
 
         return $this->forward('StudySauceBundle:Calc:index', ['_format' => 'tab']);
     }
@@ -225,7 +237,7 @@ class CalcController extends Controller
         {
             $schedule = new Schedule();
             $schedule->setUser($guest);
-            $terms = [11, 6, 5, 1];
+            $terms = [11, 8, 1, 6];
             $term = array_rand($terms, 1);
             $schedule->setTerm(date_create_from_format('!n/Y', $terms[$term] . '/' . (intval(date('Y')) - $i - 1)));
             $guest->addSchedule($schedule);
@@ -291,11 +303,11 @@ class CalcController extends Controller
      */
     public static function convertToScale($scale, $score)
     {
+        if($score === null)
+            return [null, null];
         $score = round($score);
         if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
             $scale = self::$presets['A +/-'];
-        if($score === null)
-            return [null, null];
         foreach($scale as $s) {
             if($score <= $s[1] && $score >= $s[2])
                 return [$s[0], $s[3]];

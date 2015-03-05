@@ -50,13 +50,13 @@ function loadingAnimation(that)
         return that.find('.squiggle');
 }
 
-function onYouTubeIframeAPIReady() {
-    var frames = $(this).find('iframe[src*="youtube.com/embed"]');
-    var load = function () {
-        var ytPlayer = new YT.Player($(this).attr('id'), {
+function setupYoutubePlayer()
+{
+    var frame = $(this),
+        ytPlayer = new YT.Player(frame.attr('id'), {
             events: {
                 'onStateChange': function (e) {
-                    $(ytPlayer.d).trigger('yt' + e.data);
+                    frame.trigger('yt' + e.data);
                     /*
                      -1 – unstarted
                      0 – ended
@@ -70,11 +70,15 @@ function onYouTubeIframeAPIReady() {
                 }
             }
         });
-        window.players[window.players.length] = ytPlayer;
-    };
+    $(ytPlayer).data('frame', frame);
+    window.players[window.players.length] = ytPlayer;
+}
+
+function onYouTubeIframeAPIReady() {
+    var frames = $(this).find('iframe[src*="youtube.com/embed"]');
     var delayed = function () {
         if(typeof YT != 'undefined' && typeof YT.Player != 'undefined')
-            frames.each(load);
+            frames.each(setupYoutubePlayer);
         else
             setTimeout(delayed, 100);
     };

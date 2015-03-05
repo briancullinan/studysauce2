@@ -294,10 +294,14 @@ $(document).ready(function () {
         // make hours read only
         calc.find('.term-row').each(function (j) {
             var termRow = $(this);
-            if(oldTerms.eq(j).is('.selected'))
+            if(oldTerms.eq(j).is('.selected')) {
                 termRow.addClass('selected');
-            else
+                termRow.find('term-name').removeClass('read-only');
+            }
+            else {
                 termRow.removeClass('selected');
+                termRow.find('term-name').addClass('read-only');
+            }
             termRow.find('.class-row').each(function (k) {
                 if(oldTerms.eq(j).find('.class-row').eq(k).is('.selected'))
                     $(this).addClass('selected');
@@ -309,6 +313,11 @@ $(document).ready(function () {
                     $(this).find('> .hours').addClass('read-only');
             });
         });
+        if(calc.find('.term-row.selected').length == 0) {
+            calc.find('.term-row').first().addClass('selected');
+            calc.find('.term-row').first().find('term-name').removeClass('read-only');
+            calc.find('.term-row').first().find('.class-row').addClass('selected');
+        }
         oldTerms.remove();
         if(response.filter('#calculator').is('.empty')) {
             calc.addClass('empty');
@@ -433,7 +442,9 @@ $(document).ready(function () {
             classes = calc.find('.term-row').first().find('.class-row'),
             firstGrade = classes.first().find('> .grade span').text();
 
-        dialog.find('select.class-name').find('option').remove();
+        dialog.find('select.class-name option').remove();
+        $('<option value="">-Select-</option>')
+            .appendTo(dialog.find('select.class-name'));
         dialog.find('.class-row').not(firstRow).remove();
 
         // update course list in dialog
@@ -443,14 +454,15 @@ $(document).ready(function () {
             $('<option value="' + courseId + '">' + row.find('.class-name input').val() + '</option>')
                 .appendTo(dialog.find('select.class-name'));
             firstRow.find('.class-name').html('<span class="' + row.find('.class-name span').attr('class') + '"></span>' + row.find('.class-name input').val());
-            firstRow.find('.hours').text(row.find('.hours input').val() + ' hrs');
-            firstRow.find('select').val(row.find('> .grade span').text());
+            firstRow.find('.hours').text(row.find('.hours input').val());
             if(i < classes.length - 1)
                 firstRow = firstRow.clone().insertAfter(dialog.find('.class-row').last());
         });
 
         // update grade scale in dialog to match selected grade scale
         dialog.find('#class-grade select:not(.class-name) option, #term-gpa select option').remove();
+        $('<option value="">-Select-</option>')
+            .appendTo(dialog.find('#class-grade select:not(.class-name), #term-gpa select'));
         $('#grade-scale').find('tbody tr').each(function () {
             if($(this).find('td:nth-child(1) input').val().trim() == '')
                 return true;
@@ -468,15 +480,22 @@ $(document).ready(function () {
             '</option>').appendTo(dialog.find('#term-gpa select'));
         });
 
-        // set some defaults to their current scores
-        dialog.find('#term-gpa .class-row').each(function (i) {
-            $(this).find('select').val(classes.eq(i).find('> .gpa').text());
-        });
-
-        dialog.find('#class-grade select:not(.class-name)').val();
-        dialog.find('.overall-gpa').val(Math.round(parseFloat(calc.find('.cumulative').text()) * 10) / 10);
-
         // process the current results
+        var totalHours = 0,
+            pastGPA = 0;
+        calc.find('.term-row').not(calc.find('.term-row').first()).each(function () {
+            var hours = $(this).find('> .hours').html();
+            hours = parseInt(hours.substr(0, hours.length - 4));
+            if(!isNaN(hours)) {
+                totalHours += hours;
+                pastGPA = parseFloat($(this).find('> .gpa span').text()) * hours;
+            }
+        });
+        if(!isNaN(pastGPA / totalHours))
+            dialog.find('#overall-gpa .current-grade').html(Math.round(pastGPA / totalHours * 100) / 100);
+        else
+            dialog.find('#overall-gpa .current-grade').html('&nbsp;');
+        dialog.find('#class-grade select:not(.class-name)').val('');
         dialog.find('#class-grade select:not(.class-name)').trigger('change');
         dialog.find('#term-gpa select').first().trigger('change');
         dialog.find('#overall-gpa select').first().trigger('change');
@@ -493,12 +512,28 @@ $(document).ready(function () {
         var that = $(this),
             calc = $('#calculator'),
             grade = that.parents('#class-grade'),
-            row = calc.find('.class-row.course-id-' + grade.find('.class-name').val()),
-            result = grade.find('.result'),
+            classId = grade.find('.class-name').val(),
+            classVal = grade.find('select:not(.class-name)').val(),
+            row = calc.find('.class-row.course-id-' + classId),
+            currentGrade = row.find('> .grade span').html(),
+            currentScore = parseInt(row.find('> .score').text());
+        if(classId != '' && !isNaN(currentScore)) {
+            grade.find('.current-grade').html(currentGrade);
+        }
+        else {
+            grade.find('.current-grade').html('&nbsp;');
+        }
+        if(classVal == '') {
+            grade.find('.result').html('&nbsp;');
+        }
+        if(classId == '' || classVal == '' || isNaN(currentScore)) {
+            return;
+        }
+        var result = grade.find('.result'),
             completed = row.find('> .percent').text(),
-            wants = parseInt(grade.find('select:not(.class-name)').val());
+            wants = parseInt(classVal);
         completed = parseInt(completed.substr(0, completed.length - 1));
-        var score = (wants * 100 - parseInt(row.find('> .score').text()) * completed) / (100 - completed);
+        var score = (wants * 100 - currentScore * completed) / (100 - completed);
         if(100-completed == 0) {
             if(score > 0)
                 score = 100;
@@ -506,23 +541,43 @@ $(document).ready(function () {
                 score = 0;
         }
         score = Math.round(score);
-        result.text(score + '%');
+        if(isNaN(score)) {
+            $('#what-if').addClass('grade-incomplete');
+            result.text('UNK');
+        }
+        else {
+            $('#what-if').removeClass('grade-incomplete');
+            if(score > 100)
+                score = 100;
+            if(score < 0)
+                score = 0;
+            result.text(score + '%');
+        }
     });
 
     body.on('change', '#what-if #term-gpa select', function () {
         var term = $(this).parents('#term-gpa'),
+            result = term.find('.result'),
             gpa = 0,
             total = 0;
         term.find('.class-row').each(function () {
-            var hours = $(this).find('.hours').text();
-            hours = parseInt(hours.substr(0, hours.length - 4));
+            var hours = parseInt($(this).find('.hours').text());
             gpa += $(this).find('select').val() * hours;
             total += hours;
         });
-        term.find('.result').text(Math.round(gpa / total * 100) / 100);
+        var termGPA = Math.round(gpa / total * 100) / 100;
+        result.text(termGPA);
+        if(isNaN(termGPA)) {
+            $('#what-if').addClass('term-incomplete');
+            result.text('UNK');
+        }
+        else {
+            $('#what-if').removeClass('term-incomplete');
+            result.text(Math.round(termGPA * 100) / 100);
+        }
     });
 
-    body.on('change', '#overall-gpa select', function () {
+    body.on('change', '#what-if #overall-gpa select', function () {
         /*
          Overall GPA = (Term GPA * Hours + Past GPA * Past Hours) / Total Hours
 
@@ -548,7 +603,18 @@ $(document).ready(function () {
         });
         totalHours += currentHours;
         var termGPA = (overall.find('select').val() * totalHours - pastGPA) / currentHours;
-        result.text(Math.round(termGPA * 100) / 100);
+        if(isNaN(termGPA)) {
+            $('#what-if').addClass('overall-incomplete');
+            result.text('UNK');
+        }
+        else {
+            if(termGPA > 4)
+                termGPA = 4;
+            if(termGPA < 0)
+                termGPA = 0;
+            $('#what-if').removeClass('overall-incomplete');
+            result.text(Math.round(termGPA * 100) / 100);
+        }
     });
 
     body.on('click', '#grade-scale a[href="#save-scale"]', validateGrades);

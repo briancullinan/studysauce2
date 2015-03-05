@@ -80,7 +80,25 @@
 
 #results table.results .panel-pane
 {
-    padding-top:0;
+    padding:0;
+    width:auto;
+}
+
+#results table.results > tbody > tr > td table
+{
+    white-space: normal;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#results table.results table tr:nth-child(even)
+{
+    display:none;
+}
+
+#results table.results table tr.selected + tr
+{
+    display:table-row;
 }
 
 #results table.results .highlighted-link,

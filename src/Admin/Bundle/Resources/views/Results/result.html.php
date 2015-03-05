@@ -7,9 +7,11 @@ use Course1\Bundle\Entity\Quiz4;
 use Course1\Bundle\Entity\Quiz5;
 use Course1\Bundle\Entity\Quiz6;
 use Course2\Bundle\Entity\Course2;
+use Course3\Bundle\Entity\Course3;
 
 /** @var Course1 $course1 */
 /** @var Course2 $course2 */
+/** @var Course3 $course3 */
 
 ?>
 <table>
@@ -121,6 +123,58 @@ use Course2\Bundle\Entity\Course2;
                 <tr>
                     <td class="read-only">
                         <?php $view->render('Course2Bundle:TestTaking:quiz.html.php', ['quiz' => $course2->getTestTaking()->first() ?: new \Course2\Bundle\Entity\TestTaking(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+            </table>
+        </td></tr>
+    <tr>
+        <td>Course 3</td>
+    </tr>
+    <tr><td>
+            <table>
+                <tr>
+                    <td>Intro to strategies</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course3Bundle:Strategies:quiz.html.php', ['quiz' => $course3->getStrategies()->first() ?: new \Course3\Bundle\Entity\Strategies(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Group study</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course3Bundle:GroupStudy:quiz.html.php', ['quiz' => $course3->getGroupStudy()->first() ?: new \Course3\Bundle\Entity\GroupStudy(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Teach to learn</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course3Bundle:Teaching:quiz.html.php', ['quiz' => $course3->getTeaching()->first() ?: new \Course3\Bundle\Entity\Teaching(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Active reading</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course3Bundle:ActiveReading:quiz.html.php', ['quiz' => $course3->getActiveReading()->first() ?: new \Course3\Bundle\Entity\ActiveReading(), 'csrf_token' => '']); ?>
+                        <?php $view['slots']->output('body'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Spaced repetition</td>
+                </tr>
+                <tr>
+                    <td class="read-only">
+                        <?php $view->render('Course3Bundle:SpacedRepetition:quiz.html.php', ['quiz' => $course3->getSpacedRepetition()->first() ?: new \Course3\Bundle\Entity\SpacedRepetition(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>

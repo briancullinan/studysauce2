@@ -93,8 +93,8 @@ $(document).ready(function () {
             data: scheduleData,
             success: function () {
                 profile.find('.squiggle').stop().remove();
-                // TODO update calendar events
-                // TODO: update plan tab
+                // update plan tab
+                body.trigger('scheduled');
             },
             error: function () {
                 profile.find('.squiggle').stop().remove();

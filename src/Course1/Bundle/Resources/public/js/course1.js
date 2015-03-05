@@ -96,7 +96,7 @@ $(document).ready(function () {
         }
         var autoPlay = function () {
             for(var i = 0; i < window.players.length; i++) {
-                if($(window.players[i].d).parents().is(step)) {
+                if($(window.players[i]).data('frame').parents().is(step)) {
                     if(typeof window.players[i].playVideo == 'undefined') {
                         setTimeout(autoPlay, 1000);
                         return;

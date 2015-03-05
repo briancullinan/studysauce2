@@ -48,7 +48,7 @@ $view['slots']->start('body'); ?>
                     <div class="term-name <?php print ($first ? '' : 'read-only'); ?>"><label class="input"><select><?php
                         for($y = intval(date('Y')); $y > intval(date('Y')) - 20; $y--)
                         {
-                            foreach([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 5 => 'Summer'] as $m => $t)
+                            foreach([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 6 => 'Summer'] as $m => $t)
                             {
                                 ?><option value="<?php print $m; ?>/<?php print $y; ?>" <?php
                                 print (!empty($s->getTerm()) && $s->getTerm()->format('n/Y') == $m . '/' . $y
@@ -78,7 +78,21 @@ $view['slots']->start('body'); ?>
                         <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
                             <div class="class-name read-only"><span class="class<?php print $i; ?>"></span><label class="input"><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name" /></label></div>
                             <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
-                            <div class="grade" title="Your letter grade based on your grading scale"><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
+                            <div class="grade" title="Your letter grade based on your grading scale"><?php /* TODO: remove this <label class="input"><select>
+                                        <option value="A+">A+</option>
+                                        <option value="A">A</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B">B</option>
+                                        <option value="B-">B-</option>
+                                        <option value="C+">C+</option>
+                                        <option value="C">C</option>
+                                        <option value="C-">C-</option>
+                                        <option value="D+">D+</option>
+                                        <option value="D">D</option>
+                                        <option value="D-">D-</option>
+                                        <option value="F">F</option>
+                                    </select></label>*/ ?><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
                             <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
                             <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
                             <div class="hours <?php print ($first && empty($c->getCreditHours()) ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="&bullet;" /></label></div>
@@ -138,5 +152,5 @@ $view['slots']->start('body'); ?>
 $view['slots']->start('sincludes');
 print $this->render('StudySauceBundle:Dialogs:grade-scale.html.php', ['id' => 'grade-scale', 'scale' => $scale]);
 print $this->render('StudySauceBundle:Dialogs:calc-empty.html.php', ['id' => 'calc-empty']);
-print $this->render('StudySauceBundle:Dialogs:what-if.html.php', ['id' => 'what-if']);
+print $this->render('StudySauceBundle:Dialogs:what-if.html.php', ['id' => 'what-if', 'scale' => $scale]);
 $view['slots']->stop();
