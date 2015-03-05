@@ -17,19 +17,11 @@ $view['slots']->start('modal-body') ?>
         </label><div class="description">Class name</div>
         <span class="current-grade">C-</span><div class="description">Current grade</div>
         <label class="input"><select>
-                <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B">B</option>
-                <option value="B-">B-</option>
-                <option value="C+">C+</option>
-                <option value="C">C</option>
-                <option value="C-">C-</option>
-                <option value="D+">D+</option>
-                <option value="D">D</option>
-                <option value="D-">D-</option>
-                <option value="F">F</option>
+                <option value="">-Select-</option>
+                <?php for($i = 0; $i < count($scale); $i++) {
+                    if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
+                        <option value="<?php print $scale[$i][0]; ?>"><?php print $scale[$i][0]; ?></option>
+                    <? }} ?>
             </select></label><div class="description">Grade I want</div>
         <span class="result">98%</span><div class="description">Grade I need on my remaining assignments.</div>
     </div>
@@ -37,19 +29,11 @@ $view['slots']->start('modal-body') ?>
         If I make these grades,
         <div class="class-row">
             <label class="input"><select>
-                    <option value="A+">A+</option>
-                    <option value="A">A</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B">B</option>
-                    <option value="B-">B-</option>
-                    <option value="C+">C+</option>
-                    <option value="C">C</option>
-                    <option value="C-">C-</option>
-                    <option value="D+">D+</option>
-                    <option value="D">D</option>
-                    <option value="D-">D-</option>
-                    <option value="F">F</option>
+                    <option value="">-Select-</option>
+                    <?php for($i = 0; $i < count($scale); $i++) {
+                        if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
+                            <option value="<?php print $scale[$i][0]; ?>"><?php print $scale[$i][0]; ?></option>
+                        <? }} ?>
                 </select></label>
             <div class="class-name description"></div>
             <div class="hours"></div>

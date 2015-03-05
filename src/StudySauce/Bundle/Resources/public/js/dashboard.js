@@ -219,6 +219,9 @@ $(document).ready(function () {
     }
 
     // capture all callback links
+    body.filter('.dashboard-home').on('click', 'button[value]', function () {
+        
+    });
     body.filter('.dashboard-home').on('click', 'a[href]:not(.accordion-toggle)', handleLink);
     body.filter('.dashboard-home').on('dblclick', 'a[href]:not(.accordion-toggle)', handleLink);
     body.filter('.dashboard-home').on('dragstart', 'a[href]:not(.accordion-toggle)', handleLink);

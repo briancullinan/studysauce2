@@ -275,7 +275,6 @@
     width:30px;
     text-align: left;
     display: inline-block;
-    margin-right:-15px;
 }
 
 #calculator .term-row .grade label
@@ -288,7 +287,6 @@
     width:55px;
     text-align: left;
     display: inline-block;
-    margin-right:-30px;
 }
 
 #calculator .term-editor > *:first-child,

@@ -25,8 +25,6 @@ $view['slots']->start('modal-body') ?>
     </thead>
     <tbody>
     <?php
-    if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
-        $scale = CalcController::$presets['A +/-'];
     for($i = 0; $i < 15; $i++) {
         if (empty($scale[$i]) || count($scale[$i]) < 4 || empty($scale[$i][0])) { ?>
             <tr>

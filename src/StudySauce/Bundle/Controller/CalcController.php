@@ -56,10 +56,13 @@ class CalcController extends Controller
         $user = $this->getUser();
 
         $schedules = $user->getSchedules()->toArray();
+        $scale = !empty($schedules) ? reset($schedules)->getGradeScale() : [];
+        if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
+            $scale = CalcController::$presets['A +/-'];
 
         return $this->render('StudySauceBundle:Calc:tab.html.php', [
             'schedules' => $schedules,
-            'scale' => !empty($schedules) ? reset($schedules)->getGradeScale() : [],
+            'scale' => $scale,
             'termGPA' => !empty($schedules) ? reset($schedules)->getGPA() : null,
             'overallGPA' => $this->getOverallGPA()
         ]);

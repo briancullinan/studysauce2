@@ -16,10 +16,12 @@ $(document).ready(function () {
     body.on('click', '#calculator .class-row.selected > .read-only.hours', function () {
         $(this).removeClass('read-only');
         $(this).find('input').focus();
+        $(this).find('[value="#save-grades"]').css('visibility', 'visible');
     });
 
-    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours):not(.class-name),' +
+    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours):not(.grade):not(.class-name),' +
                      '#calculator .class-row:not(.selected) > *.hours,' +
+                     '#calculator .class-row:not(.selected) > *.grade,' +
                      '#calculator .term-row:not(.schedule-id-) .class-row > *.class-name', function () {
         var row = $(this).parents('.class-row');
         if(row.is('.selected')) {
@@ -303,6 +305,7 @@ $(document).ready(function () {
                 termRow.find('term-name').addClass('read-only');
             }
             termRow.find('.class-row').each(function (k) {
+                $(this).find('[value="#save-grades"]').css('visibility', '');
                 if(oldTerms.eq(j).find('.class-row').eq(k).is('.selected'))
                     $(this).addClass('selected');
                 else

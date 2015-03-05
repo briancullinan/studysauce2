@@ -78,21 +78,13 @@ $view['slots']->start('body'); ?>
                         <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
                             <div class="class-name read-only"><span class="class<?php print $i; ?>"></span><label class="input"><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name" /></label></div>
                             <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
-                            <div class="grade" title="Your letter grade based on your grading scale"><?php /* TODO: remove this <label class="input"><select>
-                                        <option value="A+">A+</option>
-                                        <option value="A">A</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B">B</option>
-                                        <option value="B-">B-</option>
-                                        <option value="C+">C+</option>
-                                        <option value="C">C</option>
-                                        <option value="C-">C-</option>
-                                        <option value="D+">D+</option>
-                                        <option value="D">D</option>
-                                        <option value="D-">D-</option>
-                                        <option value="F">F</option>
-                                    </select></label>*/ ?><span><?php print (empty($c->getGrade()) ? '&bullet;' : $c->getGrade()); ?></span></div>
+                            <div class="grade" title="Your letter grade based on your grading scale"><label class="input"><select>
+                                        <option value="" <?php print (empty($c->getGrade()) ? 'selected="selected"' : ''); ?>>&bullet;</option>
+                                        <?php for($i = 0; $i < count($scale); $i++) {
+                                        if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
+                                            <option value="<?php print $scale[$i][0]; ?>" <?php print ($c->getGrade() == $scale[$i][0] ? 'selected="selected"' : ''); ?>><?php print $scale[$i][0]; ?></option>
+                                        <? }} ?>
+                                    </select></label></div>
                             <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
                             <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
                             <div class="hours <?php print ($first && empty($c->getCreditHours()) ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="&bullet;" /></label></div>
