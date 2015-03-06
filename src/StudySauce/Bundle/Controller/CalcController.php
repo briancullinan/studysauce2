@@ -75,55 +75,66 @@ class CalcController extends Controller
      */
     private static function saveCourseGrades(Schedule $s, $c, EntityManager $orm)
     {
+        // ignore empty rows with empty names and no course id which means they added
         if(empty($c['className']) && empty($c['courseId']))
             return;
 
+        /** @var Course $course */
         $course = $s->getClasses()->filter(function (Course $x) use($c) {return $x->getId() == $c['courseId'];})->first();
         if(empty($course)) {
             $course = new Course();
             $course->setSchedule($s);
-            $course->setName($c['className']);
             $course->setType('c');
             $s->addCourse($course);
             $orm->persist($course);
         }
-
-        /** @var Course $course */
+        $course->setName($c['className']);
         $course->setCreditHours(!empty(intval($c['creditHours'])) ? intval($c['creditHours']) : null);
+
         if(empty($c['grades']))
-            return;
+            $c['grades'] = [];
         foreach($c['grades'] as $g) {
+            // ignore new grades that are empty
             if(empty($g['gradeId']) && $g['remove'] == 'true')
                 continue;
+
+            // add a new grade
             if(empty($g['gradeId'])) {
                 $grade = new Grade();
-                $grade->setScore(intval($g['score']));
-                $grade->setPercent(intval($g['percent']));
                 $grade->setCourse($course);
-                $grade->setAssignment($g['assignment']);
                 $course->addGrade($grade);
                 $orm->persist($grade);
             }
             else {
-                $grade = $course->getGrades()->filter(function (Grade $x) use ($g) {return $x->getId() == $g['gradeId'];})->first();
-                if(!empty($grade)) {
-                    if($g['remove'] == 'true') {
-                        $course->removeGrade($grade);
-                        $orm->remove($grade);
-                    }
-                    else {
-                        $grade->setScore(intval($g['score']));
-                        $grade->setPercent(intval($g['percent']));
-                        $grade->setAssignment($g['assignment']);
-                        $orm->merge($grade);
-                    }
+                $grade = $course->getGrades()->filter(function (Grade $x) use ($g) {
+                    return $x->getId() == $g['gradeId'];
+                })->first();
+                if($g['remove'] == 'true') {
+                    $course->removeGrade($grade);
+                    $orm->remove($grade);
+                    continue;
                 }
             }
+
+            $grade->setScore(intval($g['score']));
+            $grade->setPercent(intval($g['percent']));
+            $grade->setAssignment($g['assignment']);
+            $orm->merge($grade);
         }
 
+        // set the grade manually for past terms only if the grades list is empty
+        if($course->getGrades()->count() == 0 && !empty($c['grade'])) {
+            $course->setGrade($c['grade']);
+        }
+
+        // remove empty courses or merge the changes
         if($course->getGrades()->count() == 0 && empty($course->getName())) {
             $orm->remove($course);
             $s->removeCourse($course);
+        }
+        else
+        {
+            $orm->merge($course);
         }
 
         $orm->flush();
@@ -189,8 +200,11 @@ class CalcController extends Controller
 
         $hours = 0;
         $score = array_sum($user->getSchedules()->map(function (Schedule $s) use (&$hours) {
-            $hours += $s->getCreditHours();
-            return $s->getGPA() * $s->getCreditHours();
+            if($s->getGPA() !== null) {
+                $hours += $s->getCreditHours();
+                return $s->getGPA() * $s->getCreditHours();
+            }
+            return 0;
         })->toArray());
         if(empty($hours))
             return null;
@@ -308,12 +322,27 @@ class CalcController extends Controller
     {
         if($score === null)
             return [null, null];
-        $score = round($score);
-        if(empty($scale) || !is_array($scale) || count($scale[0]) < 4)
+
+        // use default scale if needed
+        if (empty($scale) || !is_array($scale) || count($scale[0]) < 4) {
             $scale = self::$presets['A +/-'];
-        foreach($scale as $s) {
-            if($score <= $s[1] && $score >= $s[2])
-                return [$s[0], $s[3]];
+        }
+
+        // convert class letter grades to grade and GPA value
+        if(!is_numeric($score) && is_string($score)) {
+            foreach ($scale as $s) {
+                if ($score == $s[0]) {
+                    return [$s[0], $s[3]];
+                }
+            }
+        }
+        else {
+            $score = round($score);
+            foreach ($scale as $s) {
+                if ($score <= $s[1] && $score >= $s[2]) {
+                    return [$s[0], $s[3]];
+                }
+            }
         }
         return [null, null];
     }

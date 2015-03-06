@@ -24,6 +24,7 @@ $view['slots']->start('modal-body') ?>
                     <? }} ?>
             </select></label><div class="description">Grade I want</div>
         <span class="result">98%</span><div class="description">Grade I need on my remaining assignments.</div>
+        <div class="calc-completed">* Class already 100% complete.</div>
     </div>
     <div id="term-gpa" class="tab-pane">
         If I make these grades,

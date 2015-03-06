@@ -9,19 +9,20 @@ $(document).ready(function () {
             calc.find('.term-row.selected').removeClass('selected');
             calc.find('.term-row .term-name').addClass('read-only');
             row.addClass('selected');
-            row.find('.term-name').removeClass('read-only');
+            if(row.index('.term-row') > 0)
+                row.find('.term-name').removeClass('read-only');
         }
     });
 
-    body.on('click', '#calculator .class-row.selected > .read-only.hours', function () {
+    body.on('click', '#calculator .class-row > .read-only.hours', function () {
         $(this).removeClass('read-only');
         $(this).find('input').focus();
         $(this).find('[value="#save-grades"]').css('visibility', 'visible');
     });
 
     body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours):not(.grade):not(.class-name),' +
-                     '#calculator .class-row:not(.selected) > *.hours,' +
-                     '#calculator .class-row:not(.selected) > *.grade,' +
+                     '#calculator .class-row > *.hours.read-only,' +
+                     '#calculator .class-row > *.grade.read-only,' +
                      '#calculator .term-row:not(.schedule-id-) .class-row > *.class-name', function () {
         var row = $(this).parents('.class-row');
         if(row.is('.selected')) {
@@ -39,16 +40,28 @@ $(document).ready(function () {
 
     function convertToScale(score)
     {
-        var scaled = [null, null];
-        score = Math.round(score);
-        $('#grade-scale').find('tbody tr').each(function () {
-            if(score <= parseInt($(this).find('td:nth-child(2) input').val()) &&
-                    score >= parseInt($(this).find('td:nth-child(3) input').val()))
-            {
-                scaled = [$(this).find('td:nth-child(1) input').val(), $(this).find('td:nth-child(4) input').val()];
-                return false;
-            }
-        });
+        var scaled = [null, null],
+            rounded = Math.round(score);
+        if(isNaN(rounded)) {
+            // try to find letter match
+            $('#grade-scale').find('tbody tr').each(function () {
+                if(score == $(this).find('td:nth-child(1) input').val())
+                {
+                    scaled = [$(this).find('td:nth-child(1) input').val(), $(this).find('td:nth-child(4) input').val()];
+                    return false;
+                }
+            });
+        }
+        else {
+            $('#grade-scale').find('tbody tr').each(function () {
+                if(rounded <= parseInt($(this).find('td:nth-child(2) input').val()) &&
+                    rounded >= parseInt($(this).find('td:nth-child(3) input').val()))
+                {
+                    scaled = [$(this).find('td:nth-child(1) input').val(), $(this).find('td:nth-child(4) input').val()];
+                    return false;
+                }
+            });
+        }
         return scaled;
     }
 
@@ -71,7 +84,7 @@ $(document).ready(function () {
         var row = $(this),
             percent = 0,
             sum = 0;
-        row.find('.grade-row:not(.deleted)').each(function () {
+        row.next().find('.grade-row:not(.deleted)').each(function () {
             var that = $(this),
                 score = parseInt(that.find('.score input').val().trim()),
                 rowPercent = parseInt(that.find('.percent input').val().trim());
@@ -92,14 +105,26 @@ $(document).ready(function () {
                 that.find('.gpa').html(scaled[1]);
             }
         });
-        if(percent == 0) {
-            row.find('> .score, > .gpa, > .percent, > .grade span').html('&bullet;');
-        }
-        else {
+
+        // if the grade is set by the assignments the percent would add up
+        if (percent > 0) {
             var classScore = sum / percent,
                 scaled = convertToScale(classScore);
             row.find('> .score').html(Math.round(classScore * 100) / 100);
-            row.find('> .grade span').html(scaled[0]);
+        }
+        // if the grade it only set by the dropdown use that instead, assume 100%
+        else if (row.find('> .grade select').val() != '') {
+            scaled = convertToScale(row.find('> .grade select').val());
+            percent = 100;
+        }
+
+        // set the other values for the class row based on the grade or score
+        if(percent == 0) {
+            row.find('> .score, > .gpa, > .percent').html('&bullet;');
+            row.find('> .grade select').val('');
+        }
+        else {
+            row.find('> .grade select').val(scaled[0]);
             row.find('> .gpa').html(scaled[1]);
             row.find('> .percent').html(percent + '%');
         }
@@ -123,11 +148,10 @@ $(document).ready(function () {
                 calculateClassGrade.apply(this);
 
                 var percent = row.find('> .percent').html(),
-                    score = parseFloat(row.find('> .score').html()),
-                    scaled = convertToScale(score);
+                    scaled = convertToScale(row.find('> .grade select').val());
                 percent = parseInt(percent.substr(0, percent.length - 1));
 
-                if(!isNaN(courseHours) && !isNaN(percent) && !isNaN(score)) {
+                if(!isNaN(courseHours) && !isNaN(percent) && scaled[1] != null) {
                     hours += courseHours;
                     termGPA += parseFloat(scaled[1] * courseHours);
                     termPercent += percent * courseHours;
@@ -136,10 +160,12 @@ $(document).ready(function () {
 
             if(hours == 0) {
                 term.find('> .gpa span, > .percent, > .hours').html('&bullet;');
+                term.addClass('missing-hours');
                 if(term.index(calc.find('.term-row')) == 0)
                     calc.find('.projected').html('&bullet;');
             }
             else {
+                term.removeClass('missing-hours');
                 if(term.index(calc.find('.term-row')) == 0)
                     calc.find('.projected').html(Math.round(termGPA / hours * 100) / 100);
                 term.find('> .gpa span').html((Math.round(termGPA / hours * 100) / 100));
@@ -150,7 +176,7 @@ $(document).ready(function () {
                     term.find('> .gpa span').html(term.find('> .gpa span').html() + '.00');
                 }
                 term.find('> .percent').html(Math.round(termPercent / hours) + '%');
-                term.find('> .hours').html(hours + ' hrs');
+                term.find('> .hours').html(hours);
             }
 
             overallGPA += termGPA;
@@ -209,18 +235,21 @@ $(document).ready(function () {
     {
         // copy first class row
         var editor = $(this).parents('.term-editor'),
-            newClass = editor.find('.class-row').first().clone().insertBefore(editor.find('> .highlighted-link').last()),
-            grades = newClass.find('.grade-row');
-        newClass.removeClass('selected').show();
-        newClass.attr('class', newClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
-        newClass.find('.hours').removeClass('read-only').find('input').val('');
+            newClass = editor.find('.class-row').first()
+                .add(editor.find('.class-row').first().next()).clone()
+                .insertBefore(editor.find('> .highlighted-link').last())
+                .filter('.class-row'),
+            grades = newClass.next().find('.grade-row');
+        newClass.removeClass('selected').show().attr('class', newClass.attr('class').replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
+        newClass.find('.hours, > .grade').removeClass('read-only').find('input').val('');
         newClass.find('.class-name').removeClass('read-only');
         newClass.find('.class-name input').val('');
-        newClass.find('.class-name span').attr('class', 'class' + (editor.find('.class-row.course-id-').length - 1));
-        newClass.find('> .score, > .grade span, > .gpa, > .percent').html('&bullet;');
+        newClass.find('.class-name span').attr('class', 'class' + (editor.find('.class-row').length - 1));
+        newClass.find('> .score, > .gpa, > .percent').html('&bullet;');
+        newClass.find('> .grade select').val('');
         // insert new grades
         for(var i = 0; i < 4; i++) {
-            addGrade.apply(newClass.find('a[href="#add-grade"]'));
+            addGrade.apply(newClass.next().find('a[href="#add-grade"]'));
         }
         // remove existing grades
         grades.remove();
@@ -239,20 +268,6 @@ $(document).ready(function () {
             // set the fields to their current value
             calc.find('#what-if select:first-child').val(Math.round(parseFloat(calc.find('.projected').html()) * 10) / 10);
         }
-    });
-
-    body.on('click', '#calculator a[href*="/schedule"]', function () {
-        var term = $(this).parents('.term-row'),
-            scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(term.attr('class'))[1];
-
-        /*
-        body.one('show', '#schedule', function () {
-            var schedule = $('#schedule');
-            schedule.find('.term-row').hide();
-            schedule.find('.schedule-id-' + scheduleId).show();
-            updateTermControls();
-        });
-        */
     });
 
     function addGrade()
@@ -298,11 +313,12 @@ $(document).ready(function () {
             var termRow = $(this);
             if(oldTerms.eq(j).is('.selected')) {
                 termRow.addClass('selected');
-                termRow.find('term-name').removeClass('read-only');
+                if(j > 0)
+                    termRow.find('.term-name').removeClass('read-only');
             }
             else {
                 termRow.removeClass('selected');
-                termRow.find('term-name').addClass('read-only');
+                termRow.find('.term-name').addClass('read-only');
             }
             termRow.find('.class-row').each(function (k) {
                 $(this).find('[value="#save-grades"]').css('visibility', '');
@@ -318,7 +334,6 @@ $(document).ready(function () {
         });
         if(calc.find('.term-row.selected').length == 0) {
             calc.find('.term-row').first().addClass('selected');
-            calc.find('.term-row').first().find('term-name').removeClass('read-only');
             calc.find('.term-row').first().find('.class-row').addClass('selected');
         }
         oldTerms.remove();
@@ -334,6 +349,7 @@ $(document).ready(function () {
             calc.removeClass('empty');
             $('#calc-empty').modal('hide');
         }
+        validateGrades();
     }
 
     function submitCalc(evt)
@@ -360,11 +376,12 @@ $(document).ready(function () {
                     courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1],
                     courseData = {
                         courseId: courseId,
+                        grade: row.find('> .grade select').val().trim(),
                         className: row.find('.class-name input').val().trim(),
                         creditHours: parseInt(row.find('.hours input').val().trim()),
                         grades: {}
                     };
-                row.find('.grade-row.edit.valid').each(function (j) {
+                row.next().find('.grade-row.edit.valid').each(function (j) {
                     var that = $(this),
                         gradeId = (/grade-id-([0-9]*)(\s|$)/ig).exec(that.attr('class'))[1];
                     courseData.grades[j] = {
@@ -416,6 +433,22 @@ $(document).ready(function () {
             }
         }
         validateGrades();
+    });
+
+    body.on('change', '#calculator .term-name select', function () {
+        //resort term rows
+        var calc = $('#calculator');
+        calc.find('.term-row').sort(function (a, b) {
+            var timeA = $(a).find('.term-name select').val().split('/'),
+                timeB = $(b).find('.term-name select').val().split('/');
+            if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) > parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
+                return -1;
+            }
+            if(parseInt(timeA[1]) * 12 + parseInt(timeA[0]) < parseInt(timeB[1]) * 12 + parseInt(timeB[0])) {
+                return 1;
+            }
+            return 0;
+        }).detach().insertBefore(calc.find('form > .highlighted-link'));
     });
 
     body.on('click', '#grade-scale a[href="#scale-preset"]', function (evt) {
@@ -487,11 +520,10 @@ $(document).ready(function () {
         var totalHours = 0,
             pastGPA = 0;
         calc.find('.term-row').not(calc.find('.term-row').first()).each(function () {
-            var hours = $(this).find('> .hours').html();
-            hours = parseInt(hours.substr(0, hours.length - 4));
+            var hours = parseInt($(this).find('> .hours').html());
             if(!isNaN(hours)) {
                 totalHours += hours;
-                pastGPA = parseFloat($(this).find('> .gpa span').text()) * hours;
+                pastGPA += parseFloat($(this).find('> .gpa span').text()) * hours;
             }
         });
         if(!isNaN(pastGPA / totalHours))
@@ -518,43 +550,53 @@ $(document).ready(function () {
             classId = grade.find('.class-name').val(),
             classVal = grade.find('select:not(.class-name)').val(),
             row = calc.find('.class-row.course-id-' + classId),
-            currentGrade = row.find('> .grade span').html(),
-            currentScore = parseInt(row.find('> .score').text());
+            currentGrade = row.find('> .grade select').val(),
+            currentScore = parseInt(row.find('> .score').text()),
+            completed = row.find('> .percent').text(),
+            result = grade.find('.result'),
+            wants = parseInt(classVal);
+        completed = parseInt(completed.substr(0, completed.length - 1));
+
+        // these are all the error conditions
         if(classId != '' && !isNaN(currentScore)) {
             grade.find('.current-grade').html(currentGrade);
         }
         else {
             grade.find('.current-grade').html('&nbsp;');
         }
+
         if(classVal == '') {
-            grade.find('.result').html('&nbsp;');
+            result.html('&nbsp;');
+        }
+        if(100-completed == 0) {
+            $('#what-if').addClass('class-completed');
+            result.html('&nbsp;');
+        }
+        else {
+            $('#what-if').removeClass('class-completed');
         }
         if(classId == '' || classVal == '' || isNaN(currentScore)) {
             return;
         }
-        var result = grade.find('.result'),
-            completed = row.find('> .percent').text(),
-            wants = parseInt(classVal);
-        completed = parseInt(completed.substr(0, completed.length - 1));
-        var score = (wants * 100 - currentScore * completed) / (100 - completed);
-        if(100-completed == 0) {
-            if(score > 0)
-                score = 100;
-            else if(score < 0)
-                score = 0;
-        }
-        score = Math.round(score);
+
+        var score = Math.round((wants * 100 - currentScore * completed) / (100 - completed));
+
+        // finally show result
         if(isNaN(score)) {
             $('#what-if').addClass('grade-incomplete');
             result.text('UNK');
         }
         else {
             $('#what-if').removeClass('grade-incomplete');
-            if(score > 100)
-                score = 100;
-            if(score < 0)
-                score = 0;
-            result.text(score + '%');
+            if(score > 100) {
+                result.text('> 100%');
+            }
+            else if(score < 0) {
+                result.text('< 0%');
+            }
+            else {
+                result.text(score + '%');
+            }
         }
     });
 
@@ -577,6 +619,10 @@ $(document).ready(function () {
         else {
             $('#what-if').removeClass('term-incomplete');
             result.text(Math.round(termGPA * 100) / 100);
+            if(result.text().length == 1)
+                result.text(result.text() + '.00');
+            else if(result.text().length == 3)
+                result.text(result.text() + '0');
         }
     });
 
@@ -592,37 +638,48 @@ $(document).ready(function () {
             overall = $(this).parents('#overall-gpa'),
             result = overall.find('.result'),
             current = calc.find('.term-row').first(),
-            currentHours = current.find('> .hours').text(),
+            currentHours = parseInt(current.find('> .hours').text()),
             totalHours = 0,
-            pastGPA = 0;
-        currentHours = parseInt(currentHours.substr(0, currentHours.length - 4));
+            pastGPA = 0,
+            overallVal = overall.find('select').val();
+        if(overallVal == '') {
+            result.html('&nbsp;');
+            return;
+        }
         calc.find('.term-row').not(current).each(function () {
-            var hours = $(this).find('> .hours').html();
-            hours = parseInt(hours.substr(0, hours.length - 4));
+            var hours = parseInt($(this).find('> .hours').html());
             if(!isNaN(hours)) {
                 totalHours += hours;
-                pastGPA = parseFloat($(this).find('> .gpa span').text()) * hours;
+                pastGPA += parseFloat($(this).find('> .gpa span').text()) * hours;
             }
         });
         totalHours += currentHours;
-        var termGPA = (overall.find('select').val() * totalHours - pastGPA) / currentHours;
+        var termGPA = (overallVal * totalHours - pastGPA) / currentHours;
         if(isNaN(termGPA)) {
             $('#what-if').addClass('overall-incomplete');
             result.text('UNK');
         }
         else {
-            if(termGPA > 4)
-                termGPA = 4;
-            if(termGPA < 0)
-                termGPA = 0;
             $('#what-if').removeClass('overall-incomplete');
-            result.text(Math.round(termGPA * 100) / 100);
+            if(termGPA > 4) {
+                result.text('> 4.00');
+            }
+            else if(termGPA < 0) {
+                result.text('< 0.00');
+            }
+            else {
+                result.text(Math.round(termGPA * 100) / 100);
+                if(result.text().length == 1)
+                    result.text(result.text() + '.00');
+                else if(result.text().length == 3)
+                    result.text(result.text() + '0');
+            }
         }
     });
 
     body.on('click', '#grade-scale a[href="#save-scale"]', validateGrades);
     body.on('keyup', '#calculator .grade-row input, #calculator .class-row input', validateGrades);
-    body.on('change', '#calculator .grade-row input, #calculator .class-row input', validateGrades);
+    body.on('change', '#calculator .grade-row input, #calculator .class-row input, #calculator .class-row select', validateGrades);
 
     body.on('show', '#calculator', function () {
         if($(this).is('.empty'))

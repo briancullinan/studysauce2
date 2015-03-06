@@ -45,11 +45,15 @@ $view['slots']->start('body'); ?>
                     /** @var Schedule $s */
                     ?>
                 <div class="term-row schedule-id-<?php print $s->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
-                    <div class="term-name <?php print ($first ? '' : 'read-only'); ?>"><label class="input"><select><?php
+                    <div class="term-name read-only"><label class="input"><select><?php
                         for($y = intval(date('Y')); $y > intval(date('Y')) - 20; $y--)
                         {
                             foreach([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 6 => 'Summer'] as $m => $t)
                             {
+                                // skip dates beyond the current term
+                                if($y == date('Y') && $m > intval(date('n')) && (empty($s->getTerm()) || $s->getTerm()->format('n/Y') != $m . '/' . $y))
+                                    continue;
+
                                 ?><option value="<?php print $m; ?>/<?php print $y; ?>" <?php
                                 print (!empty($s->getTerm()) && $s->getTerm()->format('n/Y') == $m . '/' . $y
                                     ? 'selected="selected"'
@@ -60,7 +64,7 @@ $view['slots']->start('body'); ?>
                         ?></select></label></div>
                     <div class="gpa"><span><?php print (empty($s->getGPA()) ? '&bullet;' : $s->getGPA()); ?></span><?php print ($first ? ' (projected)' : ''); ?></div>
                     <div class="percent"><?php print (empty($s->getPercent()) ? '&bullet;' : ($s->getPercent() . '%')); ?></div>
-                    <div class="hours"><?php print (empty($s->getCreditHours()) ? '&bullet;' : ($s->getCreditHours() . ' hrs')); ?></div>
+                    <div class="hours"><?php print (empty($s->getCreditHours()) ? '&bullet;' : $s->getCreditHours()); ?></div>
                     <div class="term-editor">
                         <label></label>
                         <header>
@@ -75,19 +79,20 @@ $view['slots']->start('body'); ?>
                         foreach($courses as $i => $c) {
                             /** @var Course $c */
                             ?>
-                        <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
-                            <div class="class-name read-only"><span class="class<?php print $i; ?>"></span><label class="input"><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name" /></label></div>
-                            <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
-                            <div class="grade" title="Your letter grade based on your grading scale"><label class="input"><select>
-                                        <option value="" <?php print (empty($c->getGrade()) ? 'selected="selected"' : ''); ?>>&bullet;</option>
-                                        <?php for($i = 0; $i < count($scale); $i++) {
-                                        if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
-                                            <option value="<?php print $scale[$i][0]; ?>" <?php print ($c->getGrade() == $scale[$i][0] ? 'selected="selected"' : ''); ?>><?php print $scale[$i][0]; ?></option>
-                                        <? }} ?>
-                                    </select></label></div>
-                            <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
-                            <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
-                            <div class="hours <?php print ($first && empty($c->getCreditHours()) ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="&bullet;" /></label></div>
+                            <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
+                                <div class="class-name <?php print ($first ? 'read-only' : 'edit'); ?>"><span class="class<?php print $i; ?>"></span><label class="input"><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name" /></label></div>
+                                <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
+                                <div class="grade <?php print ($first ? 'read-only' : 'edit'); ?>" title="Your letter grade based on your grading scale"><label class="input"><select>
+                                            <option value="" <?php print (empty($c->getGrade()) ? 'selected="selected"' : ''); ?>>&bullet;</option>
+                                            <?php for($i = 0; $i < count($scale); $i++) {
+                                            if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
+                                                <option value="<?php print $scale[$i][0]; ?>" <?php print ($c->getGrade() == $scale[$i][0] ? 'selected="selected"' : ''); ?>><?php print $scale[$i][0]; ?></option>
+                                            <? }} ?>
+                                        </select></label></div>
+                                <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
+                                <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
+                                <div class="hours <?php print (empty($c->getCreditHours()) ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="&bullet;" /></label></div>
+                            </div>
                             <div class="grade-editor">
                                 <?php
                                 $isDemo = false;
@@ -121,9 +126,11 @@ $view['slots']->start('body'); ?>
                                     <button type="submit" value="#save-grades" class="more">Save</button>
                                 </div>
                             </div>
-                        </div>
                         <?php } ?>
                         <div class="highlighted-link form-actions invalid">
+                            <div class="clearfix">
+                                <div class="empty-hours">* Enter credit hours to calculate class GPA.</div>
+                            </div>
                             <a href="#add-class" class="big-add">Add <span>+</span> class</a>
                             <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>
                             <button type="submit" value="#save-grades" class="more">Save</button>

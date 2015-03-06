@@ -526,7 +526,7 @@
 
 .pane-content a[href*="#grade-scale"]:not(.more):before
 {
-    background-position: left -4204px;
+    background-position: left -4202px;
 }
 
 .pane-content a[href*="#grade-scale"]:not(.more):hover:before,
@@ -534,7 +534,7 @@
 .pane-content a[href*="#grade-scale"]:not(.more):active:before,
 .pane-content a[href*="#grade-scale"].active:not(.more):before
 {
-    background-position: left -4254px;
+    background-position: left -4252px;
 }
 
 .pane-content a[href*="/home"]:not(.more):before

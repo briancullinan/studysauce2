@@ -61,6 +61,11 @@ class Course
     protected $creditHours;
 
     /**
+     * @ORM\Column(type="string", length=3, name="grade", nullable=true)
+     */
+    protected $grade;
+
+    /**
      * @ORM\OneToMany(targetEntity="Checkin", mappedBy="course", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"checkin" = "ASC"})
      */
@@ -144,7 +149,23 @@ class Course
     public function getGrade()
     {
         $score = $this->getScore();
-        return CalcController::convertToScale($this->getSchedule()->getGradeScale(), $score)[0];
+        $scaled = CalcController::convertToScale($this->getSchedule()->getGradeScale(), $score)[0];
+        if(empty($score) && !empty($this->grade))
+            return $this->grade;
+        return $scaled;
+    }
+
+    /**
+     * Set grade
+     *
+     * @param string $grade
+     * @return Course
+     */
+    public function setGrade($grade)
+    {
+        $this->grade = $grade;
+
+        return $this;
     }
 
     /**
@@ -153,6 +174,8 @@ class Course
     public function getGPA()
     {
         $score = $this->getScore();
+        if(empty($score) && !empty($this->grade))
+            return CalcController::convertToScale($this->getSchedule()->getGradeScale(), $this->grade)[1];
         return CalcController::convertToScale($this->getSchedule()->getGradeScale(), $score)[1];
     }
 
@@ -161,9 +184,12 @@ class Course
      */
     public function getPercent()
     {
-        return array_sum($this->getGrades()->map(function (Grade $g) {
+        $result = array_sum($this->getGrades()->map(function (Grade $g) {
             return $g->getPercent();
         })->toArray());
+        if(empty($result) && !empty($this->grade))
+            return 100;
+        return $result;
     }
 
     /**
