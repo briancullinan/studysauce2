@@ -407,6 +407,63 @@ class APageLoaderCest
     {
         $I->wantTo('invite a new accountability partner');
         $I->seeAmOnUrl('/schedule');
+        $I->click('.selectize-input');
+        $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
+        $I->fillField('.selectize-input input', 'Ariz');
+        $I->wait(10);
+        $I->click('div[data-value="Arizona State University"]');
+
+        // add one class
+        $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
+        $I->click('.class-row:nth-child(1) input[value="M"] + i');
+        $I->click('.class-row:nth-child(1) input[value="W"] + i');
+        $I->click('.class-row:nth-child(1) input[value="F"] + i');
+        $I->fillField('.class-row:nth-child(1) .start-time input', '11');
+        $I->fillField('.class-row:nth-child(1) .end-time input', '12');
+        $I->fillField('.class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
+        $I->click('.class-row:nth-child(1) .end-date input');
+        $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
+
+        // add a second class
+        $I->fillField('.class-row:nth-child(2) .class-name input', 'CALC 102');
+        $I->click('.class-row:nth-child(2) input[value="M"] + i');
+        $I->click('.class-row:nth-child(2) input[value="W"] + i');
+        $I->click('.class-row:nth-child(2) input[value="F"] + i');
+        $I->fillField('.class-row:nth-child(2) .start-time input', '11');
+        $I->fillField('.class-row:nth-child(2) .end-time input', '12');
+
+        $I->click('#schedule .highlighted-link [value="#save-class"]');
+        $I->click('.invalid-only'); // should fail if hidden
+        // fix time
+        $I->fillField('.class-row:nth-child(2) .start-time input', '9');
+        $I->fillField('.class-row:nth-child(2) .end-time input', '10');
+        $I->click('#schedule .highlighted-link [value="#save-class"]');
+        $I->wait(10);
+
+        // add a new term
+        $I->click('#schedule a[href="#manage-terms"]');
+        $I->selectOption('#manage-terms select', '1/2014');
+        $I->click('#manage-terms a[href="#create-schedule"]');
+
+        // enter new schedule
+        $I->click('.selectize-input');
+        $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
+        $I->fillField('.selectize-input input', 'Ariz');
+        $I->wait(10);
+        $I->click('div[data-value="Arizona State University"]');
+
+        $I->fillField('.class-row:nth-child(1) .class-name input', 'MAT 202');
+        $I->click('.class-row:nth-child(1) input[value="M"] + i');
+        $I->click('.class-row:nth-child(1) input[value="W"] + i');
+        $I->click('.class-row:nth-child(1) input[value="F"] + i');
+        $I->fillField('.class-row:nth-child(1) .start-time input', '11');
+        $I->fillField('.class-row:nth-child(1) .end-time input', '12');
+        $I->fillField('.class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
+        $I->click('.class-row:nth-child(1) .end-date input');
+        $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
+
+        $I->click('#schedule .highlighted-link [value="#save-class"]');
+        $I->wait(10);
     }
 }
 

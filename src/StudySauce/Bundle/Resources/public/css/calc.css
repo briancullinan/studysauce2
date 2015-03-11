@@ -34,6 +34,7 @@
     display:inline-block;
     padding: 5px 0;
     text-align: center;
+    margin: 5px 0;
 }
 
 #calculator .cumulative + span,
@@ -41,10 +42,10 @@
 {
     display:inline-block;
     width:50%;
-    margin-left:-104px;
-    padding-left:120px;
     z-index: 1;
     position:relative;
+    padding: 5px 0 5px 120px;
+    margin: 5px 0 5px -104px;
 }
 
 #calculator .grade-editor
@@ -175,11 +176,14 @@
     border-top: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     margin: 0 -20px;
-    padding: 0 20px 0 20px;
+    padding: 0 20px;
 }
 
 #calculator .class-row.selected,
-#calculator .class-row.selected .class-name input {
+#calculator .class-row.selected .class-name input,
+#calculator .class-row.selected .hours input,
+#calculator .class-row.selected .grade select
+{
     font-weight: bold;
 }
 
@@ -257,6 +261,7 @@
     display:inline-block;
     width:75%;
     border-bottom: 2px solid #555;
+    margin:0 -2px;
 }
 
 #calculator .term-row .grade span
@@ -281,7 +286,7 @@
 
 #calculator .term-editor > *:first-child,
 #calculator .class-row .class-name,
-#calculator .grade-row .class-name
+#calculator .grade-row .assignment
 {
     width:25%;
     text-align: left;
@@ -289,9 +294,7 @@
 
 #calculator .grade-row .assignment
 {
-    width: 25%;
     padding-left:65px;
-    text-align: left;
 }
 
 #calculator .term-row .term-name
@@ -348,6 +351,7 @@
 #calculator .grade-editor .big-add
 {
     font-size:16px;
+    padding-left:30px;
 }
 
 #calculator .grade-editor .big-add span
@@ -421,6 +425,7 @@
 #what-if .nav-tabs>li
 {
     width:33.33%;
+    text-align: center;
 }
 
 #what-if .nav-tabs>li>a
@@ -509,3 +514,110 @@
 {
     display:block;
 }
+
+@media all and (max-width: 1000px)
+{
+    #calculator .class-row.selected + .grade-editor .highlighted-link
+    {
+        padding-left:0;
+        text-align: right;
+    }
+
+    #calculator .term-row:after
+    {
+        right:5px;
+    }
+
+    #calculator .class-row:after
+    {
+        right: -5px;
+    }
+
+    #calculator .term-row
+    {
+        padding:0 10px;
+        margin: 0 -15px;
+    }
+
+    #calculator .cumulative + span,
+    #calculator .projected + span
+    {
+        width:100%;
+        vertical-align: middle;
+    }
+
+    #calculator .term-row .term-name
+    {
+        width: 100%;
+        padding-right:15px;
+    }
+
+    #calculator .term-row > .gpa,
+    #calculator .term-row > .percent,
+    #calculator .term-row > .hours
+    {
+        width:33.33%;
+    }
+
+    #calculator .term-row > *
+    {
+        white-space: normal;
+    }
+
+    #calculator .term-row header
+    {
+        width: 65%;
+    }
+
+    #calculator .term-editor > *:first-child,
+    #calculator .class-row .class-name,
+    #calculator .grade-row .assignment
+    {
+        width:35%;
+    }
+
+    #calculator .grade-row .assignment
+    {
+        padding-left: 40px;
+    }
+
+    #calculator .term-row header > *
+    {
+        width:25%;
+    }
+
+    #calculator .term-row header > *:nth-child(2)
+    {
+        width:50%
+    }
+
+    #calculator .term-row header > *:first-child,
+    #calculator .term-row header > *:nth-child(3),
+    #calculator .class-row .score,
+    #calculator .grade-row .gpa
+    {
+        display:none;
+    }
+
+    #calculator .class-row .grade,
+    #calculator .grade-row .score
+    {
+        width:20%;
+    }
+
+}
+
+@media all and (max-width: 700px)
+{
+    #grade-scale .modal-dialog
+    {
+        width: auto;
+    }
+
+    #what-if .nav-tabs>li>a
+    {
+        padding-left:2px;
+        padding-right:2px;
+    }
+}
+

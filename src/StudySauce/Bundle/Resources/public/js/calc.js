@@ -279,7 +279,7 @@ $(document).ready(function () {
                 .insertAfter(editor.find('.grade-row').last());
         row.attr('class', row.attr('class').replace(/grade-id-([0-9]*)(\s|$)/ig, ' grade-id- '));
         row.find('.grade span, .gpa').html('&bullet;');
-        row.find('input').val('').attr('placeholder', '');
+        row.find('input').val('').attr('placeholder', '&bullet;');
         row.find('.assignment input').attr('placeholder', 'Assignment')
     }
 

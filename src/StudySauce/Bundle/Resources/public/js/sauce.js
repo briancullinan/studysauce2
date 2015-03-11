@@ -4,8 +4,15 @@ window.sincluding = [];
 window.visits = [];
 window.players = [];
 window.jsErrors = [];
+window.noError = false;
+
+$(window).unload(function() {
+    window.noError = true;
+});
 
 window.onerror = function (errorMessage, url, lineNumber) {
+    if(window.noError)
+        return false;
     var dialog = $('#error-dialog');
     if(dialog.length > 0)
     {
@@ -14,7 +21,7 @@ window.onerror = function (errorMessage, url, lineNumber) {
     }
     var message = "Error: [" + errorMessage + "], url: [" + url + "], line: [" + lineNumber + "]";
     window.jsErrors.push(message);
-    return false;
+    return true;
 };
 
 // datepicker modifications to turn onAfterUpdate in to a settable event callback
@@ -310,8 +317,10 @@ if(typeof window.jqAjax == 'undefined') {
 }
 
 $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
+    if(window.noError)
+        return false;
     var dialog = $('#error-dialog');
-    if(dialog.length > 0)
+    if(dialog.length > 0 && thrownError !== "abort" && jqXHR.status !== 0)
     {
         var error = '';
         try {

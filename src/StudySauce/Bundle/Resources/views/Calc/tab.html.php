@@ -114,10 +114,10 @@ $view['slots']->start('body'); ?>
                                     <div class="grade-row grade-id-<?php print (!$isDemo ? $d->getId() : ''); ?> <?php print ($isDemo || $d->getScore() === null || $d->getPercent() === null ? ' edit' : 'read-only'); ?>">
                                         <div class="assignment">
                                             <label class="input"><input type="text" value="<?php print (!$isDemo ? $d->getAssignment() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getAssignment()) ? $d->getAssignment() : 'Assignment'); ?>" /></label></div>
-                                        <div class="score" title="Your grade on the assignment"><label class="input"><input type="text" value="<?php print ($d instanceof Deadline ? '' : $d->getScore()); ?>" /></label></div>
+                                        <div class="score" title="Your grade on the assignment"><label class="input"><input type="text" value="<?php print ($d instanceof Deadline ? '' : $d->getScore()); ?>" placeholder="&bullet;" /></label></div>
                                         <div class="grade" title="Your letter grade based on your grading scale"><span><?php print ($d instanceof Deadline || empty($d->getGrade()) ? '&bullet;' : $d->getGrade()); ?></span></div>
                                         <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print ($d instanceof Deadline || empty($d->getGPA()) ? '&bullet;' : $d->getGPA()); ?></div>
-                                        <div class="percent" title="How much of your course grade the assignment is worth"><label class="input"><input type="text" value="<?php print (!$isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" /></label></div>
+                                        <div class="percent" title="How much of your course grade the assignment is worth"><label class="input"><input type="text" value="<?php print (!$isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" placeholder="&bullet;" /></label></div>
                                         <div class="read-only"><a href="#edit-grade">&nbsp;</a><a href="#remove-grade">&nbsp;</a></div>
                                     </div>
                                 <?php } ?>
@@ -129,7 +129,7 @@ $view['slots']->start('body'); ?>
                         <?php } ?>
                         <div class="highlighted-link form-actions invalid">
                             <div class="clearfix">
-                                <div class="empty-hours">* Enter credit hours to calculate class GPA.</div>
+                                <div class="empty-hours">* Enter credit hours to calculate class GPA</div>
                             </div>
                             <a href="#add-class" class="big-add">Add <span>+</span> class</a>
                             <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>

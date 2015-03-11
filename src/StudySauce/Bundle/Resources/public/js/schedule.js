@@ -170,7 +170,7 @@ $(document).ready(function () {
                 term.find('.university input').val().trim() != term.find('.university input').data('state') ||
                 // we may need to save deleted rows
                 term.find('.class-row.deleted').length > 0))
-            term.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
+            schedule.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
             term.find('.form-actions').removeClass('valid').addClass('invalid');
 
@@ -248,7 +248,7 @@ $(document).ready(function () {
                 responseId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(responseTerm.attr('class'))[1],
                 term = schedule.find('.term-row').eq(j);
             // update schedule id if newly added
-            term.removeClass('.schedule-id-').addClass('schedule-id-' + responseId);
+            term.removeClass('schedule-id-').addClass('schedule-id-' + responseId);
 
             term.find('.university input').data('state', responseTerm.find('.university input').val().trim());
             term.find('.schedule .class-row.valid').remove();

@@ -24,7 +24,7 @@ $view['slots']->start('modal-body') ?>
                     <? }} ?>
             </select></label><div class="description">Grade I want</div>
         <span class="result">98%</span><div class="description">Grade I need on my remaining assignments.</div>
-        <div class="calc-completed">* Class already 100% complete.</div>
+        <div class="calc-completed">* Class already 100% complete</div>
     </div>
     <div id="term-gpa" class="tab-pane">
         If I make these grades,
@@ -51,7 +51,7 @@ $view['slots']->start('modal-body') ?>
             </select></label><div class="description">Target overall GPA</div>
         <span class="result">4.0</span><div class="description">GPA needed this term</div>
     </div>
-    <div class="calc-unk">* To calculate you must designate hours for each class.</div>
+    <div class="calc-unk">* To calculate you must designate hours for each class</div>
 </div>
 <?php $view['slots']->stop();
 

@@ -19,8 +19,8 @@
 
 #schedule h2:first-child
 {
-    margin-right: -400px;
-    padding-right: 400px;
+    margin-right: -220px;
+    padding-right: 220px;
     display:inline-block;
     width:100%;
 }
@@ -129,6 +129,7 @@
 .schedule .class-name
 {
     padding-left:40px;
+    position:relative;
 }
 
 .class-row.edit .class-name
@@ -381,11 +382,6 @@
     text-align: left;
 }
 
-#manage-terms .big-add
-{
-    float:none;
-}
-
 @media all and (max-width: 1000px)
 {
 
@@ -434,6 +430,18 @@
 }
 
 @media all and (max-width: 500px) {
+
+
+    #schedule h2:first-child
+    {
+        margin-right:0;
+        padding-right:0;
+    }
+
+    #schedule .schedule-history
+    {
+        display:none;
+    }
 
     .schedule .start-date .input,
     .schedule .end-date .input,

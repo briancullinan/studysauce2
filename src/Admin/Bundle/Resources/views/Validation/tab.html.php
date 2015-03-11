@@ -35,7 +35,7 @@ $view['slots']->start('body'); ?>
                 <small>You must run <a href="http://www.seleniumhq.org/download/">Selenium Server</a> and <a
                         href="https://sites.google.com/a/chromium.org/chromedriver/downloads">ChromeDriver</a> with the
                     command
-                    <code>java -jar selenium-server-standalone-*.jar -Dwebdriver.chrome.driver=.\chromedriver.exe -port
+                    <code>java -jar selenium-server-standalone-2.44.0.jar -Dwebdriver.chrome.driver=.\chromedriver.exe -port
                         4444</code>
                 </small>
             </label>
