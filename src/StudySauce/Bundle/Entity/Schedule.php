@@ -157,20 +157,6 @@ class Schedule
     /**
      * @return number
      */
-    public function getPercent()
-    {
-        $hours = $this->getCreditHours();
-        if(empty($hours))
-            return null;
-        $score = array_sum($this->getClasses()->map(function (Course $c) {
-            return $c->getPercent() * $c->getCreditHours();
-        })->toArray());
-        return round($score / $hours);
-    }
-
-    /**
-     * @return number
-     */
     public function getCreditHours()
     {
         return array_sum($this->getClasses()->map(function (Course $c) {

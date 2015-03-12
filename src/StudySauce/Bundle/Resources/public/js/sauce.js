@@ -11,6 +11,8 @@ $(window).unload(function() {
 });
 
 window.onerror = function (errorMessage, url, lineNumber) {
+    var message = "Error: [" + errorMessage + "], url: [" + url + "], line: [" + lineNumber + "]";
+    window.jsErrors.push(message);
     if(window.noError)
         return false;
     var dialog = $('#error-dialog');
@@ -19,8 +21,6 @@ window.onerror = function (errorMessage, url, lineNumber) {
         dialog.find('.modal-body').html(errorMessage);
         dialog.modal({show:true});
     }
-    var message = "Error: [" + errorMessage + "], url: [" + url + "], line: [" + lineNumber + "]";
-    window.jsErrors.push(message);
     return true;
 };
 

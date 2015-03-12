@@ -63,6 +63,11 @@
     /* color: #FF0D00; */
 }
 
+.checkin-widget .classes .checkin
+{
+    margin: 25px 10px;
+}
+
 .checkin-widget .classes .checkin span,
 #plan .mini-checkin .checkin > span,
 #checkin .classes a span {

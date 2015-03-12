@@ -25,24 +25,18 @@ $view['slots']->start('modal-body') ?>
     </thead>
     <tbody>
     <?php
-    for($i = 0; $i < 15; $i++) {
-        if (empty($scale[$i]) || count($scale[$i]) < 4 || empty($scale[$i][0])) { ?>
-            <tr>
-                <td><label class="input"><input type="text" value=""/></label></td>
-                <td><label class="input"><input type="text" value=""/></label></td>
-                <td><label class="input"><input type="text" value=""/></label></td>
-                <td><label class="input"><input type="text" value=""/></label></td>
-            </tr>
-        <?php } else { ?>
-            <tr>
-                <td><label class="input"><input type="text" value="<?php print $scale[$i][0]; ?>"/></label></td>
-                <td><label class="input"><input type="text" value="<?php print $scale[$i][1]; ?>"/></label></td>
-                <td><label class="input"><input type="text" value="<?php print $scale[$i][2]; ?>"/></label></td>
-                <td><label class="input"><input type="text"
-                                                value="<?php print number_format($scale[$i][3], 2); ?>"/></label></td>
-            </tr>
-        <?php }
-    } ?>
+    for($i = 0; $i < count($scale); $i++) {
+        if (empty($scale[$i]) || count($scale[$i]) < 4 || empty($scale[$i][0])) {
+            continue;
+        } ?>
+        <tr>
+            <td><label class="input"><input type="text" value="<?php print $scale[$i][0]; ?>"/></label></td>
+            <td><label class="input"><input type="text" value="<?php print $scale[$i][1]; ?>"/></label></td>
+            <td><label class="input"><input type="text" value="<?php print $scale[$i][2]; ?>"/></label></td>
+            <td><label class="input"><input type="text"
+                                            value="<?php print number_format($scale[$i][3], 2); ?>"/></label></td>
+        </tr>
+    <?php } ?>
     </tbody>
 </table>
 <?php $view['slots']->stop();

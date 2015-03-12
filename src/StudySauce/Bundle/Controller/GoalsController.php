@@ -107,7 +107,7 @@ class GoalsController extends Controller
         $orm->persist($milestone);
 
         $outcomeGoals = ['3.00', '3.25', '3.50', '3.75', '4.00'];
-        $outcomeRewards = ['Vacation for spring break instead of studying', 'A gold star for effort', 'A day off.'];
+        $outcomeRewards = ['Vacation for spring break instead of studying', 'Movie night', 'A day off.'];
         $outcome = new Goal();
         $outcome->setType('outcome');
         $outcome->setGoal($outcomeGoals[array_rand($outcomeGoals, 1)]);

@@ -109,7 +109,6 @@
     position:absolute;
     left:10px;
     bottom:10px;
-    padding-left:30px;
 }
 
 #calculator .grade-row,
@@ -256,12 +255,18 @@
     width: 15%;
 }
 
+#calculator .grade-row .read-only
+{
+    width: auto;
+}
+
 #calculator .term-row header
 {
     display:inline-block;
-    width:75%;
+    width:80%;
     border-bottom: 2px solid #555;
     margin:0 -2px;
+    padding-right:54px;
 }
 
 #calculator .term-row .grade span
@@ -285,16 +290,30 @@
 }
 
 #calculator .term-editor > *:first-child,
-#calculator .class-row .class-name,
-#calculator .grade-row .assignment
+#calculator .class-row .class-name
 {
-    width:25%;
+    width:20%;
     text-align: left;
+}
+
+#calculator .class-row .gpa
+{
+    width: 20%;
+    padding-right:54px;
+}
+
+#calculator .grade-row .gpa
+{
+    width: 20%;
+    margin-right:-54px;
+    padding-right:54px;
 }
 
 #calculator .grade-row .assignment
 {
+    width:35%;
     padding-left:65px;
+    text-align: left;
 }
 
 #calculator .term-row .term-name
@@ -303,7 +322,7 @@
     text-align: left;
 }
 
-#calculator .term-row ~ .term-row .class-row .class-name span
+#calculator .term-row ~ .term-row .class-row .class-name i
 {
     display:none;
 }
@@ -330,6 +349,7 @@
 }
 
 #calculator .grade-row .read-only,
+#calculator .grade-row.edit .read-only,
 #calculator .grade-row.edit:hover .read-only
 {
     visibility: hidden;
@@ -412,6 +432,29 @@
 {
     margin-top: -15px;
     margin-right: -15px;
+}
+
+#calculator .class-row .grade span,
+#calculator .class-row .class-name span,
+#calculator .class-row .hours span,
+#calculator .grade-row .assignment span,
+#calculator .grade-row .percent span,
+#calculator .grade-row .score span
+{
+    display:none;
+}
+
+#calculator h2 + .highlighted-link
+{
+    position:absolute;
+    top:10px;
+    right:10px;
+}
+
+#calculator h2 + .highlighted-link a
+{
+    font-size: 16px;
+    padding:10px 10px;
 }
 
 #what-if .nav-tabs
@@ -517,6 +560,27 @@
 
 @media all and (max-width: 1000px)
 {
+    #calculator .class-row .hours .input,
+    #calculator .grade-row .percent .input,
+    #calculator .grade-row .score .input
+    {
+        max-width: none;
+    }
+
+    #calculator .grade-row .percent input,
+    #calculator .grade-row .score input,
+    #calculator .class-row .hours input,
+    #calculator .grade-row > *,
+    #calculator .class-row > *
+    {
+        text-align: left;
+    }
+
+    #calculator .grade-row .read-only
+    {
+        visibility: visible;
+    }
+
     #calculator .class-row.selected + .grade-editor .highlighted-link
     {
         padding-left:0;
@@ -539,6 +603,16 @@
         margin: 0 -15px;
     }
 
+    #calculator .class-row .grade span,
+    #calculator .class-row .class-name span,
+    #calculator .class-row .hours span,
+    #calculator .grade-row .assignment span,
+    #calculator .grade-row .percent span,
+    #calculator .grade-row .score span
+    {
+        display:block;
+    }
+
     #calculator .cumulative + span,
     #calculator .projected + span
     {
@@ -552,11 +626,28 @@
         padding-right:15px;
     }
 
+    #calculator .term-row > .gpa:before
+    {
+        content: "GPA";
+        display:inline-block;
+        width:100%;
+        margin-right:-52px;
+    }
+
+    #calculator .term-row > .hours:before
+    {
+        content: "Hours";
+        display:inline-block;
+        width:100%;
+        margin-right:-52px;
+    }
+
     #calculator .term-row > .gpa,
-    #calculator .term-row > .percent,
     #calculator .term-row > .hours
     {
-        width:33.33%;
+        width:50%;
+        display:inline-block;
+        text-align: left;
     }
 
     #calculator .term-row > *
@@ -569,46 +660,61 @@
         width: 65%;
     }
 
-    #calculator .term-editor > *:first-child,
     #calculator .class-row .class-name,
+    #calculator .class-row .grade,
     #calculator .grade-row .assignment
     {
-        width:35%;
+        width: 66.66%;
     }
 
-    #calculator .grade-row .assignment
-    {
-        padding-left: 40px;
-    }
-
-    #calculator .term-row header > *
-    {
-        width:25%;
-    }
-
-    #calculator .term-row header > *:nth-child(2)
-    {
-        width:50%
-    }
-
-    #calculator .term-row header > *:first-child,
-    #calculator .term-row header > *:nth-child(3),
-    #calculator .class-row .score,
+    #calculator .class-row .gpa,
+    #calculator .class-row .hours,
+    #calculator .grade-row .percent,
+    #calculator .grade-row .score,
+    #calculator .grade-row .grade,
     #calculator .grade-row .gpa
+    {
+        width: 33.33%;
+    }
+
+    #calculator .grade-row .assignment
+    {
+        padding-left: 2px;
+    }
+
+    #calculator .term-row header,
+    #calculator .class-row .percent,
+    #calculator .class-row .score
     {
         display:none;
     }
 
-    #calculator .class-row .grade,
-    #calculator .grade-row .score
+    #calculator .term-row .grade select
     {
-        width:20%;
+        width:100%;
     }
 
+    #calculator .grade-row .gpa:before,
+    #calculator .class-row .gpa:before
+    {
+        content: "GPA";
+        display:block;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    #calculator .grade-row .grade:before
+    {
+        content: "Grade";
+        display:block;
+        font-weight: bold;
+        text-align: left;
+    }
 }
 
 @media all and (max-width: 700px)
 {
+
     #grade-scale .modal-dialog
     {
         width: auto;

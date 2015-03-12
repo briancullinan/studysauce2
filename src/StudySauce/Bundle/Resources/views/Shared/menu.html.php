@@ -24,12 +24,14 @@ $user = $app->getUser();
             <li><a href="<?php print $view['router']->generate('plan'); ?>"><span>&nbsp;</span>Study plan<?php if(!$user->hasRole('ROLE_PAID')) { ?> <sup class="premium">Premium</sup><?php } ?></a></li>
             <li><a href="<?php print $view['router']->generate('profile'); ?>"><span>&nbsp;</span>Study profile<?php if(!$user->hasRole('ROLE_PAID')) { ?> <sup class="premium">Premium</sup><?php } ?></a></li>
             <li><a href="<?php print $view['router']->generate('account'); ?>"><span>&nbsp;</span>Account settings</a></li>
+            <?php /*
             <li><h3>Coming soon</h3></li>
             <li><a href="#midterm"><span>&nbsp;</span>Midterm/final planner</a></li>
             <li><a href="#quizlet"><span>&nbsp;</span>Quizlet</a></li>
             <li><a href="#drive"><span>&nbsp;</span>Google Drive</a></li>
             <li><a href="#evernote"><span>&nbsp;</span>Evernote</a></li>
             <li><a href="#blackboard"><span>&nbsp;</span>Blackboard</a></li>
+            */ ?>
         </ul>
     </nav>
 </aside>

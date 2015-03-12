@@ -70,6 +70,7 @@ a[href="#sign-in-with-email"]
 #account .type label span,
 #account .password label span,
 #account .new-password label span,
+#account .confirm-password label span,
 #account .email label span,
 #account .first-name label span,
 #account .last-name label span
@@ -82,12 +83,14 @@ a[href="#sign-in-with-email"]
 
 #account .password label input,
 #account .new-password label input,
+#account .confirm-password label input,
 #account .email label input,
 #account .first-name label input,
 #account .last-name label input
 {
     width:50%;
     display:inline-block;
+    margin:0 -4px;
 }
 
 #register .first-name,
@@ -125,7 +128,8 @@ a[href="#sign-in-with-email"]
 }
 
 #account .password,
-#account .new-password
+#account .new-password,
+#account .confirm-password
 {
     visibility:hidden;
 }
@@ -196,6 +200,7 @@ a[href="#sign-in-with-email"]
 
     #account .password label span,
     #account .new-password label span,
+    #account .confirm-password label span,
     #account .email label span,
     #account .first-name label span,
     #account .last-name label span
@@ -206,6 +211,7 @@ a[href="#sign-in-with-email"]
 
     #account .password label input,
     #account .new-password label input,
+    #account .confirm-password label input,
     #account .email label input,
     #account .first-name label input,
     #account .last-name label input

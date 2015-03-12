@@ -32,8 +32,8 @@ $view['slots']->start('body'); ?>
         echo $view->render('StudySauceBundle:Buy:funnel.html.php');
     } else { ?>
         <h2>Enter your class below</h2>
+        <a href="#manage-terms" data-toggle="modal">Create a new schedule</a>
         <div class="schedule-history">
-            <a href="#manage-terms" class="subtle" data-toggle="modal">Create a new schedule</a>
             <a href="#prev-schedule" class="subtle disabled"><span></span> Previous</a>
             <h3 class="term-label"></h3>
             <a href="#next-schedule" class="subtle">Next <span></span></a>

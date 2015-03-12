@@ -364,7 +364,7 @@ $(document).ready(function () {
         addTerm();
     });
 
-    body.on('click', '#schedule a[href*="#manage-terms"]', function () {
+    body.on('click', '#schedule a[href="#manage-terms"]', function () {
         relabelManager();
     });
 

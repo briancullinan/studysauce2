@@ -324,6 +324,13 @@
     border-color: #0099BB;
 }
 
+#schedule a[href="#manage-terms"]
+{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+}
+
 #manage-terms label
 {
     display:inline-block;
@@ -384,6 +391,11 @@
 
 @media all and (max-width: 1000px)
 {
+
+    .schedule .class-row.overlaps .class-name:before
+    {
+        margin-top:-4px;
+    }
 
     .highlighted-link
     {

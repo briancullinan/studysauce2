@@ -96,7 +96,7 @@ class ScheduleController extends Controller
             // create new empty schedule for all guest users
             $schedule = new Schedule();
             $schedule->setUser($guest);
-            $schedule->setUniversity('Enter the full name');
+            $schedule->setUniversity('Arizona State University');
             $schedule->setGrades('as-only');
             $schedule->setWeekends('hit-hard');
             $schedule->setSharp6am11am(5);
@@ -126,7 +126,7 @@ class ScheduleController extends Controller
         // TODO: remap demo functions to studysauce static functions used by testers?
         $old = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
             $b->getEndTime() > new \DateTime(); })->toArray();
-        if(count($old) < 8) {
+        if(count($old) < 4) {
             $old = $schedule->getCourses()->toArray();
             foreach ($old as $i => $c) {
                 /** @var Course $c */
@@ -209,6 +209,7 @@ class ScheduleController extends Controller
             $courses[] = $course;
             $schedule->addCourse($course);
 
+            /*
             $course = new Course();
             $class5 = new \DateTime('last Sunday');
             $class5->setTime(12, 0, 0);
@@ -276,6 +277,7 @@ class ScheduleController extends Controller
             $orm->persist($course);
             $courses[] = $course;
             $schedule->addCourse($course);
+            */
 
         }
 

@@ -159,7 +159,7 @@ $(document).ready(function () {
             });
 
             if(hours == 0) {
-                term.find('> .gpa span, > .percent, > .hours').html('&bullet;');
+                term.find('> .gpa, > .percent, > .hours').html('&bullet;');
                 term.addClass('missing-hours');
                 if(term.index(calc.find('.term-row')) == 0)
                     calc.find('.projected').html('&bullet;');
@@ -168,14 +168,13 @@ $(document).ready(function () {
                 term.removeClass('missing-hours');
                 if(term.index(calc.find('.term-row')) == 0)
                     calc.find('.projected').html(Math.round(termGPA / hours * 100) / 100);
-                term.find('> .gpa span').html((Math.round(termGPA / hours * 100) / 100));
-                if(term.find('> .gpa span').html().length == 3) {
-                    term.find('> .gpa span').html(term.find('> .gpa span').html() + '0');
+                term.find('> .gpa').html((Math.round(termGPA / hours * 100) / 100));
+                if(term.find('> .gpa').html().length == 3) {
+                    term.find('> .gpa').html(term.find('> .gpa').html() + '0');
                 }
-                if(term.find('> .gpa span').html().length == 1 && !isNaN(parseInt(term.find('> .gpa span').html()))) {
-                    term.find('> .gpa span').html(term.find('> .gpa span').html() + '.00');
+                if(term.find('> .gpa').html().length == 1 && !isNaN(parseInt(term.find('> .gpa').html()))) {
+                    term.find('> .gpa').html(term.find('> .gpa').html() + '.00');
                 }
-                term.find('> .percent').html(Math.round(termPercent / hours) + '%');
                 term.find('> .hours').html(hours);
             }
 
@@ -222,8 +221,7 @@ $(document).ready(function () {
         }
         calc.find('.term-row.selected').removeClass('selected');
         calc.find('.term-row .term-name').addClass('read-only');
-        newTerm.find('> .gpa').html('<span>&bullet;</span>');
-        newTerm.find('> .percent, > .hours').html('&bullet;');
+        newTerm.find('> .gpa, > .hours').html('&bullet;');
         newTerm.find('.term-name').removeClass('read-only');
         newTerm.addClass('selected');
         // remove existing classes
@@ -244,7 +242,7 @@ $(document).ready(function () {
         newClass.find('.hours, > .grade').removeClass('read-only').find('input').val('');
         newClass.find('.class-name').removeClass('read-only');
         newClass.find('.class-name input').val('');
-        newClass.find('.class-name span').attr('class', 'class' + (editor.find('.class-row').length - 1));
+        newClass.find('.class-name i').attr('class', 'class' + (editor.find('.class-row').length - 1));
         newClass.find('> .score, > .gpa, > .percent').html('&bullet;');
         newClass.find('> .grade select').val('');
         // insert new grades
@@ -279,7 +277,7 @@ $(document).ready(function () {
                 .insertAfter(editor.find('.grade-row').last());
         row.attr('class', row.attr('class').replace(/grade-id-([0-9]*)(\s|$)/ig, ' grade-id- '));
         row.find('.grade span, .gpa').html('&bullet;');
-        row.find('input').val('').attr('placeholder', '&bullet;');
+        row.find('input').val('');
         row.find('.assignment input').attr('placeholder', 'Assignment')
     }
 
@@ -464,11 +462,15 @@ $(document).ready(function () {
                 gpa += '.00';
             if(gpa.length == 3)
                 gpa += '0';
+            if(dialog.find('tbody tr').eq(i).length == 0) {
+                dialog.find('tbody tr').clone().insertAfter(dialog.find('tbody tr').last());
+            }
             dialog.find('tbody tr').eq(i).find('input').eq(0).val(preset[i][0]);
             dialog.find('tbody tr').eq(i).find('input').eq(1).val(preset[i][1]);
             dialog.find('tbody tr').eq(i).find('input').eq(2).val(preset[i][2]);
             dialog.find('tbody tr').eq(i).find('input').eq(3).val(gpa);
         }
+        dialog.find('tbody tr').eq(i-1).nextAll('tr').remove();
     });
 
     body.on('click', '#calculator a[href="#what-if"]', function () {
@@ -489,7 +491,7 @@ $(document).ready(function () {
                 courseId = (/course-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
             $('<option value="' + courseId + '">' + row.find('.class-name input').val() + '</option>')
                 .appendTo(dialog.find('select.class-name'));
-            firstRow.find('.class-name').html('<span class="' + row.find('.class-name span').attr('class') + '"></span>' + row.find('.class-name input').val());
+            firstRow.find('.class-name').html('<span class="' + row.find('.class-name i').attr('class') + '"></span>' + row.find('.class-name input').val());
             firstRow.find('.hours').text(row.find('.hours input').val());
             if(i < classes.length - 1)
                 firstRow = firstRow.clone().insertAfter(dialog.find('.class-row').last());
@@ -514,6 +516,14 @@ $(document).ready(function () {
             $('<option value="' + $(this).find('td:nth-child(4) input').val() + '">' +
             $(this).find('td:nth-child(1) input').val() +
             '</option>').appendTo(dialog.find('#term-gpa select'));
+        });
+
+        classes.each(function (j) {
+            var val = $(this).find('.gpa').html();
+            if(isNaN(parseFloat(val))) {
+                val = '';
+            }
+            dialog.find('.class-row').eq(j).find('select').val(val);
         });
 
         // process the current results

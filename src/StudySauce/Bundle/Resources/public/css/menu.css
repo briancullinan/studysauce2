@@ -492,7 +492,9 @@
 .pane-content a[href*="/tips"]:not(.more),
 .pane-content a[href*="/premium"]:not(.more),
 .pane-content a[href*="/account"]:not(.more),
-.pane-content a[href*="/schedule"]:not(.more)
+.pane-content a[href*="/schedule"]:not(.more),
+.pane-content a[href*="#grade-scale"]:not(.more),
+.pane-content a[href*="#manage-terms"]:not(.more)
 {
     padding-left:30px;
     position:relative;
@@ -511,7 +513,8 @@
 .pane-content a[href*="/premium"]:not(.more):before,
 .pane-content a[href*="/account"]:not(.more):before,
 .pane-content a[href*="/schedule"]:not(.more):before,
-.pane-content a[href="#grade-scale"]:not(.more):before
+.pane-content a[href*="#grade-scale"]:not(.more):before,
+.pane-content a[href*="#manage-terms"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
     content: " ";
@@ -682,11 +685,16 @@
     background-position: left -1252px;
 }
 
+.pane-content a[href*="#manage-terms"]:not(.more):before,
 .pane-content a[href*="/schedule"]:not(.more):before
 {
     background-position: left -1302px;
 }
 
+.pane-content a[href*="#manage-terms"]:not(.more):hover:before,
+.pane-content a[href*="#manage-terms"]:not(.more):focus:before,
+.pane-content a[href*="#manage-terms"]:not(.more):active:before,
+.pane-content a[href*="#manage-terms"].active:not(.more):before,
 .pane-content a[href*="/schedule"]:not(.more):hover:before,
 .pane-content a[href*="/schedule"]:not(.more):focus:before,
 .pane-content a[href*="/schedule"]:not(.more):active:before,

@@ -91,7 +91,8 @@ class DeadlinesController extends Controller
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
-            $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
+            $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')) &&
+            $d->getDueDate() <= date_add(new \DateTime(), new \DateInterval('P7D')); })->toArray();
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
             $courses = $schedule->getClasses()->toArray();
@@ -159,7 +160,7 @@ class DeadlinesController extends Controller
                 $due->setTime(0, 0, 0);
                 $due->add(new \DateInterval('P' . ($space * $j) . 'D'));
                 $deadline->setDueDate($due);
-                $deadline->setPercent(0);
+                $deadline->setPercent(rand(10, 100));
                 $deadline->setReminder($reminders);
                 $deadlines->add($deadline);
                 $guest->addDeadline($deadline);

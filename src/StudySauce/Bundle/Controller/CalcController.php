@@ -263,11 +263,12 @@ class CalcController extends Controller
             $schedules[] = $schedule;
         }
 
+        $first = true;
         foreach($schedules as $demo)
         {
             /** @var Schedule $demo */
             $courses = $demo->getClasses()->toArray();
-            for($k = 0; $k < max(5, count($courses)); $k++)
+            for($k = 0; $k < max(4, count($courses)); $k++)
             {
                 /** @var Course $course */
                 if(isset($courses[$k]))
@@ -278,23 +279,29 @@ class CalcController extends Controller
                     continue;
                 }
 
-                $typeCount = rand(1, 4);
+                $total = $first ? rand(50, 80) : 100;
+                $typeCount = rand(1, 2);
                 $grades = [];
                 $assignmentCount = [];
+                $totalPercent = 0;
                 for ($i = 0; $i < $typeCount; $i++) {
-                    $gradeCount = rand(1, 4);
+                    $gradeCount = rand(1, 3);
                     $assignment = self::getRandomAssignment();
                     $assignmentCount[$assignment] = isset($assignmentCount[$assignment])
                         ? $assignmentCount[$assignment]
                         : 0;
                     for ($j = 0; $j < $gradeCount; $j++) {
                         $assignmentCount[$assignment]++;
+                        $percent = round($total / $typeCount / $gradeCount);
                         $grades[] = [
                             'remove' => false,
-                            'score' => rand(50, 100),
-                            'percent' => 100 / $typeCount / $gradeCount,
+                            'score' => rand(75, 100),
+                            'percent' => $i == $typeCount - 1 && $j == $gradeCount - 1
+                                ? ($total - $totalPercent)
+                                : $percent,
                             'assignment' => $assignment . ' ' . $assignmentCount[$assignment]
                         ];
+                        $totalPercent += $percent;
                     }
                 }
                 self::saveCourseGrades(
@@ -308,6 +315,7 @@ class CalcController extends Controller
                     $orm
                 );
             }
+            $first = false;
         }
 
         // TODO: add past schedules

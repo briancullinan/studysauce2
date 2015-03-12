@@ -19,26 +19,13 @@ $parent = $user->getParentInvites()->filter(
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/account.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/account.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/account.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url): ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/account.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -47,7 +34,6 @@ $view['slots']->start('body'); ?>
     <div class="panel-pane" id="account">
         <div class="pane-content">
             <h2>Account settings</h2>
-
             <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
                 <div class="type">
                     <label><span>Account type</span><?php if (!$user->hasRole('ROLE_PAID')) {
