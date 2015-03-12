@@ -54,6 +54,8 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        set_time_limit(0);
+
         $container = $this->getContainer();
         /** @var $orm EntityManager */
         $orm = $container->get('doctrine')->getManager();
@@ -133,14 +135,13 @@ EOF
                             $u->hasRole('ROLE_ADMIN') || $u->hasRole('ROLE_PARTNER') || $u->hasRole('ROLE_PARENT'))
                             continue;
 
-                        $r = md5($u->getId());
                         if($u->getCompleted() < 100) {
-                            $incomplete[$r] = $u;
-                            $deadlines[$r][] = $d;
-                            $reminderRecipients[$r] = $u;
+                            $incomplete[$u->getId()] = $u;
+                            $deadlines[$u->getId()][] = $d;
+                            $reminderRecipients[$u->getId()] = $u;
                         }
                         else {
-                            $complete[$r] = $u;
+                            $complete[$u->getId()] = $u;
                         }
                     }
                 }
@@ -160,6 +161,15 @@ EOF
                 }
 
                 // send adviser updates
+                usort($incomplete, function ($a, $b) {
+                    return strcmp($a->getLast(), $b->getLast());
+                });
+                usort($nosignup, function ($a, $b) {
+                    return strcmp($a->getLast(), $b->getLast());
+                });
+                usort($complete, function ($a, $b) {
+                    return strcmp($a->getLast(), $b->getLast());
+                });
                 $emails->adviserCompletionAction($d->getUser(), $d, $incomplete, $nosignup, $complete);
 
                 $d->markSent();
@@ -178,6 +188,7 @@ EOF
             // due tomorrow
             if ($d->shouldSend()) {
                 $deadlines[$d->getUser()->getId()][] = $d;
+                $reminderRecipients[$d->getUser()->getId()] = $d->getUser();
                 $d->markSent();
                 $orm->merge($d);
                 $orm->flush();
@@ -186,12 +197,7 @@ EOF
 
         // send aggregate emails
         foreach ($deadlines as $i => $all) {
-            /** @var Deadline $d */
-            $d = $all[0];
-            if(is_string($i))
-                $user = $reminderRecipients[$i];
-            else
-                $user = $d->getUser();
+            $user = $reminderRecipients[$i];
             $emails->deadlineReminderAction($user, $all);
         }
 

@@ -46,6 +46,12 @@ $view['slots']->start('body'); ?>
             <button type="submit" value="#reset-password" class="more"><?php print (empty($token) ? 'Reset password' : 'Set password'); ?></button>
         </div>
         </form>
+        <div class="reset-sent-message">
+            <h3>Your password recovery email has been sent.  Please click the link in the email to set a new password.</h3>
+            <div class="highlighted-link">
+                <a href="<?php print $view['router']->generate('_welcome'); ?>" class="more">Go home</a>
+            </div>
+        </div>
     </div>
 </div>
 

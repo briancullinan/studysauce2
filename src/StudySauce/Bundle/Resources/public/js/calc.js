@@ -79,6 +79,18 @@ $(document).ready(function () {
 
     }
 
+    function addDecimalPoints(value)
+    {
+        var roundedScore = (Math.round(value * 100) / 100) + '';
+        if(roundedScore.indexOf('.') == -1) {
+            roundedScore += '.00';
+        }
+        if(roundedScore.indexOf('.') == roundedScore.length - 2) {
+            roundedScore += '0';
+        }
+        return roundedScore;
+    }
+
     function calculateClassGrade()
     {
         var row = $(this),
@@ -110,7 +122,7 @@ $(document).ready(function () {
         if (percent > 0) {
             var classScore = sum / percent,
                 scaled = convertToScale(classScore);
-            row.find('> .score').html(Math.round(classScore * 100) / 100);
+            row.find('> .score').html(addDecimalPoints(classScore));
         }
         // if the grade it only set by the dropdown use that instead, assume 100%
         else if (row.find('> .grade select').val() != '') {
@@ -124,6 +136,12 @@ $(document).ready(function () {
             row.find('> .grade select').val('');
         }
         else {
+            if(percent > 100) {
+                row.addClass('over-percent-error');
+            }
+            else {
+                row.removeClass('over-percent-error');
+            }
             row.find('> .grade select').val(scaled[0]);
             row.find('> .gpa').html(scaled[1]);
             row.find('> .percent').html(percent + '%');
@@ -167,15 +185,16 @@ $(document).ready(function () {
             else {
                 term.removeClass('missing-hours');
                 if(term.index(calc.find('.term-row')) == 0)
-                    calc.find('.projected').html(Math.round(termGPA / hours * 100) / 100);
-                term.find('> .gpa').html((Math.round(termGPA / hours * 100) / 100));
-                if(term.find('> .gpa').html().length == 3) {
-                    term.find('> .gpa').html(term.find('> .gpa').html() + '0');
-                }
-                if(term.find('> .gpa').html().length == 1 && !isNaN(parseInt(term.find('> .gpa').html()))) {
-                    term.find('> .gpa').html(term.find('> .gpa').html() + '.00');
-                }
+                    calc.find('.projected').html(addDecimalPoints(termGPA / hours));
+                term.find('> .gpa').html(addDecimalPoints(termGPA / hours));
                 term.find('> .hours').html(hours);
+            }
+
+            if(term.find('.over-percent-error').length > 0) {
+                term.addClass('over-percent-error');
+            }
+            else {
+                term.removeClass('over-percent-error');
             }
 
             overallGPA += termGPA;
@@ -192,20 +211,7 @@ $(document).ready(function () {
         if(overallHours == 0)
             calc.find('.cumulative').html('&bullet;');
         else
-            calc.find('.cumulative').html(Math.round(overallGPA / overallHours * 100) / 100);
-
-        if(calc.find('.cumulative').html().length == 3) {
-            calc.find('.cumulative').html(calc.find('.cumulative').html() + '0');
-        }
-        if(calc.find('.cumulative').html().length == 1 && !isNaN(parseInt(calc.find('.cumulative').html()))) {
-            calc.find('.cumulative').html(calc.find('.cumulative').html() + '.00');
-        }
-        if(calc.find('.projected').html().length == 3) {
-            calc.find('.projected').html(calc.find('.projected').html() + '0');
-        }
-        if(calc.find('.projected').html().length == 1 && !isNaN(parseInt(calc.find('.projected').html()))) {
-            calc.find('.projected').html(calc.find('.projected').html() + '.00');
-        }
+            calc.find('.cumulative').html(addDecimalPoints(overallGPA / overallHours));
     }
 
     body.on('click', '#calculator a[href="#add-schedule"]', function (evt) {
@@ -457,18 +463,13 @@ $(document).ready(function () {
         $(this).parent().addClass('active');
         dialog.find('tbody input').val('');
         for(var i = 0; i < preset.length; i++) {
-            var gpa = preset[i][3] + '';
-            if(gpa.length == 1)
-                gpa += '.00';
-            if(gpa.length == 3)
-                gpa += '0';
             if(dialog.find('tbody tr').eq(i).length == 0) {
                 dialog.find('tbody tr').clone().insertAfter(dialog.find('tbody tr').last());
             }
             dialog.find('tbody tr').eq(i).find('input').eq(0).val(preset[i][0]);
             dialog.find('tbody tr').eq(i).find('input').eq(1).val(preset[i][1]);
             dialog.find('tbody tr').eq(i).find('input').eq(2).val(preset[i][2]);
-            dialog.find('tbody tr').eq(i).find('input').eq(3).val(gpa);
+            dialog.find('tbody tr').eq(i).find('input').eq(3).val(addDecimalPoints(preset[i][3]));
         }
         dialog.find('tbody tr').eq(i-1).nextAll('tr').remove();
     });
@@ -533,7 +534,7 @@ $(document).ready(function () {
             var hours = parseInt($(this).find('> .hours').html());
             if(!isNaN(hours)) {
                 totalHours += hours;
-                pastGPA += parseFloat($(this).find('> .gpa span').text()) * hours;
+                pastGPA += parseFloat($(this).find('> .gpa').text()) * hours;
             }
         });
         if(!isNaN(pastGPA / totalHours))
@@ -628,11 +629,7 @@ $(document).ready(function () {
         }
         else {
             $('#what-if').removeClass('term-incomplete');
-            result.text(Math.round(termGPA * 100) / 100);
-            if(result.text().length == 1)
-                result.text(result.text() + '.00');
-            else if(result.text().length == 3)
-                result.text(result.text() + '0');
+            result.text(addDecimalPoints(termGPA));
         }
     });
 
@@ -660,7 +657,7 @@ $(document).ready(function () {
             var hours = parseInt($(this).find('> .hours').html());
             if(!isNaN(hours)) {
                 totalHours += hours;
-                pastGPA += parseFloat($(this).find('> .gpa span').text()) * hours;
+                pastGPA += parseFloat($(this).find('> .gpa').text()) * hours;
             }
         });
         totalHours += currentHours;
@@ -678,11 +675,7 @@ $(document).ready(function () {
                 result.text('< 0.00');
             }
             else {
-                result.text(Math.round(termGPA * 100) / 100);
-                if(result.text().length == 1)
-                    result.text(result.text() + '.00');
-                else if(result.text().length == 3)
-                    result.text(result.text() + '0');
+                result.text(addDecimalPoints(termGPA));
             }
         }
     });

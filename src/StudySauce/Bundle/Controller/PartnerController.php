@@ -13,9 +13,12 @@ use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class PartnerController
@@ -113,6 +116,43 @@ class PartnerController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('partner_update')
             : null;
         return new JsonResponse(['csrf_token' => $csrfToken]);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public static function getDemoPartner($container)
+    {
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
+            $guest = $user;
+        }
+
+        $partner = new PartnerInvite();
+        $partner->setUser($guest);
+        $partner->setCode(md5(microtime()));
+        $partner->setEmail('marketing@studysauce.com');
+        $user->addPartnerInvite($partner);
+        $partner->setFirst('Tom');
+        $partner->setLast('Sage');
+        $partner->setPermissions([
+            'goals',
+            'metrics',
+            'deadlines',
+            'uploads',
+            'plan',
+            'profile'
+        ]);
+        $orm->persist($partner);
+        $orm->flush();
+
+
     }
 
     /**

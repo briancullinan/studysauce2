@@ -155,10 +155,10 @@ class DeadlinesController extends Controller
                 $deadline->setCourse($course);
                 $deadline->setAssignment($assignment . ' ' . ($j + 1));
                 // evenly space $repeat over the next 4 weeks
-                $space = floor(7.0 * 4.0 / $repeat);
+                $space = floor(7.0 * 8.0 / $repeat);
                 $due = new \DateTime();
                 $due->setTime(0, 0, 0);
-                $due->add(new \DateInterval('P' . ($space * $j) . 'D'));
+                $due->add(new \DateInterval('P' . ($space * $j + rand(1, 7)) . 'D'));
                 $deadline->setDueDate($due);
                 $deadline->setPercent(rand(10, 100));
                 $deadline->setReminder($reminders);

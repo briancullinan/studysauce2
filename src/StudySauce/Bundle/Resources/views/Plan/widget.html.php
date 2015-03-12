@@ -30,19 +30,20 @@ use StudySauce\Bundle\Entity\Event;
                 print ' event-id-' . $event->getId();
                 print ($event->getCompleted() ? ' done' : ''); ?>">
                     <div class="class-name">
-                        <span class="class<?php print $event->getCourse()->getIndex(); ?>">&nbsp;</span> <?php print $event->getName(); ?>
+                        <span class="class<?php print (!empty($event->getCourse())
+                            ? $event->getCourse()->getIndex()
+                            : ''); ?>">&nbsp;</span> <?php print $event->getName(); ?>
                     </div>
                     <div class="date">
-                        <div class="read-only"><?php print $event->getStart()->format(
-                                    'g:i'
-                                ) . '&nbsp;' . $event->getStart()->format('A'); ?> -
-                            <?php print $event->getEnd()->format('g:i') . '&nbsp;' . $event->getEnd()->format(
-                                    'A'
-                                ); ?></div>
+                        <div class="read-only"><?php print $event->getStart()->format('g:i') .
+                                '&nbsp;' . $event->getStart()->format('A'); ?> -
+                            <?php print $event->getEnd()->format('g:i') .
+                                '&nbsp;' . $event->getEnd()->format('A'); ?></div>
                     </div>
                     <div class="completed">
-                        <label class="checkbox"><input type="checkbox" value="true" <?php print ($event->getCompleted(
-                            ) ? 'checked="checked"' : ''); ?>><i></i></label>
+                        <label class="checkbox"><input type="checkbox" value="true" <?php print ($event->getCompleted()
+                                ? 'checked="checked"'
+                                : ''); ?>><i></i></label>
                     </div>
                     </div><?php
                 }

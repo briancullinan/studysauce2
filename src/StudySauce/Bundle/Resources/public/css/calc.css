@@ -248,11 +248,25 @@
     width: 20%;
 }
 
+#calculator .term-row > *
+{
+    width: 33.33%;
+}
+
 #calculator .class-row > *,
-#calculator .term-row > *,
 #calculator .grade-row > *
 {
     width: 15%;
+}
+
+#calculator .term-row > .gpa:after
+{
+    content: " GPA";
+}
+
+#calculator .term-row > .hours:after
+{
+    content: " credit hours";
 }
 
 #calculator .grade-row .read-only
@@ -313,12 +327,6 @@
 {
     width:35%;
     padding-left:65px;
-    text-align: left;
-}
-
-#calculator .term-row .term-name
-{
-    width: 55%;
     text-align: left;
 }
 
@@ -533,11 +541,13 @@
     text-align: left;
 }
 
+#calculator .over-percent,
 #calculator .empty-hours
 {
     float:left;
 }
 
+#calculator .over-percent,
 #calculator .empty-hours,
 #what-if .calc-completed,
 #what-if .calc-unk
@@ -549,6 +559,7 @@
     display:none;
 }
 
+#calculator .over-percent-error .over-percent,
 #calculator .missing-hours .empty-hours,
 #what-if.class-completed .calc-completed,
 #what-if.grade-incomplete .calc-unk,
@@ -567,6 +578,11 @@
         max-width: none;
     }
 
+    #calculator .class-row .class-name span
+    {
+        visibility: hidden;
+    }
+
     #calculator .grade-row .percent input,
     #calculator .grade-row .score input,
     #calculator .class-row .hours input,
@@ -576,9 +592,27 @@
         text-align: left;
     }
 
+    #calculator .class-row .gpa
+    {
+        padding-right:2px;
+    }
+
     #calculator .grade-row .read-only
     {
         visibility: visible;
+    }
+
+    #calculator .grade-row
+    {
+        padding-top:10px;
+        padding-bottom:10px;
+        border-top:1px solid #CCC;
+        border-bottom:1px solid #CCC;
+    }
+
+    #calculator .class-row.selected + .grade-editor
+    {
+        padding-top:20px;
     }
 
     #calculator .class-row.selected + .grade-editor .highlighted-link
@@ -620,39 +654,14 @@
         vertical-align: middle;
     }
 
-    #calculator .term-row .term-name
-    {
-        width: 100%;
-        padding-right:15px;
-    }
-
-    #calculator .term-row > .gpa:before
-    {
-        content: "GPA";
-        display:inline-block;
-        width:100%;
-        margin-right:-52px;
-    }
-
-    #calculator .term-row > .hours:before
-    {
-        content: "Hours";
-        display:inline-block;
-        width:100%;
-        margin-right:-52px;
-    }
-
-    #calculator .term-row > .gpa,
-    #calculator .term-row > .hours
-    {
-        width:50%;
-        display:inline-block;
-        text-align: left;
-    }
-
     #calculator .term-row > *
     {
         white-space: normal;
+    }
+
+    #calculator .term-row > .hours:after
+    {
+        content: " hours";
     }
 
     #calculator .term-row header

@@ -112,7 +112,7 @@ jQuery(document).ready(function() {
             success: function () {
                 account.find('.squiggle').stop().remove();
                 if(account.find('input[name="token"]').val() == '') {
-                    account.find('form').replaceWith($('<h3>Your password recovery email has been sent.</h3>'))
+                    account.addClass('reset-sent');
                 }
             },
             error: function () {

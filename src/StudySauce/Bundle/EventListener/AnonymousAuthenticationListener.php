@@ -15,10 +15,12 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Security\LoginManager;
 use StudySauce\Bundle\Controller\CalcController;
+use StudySauce\Bundle\Controller\CourseController;
 use StudySauce\Bundle\Controller\DeadlinesController;
 use StudySauce\Bundle\Controller\GoalsController;
 use StudySauce\Bundle\Controller\HomeController;
 use StudySauce\Bundle\Controller\MetricsController;
+use StudySauce\Bundle\Controller\PartnerController;
 use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -141,6 +143,8 @@ class AnonymousAuthenticationListener implements ListenerInterface
                 MetricsController::getDemoCheckins($this->container);
                 GoalsController::getDemoGoals($this->container);
                 CalcController::getDemoCalculations($this->container);
+                CourseController::getDemoCourses($this->container);
+                PartnerController::getDemoPartner($this->container);
             }
             list($route, $options) = HomeController::getUserRedirect($user);
             $response = new RedirectResponse($router->generate($route, $options));

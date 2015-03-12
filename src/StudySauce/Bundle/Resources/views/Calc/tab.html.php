@@ -62,8 +62,8 @@ $view['slots']->start('body'); ?>
                             }
                         }
                         ?></select></label></div>
-                    <div class="gpa"><label>GPA</label><?php print (empty($s->getGPA()) ? '&bullet;' : $s->getGPA()); ?></div>
-                    <div class="hours"><label>Hours</label><?php print (empty($s->getCreditHours()) ? '&bullet;' : $s->getCreditHours()); ?></div>
+                    <div class="gpa"><?php print (empty($s->getGPA()) ? '&bullet;' : $s->getGPA()); ?></div>
+                    <div class="hours"><?php print (empty($s->getCreditHours()) ? '&bullet;' : $s->getCreditHours()); ?></div>
                     <div class="term-editor">
                         <label></label>
                         <header>
@@ -130,6 +130,7 @@ $view['slots']->start('body'); ?>
                         <div class="highlighted-link form-actions invalid">
                             <div class="clearfix">
                                 <div class="empty-hours">* Enter credit hours to calculate class GPA</div>
+                                <div class="over-percent">* Enter assignments to total 100%</div>
                             </div>
                             <a href="#add-class" class="big-add">Add <span>+</span> class</a>
                             <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>

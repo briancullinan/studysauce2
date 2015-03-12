@@ -96,8 +96,8 @@ $(document).ready(function () {
         }
 
         // update deadlines list
-        deadlines.find('.deadline-row,.head').remove();
-        response.filter('#deadlines').find('header ~ .deadline-row, header ~ .head').insertAfter(deadlines.find('header'));
+        deadlines.find('.deadline-row,header,.head').remove();
+        response.filter('#deadlines').find('.deadline-row,header,.head').insertAfter(deadlines.find('.highlighted-link'));
         deadlines.find('.highlighted-link').last().detach().insertBefore(deadlines.find('header'));
 
         // update home tab

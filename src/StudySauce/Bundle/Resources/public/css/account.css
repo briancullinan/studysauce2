@@ -188,6 +188,17 @@ a[href="#sign-in-with-email"]
     float:left;
 }
 
+#reset.reset-sent form,
+#reset .reset-sent-message
+{
+    display:none;
+}
+
+#reset.reset-sent .reset-sent-message
+{
+    display:block;
+}
+
 @media all and (max-width: 700px)
 {
     #register .first-name, #register .last-name
