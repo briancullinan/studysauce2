@@ -44,17 +44,8 @@ class ValidationController extends Controller
     public static $dispatcher;
     private static $config = [];
 
-    /**
-     * @return Response
-     */
-    public function indexAction()
+    private static function setupThis()
     {
-
-        /** @var $user User */
-        $user = $this->getUser();
-        if(!$user->hasRole('ROLE_ADMIN')) {
-            throw new AccessDeniedHttpException();
-        }
 
         Configuration::config(__DIR__ . '/../');
 
@@ -69,7 +60,50 @@ class ValidationController extends Controller
             self::$config['tests'][$suite] = $testLoader->getTests();
         }
 
+    }
+
+    /**
+     * @return Response
+     */
+    public function indexAction()
+    {
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if(!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        self::setupThis();
+
         return $this->render('AdminBundle:Validation:tab.html.php', self::$config);
+    }
+
+    /**
+     * @param $allTests
+     * @param $tests
+     * @param int $level
+     * @return array
+     */
+    private static function getTestDependencies($allTests, $tests, $level = 5)
+    {
+        $dependencies = [];
+        if($level <= 0)
+            return $dependencies;
+        foreach($allTests as $i => $t) {
+            /** @var Cest $t */
+            if (in_array($t->getName(), $tests)) {
+                // automatically include dependencies
+                $depends = array_map(function ($d) {
+                    $test = explode('::', $d);
+                    return count($test) == 1 ? $test[0] : $test[1];
+                }, PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName()));
+                $dependencies = array_merge(
+                    array_merge($dependencies, $depends),
+                    self::getTestDependencies($allTests, self::getIncludedTests($t), $level-1));
+            }
+        }
+        return $dependencies;
     }
 
     /**
@@ -84,31 +118,18 @@ class ValidationController extends Controller
         }
 
         require_once(__DIR__ . '/../../../../vendor/codeception/codeception/autoload.php');
-        Configuration::config(__DIR__ . '/../');
 
-        $suites = Configuration::suites();
+        self::setupThis();
+
         $steps = [];
-        if(in_array($suite = $request->get('suite'), $suites)) {
-            $settings = Configuration::suiteSettings($suite, Configuration::config());
-            $testLoader = new TestLoader($settings['path']);
-            $testLoader->loadTests();
-            $allTests = $testLoader->getTests();
+        if(!empty($settings = self::$config[$suite = $request->get('suite')])) {
             // get the path of the test
             $options = ['verbosity' => 3, 'colors' => false];
             if(!empty($request->get('test'))) {
                 $tests = explode('|', $request->get('test'));
-                foreach($allTests as $i => $t) {
-                    /** @var Cest $t */
-                    if (in_array($t->getName(), $tests)) {
-                        // automatically include dependencies
-                        $depends = array_map(function ($d) {
-                                $test = explode('::', $d);
-                                return count($test) == 1 ? $test[0] : $test[1];
-                            }, PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName()));
-                        $options['filter'] = $request->get('test') . (count($depends) ? ('|' . implode('|', $depends)) : '');
-                        break;
-                    }
-                }
+                $depends = self::getTestDependencies(self::$config['tests'][$suite], $tests);
+                $tests = array_merge($tests, $depends);
+                $options['filter'] = implode('|', array_unique($tests));
                 if(!isset($options['filter']))
                     return new JsonResponse(true);
             }
@@ -231,23 +252,7 @@ class ValidationController extends Controller
             $symfony->kernel = $this->container->get( 'kernel' );
             $suiteManager->getSuite()->setBackupGlobals(false);
             $suiteManager->getSuite()->setBackupStaticAttributes(false);
-            if(isset($t) && isset($depends)) {
-                // load tests for dependencies too
-                foreach($depends as $d) {
-                    foreach($allTests as $subT)
-                    {
-                        /** @var Cest $subT */
-                        if($subT->getName() == $d && $subT->getFileName() != $t->getFileName()) {
-                            $suiteManager->loadTests($subT->getFileName());
-                            break;
-                        }
-                    }
-                }
-                $suiteManager->loadTests($t->getFileName());
-            }
-            else {
-                $suiteManager->loadTests(isset($t) ? $t->getFileName() : null);
-            }
+            $suiteManager->loadTests(null);
             $suiteManager->run($runner, $result, $options);
         }
         if(isset($result) && isset($runner)) {

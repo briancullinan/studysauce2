@@ -41,17 +41,18 @@ class DeadlinesController extends Controller
         else
             $courses = [];
 
+        // show new deadline and hide headings if all the deadlines are in the past
+        $isEmpty = false;
+        if(!$deadlines->exists(function ($_, Deadline $d) { return $d->getDueDate() >= date_sub(new \Datetime('today'), new \DateInterval('P1D')); })) {
+            $isEmpty = true;
+        }
+
         $isDemo = false;
         if (empty($courses)) {
             $demo = ScheduleController::getDemoSchedule($this->container);
             $courses = $demo->getClasses()->toArray();
             $deadlines = $this->getDemoDeadlines($this->container);
             $isDemo = true;
-        }
-        // show new deadline and hide headings if all the deadlines are in the past
-        $isEmpty = false;
-        if(!$deadlines->filter(function (Deadline $d) { return $d->getDueDate() >= date_sub(new \Datetime('today'), new \DateInterval('P1D')); })->count()) {
-            $isEmpty = true;
         }
 
         $csrfToken = $this->has('form.csrf_provider')

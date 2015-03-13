@@ -395,7 +395,7 @@ class APageLoaderCest
         $I->fillField('#partner .first-name input', 'Test');
         $I->fillField('#partner .last-name input', 'Partner');
         $I->fillField('#partner .email input', 'TestPartner@mailinator.com');
-        $I->click('[value="save-partner"]');
+        $I->click('[value="#partner-save"]');
         $I->wait(15);
     }
 

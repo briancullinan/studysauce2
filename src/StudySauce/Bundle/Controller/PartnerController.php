@@ -41,8 +41,8 @@ class PartnerController extends Controller
 
         return $this->render('StudySauceBundle:Partner:tab.html.php', [
                 'partner' => $partner,
-                'isAdviser' => $partner instanceof User && ($partner->hasRole('ROLE_ADVISER') ||
-                    $partner->hasRole('ROLE_MASTER_ADVISER')),
+                'isReadOnly' => $user->hasRole('ROLE_DEMO') || $partner instanceof User &&
+                    ($partner->hasRole('ROLE_ADVISER') || $partner->hasRole('ROLE_MASTER_ADVISER')),
                 'csrf_token' => $csrfToken
             ]);
     }
@@ -207,7 +207,8 @@ class PartnerController extends Controller
             /** @var Visit $v */
             $groups[$v->getCreated()->format('Y-m-d')][$v->getUser()->getId()] = $v;
         }
-        $sessions = call_user_func_array('array_merge', $groups);
+        if(count($groups))
+            $sessions = call_user_func_array('array_merge', $groups);
 
         $showPartnerIntro = false;
         if(count($users) && empty($user->getProperty('seen_partner_intro'))) {

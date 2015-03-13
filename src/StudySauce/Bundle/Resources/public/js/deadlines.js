@@ -27,6 +27,8 @@ $(document).ready(function () {
                 that.find('.percent').css('visibility', 'visible');
 
             that.find('.due-date input').datepicker({
+                showOtherMonths: true,
+                selectOtherMonths: true,
                 minDate: 0,
                 autoPopUp:'focus',
                 changeMonth: true,

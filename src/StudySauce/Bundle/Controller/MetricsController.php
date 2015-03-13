@@ -41,8 +41,11 @@ class MetricsController extends Controller
         }
         if(empty($checkins)) {
             $isDemo = true;
+            $demo = ScheduleController::getDemoSchedule($this->container);
+            $courses = array_values($demo->getCourses()->toArray());
             list($checkins, $checkouts) = self::getDemoCheckins($this->container);
         }
+
         list($times, $total) = self::getTimes($checkins, $checkouts, $courses);
 
         /** @var $goal Goal */

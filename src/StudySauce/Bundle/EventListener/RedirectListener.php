@@ -76,7 +76,6 @@ class RedirectListener implements EventSubscriberInterface
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         // provide the better way to display a enhanced error page only in prod environment, if you want
-        // exception object
         $exception = $event->getException();
         try {
             /** @var RegistryInterface $doc */

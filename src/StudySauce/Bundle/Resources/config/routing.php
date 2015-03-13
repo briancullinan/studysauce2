@@ -417,6 +417,7 @@ $collection->add(
 );
 $collection->add('logout', new Route('/logout'));
 $collection->add('demo', new Route('/demo'));
+$collection->add('demoadviser', new Route('/demoadviser'));
 $collection->add(
     'error403',
     new Route(

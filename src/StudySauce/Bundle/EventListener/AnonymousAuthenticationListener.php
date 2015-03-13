@@ -22,6 +22,7 @@ use StudySauce\Bundle\Controller\HomeController;
 use StudySauce\Bundle\Controller\MetricsController;
 use StudySauce\Bundle\Controller\PartnerController;
 use StudySauce\Bundle\Controller\ScheduleController;
+use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -81,8 +82,9 @@ class AnonymousAuthenticationListener implements ListenerInterface
         $request = $event->getRequest();
 
         // only handle anonymous users with no context
-        if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() && $token->getUser() != 'anon.' &&
-            $request->get('_route') != 'demo') {
+        if (null !== ($token = $this->context->getToken()) && $token->isAuthenticated() &&
+            $token->getUser() != 'anon.' && $request->get('_route') != 'demo' &&
+            $request->get('_route') != 'demoadviser') {
             // reset Guest User for oauth connections
             $controller = $request->get('_controller');
             if(($controller == 'HWI\Bundle\OAuthBundle\Controller\ConnectController::connectServiceAction' ||
@@ -96,7 +98,9 @@ class AnonymousAuthenticationListener implements ListenerInterface
             return;
         }
 
-        $username = 'Guest' . ($request->get('_route') == 'demo' ? ('-' . substr(md5(microtime()), -5)) : '');
+        $username = 'Guest' . ($request->get('_route') == 'demo' || $request->get('_route') == 'demoadviser'
+                ? ('-' . substr(md5(microtime()), -5))
+                : '');
         /** @var UserManager $userManager */
         $userManager = $this->container->get('fos_user.user_manager');
         /** @var EntityManager $orm */
@@ -106,7 +110,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
         /** @var EncoderFactory $encoder */
         $encoder = $this->container->get('security.encoder_factory');
         $user = $userManager->findUserByUsername($username);
-        if($user == null || $request->get('_route') == 'demo')
+        if($user == null || $request->get('_route') == 'demo' || $request->get('_route') == 'demoadviser')
         {
             // generate a new guest user in the database
             $user = $userManager->createUser();
@@ -115,7 +119,12 @@ class AnonymousAuthenticationListener implements ListenerInterface
             $user->setPassword($password);
             $user->setEmail($username . '_studysauce.com@mailinator.com');
             $userManager->updateCanonicalFields($user);
-            if($request->get('_route') == 'demo') {
+            if($request->get('_route') == 'demoadviser') {
+                $user->addRole('ROLE_DEMO');
+                $user->addRole('ROLE_PAID');
+                $user->addRole('ROLE_ADVISER');
+            }
+            elseif($request->get('_route') == 'demo') {
                 $user->addRole('ROLE_DEMO');
                 $user->addRole('ROLE_PAID');
             }
@@ -135,9 +144,33 @@ class AnonymousAuthenticationListener implements ListenerInterface
             $this->logger->info('Populated SecurityContext with an anonymous Token');
         }
 
-        if($request->get('_route') == 'demo')
+        if($request->get('_route') == 'demo' || $request->get('_route') == 'demoadviser')
         {
-            if($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
+            if($user->hasRole('ROLE_DEMO') && $user->hasRole('ROLE_ADVISER')) {
+                // reassign some random demo accounts to this new adviser account
+                $demos = $orm->getRepository('StudySauceBundle:User')->createQueryBuilder('u')
+                    ->distinct(true)
+                    ->select('u')
+                    ->where('u.roles LIKE \'%DEMO%\' AND u.roles NOT LIKE \'%ADVISER%\'')
+                    ->leftJoin('u.partnerInvites', 'pi')
+                    ->andWhere('pi.email IS NOT NULL')
+                    //->andWhere('pi.email LIKE \'marketing@studysauce.com\'')
+                    ->getQuery()
+                    ->getResult();
+                $randoms = array_rand($demos, min(5, count($demos)));
+                foreach($randoms as $i) {
+                    /** @var User $demo */
+                    $demo = $demos[$i];
+                    /** @var PartnerInvite $pi */
+                    $pi = $demo->getPartnerInvites()->first();
+                    $pi->setPartner($user);
+                    $pi->setEmail($user->getEmail());
+                    $user->addInvitedPartner($pi);
+                    $orm->merge($pi);
+                }
+                $orm->flush();
+            }
+            elseif($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
                 ScheduleController::getDemoSchedule($this->container);
                 DeadlinesController::getDemoDeadlines($this->container);
                 MetricsController::getDemoCheckins($this->container);

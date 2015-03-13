@@ -62,7 +62,7 @@ $view['slots']->start('body'); ?>
                     <input type="hidden" name="partner-plupload">
                 </div>
 
-                <div id="partner-invite" class="<?php print ($isAdviser ? 'read-only' : 'edit'); ?>">
+                <div id="partner-invite" class="<?php print ($isReadOnly ? 'read-only' : 'edit'); ?>">
                     <div class="first-name">
                         <label class="input">
                             <input type="text" value="<?php print (!empty($partner) ? $partner->getFirst() : ''); ?>"

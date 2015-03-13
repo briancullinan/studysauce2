@@ -152,7 +152,7 @@ class Course3Cest
         $I->wait(25);
         $I->click('#course3_active_reading-step1 .highlighted-link a');
         $I->wait(5);
-        $I->fillField('input[name="quiz-what-reading"]', 'recognizing the important parts');
+        $I->fillField('textarea[name="quiz-what-reading"]', 'recognizing the important parts');
         $I->click('input[name="quiz-highlighting"][value="0"] + i');
         $I->click('input[name="quiz-skimming"][value="1"] + i');
         $I->click('input[name="quiz-self-explanation"][value="1"] + i');

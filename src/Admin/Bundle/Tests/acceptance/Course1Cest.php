@@ -80,12 +80,14 @@ class Course1Cest
         $I->seeInCurrentUrl('/partner');
         $I->test('tryNewPartner');
         // use the menu to get to lesson 7
+        /*
         $I->click('#left-panel a[href="#expand"]');
         $I->click('Level 1');
         $I->click('End of Level 1');
         $I->wait(5);
         $I->seeInCurrentUrl('/course/1/lesson/7/step');
         $I->test('tryCourse1End');
+        */
     }
 
     /**
