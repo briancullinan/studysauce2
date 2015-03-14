@@ -103,28 +103,26 @@ class APageLoaderCest
     public function tryBillMyParents(AcceptanceTester $I)
     {
         $I->wantTo('bill my parents');
-        $I->seeAmOnUrl('/premium');
+        $I->seeAmOnUrl('/torchandlaurel');
         $I->wait(5);
-        $I->seeLink('Bill my parents');
-        $I->click('Bill my parents');
+        $I->seeLink('Ask your parents');
+        $I->click('Ask your parents');
         $I->fillField('#bill-parents .first-name input', 'Test');
         $I->fillField('#bill-parents .last-name input', 'Parent');
         $I->fillField('#bill-parents .email input', 'TestParent@mailinator.com');
         $I->fillField('#bill-parents .your-first input', 'Test');
         $I->fillField('#bill-parents .your-last input', 'Student');
         $I->fillField('#bill-parents .your-email input', 'TestStudent@mailinator.com');
-        $I->click('#bill-parents a[href="#submit-contact"]');
+        $I->click('#bill-parents [value="#submit-contact"]');
         $I->wait(10);
-        $I->amOnUrl('http://mailinator.com');
-        $I->fillField('.input-append input', 'TestParent');
-        $I->click('.input-append btn');
-        $I->waitForText('about a minute ago', 60*5);
-        $I->seeLink('test has asked for your help with school');
-        $I->click('.message a');
-        $I->executeInSelenium(function (WebDriver $driver) {
-                $driver->switchTo()->defaultContent();
-                $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
-            });
+        $I->amOnUrl('http://gmail.com');
+        $I->fillField('input[name="Email"]', 'marketing@studysauce.com');
+        $I->fillField('input[name="Passwd"]', '2StudyBetter!');
+        $I->click('input[name="signIn"]');
+        $I->wait(5);
+        // TODO: use orm to solve this easier?
+        $I->moveMouseOver('div[act="20"]');
+        $I->waitForElement('tr:first-child *:contains(Test has asked for your help with school)', 60 * 6);
         $I->seeLink('Go to Study Sauce');
         $I->click('Go to Study Sauce');
         $I->wait(5);
@@ -159,7 +157,7 @@ class APageLoaderCest
         $I->fillField('#student-invite .your-first input', 'test');
         $I->fillField('#student-invite .your-last input', 'parent');
         $I->fillField('#student-invite .your-email input', 'testparent@mailinator.com');
-        $I->click('#student-invite a[href="#submit-contact"]');
+        $I->click('#student-invite [value="#submit-contact"]');
         $I->wait(10);
         // previous invite will autofill checkout page otherwise it will fail
         $I->test('tryGuestCheckout');

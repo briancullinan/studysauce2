@@ -26,7 +26,7 @@ Contact us
     <div class="message">
         <label class="input"><span>Message</span><textarea placeholder="" cols="60" rows="2"></textarea></label>
     </div>
-    <div class="highlighted-link">
+    <div class="highlighted-link invalid">
         <button type="submit" value="#submit-contact" class="more">Send</button>
     </div>
 </form>

@@ -132,7 +132,8 @@ EOF
                         $addresses[] = $u->getEmail();
 
                         if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER') ||
-                            $u->hasRole('ROLE_ADMIN') || $u->hasRole('ROLE_PARTNER') || $u->hasRole('ROLE_PARENT'))
+                            $u->hasRole('ROLE_DEMO') || $u->hasRole('ROLE_ADMIN') ||
+                            $u->hasRole('ROLE_PARTNER') || $u->hasRole('ROLE_PARENT'))
                             continue;
 
                         if($u->getCompleted() < 100) {
@@ -183,7 +184,8 @@ EOF
             /** @var Deadline $d */
             // don't send advisers their own reminders, only send them to students above
             if($d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER') ||
-                $d->getUser()->hasRole('ROLE_DEMO') || $d->getUser()->hasRole('ROLE_GUEST'))
+                $d->getUser()->hasRole('ROLE_DEMO') || $d->getUser()->hasRole('ROLE_ADMIN') ||
+                $d->getUser()->hasRole('ROLE_GUEST'))
                 continue;
             // due tomorrow
             if ($d->shouldSend()) {

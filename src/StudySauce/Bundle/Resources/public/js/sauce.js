@@ -134,7 +134,7 @@ function ssMergeStyles(content)
         //Wait for style to be loaded
         var wait = setInterval(function(){
             //Check for the style to be applied to the body
-            if($('.css-loaded.' + pane.attr('id')).css('content') === 'loading-' + pane.attr('id')) {
+            if($('.css-loaded.' + pane.attr('id')).css('content').indexOf('loading-' + pane.attr('id')) > -1) {
                 //CSS ready
                 window.sincluding.splice(window.sincluding.indexOf('loading-' + pane.attr('id')), 1);
             }

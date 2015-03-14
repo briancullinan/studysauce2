@@ -12,6 +12,7 @@ use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
+use StudySauce\Bundle\EventListener\InviteListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -141,6 +142,7 @@ class PartnerController extends Controller
         $user->addPartnerInvite($partner);
         $partner->setFirst('Tom');
         $partner->setLast('Sage');
+        $partner->setActivated(true);
         $partner->setPermissions([
             'goals',
             'metrics',
@@ -219,6 +221,16 @@ class PartnerController extends Controller
             $userManager->updateUser($user);
         }
 
+        $uniqueUsers = array_unique(array_map(function (Visit $v) {return $v->getUser();}, $sessions));
+        $diffUsers = array_diff($users, $uniqueUsers);
+        foreach($diffUsers as $u) {
+            /** @var User $u */
+            $v = new Visit();
+            $v->setUser($u);
+            $v->setCreated($u->getCreated());
+            $sessions[] = $v;
+        }
+
         return $this->render('StudySauceBundle:Partner:userlist.html.php', [
             'sessions' => $sessions,
             'users' => $users,
@@ -255,6 +267,7 @@ class PartnerController extends Controller
         $emails->setContainer($this->container);
         foreach($users as $i => $u)
         {
+            unset($invite);
             // check if invite has already been sent
             foreach($existing as $j => $gi)
             {
@@ -264,6 +277,13 @@ class PartnerController extends Controller
                     break;
                 }
             }
+
+            // check if the user already exists
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            /** @var User $invitee */
+            $invitee = $userManager->findUserByEmail($u['email']);
+
             // save the invite
             if(!isset($invite) && !empty($group)) {
                 $invite = new GroupInvite();
@@ -276,7 +296,20 @@ class PartnerController extends Controller
                 $user->addGroupInvite($invite);
                 $orm->persist($invite);
                 $orm->flush();
-                $emails->groupInviteAction($user, $invite);
+                if(empty($invitee)) {
+                    $emails->groupInviteAction($user, $invite);
+                }
+            }
+
+            if(!empty($invitee)) {
+                $invite->setStudent($invitee);
+                $invite->setActivated(true);
+                $invitee->addInvitedGroup($invite);
+                if(!$invitee->hasGroup($group->getName()))
+                    $invitee->addGroup($group);
+                $userManager->updateUser($invitee);
+                $orm->merge($invite);
+                $orm->flush();
             }
         }
 

@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Controller\AccountController;
 use StudySauce\Bundle\Controller\BuyController;
-use StudySauce\Bundle\Controller\EmailsController;
+use StudySauce\Bundle\Controller\EmailsController as StudySauceEmails;
 use StudySauce\Bundle\Entity\Coupon;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Event;
@@ -674,8 +674,7 @@ class AdminController extends Controller
 
         if(!empty($name = $request->get('groupName')))
             $g->setName($name);
-        if(!empty($description = $request->get('description')))
-            $g->setDescription($description);
+        $g->setDescription(!empty($request->get('description')) ? $request->get('description') : '');
 
         // add new roles
         $roles = $g->getRoles();
@@ -748,7 +747,7 @@ class AdminController extends Controller
                 $u->setConfirmationToken($tokenGenerator->generateToken());
             }
 
-            $emails = new EmailsController();
+            $emails = new StudySauceEmails();
             $emails->setContainer($this->container);
             $emails->resetPasswordAction($u);
             $u->setPasswordRequestedAt(new \DateTime());

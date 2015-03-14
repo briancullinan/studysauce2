@@ -14,15 +14,15 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '#calculator .class-row > .read-only.hours', function () {
+    body.on('click', '#calculator .class-row > .hours', function () {
         $(this).removeClass('read-only');
         $(this).find('input').focus();
-        $(this).find('[value="#save-grades"]').css('visibility', 'visible');
+        $(this).parents('.class-row').next().find('[value="#save-grades"]').css('visibility', 'visible');
     });
 
     body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours):not(.grade):not(.class-name),' +
-                     '#calculator .class-row > *.hours.read-only,' +
-                     '#calculator .class-row > *.grade.read-only,' +
+                     '#calculator .class-row:not(.selected) > .hours.read-only,' +
+                     '#calculator .class-row > .grade.read-only,' +
                      '#calculator .term-row:not(.schedule-id-) .class-row > *.class-name', function () {
         var row = $(this).parents('.class-row');
         if(row.is('.selected')) {
@@ -427,7 +427,7 @@ $(document).ready(function () {
     body.on('click', '#calculator a[href="#remove-grade"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('.grade-row'),
-            classRow = row.parents('.class-row');
+            classRow = row.parents('.grade-editor');
         row.addClass('edit').hide();
         row.find('.score input, .percent input, .assignment input').val('');
         // create 4 empty rows if this is the last one
@@ -562,7 +562,7 @@ $(document).ready(function () {
             classVal = grade.find('select:not(.class-name)').val(),
             row = calc.find('.class-row.course-id-' + classId),
             currentGrade = row.find('> .grade select').val(),
-            currentScore = parseInt(row.find('> .score').text()),
+            currentScore = parseFloat(row.find('> .score').text()),
             completed = row.find('> .percent').text(),
             result = grade.find('.result'),
             wants = parseInt(classVal);

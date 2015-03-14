@@ -35,6 +35,7 @@ $(document).ready(function () {
         evt.preventDefault();
         if(contact.is('.invalid'))
             return;
+        loadingAnimation(contact.find('[value="#submit-contact"]'));
         contact.removeClass('valid').addClass('invalid');
         var data = {
             first: contact.find('.first-name input').val(),
@@ -52,12 +53,14 @@ $(document).ready(function () {
             dataType: 'json',
             data: data,
             success: function () {
+                contact.find('.squiggle').stop().remove();
                 contact.removeClass('invalid').addClass('valid').modal('hide');
                 contact.find('.first-name input, .last-name input, .email input, ' +
                             '.your-first input, .your-last input, .your-email input').val('');
                 $('#bill-parents-confirm').modal({show:true});
             },
             error: function () {
+                contact.find('.squiggle').stop().remove();
                 contact.removeClass('invalid').addClass('valid');
             }
         });
@@ -69,30 +72,32 @@ $(document).ready(function () {
         var valid = true;
         if(invite.find('.first-name input').val().trim() == '' ||
             invite.find('.last-name input').val().trim() == '' ||
-            invite.find('.email input').val().trim() ||
+            invite.find('.email input').val().trim() == '' ||
             !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(invite.find('.email input').val()))
             valid = false;
-        if(invite.find('.your-first input').length > 0) {
+        if(invite.find('.your-first:visible input').length > 0) {
             if(invite.find('.your-first input').val().trim() == '' ||
                 invite.find('.your-last input').val().trim() == '' ||
-                invite.find('.your-email input').val().trim() ||
+                invite.find('.your-email input').val().trim() == '' ||
                 !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(invite.find('.your-email input').val()))
                 valid = false;
         }
         if(valid)
-            invite.removeClass('invalid').addClass('valid');
+            invite.find('.highlighted-link').removeClass('invalid').addClass('valid');
         else
-            invite.removeClass('valid').addClass('invalid');
+            invite.find('.highlighted-link').removeClass('valid').addClass('invalid');
     }
 
     body.on('keyup', '#student-invite input, #bill-parents input', validateInvite);
     body.on('change', '#student-invite input, #bill-parents input', validateInvite);
+
     body.on('submit', '#student-invite form', function (evt) {
         evt.preventDefault();
         var contact = $('#student-invite');
-        if(contact.is('.invalid'))
+        if(contact.find('.highlighted-link').is('.invalid'))
             return;
-        contact.removeClass('valid').addClass('invalid');
+        loadingAnimation(contact.find('[value="#submit-contact"]'));
+        contact.find('.highlighted-link').removeClass('valid').addClass('invalid');
         var data = {
             first: contact.find('.first-name input').val(),
             last: contact.find('.last-name input').val(),
@@ -109,12 +114,14 @@ $(document).ready(function () {
             dataType: 'json',
             data: data,
             success: function () {
+                contact.find('.squiggle').stop().remove();
                 contact.removeClass('invalid').addClass('valid').modal('hide');
                 contact.find('.first-name input, .last-name input, .email input, ' +
                             '.your-first input, .your-last input, .your-email input').val('');
                 $('#student-invite-confirm').modal({show:true});
             },
             error: function () {
+                contact.find('.squiggle').stop().remove();
                 contact.removeClass('invalid').addClass('valid');
             }
         });

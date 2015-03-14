@@ -132,7 +132,7 @@ $view['slots']->start('body'); ?>
                     <div class="session-row <?php
                     print ($first && !($first = false) ? ' first' : '');
                     print ' event-type-' . $event->getType();
-                    print ' checkin' . $course->getIndex();
+                    print ' checkin' . (!empty($course) ? $course->getIndex() : '');
                     print ($event->getStart() < $yesterday || $event->getDeleted() ? ' historic' : '');
                     print ($event->getStart() >= $startWeek && $event->getStart() <= $endWeek ? ' mobile' : '');
                     print (!empty($course) ? (' course-id-' . $course->getId()) : '');
@@ -140,7 +140,7 @@ $view['slots']->start('body'); ?>
                     print ($event->getCompleted() ? ' done' : '');
                     print ' event-id-' . $event->getId(); ?>">
                         <div class="class-name">
-                            <span class="class<?php print $course->getIndex(); ?>">&nbsp;</span>
+                            <span class="class<?php print (!empty($course) ? $course->getIndex() : ''); ?>">&nbsp;</span>
                             <?php print $event->getName(); ?>
                         </div>
                         <div class="assignment">

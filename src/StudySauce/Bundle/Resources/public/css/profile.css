@@ -89,6 +89,14 @@
     padding:5px 306px 5px 0;
 }
 
+#customization .study-types h4,
+#customization .study-difficulty h4
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #customization .study-types label,
 #customization .study-difficulty label
 {

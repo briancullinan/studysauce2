@@ -156,7 +156,14 @@ class CalcController extends Controller
         {
             // find the correct course to modify
             /** @var Schedule $schedule */
-            $schedule = $user->getSchedules()->filter(function (Schedule $s) use ($t) {return $s->getId() == $t['scheduleId'];})->first();
+            if(!empty($t['scheduleId'])) {
+                $schedule = $user->getSchedules()->filter(
+                    function (Schedule $s) use ($t) {
+                        return $s->getId() == $t['scheduleId'];
+                    }
+                )->first();
+            }
+            else $schedule = null;
             if(empty($schedule)) {
                 $schedule = new Schedule();
                 $schedule->setUser($user);
@@ -254,9 +261,7 @@ class CalcController extends Controller
         {
             $schedule = new Schedule();
             $schedule->setUser($guest);
-            $terms = [11, 8, 1, 6];
-            $term = array_rand($terms, 1);
-            $schedule->setTerm(date_create_from_format('!n/Y', $terms[$term] . '/' . (intval(date('Y')) - $i - 1)));
+            $schedule->setTerm(date_create_from_format('!n/Y', (($i % 2) == 0 ? 8 : 1) . '/' . (intval(date('Y')) - floor($i / 2) - 1)));
             $guest->addSchedule($schedule);
             $orm->persist($schedule);
             $orm->flush();

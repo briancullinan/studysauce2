@@ -193,7 +193,7 @@ $(document).ready(function () {
         row.find('.start-time input[type="text"], .end-time input[type="text"]').trigger('change');
     });
 
-    function removeClass()
+    function removeCourse()
     {
         var row = $(this).parents('.class-row'),
             schedule = $('#schedule'),
@@ -227,7 +227,8 @@ $(document).ready(function () {
         if(deleteCount == 4) {
             $('#new-schedule').modal({show:true});
         }
-        removeClass.apply(this);
+        removeCourse.apply(this);
+        planFunc();
     });
 
     function updateSchedule(data)
@@ -375,7 +376,7 @@ $(document).ready(function () {
         dialog.find('.term-row.deleted').each(function () {
             var scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec($(this).attr('class'))[1],
                 term = schedule.find('.term-row.schedule-id-' + scheduleId);
-            term.find('.class-row').each(removeClass);
+            term.find('.class-row').each(removeCourse);
             term.addClass('deleted');
         });
 

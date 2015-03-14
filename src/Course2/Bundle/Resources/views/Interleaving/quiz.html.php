@@ -4,7 +4,7 @@ use Course2\Bundle\Entity\Interleaving;
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
 /** @var Interleaving $quiz */
-$complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()) && !empty($quiz->getTypesCourses());
+$complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()) && $quiz->getTypesCourses() !== null;
 
  $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_interleaving-step2">

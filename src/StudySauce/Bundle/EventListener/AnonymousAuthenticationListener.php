@@ -69,6 +69,8 @@ class AnonymousAuthenticationListener implements ListenerInterface
         $this->container        = $container;
     }
 
+    private static $randomNames = ['Pat', 'Jean', 'John', 'Will', 'Brian', 'Steve', 'Andrew'];
+
     /**
      * Handles anonymous authentication.
      *
@@ -131,8 +133,10 @@ class AnonymousAuthenticationListener implements ListenerInterface
             else
                 $user->addRole('ROLE_GUEST');
             $user->setEnabled(true);
-            $user->setFirst($username);
-            $user->setLast('Account');
+            $first = array_rand(self::$randomNames, 1);
+            $last = rand(0, count(self::$randomNames) - 2);
+            $user->setFirst(self::$randomNames[$first]);
+            $user->setLast(self::$randomNames[($first + $last) % count(self::$randomNames)]);
             $orm->persist($user);
             $orm->flush();
         }
@@ -164,6 +168,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
                     /** @var PartnerInvite $pi */
                     $pi = $demo->getPartnerInvites()->first();
                     $pi->setPartner($user);
+                    $pi->setActivated(true);
                     $pi->setEmail($user->getEmail());
                     $user->addInvitedPartner($pi);
                     $orm->merge($pi);

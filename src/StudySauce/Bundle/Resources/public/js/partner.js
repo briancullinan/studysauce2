@@ -93,9 +93,8 @@ $(document).ready(function () {
         partnerFunc();
     });
 
-    function submitPartner(evt)
+    function submitPartner()
     {
-        evt.preventDefault();
         var partner = jQuery('#partner');
         if(partner.find('.form-actions').is('.invalid'))
             return;
@@ -127,6 +126,9 @@ $(document).ready(function () {
             }
         });
     }
-    body.on('submit', '#partner form', submitPartner);
+    body.on('submit', '#partner form', function (evt) {
+        evt.preventDefault();
+        submitPartner.apply(this);
+    });
 
 });

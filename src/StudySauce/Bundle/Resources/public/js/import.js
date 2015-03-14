@@ -124,7 +124,7 @@ jQuery(document).ready(function() {
         var importTab = $('#import'),
             newUser = importTab.find('.import-row').first().clone()
             .removeClass('read-only historic').addClass('edit').insertBefore(importTab.find('.form-actions').first());
-        newUser.find('.first-name select, .last-name input, .email input').val('');
+        newUser.find('.first-name input, .last-name input, .email input').val('');
         importFunc.apply(newUser);
     });
 

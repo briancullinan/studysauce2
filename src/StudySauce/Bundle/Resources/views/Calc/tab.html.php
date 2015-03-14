@@ -78,11 +78,11 @@ $view['slots']->start('body'); ?>
                         foreach($courses as $i => $c) {
                             /** @var Course $c */
                             ?>
-                            <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
+                            <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first && !$c->getGrades()->count() ? 'selected' : ''); ?>">
                                 <div class="class-name <?php print ($first ? 'read-only' : 'edit'); ?>"><label class="input"><span>Class name</span><i class="class<?php print $i; ?>"></i><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name" /></label></div>
                                 <div class="hours <?php print (empty($c->getCreditHours()) ? 'edit' : 'read-only'); ?>" title="How many graded credit hours the class is worth.  Enter 0 if the class does not count toward your GPA (ex. classes taken pass/fail or non-credit courses)"><label class="input"><span>Hours</span><input type="text" value="<?php print $c->getCreditHours(); ?>" placeholder="&bullet;" /></label></div>
                                 <div class="percent" title="How much of your course grade the assignment is worth"><?php print (empty($c->getPercent()) ? '&bullet;' : ($c->getPercent() . '%')); ?></div>
-                                <div class="score" title="Your grade on the assignment"><?php print ($c->getScore() === null ? '&bullet;' : $c->getScore()); ?></div>
+                                <div class="score" title="Your grade on the assignment"><?php print (empty($c->getScore()) ? '&bullet;' : number_format($c->getScore(), 2)); ?></div>
                                 <div class="grade <?php print ($first ? 'read-only' : 'edit'); ?>" title="Your letter grade based on your grading scale"><label class="input"><span>Grade</span><select>
                                             <option value="" <?php print (empty($c->getGrade()) ? 'selected="selected"' : ''); ?>>&bullet;</option>
                                             <?php for($i = 0; $i < count($scale); $i++) {

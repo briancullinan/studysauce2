@@ -52,7 +52,7 @@ $(document).ready(function () {
 
     body.on('yt1', '.course3.step1', function () {
         var actions = $(this).find('.highlighted-link');
-        actions.addClass('played invalid');
+        actions.addClass('played');
         setTimeout(function () {
             actions.removeClass('invalid');
         }, 10000);
@@ -69,7 +69,7 @@ $(document).ready(function () {
     body.on('hide', '.course3.step1', function () {
         var step = $(this);
         $(window.players).each(function () {
-            if($(this.d).parents().is(step))
+            if($(this).data('frame').parents().is(step))
                 this.pauseVideo();
         });
     });

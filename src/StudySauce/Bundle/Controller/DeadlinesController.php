@@ -144,11 +144,10 @@ class DeadlinesController extends Controller
         $deadlines = $guest->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
             $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D'));});
 
-        for($i = $deadlines->count(); $i < 30; $i++) {
+        foreach($courses as $course) {
             $assignment = self::getRandomAssignment();
             // pick a number between 1 and 10
             $repeat = rand(1, 10);
-            $course = $courses[array_rand($courses, 1)];
             $reminders = array_rand(['86400' => '', '172800' => '', '345600' => '', '604800' => '', '1209600' => ''], rand(2, 5));
             for($j = 0; $j < $repeat; $j++) {
                 $deadline = new Deadline();
@@ -167,7 +166,6 @@ class DeadlinesController extends Controller
                 $guest->addDeadline($deadline);
                 $orm->persist($deadline);
             }
-            $i+=$repeat;
         }
         $orm->flush();
 

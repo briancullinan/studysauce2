@@ -99,19 +99,6 @@
     padding-left: 35px;
 }
 
-.squiggle,
-.squiggle
-{
-    background-color: #0099BB;
-    bottom: 0;
-    display: inline-block;
-    height: 2px;
-    left: 0;
-    line-height: 1px;
-    position: absolute;
-    width: 2px;
-}
-
 .main-menu li.complete {
     text-decoration: line-through;
 }
