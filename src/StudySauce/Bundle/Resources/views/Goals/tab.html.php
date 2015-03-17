@@ -29,34 +29,36 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/g
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-    <div class="panel-pane" id="goals">
-        <div class="pane-content">
-            <h2>Set study goals for self-motivation</h2>
-            <div class="split-description big-arrow">
-                <h3>The Science of Setting Goals</h3>
-                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/science.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                    <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
-                <?php endforeach; ?>
-                <p>According to the Incentive Theory of motivation, using rewards increases the likelihood of repeating
-                    the given activity. By incorporating this powerful psychological principle into study behavior,
-                    students can incentivize optimal study practices. Studies show that the sooner the reward is given,
-                    the stronger the positive association with the activity.</p>
-            </div>
-            <div class="split-description">
-                <h3>The Application</h3>
-                <span class="site-name"><strong>Study</strong> Sauce</span>
-                <p>Study Sauce combines the best study practices with the incentive to change. Knowledge of the harm or
-                    benefit of something doesn’t necessarily result in behavioral change (just ask someone that has
-                    struggled to quit smoking). Creating meaningful study rewards dramatically increases the likelihood
-                    that a student will adopt effective study habits.</p>
-            </div>
-            <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
+<div class="panel-pane" id="goals">
+    <div class="pane-content">
+        <h2>Set study goals for self-motivation</h2>
+        <div class="split-description big-arrow">
+            <h3>The Science of Setting Goals</h3>
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/science.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+            <?php endforeach; ?>
+            <p>According to the Incentive Theory of motivation, using rewards increases the likelihood of repeating
+                the given activity. By incorporating this powerful psychological principle into study behavior,
+                students can incentivize optimal study practices. Studies show that the sooner the reward is given,
+                the stronger the positive association with the activity.</p>
+        </div>
+        <div class="split-description">
+            <h3>The Application</h3>
+            <span class="site-name"><strong>Study</strong> Sauce</span>
+            <p>Study Sauce combines the best study practices with the incentive to change. Knowledge of the harm or
+                benefit of something doesn’t necessarily result in behavioral change (just ask someone that has
+                struggled to quit smoking). Creating meaningful study rewards dramatically increases the likelihood
+                that a student will adopt effective study habits.</p>
+        </div>
+        <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
             <header>
                 <label>&nbsp;</label>
                 <label>Goal</label>
                 <label>Reward</label>
             </header>
-            <div class="goal-row valid <?php print (empty($behavior) ? 'edit' : 'read-only');
+            <div class="goal-row valid <?php
+            print (empty($behavior) || empty($behavior->getGoal()) ||
+            empty($behavior->getReward()) ? 'edit' : 'read-only');
             print (empty($behavior) ? '' : (' gid' . $behavior->getId())); ?>">
                 <div class="type"><strong>Study Hours</strong></div>
                 <div class="behavior">
@@ -89,7 +91,8 @@ $view['slots']->start('body'); ?>
                 </div>
             </div>
             <div class="goal-row valid <?php
-            print (empty($milestone) ? ' edit' : 'read-only');
+            print (empty($milestone) || empty($milestone->getGoal()) ||
+            empty($milestone->getReward()) ? ' edit' : 'read-only');
             print (empty($milestone) ? '' : (' gid' . $milestone->getId())); ?>">
                 <div class="type"><strong>Study Milestone</strong></div>
                 <div class="milestone">
@@ -120,7 +123,8 @@ $view['slots']->start('body'); ?>
                 </div>
             </div>
             <div class="goal-row valid <?php
-            print (empty($outcome) ? ' edit' : 'read-only');
+            print (empty($outcome) || empty($outcome->getGoal()) ||
+            empty($outcome->getReward()) ? ' edit' : 'read-only');
             print (empty($outcome) ? '' : (' gid' . $outcome->getId())); ?>">
                 <div class="type"><strong>Study Outcome</strong></div>
                 <div class="outcome">
@@ -150,28 +154,29 @@ $view['slots']->start('body'); ?>
                     <a class="more" href="#claim" data-target="#claim">Brag</a>
                 </div>
             </div>
-            <p class="highlighted-link form-actions invalid"
+            <div class="highlighted-link form-actions invalid"
                 <?php print (!empty($outcome) && !empty($milestone) && !empty($behavior)
                     ? 'style="visibility:hidden;"'
                     : ''); ?>>
+                <div class="invalid-only">You must complete all fields before moving on.</div>
                 <button type="submit" value="#save-goal" class="more">Save</button>
-            </p>
-                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
-            </form>
-
-            <div id="achievements" class="clearfix">
-                <?php echo $view->render('StudySauceBundle:Goals:claims.html.php', ['claims' => $claims]); ?>
             </div>
-            <!--
-            <div id="read-more-incentives">
-                <img src="/sites/studysauce.com/themes/successinc/images/science.png">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+        </form>
 
-                <h3>The Science of Setting Goals</h3>
-                <a href="#read-more">read more</a>
-            </div>
-            -->
+        <div id="achievements" class="clearfix">
+            <?php echo $view->render('StudySauceBundle:Goals:claims.html.php', ['claims' => $claims]); ?>
         </div>
+        <!--
+        <div id="read-more-incentives">
+            <img src="/sites/studysauce.com/themes/successinc/images/science.png">
+
+            <h3>The Science of Setting Goals</h3>
+            <a href="#read-more">read more</a>
+        </div>
+        -->
     </div>
+</div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');

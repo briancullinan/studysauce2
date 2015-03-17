@@ -195,9 +195,10 @@ $view['slots']->start('body'); ?>
 
                     <div class="form-actions highlighted-link clearfix invalid">
                         <a href="#add-class" class="big-add">Add <span>+</span> class</a>
-                        <div class="invalid-times">Error - invalid class time</div>
-                        <div class="overlaps-only">Error - classes cannot overlap</div>
-                        <div class="invalid-only">Error - please make sure all class information is filled in</div>
+                        <div class="invalid-times">Invalid class time</div>
+                        <div class="invalid-dates">Invalid class date</div>
+                        <div class="overlaps-only">Classes cannot overlap</div>
+                        <div class="invalid-only">You must complete all fields before moving on.</div>
                         <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
                             <button type="submit" value="#save-class" class="more">Next</button>
                         <?php } else { ?>
@@ -342,9 +343,10 @@ $view['slots']->start('body'); ?>
                     <?php } ?>
                     <div class="form-actions highlighted-link clearfix invalid">
                         <a href="#add-class" class="big-add">Add <span>+</span> other event</a>
-                        <div class="invalid-times">Error - invalid class time</div>
-                        <div class="overlaps-only">Error - classes cannot overlap</div>
-                        <div class="invalid-only">Error - please make sure all class information is filled in</div>
+                        <div class="invalid-times">Invalid class time</div>
+                        <div class="invalid-dates">Invalid class date</div>
+                        <div class="overlaps-only">Classes cannot overlap</div>
+                        <div class="invalid-only">You must complete all fields before moving on.</div>
                         <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
                             <button type="submit" value="#save-class" class="more">Next</button>
                         <?php } else { ?>

@@ -5,18 +5,26 @@ $(document).ready(function () {
     function goalsFunc() {
         var goals = $('#goals');
         jQuery(this).each(function () {
-            var row = $(this).closest('.goal-row'),
-                valid = true;
-            if(row.find('select:visible').val() == '_none' ||
-                row.find('.reward textarea').val().trim() == '')
-                valid = false;
-            if(!valid)
+            var row = $(this).closest('.goal-row');
+            if(row.find('select:visible').val() == '_none') {
+                row.addClass('goal-required');
+            }
+            else {
+                row.removeClass('goal-required');
+            }
+            if(row.find('.reward textarea').val().trim() == '') {
+                row.addClass('reward-required');
+            }
+            else {
+                row.removeClass('reward-required');
+            }
+            if(row.is('.goal-required') || row.is('.reward-required'))
                 row.removeClass('valid').addClass('invalid');
             else
                 row.removeClass('invalid').addClass('valid');
         });
         if(goals.find('.goal-row:visible:not(.invalid)').length == 3)
-            goals.find('.form-actions').removeClass('invalid').addClass('valid');
+            goals.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
         else
             goals.find('.form-actions').removeClass('valid').addClass('invalid');
     }
@@ -110,8 +118,15 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var goals = $('#goals');
-        if(goals.find('.form-actions').is('.invalid'))
+        if(goals.find('.form-actions').is('.invalid')) {
+            goals.addClass('invalid-only');
+            var toFocus = goals.find('.goal-row.goal-required, .goal-row.reward-required').first();
+            if(toFocus.is('.goal-required'))
+                toFocus.find('select').focus();
+            else if (toFocus.is('.reward-required'))
+                toFocus.find('textarea').focus();
             return;
+        }
         goals.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#save-goal"]'));
 

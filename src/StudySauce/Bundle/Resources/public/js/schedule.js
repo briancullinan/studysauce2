@@ -16,16 +16,50 @@ $(document).ready(function () {
                     row.find('.start-date input').val().trim() == '' &&
                     row.find('.end-date input').val().trim() == '')
                     row.removeClass('invalid').addClass('valid blank');
-                else if(row.find('.class-name input').val().trim() == '' ||
-                    (row.parent().not('.schedule.other') &&
-                    row.find('.day-of-the-week input:checked').length == 0) ||
-                    row.find('.start-time input').val().trim() == '' ||
-                    row.find('.end-time input').val().trim() == '' ||
-                    row.find('.start-date input').val().trim() == '' ||
-                    row.find('.end-date input').val().trim() == '')
-                    row.removeClass('valid blank').addClass('invalid');
-                else
-                    row.removeClass('invalid blank').addClass('valid');
+                else {
+                    if(row.find('.class-name input').val().trim() == '') {
+                        row.addClass('class-required');
+                    }
+                    else {
+                        row.removeClass('class-required');
+                    }
+                    if(row.find('.day-of-the-week input:checked').length == 0) {
+                        row.addClass('dotw-required');
+                    }
+                    else {
+                        row.removeClass('dotw-required');
+                    }
+                    if(row.find('.start-time input').val().trim() == '') {
+                        row.addClass('start-time-required');
+                    }
+                    else {
+                        row.removeClass('start-time-required');
+                    }
+                    if(row.find('.end-time input').val().trim() == '') {
+                        row.addClass('end-time-required');
+                    }
+                    else {
+                        row.removeClass('end-time-required');
+                    }
+                    if(row.find('.start-date input').val().trim() == '') {
+                        row.addClass('start-date-required');
+                    }
+                    else {
+                        row.removeClass('start-date-required');
+                    }
+                    if(row.find('.end-date input').val().trim() == '') {
+                        row.addClass('end-date-required');
+                    }
+                    else {
+                        row.removeClass('end-date-required');
+                    }
+
+                    if(row.is('.class-required') || row.is('.dotw-required') || row.is('.start-time-required') ||
+                        row.is('.end-time-required') || row.is('.start-date-required') || row.is('.end-date-required'))
+                        row.removeClass('valid blank').addClass('invalid');
+                    else
+                        row.removeClass('invalid blank').addClass('valid');
+                }
 
                 row.find('.start-date input[type="text"], .end-date input[type="text"]')
                     .datepicker({
@@ -102,14 +136,23 @@ $(document).ready(function () {
                         length += 86400;
                     // check if the length is less than 8 hours
                     if (from.getTime() == to.getTime() || length > 8 * 60 * 60)
-                        row.addClass('invalid-time');
+                        row.addClass('invalid-date');
                     else
-                        row.removeClass('invalid-time');
+                        row.removeClass('invalid-date');
                 }
 
                 // check if there are any overlaps with the other rows
                 var startDate = new Date(row.find('.start-date input.hasDatepicker').val());
                 var endDate = new Date(row.find('.end-time input.hasDatepicker').val());
+
+                // check if dates are reverse
+                if(!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && startDate.getTime() > endDate.getTime()) {
+                    row.addClass('date-required');
+                }
+                else {
+                    row.removeClass('date-required')
+                }
+
                 var startTime = new Date('1/1/1970 ' + row.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
                 if(row.find('.start-time input').val().match(/pm$/i) != null)
                     startTime = startTime.addHours(12);
@@ -117,6 +160,7 @@ $(document).ready(function () {
                 if(row.find('.end-time input').val().match(/pm$/i) != null)
                     endTime = endTime.addHours(12);
                 var dotw = row.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
+
                 // reset overlaps tag to start
                 var overlaps = row.is('.overlaps');
                 row.removeClass('overlaps');
@@ -161,7 +205,6 @@ $(document).ready(function () {
         var term = schedule.find('.term-row:visible').first();
         if(term.find('.class-row.edit.invalid:visible').length == 0 &&
             term.find('.class-row.overlaps:visible').length == 0 &&
-            term.find('.class-row.invalid-time:not(.blank):visible').length == 0 &&
             term.find('.class-row.valid:not(.blank)').length > 0 &&
             term.find('.university input').val().trim() != '' && (
                 // make sure there are rows to save that are not blank
@@ -174,15 +217,27 @@ $(document).ready(function () {
         else
             term.find('.form-actions').removeClass('valid').addClass('invalid');
 
-        if(term.find('.class-row.overlaps:visible').length > 1)
-            term.addClass('overlaps');
-        else
-            term.removeClass('overlaps');
+        if(term.find('.university input').val().trim() == '') {
+            schedule.addClass('university-required');
+        }
+        else {
+            schedule.removeClass('university-required');
+        }
 
-        if(term.find('.class-row.invalid-time:visible').length > 0)
-            term.addClass('invalid-time');
+        if(term.find('.class-row.overlaps:visible').length > 1)
+            schedule.addClass('overlaps');
         else
-            term.removeClass('invalid-time');
+            schedule.removeClass('overlaps');
+
+        if(term.find('.class-row.start-time-required:visible, .class-row.end-time-required:visible').length > 0)
+            schedule.addClass('invalid-time');
+        else
+            schedule.removeClass('invalid-time');
+
+        if(term.find('.class-row.start-date-required:visible, .class-row.end-date-required:visible').length > 0)
+            schedule.addClass('invalid-date');
+        else
+            schedule.removeClass('invalid-date');
     }
 
     body.on('click', '#schedule a[href="#edit-class"]', function (evt) {
@@ -465,13 +520,8 @@ $(document).ready(function () {
         if(schedule.find('.form-actions:visible').is('.invalid'))
         {
             schedule.addClass('invalid-only');
-            schedule.find('.class-row.edit.invalid .start-time input,' +
-            ' .class-row.edit.invalid .end-time input,' +
-            ' .class-row.edit.invalid .start-date input,' +
-            ' .class-row.edit.invalid .end-date input').each(function () {
-                if($(this).val().trim() == '')
-                    $(this).parents('.class-row').addClass('invalid-time');
-            });
+            // TODO: focus on correct field
+            
             return;
         }
 

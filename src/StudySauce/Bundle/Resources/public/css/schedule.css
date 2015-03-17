@@ -236,10 +236,19 @@
     margin-right:-2px;
 }
 
+#schedule.invalid-only .class-required .class-name input,
+#schedule.invalid-only .dotw-required .day-of-the-week label,
+#schedule.invalid-only .start-time-required .start-time input,
+#schedule.invalid-only .end-time-required .end-time input,
+#schedule.invalid-only .start-date-required .start-date input,
+#schedule.invalid-only .end-date-required .end-date input,
+#schedule.invalid-only.university-required .university .selectize-control,
 .schedule .overlaps .start-time input,
 .schedule .overlaps .end-time input
 {
     border-bottom:3px solid #CC0000;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .schedule .start-date .input.mobile-only,
@@ -250,18 +259,25 @@
     display:none;
 }
 
+#schedule .invalid-dates,
 #schedule .invalid-times,
 #schedule .invalid-only,
 #schedule .overlaps-only {
     display:none;
     clear: both;
     position: relative;
-    padding: 2px 3px 2px 30px;
+    padding: 2px 3px;
     border: 2px solid #CC0000;
     color:#660000;
     border-radius: 5px;
 }
 
+#schedule .overlaps-only
+{
+    padding-left:30px;
+}
+
+#schedule.invalid-date .invalid-dates,
 #schedule.invalid-time .invalid-times,
 #schedule.invalid-only .invalid-only,
 #schedule.overlaps .overlaps-only {
@@ -279,8 +295,6 @@
 }
 
 .schedule .class-row.overlaps .class-name:before,
-.schedule .invalid-times:before,
-.schedule .invalid-only:before,
 .schedule .overlaps-only:before {
     content: " ";
     left: 0;
