@@ -27,6 +27,7 @@ Contact us
         <label class="input"><span>Message</span><textarea placeholder="" cols="60" rows="2"></textarea></label>
     </div>
     <div class="highlighted-link invalid">
+        <div class="invalid-only">You must complete all fields before moving on.</div>
         <button type="submit" value="#submit-contact" class="more">Send</button>
     </div>
 </form>

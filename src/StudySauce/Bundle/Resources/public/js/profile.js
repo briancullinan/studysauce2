@@ -3,21 +3,50 @@ $(document).ready(function () {
     var body = $('body');
     
     function profileFunc() {
-        var profile = $('#profile'),
-            valid = true;
+        var profile = $('#profile');
 
-        if(profile.find('.grades input:checked').length == 0 ||
-            profile.find('.weekends input:checked').length == 0 ||
-            profile.find('input[name="profile-11am"]:checked').length == 0 ||
-            profile.find('input[name="profile-4pm"]:checked').length == 0 ||
-            profile.find('input[name="profile-9pm"]:checked').length == 0 ||
-            profile.find('input[name="profile-2am"]:checked').length == 0)
-            valid = false;
+        if(profile.find('.grades input:checked').length == 0) {
+            profile.addClass('grades-required');
+        }
+        else {
+            profile.removeClass('grades-required');
+        }
+        if(profile.find('.weekends input:checked').length == 0) {
+            profile.addClass('weekends-required');
+        }
+        else {
+            profile.removeClass('weekends-required');
+        }
+        if(profile.find('input[name="profile-11am"]:checked').length == 0) {
+            profile.addClass('profile-11am-required');
+        }
+        else {
+            profile.removeClass('profile-11am-required');
+        }
+        if(profile.find('input[name="profile-4pm"]:checked').length == 0) {
+            profile.addClass('profile-4pm-required');
+        }
+        else {
+            profile.removeClass('profile-4pm-required');
+        }
+        if(profile.find('input[name="profile-9pm"]:checked').length == 0) {
+            profile.addClass('profile-9pm-required');
+        }
+        else {
+            profile.removeClass('profile-9pm-required');
+        }
+        if(profile.find('input[name="profile-2am"]:checked').length == 0) {
+            profile.addClass('profile-2am-required');
+        }
+        else {
+            profile.removeClass('profile-2am-required');
+        }
 
-        if(valid)
-            profile.find('.highlighted-link').removeClass('invalid').addClass('valid');
-        else
+        if(profile.is('.grades-required') || profile.is('.weekends-required') || profile.is('.profile-11am-required') ||
+            profile.is('.profile-4pm-required') || profile.is('.profile-9pm-required') || profile.is('.profile-2am-required'))
             profile.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        else
+            profile.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     function customizationFunc() {
@@ -25,12 +54,17 @@ $(document).ready(function () {
             valid = true;
 
         customization.find('.study-types input, .study-difficulty input').each(function () {
-            if(customization.find('input[name="' + $(this).attr('name') + '"]:checked').length == 0)
+            var inputSet;
+            if((inputSet = customization.find('input[name="' + $(this).attr('name') + '"]')).filter(':checked').length == 0) {
+                inputSet.parents('label').prev('h4').addClass('type-required');
                 valid = false;
+            }
+            else
+                inputSet.parents('label').prev('h4').removeClass('type-required');
         });
 
         if(valid)
-            customization.find('.highlighted-link').removeClass('invalid').addClass('valid');
+            customization.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
         else
             customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
     }
@@ -73,8 +107,28 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var profile = $('#profile');
-        if(profile.find('.highlighted-link').is('.invalid'))
+        if(profile.find('.highlighted-link').is('.invalid')) {
+            profile.addClass('invalid-only');
+            if(profile.is('.grades-required')) {
+                profile.find('.grades input').first().focus();
+            }
+            else if(profile.is('.weekends-required')) {
+                profile.find('.weekends input').first().focus();
+            }
+            else if(profile.is('.profile-11am-required')) {
+                profile.find('input[name="profile-11am"]').first().focus();
+            }
+            else if(profile.is('.profile-4pm-required')) {
+                profile.find('input[name="profile-4pm"]').first().focus();
+            }
+            else if(profile.is('.profile-9pm-required')) {
+                profile.find('input[name="profile-9pm"]').first().focus();
+            }
+            else if(profile.is('.profile-2am-required')) {
+                profile.find('input[name="profile-2am"]').first().focus();
+            }
             return;
+        }
         profile.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#save-profile"]'));
         var scheduleData = { };
@@ -106,8 +160,11 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var customization = $('#customization');
-        if(customization.find('.highlighted-link').is('.invalid'))
+        if(customization.find('.highlighted-link').is('.invalid')) {
+            customization.addClass('invalid-only');
+            customization.find('.type-required').first().nextAll('label').find('input').first().focus();
             return;
+        }
         customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#save-profile"]'));
         var scheduleData = { };

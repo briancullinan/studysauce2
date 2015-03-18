@@ -96,6 +96,7 @@ $view['slots']->start('body'); ?>
                 <label class="radio"><input name="profile-2am" type="radio" value="5" <?php print ($schedule->getSharp9pm2am() == 5 ? 'checked="checked"' : ''); ?>><i></i><span>5</span></label>
             </div>
             <div class="form-actions highlighted-link">
+                <div class="invalid-only">You must complete all fields before moving on.</div>
                 <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
                     <button type="submit" value="#save-profile" class="more">Next</button>
                 <?php } else { ?>

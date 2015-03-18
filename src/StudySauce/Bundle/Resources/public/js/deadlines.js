@@ -5,18 +5,34 @@ $(document).ready(function () {
     function datesFunc() {
         var deadlines = $('#deadlines');
         jQuery(this).each(function () {
-            var that = jQuery(this),
-                error = false;
-            if(that.find('select').val() == '')
-                error = true;
-            if(that.find('.assignment input').val().trim() == '')
-                error = true;
-            if(that.find('.reminder input:checked').length == 0)
-                error = true;
-            if(that.find('.due-date input').val().trim() == '')
-                error = true;
+            var that = jQuery(this);
+            if(that.find('select').val() == '') {
+                that.addClass('class-required');
+            }
+            else {
+                that.removeClass('class-required');
+            }
+            if(that.find('.assignment input').val().trim() == '') {
+                that.addClass('assignment-required')
+            }
+            else {
+                that.removeClass('assignment-required');
+            }
+            if(that.find('.reminder input:checked').length == 0) {
+                that.addClass('reminder-required');
+            }
+            else {
+                that.removeClass('reminder-required');
+            }
+            if(that.find('.due-date input').val().trim() == '') {
+                that.addClass('date-required');
+            }
+            else {
+                that.removeClass('date-required');
+            }
 
-            if(error)
+            if(that.is('.class-required') || that.is('.assignment-required') || that.is('.reminder-required') ||
+                that.is('.date-required'))
                 that.removeClass('valid').addClass('invalid');
             else
                 that.removeClass('invalid').addClass('valid');
@@ -50,7 +66,7 @@ $(document).ready(function () {
         if(deadlines.find('.deadline-row.edit.valid').length == 0)
             deadlines.find('.form-actions').removeClass('valid').addClass('invalid');
         else
-            deadlines.find('.form-actions').removeClass('invalid').addClass('valid');
+            deadlines.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
     }
 
     body.on('show', '#deadlines', function () {
@@ -110,8 +126,25 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var deadlines = $('#deadlines');
-        if(deadlines.find('.form-actions').is('.invalid'))
+        if(deadlines.find('.form-actions').is('.invalid')) {
+            // focus on input
+            deadlines.addClass('invalid-only');
+            var toEdit = deadlines.find('.deadline-row.class-required, .deadline-row.assignment-required, ' +
+                '.deadline-row.reminder-required, .deadline-row.date-required').first();
+            if(toEdit.is('.class-required')) {
+                toEdit.find('.class-name select').focus();
+            }
+            else if (toEdit.is('.assignment-required')) {
+                toEdit.find('.assignment input').focus();
+            }
+            else if (toEdit.is('.reminder-required')) {
+                toEdit.find('.reminder input').first().focus();
+            }
+            else if (toEdit.is('.date-required')) {
+                toEdit.find('.due-date input').focus();
+            }
             return;
+        }
         loadingAnimation($(this).find('[value="#save-deadline"]'));
         deadlines.find('.form-actions').removeClass('valid').addClass('invalid');
         var dates = [];

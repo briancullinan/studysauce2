@@ -93,6 +93,7 @@ $view['slots']->start('body'); ?>
                         } ?>
                     </div>
                     <div class="form-actions">
+                        <div class="invalid-only">You must complete all fields before moving on.</div>
                         <button type="submit" value="#save-account" class="more">Save</button>
                     </div>
                 </div>

@@ -59,6 +59,7 @@ $view['slots']->start('body'); ?>
                 <a href="<?php print $view['router']->generate('logout'); ?>" class="cloak">You have been invited by <?php print (!empty($invite) ? $invite->getUser()->getFirst() : $invite->getFromFirst()); ?>.  Click here to decline.</a>
             <?php } */ ?>
             <a href="<?php print $view['router']->generate('password_reset'); ?>">Forgot password?</a>
+            <div class="invalid-only">You must complete all fields before moving on.</div>
             <button type="submit" value="#user-login" class="more">Login</button>
         </div>
         </form>

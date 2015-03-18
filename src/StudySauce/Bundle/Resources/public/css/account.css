@@ -167,7 +167,10 @@ a[href="#sign-in-with-email"]
 
 #login .form-actions .error,
 #register .form-actions .error,
-#account .form-actions .error
+#account .form-actions .error,
+#account .invalid-only,
+#login .invalid-only,
+#register .invalid-only
 {
     clear: both;
     position: relative;
@@ -175,6 +178,38 @@ a[href="#sign-in-with-email"]
     border: 2px solid #CC0000;
     color:#660000;
     border-radius: 5px;
+}
+
+#login .invalid-only,
+#account .invalid-only,
+#register .invalid-only
+{
+    display:none;
+}
+
+#login.invalid-only .invalid-only,
+#account.invalid-only .invalid-only,
+#register.invalid-only .invalid-only
+{
+    display:inline-block;
+}
+
+#account.invalid-only.password-required .password input,
+#account.invalid-only.new-password-required .new-password input,
+#account.invalid-only.first-required .first-name input,
+#account.invalid-only.last-required .last-name input,
+#account.invalid-only.email-required .email input,
+#account.invalid-only.confirm-required .confirm-password input,
+#login.invalid-only.email-required .email input,
+#login.invalid-only.password-required .password input,
+#register.invalid-only.first-required .first-name input,
+#register.invalid-only.last-required .last-name input,
+#register.invalid-only.email-required .email input,
+#register.invalid-only.password-required .password input
+{
+    border-bottom:3px solid #CC0000;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 #register .form-actions a[href*="/logout"],

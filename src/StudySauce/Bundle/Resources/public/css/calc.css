@@ -542,13 +542,8 @@
 }
 
 #calculator .over-percent,
-#calculator .empty-hours
-{
-    float:left;
-}
-
-#calculator .over-percent,
 #calculator .empty-hours,
+#calculator .invalid-only,
 #what-if .calc-completed,
 #what-if .calc-unk
 {
@@ -561,12 +556,18 @@
 
 #calculator .over-percent-error .over-percent,
 #calculator .missing-hours .empty-hours,
+#calculator.invalid-only .invalid-only,
 #what-if.class-completed .calc-completed,
 #what-if.grade-incomplete .calc-unk,
 #what-if.overall-incomplete .calc-unk,
 #what-if.term-incomplete .calc-unk
 {
-    display:block;
+    display:inline-block;
+}
+
+#calculator.invalid-only .invalid .class-name input
+{
+    border-bottom:3px solid #CC0000;
 }
 
 @media all and (max-width: 1000px)

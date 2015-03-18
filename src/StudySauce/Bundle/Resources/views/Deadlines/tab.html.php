@@ -84,6 +84,7 @@ $view['slots']->start('body'); ?>
         <div class="highlighted-link form-actions invalid">
             <a href="<?php print $view['router']->generate('schedule'); ?>">Edit schedule</a>
             <a href="#add-deadline" class="big-add">Add <span>+</span> deadline</a>
+            <div class="invalid-only">You must complete all fields before moving on.</div>
             <button type="submit" value="#save-deadline" class="more">Save</button>
         </div>
         <header>

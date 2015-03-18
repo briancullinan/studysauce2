@@ -4,30 +4,47 @@ $(document).ready(function () {
     function getHash()
     {
         var partner = jQuery('#partner');
-        return partner.find('.first-name input').val().trim() + partner.find('.last-name input').val().trim() +
-                partner.find('.email input').val().trim() +
-        $('#partner').find('.permissions input:checked').map(function (i, o) {return jQuery(o).val();}).toArray().join(',') +
-            partner.find('input[name="partner-plupload"]').val();
+        return partner.find('.first-name input').val().trim() + partner.find('.last-name input').val().trim()
+            + partner.find('.email input').val().trim()
+            + $('#partner').find('.permissions input:checked').map(function (i, o) {
+                return jQuery(o).val();}).toArray().join(',')
+            + partner.find('input[name="partner-plupload"]').val();
     }
 
     function partnerFunc() {
         var partner = jQuery('#partner');
         var valid = true;
-        if(getHash() == partner.data('state') ||
-            partner.find('.first-name input').val().trim() == '' ||
-            partner.find('.last-name input').val().trim() == '' ||
-            partner.find('.email input').val().trim() == '' ||
-            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(partner.find('.email input').val()))
-            valid = false;
-        if(valid)
-            partner.find('.form-actions').removeClass('invalid').addClass('valid');
-        else
+        if(partner.find('.first-name input').val().trim() == '') {
+            partner.addClass('first-required');
+        }
+        else {
+            partner.removeClass('first-required');
+        }
+        if(partner.find('.last-name input').val().trim() == '') {
+            partner.addClass('last-required');
+        }
+        else {
+            partner.removeClass('last-required');
+        }
+        if(partner.find('.email input').val().trim() == '' ||
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(partner.find('.email input').val())) {
+            partner.addClass('email-required');
+        }
+        else {
+            partner.removeClass('email-required');
+        }
+        if(getHash() == partner.data('state') || partner.is('.first-required') || partner.is('.last-required') ||
+            partner.is('.email-required'))
             partner.find('.form-actions').removeClass('valid').addClass('invalid');
+        else
+            partner.removeClass('.invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#partner .first-name input, #partner .last-name input, #partner .email input, #partner .permissions input', partnerFunc);
     body.on('keyup', '#partner .first-name input, #partner .last-name input, #partner .email input', partnerFunc);
-    body.on('change', '#partner .permissions input', submitPartner);
+    body.on('change', '#partner .permissions input', function () {
+        submitPartner(false);
+    });
     body.on('show', '#partner', function () {
         var partner = $(this);
         if(partner.data('state') == null) {
@@ -81,7 +98,7 @@ $(document).ready(function () {
                         // update masthead picture
                         body.find('#partner-message img').attr('src', data.src);
                         partnerFunc();
-                        submitPartner();
+                        submitPartner(false);
                     },
                     Error: function(up, err) {
                     }
@@ -93,13 +110,26 @@ $(document).ready(function () {
         partnerFunc();
     });
 
-    function submitPartner()
+    function submitPartner(showConfirmation)
     {
         var partner = jQuery('#partner');
-        if(partner.find('.form-actions').is('.invalid'))
+        if(partner.find('.form-actions').is('.invalid')) {
+            if(partner.is('.first-required') || partner.is('.last-required') || partner.is('.email-required')) {
+                partner.addClass('invalid-only');
+                if(partner.is('.first-required')) {
+                    partner.find('.first-name input').focus();
+                }
+                else if(partner.is('.last-required')) {
+                    partner.find('.last-name input').focus();
+                }
+                else if(partner.is('.email-required')) {
+                    partner.find('.email input').focus();
+                }
+            }
             return;
+        }
         partner.find('.form-actions').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this).find('[value="#partner-save"]'));
+        loadingAnimation(partner.find('[value="#partner-save"]'));
         var hash = getHash();
         jQuery.ajax({
             url: window.callbackPaths['update_partner'],
@@ -115,7 +145,8 @@ $(document).ready(function () {
             success: function () {
                 partner.find('.squiggle').stop().remove();
                 partner.data('state', hash);
-                $('#partner-confirm').modal({show:true});
+                if(showConfirmation)
+                    $('#partner-confirm').modal({show:true});
                 // update masthead
                 body.find('#partner-message > div > span, #partner-message > div > a')
                     .first().replaceWith('<span>' + partner.find('.first-name input').val() + ' ' + partner.find('.last-name input').val() + '</span>');
@@ -128,7 +159,7 @@ $(document).ready(function () {
     }
     body.on('submit', '#partner form', function (evt) {
         evt.preventDefault();
-        submitPartner.apply(this);
+        submitPartner.apply(true);
     });
 
 });

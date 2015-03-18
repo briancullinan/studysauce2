@@ -82,6 +82,7 @@ $view['slots']->start('body'); ?>
                         </label>
                     </div>
                     <div class="form-actions highlighted-link invalid">
+                        <div class="invalid-only">You must complete all fields before moving on.</div>
                         <button type="submit" value="#partner-save" class="more">Invite</button>
                     </div>
                 </div>

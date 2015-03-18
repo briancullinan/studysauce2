@@ -70,6 +70,7 @@ $view['slots']->start('body'); ?>
             <?php } ?>
         </div>
         <div class="form-actions highlighted-link">
+            <div class="invalid-only">You must complete all fields before moving on.</div>
             <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
                 <button type="submit" value="#save-profile" class="more">Next</button>
             <?php } else { ?>

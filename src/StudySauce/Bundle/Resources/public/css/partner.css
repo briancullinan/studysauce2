@@ -114,6 +114,29 @@
     margin-top: 0;
 }
 
+#partner.invalid-only .first-required .first-name input,
+#partner.invalid-only .last-required .last-name input,
+#partner.invalid-only .email-required .email input
+{
+    border-bottom:3px solid #CC0000;
+}
+
+#partner .invalid-only
+{
+    display:none;
+    clear: both;
+    position: relative;
+    padding: 2px 3px;
+    border: 2px solid #CC0000;
+    color:#660000;
+    border-radius: 5px;
+}
+
+#partner.invalid-only .invalid-only
+{
+    display: inline-block;
+}
+
 @media all and (max-width:1000px)
 {
     #partner-invite,

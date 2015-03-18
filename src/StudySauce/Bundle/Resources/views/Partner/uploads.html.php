@@ -13,11 +13,9 @@ $view['slots']->start('body'); ?>
         <?php echo $view->render('StudySauceBundle:Partner:partner-nav.html.php', ['user' => $user]); ?>
         <h2>Uploads</h2>
         <?php
-if(empty($uploads)) {
-    ?>
-    <h3>Your student has not completed this section yet.</h3>
-<?php
-}
+        if(empty($uploads)) {
+            ?><h3>Your student has not completed this section yet.</h3><?php
+        }
         else
         {
     // sort strategies by date and display strategies read-only

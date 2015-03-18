@@ -161,6 +161,11 @@ $(document).ready(function () {
         $(this).tipsy().trigger('mouseenter');
     });
 
+    body.on('click', '*[title]:not([original-title]):not(iframe)', function () {
+        $('.tipsy').remove();
+        $(this).tipsy().trigger('mouseenter');
+    });
+
     body.on('show', '#home', function () {
         // TODO: add mobile check here?
         if (typeof navigator != 'undefined' &&

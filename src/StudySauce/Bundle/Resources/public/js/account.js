@@ -14,28 +14,60 @@ jQuery(document).ready(function() {
         var account = jQuery('#account');
         var valid = true;
 
-        if (getHash() == account.data('state') ||
-            account.find('.password input').val() == '' || (
-                account.find('.new-password input:visible').length > 0 && (
-                    account.find('.new-password input').val().trim() == '' ||
-                    account.find('.new-password input').val() != account.find('.confirm-password input').val())) ||
-            account.find('.first-name input').val() == '' ||
-            account.find('.last-name input').val() == '' ||
-            account.find('.email input').val().trim() == '' ||
-            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val()))
-            valid = false;
-
-        if (!valid)
-            account.find('.form-actions').removeClass('valid').addClass('invalid');
+        if (account.find('.password input').val() == '') {
+            account.addClass('password-required');
+        }
         else {
-            account.find('.form-actions').removeClass('invalid').addClass('valid');
+            account.removeClass('password-required');
+        }
+        if(account.find('.new-password').css('visibility') != 'hidden' && account.find('.new-password input').val().trim() == '') {
+            account.addClass('new-password-required');
+        }
+        else {
+            account.removeClass('new-password-required');
+        }
+        if(account.find('.new-password').css('visibility') != 'hidden' &&
+            account.find('.new-password input').val() != account.find('.confirm-password input').val()) {
+            account.addClass('confirm-required');
+        }
+        else {
+            account.removeClass('confirm-required');
+        }
+        if(account.find('.first-name input').val() == '') {
+            account.addClass('first-required');
+        }
+        else {
+            account.removeClass('first-required');
+        }
+        if(account.find('.last-name input').val() == '') {
+            account.addClass('last-required');
+        }
+        else {
+            account.removeClass('last-required');
+        }
+        if(account.find('.email input').val().trim() == '' ||
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val())) {
+            account.addClass('email-required');
+        }
+        else {
+            account.removeClass('email-required');
+        }
+
+        if (getHash() == account.data('state') || account.is('.password-required') || account.is('.new-password-required') ||
+            account.is('.first-required') || account.is('.last-required') || account.is('.email-required') || account.is('.confirm-required')) {
+            account.find('.form-actions').removeClass('valid').addClass('invalid');
+        }
+        else {
+            account.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
             account.find('.form-actions .error').remove();
         }
     }
+
     body.on('show', '#account', function () {
         $(this).data('state', getHash());
         accountFunc();
     });
+
     body.on('change', '#account input', accountFunc);
     body.on('keyup', '#account input', accountFunc);
     body.on('keydown', '#account input', accountFunc);
@@ -48,6 +80,7 @@ jQuery(document).ready(function() {
         account.find('.new-password, .confirm-password').css('visibility', 'hidden');
         account.find('.edit-icons').toggle();
         account.find('[value="#save-account"]').show();
+        accountFunc();
     });
 
     body.on('click', '#account a[href="#edit-password"]', function (evt) {
@@ -56,6 +89,7 @@ jQuery(document).ready(function() {
         account.find('.password, .new-password, .confirm-password').css('visibility', 'visible');
         account.find('.edit-icons').toggle();
         account.find('[value="#save-account"]').show();
+        accountFunc();
     });
 
     body.on('click', '#cancel-confirm a[href="#cancel-account"]', function (evt) {
@@ -88,8 +122,31 @@ jQuery(document).ready(function() {
     {
         evt.preventDefault();
         var account = jQuery('#account');
-        if(account.find('.form-actions').is('.invalid'))
+        if(account.find('.form-actions').is('.invalid')) {
+            if (account.is('.password-required') || account.is('.new-password-required') || account.is('.first-required') ||
+                account.is('.last-required') || account.is('.email-required') || account.is('.confirm-required')) {
+                account.addClass('invalid-only');
+                if(account.is('.password-required')) {
+                    account.find('.password input').focus();
+                }
+                else if(account.is('.new-password-required')) {
+                    account.find('.new-password input').focus();
+                }
+                else if(account.is('.confirm-required')) {
+                    account.find('.confirm-password input').focus();
+                }
+                else if(account.is('.first-required')) {
+                    account.find('.first-name input').focus();
+                }
+                else if(account.is('.last-required')) {
+                    account.find('.last-name input').focus();
+                }
+                else if(account.is('.email-required')) {
+                    account.find('.email input').focus();
+                }
+            }
             return;
+        }
         account.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#save-account"]'));
         var hash = getHash();

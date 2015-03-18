@@ -111,6 +111,8 @@ class UserProvider extends BaseUserProvider
             $factory = $this->encoderFactory->getEncoder($user);
             $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
             $user->setEnabled(true);
+            $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
+            $this->userManager->updateCanonicalFields($user);
             // reconnect social users to adviser invites
             InviteListener::setInviteRelationship($orm, $request, $user);
         }
@@ -120,8 +122,6 @@ class UserProvider extends BaseUserProvider
         $user->$setter_id($username);
         $setter_token = $setter.'AccessToken';
         $user->$setter_token($response->getAccessToken());
-        $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
-        $this->userManager->updateCanonicalFields($user);
         $user->setFirst($response->getFirst());
         $user->setLast($response->getLast());
 

@@ -520,8 +520,34 @@ $(document).ready(function () {
         if(schedule.find('.form-actions:visible').is('.invalid'))
         {
             schedule.addClass('invalid-only');
-            // TODO: focus on correct field
-            
+            // focus on required field
+            if(schedule.is('.university-required')) {
+                schedule.find('.university input').selectize.focus();
+            }
+            var toEdit;
+            if((toEdit = schedule.find('.class-row.class-required, .class-row.dotw-required, ' +
+                '.class-row.start-time-required, .class-row.end-time-required, ' +
+                '.class-row.start-date-required, .class-row.end-date-required')).length > 0 ||
+                (toEdit = schedule.find('.class-row.blank').first()).length > 0) {
+                if(toEdit.is('.blank') || toEdit.is('.class-required')) {
+                    toEdit.find('.class-name input').focus();
+                }
+                else if(toEdit.is('.dotw-required')) {
+                    toEdit.find('.day-of-the-week input').first().focus();
+                }
+                else if(toEdit.is('.start-time-required')) {
+                    toEdit.find('.start-time input').focus();
+                }
+                else if(toEdit.is('.end-time-required')) {
+                    toEdit.find('.end-time input').focus();
+                }
+                else if(toEdit.is('.start-date-required')) {
+                    toEdit.find('.start-date input').focus();
+                }
+                else if(toEdit.is('.end-date-required')) {
+                    toEdit.find('.end-date input').focus();
+                }
+            }
             return;
         }
 
@@ -529,13 +555,8 @@ $(document).ready(function () {
         loadingAnimation(schedule.find('[value="#save-class"]'));
 
         schedule.find('.term-row').each(function () {
-            var term = $(this);
-            if(term.find('.university input').val().trim() == '')
-                term.find('.university').addClass('error-empty');
-            else
-                term.find('.university').removeClass('error-empty');
-
-            var classes = [],
+            var term = $(this),
+                classes = [],
                 scheduleId = (/schedule-id-([0-9]*)(\s|$)/ig).exec(term.attr('class'))[1];
             term.find('.class-row.edit:not(.invalid):not(.blank), .class-row.deleted').each(function () {
                 var row = $(this),

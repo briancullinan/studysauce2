@@ -3,11 +3,57 @@ $(document).ready(function () {
     // TODO: bring back chat
     var body = $('body');
 
+    function validateContact()
+    {
+        var contact = $(this).closest('#contact-support, #schedule-demo');
+        if(contact.find('.name input').val().trim() == '') {
+            contact.addClass('name-required');
+        }
+        else {
+            contact.removeClass('name-required');
+        }
+        if(contact.find('.email input').val().trim() == '' ||
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(contact.find('.email input').val())) {
+            contact.addClass('email-required');
+        }
+        else {
+            contact.removeClass('email-required');
+        }
+        if(contact.find('.message textarea').val().trim() == '') {
+            contact.addClass('message-required');
+        }
+        else {
+            contact.removeClass('message-required');
+        }
+
+        if(contact.is('.name-required') || contact.is('.email-required') || contact.is('.message-required')) {
+            contact.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        }
+        else {
+            contact.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
+        }
+    }
+
+    body.on('show.bs.modal', '#contact-support, #schedule-demo', validateContact);
+    body.on('keyup', '#contact-support input, #schedule-demo input, #contact-support textarea, #schedule-demo textarea', validateContact);
+    body.on('change', '#contact-support input, #schedule-demo input, #contact-support textarea, #schedule-demo textarea', validateContact);
+
     body.on('submit', '#contact-support form, #schedule-demo form', function (evt) {
         evt.preventDefault();
         var contact = $('#contact-support:visible, #schedule-demo:visible');
-        if(contact.is('.invalid'))
+        if(contact.find('.highlighted-link').is('.invalid')) {
+            contact.addClass('invalid-only');
+            if(contact.is('.name-required')) {
+                contact.find('.name input').focus();
+            }
+            if(contact.is('.email-required')) {
+                contact.find('.email input').focus();
+            }
+            if(contact.is('.message-required')) {
+                contact.find('.message textarea').focus();
+            }
             return;
+        }
         contact.removeClass('valid').addClass('invalid');
 
         jQuery.ajax({
@@ -20,7 +66,6 @@ $(document).ready(function () {
                 message: contact.find('.message textarea').val()
             },
             success: function () {
-                contact.removeClass('invalid').addClass('valid').modal('hide');
                 contact.find('.message textarea').val('');
                 contact.modal('hide');
             },

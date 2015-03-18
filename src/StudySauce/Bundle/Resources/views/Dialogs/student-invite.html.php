@@ -33,7 +33,7 @@ $view['slots']->start('modal-body') ?>
             <label class="input"><span>Your email</span><input type="email" value=""></label>
         </div>
     <?php } ?>
-    <div class="highlighted-link">
+    <div class="highlighted-link invalid">
         <button type="submit" value="#submit-contact" class="more">Send</button>
     </div>
 </form>

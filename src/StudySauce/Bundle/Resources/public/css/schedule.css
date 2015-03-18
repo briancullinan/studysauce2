@@ -237,7 +237,7 @@
 }
 
 #schedule.invalid-only .class-required .class-name input,
-#schedule.invalid-only .dotw-required .day-of-the-week label,
+#schedule.invalid-only .dotw-required .day-of-the-week,
 #schedule.invalid-only .start-time-required .start-time input,
 #schedule.invalid-only .end-time-required .end-time input,
 #schedule.invalid-only .start-date-required .start-date input,

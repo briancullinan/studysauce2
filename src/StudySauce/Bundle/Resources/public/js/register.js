@@ -12,18 +12,37 @@ jQuery(document).ready(function() {
     function accountFunc() {
         var account = jQuery('#register');
         var valid = true;
-        if (getHash() == account.data('state') ||
-            account.find('.first-name input').val() == '' ||
-            account.find('.last-name input').val() == '' ||
-            account.find('.email input').val().trim() == '' ||
-            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val()) ||
-            account.find('.password input').val() == '')
-            valid = false;
+        if (account.find('.first-name input').val() == '') {
+            account.addClass('first-required');
+        }
+        else {
+            account.removeClass('first-required');
+        }
+        if(account.find('.last-name input').val() == '') {
+            account.addClass('last-required');
+        }
+        else {
+            account.removeClass('last-required');
+        }
+        if(account.find('.email input').val().trim() == '' ||
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val())) {
+            account.addClass('email-required');
+        }
+        else {
+            account.removeClass('email-required');
+        }
+        if(account.find('.password input').val() == '') {
+            account.addClass('password-required');
+        }
+        else {
+            account.removeClass('password-required');
+        }
 
-        if (!valid)
+        if (getHash() == account.data('state') || account.is('.first-required') || account.is('.last-required') ||
+            account.is('.email-required') || account.is('.password-required'))
             account.find('.form-actions').removeClass('valid').addClass('invalid');
         else {
-            account.find('.form-actions').removeClass('invalid').addClass('valid');
+            account.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
             account.find('.form-actions .error').remove();
         }
     }
@@ -41,12 +60,30 @@ jQuery(document).ready(function() {
         evt.preventDefault();
         $(this).remove();
         account.find('form').show();
+        accountFunc();
     });
     function submitRegister(evt) {
         evt.preventDefault();
         var account = jQuery('#register');
-        if(account.find('.form-actions').is('.invalid'))
+        if(account.find('.form-actions').is('.invalid')) {
+            if (account.is('.first-required') || account.is('.last-required') ||
+                account.is('.email-required') || account.is('.password-required')) {
+                account.addClass('invalid-only');
+                if (account.is('.first-required')) {
+                    account.find('.first-name input').focus();
+                }
+                else if (account.is('.last-required')) {
+                    account.find('.last-name input').focus();
+                }
+                else if (account.is('.email-required')) {
+                    account.find('.email input').focus();
+                }
+                else if (account.is('.password-required')) {
+                    account.find('.password input').focus();
+                }
+            }
             return;
+        }
         account.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#user-register"]'));
         var hash = getHash();

@@ -142,6 +142,7 @@ $view['slots']->start('body'); ?>
                 <div class="highlighted-link form-actions invalid">
                     <a href="#add-schedule" class="big-add">Add <span>+</span> semester</a>
                     <a href="#grade-scale" data-toggle="modal">Change grade scale</a>
+                    <div class="invalid-only">You must complete all fields before moving on.</div>
                     <button type="submit" value="#save-grades" class="more">Save</button>
                 </div>
             </form>

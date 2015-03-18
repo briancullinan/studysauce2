@@ -74,8 +74,12 @@ $(document).ready(function () {
             that.find('.percent input').val().trim() == '' &&
             that.find('.assignment input').val().trim() == ''))
             that.removeClass('invalid').addClass('valid');
-        else
+        else {
+            if(that.find('.assignment input').val().trim() == '') {
+
+            }
             that.removeClass('valid').addClass('invalid');
+        }
 
     }
 
@@ -360,8 +364,26 @@ $(document).ready(function () {
     {
         evt.preventDefault();
         var calc = $('#calculator');
-        if(calc.find('.form-actions').is('invalid'))
+        if(calc.find('.form-actions').is('.invalid')) {
+            // TODO: open term with invalid entry
+            calc.addClass('invalid-only');
+            var rowEdit = calc.find('.grade-row.invalid').first(),
+                termRow = rowEdit.parents('.term-row'),
+                classRow = rowEdit.parents('.class-row');
+            if(!termRow.is('.selected')) {
+                calc.find('.term-row.selected').removeClass('selected');
+                calc.find('.term-row .term-name').addClass('read-only');
+                termRow.addClass('selected');
+                if(termRow.index('.term-row') > 0)
+                    termRow.find('.term-name').removeClass('read-only');
+            }
+            if(!classRow.is('.selected')) {
+                classRow.addClass('selected');
+                classRow.find('.hours').removeClass('read-only');
+            }
+            rowEdit.find('.assignment input').focus();
             return;
+        }
 
         calc.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation(calc.find('[value="#save-grades"]'));

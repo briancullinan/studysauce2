@@ -237,6 +237,31 @@
     margin-bottom:-20px;
 }
 
+#deadlines.invalid-only .class-required .class-name select,
+#deadlines.invalid-only .assignment-required .assignment input,
+#deadlines.invalid-only .reminder-required .reminder,
+#deadlines.invalid-only .date-required .due-date input
+{
+    border-bottom:3px solid #CC0000;
+}
+
+#deadlines .invalid-only
+{
+    display:none;
+    clear: both;
+    position: relative;
+    padding: 2px 3px;
+    border: 2px solid #CC0000;
+    color:#660000;
+    border-radius: 5px;
+}
+
+#deadlines.invalid-only .invalid-only
+{
+    display: inline-block;
+}
+
+
 @media all and (max-width:1000px)
 {
     #deadlines .deadline-row

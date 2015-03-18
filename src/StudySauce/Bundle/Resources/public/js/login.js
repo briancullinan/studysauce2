@@ -4,16 +4,26 @@ jQuery(document).ready(function() {
 
     function accountFunc() {
         var account = jQuery('#login');
-        var valid = true;
 
         if (account.find('.email input').val().trim() == '' ||
-            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val()))
-            valid = false;
-
-        if (!valid)
-            account.find('.form-actions').removeClass('valid').addClass('invalid');
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(account.find('.email input').val())) {
+            account.addClass('email-required');
+        }
         else {
-            account.find('.form-actions').removeClass('invalid').addClass('valid');
+            account.removeClass('email-required');
+        }
+        if (account.find('.password input').val().trim() == '') {
+            account.addClass('password-required');
+        }
+        else {
+            account.removeClass('password-required');
+        }
+
+        if (account.is('.email-required') || account.is('.password-required')) {
+            account.find('.form-actions').removeClass('valid').addClass('invalid');
+        }
+        else {
+            account.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
             account.find('.form-actions .error').remove();
         }
     }
@@ -23,6 +33,7 @@ jQuery(document).ready(function() {
         evt.preventDefault();
         $(this).remove();
         account.find('form').show();
+        accountFunc();
     });
 
     body.on('change', '#login .email input, #login .password input', accountFunc);
@@ -32,8 +43,16 @@ jQuery(document).ready(function() {
     {
         evt.preventDefault();
         var account = jQuery('#login');
-        if(account.find('.form-actions').is('.invalid'))
+        if(account.find('.form-actions').is('.invalid')) {
+            account.addClass('invalid-only');
+            if(account.is('.email-required')) {
+                account.find('.email input').focus();
+            }
+            else if(account.is('.password-required')) {
+                account.find('.password input').focus();
+            }
             return;
+        }
         account.find('.form-actions').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#user-login"]'));
         jQuery.ajax({
