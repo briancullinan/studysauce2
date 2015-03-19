@@ -533,64 +533,6 @@ $collection->add(
     )
 );
 $collection->add(
-    'userlist',
-    new Route(
-        '/userlist/{_format}',
-        ['_controller' => 'StudySauceBundle:Partner:userlist', '_format' => 'adviser'],
-        ['_format' => DASHBOARD_VIEWS]
-    )
-);
-$collection->add(
-    'userlist_status',
-    new Route(
-        '/userlist/status',
-        ['_controller' => 'StudySauceBundle:Partner:updateStatus'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
-    )
-);
-$collection->add(
-    'adviser',
-    new Route(
-        '/adviser/{_user}/{_tab}/{_format}',
-        ['_controller' => 'StudySauceBundle:Partner:adviser', '_format' => 'adviser'],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
-    )
-);
-$collection->add(
-    'adviser_partner',
-    new Route(
-        '/partner/{_user}/{_tab}/{_format}',
-        ['_controller' => 'StudySauceBundle:Partner:partner', '_format' => 'adviser'],
-        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
-    )
-);
-$collection->add(
-    'import',
-    new Route(
-        '/import/{_format}',
-        ['_controller' => 'StudySauceBundle:Partner:import', '_format' => 'adviser'],
-        ['_format' => DASHBOARD_VIEWS]
-    )
-);
-$collection->add(
-    'import_save',
-    new Route(
-        '/import/save',
-        ['_controller' => 'StudySauceBundle:Partner:importSave'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
-    )
-);
-$collection->add(
     'contact_send',
     new Route(
         '/contact/send',

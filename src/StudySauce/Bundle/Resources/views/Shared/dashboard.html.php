@@ -72,9 +72,9 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         echo $view->render('StudySauceBundle:Shared:header.html.php');
         if($app->getUser()->hasRole('ROLE_ADMIN'))
             echo $view->render('AdminBundle:Shared:menu.html.php');
-        elseif($user->hasRole('ROLE_PARTNER'))
+        elseif($app->getUser()->hasRole('ROLE_PARTNER'))
             echo $view->render('StudySauceBundle:Partner:menu.html.php');
-        elseif($user->hasRole('ROLE_MASTER_ADVISER') || $user->hasRole('ROLE_ADVISER'))
+        elseif($app->getUser()->hasRole('ROLE_MASTER_ADVISER') || $app->getUser()->hasRole('ROLE_ADVISER'))
             echo $view->render('AdminBundle:Adviser:menu.html.php');
         else
             echo $view->render('StudySauceBundle:Shared:menu.html.php');

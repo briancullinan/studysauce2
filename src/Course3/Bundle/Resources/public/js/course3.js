@@ -76,14 +76,13 @@ $(document).ready(function () {
 
     function validateStrategies() {
         var step = body.find('#course3_strategies-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-self-testing"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_strategies-step2 input', validateStrategies);
@@ -92,8 +91,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course3_strategies-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course3_strategies_update'],
@@ -122,7 +123,6 @@ $(document).ready(function () {
 
     function validateGroupStudy() {
         var step = body.find('#course3_group_study-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-bad-times"]:checked').length == 0 ||
             step.find('input[name="quiz-building"]:checked').length == 0 ||
@@ -130,9 +130,9 @@ $(document).ready(function () {
             step.find('input[name="quiz-group-breaks"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_group_study-step2 input', validateGroupStudy);
@@ -142,8 +142,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course3_group_study-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course3_group_study_update'],
@@ -175,14 +177,13 @@ $(document).ready(function () {
 
     function validateGroupStudyInvestment() {
         var step = body.find('#course3_group_study-step4'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('textarea').val().trim() == '')
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_group_study-step4 textarea', validateGroupStudyInvestment);
@@ -192,8 +193,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course3_group_study-step4'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course3_group_study_update'],
@@ -213,16 +216,15 @@ $(document).ready(function () {
 
     function validateTeaching() {
         var step = body.find('#course3_teaching-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-new-language"]').val().trim() == '' ||
             step.find('input[name="quiz-memorizing"]:checked').length == 0 ||
             step.find('input[name="quiz-videotaping"]').val().trim() == '')
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_teaching-step2 input', validateTeaching);
@@ -232,8 +234,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course3_teaching-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course3_teaching_update'],
@@ -266,7 +270,6 @@ $(document).ready(function () {
 
     function validateActiveReading() {
         var step = body.find('#course3_active_reading-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('textarea[name="quiz-what-reading"]').val().trim() == '' ||
             step.find('input[name="quiz-highlighting"]:checked').length == 0 ||
@@ -274,9 +277,9 @@ $(document).ready(function () {
             step.find('input[name="quiz-self-explanation"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_active_reading-step2 input', validateActiveReading);
@@ -286,8 +289,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course3_active_reading-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course3_active_reading_update'],
@@ -321,7 +326,6 @@ $(document).ready(function () {
 
     function validateSpacedRepetition() {
         var step = body.find('#course3_spaced_repetition-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-space-out"]:checked').length == 0 ||
             step.find('textarea[name="quiz-forgetting"]').val().trim() == '' ||
@@ -329,9 +333,9 @@ $(document).ready(function () {
             step.find('input[name="quiz-another-name"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_spaced_repetition-step2 input, #course3_spaced_repetition-step2 textarea', validateSpacedRepetition);
@@ -341,8 +345,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course3_spaced_repetition-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course3_spaced_repetition_update'],
@@ -375,15 +381,14 @@ $(document).ready(function () {
 
     function validateFeedback() {
         var step = body.find('#course3_spaced_repetition-step4'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input:checked').length == 0 ||
             step.find('textarea').val().trim() == '')
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course3_spaced_repetition-step4 input, #course3_spaced_repetition-step4 textarea', validateFeedback);

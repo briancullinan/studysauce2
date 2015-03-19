@@ -156,14 +156,65 @@ $(document).ready(function () {
         }
     }
 
-    body.on('mouseenter', '*[title]:not([original-title]):not(iframe)', function () {
+    body.on('mouseenter', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
         $('.tipsy').remove();
-        $(this).tipsy().trigger('mouseenter');
+        if(!($(this).is('[original-title]')))
+            $(this).tipsy({trigger: 'manual'});
+        $(this).tipsy('show');
     });
 
-    body.on('click', '*[title]:not([original-title]):not(iframe)', function () {
+    body.on('mouseover', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
         $('.tipsy').remove();
-        $(this).tipsy().trigger('mouseenter');
+        if(!($(this).is('[original-title]')))
+            $(this).tipsy({trigger: 'manual'});
+        $(this).tipsy('show');
+    });
+
+    var tipsyTimeout = null;
+    body.on('click', '.tipsy', function () {
+        if(tipsyTimeout != null)
+            clearTimeout(tipsyTimeout);
+        $(this).toggleClass('focus');
+    });
+
+    body.on('mouseenter', '.tipsy', function () {
+        if(tipsyTimeout != null)
+            clearTimeout(tipsyTimeout);
+    });
+
+    body.on('click', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
+        $('.tipsy').remove();
+        if(!($(this).is('[original-title]')))
+            $(this).tipsy({trigger: 'manual'});
+        $(this).tipsy('show');
+    });
+
+    body.on('focus', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
+        $('.tipsy').remove();
+        if(!($(this).is('[original-title]')))
+            $(this).tipsy({trigger: 'manual'});
+        $(this).tipsy('show');
+    });
+
+    body.on('mouseleave', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
+        tipsyTimeout = setTimeout(function () {
+            $('.tipsy').remove();
+            $(this).tipsy('hide');
+        }, 200);
+    });
+
+    body.on('mouseout', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
+        tipsyTimeout = setTimeout(function () {
+            $('.tipsy').remove();
+            $(this).tipsy('hide');
+        }, 200);
+    });
+
+    body.on('blur', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
+        tipsyTimeout = setTimeout(function () {
+            $('.tipsy').remove();
+            $(this).tipsy('hide');
+        }, 200);
     });
 
     body.on('show', '#home', function () {

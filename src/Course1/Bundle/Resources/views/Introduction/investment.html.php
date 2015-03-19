@@ -24,6 +24,7 @@ $view['slots']->start('body'); ?>
             <?php endforeach; ?>
         </div>
         <div class="highlighted-link invalid">
+            <div class="invalid-only">You must complete all fields before moving on.</div>
             <a href="<?php print $view['router']->generate('course1_setting_goals', ['_step' => 0]); ?>" class="more">Next step</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>

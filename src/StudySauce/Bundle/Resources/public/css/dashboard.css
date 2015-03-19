@@ -401,9 +401,33 @@ a[href="#remove-deadline"]:hover
 }
 
 @media all and (max-width: 1000px) {
+
     .tipsy
     {
-        display: none !important;
+        top:auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        position: fixed;
+        width:auto !important;
+        padding-bottom:0;
+    }
+
+    .tipsy.focus .tipsy-inner
+    {
+        overflow: visible;
+        white-space: normal;
+    }
+
+    .tipsy .tipsy-inner
+    {
+        max-width: none;
+        border-bottom:0;
+        white-space: nowrap;
+        overflow:hidden;
+        text-overflow: ellipsis;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
     .panel-pane {

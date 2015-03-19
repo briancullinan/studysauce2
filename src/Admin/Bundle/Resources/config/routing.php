@@ -256,5 +256,62 @@ $collection->add(
         'request.isXmlHttpRequest()'
     )
 );
-
+$collection->add(
+    'import',
+    new Route(
+        '/import/{_format}',
+        ['_controller' => 'AdminBundle:Import:index', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
+    )
+);
+$collection->add(
+    'import_save',
+    new Route(
+        '/import/save',
+        ['_controller' => 'AdminBundle:Import:update'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'userlist',
+    new Route(
+        '/userlist/{_format}',
+        ['_controller' => 'AdminBundle:Adviser:userlist', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS]
+    )
+);
+$collection->add(
+    'userlist_status',
+    new Route(
+        '/userlist/status',
+        ['_controller' => 'AdminBundle:Adviser:updateStatus'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'adviser',
+    new Route(
+        '/adviser/{_user}/{_tab}/{_format}',
+        ['_controller' => 'AdminBundle:Adviser:adviser', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
+    )
+);
+$collection->add(
+    'adviser_partner',
+    new Route(
+        '/partner/{_user}/{_tab}/{_format}',
+        ['_controller' => 'AdminBundle:Adviser:partner', '_format' => 'adviser'],
+        ['_format' => DASHBOARD_VIEWS, '_user' => '[0-9]+']
+    )
+);
 return $collection;

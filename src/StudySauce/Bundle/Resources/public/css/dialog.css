@@ -102,7 +102,13 @@
 
 #contact-support.invalid-only.name-required .name input,
 #contact-support.invalid-only.email-required .email input,
-#contact-support.invalid-only.message-required .message textarea
+#contact-support.invalid-only.message-required .message textarea,
+#bill-parents.invalid-only.first-required .first-name input,
+#bill-parents.invalid-only.last-required .last-name input,
+#bill-parents.invalid-only.email-required .email input,
+#bill-parents.invalid-only.your-first-required .your-first input,
+#bill-parents.invalid-only.your-last-required .your-last input,
+#bill-parents.invalid-only.your-email-required .your-email input
 {
     border-bottom:3px solid #CC0000;
     border-bottom-left-radius: 5px;

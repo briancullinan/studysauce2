@@ -1,6 +1,9 @@
 <?php
 
 
+namespace Admin\Bundle\Controller;
+
+
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Group;

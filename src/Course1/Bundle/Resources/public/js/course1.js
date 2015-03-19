@@ -11,7 +11,6 @@ $(document).ready(function () {
 
     function validateQuiz1() {
         var step = body.find('#course1_introduction-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-education"]:checked').length == 0 ||
             step.find('input[name="quiz-mindset"]:checked').length == 0 ||
@@ -20,14 +19,13 @@ $(document).ready(function () {
             step.find('input[name="quiz-time-management"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     function validateQuiz2() {
         var step = body.find('#course1_setting_goals-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-goal-performance"]:checked').length == 0 ||
             step.find('input[name="quiz-smart-acronym-S"]').val().trim() == '' ||
@@ -39,14 +37,13 @@ $(document).ready(function () {
             step.find('input[name="quiz-motivation-E"]').val().trim() == '')
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     function validateQuiz3() {
         var step = body.find('#course1_procrastination-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-memory-A"]').val().trim() == '' ||
             step.find('input[name="quiz-memory-R"]').val().trim() == '' ||
@@ -56,14 +53,13 @@ $(document).ready(function () {
             step.find('input[name="quiz-reduce-procrastination-P"]').val().trim() == '')
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     function validateQuiz4() {
         var step = body.find('#course1_distractions-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-multitask"]:checked').length == 0 ||
             step.find('input[name="quiz-downside"]:checked').length == 0 ||
@@ -71,9 +67,9 @@ $(document).ready(function () {
             step.find('input[name="quiz-distraction"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('show', '.course1.step0', function () {
@@ -156,8 +152,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_introduction-step4'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_introduction_update'],
@@ -179,8 +177,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_introduction-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_introduction_update'],
@@ -210,8 +210,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_setting_goals-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_setting_goals_update'],
@@ -252,8 +254,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_procrastination-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_procrastination_update'],
@@ -291,8 +295,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_distractions-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_distractions_update'],
@@ -324,7 +330,6 @@ $(document).ready(function () {
 
     function validateQuiz5() {
         var step = body.find('#course1_environment-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-environment-bed"]:checked').length == 0 ||
             step.find('input[name="quiz-environment-mozart"]:checked').length == 0 ||
@@ -332,9 +337,9 @@ $(document).ready(function () {
             step.find('input[name="quiz-environment-breaks"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course1_environment-step2 input', validateQuiz5);
@@ -343,8 +348,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_environment-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_environment_update'],
@@ -377,7 +384,6 @@ $(document).ready(function () {
 
     function validateQuiz6() {
         var step = body.find('#course1_partners-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-partners-help"]:checked').length == 0 ||
             step.find('input[name="quiz-partners-attribute"]:checked').length == 0 ||
@@ -385,9 +391,9 @@ $(document).ready(function () {
             step.find('input[name="quiz-partners-usage"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course1_partners-step2 input', validateQuiz6);
@@ -397,8 +403,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_partners-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_partners_update'],
@@ -431,14 +439,13 @@ $(document).ready(function () {
 
     function validateQuiz7() {
         var step = body.find('#course1_upgrade-step2'),
-            actions = step.find('.highlighted-link'),
             valid = true;
         if(step.find('input[name="quiz-enjoyed"]:checked').length == 0)
             valid = false;
         if(!valid)
-            actions.removeClass('valid').addClass('invalid');
+            step.find('.highlighted-link').removeClass('valid').addClass('invalid');
         else
-            actions.removeClass('invalid').addClass('valid');
+            step.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     }
 
     body.on('change', '#course1_upgrade-step2 input', validateQuiz7);
@@ -447,8 +454,10 @@ $(document).ready(function () {
         evt.preventDefault();
         var step = body.find('#course1_upgrade-step2'),
             actions = step.find('.highlighted-link');
-        if(actions.is('.invalid'))
+        if(actions.is('.invalid')) {
+            step.addClass('invalid-only');
             return;
+        }
         actions.removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['course1_upgrade_update'],

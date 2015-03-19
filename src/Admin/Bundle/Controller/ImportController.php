@@ -32,7 +32,7 @@ class ImportController extends Controller
      * @param Group $group
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function importAction(Request $request, Group $group = null)
+    public function updateAction(Request $request, Group $group = null)
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();

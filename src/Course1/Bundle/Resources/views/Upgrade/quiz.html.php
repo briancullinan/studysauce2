@@ -22,6 +22,7 @@ $complete = $course->getEnjoyed() !== null;
         <?php } ?>
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
         <div class="highlighted-link <?php print ($complete ? ' valid' : ' invalid'); ?>">
+            <div class="invalid-only">You must complete all fields before moving on.</div>
             <a href="#submit-quiz" class="more">Submit</a>
             <a href="<?php print $view['router']->generate('course1_upgrade', ['_step' => 3]); ?>" class="more">Next</a>
         </div>
