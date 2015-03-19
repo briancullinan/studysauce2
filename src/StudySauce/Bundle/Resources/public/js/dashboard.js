@@ -156,66 +156,55 @@ $(document).ready(function () {
         }
     }
 
-    body.on('mouseenter', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        $('.tipsy').remove();
+    function showTip()
+    {
+        var to;
+        if((to = $(this).data('timer')) != null)
+            clearTimeout(to);
         if(!($(this).is('[original-title]')))
             $(this).tipsy({trigger: 'manual'});
         $(this).tipsy('show');
-    });
+        var tip = $(this).data('tipsy').$tip;
+        tip.data('el', this);
+    }
 
-    body.on('mouseover', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        $('.tipsy').remove();
-        if(!($(this).is('[original-title]')))
-            $(this).tipsy({trigger: 'manual'});
-        $(this).tipsy('show');
-    });
+    function hideTip()
+    {
+        var that = $(this);
+        that.data('timer', setTimeout(function () {
+            that.tipsy('hide');
+        }, 100));
+    }
 
-    var tipsyTimeout = null;
+    function cancelHide()
+    {
+        var to, el;
+        if((el = $(this).data('el')) != null && (to = $(el).data('timer')) != null)
+            clearTimeout(to);
+    }
+
     body.on('click', '.tipsy', function () {
-        if(tipsyTimeout != null)
-            clearTimeout(tipsyTimeout);
+        cancelHide.apply(this);
         $(this).toggleClass('focus');
     });
 
-    body.on('mouseenter', '.tipsy', function () {
-        if(tipsyTimeout != null)
-            clearTimeout(tipsyTimeout);
+    body.on('mouseover', '.tipsy', cancelHide);
+
+    body.on('focus', '.tipsy', cancelHide);
+
+    body.on('mouseout', '.tipsy', function () {
+        hideTip.apply($(this).data('el'));
     });
 
-    body.on('click', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        $('.tipsy').remove();
-        if(!($(this).is('[original-title]')))
-            $(this).tipsy({trigger: 'manual'});
-        $(this).tipsy('show');
-    });
+    body.on('mouseover', '*[title]:not(iframe),*[original-title]:not(iframe)', showTip);
 
-    body.on('focus', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        $('.tipsy').remove();
-        if(!($(this).is('[original-title]')))
-            $(this).tipsy({trigger: 'manual'});
-        $(this).tipsy('show');
-    });
+    body.on('click', '*[title]:not(iframe),*[original-title]:not(iframe)', showTip);
 
-    body.on('mouseleave', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        tipsyTimeout = setTimeout(function () {
-            $('.tipsy').remove();
-            $(this).tipsy('hide');
-        }, 200);
-    });
+    body.on('focus', '*[title]:not(iframe),*[original-title]:not(iframe)', showTip);
 
-    body.on('mouseout', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        tipsyTimeout = setTimeout(function () {
-            $('.tipsy').remove();
-            $(this).tipsy('hide');
-        }, 200);
-    });
+    body.on('mouseout', '*[title]:not(iframe),*[original-title]:not(iframe)', hideTip);
 
-    body.on('blur', '*[title]:not(iframe),*[original-title]:not(iframe)', function () {
-        tipsyTimeout = setTimeout(function () {
-            $('.tipsy').remove();
-            $(this).tipsy('hide');
-        }, 200);
-    });
+    body.on('blur', '*[title]:not(iframe),*[original-title]:not(iframe)', hideTip);
 
     body.on('show', '#home', function () {
         // TODO: add mobile check here?

@@ -113,7 +113,7 @@ $(document).ready(function () {
     function submitPartner(showConfirmation)
     {
         var partner = jQuery('#partner');
-        if(partner.find('.form-actions').is('.invalid')) {
+        if(partner.find('.form-actions').is('.invalid') || partner.find('#partner-invite').is('read-only')) {
             if(partner.is('.first-required') || partner.is('.last-required') || partner.is('.email-required')) {
                 partner.addClass('invalid-only');
                 if(partner.is('.first-required')) {
