@@ -45,7 +45,7 @@ class EnvironmentController extends Controller
                 return $this->render('Course1Bundle:Environment:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course1Bundle:Environment:video.html.php');
+                return $this->render('Course1Bundle:Environment:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

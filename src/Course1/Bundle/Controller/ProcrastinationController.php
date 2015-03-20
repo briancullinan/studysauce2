@@ -45,7 +45,7 @@ class ProcrastinationController extends Controller
                 return $this->render('Course1Bundle:Procrastination:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course1Bundle:Procrastination:video.html.php');
+                return $this->render('Course1Bundle:Procrastination:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

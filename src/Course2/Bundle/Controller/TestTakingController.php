@@ -45,7 +45,7 @@ class TestTakingController extends Controller
                 return $this->render('Course2Bundle:TestTaking:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course2Bundle:TestTaking:video.html.php');
+                return $this->render('Course2Bundle:TestTaking:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

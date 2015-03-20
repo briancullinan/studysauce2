@@ -45,7 +45,7 @@ class PartnersController extends Controller
                 return $this->render('Course1Bundle:Partners:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course1Bundle:Partners:video.html.php');
+                return $this->render('Course1Bundle:Partners:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

@@ -62,6 +62,7 @@ $view['slots']->start('body'); ?>
             </div>
         </div>
         <hr>
+        <a href="#add-study-hours" class="big-add" data-toggle="modal">Add <span>+</span> study hours</a>
         <div id="checkins-list">
             <?php
             reset($checkouts);
@@ -123,4 +124,5 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:metricsEmpty'), $isDemo ? []: ['strategy' => 'sinclude']);
+print $this->render('StudySauceBundle:Dialogs:add-study-hours.html.php', ['id' => 'add-study-hours']);
 $view['slots']->stop();

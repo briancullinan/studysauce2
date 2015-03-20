@@ -147,6 +147,7 @@
     overflow: hidden;
     margin: 0 -2px;
     padding: 0 2px;
+    vertical-align: top;
 }
 
 #deadlines header label:nth-child(4),

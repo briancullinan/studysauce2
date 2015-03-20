@@ -45,7 +45,7 @@ class SpacedRepetitionController extends Controller
                 return $this->render('Course3Bundle:SpacedRepetition:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course3Bundle:SpacedRepetition:video.html.php');
+                return $this->render('Course3Bundle:SpacedRepetition:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

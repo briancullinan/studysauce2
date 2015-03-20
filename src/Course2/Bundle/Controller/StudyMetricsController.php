@@ -45,7 +45,7 @@ class StudyMetricsController extends Controller
                 return $this->render('Course2Bundle:StudyMetrics:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course2Bundle:StudyMetrics:video.html.php');
+                return $this->render('Course2Bundle:StudyMetrics:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

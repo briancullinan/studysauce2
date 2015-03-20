@@ -25,13 +25,23 @@ class DeadlinesController extends Controller
     /**
      * @param User $user
      * @param array $template
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @return Response
      */
-    public function indexAction(User $user = null, $template = ['Deadlines', 'tab'])
+    public function indexAction(Request $request, User $user = null, $template = ['Deadlines', 'tab'])
     {
         /** @var $user \StudySauce\Bundle\Entity\User */
         if(empty($user))
             $user = $this->getUser();
+
+        // forward to adviser deadlines
+        if($user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER')) {
+            $params = $request->attributes->all();
+            if($params['_format'] == 'index')
+                $params['_format'] = 'adviser';
+            return $this->forward('AdminBundle:Deadlines:index', $params, $request->query->all());
+        }
+
         $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted();});
 
         /** @var Schedule $schedule */
@@ -70,10 +80,11 @@ class DeadlinesController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $_user
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function partnerAction($_user)
+    public function partnerAction(Request $request, $_user)
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -81,7 +92,7 @@ class DeadlinesController extends Controller
         /** @var $user User */
         $user = $userManager->findUserBy(['id' => intval($_user)]);
 
-        return $this->indexAction($user, ['Partner', 'deadlines']);
+        return $this->indexAction($request, $user, ['Partner', 'deadlines']);
     }
 
     /**
@@ -249,7 +260,7 @@ class DeadlinesController extends Controller
 
         $request->attributes->set('_format', 'tab');
         /** @var Response $deadlines */
-        $deadlines = $this->indexAction();
+        $deadlines = $this->indexAction($request);
         /** @var Response $widget */
         $widget = $this->widgetAction();
         return new Response($deadlines->getContent() . $widget->getContent());

@@ -94,7 +94,8 @@ $view['slots']->start('body'); ?>
             foreach($sessions as $i => $s)
             {
                 /** @var Visit $s */
-                $path = implode('', explode('/', $s->getPath()));
+                $parts = explode('/', $s->getPath());
+                $path = implode('', $parts);
                 /** @var Schedule $schedule */
                 $schedule = $s->getUser()->getSchedules()->first();
                 /** @var User $adviser */
@@ -105,7 +106,7 @@ $view['slots']->start('body'); ?>
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print $s->getCreated()->getTimestamp(); ?>"><?php print $s->getCreated()->format('j M'); ?></td>
                 <td><?php print $s->getUser()->getCompleted(); ?>%</td>
-                <td><a href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
+                <td><a title="<?php print (!empty($parts[1]) ? ucfirst($parts[1]) : 'Home'); ?>" href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
                 <td><?php print (empty($schedule) || empty($schedule->getUniversity()) ? 'Not set' : $schedule->getUniversity()); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>
                 <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>

@@ -45,7 +45,7 @@ class ActiveReadingController extends Controller
                 return $this->render('Course3Bundle:ActiveReading:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course3Bundle:ActiveReading:video.html.php');
+                return $this->render('Course3Bundle:ActiveReading:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

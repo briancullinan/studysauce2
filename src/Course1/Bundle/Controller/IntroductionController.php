@@ -53,7 +53,7 @@ class IntroductionController extends Controller
                 return $this->render('Course1Bundle:Introduction:tab.html.php');
                 break;
             case 1:
-                return $this->render('Course1Bundle:Introduction:video.html.php');
+                return $this->render('Course1Bundle:Introduction:video.html.php', ['course' => $course]);
                 break;
             case 2:
                 $csrfToken = $this->has('form.csrf_provider')

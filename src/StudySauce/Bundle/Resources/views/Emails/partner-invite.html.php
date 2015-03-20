@@ -14,7 +14,7 @@ You can work out the specific expectations with <?php print $user->getFirst(); ?
 <ul style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555;">
     <li>Will challenge a student (needs more than just encouragement)</li>
     <li>Will celebrate student successes</li>
-    <li>Is emotionally invested in the student\'s education</li>
+    <li>Is emotionally invested in the student's education</li>
     <li>Commits to regular communication about academics</li>
 </ul>
 <?php $view['slots']->stop(); ?>

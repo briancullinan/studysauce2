@@ -65,14 +65,15 @@ $view['slots']->start('body'); ?>
             </div>
             <h4 style="text-align:center;"><a href="#mozart-effect" data-toggle="modal">The Mozart Effect®</a></h4>
         </div>
-
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
+        <a href="#add-study-hours" class="big-add" data-toggle="modal">Add <span>+</span> study hours</a>
         <a href="<?php print $view['router']->generate('schedule'); ?>"><span>Edit schedule</span></a>
     </div>
 </div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
+print $this->render('StudySauceBundle:Dialogs:add-study-hours.html.php', ['id' => 'add-study-hours']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'));
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'),['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'),['strategy' => 'sinclude']);
