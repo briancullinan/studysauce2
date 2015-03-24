@@ -197,6 +197,12 @@ class DeadlinesController extends Controller
 
         /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
+        if(empty($schedule)) {
+            $schedule = new Schedule();
+            $schedule->setUser($user);
+            $user->addSchedule($schedule);
+            $orm->persist($schedule);
+        }
 
         // save class
         $dates = $request->get('dates');

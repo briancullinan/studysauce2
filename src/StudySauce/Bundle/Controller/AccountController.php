@@ -2,25 +2,25 @@
 
 namespace StudySauce\Bundle\Controller;
 
-use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Doctrine\UserManager;
-use FOS\UserBundle\Security\LoginManager;
-use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
-use StudySauce\Bundle\Entity\Invite;
-use StudySauce\Bundle\Entity\User;
-use StudySauce\Bundle\EventListener\InviteListener;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+    use Doctrine\ORM\EntityManager;
+    use FOS\UserBundle\Doctrine\UserManager;
+    use FOS\UserBundle\Security\LoginManager;
+    use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
+    use StudySauce\Bundle\Entity\Invite;
+    use StudySauce\Bundle\Entity\User;
+    use StudySauce\Bundle\EventListener\InviteListener;
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Symfony\Component\HttpFoundation\JsonResponse;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+    use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+    use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+    use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
-/**
- * Class AccountController
- * @package StudySauce\Bundle\Controller
- */
+    /**
+     * Class AccountController
+     * @package StudySauce\Bundle\Controller
+     */
 class AccountController extends Controller
 {
     /**
@@ -34,9 +34,18 @@ class AccountController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
             : null;
 
+        // list oauth services
+        $services = [];
+        /** @var OAuthHelper $oauth */
+        $oauth = $this->get('hwi_oauth.templating.helper.oauth');
+        foreach($oauth->getResourceOwners() as $o) {
+            $services[$o] = $oauth->getLoginUrl($o);
+        }
+
         return $this->render('StudySauceBundle:Account:tab.html.php', [
                 'user' => $user,
-                'csrf_token' => $csrfToken
+                'csrf_token' => $csrfToken,
+                'services' => $services
             ]);
     }
 

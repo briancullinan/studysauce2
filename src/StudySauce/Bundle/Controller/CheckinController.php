@@ -91,7 +91,7 @@ class CheckinController extends Controller
         if(!empty($course)) {
             if ($request->get('checkedIn')) {
                 /** @var $c Checkin */
-                $c = $course->getCheckins()->first();
+                $c = $course->getCheckins()->last();
                 $c->setCheckout(new \DateTime($request->get('date')));
                 $c->setUtcCheckout(new \DateTime());
                 $orm->merge($c);
@@ -99,7 +99,12 @@ class CheckinController extends Controller
                 $c = new Checkin();
                 $c->setCourse($course);
                 $c->setCheckin(new \DateTime($request->get('date')));
-                $c->setUtcCheckin(new \DateTime());
+                $utc = new \DateTime();
+                $c->setUtcCheckin($utc);
+                if(!empty($request->get('length'))) {
+                    $c->setCheckout(date_add(new \DateTime($request->get('date')), new \DateInterval('PT' . intval($request->get('length')) * 60 . 'S')));
+                    $c->setUtcCheckout($utc);
+                }
                 $course->addCheckin($c);
                 $orm->persist($c);
             }

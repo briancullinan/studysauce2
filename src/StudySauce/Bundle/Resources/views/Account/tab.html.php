@@ -65,6 +65,16 @@ $view['slots']->start('body'); ?>
                         </label>
                     </div>
                 </div>
+                <div class="social-login">
+                    <?php foreach($services as $o => $url) {
+                        $getter = 'get'.ucfirst($o).'AccessToken';
+                        if(!empty($user->$getter)) { ?>
+                            Connected
+                        <?php } ?>
+                        <label><span><?php print ucfirst($o); ?> account</span>
+                            <a href="<?php print $url; ?>" class="more">Connect</a></label>
+                    <?php } ?>
+                </div>
                 <div class="password">
                     <label class="input"><span>Current password</span>
                         <input type="password" placeholder="Enter password" value="">

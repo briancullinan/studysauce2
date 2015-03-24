@@ -20,6 +20,7 @@ html, body
     outline: 0 none;
     vertical-align: baseline;
     text-align: justify;
+    text-align: justify;
     position:relative;
     width:100%;
     left:0;
@@ -629,7 +630,7 @@ input[type=month],
     border-radius: 2px;
     width:auto;
     padding:0;
-    z-index: 1000 !important;
+    z-index: 10000 !important;
 }
 
 .ui-datepicker .ui-state-default {

@@ -29,6 +29,9 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(['@metrics_scripts'], [], ['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach;
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/metrics-add.js'], [], ['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
 <script type="text/javascript">
     window.initialHistory = JSON.parse('<?php print json_encode($times); ?>');
@@ -47,9 +50,8 @@ $view['slots']->start('body'); ?>
                     foreach ($courses as $i => $c) {
                         /** @var $c Course */
                         ?>
-                        <li><span class="class<?php print $i; ?>">&nbsp;</span><?php print $c->getName(); ?></li><?php
-                    }
-                    ?>
+                        <li class="course-id-<?php print $c->getId(); ?>"><span class="class<?php print $i; ?>">&nbsp;</span><?php print $c->getName(); ?></li>
+                    <?php } ?>
                 </ol>
             </div>
             <div id="timeline">
@@ -61,8 +63,8 @@ $view['slots']->start('body'); ?>
                 <h4><span>Total study hours: <strong id="study-total"><?php print $total; ?></strong><span></h4>
             </div>
         </div>
-        <hr>
         <a href="#add-study-hours" class="big-add" data-toggle="modal">Add <span>+</span> study hours</a>
+        <hr>
         <div id="checkins-list">
             <?php
             reset($checkouts);
@@ -103,7 +105,7 @@ $view['slots']->start('body'); ?>
 
                 /** @var $c Checkin */
                 ?>
-                <div class="checkin-row">
+                <div class="checkin-row <?php print ($c->getUtcCheckin() == $c->getUtcCheckout() ? 'manually-entered' : ''); ?>">
                     <div class="class-name"><span class="class<?php print array_search($c->getCourse(), $courses); ?>">&nbsp;</span>
                         <?php print $c->getCourse()->getName(); ?></div>
                     <div class="class-date"><span class="full-only"><?php print $c->getCheckin()->format('j F'); ?></span>

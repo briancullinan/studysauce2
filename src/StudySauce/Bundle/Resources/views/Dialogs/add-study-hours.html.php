@@ -12,21 +12,30 @@ $view['slots']->start('modal-header') ?>
 
 $view['slots']->start('modal-body') ?>
     No problem. Add your hours below.
-    <form action="<?php print $view['router']->generate('contact_parents'); ?>" method="post">
+    <form action="<?php print $view['router']->generate('checkin_update'); ?>" method="post">
         <div class="class-name">
-            <label class="input"><span>Class</span><select>
-                    <option></option>
+            <label class="input"><span>Class</span>
+                <select>
+                    <option value="">- Select -</option>
             </select></label>
         </div>
         <div class="date">
-            <label class="input"><span>Date</span><input type="text" value=""></label>
+            <label class="input"><span>Date</span>
+                <input type="text" value=""></label>
         </div>
         <div class="time">
-            <label class="input"><span>Time (min)</span><input type="email" value=""></label>
+            <label class="input"><span>Time (min)</span>
+                <select>
+                    <option value="">- Select -</option>
+                    <option value="30">30 min</option>
+                    <option value="45">45 min</option>
+                    <option value="60">60 min</option>
+                </select></label>
         </div>
-        <div class="highlighted-link invalid">
-            <div style="float:left;">* Research shows you shouldn't studying longer than 60 minutes without a break.</div>
-            <button type="submit" value="#submit-contact" class="more">Save</button>
+        <div class="highlighted-link invalid clearfix">
+            <label class="checkbox"><input type="checkbox"><i></i>Add another</label>
+            <button type="submit" value="#submit-checkin" class="more">Save</button>
+            <div style="float:left; text-align: left;">* Research shows you shouldn't study longer than 60 minutes without a break.</div>
         </div>
     </form>
 <?php $view['slots']->stop();

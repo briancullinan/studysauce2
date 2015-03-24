@@ -17,8 +17,15 @@ $view['slots']->stop();
 $view['slots']->start('javascripts');
 foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/deadlines.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-$view['slots']->stop();
+<?php endforeach; ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('body').on('change', '#deadlines .class-name select', function () {
+            $(this).parents('.deadline-row').find('.assignment input').val($(this).val());
+        });
+    });
+</script>
+<?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane <?php
@@ -42,17 +49,9 @@ $view['slots']->start('body'); ?>
                     <i class="class"></i>
                     <select>
                         <option value="" selected="selected">Select a class</option>
-                        <option value="completion">Course completion</option>
-                        <option value="adviser">Adviser completion</option>
-                        <option value="past">Past due</option>
-                        <?php
-                        /*
-                        foreach ($courses as $c):
-                            /** @var $c Course */
-                            /*?>
-                            <option value="<?php print $c->getId(); ?>"><?php print $c->getName(); ?></option>
-                        <?php endforeach; */ ?>
-                        <option value="Nonacademic">Nonacademic</option>
+                        <option>Course completion</option>
+                        <option>Adviser completion</option>
+                        <option>Past due</option>
                     </select>
                 </label>
             </div>
@@ -137,18 +136,9 @@ $view['slots']->start('body'); ?>
                     <span class="sort-date-label"><?php print $newHeadStr; ?></span>
                     <select>
                         <option value="" <?php print (empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
-                        <option value="completion">Course completion</option>
-                        <option value="adviser">Adviser completion</option>
-                        <option value="past">Past due</option>
-                        <?php
-                        foreach ($courses as $c):
-                            /** @var $c Course */
-                            ?>
-                            <option value="<?php print $c->getId(); ?>" <?php print (
-                                $d->getCourse() == $c ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
-                        <?php endforeach; ?>
-                        <option value="Nonacademic" <?php print (!empty($d->getAssignment()) &&
-                            empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Nonacademic</option>
+                        <option>Course completion</option>
+                        <option>Adviser completion</option>
+                        <option>Past due</option>
                     </select>
                 </label>
             </div>

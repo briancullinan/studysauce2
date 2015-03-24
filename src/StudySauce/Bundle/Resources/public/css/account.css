@@ -1,7 +1,12 @@
-#login .pane-content,
 #register .pane-content
 {
     text-align: center;
+}
+
+#login .pane-content
+{
+    text-align: center;
+    padding-bottom: 40px;
 }
 
 #login label span {
@@ -67,6 +72,47 @@ a[href="#sign-in-with-email"]
     margin:10px auto;
 }
 
+#login .social-login
+{
+    display: inline-block;
+    width:50%;
+    margin: 0 -2px;
+    padding: 100px 200px 0 2px;
+    vertical-align: middle;
+}
+
+#login .social-login a
+{
+    display:block;
+    margin:0 auto 10px auto;
+}
+
+#login .signup-or
+{
+    display:inline-block;
+    width: 200px;
+    margin: 0 -102px;
+    vertical-align: middle;
+    padding-top:100px;
+}
+
+#register form
+{
+    max-width: 600px;
+    margin:0 auto;
+    padding-top: 100px;
+}
+
+#login form
+{
+    margin:0 -2px;
+    padding: 100px 2px 0 200px;
+    display:inline-block;
+    width:50%;
+    vertical-align: middle;
+}
+
+#account .social-login label span,
 #account .type label span,
 #account .password label span,
 #account .new-password label span,
@@ -81,6 +127,7 @@ a[href="#sign-in-with-email"]
     padding-right:50%;
 }
 
+#account .social-login label input,
 #account .password label input,
 #account .new-password label input,
 #account .confirm-password label input,
@@ -103,18 +150,16 @@ a[href="#sign-in-with-email"]
     display:inline-block;
 }
 
+#register .first-name label,
+#register .last-name label
+{
+    margin-bottom:0;
+}
+
 #register .last-name
 {
     padding-right:0;
     padding-left:2px;
-}
-
-#register form,
-#login form
-{
-    max-width: 600px;
-    display: none;
-    margin:0 auto;
 }
 
 #register .email,
@@ -220,7 +265,9 @@ a[href="#sign-in-with-email"]
 }
 
 #login .form-actions a[href*="/reset"] {
-    float:left;
+    position:absolute;
+    left:10px;
+    bottom:10px;
 }
 
 #reset.reset-sent form,
@@ -232,6 +279,18 @@ a[href="#sign-in-with-email"]
 #reset.reset-sent .reset-sent-message
 {
     display:block;
+}
+
+@media all and (max-width: 1000px)
+{
+    #login form,
+    #login .signup-or,
+    #login .social-login {
+        display: block;
+        width: auto;
+        padding: 40px 0 0;
+    }
+
 }
 
 @media all and (max-width: 700px)

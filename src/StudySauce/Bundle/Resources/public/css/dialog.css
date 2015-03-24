@@ -45,6 +45,16 @@
     color: #0099BB;
 }
 
+#add-study-hours .modal-body label input,
+#add-study-hours .modal-body label select,
+#add-study-hours .modal-body label span
+{
+    width:50%;
+    display:inline-block;
+    margin:0 -2px;
+    padding: 0 2px;
+}
+
 #plan-empty
 {
     position: absolute;
@@ -108,7 +118,10 @@
 #bill-parents.invalid-only.email-required .email input,
 #bill-parents.invalid-only.your-first-required .your-first input,
 #bill-parents.invalid-only.your-last-required .your-last input,
-#bill-parents.invalid-only.your-email-required .your-email input
+#bill-parents.invalid-only.your-email-required .your-email input,
+#add-study-hours.invalid-only.class-required .class-name select,
+#add-study-hours.invalid-only.date-required .date input,
+#add-study-hours.invalid-only.time-required .time select
 {
     border-bottom:3px solid #CC0000;
     border-bottom-left-radius: 5px;

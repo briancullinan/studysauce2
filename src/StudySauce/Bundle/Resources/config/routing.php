@@ -478,6 +478,14 @@ $collection->add(
     )
 );
 $collection->add(
+    'signup',
+    new Route(
+        '/signup/{_format}',
+        ['_controller' => 'StudySauceBundle:Business:signup', '_format' => 'funnel'],
+        ['_format' => 'funnel',]
+    )
+);
+$collection->add(
     'checkout',
     new Route(
         '/checkout/{_format}',
@@ -498,6 +506,19 @@ $collection->add(
     new Route(
         '/checkout/pay',
         ['_controller' => 'StudySauceBundle:Buy:pay'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'signup_pay',
+    new Route(
+        '/signup/pay',
+        ['_controller' => 'StudySauceBundle:Business:pay'],
         [],
         [],
         '',

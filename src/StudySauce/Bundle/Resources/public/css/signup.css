@@ -1,9 +1,9 @@
 
 
-#checkout #payment-pane,
-#checkout #billing-pane,
-#checkout #coupon-pane,
-#checkout #gift-pane
+
+
+#signup #payment-pane,
+#signup #billing-pane
 {
     width:50%;
     display:inline-block;
@@ -11,37 +11,21 @@
     margin: 0 -4px 10px;
 }
 
-#checkout #gift-pane,
-#checkout #coupon-pane,
-#checkout #billing-pane
+#signup #billing-pane
 {
     float:left;
     clear:left;
 }
 
-#checkout #payment-pane
+#signup #payment-pane
 {
     float:right;
     clear:right;
+    display: none;
 }
 
-#checkout #gift-pane,
-#checkout #coupon-pane {
-    visibility: hidden;
-    height: 0;
-    opacity: 0;
-    display:none;
-}
-
-#checkout #gift-pane.shown-by-default
-{
-    height: auto;
-    opacity: 1;
-    visibility: visible;
-    display: inline-block;
-}
-
-#checkout .form-actions .error
+#signup .invalid-only,
+#signup .form-actions .error
 {
     clear: both;
     position: relative;
@@ -49,6 +33,40 @@
     border: 2px solid #CC0000;
     color:#660000;
     border-radius: 5px;
+}
+
+#signup .invalid-only
+{
+    display:none;
+}
+
+#signup.invalid-only .invalid-only
+{
+    display:inline-block;
+}
+
+#payment-pane .cc-number img {
+    float: right;
+    border-radius: 1px;
+}
+
+#signup.invalid-only.organization-required .organization input,
+#signup.invalid-only.first-required .first-name input,
+#signup.invalid-only.last-required .last-name input,
+#signup.invalid-only.street-required input[name="street1"],
+#signup.invalid-only.city-required .city input,
+#signup.invalid-only.zip-required .zip input,
+#signup.invalid-only.state-required select[name="state"],
+#signup.invalid-only.country-required select[name="country"],
+#signup.invalid-only.title-required .title input,
+#signup.invalid-only.email-required .email input,
+#signup.invalid-only.phone-required .phone input,
+#signup.invalid-only.students-required .students input,
+#signup.invalid-only.payment-required .payment select,
+#signup.invalid-only.cc-number-required .cc-number input,
+#signup.invalid-only.cc-ccv-required input[name="cc-ccv"]
+{
+    border-bottom:3px solid #CC0000;
 }
 
 #payment-pane .product-option
@@ -65,15 +83,6 @@
     vertical-align: middle;
 }
 
-#coupon-pane .coupon-code
-{
-    display:inline-block;
-    width:100%;
-    padding-right:200px;
-    margin-right: -185px;
-    vertical-align: middle;
-}
-
 #billing-pane a[href="#show-coupon"],
 #billing-pane a[href="#show-gift"]
 {
@@ -82,17 +91,8 @@
     max-width: 350px;
 }
 
-#coupon-pane a[href="#coupon-apply"]
-{
-    margin-left:auto;
-    margin-right:0;
-    vertical-align: middle;
-}
-
 #payment-pane .cc-year,
 #payment-pane .cc-month,
-#gift-pane .first-name,
-#gift-pane .last-name,
 #billing-pane .first-name,
 #billing-pane .last-name,
 #billing-pane .city,
@@ -105,7 +105,7 @@
     vertical-align: bottom;
 }
 
-#checkout .form-actions
+#signup .form-actions
 {
     width: 50%;
     margin: 0 -4px 0 2px;
@@ -114,6 +114,7 @@
     vertical-align: top;
     float:right;
 }
+
 
 #payment-pane .cc-number
 {
@@ -139,34 +140,15 @@
     opacity: .9;
 }
 
-#payment-pane .cc-number img
-{
-    float:right;
-    border-radius: 1px;
-}
-
 #payment-pane .cc-number input
 {
     padding-right: 160px;
 }
 
-#thanks h1
-{
-    font-size: 72px;
-    color: #FF9900;
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
-#thanks h2
-{
-    text-align: center;
-}
 
 @media all and (max-width:700px)
 {
-    #checkout .form-actions
+    #signup .form-actions
     {
         width:auto;
         margin:0;
@@ -185,32 +167,20 @@
         padding-right:5px;
     }
 
-    #coupon-pane .coupon-code
-    {
-        margin-right: 0;
-        padding-right: 0;
-        display: block;
-    }
-
     .page-cart-checkout #payment-pane
     {
         margin-left:-10px;
         margin-right:-1px;
     }
 
-    #checkout #payment-pane,
-    #checkout #billing-pane,
-    #checkout #coupon-pane,
-    #checkout #gift-pane
+    #signup #payment-pane,
+    #signup #billing-pane
     {
         width: auto;
-        display:block !important;
+        display:block;
         float:none;
         clear:both;
-        height:auto !important;
+        height:auto;
     }
 }
-
-
-
 

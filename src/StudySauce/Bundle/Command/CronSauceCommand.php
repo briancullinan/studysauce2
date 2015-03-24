@@ -109,15 +109,20 @@ EOF
 
         // send deadline reminders
         $futureReminders = Criteria::create()->where(Criteria::expr()->gt('dueDate', new \DateTime()));
-        $reminders = $orm->getRepository('StudySauceBundle:Deadline')->matching($futureReminders)->toArray();
+        $reminders = $orm->getRepository('StudySauceBundle:Deadline')->matching($futureReminders);
         $deadlines = [];
 
         // create a list of adviser deadlines
         $reminderRecipients = [];
-        foreach ($reminders as $i => $d) {
+        $adviser = $reminders->filter(function (Deadline $d) {
+            return $d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER');});
+        foreach ($adviser->toArray() as $i => $d) {
             /** @var Deadline $d */
-            if(($d->getUser()->hasRole('ROLE_ADVISER') || $d->getUser()->hasRole('ROLE_MASTER_ADVISER')) &&
-                $d->shouldSend() && $d->getAssignment() == 'Course completion')
+
+            /** @var Deadline $adviserCompletion */
+            $adviserCompletion = $adviser->filter(function (Deadline $r) use ($d) {return $r->getAssignment() == 'Adviser completion' && $d->getUser() == $r->getUser();})->first();
+
+            if($d->shouldSend() && $d->getAssignment() == 'Course completion')
             {
                 // get a list of all users in the group
                 $addresses = [];
@@ -171,7 +176,11 @@ EOF
                 usort($complete, function ($a, $b) {
                     return strcmp($a->getLast(), $b->getLast());
                 });
-                $emails->adviserCompletionAction($d->getUser(), $d, $incomplete, $nosignup, $complete);
+                if(!empty($adviserCompletion) && $adviserCompletion->shouldSend()) {
+                    $emails->adviserCompletionAction($d->getUser(), $d, $incomplete, $nosignup, $complete);
+                    $adviserCompletion->markSent();
+                    $orm->merge($adviserCompletion);
+                }
 
                 $d->markSent();
                 $orm->merge($d);

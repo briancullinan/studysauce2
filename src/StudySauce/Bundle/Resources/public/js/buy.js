@@ -128,7 +128,10 @@ jQuery(document).ready(function($) {
         evt.preventDefault();
         if(!checkout.find('.form-actions').is('.valid'))
             return;
+
         checkout.find('.form-actions').removeClass('valid').addClass('invalid');
+        loadingAnimation(checkout.find('a[href="#submit-order"]'));
+
         $.ajax({
             url: window.callbackPaths['checkout_pay'],
             type: 'POST',
@@ -156,10 +159,14 @@ jQuery(document).ready(function($) {
                 } : null
             },
             success: function (data) {
+                checkout.find('.squiggle').stop().remove();
                 // this should redirect anyways
                 if(typeof data.error != 'undefined') {
                     checkout.find('.form-actions').prepend($('<span class="error">' + data.error + '</span>'));
                 }
+            },
+            error: function () {
+                checkout.find('.squiggle').stop().remove();
             }
         });
     });

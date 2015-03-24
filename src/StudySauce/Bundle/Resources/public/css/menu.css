@@ -481,7 +481,9 @@
 .pane-content a[href*="/account"]:not(.more),
 .pane-content a[href*="/schedule"]:not(.more),
 .pane-content a[href*="#grade-scale"]:not(.more),
-.pane-content a[href*="#manage-terms"]:not(.more)
+.pane-content a[href*="#manage-terms"]:not(.more),
+#command_control a[href="#confirm-password-reset"],
+#login a[href*="/reset"]:not(.more)
 {
     padding-left:30px;
     position:relative;
@@ -501,7 +503,9 @@
 .pane-content a[href*="/account"]:not(.more):before,
 .pane-content a[href*="/schedule"]:not(.more):before,
 .pane-content a[href*="#grade-scale"]:not(.more):before,
-.pane-content a[href*="#manage-terms"]:not(.more):before
+.pane-content a[href*="#manage-terms"]:not(.more):before,
+#command_control a[href="#confirm-password-reset"]:before,
+#login a[href*="/reset"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
     content: " ";
@@ -512,6 +516,19 @@
     position:absolute;
     left:2px;
     top:50%;
+}
+
+#login a[href*="/reset"]:not(.more):before
+{
+    background-position: left -3902px;
+}
+
+#login a[href*="/reset"]:not(.more):hover:before,
+#login a[href*="/reset"]:not(.more):focus:before,
+#login a[href*="/reset"]:not(.more):active:before,
+#login a[href*="/reset"].active:not(.more):before
+{
+    background-position: left -3952px;
 }
 
 .pane-content a[href*="#grade-scale"]:not(.more):before

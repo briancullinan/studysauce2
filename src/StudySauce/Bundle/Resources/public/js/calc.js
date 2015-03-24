@@ -434,7 +434,13 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: data,
-            success: updateCalc
+            success: function (data) {
+                calc.find('.squiggle').stop().remove();
+                updateCalc(data);
+            },
+            error: function () {
+                calc.find('.squiggle').stop().remove();
+            }
         });
     }
 

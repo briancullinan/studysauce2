@@ -3,6 +3,11 @@
     text-align: center;
 }
 
+#checkins-list
+{
+    clear:both;
+}
+
 #metrics-empty .close
 {
     display: none;
