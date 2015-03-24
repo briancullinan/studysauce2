@@ -148,7 +148,6 @@ class OAuthFactory extends AbstractFactory
         $container
             ->setDefinition($entryPointId, new DefinitionDecorator('hwi_oauth.authentication.entry_point.oauth'))
             ->addArgument($config['login_path'])
-            ->addArgument($config['use_forward'])
         ;
 
         return $entryPointId;

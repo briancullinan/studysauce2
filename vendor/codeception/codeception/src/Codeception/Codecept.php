@@ -1,15 +1,13 @@
 <?php
 namespace Codeception;
 
-use Codeception\Configuration;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "2.0.9";
+    const VERSION = "2.0.11";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -47,7 +45,8 @@ class Codecept
         'filter' => null,
         'env' => null,
         'fail-fast' => false,
-        'verbosity' => 1
+        'verbosity' => 1,
+        'interactive' => true
     );
 
     /**
@@ -58,12 +57,14 @@ class Codecept
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->dispatcher = new EventDispatcher();
-        $this->loadExtensions($this->options);
+
+        $baseOptions = $this->mergeOptions($options);
+
+        $this->loadExtensions($baseOptions);
 
         $this->config = Configuration::config();
 
-        $this->options = array_merge($this->options, $this->config['settings']);
-        $this->options = array_merge($this->options, $options);
+        $this->options = $this->mergeOptions($options);
 
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
@@ -71,6 +72,20 @@ class Codecept
         $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
         $this->runner = new PHPUnit\Runner($this->options);
         $this->runner->setPrinter($printer);
+    }
+
+    /**
+     * Merges given options with default values and current configuration
+     *
+     * @param array $options options
+     * @return array
+     * @throws ConfigurationException
+     */
+    protected function mergeOptions($options)
+    {
+        $config = Configuration::config();
+        $baseOptions = array_merge($this->options, $config['settings']);
+        return array_merge($baseOptions, $options);
     }
 
     protected function loadExtensions($options)

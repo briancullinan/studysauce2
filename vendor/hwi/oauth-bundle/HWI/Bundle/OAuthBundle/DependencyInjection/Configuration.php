@@ -28,43 +28,36 @@ class Configuration implements ConfigurationInterface
      *
      * @var array
      */
-    private static $resourceOwners = array(
-        'oauth2' => array(
+    private $resourceOwners = array(
+        'oauth2',
             'amazon',
-            'auth0',
             'bitly',
             'box',
             'dailymotion',
             'deviantart',
             'disqus',
-            'eve_online',
             'eventbrite',
             'facebook',
             'foursquare',
             'github',
             'google',
-            'hubic',
             'instagram',
             'linkedin',
             'mailru',
             'odnoklassniki',
-            'paypal',
             'qq',
-            'reddit',
             'salesforce',
             'sensio_connect',
             'sina_weibo',
-            'soundcloud',
             'stack_exchange',
-            'toshl',
             'twitch',
             'vkontakte',
             'windows_live',
             'wordpress',
             'yandex',
             '37signals',
-        ),
-        'oauth1' => array(
+
+        'oauth1',
             'bitbucket',
             'dropbox',
             'flickr',
@@ -72,46 +65,8 @@ class Configuration implements ConfigurationInterface
             'stereomood',
             'trello',
             'twitter',
-            'xing',
             'yahoo',
-        ),
     );
-
-    /**
-     * Return the type (OAuth1 or OAuth2) of given resource owner.
-     *
-     * @param string $resourceOwner
-     *
-     * @return string
-     */
-    public static function getResourceOwnerType($resourceOwner)
-    {
-        if ('oauth1' === $resourceOwner || 'oauth2' === $resourceOwner) {
-            return $resourceOwner;
-        }
-
-        if (in_array($resourceOwner, static::$resourceOwners['oauth1'])) {
-            return 'oauth1';
-        }
-
-        return 'oauth2';
-    }
-
-    /**
-     * Checks that given resource owner is supported by this bundle.
-     *
-     * @param string $resourceOwner
-     *
-     * @return Boolean
-     */
-    public static function isResourceOwnerSupported($resourceOwner)
-    {
-        if ('oauth1' === $resourceOwner || 'oauth2' === $resourceOwner) {
-            return true;
-        }
-
-        return in_array($resourceOwner, static::$resourceOwners['oauth1']) || in_array($resourceOwner, static::$resourceOwners['oauth2']);
-    }
 
     /**
      * Generates the configuration tree builder.
@@ -127,7 +82,6 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('firewall_name')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('target_path_parameter')->defaultNull()->end()
-                ->booleanNode('use_referer')->defaultFalse()->end()
                 ->scalarNode('templating_engine')->defaultValue('twig')->end()
             ->end()
         ;
@@ -227,9 +181,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->scalarNode('type')
                                 ->validate()
-                                    ->ifTrue(function($type) {
-                                        return !Configuration::isResourceOwnerSupported($type);
-                                    })
+                                    ->ifNotInArray($this->resourceOwners)
                                     ->thenInvalid('Unknown resource owner type "%s".')
                                 ->end()
                                 ->validate()
@@ -368,7 +320,6 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('verify_peer')->defaultTrue()->end()
                         ->scalarNode('max_redirects')->defaultValue(5)->cannotBeEmpty()->end()
                         ->booleanNode('ignore_errors')->defaultTrue()->end()
-                        ->scalarNode('proxy')->end()
                     ->end()
                 ->end()
             ->end()

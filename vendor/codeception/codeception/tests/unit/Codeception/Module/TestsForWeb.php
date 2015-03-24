@@ -522,12 +522,15 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('input[name=name]');
     }
 
-
 	public function testCookies()
 	{
 		$cookie_name = 'test_cookie';
 		$cookie_value = 'this is a test';
+        $this->module->amOnPage('/');
+        $this->module->setCookie('nocookie', '1111');
 		$this->module->setCookie($cookie_name, $cookie_value);
+        $this->module->setCookie('notthatcookie', '22222');
+
 
 		$this->module->seeCookie($cookie_name);
 		$this->module->dontSeeCookie('evil_cookie');
@@ -538,6 +541,24 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 		$this->module->resetCookie($cookie_name);
 		$this->module->dontSeeCookie($cookie_name);
 	}
+
+    public function testCookiesWithPath()
+    {
+        $cookie_name = 'cookie';
+        $cookie_value = 'tasty';
+        $this->module->amOnPage('/info');
+        $this->module->setCookie($cookie_name, $cookie_value, ['path' => '/info']);
+
+        $this->module->seeCookie($cookie_name, ['path' => '/info']);
+        $this->module->dontSeeCookie('evil_cookie');
+
+        $cookie = $this->module->grabCookie($cookie_name, ['path' => '/info']);
+        $this->assertEquals($cookie_value, $cookie);
+
+        $this->module->resetCookie($cookie_name, ['path' => '/info']);
+        $this->module->dontSeeCookie($cookie_name, ['path' => '/info']);
+        $this->module->dontSeeCookie($cookie_name);
+    }
 
     public function testPageTitle()
     {
@@ -737,8 +758,8 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('Is Codeception maintainer', $form['description']);
-//        $this->assertFalse(isset($form['disabled_fieldset']));
-//        $this->assertFalse(isset($form['disabled_field']));
+        $this->assertFalse(isset($form['disabled_fieldset']));
+        $this->assertFalse(isset($form['disabled_field']));
         $this->assertEquals('kill_all', $form['action']);
     }
 
@@ -751,6 +772,24 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello!', $form['text']);
     }
     
+    public function testSubmitFormWithAmpersand()
+    {
+        $this->module->amOnPage('/form/submitform_ampersands');
+        $this->module->submitForm('form', []);
+        $form = data::get('form');
+        $this->assertEquals('this & that', $form['test']);
+    }
+    
+    public function testSubmitFormWithMultiSelect()
+    {
+        $this->module->amOnPage('/form/submitform_multiple');
+        $this->module->submitForm('form', []);
+        $form = data::get('form');
+        $this->assertCount(2, $form['select']);
+        $this->assertEquals('see test one', $form['select'][0]);
+        $this->assertEquals('see test two', $form['select'][1]);
+    }
+
     /**
      * https://github.com/Codeception/Codeception/issues/1381
      */

@@ -4,7 +4,7 @@
 
 
 This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
-Be default it will cover all database queries into transaction and rollback it afterwards.
+By default it will cover all database queries into transaction and rollback it afterwards.
 The database should support nested transactions, in order to make cleanup work as expected.
 
 Pass PDO instance to this module from within your bootstrap file.
@@ -46,50 +46,6 @@ This module despite of it's stability may act unstable because of transactions i
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### dontSeeInDatabase
  
 Effect is opposite to ->seeInDatabase
@@ -115,9 +71,6 @@ Fails if such user was found.
  * `param array` $criteria
 
 
-
-
-
 ### grabFromDatabase
  
 Fetches a single column value from a database.
@@ -136,10 +89,6 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * `param`       $table
  * `param`       $column
  * `param array` $criteria
-
-
-
-
 
 
 

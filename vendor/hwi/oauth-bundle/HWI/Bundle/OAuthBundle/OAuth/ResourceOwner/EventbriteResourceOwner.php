@@ -35,6 +35,25 @@ class EventbriteResourceOwner extends GenericOAuth2ResourceOwner
     /**
      * {@inheritDoc}
      */
+    public function getUserInformation(array $accessToken, array $extraParameters = array())
+    {
+        $url = $this->normalizeUrl($this->getOption('infos_url'), array(
+            'access_token' => $accessToken['access_token']
+        ));
+
+        $content = $this->httpRequest($url, null, array('Authorization: Bearer '.$accessToken['access_token']))->getContent();
+
+        $response = $this->getUserResponse();
+        $response->setResponse($content);
+        $response->setResourceOwner($this);
+        $response->setOAuthToken(new OAuthToken($accessToken));
+
+        return $response;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function doGetTokenRequest($url, array $parameters = array())
     {
         return $this->httpRequest($url, http_build_query($parameters, '', '&'), array(), HttpRequestInterface::METHOD_POST);
@@ -48,11 +67,9 @@ class EventbriteResourceOwner extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'authorization_url'        => 'https://www.eventbrite.com/oauth/authorize',
-            'access_token_url'         => 'https://www.eventbrite.com/oauth/token',
-            'infos_url'                => 'https://www.eventbrite.com/json/user_get',
-
-            'use_bearer_authorization' => true,
+            'authorization_url' => 'https://www.eventbrite.com/oauth/authorize',
+            'access_token_url'  => 'https://www.eventbrite.com/oauth/token',
+            'infos_url'         => 'https://www.eventbrite.com/json/user_get',
         ));
     }
 }

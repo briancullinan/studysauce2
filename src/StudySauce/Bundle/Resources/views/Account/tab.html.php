@@ -68,10 +68,11 @@ $view['slots']->start('body'); ?>
                 <div class="social-login">
                     <?php foreach($services as $o => $url) {
                         $getter = 'get'.ucfirst($o).'AccessToken';
-                        if(!empty($user->$getter)) { ?>
-                            Connected
-                        <?php } ?>
+                        ?>
                         <label><span><?php print ucfirst($o); ?> account</span>
+                            <?php if(!empty($user->$getter())) { ?>
+                            Connected
+                            <?php } ?>
                             <a href="<?php print $url; ?>" class="more">Connect</a></label>
                     <?php } ?>
                 </div>

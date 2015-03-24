@@ -90,8 +90,6 @@ class FoursquareResourceOwner extends GenericOAuth2ResourceOwner
             'version'                  => '20121206',
 
             'use_bearer_authorization' => false,
-            
-            'use_bearer_authorization' => false,
         ));
     }
 }

@@ -44,6 +44,7 @@ security:
                 always_remember_me: true
                 user_provider: fos_userbundle
             oauth:
+                remember_me: true
                 resource_owners:
                     facebook:           "/login/facebook/"
                     google:             "/login/google/"
@@ -51,6 +52,7 @@ security:
                 use_forward:       false
                 failure_path:      /login
                 default_target_path: /home
+                provider: fos_userbundle
                 oauth_user_provider:
                     service: my_user_provider
             switch_user: { role: ROLE_ADMIN, parameter: _switch_user }
@@ -93,5 +95,6 @@ security:
         - { path: ^/command,                role: ROLE_ADMIN }
         - { path: ^/emails,                 role: ROLE_ADMIN }
         - { path: ^/validation,             role: ROLE_ADMIN }
-        - { path: ^/, allow_if: "!has_role('ROLE_GUEST')" }
+        - { path: ^/home,                   allow_if: "!has_role('ROLE_GUEST')" }
+        - { path: ^/,                       allow_if: "!has_role('ROLE_GUEST')" }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
