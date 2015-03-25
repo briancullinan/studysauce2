@@ -169,11 +169,11 @@
     display:block;
     position:absolute;
     top:50%;
-    height: 250px;
-    width: 240px;
+    height: 282px;
+    width: 269px;
     left: 0;
-    margin:-125px 25px 0 25px;
-    background: url(../images/Study_Sauce_Logo_Gray.png) no-repeat 0 0 transparent;
+    margin:-140px 25px 0 25px;
+    background: url(../images/Study_Sauce_Logo_Sketch.png) no-repeat 0 0 transparent;
 }
 
 #thanks h1

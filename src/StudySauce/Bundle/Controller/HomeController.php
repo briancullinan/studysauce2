@@ -37,7 +37,7 @@ class HomeController extends Controller
             $userManager->updateUser($user);
         }
 
-        $showAccountOptions = true;
+        $showAccountOptions = false;
         if(empty($user->getProperty('seen_account_options')) && !$user->hasRole('ROLE_DEMO') &&
             !$user->hasRole('ROLE_GUEST') && empty($user->getFacebookId()) && empty($user->getGoogleId())) {
             $showAccountOptions = true;

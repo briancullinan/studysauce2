@@ -18,6 +18,6 @@ $view['slots']->start('modal-body') ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>
-<a href="#close" data-dismiss="modal" class="btn">No thanks</a>
+<a href="#close" data-dismiss="modal">No thanks</a>
 <?php $view['slots']->stop() ?>
 
