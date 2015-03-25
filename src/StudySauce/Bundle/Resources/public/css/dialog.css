@@ -63,6 +63,7 @@
     z-index:1;
 }
 
+#account-not-found .close,
 #calc-empty .close,
 #checkin-empty .close,
 #profile-upgrade .close,
@@ -71,6 +72,45 @@
 #plan-empty .close
 {
     display:none;
+}
+
+#account-options .social-login
+{
+    text-align: center;
+}
+
+#account-options .social-login a:nth-of-type(even)
+{
+    margin-left: 100px;
+    vertical-align: middle;
+}
+
+#account-options .social-login a:nth-of-type(odd)
+{
+    margin-right: 100px;
+    vertical-align: middle;
+}
+
+#account-options .signup-or
+{
+    display:inline-block;
+    width: 200px;
+    margin: 0 -102px 20px -102px;
+    vertical-align: middle;
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    clear: both;
+}
+
+#account-options .signup-or span {
+    background: url("../images/noise_darkgray.png") repeat scroll 0 0 #111111;
+    border-radius: 4px 4px 4px 4px;
+    color: #CCCCCC;
+    font-style: italic;
+    padding: 3px 20px;
+    position: relative;
+    text-transform: uppercase;
+    top: 12px;
 }
 
 #plan-empty.modal.in .modal-dialog .modal-content

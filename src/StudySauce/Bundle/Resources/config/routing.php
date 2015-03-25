@@ -243,6 +243,27 @@ $collection->add(
     )
 );
 $collection->add(
+    'hwi_oauth_connect',
+    new Route(
+        '/connect',
+        ['_controller' => 'StudySauceBundle:Connect:connect']
+    )
+);
+$collection->add(
+    'hwi_oauth_connect_service',
+    new Route(
+        '/connect/service/{service}',
+        ['_controller' => 'StudySauceBundle:Connect:connectService']
+    )
+);
+$collection->add(
+    'hwi_oauth_connect_registration',
+    new Route(
+        '/connect/registration/{key}',
+        ['_controller' => 'HWIOAuthBundle:Connect:registration']
+    )
+);
+$collection->add(
     'plan',
     new Route(
         '/plan/{_format}',
@@ -515,10 +536,10 @@ $collection->add(
     )
 );
 $collection->add(
-    'signup_pay',
+    'signup_save',
     new Route(
-        '/signup/pay',
-        ['_controller' => 'StudySauceBundle:Business:pay'],
+        '/signup/save',
+        ['_controller' => 'StudySauceBundle:Business:signupSave'],
         [],
         [],
         '',

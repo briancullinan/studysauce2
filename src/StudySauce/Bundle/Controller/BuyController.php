@@ -530,8 +530,11 @@ class BuyController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function thanksAction()
+    public function thanksAction(Request $request)
     {
+        if(!empty($request->getSession()->get('signup'))) {
+            return $this->render('StudySauceBundle:Business:thanks.html.php');
+        }
         return $this->render('StudySauceBundle:Buy:thanks.html.php');
     }
 

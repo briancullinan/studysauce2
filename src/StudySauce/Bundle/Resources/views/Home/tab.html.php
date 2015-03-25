@@ -59,6 +59,10 @@ if($showBookmark)
 {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:bookmark'));
 }
+if($showAccountOptions)
+{
+    print $this->render('StudySauceBundle:Dialogs:account-options.html.php', ['id' => 'account-options', 'services' => $services]);
+}
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);

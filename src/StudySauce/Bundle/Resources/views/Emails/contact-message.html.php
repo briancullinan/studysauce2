@@ -9,5 +9,6 @@ $view['slots']->start('message'); ?>
 <strong>Name: </strong><?php print $view->escape($contact->getName()); ?><br />
 <strong>Email: </strong><?php print $view->escape($contact->getEmail()); ?><br />
 <strong>Message: </strong>
-<?php print '<hr />' . $view->escape($contact->getMessage()); ?>
+<hr />
+<?php print $contact->getMessage(); ?>
 <?php $view['slots']->stop(); ?>

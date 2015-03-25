@@ -127,18 +127,6 @@ jQuery(document).ready(function($) {
         else {
             signup.removeClass('payment-required');
         }
-        if(signup.find('.cc-number input').val().trim() == '') {
-            signup.addClass('cc-number-required');
-        }
-        else {
-            signup.removeClass('cc-number-required');
-        }
-        if(signup.find('input[name="cc-ccv"]').val().trim() == '') {
-            signup.addClass('cc-ccv-required');
-        }
-        else {
-            signup.removeClass('cc-ccv-required');
-        }
 
         if(signup.is('.first-required') || signup.is('.last-required') || signup.is('.email-required')
             || signup.is('.street-required') || signup.is('.city-required') || signup.is('.zip-required')
@@ -151,13 +139,14 @@ jQuery(document).ready(function($) {
             signup.find('.form-actions .error').remove();
         }
 
+        /*
         if(signup.find('.payment select').val() == 'Credit card') {
             signup.find('#payment-pane').css('display', 'inline-block');
         }
         else {
             signup.find('#payment-pane').hide();
         }
-
+        */
     }
 
     body.on('show', '#signup', signupFunc);
@@ -215,7 +204,7 @@ jQuery(document).ready(function($) {
         loadingAnimation(signup.find('[value="#business-order"]'));
 
         $.ajax({
-            url: window.callbackPaths['signup_pay'],
+            url: window.callbackPaths['signup_save'],
             type: 'POST',
             dataType: 'json',
             data: {
@@ -232,12 +221,13 @@ jQuery(document).ready(function($) {
                 zip: signup.find('.zip input').val().trim(),
                 state: signup.find('select[name="state"]').val().trim(),
                 country: signup.find('select[name="country"]').val().trim(),
-                payment: signup.find('form').is(':visible') ? {
+                students: signup.find('input[name="students"]').val().trim(),
+                payment: signup.find('.payment select').val() /* signup.find('form').is(':visible') ? {
                     number: signup.find('input[name="cc-number"]').val().trim(),
                     month: signup.find('select[name="cc-month"]').val().trim(),
                     year: signup.find('select[name="cc-year"]').val().trim(),
                     ccv: signup.find('input[name="cc-ccv"]').val().trim()
-                } : null
+                } : null */
             },
             success: function (data) {
                 signup.find('.squiggle').stop().remove();

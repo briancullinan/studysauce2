@@ -150,6 +150,32 @@
     padding-right: 160px;
 }
 
+#thanks .pane-content
+{
+    padding-bottom:40px;
+    padding-left: 300px;
+}
+
+#thanks a[href*="/home"]
+{
+    position:absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#thanks h1:before
+{
+    content: " ";
+    display:block;
+    position:absolute;
+    top:50%;
+    height: 250px;
+    width: 240px;
+    left: 0;
+    margin:-125px 25px 0 25px;
+    background: url(../images/Study_Sauce_Logo_Gray.png) no-repeat 0 0 transparent;
+}
+
 #thanks h1
 {
     font-size: 72px;
@@ -166,6 +192,17 @@
 
 @media all and (max-width:700px)
 {
+
+    #thanks h1:before
+    {
+        display:none;
+    }
+
+    #thanks .pane-content
+    {
+        padding-left:15px;
+    }
+
     #checkout .form-actions
     {
         width:auto;

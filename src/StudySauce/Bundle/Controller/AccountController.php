@@ -16,6 +16,7 @@ namespace StudySauce\Bundle\Controller;
     use Symfony\Component\Security\Core\Encoder\EncoderFactory;
     use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
     use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+    use Symfony\Component\Security\Core\SecurityContext;
 
     /**
      * Class AccountController
@@ -129,15 +130,41 @@ class AccountController extends Controller
             $email = $invite->getEmail();
         }
 
+        $error = $this->getErrorForRequest($request);
+
         $csrfToken = $this->has('form.csrf_provider')
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_login')
             : null;
+
         return $this->render('StudySauceBundle:Account:login.html.php', [
                 'invite' => $invite,
                 'email' => $email,
                 'csrf_token' => $csrfToken,
-                'services' => $services
+                'services' => $services,
+                'error' => $error
             ]);
+    }
+
+    /**
+     * Get the security error for a given request.
+     *
+     * @param Request $request
+     *
+     * @return string|\Exception
+     */
+    protected function getErrorForRequest(Request $request)
+    {
+        $session = $request->getSession();
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $error = '';
+        }
+
+        return $error;
     }
 
     /**

@@ -57,4 +57,10 @@ $view['slots']->start('body'); ?>
     </div>
 </div>
 
-<?php $view['slots']->stop(); ?>
+<?php $view['slots']->stop();
+
+$view['slots']->start('sincludes');
+if($error instanceof \HWI\Bundle\OAuthBundle\Security\Core\Exception\AccountNotLinkedException) {
+    print $this->render('StudySauceBundle:Dialogs:account-not-found.html.php', ['id' => 'account-not-found', 'csrf_token' => $csrf_token]);
+}
+$view['slots']->stop();

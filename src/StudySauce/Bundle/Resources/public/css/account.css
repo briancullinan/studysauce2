@@ -15,39 +15,6 @@
     display: inline-block;
 }
 
-a[href$="/redirect/google"]
-{
-    width:150px;
-    border-bottom-color:#771100;
-    color: #ffffff;
-    background:url("../images/menu_new_compressed.png") no-repeat left -5500px #DD4433;
-    padding-left:30px;
-}
-
-a[href$="/redirect/google"]:hover,
-a[href$="/redirect/google"]:active,
-a[href$="/redirect/google"]:focus {
-    background-color: #771100;
-    border-bottom-color: #771100;
-}
-
-a[href$="/redirect/facebook"]
-{
-    width:150px;
-    border-bottom-color:#224477;
-    color: #ffffff;
-    background:url("../images/menu_new_compressed.png") no-repeat left -5400px #5577AA;
-    padding-left:30px;
-}
-
-a[href$="/redirect/facebook"]:hover,
-a[href$="/redirect/facebook"]:active,
-a[href$="/redirect/facebook"]:focus
-{
-    background-color:#446699;
-    border-bottom-color: #224477;
-}
-
 .signup-or {
     border-bottom: 2px solid #ccc;
     text-align: center;
@@ -93,7 +60,7 @@ a[href="#sign-in-with-email"]
 {
     display:inline-block;
     width: 200px;
-    margin: 0 -102px;
+    margin: 0 -102px 20px -102px;
     vertical-align: middle;
     padding-top:100px;
 }
@@ -103,6 +70,22 @@ a[href="#sign-in-with-email"]
     max-width: 600px;
     margin:0 auto;
     padding-top: 100px;
+}
+
+#account-not-found a[href*="/reset"]
+{
+    float:left;
+}
+
+#account-not-found .social-login,
+#account-not-found form
+{
+    margin:0 -2px;
+    padding: 0 2px 0 2px;
+    display:inline-block;
+    width:50%;
+    vertical-align: middle;
+    text-align: center;
 }
 
 #login form
@@ -216,6 +199,7 @@ a[href="#sign-in-with-email"]
 #register .form-actions .error,
 #account .form-actions .error,
 #account .invalid-only,
+#account-not-found .invalid-only,
 #login .invalid-only,
 #register .invalid-only
 {
@@ -227,6 +211,7 @@ a[href="#sign-in-with-email"]
     border-radius: 5px;
 }
 
+#account-not-found .invalid-only,
 #login .invalid-only,
 #account .invalid-only,
 #register .invalid-only
@@ -234,6 +219,7 @@ a[href="#sign-in-with-email"]
     display:none;
 }
 
+#account-not-found.invalid-only .invalid-only,
 #login.invalid-only .invalid-only,
 #account.invalid-only .invalid-only,
 #register.invalid-only .invalid-only
@@ -247,6 +233,8 @@ a[href="#sign-in-with-email"]
 #account.invalid-only.last-required .last-name input,
 #account.invalid-only.email-required .email input,
 #account.invalid-only.confirm-required .confirm-password input,
+#account-not-found.invalid-only.email-required .email input,
+#account-not-found.invalid-only.password-required .password input,
 #login.invalid-only.email-required .email input,
 #login.invalid-only.password-required .password input,
 #register.invalid-only.first-required .first-name input,

@@ -95,6 +95,6 @@ security:
         - { path: ^/command,                role: ROLE_ADMIN }
         - { path: ^/emails,                 role: ROLE_ADMIN }
         - { path: ^/validation,             role: ROLE_ADMIN }
-        - { path: ^/home,                   allow_if: "!has_role('ROLE_GUEST')" }
+        - { path: ^/home,                   roles: ROLE_USER }
         - { path: ^/,                       allow_if: "!has_role('ROLE_GUEST')" }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

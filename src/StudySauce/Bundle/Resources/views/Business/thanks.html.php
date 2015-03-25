@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
-
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
@@ -17,12 +15,12 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/b
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane" id="thanks">
-    <div class="pane-content clearfix">
-        <h1>Thank you for your purchase</h1>
-        <h2>We have notified your student of the purchase. Please feel free to contact us if you have any questions. Thank you.<br />
-            <br />- The Study Sauce Team</h2>
-        <a href="<?php print $view['router']->generate('home'); ?>">Go home</a>
+    <div class="panel-pane" id="thanks">
+        <div class="pane-content clearfix">
+            <h1>Thank you!</h1>
+            <h2>We are excited to start working with you.  We will be in touch shortly.<br />
+                <br />- Study Sauce</h2>
+            <a href="<?php print $view['router']->generate('home'); ?>">Go home</a>
+        </div>
     </div>
-</div>
 <?php $view['slots']->stop();

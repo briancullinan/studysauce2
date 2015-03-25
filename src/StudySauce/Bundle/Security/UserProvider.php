@@ -5,9 +5,9 @@ namespace StudySauce\Bundle\Security;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\Exception\AccountNotLinkedException;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseUserProvider;
 use StudySauce\Bundle\Entity\User;
-use StudySauce\Bundle\EventListener\InviteListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -50,9 +50,9 @@ class UserProvider extends BaseUserProvider
     public function connect(UserInterface $user, UserResponseInterface $response)
     {
         /** @var EntityManager $orm */
-        $orm = $this->container->get('doctrine')->getManager();
+        //$orm = $this->container->get('doctrine')->getManager();
         /** @var Request $request */
-        $request = $this->container->get('request');
+        //$request = $this->container->get('request');
         /** @var User $user */
         /** @var PathUserResponse $response */
         $property = $this->getProperty($response);
@@ -87,9 +87,9 @@ class UserProvider extends BaseUserProvider
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
         /** @var EntityManager $orm */
-        $orm = $this->container->get('doctrine')->getManager();
+        //$orm = $this->container->get('doctrine')->getManager();
         /** @var Request $request */
-        $request = $this->container->get('request');
+        //$request = $this->container->get('request');
         /** @var PathUserResponse $response */
         $username = $response->getUsername();
         /** @var User $user */
@@ -103,9 +103,10 @@ class UserProvider extends BaseUserProvider
         $setter = 'set'.ucfirst($service);
 
         // create new user here
-        if (null === $user) {
+        if (null !== $user) {
             //I have set all requested data with the user's username
             //modify here with relevant data
+            /*
             $user = $this->userManager->createUser();
             $user->setUsername($service.'.'.$username);
             $factory = $this->encoderFactory->getEncoder($user);
@@ -115,17 +116,21 @@ class UserProvider extends BaseUserProvider
             $this->userManager->updateCanonicalFields($user);
             // reconnect social users to adviser invites
             InviteListener::setInviteRelationship($orm, $request, $user);
+            */
+
+            // these fields can always be updated and sync from the service
+            $setter_id = $setter.'Id';
+            $user->$setter_id($username);
+            $setter_token = $setter.'AccessToken';
+            $user->$setter_token($response->getAccessToken());
+            $user->setFirst($response->getFirst());
+            $user->setLast($response->getLast());
+
+            $this->userManager->updateUser($user);
         }
+        else
+            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $username));
 
-        // these fields can always be updated and sync from the service
-        $setter_id = $setter.'Id';
-        $user->$setter_id($username);
-        $setter_token = $setter.'AccessToken';
-        $user->$setter_token($response->getAccessToken());
-        $user->setFirst($response->getFirst());
-        $user->setLast($response->getLast());
-
-        $this->userManager->updateUser($user);
         return $user;
     }
 

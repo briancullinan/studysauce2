@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\Controller;
 
 use FOS\UserBundle\Doctrine\UserManager;
+use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -36,12 +37,31 @@ class HomeController extends Controller
             $userManager->updateUser($user);
         }
 
+        $showAccountOptions = true;
+        if(empty($user->getProperty('seen_account_options')) && !$user->hasRole('ROLE_DEMO') &&
+            !$user->hasRole('ROLE_GUEST') && empty($user->getFacebookId()) && empty($user->getGoogleId())) {
+            $showAccountOptions = true;
+            $userManager = $this->get('fos_user.user_manager');
+            $user->setProperty('seen_account_options', true);
+            $userManager->updateUser($user);
+        }
+
+        // list oauth services
+        $services = [];
+        /** @var OAuthHelper $oauth */
+        $oauth = $this->get('hwi_oauth.templating.helper.oauth');
+        foreach($oauth->getResourceOwners() as $o) {
+            $services[$o] = $oauth->getLoginUrl($o);
+        }
+
         return $this->render(
             'StudySauceBundle:Home:tab.html.php',
             [
                 'showBookmark' => $showBookmark,
+                'showAccountOptions' => $showAccountOptions,
                 'user' => $user,
-                'csrf_token' => $csrfToken
+                'csrf_token' => $csrfToken,
+                'services' => $services
             ]
         );
     }
