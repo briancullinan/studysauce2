@@ -160,6 +160,7 @@ white_october_swift_mailer_db:
     keep_sent_messages: true
 
 hwi_oauth:
+    target_path_parameter: _target
     firewall_name: main
     connect:
         account_connector: my_user_provider

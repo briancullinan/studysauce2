@@ -42,10 +42,10 @@ a[href="#sign-in-with-email"]
 #login .social-login
 {
     display: inline-block;
-    width:50%;
     margin: 0 -2px;
-    padding: 100px 200px 0 2px;
+    padding: 100px 140px 0 2px;
     vertical-align: middle;
+    text-align: right;
 }
 
 #login .social-login a
@@ -53,7 +53,6 @@ a[href="#sign-in-with-email"]
     display:block;
     margin-left:auto;
     margin-bottom:10px;
-    margin-right:auto;
 }
 
 #login .signup-or
@@ -91,7 +90,7 @@ a[href="#sign-in-with-email"]
 #login form
 {
     margin:0 -2px;
-    padding: 100px 2px 0 200px;
+    padding: 100px 2px 0 140px;
     display:inline-block;
     width:50%;
     vertical-align: middle;
@@ -273,6 +272,12 @@ a[href="#sign-in-with-email"]
 
 @media all and (max-width: 1000px)
 {
+
+    #login .social-login a
+    {
+        margin-right:auto;
+    }
+
     #login form,
     #login .signup-or,
     #login .social-login {
@@ -285,6 +290,12 @@ a[href="#sign-in-with-email"]
 
 @media all and (max-width: 700px)
 {
+
+    #register form
+    {
+        padding-top: 40px;
+    }
+
     #register .first-name, #register .last-name
     {
         margin:0;

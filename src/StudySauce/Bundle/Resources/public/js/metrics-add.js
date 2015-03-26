@@ -1,6 +1,10 @@
 $(document).ready(function () {
     var body = $('body');
 
+    body.on('hide.bs.modal', '#add-study-hours', function () {
+        window.location = '/metrics';
+    });
+
     body.on('show.bs.modal', '#add-study-hours', function () {
         // populate class name drop down from current tab
         var tab = $('#metrics:visible, #checkin:visible'),
@@ -106,7 +110,7 @@ $(document).ready(function () {
                 location: ',',
                 length: dialog.find('.time select').val()
             },
-            success: function (data) {
+            success: function () {
                 dialog.find('.squiggle').remove();
                 body.trigger('checkin');
                 dialog.find('.date input, .time select').val('');

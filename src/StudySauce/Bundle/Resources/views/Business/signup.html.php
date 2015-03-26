@@ -24,13 +24,26 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane" id="signup">
     <div class="pane-content">
         <h2>Welcome to Study Sauce!</h2>
-        <fieldset id="billing-pane">
-            <legend>Enter the information to get started.</legend>
+        <div id="billing-pane">
+            <h3>Enter the information below to get started.</h3>
+            <br />
             <div class="organization">
                 <label class="input"><span>Organization</span><input name="organization" type="text" value="<?php print $organization; ?>"></label>
             </div>
+            <div class="first-name">
+                <label class="input"><span>Point of contact</span><input name="first-name" type="text" value="<?php print $first . ' ' . $last; ?>"></label>
+            </div>
+            <div class="title">
+                <label class="input"><span>Title</span><input name="title" type="text" value="<?php print $title; ?>"></label>
+            </div>
+            <div class="email">
+                <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
+            </div>
+            <div class="phone">
+                <label class="input"><span>Phone number</span><input name="phone" type="text" value="<?php print $phone; ?>"></label>
+            </div>
             <label class="input"><span>Street address</span><input name="street1" type="text" value=""></label>
-            <label class="input"><input name="street2" type="text" value=""></label>
+            <label class="input"><span>&nbsp;</span><input name="street2" type="text" value=""></label>
             <div class="city">
                 <label class="input"><span>City</span><input name="city" type="text" value=""></label>
             </div>
@@ -109,26 +122,6 @@ $view['slots']->start('body'); ?>
                     <option value="Canada">Canada</option>
                     <option value="United States" selected="selected">United States</option>
                 </select></label>
-            <div class="first-name">
-                <label class="input"><span>First name</span><input name="first-name" type="text" value="<?php print $first; ?>"></label>
-            </div>
-            <div class="last-name">
-                <label class="input"><span>Last name</span><input name="last-name" type="text" value="<?php print $last; ?>"></label>
-            </div>
-            <div class="title">
-                <label class="input"><span>Title</span><input name="title" type="text" value="<?php print $title; ?>"></label>
-            </div>
-            <div class="email">
-                <label class="input"><span>E-mail address</span><input name="email" type="text" value="<?php print $email; ?>"></label>
-            </div>
-            <div class="phone">
-                <label class="input"><span>Phone number</span><input name="phone" type="text" value="<?php print $phone; ?>"></label>
-            </div>
-            <?php if(!is_object($user) || $user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) { ?>
-                <div class="password">
-                    <label class="input"><span>Password</span><input name="password" type="password" value=""></label>
-                </div>
-            <?php } ?>
             <div class="students">
                 <label class="input"><span># of students</span><input name="students" type="text" value="<?php print $students; ?>"></label>
             </div>
@@ -184,8 +177,8 @@ $view['slots']->start('body'); ?>
             <label class="input"><span>CCV</span><input name="cc-ccv" type="text" value="">
                 <a href="#ccv-info" data-toggle="modal">What's the CVV?</a>
             </label>
-        </fieldset>
-        <div class="form-actions highlighted-link invalid"><a href="#business-order" class="more">Complete order</a></div>
+        </div>
+        <div class="form-actions highlighted-link invalid"><a href="#business-order" class="more">Save</a></div>
     </div>
 </div>
 <?php $view['slots']->stop();

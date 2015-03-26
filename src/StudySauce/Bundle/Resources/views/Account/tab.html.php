@@ -2,9 +2,11 @@
 use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
+/** @var GlobalVariables $app */
 /** @var $view TimedPhpEngine */
 /** @var $user User */
 /** @var Payment $payment */
@@ -67,14 +69,15 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="social-login">
                     <?php foreach($services as $o => $url) {
-                        $getter = 'get'.ucfirst($o).'AccessToken';
+                        $getter = 'get' . ucfirst($o) . 'AccessToken';
                         ?>
                         <label><span><?php print ucfirst($o); ?> account</span>
-                            <?php if(!empty($user->$getter())) { ?>
-                            Connected
-                            <?php } ?>
-                            <a href="<?php print $url; ?>" class="more">Connect</a></label>
-                    <?php } ?>
+                        <?php if (!empty($user->$getter())) { ?>
+                            Connected <a href="#remove-<?php print $o; ?>"></a>
+                        <?php } else { ?>
+                            <a href="<?php print $url; ?>?_target=<?php print $view['router']->generate($app->getRequest()->get('_route')); ?>" class="more">Connect</a></label>
+                        <?php }
+                    } ?>
                 </div>
                 <div class="password">
                     <label class="input"><span>Current password</span>

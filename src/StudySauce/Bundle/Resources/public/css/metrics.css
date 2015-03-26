@@ -69,11 +69,6 @@
     margin-bottom:40px;
 }
 
-#metrics hr
-{
-    margin-top:40px;
-}
-
 #metrics #legend {
     text-align: center;
     width: 30%;
@@ -86,6 +81,11 @@
     text-overflow: ellipsis;
     left:0;
     position:absolute;
+}
+
+#metrics .manually-entered
+{
+    background: url('../images/menu_icons_32.png') no-repeat left -1312px transparent;
 }
 
 #metrics ol {
@@ -207,6 +207,7 @@
 
 #metrics .checkin-row .class-name {
     text-align: left;
+    padding-left:40px;
 }
 
 #metrics .checkin-row .class-date {

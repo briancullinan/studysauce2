@@ -12,12 +12,6 @@ jQuery(document).ready(function($) {
         else {
             signup.removeClass('first-required');
         }
-        if(signup.find('#billing-pane .last-name input').val().trim() == '') {
-            signup.addClass('last-required');
-        }
-        else {
-            signup.removeClass('last-required');
-        }
         if(signup.find('#billing-pane .email input').val().trim() == ''
             || !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i)
                 .test(signup.find('#billing-pane .email input').val())) {
@@ -88,13 +82,6 @@ jQuery(document).ready(function($) {
             signup.removeClass('cc-year-required');
             signup.removeClass('cc-ccv-required');
         }
-        if(signup.find('input[name="password"]:visible').length > 0
-            && signup.find('input[name="password"]:visible').val().trim() == '') {
-            signup.addClass('password-required');
-        }
-        else {
-            signup.removeClass('password-required');
-        }
         if(signup.find('input[name="organization"]').val().trim() == '') {
             signup.addClass('organization-required');
         }
@@ -128,11 +115,11 @@ jQuery(document).ready(function($) {
             signup.removeClass('payment-required');
         }
 
-        if(signup.is('.first-required') || signup.is('.last-required') || signup.is('.email-required')
+        if(signup.is('.first-required') || signup.is('.email-required')
             || signup.is('.street-required') || signup.is('.city-required') || signup.is('.zip-required')
             || signup.is('.state-required') || signup.is('.country-required') || signup.is('.cc-number-required')
             || signup.is('.cc-month-required') || signup.is('.cc-year-required') || signup.is('.cc-ccv-required')
-            || signup.is('.password-required') || signup.is('.payment-required'))
+            || signup.is('.payment-required'))
             signup.find('.form-actions').removeClass('valid').addClass('invalid');
         else {
             signup.removeClass('invalid-only').find('.form-actions').removeClass('invalid').addClass('valid');
@@ -151,7 +138,7 @@ jQuery(document).ready(function($) {
 
     body.on('show', '#signup', signupFunc);
     body.on('change', '#signup input, #signup select', signupFunc);
-    body.on('keyup', '#signup input[type="text"], #signup input[type="password"]', signupFunc);
+    body.on('keyup', '#signup input[type="text"]', signupFunc);
 
     body.on('click', '#signup a[href="#business-order"]', function (evt) {
         var signup = $('#signup');
@@ -178,9 +165,6 @@ jQuery(document).ready(function($) {
             }
             else if(signup.is('.first-required')) {
                 signup.find('#billing-pane .first-name input').focus();
-            }
-            else if(signup.is('.last-required')) {
-                signup.find('#billing-pane .last-required input').focus();
             }
             else if(signup.is('.title-required')) {
                 signup.find('#billing-pane .title input').focus();
@@ -212,9 +196,7 @@ jQuery(document).ready(function($) {
                 phone: signup.find('#billing-pane .phone input').val().trim(),
                 title: signup.find('#billing-pane .title input').val().trim(),
                 first: signup.find('#billing-pane .first-name input').val().trim(),
-                last: signup.find('#billing-pane .last-name input').val().trim(),
                 email: signup.find('#billing-pane .email input').val().trim(),
-                pass: signup.find('input[name="password"]:visible').length == 0 ? null : signup.find('input[name="password"]:visible').val(),
                 street1: signup.find('input[name="street1"]').val().trim(),
                 street2: signup.find('input[name="street2"]').val().trim(),
                 city: signup.find('.city input').val().trim(),

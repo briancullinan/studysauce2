@@ -393,6 +393,19 @@ $collection->add(
     )
 );
 $collection->add(
+    'remove_social',
+    new Route(
+        '/remove/social',
+        ['_controller' => 'StudySauceBundle:Account:removeSocial'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
     'password_reset',
     new Route(
         '/reset/{_format}',

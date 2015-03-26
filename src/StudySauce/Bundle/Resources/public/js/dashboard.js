@@ -183,7 +183,8 @@ $(document).ready(function () {
             clearTimeout(to);
     }
 
-    body.on('click', '.tipsy', function () {
+    body.on('click', '.tipsy', function (evt) {
+        evt.preventDefault();
         cancelHide.apply(this);
         $(this).toggleClass('focus');
     });

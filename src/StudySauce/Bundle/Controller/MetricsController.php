@@ -257,29 +257,43 @@ class MetricsController extends Controller
                     /** @var $checkin Checkin */
 
                     // Create a list of valid checkin times for all classes
-                    if (empty($checkin->getCheckin()->getTimestamp())) {
+                    if (empty($checkin->getUtcCheckin()->getTimestamp())) {
                         continue;
                     }
 
-                    $checkins[$checkin->getCheckin()->getTimestamp()] = $checkin;
+                    $checkins[$checkin->getUtcCheckin()->getTimestamp()] = $checkin;
 
                     // add checkout times
-                    if (!empty($checkin->getCheckout())) {
-                        $checkouts[$checkin->getCheckout()->getTimestamp()] = $checkin;
+                    if (!empty($checkin->getUtcCheckout())) {
+                        $length = min(3600, $checkin->getCheckout()->getTimestamp() - $checkin->getCheckin()->getTimestamp());
                     }
-                    $checkouts[min(time(), $checkin->getCheckin()->getTimestamp() + 3600)] = $checkin;
+                    else {
+                        $length = min(time() - $checkin->getCheckin()->getTimestamp(), 3600);
+                    }
+                    $checkouts[$checkin->getUtcCheckin()->getTimestamp() + $length] = $checkin;
                 }
             }
         }
 
-        krsort($checkins);
+        $times = array_map(function (Checkin $a) {
+            return $a->getCheckin()->getTimestamp();}, $checkins);
+        $times2 = array_map(function (Checkin $a) {
+            return $a->getUtcCheckin()->getTimestamp();}, $checkins);
+        array_multisort($times, SORT_NUMERIC, SORT_DESC, $times2, SORT_NUMERIC, SORT_DESC, $checkins);
 
         // if the checkin time is before the last checkout time then change the checkout time to match checkin time,
         //    they switched classes in the middle of the session
+        $all = array_merge($checkins, $checkouts);
         foreach($checkins as $i => $class)
         {
+            /** @var Checkin $class */
+            if($class->getUtcCheckin() == $class->getUtcCheckout()) {
+                $length = $class->getCheckout()->getTimestamp() - $class->getCheckin()->getTimestamp();
+                $resultCheckouts[$i+$length] = $length;
+                continue;
+            }
             $diffs = [];
-            foreach(($checkins + $checkouts) as $k => $c)
+            foreach($all as $k => $c)
                 $diffs[$k] = $k - $i;
 
             asort($diffs);
@@ -296,8 +310,7 @@ class MetricsController extends Controller
         }
 
         reset($checkouts);
-            return [$checkins, $resultCheckouts];
-
+        return [$checkins, $resultCheckouts];
     }
 
 }

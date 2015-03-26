@@ -11,7 +11,9 @@ $view['slots']->start('modal-header') ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-    No problem. Add your hours below.
+    <p>No problem. Add your hours below.
+        <br />
+        <br /></p>
     <form action="<?php print $view['router']->generate('checkin_update'); ?>" method="post">
         <div class="class-name">
             <label class="input"><span>Class</span>
@@ -33,9 +35,13 @@ $view['slots']->start('modal-body') ?>
                 </select></label>
         </div>
         <div class="highlighted-link invalid clearfix">
+            <br/>
             <label class="checkbox"><input type="checkbox"><i></i>Add another</label>
             <button type="submit" value="#submit-checkin" class="more">Save</button>
-            <div style="float:left; text-align: left;">* Research shows you shouldn't study longer than 60 minutes without a break.</div>
+            <br />
+            <br />
+            <br />
+            <div style="float:left; text-align: left;">* Research shows you shouldn't study > 60 minutes without a break.</div>
         </div>
     </form>
 <?php $view['slots']->stop();

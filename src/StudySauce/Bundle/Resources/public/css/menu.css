@@ -482,7 +482,6 @@
 .pane-content a[href*="/schedule"]:not(.more),
 .pane-content a[href*="#grade-scale"]:not(.more),
 .pane-content a[href*="#manage-terms"]:not(.more),
-#command_control a[href="#confirm-password-reset"],
 #login a[href*="/reset"]:not(.more)
 {
     padding-left:30px;
@@ -504,7 +503,6 @@
 .pane-content a[href*="/schedule"]:not(.more):before,
 .pane-content a[href*="#grade-scale"]:not(.more):before,
 .pane-content a[href*="#manage-terms"]:not(.more):before,
-#command_control a[href="#confirm-password-reset"]:before,
 #login a[href*="/reset"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
@@ -840,7 +838,7 @@
     content: "3-5"
 }
 
-a[href$="/redirect/google"]
+a[href*="/redirect/google"]
 {
     width:150px;
     border-bottom-color:#771100;
@@ -849,14 +847,14 @@ a[href$="/redirect/google"]
     padding-left:30px;
 }
 
-a[href$="/redirect/google"]:hover,
-a[href$="/redirect/google"]:active,
-a[href$="/redirect/google"]:focus {
+a[href*="/redirect/google"]:hover,
+a[href*="/redirect/google"]:active,
+a[href*="/redirect/google"]:focus {
     background-color: #771100;
     border-bottom-color: #771100;
 }
 
-a[href$="/redirect/facebook"]
+a[href*="/redirect/facebook"]
 {
     width:150px;
     border-bottom-color:#224477;
@@ -865,9 +863,9 @@ a[href$="/redirect/facebook"]
     padding-left:30px;
 }
 
-a[href$="/redirect/facebook"]:hover,
-a[href$="/redirect/facebook"]:active,
-a[href$="/redirect/facebook"]:focus
+a[href*="/redirect/facebook"]:hover,
+a[href*="/redirect/facebook"]:active,
+a[href*="/redirect/facebook"]:focus
 {
     background-color:#446699;
     border-bottom-color: #224477;

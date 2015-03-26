@@ -367,5 +367,23 @@ class AccountController extends Controller
             return new JsonResponse(['error' => true, 'csrf_token' => $csrfToken]);
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeSocialAction(Request $request)
+    {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $this->getUser();
+        $setter = 'set'.ucfirst($request->get('remove'));
+        $setter_id = $setter.'Id';
+        $user->$setter_id('');
+        $setter_token = $setter.'AccessToken';
+        $user->$setter_token('');
+        $userManager->updateUser($user);
+        return $this->forward('StudySauceBundle:Account:index', ['_format' => 'tab']);
+    }
 }
 

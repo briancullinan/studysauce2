@@ -63,7 +63,9 @@ $view['slots']->start('body'); ?>
                 <h4><span>Total study hours: <strong id="study-total"><?php print $total; ?></strong><span></h4>
             </div>
         </div>
-        <a href="#add-study-hours" class="big-add" data-toggle="modal">Add <span>+</span> study hours</a>
+        <div class="clearfix">
+            <a href="#add-study-hours" class="big-add" data-toggle="modal">Add <span>+</span> study hours manually</a>
+        </div>
         <hr>
         <div id="checkins-list">
             <?php

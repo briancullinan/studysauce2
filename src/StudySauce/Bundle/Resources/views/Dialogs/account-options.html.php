@@ -12,7 +12,7 @@ $view['slots']->start('modal-body') ?>
                 <div class="signup-or"><span>Or</span></div>
             <?php }
             $first = false; ?>
-            <a href="<?php print $url; ?>" class="more">Connect</a>
+            <a href="<?php print $url; ?>?_target=<?php print $app->getRequest()->getUri(); ?>" class="more">Connect</a>
         <?php } ?>
     </div>
 <?php $view['slots']->stop();

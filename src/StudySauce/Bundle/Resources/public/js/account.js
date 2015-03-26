@@ -80,6 +80,7 @@ jQuery(document).ready(function() {
         account.find('.new-password, .confirm-password').css('visibility', 'hidden');
         account.find('.edit-icons').toggle();
         account.find('[value="#save-account"]').show();
+        account.find('.social-login').hide();
         accountFunc();
     });
 
@@ -89,6 +90,7 @@ jQuery(document).ready(function() {
         account.find('.password, .new-password, .confirm-password').css('visibility', 'visible');
         account.find('.edit-icons').toggle();
         account.find('[value="#save-account"]').show();
+        account.find('.social-login').hide();
         accountFunc();
     });
 
@@ -115,7 +117,26 @@ jQuery(document).ready(function() {
             error: function () {
                 cancel.removeClass('invalid').addClass('valid');
             }
-        })
+        });
+    });
+
+    body.on('click', '#account .social-login a[href*="#remove-"]', function (evt) {
+        evt.preventDefault();
+        var account = $('#account');
+        jQuery.ajax({
+            url: window.callbackPaths['remove_social'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                remove: $(this).attr('href').substr(8),
+                csrf_token: account.find('input[name="csrf_token"]').val()
+            },
+            success: function (data) {
+                var response = $(data);
+                account.find('input[name="csrf_token"]').val(response.find('input[name="csrf_token"]').val());
+                account.find('.social-login').replaceWith(response.find('.social-login'));
+            }
+        });
     });
 
     function submitAccount(evt)
@@ -164,6 +185,7 @@ jQuery(document).ready(function() {
                 csrf_token: account.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
+                account.find('.squiggle').remove();
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 account.data('state', hash);
                 if(typeof data.error != 'undefined') {
@@ -174,6 +196,10 @@ jQuery(document).ready(function() {
                 account.find('[value="#save-account"]').hide();
                 account.find('.account-info').removeClass('edit').addClass('read-only');
                 account.find('.password, .new-password, .confirm-password').css('visibility', 'hidden');
+                account.find('.social-login').show();
+            },
+            error: function () {
+                account.find('.squiggle').remove();
             }
         });
     }

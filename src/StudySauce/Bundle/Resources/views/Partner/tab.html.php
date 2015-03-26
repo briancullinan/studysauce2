@@ -87,7 +87,7 @@ $view['slots']->start('body'); ?>
                     </div>
                 </div>
 
-                <div class="permissions">
+                <div class="permissions <?php print ($isReadOnly ? 'read-only' : 'edit'); ?>">
                     <h3>My partner is allowed to see:</h3>
                     <ul>
                         <li><label class="checkbox"><input type="checkbox" value="goals" <?php print (in_array(

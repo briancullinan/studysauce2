@@ -84,8 +84,15 @@ class ConnectController extends BaseController
             $this->authenticateUser($request, $currentUser, $service, $currentToken->getRawToken(), false);
         }
 
-        list($route, $options) = HomeController::getUserRedirect($currentUser);
-        return new RedirectResponse($this->container->get('router')->generate($route, $options));
+        $target = $session->get('_security.main.target_path');
+        if(empty($target)) {
+            list($route, $options) = HomeController::getUserRedirect($currentUser);
+            return new RedirectResponse($this->container->get('router')->generate($route, $options));
+        }
+        else {
+            $session->remove('_security.main.target_path');
+            return new RedirectResponse($target);
+        }
     }
 
 }

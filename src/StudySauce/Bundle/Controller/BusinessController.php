@@ -67,7 +67,6 @@ class BusinessController extends Controller
             'State' => $request->get('state'),
             'Country' => $request->get('country'),
             'First' => $request->get('first'),
-            'Last' => $request->get('last'),
             'Title' => $request->get('title'),
             'Email' => $request->get('email'),
             'Phone' => $request->get('phone'),
