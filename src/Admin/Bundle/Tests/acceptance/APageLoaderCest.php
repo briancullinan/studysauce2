@@ -115,14 +115,20 @@ class APageLoaderCest
         $I->fillField('#bill-parents .your-email input', 'TestStudent@mailinator.com');
         $I->click('#bill-parents [value="#submit-contact"]');
         $I->wait(10);
-        $I->amOnUrl('http://gmail.com');
-        $I->fillField('input[name="Email"]', 'marketing@studysauce.com');
-        $I->fillField('input[name="Passwd"]', '2StudyBetter!');
-        $I->click('input[name="signIn"]');
-        $I->wait(5);
-        // TODO: use orm to solve this easier?
-        $I->moveMouseOver('div[act="20"]');
-        $I->waitForElement('tr:first-child *:contains(Test has asked for your help with school)', 60 * 6);
+        $I->amOnPage('/cron');
+
+        // check mailinator for emails
+        $I->amOnUrl('http://mailinator.com');
+        $I->fillField('.input-append input', 'studymarketing');
+        $I->click('.input-append btn');
+        $I->waitForText('a minute ago', 60*5);
+        $I->seeLink('Test has asked for your help with school');
+        $I->click('//a[contains(.,"Test has asked for your help with school")]');
+        $I->executeInSelenium(function (WebDriver $driver) {
+            $driver->switchTo()->defaultContent();
+            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
+        });
+
         $I->seeLink('Go to Study Sauce');
         $I->click('Go to Study Sauce');
         $I->wait(5);
@@ -131,10 +137,13 @@ class APageLoaderCest
                 $last_window = end($handles);
                 $webdriver->switchTo()->window($last_window);
             });
-        $I->seeInCurrentUrl('/parents');
+        $I->seeInCurrentUrl('/torchandlaurelparents');
         $I->test('tryPrepayParent');
-        $I->seeInCurrentUrl('/students');
-        $I->test('tryStudentRegister');
+        $I->seeInCurrentUrl('/torchandlaurelregister');
+        $I->fillField('.password input', 'password');
+        $I->click('Register');
+        $I->wait(10);
+
         $I->seeInCurrentUrl('/profile/funnel');
         $I->test('tryStudyFunnel');
         $I->seeInCurrentUrl('/plan');
@@ -162,25 +171,28 @@ class APageLoaderCest
         // previous invite will autofill checkout page otherwise it will fail
         $I->test('tryGuestCheckout');
         $I->seeInCurrentUrl('/thanks');
+        $I->amOnPage('/cron');
+
+        // check mailinator for emails
         $I->amOnUrl('http://mailinator.com');
-        $I->fillField('.input-append input', $last . 'test');
+        $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
-        $I->waitForText('about a minute ago', 60*5);
+        $I->waitForText('a minute ago', 60*5);
         $I->seeLink('test has prepaid for your study plan');
-        $I->click('.message a');
+        $I->click('//a[contains(.,"test has prepaid for your study plan")]');
         $I->executeInSelenium(function (WebDriver $driver) {
                 $driver->switchTo()->defaultContent();
                 $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
             });
+
         $I->seeLink('Go to Study Sauce');
-        $I->click('Go to Study Sauce');
+        $I->click('//a[contains(.,"Go to Study Sauce")]');
         $I->wait(5);
         $I->executeInSelenium(function (WebDriver $webdriver) {
                 $handles=$webdriver->getWindowHandles();
                 $last_window = end($handles);
                 $webdriver->switchTo()->window($last_window);
             });
-        $I->seeInCurrentUrl('/students');
     }
 
     /**
@@ -216,11 +228,8 @@ class APageLoaderCest
     {
         $I->wantTo('register as a new student');
         $I->seeAmOnUrl('/students');
-        $I->seeLink('Sign up for free');
         $I->click('Sign up for free');
         $I->seeInCurrentUrl('/register');
-        $I->seeLink('register with email');
-        $I->click('register with email');
         $I->fillField('.first-name input', 'test');
         $last = 'tester' . substr(md5(microtime()), -5);
         $I->fillField('.last-name input', $last);
@@ -276,7 +285,7 @@ class APageLoaderCest
         $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
         $I->fillField('.selectize-input input', 'Ariz');
         $I->wait(10);
-        $I->click('div[data-value="Arizona State University"]');
+        $I->click('//span[contains(.,"Arizona State University")]');
         $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
         $I->click('.class-row:nth-child(1) input[value="M"] + i');
         $I->click('.class-row:nth-child(1) input[value="W"] + i');
@@ -332,7 +341,7 @@ class APageLoaderCest
         $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
         $I->fillField('.selectize-input input', 'Ariz');
         $I->wait(10);
-        $I->click('div[data-value="Arizona State University"]');
+        $I->click('//span[contains(.,"Arizona State University")]');
         $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
         $I->click('.class-row:nth-child(1) input[value="M"] + i');
         $I->click('.class-row:nth-child(1) input[value="W"] + i');
@@ -347,6 +356,7 @@ class APageLoaderCest
     }
 
     /**
+     * @depends tryNewSchedule
      * @param AcceptanceTester $I
      */
     public function tryNewDeadlines(AcceptanceTester $I)
@@ -384,6 +394,22 @@ class APageLoaderCest
     }
 
     /**
+     * @depends tryNewSchedule
+     * @depends tryNewCheckin
+     * @param AcceptanceTester $I
+     */
+    public function tryNewMetrics(AcceptanceTester $I) {
+        $I->wantTo('enter a manually study session');
+        $I->seeAmOnUrl('/metrics');
+        $I->click('#metrics a[href="#add-study-hours"]');
+        $I->selectOption('#add-study-hours .class-name select', 'PHIL 101');
+        $I->click('#add-study-hours .date input');
+        $I->click('.ui-datepicker-calendar td:not(.ui-datepicker-unselectable) a');
+        $I->selectOption('#add-study-hours .time select', '45');
+        $I->click('#add-study-hours [value="#submit-checkin"]');
+    }
+
+    /**
      * @param AcceptanceTester $I
      */
     public function tryNewPartner(AcceptanceTester $I)
@@ -409,7 +435,7 @@ class APageLoaderCest
         $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
         $I->fillField('.selectize-input input', 'Ariz');
         $I->wait(10);
-        $I->click('div[data-value="Arizona State University"]');
+        $I->click('//span[contains(.,"Arizona State University")]');
 
         // add one class
         $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
@@ -431,7 +457,7 @@ class APageLoaderCest
         $I->fillField('.class-row:nth-child(2) .end-time input', '12');
 
         $I->click('#schedule .highlighted-link [value="#save-class"]');
-        $I->click('.invalid-only'); // should fail if hidden
+        $I->see('You must complete all fields before moving on.'); // should fail if hidden
         // fix time
         $I->fillField('.class-row:nth-child(2) .start-time input', '9');
         $I->fillField('.class-row:nth-child(2) .end-time input', '10');
@@ -448,7 +474,7 @@ class APageLoaderCest
         $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
         $I->fillField('.selectize-input input', 'Ariz');
         $I->wait(10);
-        $I->click('div[data-value="Arizona State University"]');
+        $I->click('//span[contains(.,"Arizona State University")]');
 
         $I->fillField('.class-row:nth-child(1) .class-name input', 'MAT 202');
         $I->click('.class-row:nth-child(1) input[value="M"] + i');
@@ -462,6 +488,54 @@ class APageLoaderCest
 
         $I->click('#schedule .highlighted-link [value="#save-class"]');
         $I->wait(10);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function trySignup(AcceptanceTester $I)
+    {
+        $I->wantTo('sign up for study sauce');
+        $I->seeAmOnUrl('/signup');
+        $I->fillField('input[name="organization"]', 'Study Sauce');
+        $I->fillField('input[name="first-name"]', 'test');
+        $I->fillField('input[name="title"]', 'Mr');
+        $last = 'tester' . substr(md5(microtime()), -5);
+        $I->fillField('input[name="email"]', 'test' . $last . '@mailinator.com');
+        $I->fillField('input[name="phone"]', '4804660856');
+        $I->fillField('input[name="street1"]', '6934 E sandra ter');
+        $I->fillField('input[name="city"]', 'scottsdale');
+        $I->fillField('input[name="zip"]', '85254');
+        $I->selectOption('select[name="state"]', 'Arizona');
+        $I->selectOption('select[name="country"]', 'United States');
+        $I->fillField('input[name="students"]', '10');
+        $I->selectOption('.payment select', 'Credit card');
+        $I->seeLink('Save');
+        $I->click('Save');
+        $I->wait(10);
+
+        // visit mailinator and check for email
+        $I->amOnUrl('http://mailinator.com');
+        $I->fillField('.input-append input', 'studymarketing');
+        $I->click('.input-append btn');
+        $I->waitForText('a minute ago', 60*5);
+        $I->seeLink('Contact Us');
+        $I->click('//a[contains(.,"Contact Us")]');
+        $I->see('Organization:');
+    }
+
+    /**
+     * @depends tryNewPartner
+     * @param AcceptanceTester $I
+     */
+    public function tryPartnerEmail(AcceptanceTester $I)
+    {
+        $I->amOnUrl('http://mailinator.com');
+        $I->fillField('.input-append input', 'studymarketing');
+        $I->click('.input-append btn');
+        $I->waitForText('a minute ago', 60*5);
+        $I->seeLink('needs your help with school');
+        $I->click('//a[contains(.,"needs your help with school")]');
     }
 }
 

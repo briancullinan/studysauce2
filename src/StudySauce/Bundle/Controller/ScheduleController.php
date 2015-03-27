@@ -45,8 +45,9 @@ class ScheduleController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('update_schedule')
             : null;
 
-        $needsNew = !empty($user->getSchedules()->first()) && !empty($user->getSchedules()->first()->getCourses())
-            && !$user->getSchedules()->first()->getCourses()->exists(function ($_, Course $c) {
+        /** @var Schedule $schedule */
+        $needsNew = !empty($schedule = $user->getSchedules()->first()) && !empty($schedule->getCourses()->count())
+            && !$schedule->getCourses()->exists(function ($_, Course $c) {
                     return $c->getEndTime() > new \DateTime();})
             && empty($user->getProperty('needs_new'));
         if($needsNew) {

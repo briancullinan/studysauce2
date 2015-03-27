@@ -96,7 +96,7 @@ class GoalsController extends Controller
         $guest->addGoal($behavior);
         $orm->persist($behavior);
 
-        $milestoneGoals = ['B', 'B+', 'A-', 'A', 'A+'];
+        $milestoneGoals = ['B-', 'B', 'B+', 'A-', 'A', 'A+'];
         $milestoneRewards = ['$50 gift card', 'Fancy dinner with parents', 'Shopping spree'];
         $milestone = new Goal();
         $milestone->setType('milestone');

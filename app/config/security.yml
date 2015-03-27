@@ -61,6 +61,7 @@ security:
         # anonymous pages
         - { path: ^$,                       roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         - { path: ^/$,                      roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
+        - { path: ^/signup,                 roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         - { path: ^/denied,                 roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         - { path: ^/_visit,                 roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }
         - { path: ^/_fragment,              roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER] }

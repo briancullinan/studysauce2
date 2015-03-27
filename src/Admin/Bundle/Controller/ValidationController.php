@@ -85,7 +85,7 @@ class ValidationController extends Controller
      * @param int $level
      * @return array
      */
-    private static function getTestDependencies($allTests, $tests, $level = 5)
+    private static function getTestDependencies($allTests, $tests, $level = 1)
     {
         $dependencies = [];
         if($level <= 0)

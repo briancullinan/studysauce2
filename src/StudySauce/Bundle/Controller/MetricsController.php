@@ -279,8 +279,9 @@ class MetricsController extends Controller
             return $a->getCheckin()->getTimestamp();}, $checkins);
         $times2 = array_map(function (Checkin $a) {
             return $a->getUtcCheckin()->getTimestamp();}, $checkins);
-        array_multisort($times, SORT_NUMERIC, SORT_DESC, $times2, SORT_NUMERIC, SORT_DESC, $checkins);
-
+        $keys = array_keys($checkins);
+        array_multisort($times, SORT_NUMERIC, SORT_DESC, $times2, SORT_NUMERIC, SORT_DESC, $checkins, $keys);
+        $checkins = array_combine($keys, $checkins);
         // if the checkin time is before the last checkout time then change the checkout time to match checkin time,
         //    they switched classes in the middle of the session
         $all = array_merge($checkins, $checkouts);

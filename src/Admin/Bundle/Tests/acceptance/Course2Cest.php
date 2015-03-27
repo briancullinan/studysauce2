@@ -90,9 +90,9 @@ class Course2Cest
         $I->click('input[value="procrastination"] + i');
         $I->click('input[name="quiz-doing-well"][value="1"] + i');
         $I->fillField('input[name="quiz-all-together"]', 'they don\'t');
-        $I->click('#course2_study_metrics-step2 .highlighted-link a:first-child');
+        $I->click('#course2_study_metrics-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
-        $I->click('#course2_study_metrics-step2 .highlighted-link a:last-child');
+        $I->click('#course2_study_metrics-step2 .highlighted-link a:nth-of-type(2)');
         $I->wait(5);
         $I->click('#course2_study_metrics-step3 .highlighted-link a');
         $I->wait(5);
@@ -114,9 +114,9 @@ class Course2Cest
         $I->fillField('textarea[name="quiz-procrastination"]', 'helps your commit time');
         $I->fillField('textarea[name="quiz-study-sessions"]', 'good for projects');
         $I->fillField('textarea[name="quiz-stick-plan"]', 'start immediately');
-        $I->click('#course2_study_plan-step2 .highlighted-link a:first-child');
+        $I->click('#course2_study_plan-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
-        $I->click('#course2_study_plan-step2 .highlighted-link a:last-child');
+        $I->click('#course2_study_plan-step2 .highlighted-link a:nth-of-type(2)');
         $I->wait(5);
         $I->click('#course2_study_plan-step3 .highlighted-link a');
         $I->wait(5);
@@ -139,9 +139,9 @@ class Course2Cest
         $I->fillField('input[name="quiz-multiple-sessions"]', 'blocked practice');
         $I->fillField('input[name="quiz-other-name"]', 'varied practice');
         $I->click('input[name="quiz-types-courses"][value="0"] + i');
-        $I->click('#course2_interleaving-step2 .highlighted-link a:first-child');
+        $I->click('#course2_interleaving-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
-        $I->click('#course2_interleaving-step2 .highlighted-link a:last-child');
+        $I->click('#course2_interleaving-step2 .highlighted-link a:nth-of-type(2)');
         $I->wait(5);
         $I->click('#course2_interleaving-step3 .highlighted-link a');
         $I->wait(5);
@@ -164,9 +164,9 @@ class Course2Cest
         $I->fillField('input[name="quiz-most-important"]', 'space out your studying');
         $I->fillField('input[name="quiz-open-tips-1"]', 'study more');
         $I->fillField('input[name="quiz-open-tips-2"]', 'get organized');
-        $I->click('#course2_study_tests-step2 .highlighted-link a:first-child');
+        $I->click('#course2_study_tests-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
-        $I->click('#course2_study_tests-step2 .highlighted-link a:last-child');
+        $I->click('#course2_study_tests-step2 .highlighted-link a:nth-of-type(2)');
         $I->wait(5);
         $I->click('#course2_study_tests-step3 .highlighted-link a');
         $I->wait(5);

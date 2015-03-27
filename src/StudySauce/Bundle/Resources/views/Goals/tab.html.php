@@ -100,6 +100,7 @@ $view['slots']->start('body'); ?>
                         <span>Goal</span>
                         <select>
                             <option value="_none" <?php print (empty($milestone) || empty($milestone->getGoal()) ? 'selected="selected"' : ''); ?>>None</option>
+                            <option value="A+" <?php print (!empty($milestone) && $milestone->getGoal() == 'A+' ? 'selected="selected"' : ''); ?>>A+</option>
                             <option value="A" <?php print (!empty($milestone) && $milestone->getGoal() == 'A' ? 'selected="selected"' : ''); ?>>A</option>
                             <option value="A-" <?php print (!empty($milestone) && $milestone->getGoal() == 'A-' ? 'selected="selected"' : ''); ?>>A-</option>
                             <option value="B+" <?php print (!empty($milestone) && $milestone->getGoal() == 'B+' ? 'selected="selected"' : ''); ?>>B+</option>

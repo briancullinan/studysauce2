@@ -15,7 +15,8 @@ $(document).ready(function () {
                     row.find('.day-of-the-week input:not([value="Weekly"]):checked').length == 0 &&
                     row.find('.start-date input').val().trim() == '' &&
                     row.find('.end-date input').val().trim() == '')
-                    row.removeClass('invalid').addClass('valid blank');
+                    row.removeClass('invalid class-required dotw-required start-time-required end-time-required ' +
+                        'start-date-required end-date-required').addClass('valid blank');
                 else {
                     if(row.find('.class-name input').val().trim() == '') {
                         row.addClass('class-required');
@@ -522,7 +523,7 @@ $(document).ready(function () {
             schedule.addClass('invalid-only');
             // focus on required field
             if(schedule.is('.university-required')) {
-                schedule.find('.university input').selectize.focus();
+                schedule.find('.university input.selectized')[0].selectize.focus();
             }
             var toEdit;
             if((toEdit = schedule.find('.class-row.class-required, .class-row.dotw-required, ' +
@@ -793,9 +794,7 @@ $(document).ready(function () {
                     select[0].selectize.focus();
             }
         });
-        if(schedule.is('.needs-new-schedule')) {
-            $('#new-schedule').modal({show:true});
-        }
+        $('#new-schedule').modal({show:true})
         updateTermControls();
     }
 
