@@ -72,10 +72,6 @@ $view['slots']->start('body'); ?>
             reset($checkouts);
             foreach ($checkins as $t => $c) {
                 list($k) = each($checkouts);
-                $length = $k - $t;
-                if ($length <= 60) {
-                    $length = 60;
-                }
 
                 $elapsedString = function ($etime) {
                     if ($etime < 1) {
@@ -103,7 +99,7 @@ $view['slots']->start('body'); ?>
                     return '';
                 };
 
-                $lengthStr = $elapsedString($length);
+                $lengthStr = $elapsedString($checkouts[$k]);
 
                 /** @var $c Checkin */
                 ?>

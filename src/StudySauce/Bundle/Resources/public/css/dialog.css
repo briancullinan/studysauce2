@@ -424,6 +424,19 @@ body.right-menu #bookmark
 @media all and (max-width:700px)
 {
 
+    #account-options .signup-or,
+    #account-options .social-login a:nth-of-type(even),
+    #account-options .social-login a:nth-of-type(odd)
+    {
+        margin-left:auto;
+        margin-right:auto;
+    }
+    #account-options .social-login > div,
+    #account-options .social-login > a
+    {
+        display:block;
+    }
+
     .left-menu.modal-open .modal
     {
         left:220px;

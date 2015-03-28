@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Command;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
@@ -108,8 +109,12 @@ EOF
         }
 
         // send deadline reminders
-        $futureReminders = Criteria::create()->where(Criteria::expr()->gt('dueDate', new \DateTime()));
-        $reminders = $orm->getRepository('StudySauceBundle:Deadline')->matching($futureReminders);
+        $reminders = new ArrayCollection($orm->getRepository('StudySauceBundle:Deadline')->createQueryBuilder('d')
+            ->select('d')
+            ->andWhere('d.dueDate > :date AND d.deleted != 1')
+            ->setParameter('date', new \DateTime())
+            ->getQuery()
+            ->getResult());
         $deadlines = [];
 
         // create a list of adviser deadlines

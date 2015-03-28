@@ -6,14 +6,18 @@ $view['slots']->start('modal-header') ?>
 
 $view['slots']->start('modal-body') ?>
     <div class="social-login">
+        <br />
+        <br />
         <?php $first = true;
         foreach($services as $o => $url) {
             if(!$first) { ?>
                 <div class="signup-or"><span>Or</span></div>
             <?php }
             $first = false; ?>
-            <a href="<?php print $url; ?>?_target=<?php print $app->getRequest()->getUri(); ?>" class="more">Connect</a>
+            <a href="<?php print $url; ?>?_target=<?php print $view['router']->generate($app->getRequest()->get('_route')); ?>" class="more">Connect</a>
         <?php } ?>
+        <br />
+        <br />
     </div>
 <?php $view['slots']->stop();
 

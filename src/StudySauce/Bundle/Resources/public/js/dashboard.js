@@ -111,6 +111,10 @@ $(document).ready(function () {
         }, 50);
     }
 
+    body.on('click', 'a[href*="/redirect/facebook"], a[href*="/redirect/google"]', function () {
+        loadingAnimation($(this));
+    });
+
     // hide any visible modals when panel changes
     body.on('hide', '.panel-pane', function () {
         body.find('.modal:visible').modal('hide');
@@ -161,11 +165,11 @@ $(document).ready(function () {
         var to;
         if((to = $(this).data('timer')) != null)
             clearTimeout(to);
-        if(!($(this).is('[original-title]')))
-            $(this).tipsy({trigger: 'manual'});
+        $(this).tipsy({trigger: 'manual'});
         $(this).tipsy('show');
         var tip = $(this).data('tipsy').$tip;
         tip.data('el', this);
+        $('.tipsy').not(tip).remove();
     }
 
     function hideTip()
@@ -173,7 +177,7 @@ $(document).ready(function () {
         var that = $(this);
         that.data('timer', setTimeout(function () {
             that.tipsy('hide');
-        }, 100));
+        }, 15));
     }
 
     function cancelHide()

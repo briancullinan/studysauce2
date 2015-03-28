@@ -75,7 +75,7 @@ $view['slots']->start('body'); ?>
                         <?php if (!empty($user->$getter())) { ?>
                             Connected <a href="#remove-<?php print $o; ?>"></a>
                         <?php } else { ?>
-                            <a href="<?php print $url; ?>?_target=<?php print $view['router']->generate($app->getRequest()->get('_route')); ?>" class="more">Connect</a></label>
+                            <a href="<?php print $url; ?>?_target=<?php print $view['router']->generate('account'); ?>" class="more">Connect</a></label>
                         <?php }
                     } ?>
                 </div>

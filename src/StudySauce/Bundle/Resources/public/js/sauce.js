@@ -45,10 +45,10 @@ function loadingAnimation(that)
     }
     else if ($(this).is('.squiggle'))
     {
-        var width = $(this).parent().outerWidth(true);
+        var width = $(this).parent().outerWidth(false);
         return $(this).css('width', 0).css('left', 0)
             .animate({width: width}, 1000, 'swing', function () {
-                var width = $(this).parent().outerWidth(true);
+                var width = $(this).parent().outerWidth(false);
                 $(this).css('width', width).css('left', 0)
                     .animate({left: width, width: 0}, 1000, 'swing', loadingAnimation);
             });

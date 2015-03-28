@@ -363,14 +363,19 @@ class APageLoaderCest
     {
         $I->wantTo('set up a deadline');
         $I->seeAmOnUrl('/deadlines');
-        $I->selectOption('.deadline-row .class-name select', 'PHIL 101');
-        $I->fillField('.deadline-row .assignment input', 'Exam 1');
-        $I->checkOption('.deadline-row input[value="86400"]');
-        $I->checkOption('.deadline-row input[value="172800"]');
-        $I->checkOption('.deadline-row input[value="345600"]');
-        $I->click('.deadline-row .due-date input');
-        $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
-        $I->fillField('.deadline-row .percent input', '10');
+        $I->selectOption('.deadline-row.edit .class-name select', 'PHIL 101');
+        $I->fillField('.deadline-row.edit .assignment input', 'Exam 1');
+        $I->checkOption('.deadline-row.edit input[value="86400"]');
+        $I->checkOption('.deadline-row.edit input[value="172800"]');
+        $I->checkOption('.deadline-row.edit input[value="345600"]');
+        $I->checkOption('.deadline-row.edit input[value="604800"]');
+        $I->click('.deadline-row.edit .due-date input');
+        $d = date_add(new \DateTime(), new \DateInterval('P8D'))->format('j');
+        if($d < 8) {
+            $I->click('.ui-datepicker-next');
+        }
+        $I->click('//*[@id="ui-datepicker-div"]//td[not(@class="ui-datepicker-unselectable")]/a[contains(.,"' . $d . '")]');
+        $I->fillField('.deadline-row.edit .percent input', '10');
         $I->click('#deadlines .highlighted-link [value="#save-deadline"]');
         $I->wait(10);
     }
@@ -521,6 +526,10 @@ class APageLoaderCest
         $I->waitForText('a minute ago', 60*5);
         $I->seeLink('Contact Us');
         $I->click('//a[contains(.,"Contact Us")]');
+        $I->executeInSelenium(function (WebDriver $driver) {
+            $driver->switchTo()->defaultContent();
+            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
+        });
         $I->see('Organization:');
     }
 
@@ -530,12 +539,46 @@ class APageLoaderCest
      */
     public function tryPartnerEmail(AcceptanceTester $I)
     {
+        $I->amOnPage('/cron');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
         $I->waitForText('a minute ago', 60*5);
         $I->seeLink('needs your help with school');
         $I->click('//a[contains(.,"needs your help with school")]');
+        $I->executeInSelenium(function (WebDriver $driver) {
+            $driver->switchTo()->defaultContent();
+            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
+        });
+
+    }
+
+    /**
+     * @depends tryNewDeadlines
+     * @param AcceptanceTester $I
+     */
+    public function tryDeadlineEmail(AcceptanceTester $I)
+    {
+        $I->amOnPage('/cron');
+        $I->amOnUrl('http://mailinator.com');
+        $I->fillField('.input-append input', 'studymarketing');
+        $I->click('.input-append btn');
+        $I->waitForText('a minute ago', 60*5);
+        $I->seeLink('notification');
+        $I->click('//a[contains(.,"notification")]');
+        $I->executeInSelenium(function (WebDriver $driver) {
+            $driver->switchTo()->defaultContent();
+            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
+        });
+        $I->see('Exam 1');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryAdviserInvites(AcceptanceTester $I)
+    {
+
     }
 }
 

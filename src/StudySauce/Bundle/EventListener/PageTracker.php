@@ -120,7 +120,7 @@ class PageTracker implements EventSubscriberInterface
                     $visited->setTimezone(new \DateTimeZone(date_default_timezone_get()));
                     $prev->setCreated($visited);
                     $prev->setMethod($request->getMethod());
-                    $prev->setHash($v['hash']);
+                    $prev->setHash(isset($v['hash']) ? $v['hash'] : '');
                     if(!empty($base = $request->getBaseUrl()) && strpos($v['path'], $base) == 0)
                         $v['path'] = substr($v['path'], strlen($request->getBaseUrl()));
                     if(substr($v['path'], 0, 1) != '/')

@@ -4,9 +4,8 @@ $(document).ready(function () {
 
     var margins = [25, 20, 45, 20];
 
-    var color = d3.scale.category10().range(["#FF1100", "#FF9900", "#FFDD00", "#BBEE00", "#33DD00",
-        "#009999", "#1133AA", "#6611AA", "#BB0088"]);
-    var x,
+    var color,
+        x,
         y,
         xAxis,
         xAxisLine2,
@@ -111,7 +110,10 @@ $(document).ready(function () {
             .attr("class", "symbol");
         g2.exit().remove();
 
-        color = color.domain(window.classIds);
+        color = d3.scale.category10()
+            .range(["#FF1100", "#FF9900", "#FFDD00", "#BBEE00", "#33DD00",
+            "#009999", "#1133AA", "#6611AA", "#BB0088"])
+            .domain(window.classIds);
 
         redraw();
     }

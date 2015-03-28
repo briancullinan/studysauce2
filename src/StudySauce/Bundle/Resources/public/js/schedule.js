@@ -135,11 +135,11 @@ $(document).ready(function () {
                     var length = (to.getTime() - from.getTime()) / 1000;
                     if (length < 0)
                         length += 86400;
-                    // check if the length is less than 8 hours
-                    if (from.getTime() == to.getTime() || length > 8 * 60 * 60)
-                        row.addClass('invalid-date');
+                    // check if the length is less than 12 hours
+                    if (from.getTime() == to.getTime() || length > 12 * 60 * 60)
+                        row.addClass('invalid-time');
                     else
-                        row.removeClass('invalid-date');
+                        row.removeClass('invalid-time');
                 }
 
                 // check if there are any overlaps with the other rows
@@ -148,10 +148,10 @@ $(document).ready(function () {
 
                 // check if dates are reverse
                 if(!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && startDate.getTime() > endDate.getTime()) {
-                    row.addClass('date-required');
+                    row.addClass('invalid-date');
                 }
                 else {
-                    row.removeClass('date-required')
+                    row.removeClass('invalid-date')
                 }
 
                 var startTime = new Date('1/1/1970 ' + row.find('.start-time input').val().replace(/[ap]m$/i, '').replace(/12:/i, '00:'));
@@ -205,6 +205,8 @@ $(document).ready(function () {
 
         var term = schedule.find('.term-row:visible').first();
         if(term.find('.class-row.edit.invalid:visible').length == 0 &&
+            term.find('.class-row.invalid-date:visible').length == 0 &&
+            term.find('.class-row.invalid-time:visible').length == 0 &&
             term.find('.class-row.overlaps:visible').length == 0 &&
             term.find('.class-row.valid:not(.blank)').length > 0 &&
             term.find('.university input').val().trim() != '' && (
@@ -225,20 +227,6 @@ $(document).ready(function () {
             schedule.removeClass('university-required');
         }
 
-        if(term.find('.class-row.overlaps:visible').length > 1)
-            schedule.addClass('overlaps');
-        else
-            schedule.removeClass('overlaps');
-
-        if(term.find('.class-row.start-time-required:visible, .class-row.end-time-required:visible').length > 0)
-            schedule.addClass('invalid-time');
-        else
-            schedule.removeClass('invalid-time');
-
-        if(term.find('.class-row.start-date-required:visible, .class-row.end-date-required:visible').length > 0)
-            schedule.addClass('invalid-date');
-        else
-            schedule.removeClass('invalid-date');
     }
 
     body.on('click', '#schedule a[href="#edit-class"]', function (evt) {

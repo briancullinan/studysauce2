@@ -1,13 +1,7 @@
 <?php
 use StudySauce\Bundle\Entity\Course;
-use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Grade;
-use StudySauce\Bundle\Entity\ParentInvite;
-use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\Schedule;
-use StudySauce\Bundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -98,7 +92,6 @@ $view['slots']->start('body'); ?>
                                 if(empty($grades = $c->getGrades()->toArray()))
                                 {
                                     $isDemo = true;
-                                    $grades = $c->getDeadlines()->filter(function (Deadline $d) {return !empty($d->getCourse());})->toArray();
                                     for($k = 0; $k < 4; $k++)
                                     {
                                         if(count($grades) < 4)
@@ -115,9 +108,9 @@ $view['slots']->start('body'); ?>
                                             <label class="input"><span>Assignment</span>
                                                 <input type="text" value="<?php print (!$isDemo ? $d->getAssignment() : ''); ?>" placeholder="<?php print ($isDemo && !empty($d->getAssignment()) ? $d->getAssignment() : 'Assignment'); ?>" /></label></div>
                                         <div class="percent" title="How much of your course grade the assignment is worth"><label class="input"><span>%</span><input type="text" value="<?php print (!$isDemo && !empty($d->getPercent()) ? $d->getPercent() : ''); ?>" placeholder="&bullet;" /></label></div>
-                                        <div class="score" title="Your grade on the assignment"><label class="input"><span>Score</span><input type="text" value="<?php print ($d instanceof Deadline ? '' : $d->getScore()); ?>" placeholder="&bullet;" /></label></div>
-                                        <div class="grade" title="Your letter grade based on your grading scale"><span><?php print ($d instanceof Deadline || empty($d->getGrade()) ? '&bullet;' : $d->getGrade()); ?></span></div>
-                                        <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print ($d instanceof Deadline || empty($d->getGPA()) ? '&bullet;' : $d->getGPA()); ?></div>
+                                        <div class="score" title="Your grade on the assignment"><label class="input"><span>Score</span><input type="text" value="<?php print $d->getScore(); ?>" placeholder="&bullet;" /></label></div>
+                                        <div class="grade" title="Your letter grade based on your grading scale"><span><?php print (empty($d->getGrade()) ? '&bullet;' : $d->getGrade()); ?></span></div>
+                                        <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($d->getGPA()) ? '&bullet;' : $d->getGPA()); ?></div>
                                         <div class="read-only"><a href="#edit-grade">&nbsp;</a><a href="#remove-grade">&nbsp;</a></div>
                                     </div>
                                 <?php } ?>

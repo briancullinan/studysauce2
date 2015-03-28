@@ -60,7 +60,7 @@ class AdviserController extends Controller
             ->leftJoin('v.user', 'u')
             ->select(['v', 'u'])
             ->andWhere('v.user IN (\'' . implode('\',\'', array_map(function (User $u) {return $u->getId();}, $users)) . '\')')
-            ->andWhere('v.path LIKE \'/schedule%\' OR v.path LIKE \'/metrics%\' OR v.path LIKE \'/goals%\' OR v.path LIKE \'/plan%\' OR v.path LIKE \'/course%\' OR v.path LIKE \'/account%\' OR v.path LIKE \'/premium%\' OR v.path LIKE \'/deadlines%\' OR v.path LIKE \'/checkin%\' OR v.path LIKE \'/home%\' OR v.path LIKE \'/partner%\' OR v.path LIKE \'/profile%\'')
+            ->andWhere('v.path LIKE \'/schedule%\' OR v.path LIKE \'/metrics%\' OR v.path LIKE \'/goals%\' OR v.path LIKE \'/plan%\' OR v.path LIKE \'/course%\' OR v.path LIKE \'/account%\' OR v.path LIKE \'/premium%\' OR v.path LIKE \'/deadlines%\' OR v.path LIKE \'/checkin%\' OR v.path LIKE \'/home%\' OR v.path LIKE \'/partner%\' OR v.path LIKE \'/profile%\' OR v.path LIKE \'/calculator%\'')
             ->andWhere('u.roles NOT LIKE \'%ADVISER%\' AND u.roles NOT LIKE \'%ADMIN%\'')
             ->groupBy('v.session')
             ->orderBy('v.created', 'DESC')

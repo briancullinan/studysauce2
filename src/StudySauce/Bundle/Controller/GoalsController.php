@@ -87,7 +87,7 @@ class GoalsController extends Controller
         }
 
         $behaviorGoals = ['25', '30', '35', '40', '45', '50'];
-        $behaviorRewards = ['Lunch with parents', 'That new sweater I always wanted', 'Pat on the back'];
+        $behaviorRewards = ['Lunch with parents', 'Movie night', 'Date night'];
         $behavior = new Goal();
         $behavior->setType('behavior');
         $behavior->setGoal($behaviorGoals[array_rand($behaviorGoals, 1)]);
@@ -97,7 +97,7 @@ class GoalsController extends Controller
         $orm->persist($behavior);
 
         $milestoneGoals = ['B-', 'B', 'B+', 'A-', 'A', 'A+'];
-        $milestoneRewards = ['$50 gift card', 'Fancy dinner with parents', 'Shopping spree'];
+        $milestoneRewards = ['Frozen yogurt', 'Fancy dinner', 'Shopping tip', '$50 gift card', 'A night off from studying.'];
         $milestone = new Goal();
         $milestone->setType('milestone');
         $milestone->setGoal($milestoneGoals[array_rand($milestoneGoals, 1)]);
@@ -107,7 +107,7 @@ class GoalsController extends Controller
         $orm->persist($milestone);
 
         $outcomeGoals = ['3.00', '3.25', '3.50', '3.75', '4.00'];
-        $outcomeRewards = ['Vacation for spring break instead of studying', 'Movie night', 'A day off.'];
+        $outcomeRewards = ['Spa day', 'Spring break trip!', 'Semester abroad'];
         $outcome = new Goal();
         $outcome->setType('outcome');
         $outcome->setGoal($outcomeGoals[array_rand($outcomeGoals, 1)]);

@@ -59,7 +59,7 @@ class ScheduleController extends Controller
 
         return $this->render('StudySauceBundle:Schedule:tab.html.php', [
                 'needsNew' => $needsNew,
-                'schedules' => $user->getSchedules()->isEmpty() || $user->getSchedules()->first()->getCourses()->isEmpty()
+                'schedules' => $user->getSchedules()->isEmpty()
                     ? [new Schedule()]
                     : $user->getSchedules()->toArray(),
                 'demoSchedules' => [$demo],

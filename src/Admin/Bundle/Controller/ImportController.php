@@ -24,7 +24,7 @@ class ImportController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('StudySauceBundle:Partner:import.html.php');
+        return $this->render('AdminBundle:Import:tab.html.php');
     }
 
     /**

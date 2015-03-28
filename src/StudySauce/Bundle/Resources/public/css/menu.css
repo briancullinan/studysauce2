@@ -482,6 +482,7 @@
 .pane-content a[href*="/schedule"]:not(.more),
 .pane-content a[href*="#grade-scale"]:not(.more),
 .pane-content a[href*="#manage-terms"]:not(.more),
+.pane-content a[href*="/calculator"]:not(.more),
 #login a[href*="/reset"]:not(.more)
 {
     padding-left:30px;
@@ -503,6 +504,7 @@
 .pane-content a[href*="/schedule"]:not(.more):before,
 .pane-content a[href*="#grade-scale"]:not(.more):before,
 .pane-content a[href*="#manage-terms"]:not(.more):before,
+.pane-content a[href*="/calculator"]:not(.more):before,
 #login a[href*="/reset"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
@@ -555,8 +557,22 @@
     background-position: left -2502px;
 }
 
+.pane-content a[href*="/calculator"]:not(.more):before
+{
+    background-position: left -1802px;
+}
+
+.pane-content a[href*="/calculator"]:not(.more):hover:before,
+.pane-content a[href*="/calculator"]:not(.more):focus:before,
+.pane-content a[href*="/calculator"]:not(.more):active:before,
+.pane-content a[href*="/calculator"].active:not(.more):before
+{
+    background-position: left -1852px;
+}
+
 .pane-content a[href*="/goals"]:not(.more):before
 {
+    background-position: left -302px;
 }
 
 .pane-content a[href*="/goals"]:not(.more):hover:before,
@@ -845,6 +861,7 @@ a[href*="/redirect/google"]
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5500px #DD4433;
     padding-left:30px;
+    position:relative;
 }
 
 a[href*="/redirect/google"]:hover,
@@ -861,6 +878,7 @@ a[href*="/redirect/facebook"]
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5400px #5577AA;
     padding-left:30px;
+    position:relative;
 }
 
 a[href*="/redirect/facebook"]:hover,

@@ -415,6 +415,7 @@ a[href="#remove-deadline"]:hover
         position: fixed;
         width:auto !important;
         padding:0;
+        display:none !important;
     }
 
     .tipsy-arrow

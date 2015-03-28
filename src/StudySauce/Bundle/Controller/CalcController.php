@@ -309,13 +309,11 @@ class CalcController extends Controller
                         $totalPercent += $percent;
                     }
                 }
-                self::saveCourseGrades(
-                    $demo,
-                    [
+                self::saveCourseGrades($demo, [
                         'courseId' => isset($course) ? $course->getId() : '',
                         'creditHours' => isset($course) ? count($course->getDotw()) : 3,
                         'className' => isset($course) ? $course->getName() : ScheduleController::getRandomName(),
-                            'grades' => $grades
+                        'grades' => $grades
                     ],
                     $orm
                 );

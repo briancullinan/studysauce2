@@ -61,7 +61,7 @@ jQuery(document).ready(function() {
         }
 
         account.find('.form-actions').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this).find('[value="#user-login"]'));
+        loadingAnimation(account.find('[value="#user-login"]'));
 
         jQuery.ajax({
             url:window.callbackPaths['account_auth'],

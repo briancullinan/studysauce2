@@ -24,6 +24,7 @@ use StudySauce\Bundle\Controller\PartnerController;
 use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -69,7 +70,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
         $this->container        = $container;
     }
 
-    private static $randomNames = ['Pat', 'Jean', 'John', 'Will', 'Brian', 'Steve', 'Andrew'];
+    private static $randomNames = ['Pat', 'Jean', 'John', 'Will', 'Brian', 'Steve', 'Andrew', 'Roxie', 'Leland', 'Latrina', 'Mariette', 'Cheyenne', 'Page', 'Kerstin', 'Veda', 'Loni', 'Alexander', 'Rosalyn', 'Arvilla', 'Juliette', 'Delena', 'Natacha', 'Beatris', 'Lesia', 'Howard', 'Louetta', 'Buffy', 'Summer', 'Jannie', 'Emile', 'Dusti', 'Beverley', 'Hilma', 'Johnathan', 'Taisha', 'Ben', 'Teri', 'Latonya', 'Sadie', 'Elva', 'Mohammed', 'Slyvia', 'Syreeta', 'Evelynn', 'Kristle', 'Jessika', 'Rebbecca', 'Blair', 'Albertina', 'Isidro', 'Clarice', 'Lenore', 'Teresita', 'Stephani', 'Bruno', 'Gil', 'Dede'];
 
     /**
      * Handles anonymous authentication.
@@ -161,8 +162,8 @@ class AnonymousAuthenticationListener implements ListenerInterface
                     //->andWhere('pi.email LIKE \'marketing@studysauce.com\'')
                     ->getQuery()
                     ->getResult();
-                $randoms = array_rand($demos, min(5, count($demos)));
-                foreach($randoms as $i) {
+                $randoms = array_rand($demos, min(10, count($demos)));
+                foreach($randoms as $k => $i) {
                     /** @var User $demo */
                     $demo = $demos[$i];
                     /** @var PartnerInvite $pi */
@@ -172,7 +173,31 @@ class AnonymousAuthenticationListener implements ListenerInterface
                     $pi->setEmail($user->getEmail());
                     $user->addInvitedPartner($pi);
                     $orm->merge($pi);
+
+                    // create demo activity
+                    $paths = ['/schedule', '/metrics', '/goals', '/plan', '/course1lesson1', '/account', '/premium', '/deadlines', '/checkin', '/home', '/partner', '/profile', '/calculator'];
+                    $v = new Visit();
+                    $v->setUser($demo);
+                    $rand = array_rand($paths, 1);
+                    $v->setPath($paths[$rand]);
+                    $v->setHash('');
+                    $v->setMethod('GET');
+                    $v->setSession(md5(microtime()));
+                    $user->addVisit($v);
+                    $orm->persist($v);
+
+                    if($k == count($randoms) - 1) {
+                        $demo->setProperty('adviser_status', 'yellow');
+                    }
+                    elseif($k == count($randoms) - 2) {
+                        $demo->setProperty('adviser_status', 'red');
+                    }
+                    else {
+                        $demo->setProperty('adviser_status', 'green');
+                    }
+                    $orm->merge($demo);
                 }
+
                 $orm->flush();
             }
             elseif($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {

@@ -164,7 +164,6 @@
     overflow: hidden;
     margin: 0 -2px;
     padding: 0 2px;
-    height:16px;
 }
 
 .schedule .edit .day-of-the-week label
@@ -278,9 +277,9 @@
 }
 
 #schedule.invalid-date .invalid-dates,
-#schedule.invalid-time .invalid-times,
-#schedule.invalid-only .invalid-only,
-#schedule.overlaps .overlaps-only {
+#schedule .invalid-time ~ .highlighted-link .invalid-times,
+#schedule .invalid-only ~ .highlighted-link .invalid-only,
+#schedule .overlaps ~ .highlighted-link .overlaps-only {
     display:inline-block;
 }
 

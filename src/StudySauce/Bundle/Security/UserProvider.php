@@ -73,8 +73,8 @@ class UserProvider extends BaseUserProvider
         }
 
         //we connect current user
-        $user->setFirst($response->getFirst());
-        $user->setLast($response->getLast());
+        //$user->setFirst($response->getFirst());
+        //$user->setLast($response->getLast());
         $user->$setter_id($username);
         $user->$setter_token($response->getAccessToken());
 

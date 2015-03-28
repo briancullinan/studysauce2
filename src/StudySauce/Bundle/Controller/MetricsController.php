@@ -227,9 +227,9 @@ class MetricsController extends Controller
                     $t->setTimestamp($_week + 604800 * $w);
                     $t->setTime(intval($c->getEndTime()->format('H')), 0, 0);
                     $checkin->setCheckin($t);
-                    $checkin->setUtcCheckin(new \DateTime());
+                    $checkin->setUtcCheckin(date_timezone_set(clone $t, new \DateTimeZone('UTC')));
                     $checkin->setCheckout(date_add(clone $t, new \DateInterval('PT' . $l . 'M')));
-                    $checkin->setUtcCheckout(new \DateTime());
+                    $checkin->setUtcCheckout(date_timezone_set(clone $t, new \DateTimeZone('UTC')));
                     $orm->persist($checkin);
                 }
             }
@@ -290,24 +290,35 @@ class MetricsController extends Controller
             /** @var Checkin $class */
             if($class->getUtcCheckin() == $class->getUtcCheckout()) {
                 $length = $class->getCheckout()->getTimestamp() - $class->getCheckin()->getTimestamp();
-                $resultCheckouts[$i+$length] = $length;
-                continue;
             }
-            $diffs = [];
-            foreach($all as $k => $c)
-                $diffs[$k] = $k - $i;
-
-            asort($diffs);
-
-            foreach($diffs as $t => $length)
-                if($length > 0)
-                {
-                    if($length < 60)
-                        $length = 60;
-
-                    $resultCheckouts[$t] = $length;
-                    break;
+            else {
+                $diffs = [];
+                foreach ($all as $k => $c) {
+                    $diffs[$k] = $k - $i;
                 }
+
+                asort($diffs);
+
+                foreach ($diffs as $t => $length) {
+                    if ($length > 0) {
+                        break;
+                    }
+                }
+            }
+
+            if(isset($length)) {
+                if ($length < 60) {
+                    $length = 60;
+                }
+                if ($length > 3600) {
+                    $length = 3600;
+                }
+
+                $resultCheckouts[] = $length;
+            }
+            else {
+                $hit = ';';
+            }
         }
 
         reset($checkouts);

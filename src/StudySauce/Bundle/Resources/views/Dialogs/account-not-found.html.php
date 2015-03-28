@@ -1,7 +1,7 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
-No account found
+    No account found - please register or log in with email
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
@@ -18,9 +18,12 @@ $view['slots']->start('modal-body') ?>
     </div>
     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>"/>
     <div class="form-actions highlighted-link invalid">
+        <br />
         <a href="<?php print $view['router']->generate('password_reset'); ?>">Forgot password?</a>
         <div class="invalid-only">You must complete all fields before moving on.</div>
         <button type="submit" value="#user-login" class="more">Login</button>
+        <br />
+        <br />
     </div>
 </form>
 <div>* Note - You can connect with Facebook or Google once you log in.</div>
