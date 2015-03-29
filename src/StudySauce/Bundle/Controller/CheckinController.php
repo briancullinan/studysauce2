@@ -92,17 +92,17 @@ class CheckinController extends Controller
             if ($request->get('checkedIn')) {
                 /** @var $c Checkin */
                 $c = $course->getCheckins()->last();
-                $c->setCheckout(new \DateTime($request->get('date')));
+                $c->setCheckout(date_timezone_set(new \DateTime($request->get('date')), new \DateTimeZone(date_default_timezone_get())));
                 $c->setUtcCheckout(new \DateTime());
                 $orm->merge($c);
             } else {
                 $c = new Checkin();
                 $c->setCourse($course);
-                $c->setCheckin(new \DateTime($request->get('date')));
+                $c->setCheckin(date_timezone_set(new \DateTime($request->get('date')), new \DateTimeZone(date_default_timezone_get())));
                 $utc = new \DateTime();
                 $c->setUtcCheckin($utc);
                 if(!empty($request->get('length'))) {
-                    $c->setCheckout(date_add(new \DateTime($request->get('date')), new \DateInterval('PT' . intval($request->get('length')) * 60 . 'S')));
+                    $c->setCheckout(date_timezone_set(date_add(new \DateTime($request->get('date')), new \DateInterval('PT' . intval($request->get('length')) * 60 . 'S')), new \DateTimeZone(date_default_timezone_get())));
                     $c->setUtcCheckout($utc);
                 }
                 $course->addCheckin($c);

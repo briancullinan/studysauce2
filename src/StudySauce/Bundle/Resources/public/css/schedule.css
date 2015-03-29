@@ -242,6 +242,10 @@
 #schedule.invalid-only .start-date-required .start-date input,
 #schedule.invalid-only .end-date-required .end-date input,
 #schedule.invalid-only.university-required .university .selectize-control,
+.invalid-date .start-time input,
+.invalid-date .end-time input,
+.invalid-time .start-time input,
+.invalid-time .end-time input,
 .schedule .overlaps .start-time input,
 .schedule .overlaps .end-time input
 {
@@ -276,7 +280,7 @@
     padding-left:30px;
 }
 
-#schedule.invalid-date .invalid-dates,
+#schedule .invalid-date ~ .highlighted-link .invalid-dates,
 #schedule .invalid-time ~ .highlighted-link .invalid-times,
 #schedule .invalid-only ~ .highlighted-link .invalid-only,
 #schedule .overlaps ~ .highlighted-link .overlaps-only {

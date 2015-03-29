@@ -114,9 +114,9 @@
     margin-top: 0;
 }
 
-#partner.invalid-only .first-required .first-name input,
-#partner.invalid-only .last-required .last-name input,
-#partner.invalid-only .email-required .email input
+#partner.invalid-only.first-required .first-name input,
+#partner.invalid-only.last-required .last-name input,
+#partner.invalid-only.email-required .email input
 {
     border-bottom:3px solid #CC0000;
 }

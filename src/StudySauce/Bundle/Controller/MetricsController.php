@@ -122,23 +122,19 @@ class MetricsController extends Controller
         foreach($checkins as $t => $c)
         {
             /** @var $c Checkin */
-            list($k) = each($checkouts);
-
-            $length = $k - $t;
-            if($length <= 60)
-                $length = 60;
+            list($k, $l) = each($checkouts);
 
             // since we are already in order by time, sum up the other lengths on this day
             $courseId = $c->getCourse()->getId();
 
             $times[] = [
                 'time' => $t,
-                'length' => $length,
+                'length' => $l,
                 'class' => $c->getCourse()->getName(),
                 'courseId' => $courseId
             ];
 
-            $total += $length;
+            $total += $l;
         }
 
         $total = round($total / 3600, 1);

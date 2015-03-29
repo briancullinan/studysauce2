@@ -856,7 +856,7 @@
 
 a[href*="/redirect/google"]
 {
-    width:150px;
+    width:160px;
     border-bottom-color:#771100;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5500px #DD4433;
@@ -873,7 +873,7 @@ a[href*="/redirect/google"]:focus {
 
 a[href*="/redirect/facebook"]
 {
-    width:150px;
+    width:160px;
     border-bottom-color:#224477;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5400px #5577AA;

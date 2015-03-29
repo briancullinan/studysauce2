@@ -304,6 +304,7 @@ a[href="#sign-in-with-email"]
         max-width: none;
     }
 
+    #account .social-login label span,
     #account .password label span,
     #account .new-password label span,
     #account .confirm-password label span,
@@ -313,6 +314,8 @@ a[href="#sign-in-with-email"]
     {
         display:block;
         width:auto;
+        padding:0;
+        margin: 0;
     }
 
     #account .password label input,
@@ -323,6 +326,7 @@ a[href="#sign-in-with-email"]
     #account .last-name label input
     {
         width:100%;
+        margin: 0;
     }
 }
 
