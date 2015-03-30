@@ -291,6 +291,13 @@ a[href="#sign-in-with-email"]
 @media all and (max-width: 700px)
 {
 
+    #account a[href*="/premium"]
+    {
+        display:block;
+        margin: 10px auto;
+        max-width: 130px;
+    }
+
     #register form
     {
         padding-top: 40px;

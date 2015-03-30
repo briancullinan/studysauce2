@@ -101,10 +101,9 @@ $view['slots']->start('body'); ?>
                         <a href="<?php print $view['router']->generate('password_reset'); ?>">Forgot password</a>
                         <?php if ($user->hasRole('ROLE_PAID')) { ?>
                             <a href="#cancel-confirm" data-toggle="modal">Cancel account</a>
-                        <?php } else {
-                            ?><a href="<?php print $view['router']->generate('premium'); ?>" class="more">
-                                Upgrade</a><?php
-                        } ?>
+                        <?php } else { ?>
+                            <a href="<?php print $view['router']->generate('premium'); ?>" class="more">Upgrade</a>
+                        <?php } ?>
                     </div>
                     <div class="form-actions">
                         <div class="invalid-only">You must complete all fields before moving on.</div>
