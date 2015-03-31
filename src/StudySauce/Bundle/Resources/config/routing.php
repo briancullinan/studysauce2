@@ -428,6 +428,7 @@ $collection->add(
 );
 $collection->add('facebook_login', new Route('/login/facebook/'));
 $collection->add('google_login', new Route('/login/google/'));
+$collection->add('evernote_login', new Route('/login/evernote/'));
 $collection->add(
     'account_auth',
     new Route(

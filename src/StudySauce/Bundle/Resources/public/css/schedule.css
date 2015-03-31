@@ -126,23 +126,7 @@
     width: 20%;
 }
 
-.schedule .class-name
-{
-    padding-left:40px;
-    position:relative;
-}
-
-.class-row.edit .class-name
-{
-    padding-left: 2px;
-}
-
-.class-row .class-name i
-{
-    margin-left: -40px;
-}
-
-.class-row.edit .class-name i
+#schedule .class-row.edit .class-name i
 {
     display:none;
 }

@@ -29,7 +29,6 @@ $(document).ready(function () {
     setTimeout(autoFitFrame, 500);
 
     CKEDITOR.on('dialogDefinition', function(e) {
-        var dialogName = e.data.name;
         var dialogDefinition = e.data.definition;
         dialogDefinition.onShow = function() {
             this.move($(window).width() - this.getSize().width,0); // Top center
@@ -80,7 +79,7 @@ $(document).ready(function () {
     });
 
 
-    mirror = CodeMirror.fromTextArea($('#markdown')[0], {
+    var mirror = CodeMirror.fromTextArea($('#markdown')[0], {
         lineNumbers: true,
         lineWrapping: true,
         extraKeys: {

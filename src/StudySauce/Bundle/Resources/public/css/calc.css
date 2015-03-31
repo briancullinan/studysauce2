@@ -622,22 +622,6 @@
         text-align: right;
     }
 
-    #calculator .term-row:after
-    {
-        right:5px;
-    }
-
-    #calculator .class-row:after
-    {
-        right: -5px;
-    }
-
-    #calculator .term-row
-    {
-        padding:0 10px;
-        margin: 0 -15px;
-    }
-
     #calculator .class-row .grade span,
     #calculator .class-row .class-name span,
     #calculator .class-row .hours span,
@@ -724,6 +708,22 @@
 
 @media all and (max-width: 700px)
 {
+
+    #calculator .term-row:after
+    {
+        right:5px;
+    }
+
+    #calculator .class-row:after
+    {
+        right: -5px;
+    }
+
+    #calculator .term-row
+    {
+        padding:0 10px;
+        margin: 0 -15px;
+    }
 
     #grade-scale .modal-dialog
     {

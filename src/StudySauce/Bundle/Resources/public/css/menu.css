@@ -860,15 +860,32 @@ a[href*="/redirect/google"]
     border-bottom-color:#771100;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5500px #DD4433;
-    padding-left:30px;
+    padding-left:50px;
     position:relative;
 }
 
 a[href*="/redirect/google"]:hover,
 a[href*="/redirect/google"]:active,
 a[href*="/redirect/google"]:focus {
-    background-color: #771100;
+    background-color: #992211;
     border-bottom-color: #771100;
+}
+
+a[href*="/redirect/evernote"]
+{
+    width:160px;
+    border-bottom-color:#447711;
+    color: #ffffff;
+    background:url("../images/menu_new_compressed.png") no-repeat left -7100px #77CC44;
+    padding-left:50px;
+    position:relative;
+}
+
+a[href*="/redirect/evernote"]:hover,
+a[href*="/redirect/evernote"]:active,
+a[href*="/redirect/evernote"]:focus {
+    background-color: #559922;
+    border-bottom-color: #447711;
 }
 
 a[href*="/redirect/facebook"]
@@ -877,7 +894,7 @@ a[href*="/redirect/facebook"]
     border-bottom-color:#224477;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5400px #5577AA;
-    padding-left:30px;
+    padding-left:50px;
     position:relative;
 }
 

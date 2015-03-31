@@ -168,6 +168,8 @@ $(document).ready(function () {
         $(this).tipsy({trigger: 'manual'});
         $(this).tipsy('show');
         var tip = $(this).data('tipsy').$tip;
+        if(tip == null)
+            return;
         tip.data('el', this);
         $('.tipsy').not(tip).remove();
     }
@@ -201,15 +203,15 @@ $(document).ready(function () {
         hideTip.apply($(this).data('el'));
     });
 
-    body.on('mouseover', '*[title]:not(iframe),*[original-title]:not(iframe)', showTip);
+    body.on('mouseover', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
 
-    body.on('click', '*[title]:not(iframe),*[original-title]:not(iframe)', showTip);
+    body.on('click', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
 
-    body.on('focus', '*[title]:not(iframe),*[original-title]:not(iframe)', showTip);
+    body.on('focus', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
 
-    body.on('mouseout', '*[title]:not(iframe),*[original-title]:not(iframe)', hideTip);
+    body.on('mouseout', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', hideTip);
 
-    body.on('blur', '*[title]:not(iframe),*[original-title]:not(iframe)', hideTip);
+    body.on('blur', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', hideTip);
 
     body.on('show', '#home', function () {
         // TODO: add mobile check here?

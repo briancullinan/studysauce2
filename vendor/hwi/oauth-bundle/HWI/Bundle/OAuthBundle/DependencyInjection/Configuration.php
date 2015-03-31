@@ -59,6 +59,7 @@ class Configuration implements ConfigurationInterface
 
         'oauth1',
             'bitbucket',
+            'evernote',
             'dropbox',
             'flickr',
             'jira',

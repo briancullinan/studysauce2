@@ -253,14 +253,14 @@ class MetricsController extends Controller
                     /** @var $checkin Checkin */
 
                     // Create a list of valid checkin times for all classes
-                    if (empty($checkin->getUtcCheckin()->getTimestamp())) {
+                    if (empty($checkin->getCheckin())) {
                         continue;
                     }
 
                     $checkins[$checkin->getUtcCheckin()->getTimestamp()] = $checkin;
 
                     // add checkout times
-                    if (!empty($checkin->getUtcCheckout())) {
+                    if (!empty($checkin->getCheckout())) {
                         $length = min(3600, $checkin->getCheckout()->getTimestamp() - $checkin->getCheckin()->getTimestamp());
                     }
                     else {
@@ -284,7 +284,7 @@ class MetricsController extends Controller
         foreach($checkins as $i => $class)
         {
             /** @var Checkin $class */
-            if($class->getUtcCheckin() == $class->getUtcCheckout()) {
+            if($class->getCheckout() != null && $class->getCheckin() == $class->getCheckout()) {
                 $length = $class->getCheckout()->getTimestamp() - $class->getCheckin()->getTimestamp();
             }
             else {

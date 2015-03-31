@@ -26,7 +26,7 @@ services:
     my_user_provider:
         class: StudySauce\Bundle\Security\UserProvider
         #this is the place where the properties are passed to the UserProvider - see config.yml
-        arguments: [@fos_user.user_manager, @service_container, @security.encoder_factory, {facebook: facebook_id, google: google_id}]
+        arguments: [@fos_user.user_manager, @service_container, @security.encoder_factory, {facebook: facebook_id, google: google_id, evernote: evernote_id}]
 
     studysauce.drupal_encoder:
         class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
@@ -68,6 +68,10 @@ services:
         tags:
             - {name: kernel.event_subscriber}
         arguments: ["@service_container", "@doctrine.orm.entity_manager", "@session", "@security.context"]
+
+    hwi_oauth.abstract_resource_owner.evernote:
+        class: StudySauce\Bundle\Security\EvernoteResourceOwner
+        parent: hwi_oauth.abstract_resource_owner.oauth1
 
 framework:
     #esi:             ~
@@ -171,6 +175,8 @@ hwi_oauth:
             # these properties will be used/redefined later in the custom FOSUBUserProvider service.
             facebook: facebook_id
             google: google_id
+            evernote: evernote_id
+
     resource_owners:
         facebook:
             type:                facebook
@@ -195,8 +201,23 @@ hwi_oauth:
                 last: family_name
                 first: given_name
 
+        evernote:
+            type:                evernote
+            client_id:           bjcullinan
+            client_secret:       cd8e3ff10d842747
+            request_token_url:   https://sandbox.evernote.com/oauth
+            access_token_url:    https://sandbox.evernote.com/oauth
+            authorization_url:   https://sandbox.evernote.com/OAuth.action
+            infos_url:           https://sandbox.evernote.com/edam/note/shard/s4
+            realm:               "evernote.com"
+            user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
+            paths:
+                identifier: id
+                nickname:   username
+                realname:   name
+
     http_client:
-        timeout:       10 # Time in seconds, after library will shutdown request, by default: 5
+        timeout:       5 # Time in seconds, after library will shutdown request, by default: 5
         verify_peer:   false # Setting allowing you to turn off SSL verification, by default: true
         ignore_errors: false # Setting allowing you to easier debug request errors, by default: true
         max_redirects: 1 # Number of HTTP redirection request after which library will shutdown request,

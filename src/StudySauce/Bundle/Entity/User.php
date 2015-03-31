@@ -170,6 +170,12 @@ class User extends BaseUser implements EncoderAwareInterface
     /** @ORM\Column(name="google_access_token", type="string", length=255, nullable=true) */
     protected $google_access_token;
 
+    /** @ORM\Column(name="evernote_id", type="string", length=255, nullable=true) */
+    protected $evernote_id;
+
+    /** @ORM\Column(name="evernote_access_token", type="string", length=255, nullable=true) */
+    protected $evernote_access_token;
+
     /**
      * @ORM\ManyToMany(targetEntity="Group")
      * @ORM\JoinTable(name="ss_user_group",
@@ -1186,5 +1192,51 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * Set evernote_id
+     *
+     * @param string $evernoteId
+     * @return User
+     */
+    public function setEvernoteId($evernoteId)
+    {
+        $this->evernote_id = $evernoteId;
+
+        return $this;
+    }
+
+    /**
+     * Get evernote_id
+     *
+     * @return string 
+     */
+    public function getEvernoteId()
+    {
+        return $this->evernote_id;
+    }
+
+    /**
+     * Set evernote_access_token
+     *
+     * @param string $evernoteAccessToken
+     * @return User
+     */
+    public function setEvernoteAccessToken($evernoteAccessToken)
+    {
+        $this->evernote_access_token = $evernoteAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get evernote_access_token
+     *
+     * @return string 
+     */
+    public function getEvernoteAccessToken()
+    {
+        return $this->evernote_access_token;
     }
 }

@@ -1,12 +1,26 @@
 
 
 
+#calculator .class-row,
+#calculator .term-row
+{
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    position: relative;
+}
 
 #notes .term-row {
     border-top: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     margin: 0 -20px;
     padding: 0 20px;
+}
+
+#notes .term-row.selected {
+    font-weight: bold;
+    background: url(../images/noise_white.png) #FFFFFF;
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 #notes .term-row .term-editor {
@@ -17,7 +31,146 @@
     overflow: visible;
 }
 
+#notes .term-row.selected .term-editor {
+    display: block;
+    white-space: normal;
+}
+
+#notes .class-row .class-name
+{
+    width:100%;
+}
+
+#notes .notes
+{
+    display:block;
+    text-align: left;
+    white-space: normal;
+    margin: 0 -10px;
+}
+
+#notes .note-row
+{
+    width: 25%;
+    display:inline-block;
+    margin: 0 -2px;
+    padding: 10px;
+}
+
+#notes .note-row h4
+{
+    margin:0;
+    padding: 10px;
+    background: #eee;
+    border-radius: 5px 5px 0 0;
+}
+
+#notes .note-row .summary
+{
+    border: 1px solid #eee;
+    padding: 10px;
+    min-height: 100px;
+}
+
 #notes .class-row .class-name span
 {
     display:none;
 }
+
+#notes .term-row header > *,
+#notes .term-row > * {
+    vertical-align: middle;
+    display: inline-block;
+    margin: 0 -2px;
+    padding: 5px 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+#notes .highlighted-link
+{
+    display:none;
+    margin-top:20px;
+}
+
+#notes #editor1
+{
+    outline: none;
+    background-color: #fff;
+    margin: 0 -20px;
+    padding: 20px;
+    min-height: 400px;
+    display:none;
+}
+
+#notes .note-title
+{
+    margin: 0 -10px;
+}
+
+#notes .note-title input
+{
+    font-size: 22px;
+    font-weight: bold;
+    color: #09b;
+    height: auto;
+}
+
+#notes.edit-note h2,
+#notes.edit-note .term-row,
+#notes .note-title
+{
+    display:none;
+}
+
+#notes.edit-note .note-title,
+#notes.edit-note #editor1,
+#notes.edit-note .highlighted-link
+{
+    display:block;
+}
+
+.class-row .class-name i
+{
+
+}
+
+#notes-connect a[href*="/redirect/evernote"]
+{
+    width: auto;
+}
+
+#notes-connect .form-actions
+{
+    text-align: center;
+}
+
+@media all and (max-width: 1000px)
+{
+
+    #notes .note-row
+    {
+        width:33.33%;
+    }
+}
+
+@media all and (max-width: 700px)
+{
+
+    #notes .note-row
+    {
+        width:50%;
+    }
+}
+
+@media all and (max-width: 500px)
+{
+
+    #notes .note-row
+    {
+        width:100%;
+    }
+}
+
