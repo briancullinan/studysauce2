@@ -1,0 +1,23 @@
+
+
+
+
+#notes .term-row {
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    margin: 0 -20px;
+    padding: 0 20px;
+}
+
+#notes .term-row .term-editor {
+    display: none;
+    width: auto;
+    font-weight: normal;
+    position: relative;
+    overflow: visible;
+}
+
+#notes .class-row .class-name span
+{
+    display:none;
+}

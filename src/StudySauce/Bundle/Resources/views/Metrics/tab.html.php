@@ -104,7 +104,7 @@ $view['slots']->start('body'); ?>
                 /** @var $c Checkin */
                 ?>
                 <div class="checkin-row <?php print ($c->getUtcCheckin() == $c->getUtcCheckout() ? 'manually-entered' : ''); ?>">
-                    <div class="class-name"><span class="class<?php print array_search($c->getCourse(), $courses); ?>">&nbsp;</span>
+                    <div class="class-name" <?php print ($c->getUtcCheckin() == $c->getUtcCheckout() ? 'title="Manually entered study session"' : ''); ?>><span class="class<?php print array_search($c->getCourse(), $courses); ?>">&nbsp;</span>
                         <?php print $c->getCourse()->getName(); ?></div>
                     <div class="class-date"><span class="full-only"><?php print $c->getCheckin()->format('j F'); ?></span>
                         <span class="mobile-only"><?php print $c->getCheckin()->format('j M'); ?></span>
@@ -114,10 +114,9 @@ $view['slots']->start('body'); ?>
                                 array_values($shortTimeIntervals),
                                 $lengthStr); ?></span></div>
                 </div>
-            <?php
-            }
-            ?>
+            <?php } ?>
         </div>
+        <div class="manually-entered">Manually entered study session</div>
     </div>
 </div>
 <?php $view['slots']->stop();

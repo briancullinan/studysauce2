@@ -37,15 +37,6 @@ class HomeController extends Controller
             $userManager->updateUser($user);
         }
 
-        $showAccountOptions = false;
-        if(empty($user->getProperty('seen_account_options')) && !$user->hasRole('ROLE_DEMO') &&
-            !$user->hasRole('ROLE_GUEST') && empty($user->getFacebookId()) && empty($user->getGoogleId())) {
-            $showAccountOptions = true;
-            $userManager = $this->get('fos_user.user_manager');
-            $user->setProperty('seen_account_options', true);
-            $userManager->updateUser($user);
-        }
-
         // list oauth services
         $services = [];
         /** @var OAuthHelper $oauth */
@@ -58,7 +49,6 @@ class HomeController extends Controller
             'StudySauceBundle:Home:tab.html.php',
             [
                 'showBookmark' => $showBookmark,
-                'showAccountOptions' => $showAccountOptions,
                 'user' => $user,
                 'csrf_token' => $csrfToken,
                 'services' => $services

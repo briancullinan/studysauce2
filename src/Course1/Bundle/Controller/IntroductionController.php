@@ -50,7 +50,19 @@ class IntroductionController extends Controller
                     $user->setProperty('first_time', true);
                     $userManager->updateUser($user);
                 }
-                return $this->render('Course1Bundle:Introduction:tab.html.php');
+
+                $showAccountOptions = false;
+                if(empty($user->getProperty('seen_account_options')) && !$user->hasRole('ROLE_DEMO') &&
+                    !$user->hasRole('ROLE_GUEST') && empty($user->getFacebookId()) && empty($user->getGoogleId())) {
+                    $showAccountOptions = true;
+                    $userManager = $this->get('fos_user.user_manager');
+                    $user->setProperty('seen_account_options', true);
+                    $userManager->updateUser($user);
+                }
+
+                return $this->render('Course1Bundle:Introduction:tab.html.php', [
+                    'showAccountOptions' => $showAccountOptions
+                ]);
                 break;
             case 1:
                 return $this->render('Course1Bundle:Introduction:video.html.php', ['course' => $course]);

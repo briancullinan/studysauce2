@@ -88,6 +88,12 @@
     background: url('../images/menu_icons_32.png') no-repeat left -1312px transparent;
 }
 
+#metrics .manually-entered:not(.checkin-row)
+{
+    padding: 5px 0 5px 40px;
+    text-align: left;
+}
+
 #metrics ol {
     display: inline-block;
     list-style: none;

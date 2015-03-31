@@ -128,7 +128,7 @@ class MetricsController extends Controller
             $courseId = $c->getCourse()->getId();
 
             $times[] = [
-                'time' => $t,
+                'time' => $c->getCheckin()->getTimestamp(),
                 'length' => $l,
                 'class' => $c->getCourse()->getName(),
                 'courseId' => $courseId

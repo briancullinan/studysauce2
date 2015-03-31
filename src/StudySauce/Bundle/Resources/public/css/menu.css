@@ -443,15 +443,15 @@
     background-position: left -4305px;
 }
 
-#right-panel .main-menu a[href*="#evernote"] span
+#right-panel .main-menu a[href*="/notes"] span
 {
     background-position: left -4405px;
 }
 
-#right-panel .main-menu a[href*="#evernote"]:hover span,
-#right-panel .main-menu a[href*="#evernote"]:focus span,
-#right-panel .main-menu a[href*="#evernote"]:active span,
-#right-panel .main-menu a[href*="#evernote"].active span {
+#right-panel .main-menu a[href*="/notes"]:hover span,
+#right-panel .main-menu a[href*="/notes"]:focus span,
+#right-panel .main-menu a[href*="/notes"]:active span,
+#right-panel .main-menu a[href*="/notes"].active span {
     background-position: left -4505px;
 }
 
@@ -1352,7 +1352,7 @@ a[href*="/redirect/facebook"]:focus
         background-position: left -7005px;
     }
 
-    #right-panel .main-menu a[href*="#evernote"] span
+    #right-panel .main-menu a[href*="/notes"] span
     {
         background-position: left -7105px;
     }

@@ -27,4 +27,11 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>
 </div>
-<?php $view['slots']->stop(); ?>
+<?php $view['slots']->stop();
+
+$view['slots']->start('sincludes');
+if($showAccountOptions)
+{
+print $this->render('StudySauceBundle:Dialogs:account-options.html.php', ['id' => 'account-options', 'services' => $services]);
+}
+$view['slots']->stop();

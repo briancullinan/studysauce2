@@ -52,9 +52,8 @@ $view['slots']->start('body'); ?>
                     foreach ($courses as $i => $c) {
                         /** @var $c Course */
                         ?>
-                        <li><span class="class<?php print $i; ?>">&nbsp;</span><?php print $c->getName(); ?></li><?php
-                    }
-                    ?>
+                        <li class="course-id-<?php print $c->getId(); ?>"><span class="class<?php print $i; ?>">&nbsp;</span><?php print $c->getName(); ?></li>
+                    <?php } ?>
                 </ol>
             </div>
             <div id="timeline">
@@ -63,8 +62,7 @@ $view['slots']->start('body'); ?>
             </div>
             <div id="pie-chart">
                 <h3>Study hours by class</h3>
-                <h4>Total study hours: <strong id="study-total"><?php print $total; ?>
-                        hour<?php print ($total <> 1 ? 's' : ''); ?></strong></h4>
+                <h4>Total study hours: <strong id="study-total"><?php print $total; ?></strong></h4>
             </div>
         </div>
         <hr>
@@ -72,11 +70,7 @@ $view['slots']->start('body'); ?>
             <?php
             reset($checkouts);
             foreach ($checkins as $t => $c) {
-                list($k) = each($checkouts);
-                $length = $k - $t;
-                if ($length <= 60) {
-                    $length = 60;
-                }
+                list($k, $l) = each($checkouts);
 
                 $elapsedString = function ($etime) {
                     if ($etime < 1) {
@@ -104,11 +98,11 @@ $view['slots']->start('body'); ?>
                     return '';
                 };
 
-                $lengthStr = $elapsedString($length);
+                $lengthStr = $elapsedString($l);
 
                 /** @var $c Checkin */
                 ?>
-                <div class="checkin-row">
+                <div class="checkin-row <?php print ($c->getUtcCheckin() == $c->getUtcCheckout() ? 'manually-entered' : ''); ?>">
                     <div class="class-name"><span class="class<?php print array_search($c->getCourse(), $courses); ?>">&nbsp;</span>
                         <?php print $c->getCourse()->getName(); ?></div>
                     <div class="class-date"><span class="full-only"><?php print $c->getCheckin()->format('j F'); ?></span>
@@ -119,10 +113,9 @@ $view['slots']->start('body'); ?>
                             array_values($shortTimeIntervals),
                             $lengthStr); ?></span></div>
                 </div>
-            <?php
-            }
-            ?>
+            <?php } ?>
         </div>
+            <div class="manually-entered">Manually entered study session</div>
         <?php } ?>
     </div>
 </div>
