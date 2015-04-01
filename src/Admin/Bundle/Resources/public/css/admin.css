@@ -200,6 +200,10 @@
     width:3000px;
 }
 
+#command_control table.results > thead > tr > th:nth-child(30),
+#command_control table.results > tbody > tr > td:nth-child(30),
+#command_control table.results > thead > tr > th:nth-child(29),
+#command_control table.results > tbody > tr > td:nth-child(29),
 #command_control table.results > thead > tr > th:nth-child(28),
 #command_control table.results > tbody > tr > td:nth-child(28),
 #command_control table.results > thead > tr > th:nth-child(27),
@@ -229,15 +233,15 @@
 #command_control table.results > thead > tr > th:nth-child(15),
 #command_control table.results > tbody > tr > td:nth-child(15),
 #command_control table.results > thead > tr > th:nth-child(14),
-#command_control table.results > tbody > tr > td:nth-child(14),
-#command_control table.results > thead > tr > th:nth-child(13),
-#command_control table.results > tbody > tr > td:nth-child(13),
-#command_control table.results > thead > tr > th:nth-child(12),
-#command_control table.results > tbody > tr > td:nth-child(12)
+#command_control table.results > tbody > tr > td:nth-child(14)
 {
     display:none;
 }
 
+#command_control.all table.results > thead > tr > th:nth-child(30),
+#command_control.all table.results > tbody > tr > td:nth-child(30),
+#command_control.all table.results > thead > tr > th:nth-child(29),
+#command_control.all table.results > tbody > tr > td:nth-child(29),
 #command_control.all table.results > thead > tr > th:nth-child(28),
 #command_control.all table.results > tbody > tr > td:nth-child(28),
 #command_control.all table.results > thead > tr > th:nth-child(27),
@@ -298,6 +302,10 @@
     display:table-cell;
 }
 
+#command_control.courses table.results > thead > tr > th:nth-child(13),
+#command_control.courses table.results > tbody > tr > td:nth-child(13),
+#command_control.courses table.results > thead > tr > th:nth-child(12),
+#command_control.courses table.results > tbody > tr > td:nth-child(12),
 #command_control.courses table.results > thead > tr > th:nth-child(11),
 #command_control.courses table.results > tbody > tr > td:nth-child(11),
 #command_control.courses table.results > thead > tr > th:nth-child(10),
@@ -314,6 +322,10 @@
     display:none;
 }
 
+#command_control.courses table.results > thead > tr > th:nth-child(30),
+#command_control.courses table.results > tbody > tr > td:nth-child(30),
+#command_control.courses table.results > thead > tr > th:nth-child(29),
+#command_control.courses table.results > tbody > tr > td:nth-child(29),
 #command_control.courses table.results > thead > tr > th:nth-child(28),
 #command_control.courses table.results > tbody > tr > td:nth-child(28),
 #command_control.courses table.results > thead > tr > th:nth-child(27),
@@ -343,11 +355,7 @@
 #command_control.courses table.results > thead > tr > th:nth-child(15),
 #command_control.courses table.results > tbody > tr > td:nth-child(15),
 #command_control.courses table.results > thead > tr > th:nth-child(14),
-#command_control.courses table.results > tbody > tr > td:nth-child(14),
-#command_control.courses table.results > thead > tr > th:nth-child(13),
-#command_control.courses table.results > tbody > tr > td:nth-child(13),
-#command_control.courses table.results > thead > tr > th:nth-child(12),
-#command_control.courses table.results > tbody > tr > td:nth-child(12)
+#command_control.courses table.results > tbody > tr > td:nth-child(14)
 {
     width:2.8%;
     text-align: center;
@@ -444,6 +452,10 @@
     padding-top:0;
 }
 
+#command_control table.results > thead > tr > th:nth-child(13),
+#command_control table.results > tbody > tr > td:nth-child(13),
+#command_control table.results > thead > tr > th:nth-child(12),
+#command_control table.results > tbody > tr > td:nth-child(12),
 #command_control table.results > thead > tr > th:nth-child(11),
 #command_control table.results > tbody > tr > td:nth-child(11),
 #command_control table.results > thead > tr > th:nth-child(10),
@@ -466,13 +478,13 @@
 #command_control table.results > tbody > tr > td:nth-child(1)
 {
     text-align: center;
-    width: 8%;
+    width: 7%;
 }
 
 #command_control table.results > thead > tr > th:nth-child(4),
 #command_control table.results > tbody > tr > td:nth-child(4)
 {
-    width: 12%;
+    width: 9%;
 }
 
 #command_control table.results > tbody > tr > td:nth-child(4) label:nth-child(2),
@@ -553,14 +565,14 @@
     height: 1em;
 }
 
-#command_control table.results > thead > tr > th:nth-child(29),
-#command_control table.results > tbody > tr > td:nth-child(29)
+#command_control table.results > thead > tr > th:nth-child(31),
+#command_control table.results > tbody > tr > td:nth-child(31)
 {
     text-align: right;
     width: 210px;
 }
 
-#command_control table.results > thead > tr > th:nth-child(29) > label
+#command_control table.results > thead > tr > th:nth-child(31) > label
 {
     margin-right:-30px;
     padding-right:30px;

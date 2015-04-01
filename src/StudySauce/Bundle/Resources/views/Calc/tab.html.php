@@ -81,7 +81,10 @@ $view['slots']->start('body'); ?>
                                             <option value="" <?php print (empty($c->getGrade()) ? 'selected="selected"' : ''); ?>>&bullet;</option>
                                             <?php for($i = 0; $i < count($scale); $i++) {
                                             if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
-                                                <option value="<?php print $scale[$i][0]; ?>" <?php print ($c->getGrade() == $scale[$i][0] ? 'selected="selected"' : ''); ?>><?php print $scale[$i][0]; ?></option>
+                                                <option value="<?php print $scale[$i][0]; ?>" <?php print ($c->getGrade() == $scale[$i][0] ||
+                                                    str_replace(['-', '+'], '', $c->getGrade()) == $scale[$i][0] && count($scale) < 6
+                                                    ? 'selected="selected"'
+                                                    : ''); ?>><?php print $scale[$i][0]; ?></option>
                                             <? }} ?>
                                         </select></label></div>
                                 <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>

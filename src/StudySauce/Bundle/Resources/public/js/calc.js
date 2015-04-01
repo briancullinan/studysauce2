@@ -708,7 +708,28 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '#grade-scale a[href="#save-scale"]', validateGrades);
+    body.on('click', '#grade-scale a[href="#save-scale"]', function (evt) {
+        evt.preventDefault();
+        $.ajax({
+            url: window.callbackPaths['calculator_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                scale: $('#grade-scale').find('tbody tr').map(function () { return [[
+                    $(this).find('td:nth-child(1) input').val(),
+                    $(this).find('td:nth-child(2) input').val(),
+                    $(this).find('td:nth-child(3) input').val(),
+                    $(this).find('td:nth-child(4) input').val()
+                ]]; }).toArray()
+            },
+            success: function (data) {
+                $('#grade-scale').modal('hide');
+                updateCalc(data);
+            },
+            error: function () {
+            }
+        });
+    });
     body.on('keyup', '#calculator .grade-row input, #calculator .class-row input', validateGrades);
     body.on('change', '#calculator .grade-row input, #calculator .class-row input, #calculator .class-row select', validateGrades);
 

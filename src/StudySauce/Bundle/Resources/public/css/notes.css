@@ -63,13 +63,18 @@
     padding: 10px;
     background: #eee;
     border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #notes .note-row .summary
 {
     border: 1px solid #eee;
     padding: 10px;
-    min-height: 100px;
+    height: 150px;
+    overflow:hidden;
+
 }
 
 #notes .class-row .class-name span

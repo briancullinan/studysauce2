@@ -135,7 +135,7 @@ $collection = $router->getRouteCollection();
 <?php endforeach;
 $agent = strtolower($app->getRequest()->server->get('HTTP_USER_AGENT'));
 if((strpos($agent, 'android') && strpos($agent, 'chrome') === false) ||
-    preg_match('/(?i)msie [1-9]/', $agent)) {
+    preg_match('/(?i)msie/', $agent)) {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:unsupported'));
 }
 $view['slots']->output('javascripts');

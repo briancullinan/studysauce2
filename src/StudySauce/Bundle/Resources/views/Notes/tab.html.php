@@ -1,5 +1,7 @@
 <?php
 
+use Evernote\Model\Note;
+use Evernote\Model\Notebook;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 
@@ -55,34 +57,29 @@ $view['slots']->start('body'); ?>
             <div class="term-editor">
                 <?php
                 $courses = array_values($s->getClasses()->toArray());
-                foreach($courses as $i => $c) {
-                /** @var Course $c */
-                ?>
-                <div class="class-row course-id-<?php print $c->getId(); ?> <?php print ($first && !$c->getGrades()->count() ? 'selected' : ''); ?>">
-                    <div class="class-name read-only"><label class="input"><span>Class name</span><i class="class<?php print $i; ?>"></i><input type="text" value="<?php print $c->getName(); ?>" placeholder="Class name"></label></div>
+                foreach($notebooks as $i => $c) {
+                    /** @var Notebook $c */
+                    $name = $c->getName();
+                    $id = $c->getGuid(); ?>
+                <div class="class-row course-id-<?php print $id; ?> <?php print ($first ? 'selected' : ''); ?>">
+                    <div class="class-name read-only"><label class="input"><span>Class name</span><i class="class<?php print $i; ?>"></i><input type="text" value="<?php print $name; ?>" placeholder="Class name"></label></div>
                 </div>
                 <div class="notes">
-                    <div class="note-row">
-                        <h4 class="note-name"><a href="#note-id-<?php print md5(microtime()); ?>">Note title</a></h4>
-                        <div class="summary">this is a note summary</div>
-                    </div>
-                    <div class="note-row">
-                        <h4 class="note-name"><a href="#note-id-<?php print md5(microtime()); ?>">Note title</a></h4>
-                        <div class="summary">this is a note summary</div>
-                    </div>
-                    <div class="note-row">
-                        <h4 class="note-name"><a href="#note-id-<?php print md5(microtime()); ?>">Note title</a></h4>
-                        <div class="summary">this is a note summary</div>
-                    </div>
-                    <div class="note-row">
-                        <h4 class="note-name"><a href="#note-id-<?php print md5(microtime()); ?>">Note title</a></h4>
-                        <div class="summary">this is a note summary</div>
-                    </div>
+                    <?php
+                    foreach($notes[$c->getGuid()] as $n) {
+                    /** @var Note $n */
+                    ?>
+                        <div class="note-row">
+                            <h4 class="note-name"><a href="#note-id-<?php $n->getGuid(); ?>"><?php print $n->getTitle(); ?></a></h4>
+                            <div class="summary"><?php print $n->getContent()->toEnml(); ?></div>
+                        </div>
+                    <?php } ?>
                 </div>
                 <?php } ?>
             </div>
         </div>
-        <?php $first = false; } ?>
+        <?php $first = false;
+        } ?>
         <h3 class="note-title"><label><input type="text" placeholder="Title your note" /></label></h3>
         <div id="editor1" contenteditable="true">This is note content</div>
         <div class="highlighted-link"><a href="#save-note" class="more">Save</a></div>

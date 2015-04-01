@@ -42,6 +42,6 @@ $view['slots']->start('modal-body') ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>
-<a href="#save-scale" data-dismiss="modal" class="btn btn-primary">Save</a>
+<a href="#save-scale" class="btn btn-primary">Save</a>
 <?php $view['slots']->stop() ?>
 

@@ -7,6 +7,7 @@ use Course3\Bundle\Course3Bundle;
 use Course3\Bundle\Entity\Course3;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -180,9 +181,21 @@ $view['slots']->start('body'); ?>
                     <option value="yes">Y</option>
                     <option value="no">N</option>
                 </select></label></th>
+        <th><label><span>Grades: <?php print $grades; ?></span><br/>
+                <select name="hasGrades">
+                    <option value="">Grades</option>
+                    <option value="yes">Y</option>
+                    <option value="no">N</option>
+                </select></label></th>
         <th><label><span>Partner: <?php print $partnerTotal; ?></span><br/>
                 <select name="hasPartners">
                     <option value="">Partner</option>
+                    <option value="yes">Y</option>
+                    <option value="no">N</option>
+                </select></label></th>
+        <th><label><span>Notes: <?php print $notes; ?></span><br/>
+                <select name="hasNotes">
+                    <option value="">Notes</option>
                     <option value="yes">Y</option>
                     <option value="no">N</option>
                 </select></label></th>
@@ -352,7 +365,9 @@ $view['slots']->start('body'); ?>
             <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getSchedules()->exists(function ($_, Schedule $s) {return $s->getCourses()->exists(function ($__, Course $c) {return $c->getGrades()->count() > 0;});}) ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
+            <td><?php print (!empty($u->getEvernoteAccessToken()) ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1(
                 ) == 4 ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson2(

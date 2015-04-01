@@ -57,7 +57,7 @@ class EvernoteResourceOwner extends GenericOAuth1ResourceOwner
     public function getUserInformation(array $accessToken, array $extraParameters = [])
     {
         $client = new EvernoteClient($accessToken['oauth_token'], $this->options['sandbox']);
-        $user = $client->getUser();
+        $user = $client->getUserNotestore();
 
         $response = $this->getUserResponse();
         $response->setResponse((array) $user);

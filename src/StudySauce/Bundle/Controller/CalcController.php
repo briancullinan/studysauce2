@@ -151,47 +151,51 @@ class CalcController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 
-        $first = true;
-        foreach($request->get('terms') as $t)
-        {
-            // find the correct course to modify
-            /** @var Schedule $schedule */
-            if(!empty($t['scheduleId'])) {
-                $schedule = $user->getSchedules()->filter(
-                    function (Schedule $s) use ($t) {
-                        return $s->getId() == $t['scheduleId'];
+        if(!empty($request->get('terms'))) {
+            foreach ($request->get('terms') as $t) {
+                // find the correct course to modify
+                /** @var Schedule $schedule */
+                if (!empty($t['scheduleId'])) {
+                    $schedule = $user->getSchedules()->filter(
+                        function (Schedule $s) use ($t) {
+                            return $s->getId() == $t['scheduleId'];
+                        }
+                    )->first();
+                } else {
+                    $schedule = null;
+                }
+                if (empty($schedule)) {
+                    $schedule = new Schedule();
+                    $schedule->setUser($user);
+                    $user->addSchedule($schedule);
+                    $orm->persist($schedule);
+                }
+
+                $schedule->setTerm(empty($t['term']) ? null : date_create_from_format('!n/Y', $t['term']));
+                $orm->merge($schedule);
+
+                // save the course grades
+                if (!empty($t['courses'])) {
+                    foreach ($t['courses'] as $c) {
+                        self::saveCourseGrades($schedule, $c, $orm);
                     }
-                )->first();
-            }
-            else $schedule = null;
-            if(empty($schedule)) {
-                $schedule = new Schedule();
-                $schedule->setUser($user);
-                $user->addSchedule($schedule);
-                $orm->persist($schedule);
-            }
+                }
 
-            // set the scale
-            if($first) {
-                $schedule->setGradeScale($request->get('scale'));
-                $first = false;
-            }
-
-            $schedule->setTerm(empty($t['term']) ? null : date_create_from_format('!n/Y', $t['term']));
-            $orm->merge($schedule);
-
-            // save the course grades
-            if(!empty($t['courses'])) {
-                foreach ($t['courses'] as $c) {
-                    self::saveCourseGrades($schedule, $c, $orm);
+                if ($schedule->getCourses()->count() == 0) {
+                    $orm->remove($schedule);
+                    $user->removeSchedule($schedule);
                 }
             }
-
-            if($schedule->getCourses()->count() == 0) {
-                $orm->remove($schedule);
-                $user->removeSchedule($schedule);
-            }
         }
+
+        // set the scale
+        if(!empty($request->get('scale'))) {
+            /** @var Schedule $first */
+            $first = $user->getSchedules()->first();
+            $first->setGradeScale($request->get('scale'));
+            $orm->merge($first);
+        }
+
         $orm->flush();
 
         return $this->forward('StudySauceBundle:Calc:index', ['_format' => 'tab']);

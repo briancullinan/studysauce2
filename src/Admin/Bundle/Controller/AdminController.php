@@ -226,6 +226,34 @@ class AdminController extends Controller
             }
         }
 
+        if(!empty($grades = $request->get('grades'))) {
+            if(!in_array('schedules', $joins)) {
+                $qb = $qb->leftJoin('u.schedules', 'schedules');
+                $joins[] = 'schedules';
+            }
+            if(!in_array('grades', $joins)) {
+                $qb = $qb->leftJoin('schedules.courses', 'courses');
+                $qb = $qb->leftJoin('courses.grades', 'grades');
+                $joins[] = 'grades';
+            }
+            if($grades == 'yes') {
+
+                $qb = $qb->andWhere('grades.assignment IS NOT NULL AND grades.assignment!=\'\'');
+            }
+            else {
+                $qb = $qb->andWhere('grades.assignment IS NULL OR grades.assignment=\'\'');
+            }
+        }
+
+        if(!empty($notes = $request->get('notes'))) {
+            if($notes == 'yes') {
+                $qb = $qb->andWhere('u.evernote_access_token IS NOT NULL AND u.evernote_access_token!=\'\'');
+            }
+            else {
+                $qb = $qb->andWhere('u.evernote_access_token IS NULL OR e.evernote_access_token=\'\'');
+            }
+        }
+
         if(!empty($partners = $request->get('partners'))) {
             if(!in_array('partners', $joins)) {
                 $qb = $qb->leftJoin('u.partnerInvites', 'partners');
@@ -510,6 +538,20 @@ class AdminController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
 
+        /** @var QueryBuilder $grades */
+        $grades = self::searchBuilder($orm, $request, $joins);
+        if(!in_array('schedules', $joins)) {
+            $grades = $grades->leftJoin('u.schedules', 'schedules');
+        }
+        if(!in_array('grades', $joins)) {
+            $grades = $grades->leftJoin('schedules.courses', 'courses');
+            $grades = $grades->leftJoin('courses.grades', 'grades');
+        }
+        $grades = $grades->select('COUNT(DISTINCT u.id)')
+            ->andWhere('grades.assignment IS NOT NULL AND grades.assignment!=\'\'')
+            ->getQuery()
+            ->getSingleScalarResult();
+
         /** @var QueryBuilder $partnerTotal */
         $partnerTotal = self::searchBuilder($orm, $request, $joins);
         if(!in_array('partners', $joins)) {
@@ -517,6 +559,13 @@ class AdminController extends Controller
         }
         $partnerTotal = $partnerTotal->select('COUNT(DISTINCT u.id)')
             ->andWhere('partners.id IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        /** @var QueryBuilder $notes */
+        $notes = self::searchBuilder($orm, $request, $joins);
+        $notes = $notes->select('COUNT(DISTINCT u.id)')
+            ->andWhere('u.evernote_access_token IS NOT NULL AND u.evernote_access_token!=\'\'')
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -539,7 +588,9 @@ class AdminController extends Controller
                 'goals' => $goals,
                 'deadlines' => $deadlines,
                 'schedules' => $schedules,
+                'grades' => $grades,
                 'partnerTotal' => $partnerTotal,
+                'notes' => $notes,
                 'total' => $total,
                 'c1l1' => $c1l1,
                 'c1l2' => $c1l2,

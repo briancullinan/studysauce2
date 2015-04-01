@@ -17,7 +17,6 @@ $view['slots']->start('modal-body') ?>
     <a href="https://www.google.com/chrome/browser/">&nbsp;</a>
     <a href="https://www.mozilla.org/en-US/firefox/new/">&nbsp;</a>
     <a href="http://support.apple.com/downloads/#safari">&nbsp;</a>
-    <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">&nbsp;</a></p>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

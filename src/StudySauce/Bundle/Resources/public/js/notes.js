@@ -4,12 +4,14 @@ $(document).ready(function () {
 
     body.on('click', 'a[href*="#note-id-"]', function (evt) {
         evt.preventDefault();
-        var notes = $('#notes');
+        var notes = $('#notes'),
+            note = $(this).parents('.note-row');
         notes.find('.note-title input').val($(this).text());
         notes.addClass('edit-note');
         setTimeout(function () {
             notes.find('#editor1').attr('contenteditable', true);
             CKEDITOR.instances['editor1'].setReadOnly(false);
+            CKEDITOR.instances['editor1'].setData(note.find('.summary').html());
         }, 100);
     });
 
