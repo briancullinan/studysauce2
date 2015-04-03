@@ -6,14 +6,7 @@ $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
 
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/deadlines.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/deadlines.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
 
@@ -21,14 +14,7 @@ $view['slots']->stop();
 
 $view['slots']->start('javascripts');
 
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/deadlines.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/deadlines.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 
@@ -93,7 +79,7 @@ $view['slots']->start('body'); ?>
                     <div class="class-name">
                         <label class="select">
                             <span>Class name</span>
-                            <i class="class<?php print $d->getCourse()->getIndex(); ?>"></i>
+                            <i class="class<?php print (!empty($d->getCourse()) ? $d->getCourse()->getIndex() : ''); ?>"></i>
                             <select>
                                 <option value="" <?php print ($isDemo || empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Select a class</option>
                                 <?php

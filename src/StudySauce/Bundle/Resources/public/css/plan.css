@@ -211,7 +211,7 @@ a.fc-event:not([href])
     display:block;
     content: " ";
     position:absolute;
-    top:25px;
+    top:15px;
     width:100%;
     left:0;
     border-bottom: 1px solid #555555;

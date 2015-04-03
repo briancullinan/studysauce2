@@ -514,6 +514,4 @@ $(document).ready(function () {
         loadResults();
     });
 
-    body.on('change', '#command_control input[name="search"], #command_control input[name="page"]', loadResults);
-
 });

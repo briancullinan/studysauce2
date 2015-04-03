@@ -280,7 +280,7 @@ class MetricsController extends Controller
         $checkins = array_combine($keys, $checkins);
         // if the checkin time is before the last checkout time then change the checkout time to match checkin time,
         //    they switched classes in the middle of the session
-        $all = array_merge($checkins, $checkouts);
+        $all = $checkins + $checkouts;
         foreach($checkins as $i => $class)
         {
             /** @var Checkin $class */

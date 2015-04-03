@@ -94,7 +94,7 @@ $view['slots']->start('body'); ?>
                         }
                         ?>
                         <div class="class-row clearfix<?php
-                        print ($isDemo ? ' edit valid blank' : ' read-only');
+                        print ($isDemo || empty($c->getStartTime()) || empty($c->getEndTime()) ? ' edit valid blank' : ' read-only');
                         print ' course-id-' . ($isDemo ? '' : $c->getId()); ?>">
                             <div class="class-name">
                                 <label class="input">

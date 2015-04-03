@@ -43,10 +43,15 @@
 
 #notes .notes
 {
-    display:block;
+    display:none;
     text-align: left;
     white-space: normal;
     margin: 0 -10px;
+}
+
+#notes .class-row.selected + .notes
+{
+    display:block;
 }
 
 #notes .note-row
@@ -68,13 +73,41 @@
     white-space: nowrap;
 }
 
+#notes .note-row .date
+{
+    color:#888;
+    font-weight: bold;
+    position:absolute;
+    right: 2px;
+    top: 0;
+}
+
 #notes .note-row .summary
 {
-    border: 1px solid #eee;
+    border: 1px solid transparent;
     padding: 10px;
     height: 150px;
     overflow:hidden;
+    position: relative;
+}
 
+#notes .term-row .term-name
+{
+    width: 100%;
+}
+
+#notes .note-row:hover .summary
+{
+    border-color: #eee;
+}
+
+#notes .term-row:hover:not(.selected):not(.edit),
+#notes .term-row:hover:not(.selected):not(.edit) .term-name select,
+#notes .class-row:hover:not(.edit) > .class-name,
+#notes .class-row:hover:not(.edit) > .class-name input
+{
+    cursor: pointer;
+    color:#00CCEE;
 }
 
 #notes .class-row .class-name span
@@ -110,6 +143,23 @@
     display:none;
 }
 
+.cke
+{
+    opacity: .75;
+    transition:opacity ease-in-out .15s;
+}
+
+#notes #editor1 h1,
+#notes .note-row h1
+{
+    font-size: 32px;
+}
+
+.cke:hover
+{
+    opacity: 1;
+}
+
 #notes .note-title
 {
     margin: 0 -10px;
@@ -125,6 +175,7 @@
 
 #notes.edit-note h2,
 #notes.edit-note .term-row,
+#notes.edit-note .new-study-note,
 #notes .note-title
 {
     display:none;
@@ -150,6 +201,50 @@
 #notes-connect .form-actions
 {
     text-align: center;
+}
+
+#notes-connect a[href="#close"]
+{
+    display:none;
+}
+
+#notes-connect .evernote-name,
+#notes-connect .site-name
+{
+    font-size: 35px;
+    letter-spacing: -3px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 60px;
+}
+
+#notes-connect .connect-sketch
+{
+    text-align: center;
+}
+
+#notes-connect .connect-sketch img,
+#notes-connect .site-name img
+{
+    margin:0 auto;
+    display:block;
+}
+
+.connect-or {
+    text-align: center;
+    margin-bottom: 20px;
+    clear: both;
+    display:inline-block;
+}
+
+.connect-or span {
+    border-radius: 4px 4px 4px 4px;
+    font-style: italic;
+    padding: 3px 20px;
+    position: relative;
+    text-transform: uppercase;
+    top: 12px;
+    font-size: 40px;
 }
 
 @media all and (max-width: 1000px)

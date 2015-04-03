@@ -1,24 +1,85 @@
 $(document).ready(function () {
 
-    var body = $('body');
+    var body = $('body'),
+        noteId = '';
 
-    body.on('click', 'a[href*="#note-id-"]', function (evt) {
+    body.on('click', '#notes .term-row > *:not(.term-editor)', function () {
+        var calc = body.find('#notes'),
+            row = $(this).parents('.term-row');
+        if(!row.is('.selected')) {
+            calc.find('.term-row.selected').removeClass('selected');
+            row.addClass('selected');
+        }
+    });
+
+    body.on('click', '#notes .class-row > *:not(.notes)', function () {
+        var row = $(this).parents('.class-row');
+        if(row.is('.selected')) {
+            row.removeClass('selected');
+        }
+        else {
+            row.addClass('selected');
+        }
+    });
+
+    body.on('click', '#notes a[href*="#note-id-"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes'),
-            note = $(this).parents('.note-row');
+            note = $(this).parents('.note-row'),
+            notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).parents('.notes').prev('.class-row').attr('class'))[1];
         notes.find('.note-title input').val($(this).text());
+        notes.find('select[name="notebook"]').val(notebook);
         notes.addClass('edit-note');
-        setTimeout(function () {
-            notes.find('#editor1').attr('contenteditable', true);
-            CKEDITOR.instances['editor1'].setReadOnly(false);
-            CKEDITOR.instances['editor1'].setData(note.find('.summary').html());
-        }, 100);
+        noteId = $(this).attr('href').substr(9);
+        CKEDITOR.instances['editor1'].setData(note.find('.summary en-note').html());
+        if(notes.find('#editor1').is('.cke_editable')) {
+            setTimeout(function () {
+                notes.find('#editor1').attr('contenteditable', true);
+                CKEDITOR.instances['editor1'].setReadOnly(false);
+            }, 100);
+        }
+    });
+
+    body.on('click', '#notes a[href*="#add-note"]', function (evt) {
+        evt.preventDefault();
+        var notes = $('#notes');
+        notes.find('.note-title input').val('');
+        notes.find('select[name="notebook"]').val('');
+        notes.addClass('edit-note');
+        noteId = '';
+        CKEDITOR.instances['editor1'].setData('');
+        if(notes.find('#editor1').is('.cke_editable')) {
+            setTimeout(function () {
+                notes.find('#editor1').attr('contenteditable', true);
+                CKEDITOR.instances['editor1'].setReadOnly(false);
+            }, 100);
+        }
     });
 
     body.on('click', 'a[href="#save-note"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes');
-        notes.removeClass('edit-note');
+        notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        loadingAnimation(notes.find('a[href="#save-note"]'));
+        $.ajax({
+            url: window.callbackPaths['notes_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                noteId: noteId,
+                title: notes.find('.note-title input').val().trim(),
+                notebookId: notes.find('select[name="notebook"]').val(),
+                body: CKEDITOR.instances['editor1'].getData()
+            },
+            success: function (data) {
+                notes.find('.squiggle').remove();
+                notes.removeClass('edit-note');
+
+            },
+            error: function () {
+                notes.find('.squiggle').remove();
+            }
+        });
     });
 
     body.on('show', '#notes', function () {

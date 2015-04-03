@@ -265,14 +265,14 @@
 
 #right-panel .main-menu a[href*="/deadlines"] span
 {
-    background-position: left -805px;
+    background-position: left -8605px;
 }
 
 #right-panel .main-menu a[href*="/deadlines"]:hover span,
 #right-panel .main-menu a[href*="/deadlines"]:focus span,
 #right-panel .main-menu a[href*="/deadlines"]:active span,
 #right-panel .main-menu a[href*="/deadlines"].active span {
-    background-position: left -905px;
+    background-position: left -8705px;
 }
 
 #right-panel .main-menu a[href*="/checkin"] span
@@ -445,14 +445,14 @@
 
 #right-panel .main-menu a[href*="/notes"] span
 {
-    background-position: left -4405px;
+    background-position: left -805px;
 }
 
 #right-panel .main-menu a[href*="/notes"]:hover span,
 #right-panel .main-menu a[href*="/notes"]:focus span,
 #right-panel .main-menu a[href*="/notes"]:active span,
 #right-panel .main-menu a[href*="/notes"].active span {
-    background-position: left -4505px;
+    background-position: left -905px;
 }
 
 #right-panel .main-menu a[href*="#blackboard"] span
@@ -585,14 +585,14 @@
 
 .pane-content a[href*="/deadlines"]:not(.more):before
 {
-    background-position: left -402px;
+    background-position: left -4302px;
 }
 
 .pane-content a[href*="/deadlines"]:not(.more):hover:before,
 .pane-content a[href*="/deadlines"]:not(.more):focus:before,
 .pane-content a[href*="/deadlines"]:not(.more):active:before,
 .pane-content a[href*="/deadlines"].active:not(.more):before {
-    background-position: left -452px;
+    background-position: left -4352px;
 }
 
 .pane-content a[href*="/checkin"]:not(.more):before
@@ -1321,7 +1321,7 @@ a[href*="/redirect/facebook"]:focus
 
     #right-panel .main-menu a[href*="/deadlines"] span
     {
-        background-position: left -5805px;
+        background-position: left -8805px;
     }
 
     #right-panel .main-menu a[href*="/partner"] span
@@ -1371,7 +1371,7 @@ a[href*="/redirect/facebook"]:focus
 
     #right-panel .main-menu a[href*="/notes"] span
     {
-        background-position: left -7105px;
+        background-position: left -5805px;
     }
 
     #right-panel .main-menu a[href*="#blackboard"] span
