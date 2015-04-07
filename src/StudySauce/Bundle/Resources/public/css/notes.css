@@ -137,7 +137,7 @@
 {
     outline: none;
     background-color: #fff;
-    margin: 0 -20px;
+    margin: 86px -20px;
     padding: 20px;
     min-height: 400px;
     display:none;
@@ -165,7 +165,7 @@
     margin: 0 -10px;
 }
 
-#notes .note-title input
+#notes .note-title .input:last-child input
 {
     font-size: 22px;
     font-weight: bold;
@@ -188,6 +188,24 @@
     display:block;
 }
 
+#notes .input.books
+{
+    width:200px;
+    display:inline-block;
+    position:relative;
+    z-index: 2;
+}
+
+#notes .input.tags
+{
+    margin-left:-206px;
+    padding-left:206px;
+    display:inline-block;
+    width:100%;
+    position:relative;
+    z-index: 1;
+}
+
 .class-row .class-name i
 {
 
@@ -201,6 +219,7 @@
 #notes-connect .form-actions
 {
     text-align: center;
+    margin: 40px 0 20px 0;
 }
 
 #notes-connect a[href="#close"]
@@ -211,16 +230,19 @@
 #notes-connect .evernote-name,
 #notes-connect .site-name
 {
-    font-size: 35px;
+    font-size: 40px;
     letter-spacing: -3px;
     display: inline-block;
     vertical-align: middle;
     line-height: 60px;
+    color: #777777;
+    font-family: 'Ubuntu',Arial,sans-serif;
 }
 
 #notes-connect .connect-sketch
 {
     text-align: center;
+    margin: 20px 0;
 }
 
 #notes-connect .connect-sketch img,
@@ -235,16 +257,16 @@
     margin-bottom: 20px;
     clear: both;
     display:inline-block;
+    color: #777777;
 }
 
 .connect-or span {
     border-radius: 4px 4px 4px 4px;
-    font-style: italic;
     padding: 3px 20px;
     position: relative;
     text-transform: uppercase;
     top: 12px;
-    font-size: 40px;
+    font-size: 80px;
 }
 
 @media all and (max-width: 1000px)
@@ -253,6 +275,14 @@
     #notes .note-row
     {
         width:33.33%;
+    }
+}
+
+@media all and (max-width: 914px)
+{
+    #notes #editor1
+    {
+        margin: 120px -20px;
     }
 }
 

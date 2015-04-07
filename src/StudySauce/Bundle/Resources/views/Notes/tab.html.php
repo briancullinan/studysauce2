@@ -17,9 +17,10 @@ foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/ionic
 $view['slots']->stop();
 
 $view['slots']->start('javascripts'); ?>
-    <script type="text/javascript">
-        CKEDITOR_BASEPATH = '<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/ckeditor/';
-    </script>
+<script type="text/javascript">
+    CKEDITOR_BASEPATH = '<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/ckeditor/';
+    window.initialTags = JSON.parse('<?php print json_encode($allTags); ?>');
+</script>
 <?php foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/ckeditor/ckeditor.js',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
@@ -90,9 +91,8 @@ $view['slots']->start('body'); ?>
                                 $classI = '';
                             }
                             ?>
-                            <div class="class-row notebook-id-<?php
-                                print (is_numeric($i) ? '' : $i);
-                                print (is_numeric($i) ? (' course-id-' . $i) : '');
+                            <div class="class-row notebook-id-<?php print (is_numeric($i) ? '' : $i); ?>
+                                course-id-<?php print (is_numeric($i) ? $i : '');
                                 print ($first ? ' selected' : ' '); ?>">
                                 <div class="class-name read-only">
                                     <label class="input"><span>Class name</span><i class="class<?php print $classI; ?>"></i>
@@ -105,7 +105,7 @@ $view['slots']->start('body'); ?>
                                 foreach ($books as $n) {
                                     /** @var Note $n */
                                     ?>
-                                    <div class="note-row note-id-<?php print $n->getGuid(); ?>">
+                                    <div class="note-row note-id-<?php print $n->getGuid(); ?>" data-tags="<?php print htmlentities(json_encode($n->getEdamNote()->tagGuids)); ?>">
                                         <h4 class="note-name">
                                             <a href="#view-note"><?php print $n->getTitle(); ?></a>
                                         </h4>
@@ -122,12 +122,12 @@ $view['slots']->start('body'); ?>
                 <?php $first = false;
             } ?>
             <h3 class="note-title">
-                <label class="input"><select name="notebook">
+                <label class="input books"><select name="notebook">
                     <option value="">Select a notebook</option><?php
+                    $allnotebooks = [];
                     if(isset($schedules[0])) {
                         $s = $schedules[0];
                         $courses = $s->getClasses()->toArray();
-                        $allnotebooks = [];
                         foreach($courses as $i => $c)
                         {
                             /** @var Course $c */
@@ -140,7 +140,7 @@ $view['slots']->start('body'); ?>
                                     break;
                                 }
                             }
-                            ?><option value="<?php print $id; ?>"><?php print $c->getName(); ?></option><?php
+                            ?><option value="<?php print (!empty($id) ? $id : $c->getId()); ?>"><?php print $c->getName(); ?></option><?php
                         }
                     }
                     foreach($notebooks as $b) {
@@ -149,7 +149,10 @@ $view['slots']->start('body'); ?>
                         }
                     }
                     ?></select></label>
-                <label><input type="text" placeholder="Title your note"/></label></h3>
+                <label class="input tags">
+                    <input type="text" placeholder="Tags" data-data="" value="" autocomplete="off">
+                </label>
+                <label class="input title"><input type="text" placeholder="Title your note"/></label></h3>
             <div id="editor1" contenteditable="true">This is note content</div>
             <div class="highlighted-link"><a href="#save-note" class="more">Save</a></div>
         </div>

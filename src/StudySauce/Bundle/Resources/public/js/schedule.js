@@ -782,7 +782,7 @@ $(document).ready(function () {
                     select[0].selectize.focus();
             }
         });
-        $('#new-schedule').modal({show:true})
+        $('#new-schedule').modal({show:true});
         updateTermControls();
     }
 

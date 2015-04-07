@@ -117,7 +117,7 @@ class DeadlinesController extends Controller
             ]);
     }
 
-    public static $examples = ['Exam', 'Paper', 'Essay'];
+    public static $examples = ['Exam', 'Paper', 'Essay', 'Homework', 'Quiz', 'Group Project', 'Project', 'Test', 'Oral Exam', 'Journal'];
 
     /**
      * @return string
@@ -171,7 +171,7 @@ class DeadlinesController extends Controller
                 $due->setTime(0, 0, 0);
                 $due->add(new \DateInterval('P' . ($space * $j + rand(1, 7)) . 'D'));
                 $deadline->setDueDate($due);
-                $deadline->setPercent(rand(10, 100));
+                $deadline->setPercent(rand(5, 30));
                 $deadline->setReminder($reminders);
                 $deadlines->add($deadline);
                 $guest->addDeadline($deadline);

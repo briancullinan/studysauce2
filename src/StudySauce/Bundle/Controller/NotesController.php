@@ -2,7 +2,6 @@
 
 namespace StudySauce\Bundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use EDAM\Types\Tag;
 use Evernote\Model\Note;
@@ -13,7 +12,6 @@ use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Evernote\Client as EvernoteClient;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,14 +31,14 @@ class NotesController extends Controller
         /** @var Schedule $s */
         $s = $schedules->filter(function (Schedule $s) use ($name) {
             return $s->getClasses()->exists(function ($_, Course $c) use ($name) {
-                return $c->getName() == $name;
+                return $c->getName() == $name || $c->getId() == $name;
             });
         })->first();
         if(!empty($s)) {
             /** @var Course $c */
             return $s->getClasses()->first(
                 function (Course $c) use ($name) {
-                    return $c->getName() == $name;
+                    return $c->getName() == $name || $c->getId() == $name;
                 }
             );
         }
@@ -60,14 +58,15 @@ class NotesController extends Controller
         $services = [];
         $notebooks = [];
         $notes = [];
+        $allTags = [];
         if(!empty($user->getEvernoteAccessToken())) {
             $client = new EvernoteClient($user->getEvernoteAccessToken(), true);
             $notebooks = $client->listNotebooks();
             foreach($notebooks as $b) {
                 /** @var Notebook $b */
-                $allTags = $client->getUserNotestore()
+                $bookTags = $client->getUserNotestore()
                     ->listTagsByNotebook($user->getEvernoteAccessToken(), $b->getGuid());
-                $allTags = array_combine(array_map(function (Tag $t) {return $t->guid;}, $allTags), $allTags);
+                $allTags = array_merge($allTags, array_combine(array_map(function (Tag $t) {return $t->guid;}, $bookTags), $bookTags));
                 // find course with matching name
                 $c = self::getCourseByName($b->getName(), $schedules);
 
@@ -101,7 +100,7 @@ class NotesController extends Controller
                             $c = self::getCourseByName($t->name, $schedules);
                         }
 
-                        $notes[$s->getId()][!empty($c) ? $c->getId() : $b->getGuid()][] = $n;
+                        $notes[empty($s) ? '' : $s->getId()][!empty($c) ? $c->getId() : $b->getGuid()][] = $n;
                     }
                 }
             }
@@ -121,12 +120,14 @@ class NotesController extends Controller
         }
 
         return $this->render('StudySauceBundle:Notes:tab.html.php', [
-            'schedules' => $schedules->toArray(),
+            'schedules' => $schedules->count() == 0 ? [new Schedule()] : $schedules->toArray(),
             'services' => $services,
             'notebooks' => array_combine(
                 array_map(function (Notebook $b) {return $b->getGuid();}, $notebooks),
                 $notebooks),
-            'notes' => $notes
+            'notes' => $notes,
+            'allTags' => array_values(array_map(function (Tag $t) {
+                return ['value' => $t->guid, 'text' => $t->name];}, $allTags))
         ]);
     }
 
@@ -150,8 +151,13 @@ class NotesController extends Controller
                 }
             }
         }
-        else {
-            $notebook = new Notebook();
+
+        if(empty($notebook)) {
+            // get class name
+            /** @var Course $c */
+            $c = self::getCourseByName($request->get('notebookId'), $user->getSchedules());
+            $notebook = new \EDAM\Types\Notebook(['name' => $c]);
+            $client->getUserNotestore()->createNotebook($user->getEvernoteAccessToken(), $notebook);
         }
 
         /** @var Note $note */

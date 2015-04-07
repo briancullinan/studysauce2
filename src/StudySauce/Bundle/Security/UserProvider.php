@@ -92,6 +92,9 @@ class UserProvider extends BaseUserProvider
         //$request = $this->container->get('request');
         /** @var PathUserResponse $response */
         $username = $response->getUsername();
+        if(empty($username)) {
+            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $username));
+        }
         /** @var User $user */
         $prop = $this->getProperty($response);
         $user = $this->userManager->findUserBy([$prop => $username]);
@@ -123,8 +126,10 @@ class UserProvider extends BaseUserProvider
             $user->$setter_id($username);
             $setter_token = $setter.'AccessToken';
             $user->$setter_token($response->getAccessToken());
-            $user->setFirst($response->getFirst());
-            $user->setLast($response->getLast());
+            if($response instanceof PathUserResponse) {
+                $user->setFirst($response->getFirst());
+                $user->setLast($response->getLast());
+            }
 
             $this->userManager->updateUser($user);
         }

@@ -8,6 +8,16 @@ namespace StudySauce\Bundle\Security;
  */
 class PathUserResponse extends \HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
 {
+    public $username;
+
+    public function getUsername()
+    {
+        if(!empty($this->username))
+            return $this->username;
+        else
+            parent::getUsername();
+    }
+
     /**
      * @return null|string
      */

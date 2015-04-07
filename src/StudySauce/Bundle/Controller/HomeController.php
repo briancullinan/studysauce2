@@ -37,21 +37,12 @@ class HomeController extends Controller
             $userManager->updateUser($user);
         }
 
-        // list oauth services
-        $services = [];
-        /** @var OAuthHelper $oauth */
-        $oauth = $this->get('hwi_oauth.templating.helper.oauth');
-        foreach($oauth->getResourceOwners() as $o) {
-            $services[$o] = $oauth->getLoginUrl($o);
-        }
-
         return $this->render(
             'StudySauceBundle:Home:tab.html.php',
             [
                 'showBookmark' => $showBookmark,
                 'user' => $user,
-                'csrf_token' => $csrfToken,
-                'services' => $services
+                'csrf_token' => $csrfToken
             ]
         );
     }

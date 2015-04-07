@@ -210,7 +210,7 @@ hwi_oauth:
             authorization_url:   https://sandbox.evernote.com/OAuth.action
             infos_url:           https://sandbox.evernote.com/edam/note/shard/s4
             realm:               "evernote.com"
-            user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
+            user_response_class: StudySauce\Bundle\Security\PathUserResponse
             paths:
                 identifier: id
                 nickname:   username

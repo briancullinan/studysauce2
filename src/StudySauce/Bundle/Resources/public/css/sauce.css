@@ -543,7 +543,9 @@ label
 }
 
 .selectize-input,
+.selectize-control.multi .selectize-input.has-items,
 .selectize-control.single .selectize-input,
+.selectize-control.multi .selectize-input,
 input:not([type]),
 input[type="email"],
 input[type="number"],
@@ -605,13 +607,15 @@ input[type=month],
     padding:5px;
 }
 
-.selectize-dropdown.single
+.selectize-dropdown.single,
+.selectize-dropdown.multi
 {
     border-color: #555555;
     border-radius: 0 0 2px 2px;
 }
 
-.selectize-control.single .selectize-input .item
+.selectize-control.single .selectize-input .item,
+.selectize-control.multi .selectize-input .item
 {
     background: #EEEEEE none;
     border-radius: 3px;
@@ -619,6 +623,8 @@ input[type=month],
     margin: -1px 2px;
     border: 1px solid #CCCCCC;
     vertical-align: top;
+    color: inherit;
+    text-shadow: none;
 }
 
 .ui-datepicker
@@ -705,6 +711,7 @@ input[type=month],
 }
 
 .selectize-control.single .selectize-input.focus,
+.selectize-control.multi .selectize-input.focus,
 .selectize-input.focus,
 .selectize-input:focus,
 input:not([type]):focus,
@@ -727,6 +734,7 @@ input[type=month]:focus
 
 .read-only .selectize-input,
 .read-only .selectize-control.single .selectize-input,
+.read-only .selectize-control.multi .selectize-input,
 .read-only input:not([type]),
 .read-only input[type="email"],
 .read-only input[type="number"],

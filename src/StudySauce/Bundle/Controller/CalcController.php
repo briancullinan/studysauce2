@@ -222,7 +222,7 @@ class CalcController extends Controller
         return number_format($score / $hours, 2);
     }
 
-    public static $examples = ['Exam', 'Paper', 'Essay'];
+    public static $examples = ['Exam', 'Paper', 'Essay', 'Homework', 'Quiz', 'Group Project', 'Project', 'Test', 'Oral Exam', 'Journal', 'Pop Quiz'];
 
     /**
      * @return string

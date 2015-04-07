@@ -26,6 +26,7 @@
     display: inline-block;
     vertical-align: middle;
     line-height: 60px;
+    font-family: 'Ubuntu',Arial,sans-serif;
 }
 
 #goals .split-description h3 {

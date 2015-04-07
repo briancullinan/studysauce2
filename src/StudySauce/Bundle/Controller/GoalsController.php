@@ -97,7 +97,7 @@ class GoalsController extends Controller
         $orm->persist($behavior);
 
         $milestoneGoals = ['B-', 'B', 'B+', 'A-', 'A', 'A+'];
-        $milestoneRewards = ['Frozen yogurt', 'Fancy dinner', 'Shopping tip', '$50 gift card', 'A night off from studying.'];
+        $milestoneRewards = ['Frozen yogurt', 'Fancy dinner', 'Shopping trip', '$50 gift card', 'A night off from studying.'];
         $milestone = new Goal();
         $milestone->setType('milestone');
         $milestone->setGoal($milestoneGoals[array_rand($milestoneGoals, 1)]);

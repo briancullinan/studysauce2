@@ -60,6 +60,9 @@ class EvernoteResourceOwner extends GenericOAuth1ResourceOwner
         $user = $client->getUserNotestore();
 
         $response = $this->getUserResponse();
+        if($response instanceof PathUserResponse) {
+            $response->username = $accessToken['edam_userId'];
+        }
         $response->setResponse((array) $user);
         $response->setResourceOwner($this);
         $response->setOAuthToken(new OAuthToken($accessToken));
