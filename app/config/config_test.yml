@@ -1,7 +1,8 @@
 imports:
     - { resource: config.yml }
 
-framework:
+parameters:
+    defer_all_emails: "studymarketing@mailinator.com"
 
 doctrine:
     dbal:

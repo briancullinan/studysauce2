@@ -127,8 +127,10 @@ class UserProvider extends BaseUserProvider
             $setter_token = $setter.'AccessToken';
             $user->$setter_token($response->getAccessToken());
             if($response instanceof PathUserResponse) {
-                $user->setFirst($response->getFirst());
-                $user->setLast($response->getLast());
+                if(!empty($response->getFirst()))
+                    $user->setFirst($response->getFirst());
+                if(!empty($response->getLast()))
+                    $user->setLast($response->getLast());
             }
 
             $this->userManager->updateUser($user);

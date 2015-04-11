@@ -47,24 +47,15 @@ $view['slots']->start('body'); ?>
                 <div
                     class="term-row schedule-id-<?php print $s->getId(); ?> <?php print ($first ? 'selected' : ''); ?>">
                     <div class="term-name"><?php
-                        for ($y = intval(date('Y')); $y > intval(date('Y')) - 20; $y--) {
-                            foreach ([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 6 => 'Summer'] as $m => $t) {
-                                // skip dates beyond the current term
-                                if ($y == date('Y') && $m > intval(date('n')) && (
-                                        empty($s->getTerm()) || $s->getTerm()->format('n/Y') != $m . '/' . $y)
-                                ) {
-                                    continue;
-                                }
-
-                                if (!empty($s->getTerm()) && $s->getTerm()->format('n/Y') == $m . '/' . $y) {
-                                    $label = $t . ' ' . $y;
-                                }
+                        foreach ([11 => 'Winter', 8 => 'Fall', 1 => 'Spring', 6 => 'Summer'] as $m => $t) {
+                            // skip dates beyond the current term
+                            if ($m > intval(date('n')) && (empty($s->getTerm()) || $m > $s->getTerm()->format('n'))) {
+                                continue;
                             }
+
+                            $label = $t . ' ' . (empty($s->getTerm()) ? date('Y') : $s->getTerm()->format('Y'));
                         }
-                        if(empty($label) || $first)
-                            print 'Current term';
-                        else
-                            print $label;
+                        print $label;
                         ?>
                     </div>
                     <div class="term-editor">
@@ -72,27 +63,37 @@ $view['slots']->start('body'); ?>
                         if(!isset($notes[$s->getId()]))
                             $notes[$s->getId()] = [];
 
-                        $keys = array_map(function ($i) use ($classes) {return is_numeric($i) ? $classes[$i]->getIndex() : false;}, array_keys($notes[$s->getId()]));
+                        $keys = array_map(function ($i) use ($classes) {return is_numeric($i) && isset($classes[$i])
+                            ? $classes[$i]->getIndex()
+                            : 9999999999;}, array_keys($notes[$s->getId()]));
                         $orig = array_keys($notes[$s->getId()]);
-                        array_multisort($keys, SORT_DESC, SORT_NUMERIC, $notes[$s->getId()], $orig);
+                        array_multisort($keys, SORT_ASC, SORT_NUMERIC, $notes[$s->getId()], $orig);
                         $notes[$s->getId()] = array_combine($orig, array_values($notes[$s->getId()]));
                         foreach ($notes[$s->getId()] as $i => $books) {
                             /** @var Notebook $b */
                             if(is_numeric($i)) {
                                 /** @var Course $c */
-                                $c = $classes[$i];
+                                $c = \StudySauce\Bundle\Controller\NotesController::getCourseByName($i, new Doctrine\Common\Collections\ArrayCollection($schedules));
                                 $name = $c->getName();
                                 $classI = $c->getIndex();
+                                $id = '';
+                                foreach($notebooks as $b) {
+                                    if($b->getName() == $c->getName()) {
+                                        $id = $b->getGuid();
+                                        break;
+                                    }
+                                }
+
                             }
                             else {
                                 /** @var Notebook $n */
+                                $id = $i;
                                 $n = $notebooks[$i];
                                 $name = $n->getName();
                                 $classI = '';
                             }
                             ?>
-                            <div class="class-row notebook-id-<?php print (is_numeric($i) ? '' : $i); ?>
-                                course-id-<?php print (is_numeric($i) ? $i : '');
+                            <div class="class-row notebook-id-<?php print $id; ?> course-id-<?php print (is_numeric($i) ? $i : '');
                                 print ($first ? ' selected' : ' '); ?>">
                                 <div class="class-name read-only">
                                     <label class="input"><span>Class name</span><i class="class<?php print $classI; ?>"></i>
@@ -110,13 +111,19 @@ $view['slots']->start('body'); ?>
                                             <a href="#view-note"><?php print $n->getTitle(); ?></a>
                                         </h4>
                                         <div class="summary">
-                                            <small class="date"><?php print date_timestamp_set(new \DateTime(), $n->getEdamNote()->updated)->format('j M h:i'); ?></small>
+                                            <small class="date"><?php print date_timestamp_set(new \DateTime(), $n->getEdamNote()->updated / 1000)->format('j M'); ?></small>
                                             <?php print $n->getContent()->toEnml(); ?></div>
                                     </div>
                                 <?php } ?>
                             </div>
                         <?php }
-                        if(empty($notes[$s->getId()])) { ?>No notes for this term<?php } ?>
+                        if(empty($notes[$s->getId()])) { ?>No notes for this term<?php }
+
+                        if($first) { ?>
+                            <div class="highlighted-link form-actions valid">
+                                <a href="#add-notebook" class="big-add" data-toggle="modal">Add <span>+</span> notebook</a>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <?php $first = false;
@@ -148,22 +155,21 @@ $view['slots']->start('body'); ?>
                             ?><option value="<?php print $id; ?>"><?php print $b->getName(); ?></option><?php
                         }
                     }
-                    ?></select></label>
+                    ?>
+                        <option>Add notebook</option></select></label>
                 <label class="input tags">
                     <input type="text" placeholder="Tags" data-data="" value="" autocomplete="off">
                 </label>
                 <label class="input title"><input type="text" placeholder="Title your note"/></label></h3>
             <div id="editor1" contenteditable="true">This is note content</div>
-            <div class="highlighted-link"><a href="#save-note" class="more">Save</a></div>
+            <div class="highlighted-link"><a href="#delete-note">Delete note</a><a href="#save-note" class="more">Save</a></div>
         </div>
     </div>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
 if (!empty($services)) {
-    print $this->render(
-        'StudySauceBundle:Dialogs:notes-connect.html.php',
-        ['id' => 'notes-connect', 'services' => $services]
-    );
+    print $this->render('StudySauceBundle:Dialogs:notes-connect.html.php',['id' => 'notes-connect', 'services' => $services]);
 }
+print $this->render('StudySauceBundle:Dialogs:add-notebook.html.php',['id' => 'add-notebook']);
 $view['slots']->stop();

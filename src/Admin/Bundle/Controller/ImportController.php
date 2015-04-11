@@ -44,7 +44,7 @@ class ImportController extends Controller
 
         $users = $request->get('users');
         $existing = $user->getGroupInvites()->toArray();
-        $emails = new EmailsController();
+        $emails = new \StudySauce\Bundle\Controller\EmailsController();
         $emails->setContainer($this->container);
         foreach($users as $i => $u)
         {
@@ -94,7 +94,7 @@ class ImportController extends Controller
             }
         }
 
-        return $this->forward('StudySauceBundle:Partner:import', ['_format' => 'tab']);
+        return $this->forward('AdminBundle:Import:index', ['_format' => 'tab']);
     }
 
 }

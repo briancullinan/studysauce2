@@ -118,7 +118,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
             // generate a new guest user in the database
             $user = $userManager->createUser();
             $user->setUsername($username);
-            $password = $encoder->getEncoder($user)->encodePassword($username, $user->getSalt());
+            $password = $encoder->getEncoder($user)->encodePassword('guest', $user->getSalt());
             $user->setPassword($password);
             $user->setEmail($username . '_studysauce.com@mailinator.com');
             $userManager->updateCanonicalFields($user);

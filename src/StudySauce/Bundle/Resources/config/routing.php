@@ -669,5 +669,31 @@ $collection->add(
         'request.isXmlHttpRequest()'
     )
 );
+$collection->add(
+    'notes_remove',
+    new Route(
+        '/notes/remove',
+        ['_controller' => 'StudySauceBundle:Notes:remove'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+$collection->add(
+    'notes_notebook',
+    new Route(
+        '/notes/notebook',
+        ['_controller' => 'StudySauceBundle:Notes:notebook'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
 /*$collection->add('course', new Route('/course/{_course}/{_format}', array(            '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',            '_format'     => 'dashboard'        )));$collection->add('default', new Route('/{_controller}'));$acmeHello = $loader->import('@StudySauceBundle/Resources/public/images/', 'directory');$acmeHello->addPrefix('/bundles/studysauce/images/');$collection->addCollection($acmeHello);*/
 return $collection;

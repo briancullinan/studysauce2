@@ -1,26 +1,28 @@
 
 
 
-#calculator .class-row,
-#calculator .term-row
+#notes .class-row
 {
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
     position: relative;
 }
 
 #notes .term-row {
-    border-top: 1px solid #dddddd;
-    border-bottom: 1px solid #dddddd;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
     margin: 0 -20px;
-    padding: 0 20px;
+    padding: 0;
+    position: relative;
 }
 
 #notes .term-row.selected {
     font-weight: bold;
-    background: url(../images/noise_white.png) #FFFFFF;
-    border-top: 1px solid #DDDDDD;
-    border-bottom: 1px solid #DDDDDD;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+#notes .term-row:not(.selected):not(.edit):hover
+{
+    background-color: rgba(255,255,255,.50);
 }
 
 #notes .term-row .term-editor {
@@ -29,6 +31,8 @@
     font-weight: normal;
     position: relative;
     overflow: visible;
+    padding: 0 20px;
+    margin-bottom:20px;
 }
 
 #notes .term-row.selected .term-editor {
@@ -46,7 +50,21 @@
     display:none;
     text-align: left;
     white-space: normal;
-    margin: 0 -10px;
+    margin: 0 -20px 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#notes .term-editor .big-add {
+    font-size: 16px;
+    padding-left: 30px;
+    float:none;
+}
+
+#notes .notes:last-of-type
+{
+    margin-bottom:0;
+    border-bottom-color: transparent;
 }
 
 #notes .class-row.selected + .notes
@@ -60,17 +78,27 @@
     display:inline-block;
     margin: 0 -2px;
     padding: 10px;
+    cursor: pointer;
+    font-size: 80%;
+}
+
+#notes .note-row h4 a
+{
+    color:#555;
 }
 
 #notes .note-row h4
 {
+    border: 2px solid transparent;
     margin:0;
     padding: 10px;
-    background: #eee;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    background: url(../images/noise_white.png) #eee;
+    border-bottom: 0;
+    font-size: 16px;
 }
 
 #notes .note-row .date
@@ -82,13 +110,32 @@
     top: 0;
 }
 
+#notes .term-editor .highlighted-link
+{
+    text-align: left;
+}
+
+#notes .new-study-note .big-add
+{
+    float:none;
+}
+
+#notes .new-study-note
+{
+    text-align: left;
+    padding: 20px 0;
+}
+
 #notes .note-row .summary
 {
-    border: 1px solid transparent;
+    border: 2px solid transparent;
+    border-top: 0;
     padding: 10px;
     height: 150px;
     overflow:hidden;
     position: relative;
+    background: url(../images/noise_white.png) #FFFFFF;
+    border-radius: 0 0 5px 5px;
 }
 
 #notes .term-row .term-name
@@ -96,9 +143,20 @@
     width: 100%;
 }
 
+#notes .term-row ~ .term-row .term-name
+{
+    border-top: 2px solid #555;
+}
+
+#notes .term-row.selected .term-name
+{
+    margin-bottom:20px;
+}
+
+#notes .note-row:hover h4,
 #notes .note-row:hover .summary
 {
-    border-color: #eee;
+    border-color: #09B;
 }
 
 #notes .term-row:hover:not(.selected):not(.edit),
@@ -119,18 +177,19 @@
 #notes .term-row > * {
     vertical-align: middle;
     display: inline-block;
-    margin: 0 -2px;
-    padding: 5px 2px;
+    margin: 0;
+    padding: 5px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
 }
 
-#notes .highlighted-link
+#notes #editor1 ~ .highlighted-link
 {
     display:none;
     margin-top:20px;
+    margin-bottom:-20px;
 }
 
 #notes #editor1
@@ -147,17 +206,82 @@
 {
     opacity: .75;
     transition:opacity ease-in-out .15s;
+    z-index: 999 !important;
 }
 
-#notes #editor1 h1,
-#notes .note-row h1
+#notes #editor1 h1
 {
     font-size: 32px;
+}
+
+#notes .note-row h1
+{
+    font-size: 16px;
+}
+
+#notes #editor1 h2
+{
+    font-size: 24px;
+    color: inherit;
+}
+
+#notes .note-row h2
+{
+    font-size: 14px;
+    color: inherit;
 }
 
 .cke:hover
 {
     opacity: 1;
+}
+
+#notes .term-row:after,
+#notes .class-row:after
+{
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    -moz-transform-origin: center center;
+    -ms-transform-origin: center center;
+    -o-transform-origin: center center;
+    content: " ";
+    display:block;
+    position:absolute;
+    top: 10px;
+    right: -10px;
+    left:auto;
+    background: url(../images/menu_new_half.png) no-repeat -4px -3px transparent;
+    height: 16px;
+    width:16px;
+    transition: transform ease-in-out .15s, -webkit-transform ease-in-out .15s, -moz-transform ease-in-out .15s, -ms-transform ease-in-out .15s, -o-transform ease-in-out .15s, filter ease-in-out .15s;
+}
+
+#notes .term-row:after
+{
+    right:10px;
+}
+
+#notes .term-row:hover:not(.selected):not(.edit):after,
+#notes .class-row:hover:not(.selected):not(.edit):after
+{
+    background-position: -4px -153px;
+}
+
+#notes .term-row.selected:after,
+#notes .class-row.selected:after
+{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
 }
 
 #notes .note-title
@@ -183,7 +307,7 @@
 
 #notes.edit-note .note-title,
 #notes.edit-note #editor1,
-#notes.edit-note .highlighted-link
+#notes.edit-note #editor1 ~ .highlighted-link
 {
     display:block;
 }
@@ -204,6 +328,26 @@
     width:100%;
     position:relative;
     z-index: 1;
+}
+
+#notes.edit-note .pane-content
+{
+    padding-bottom:40px;
+}
+
+#notes a[href="#delete-note"]
+{
+    position:absolute;
+    left: 10px;
+    bottom: 10px;
+    display: inline-block;
+    padding-left:30px;
+    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1652px transparent;
+}
+
+#notes a[href="#delete-note"]:hover
+{
+    background-position: left -1702px;
 }
 
 .class-row .class-name i

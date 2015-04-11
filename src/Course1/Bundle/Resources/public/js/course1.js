@@ -1,6 +1,15 @@
 $(document).ready(function () {
     var body = $('body');
 
+    body.on('show', '#course1_introduction', function () {
+        $('#account-options').modal({show:true});
+    });
+
+    // remove it so it never comes up more than once
+    body.on('hidden.bs.modal', '#account-options', function () {
+        $(this).remove();
+    });
+
     function introductionFunc() {
         var actions = body.find('#course1_introduction-step4 .highlighted-link');
         if(body.find('#course1_introduction-step4 textarea').val().trim() != '')

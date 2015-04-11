@@ -11,7 +11,7 @@ use WebDriverKeys;
  * @backupGlobals false
  * @backupStaticAttributes false
  */
-class APageLoaderCest
+class PageLoaderCest
 {
     /**
      * @param AcceptanceTester $I
@@ -115,9 +115,9 @@ class APageLoaderCest
         $I->fillField('#bill-parents .your-email input', 'TestStudent@mailinator.com');
         $I->click('#bill-parents [value="#submit-contact"]');
         $I->wait(10);
-        $I->amOnPage('/cron');
 
-        // check mailinator for emails
+        $I->wantTo('check mailinator for bill my parents email');
+        $I->amOnPage('/cron');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -241,7 +241,6 @@ class APageLoaderCest
     }
 
     /**
-     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryStudyFunnel(AcceptanceTester $I)
@@ -256,7 +255,6 @@ class APageLoaderCest
     }
 
     /**
-     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryFunnelProfile(AcceptanceTester $I)
@@ -274,7 +272,6 @@ class APageLoaderCest
     }
 
     /**
-     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryFunnelSchedule(AcceptanceTester $I)
@@ -300,7 +297,6 @@ class APageLoaderCest
     }
 
     /**
-     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryFunnelCustomization(AcceptanceTester $I)
@@ -462,7 +458,7 @@ class APageLoaderCest
         $I->fillField('.class-row:nth-child(2) .end-time input', '12');
 
         $I->click('#schedule .highlighted-link [value="#save-class"]');
-        $I->see('You must complete all fields before moving on.'); // should fail if hidden
+        $I->see('Cannot overlap'); // should fail if hidden
         // fix time
         $I->fillField('.class-row:nth-child(2) .start-time input', '9');
         $I->fillField('.class-row:nth-child(2) .end-time input', '10');
@@ -519,7 +515,8 @@ class APageLoaderCest
         $I->click('Save');
         $I->wait(10);
 
-        // visit mailinator and check for email
+        $I->wantTo('visit mailinator and check for organization email');
+        $I->amOnPage('/cron');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -574,12 +571,20 @@ class APageLoaderCest
     }
 
     /**
+     * @depends tryStudentRegister
      * @param AcceptanceTester $I
      */
-    public function tryAdviserInvites(AcceptanceTester $I)
+    public function tryStudyNotes(AcceptanceTester $I)
     {
-
+        $I->amOnPage('/notes');
+        $I->click('a[href*="/evernote"]');
+        $I->fillField('input[name="username"]', 'brian@studysauce.com');
+        $I->fillField('input[name="password"]', 'Da1ddy23');
+        $I->click('[type="submit"]');
+        $I->click('authorize');
+        $I->seeInCurrentUrl('/notes');
     }
+
 }
 
 

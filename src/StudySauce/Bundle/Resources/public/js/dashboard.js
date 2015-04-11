@@ -221,10 +221,10 @@ $(document).ready(function () {
             // show empty
             $('#bookmark').modal({show:true});
         }
-        $('#account-options').modal({show:true});
     });
+
     // remove it so it never comes up more than once
-    body.on('hidden.bs.modal', '#bookmark, #account-options', function () {
+    body.on('hidden.bs.modal', '#bookmark', function () {
         $(this).remove();
     });
 

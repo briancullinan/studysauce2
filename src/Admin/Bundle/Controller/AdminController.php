@@ -81,20 +81,25 @@ class AdminController extends Controller
                 ->setParameter('search', $search);
         }
 
-        if(!empty($role = $request->get('role'))) {
-            if($role == 'ROLE_STUDENT') {
-                $qb = $qb->andWhere('u.roles NOT LIKE \'%s:12:"ROLE_ADVISER"%\' AND u.roles NOT LIKE \'%s:19:"ROLE_MASTER_ADVISER"%\' AND u.roles NOT LIKE \'%s:12:"ROLE_PARTNER"%\' AND u.roles NOT LIKE \'%s:11:"ROLE_PARENT"%\'');
+        $role = $request->get('role');
+        if($role != 'ROLE_GUEST') {
+            $qb = $qb->andWhere('u.roles NOT LIKE \'%s:10:"ROLE_GUEST"%\'');
+        }
+        if($role != 'ROLE_DEMO') {
+            $qb = $qb->andWhere('u.roles NOT LIKE \'%s:9:"ROLE_DEMO"%\'');
+        }
+        if($role == 'ROLE_STUDENT') {
+            $qb = $qb->andWhere('u.roles NOT LIKE \'%s:12:"ROLE_ADVISER"%\' AND u.roles NOT LIKE \'%s:19:"ROLE_MASTER_ADVISER"%\' AND u.roles NOT LIKE \'%s:12:"ROLE_PARTNER"%\' AND u.roles NOT LIKE \'%s:11:"ROLE_PARENT"%\'');
+        }
+        elseif($role == 'ROLE_PAID') {
+            if(!in_array('g', $joins)) {
+                $qb = $qb->leftJoin('u.groups', 'g');
+                $joins[] = 'g';
             }
-            else if($role == 'ROLE_PAID') {
-                if(!in_array('g', $joins)) {
-                    $qb = $qb->leftJoin('u.groups', 'g');
-                    $joins[] = 'g';
-                }
-                $qb = $qb->andWhere('u.roles LIKE \'%s:9:"ROLE_PAID"%\' OR g.id IN (' . self::$paidStr . ')');
-            }
-            else {
-                $qb = $qb->andWhere('u.roles LIKE \'%s:' . strlen($role) . ':"' . $role . '"%\'');
-            }
+            $qb = $qb->andWhere('u.roles LIKE \'%s:9:"ROLE_PAID"%\' OR g.id IN (' . self::$paidStr . ')');
+        }
+        elseif(!empty($role)) {
+            $qb = $qb->andWhere('u.roles LIKE \'%s:' . strlen($role) . ':"' . $role . '"%\'');
         }
 
         if(!empty($group = $request->get('group'))) {

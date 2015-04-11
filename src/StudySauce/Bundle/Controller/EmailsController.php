@@ -609,6 +609,7 @@ class EmailsController extends Controller
 
         /** @var \Swift_Mailer $mailer */
         $mailer = $this->get('mailer');
+        $mailer = $this->get('mailer');
         $mailer->send($message);
     }
 

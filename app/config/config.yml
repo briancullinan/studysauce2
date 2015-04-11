@@ -4,7 +4,7 @@ imports:
 
 parameters:
     authorize_test_mode: true
-    defer_all_emails: "marketing@studysauce.com"
+    defer_all_emails: "studymarketing@mailinator.com"
 
 services:
     pdo:
@@ -205,10 +205,6 @@ hwi_oauth:
             type:                evernote
             client_id:           bjcullinan
             client_secret:       cd8e3ff10d842747
-            request_token_url:   https://sandbox.evernote.com/oauth
-            access_token_url:    https://sandbox.evernote.com/oauth
-            authorization_url:   https://sandbox.evernote.com/OAuth.action
-            infos_url:           https://sandbox.evernote.com/edam/note/shard/s4
             realm:               "evernote.com"
             user_response_class: StudySauce\Bundle\Security\PathUserResponse
             paths:

@@ -266,7 +266,7 @@
 
 #schedule .invalid-date ~ .highlighted-link .invalid-dates,
 #schedule .invalid-time ~ .highlighted-link .invalid-times,
-#schedule .invalid-only ~ .highlighted-link .invalid-only,
+#schedule.invalid-only .highlighted-link .invalid-only,
 #schedule .overlaps ~ .highlighted-link .overlaps-only {
     display:inline-block;
 }
@@ -395,7 +395,8 @@
 
     .schedule .class-row.overlaps .class-name:before
     {
-        margin-top:-4px;
+        margin-top: -4px;
+        top: 28px;
     }
 
     .highlighted-link

@@ -22,32 +22,62 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '#notes a[href="#view-note"]', function (evt) {
+    body.on('click', '#notes .note-row', function (evt) {
         evt.preventDefault();
         var notes = $('#notes'),
-            note = $(this).parents('.note-row'),
+            note = $(this),
             classes = $(this).parents('.notes').prev('.class-row').attr('class'),
             notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(classes)[1],
             courseId = (/course-id-([a-z0-9\-]*)(\s|$)/ig).exec(classes)[1];
-        notes.find('.note-title .title input').val($(this).text());
+        notes.find('.note-title .title input').val($(this).find('h4 a').text());
         if(notebook != '')
             notes.find('select[name="notebook"]').val(notebook);
         else
             notes.find('select[name="notebook"]').val(courseId);
         notes.find('.input.tags input')[0].selectize.setValue(JSON.parse(note.attr('data-tags')));
-        noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).parents('.note-row').attr('class'))[1];
+        noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notes.addClass('edit-note');
         CKEDITOR.instances['editor1'].setData(note.find('.summary en-note').html());
         $('#editor1').focus();
     });
 
-    body.on('click', '#notes a[href*="#add-note"]', function (evt) {
+    body.on('click', '#notes a[href="#delete-note"]', function (evt) {
+        evt.preventDefault();
+        var notes = $('#notes');
+        notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this));
+        $.ajax({
+            url: window.callbackPaths['notes_remove'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                noteId: noteId,
+                remove: true
+            },
+            success: function (data) {
+                notes.find('.squiggle').remove();
+                notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
+                var response = $(data);
+                notes.find('.term-row').remove();
+                response.find('.term-row').insertAfter('.new-study-note');
+                $('#editor1').blur();
+                CKEDITOR.instances.editor1.fire('blur');
+            },
+            error: function () {
+                notes.find('.squiggle').remove();
+            }
+        });
+
+    });
+
+    body.on('click', '#notes a[href="#add-note"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes');
         notes.find('.note-title input').val('');
         notes.find('select[name="notebook"]').val('');
-        notes.addClass('edit-note');
+        notes.find('.input.tags input')[0].selectize.setValue([]);
         noteId = '';
+        notes.addClass('edit-note');
         CKEDITOR.instances['editor1'].setData('');
         $('#editor1').focus();
     });
@@ -56,7 +86,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var notes = $('#notes');
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
-        loadingAnimation(notes.find('a[href="#save-note"]'));
+        loadingAnimation($(this));
         $.ajax({
             url: window.callbackPaths['notes_update'],
             type: 'POST',
@@ -70,7 +100,12 @@ $(document).ready(function () {
             },
             success: function (data) {
                 notes.find('.squiggle').remove();
-                notes.removeClass('edit-note');
+                notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
+                var response = $(data);
+                notes.find('.term-row').remove();
+                response.find('.term-row').insertAfter('.new-study-note');
+                notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
+                $('#editor1').blur();
                 CKEDITOR.instances.editor1.fire('blur');
             },
             error: function () {
@@ -79,8 +114,84 @@ $(document).ready(function () {
         });
     });
 
+    function updateNotes()
+    {
+        var notes = $('#notes');
+        $.ajax({
+            url: window.callbackPaths['notes'],
+            type: 'POST',
+            dataType: 'text',
+            data: {},
+            success: function (data) {
+                var response = $(data);
+                notes.find('.term-row').remove();
+                response.find('.term-row').insertAfter('.new-study-note');
+                notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
+            }
+        });
+    }
+
+    body.on('scheduled', updateNotes);
+
     body.on('hide', '#notes', function () {
         CKEDITOR.instances.editor1.fire('blur');
+        var notes = $('#notes');
+        if(notes.is('.edit-note')) {
+            notes.find('a[href="#save-note"]').trigger('click');
+        }
+    });
+
+    body.on('submit', '#add-notebook form', function (evt) {
+        evt.preventDefault();
+        var notes = $('#notes'),
+            dialog = $('#add-notebook');
+        if(dialog.find('.highlighted-link').is('.invalid')) {
+            dialog.find('input').focus();
+            return;
+        }
+        loadingAnimation(dialog.find('[value="#save-notebook"]'));
+        $.ajax({
+            url: window.callbackPaths['notes_notebook'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                name: dialog.find('input').val().trim()
+            },
+            success: function (data) {
+                dialog.find('.squiggle').remove();
+                var response = $(data);
+                notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
+                notes.find('select[name="notebook"]').val(notes.find('option:contains(' + dialog.find('input').val().trim() + ')').attr('value'));
+                dialog.find('input').val('');
+                dialog.modal('hide');
+            },
+            error: function () {
+                dialog.find('.squiggle').remove();
+            }
+        });
+    });
+
+    body.on('change', '#notes select[name="notebook"]', function (evt) {
+        if($(this).val() == 'Add notebook') {
+            evt.preventDefault();
+            $('#add-notebook').modal({show:true});
+            return false;
+        }
+    });
+
+    body.on('change', '#add-notebook input', function () {
+        var dialog = $('#add-notebook');
+        if($(this).val().trim() != '')
+            dialog.find('.highlighted-link').removeClass('invalid').addClass('valid');
+        else
+            dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
+    });
+    body.on('keyup', '#add-notebook input', function () {
+        var dialog = $('#add-notebook');
+        if($(this).val().trim() != '')
+            dialog.find('.highlighted-link').removeClass('invalid').addClass('valid');
+        else
+            dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
     });
 
     body.on('show', '#notes', function () {
@@ -109,13 +220,16 @@ $(document).ready(function () {
                 var editor = event.editor,
                     element = editor.element;
                 editor.on('blur',function( e ){
-                    editor.fire('focus');
+                    if(notes.is('.edit-note'))
+                        editor.fire('focus');
                 });
                 editor.on('focus',function( e ){
                     if($('#cke_editor1').width() != $('#editor1').outerWidth()) {
                         $('#cke_editor1').width($('#editor1').outerWidth());
-                        editor.fire('blur');
-                        editor.fire('focus');
+                        if(notes.is('.edit-note')) {
+                            editor.fire('blur');
+                            editor.fire('focus');
+                        }
                     }
                 });
                 $(window).resize(function () {

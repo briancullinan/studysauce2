@@ -73,7 +73,7 @@ $view['slots']->start('body'); ?>
             <div class="percent">
                 <label class="input">
                     <span>% of grade</span>
-                    <input type="text" placeholder="% of grade" value="" size="2" maxlength="255">
+                    <input type="text" value="" size="2" maxlength="255">
                 </label>
             </div>
             <div class="read-only">
@@ -185,7 +185,7 @@ $view['slots']->start('body'); ?>
                 empty($d->getCourse()) ? 'style="visibility:hidden;"' : ''); ?>>
                 <label class="input">
                     <span>% of grade</span>
-                    <input type="text" placeholder="% of grade" value="<?php print ($d->getPercent() > 0 ? $d->getPercent() : ''); ?>" size="2"
+                    <input type="text" value="<?php print ($d->getPercent() > 0 ? $d->getPercent() : ''); ?>" size="2"
                            maxlength="255">
                 </label>
             </div>
