@@ -94,7 +94,7 @@ $view['slots']->start('body'); ?>
                         ?> depends-on-<?php print implode(' depends-on-', $depends);
                         ?> includes-<?php print implode(' includes-', $includes);
                         ?> suite-<?php print $suite; ?> ">
-                            <td><?php print $t->getName(); ?>
+                            <td><?php print substr($t->getName(), 3); ?>
                                 <?php if (!empty($depends)) { ?>
                                 <br /><small>Depends on: <?php print implode(', ', $depends); ?></small>
                                 <?php } ?>

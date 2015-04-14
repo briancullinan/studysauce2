@@ -232,12 +232,16 @@ class NotesController extends Controller
             }
         }
 
-        if(empty($notebook)) {
+        if(empty($notebook) && !empty($request->get('notebookId'))) {
             // get class name
             /** @var Course $c */
             $c = self::getCourseByName($request->get('notebookId'), $user->getSchedules());
             $nb = new \EDAM\Types\Notebook(['name' => $c->getName()]);
             $notebook = $store->createNotebook($user->getEvernoteAccessToken(), $nb);
+        }
+
+        if(empty($notebook)) {
+            $notebook = $store->getDefaultNotebook($user->getEvernoteAccessToken());
         }
 
         /** @var \EDAM\Types\Note $note */

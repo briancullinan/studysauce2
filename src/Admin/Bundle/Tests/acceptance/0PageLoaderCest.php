@@ -333,19 +333,19 @@ class PageLoaderCest
     {
         $I->wantTo('fill out my class schedule');
         $I->seeAmOnUrl('/schedule');
-        $I->click('.selectize-input');
-        $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
-        $I->fillField('.selectize-input input', 'Ariz');
+        $I->click('#schedule .selectize-control');
+        $I->pressKey('#schedule .selectize-input input', WebDriverKeys::BACKSPACE);
+        $I->fillField('#schedule .selectize-input input', 'Ariz');
         $I->wait(10);
         $I->click('//span[contains(.,"Arizona State University")]');
-        $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
-        $I->click('.class-row:nth-child(1) input[value="M"] + i');
-        $I->click('.class-row:nth-child(1) input[value="W"] + i');
-        $I->click('.class-row:nth-child(1) input[value="F"] + i');
-        $I->fillField('.class-row:nth-child(1) .start-time input', '11');
-        $I->fillField('.class-row:nth-child(1) .end-time input', '12');
-        $I->fillField('.class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
-        $I->click('.class-row:nth-child(1) .end-date input');
+        $I->fillField('#schedule .class-row:nth-child(1) .class-name input', 'PHIL 101');
+        $I->click('#schedule .class-row:nth-child(1) input[value="M"] + i');
+        $I->click('#schedule .class-row:nth-child(1) input[value="W"] + i');
+        $I->click('#schedule .class-row:nth-child(1) input[value="F"] + i');
+        $I->fillField('#schedule .class-row:nth-child(1) .start-time input', '11');
+        $I->fillField('#schedule .class-row:nth-child(1) .end-time input', '12');
+        $I->fillField('#schedule .class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
+        $I->click('#schedule .class-row:nth-child(1) .end-date input');
         $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
         $I->click('#schedule .highlighted-link [value="#save-class"]');
         $I->wait(10);
@@ -597,6 +597,25 @@ class PageLoaderCest
         $I->click('[type="submit"]');
         $I->click('authorize');
         $I->seeInCurrentUrl('/notes');
+        $I->click('#right-panel a[href="#expand"] span');
+        $I->click('a[href="/schedule"]');
+        $I->wait(5);
+        $I->test('tryNewSchedule');
+        $I->seeAmOnUrl('/notes');
+        $I->click('study note');
+        $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
+        $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
+        for($i = 0; $i < strlen('' . time()); $i++)
+        {
+            $key = constant('WebDriverKeys::NUMPAD' . substr('' . time(), $i, 1));
+            $I->pressKey('#editor1', $key);
+        }
+        $I->click('#notes a[href="#save-note"]');
+        $I->wait(15);
+        $I->see('This is a new note');
+        $I->click('This is a new note');
+        $I->click('#notes a[href="#delete-note"]');
+        $I->wait(5);
     }
 
 }

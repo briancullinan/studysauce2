@@ -63,11 +63,11 @@ $view['slots']->start('body'); ?>
                         if(!isset($notes[$s->getId()]))
                             $notes[$s->getId()] = [];
 
-                        $keys = array_map(function ($i) use ($classes, $notes, $s) {return is_numeric($i) && isset($classes[$i])
+                        $keys = array_map(function ($i) use ($classes, $notes, $s, $notebooks) {return is_numeric($i) && isset($classes[$i])
                             ? $classes[$i]->getIndex()
-                            : empty($notes[$s->getId()][$i]) ? 99999999999 : 9999999999;}, array_keys($notes[$s->getId()]));
+                            : (isset($notebooks[$i]) ? strtolower($notebooks[$i]->getName()) : 9999999999);}, array_keys($notes[$s->getId()]));
                         $orig = array_keys($notes[$s->getId()]);
-                        array_multisort($keys, SORT_ASC, SORT_NUMERIC, $notes[$s->getId()], $orig);
+                        array_multisort($keys, SORT_ASC, SORT_STRING, $notes[$s->getId()], $orig);
                         $notes[$s->getId()] = array_combine($orig, array_values($notes[$s->getId()]));
                         foreach ($notes[$s->getId()] as $i => $books) {
                             /** @var Notebook $b */
@@ -97,7 +97,7 @@ $view['slots']->start('body'); ?>
                                 print ($first && !empty($books) ? ' selected' : ' '); ?>">
                                 <div class="class-name read-only">
                                     <label class="input"><span>Class name</span>
-                                        <?php if(!empty($classI)) { ?><i class="class<?php print $classI; ?>"></i><?php } ?>
+                                        <?php if($classI !== '') { ?><i class="class<?php print $classI; ?>"></i><?php } ?>
                                         <input type="text" value="<?php print $name; ?>" placeholder="Class name">
                                     </label>
                                 </div>

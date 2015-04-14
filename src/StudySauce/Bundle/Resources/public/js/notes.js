@@ -37,8 +37,10 @@ $(document).ready(function () {
         notes.find('.input.tags input')[0].selectize.setValue(JSON.parse(note.attr('data-tags')));
         noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notes.addClass('edit-note');
-        CKEDITOR.instances['editor1'].setData(note.find('.summary en-note').html());
-        $('#editor1').focus();
+        CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
+        setTimeout(function () {
+            CKEDITOR.instances.editor1.fire('focus');
+        }, 20);
     });
 
     body.on('click', '#notes a[href="#delete-note"]', function (evt) {
@@ -79,7 +81,9 @@ $(document).ready(function () {
         noteId = '';
         notes.addClass('edit-note');
         CKEDITOR.instances['editor1'].setData('');
-        $('#editor1').focus();
+        setTimeout(function () {
+            CKEDITOR.instances.editor1.fire('focus');
+        }, 20);
     });
 
     body.on('click', 'a[href="#save-note"]', function (evt) {
@@ -135,6 +139,7 @@ $(document).ready(function () {
 
     body.on('hide', '#notes', function () {
         CKEDITOR.instances.editor1.fire('blur');
+        $('#cke_editor1').hide();
         var notes = $('#notes');
         if(notes.is('.edit-note')) {
             notes.find('a[href="#save-note"]').trigger('click');
@@ -210,76 +215,6 @@ $(document).ready(function () {
 
             $(this).addClass('loaded');
 
-            CKEDITOR.on('dialogDefinition', function(e) {
-                var dialogDefinition = e.data.definition;
-                dialogDefinition.onShow = function() {
-                    this.move($(window).width() - this.getSize().width,0); // Top center
-                }
-            });
-            CKEDITOR.on( 'instanceReady', function( event ) {
-                var editor = event.editor,
-                    element = editor.element;
-                editor.on('blur',function( e ){
-                    if(notes.is('.edit-note'))
-                        editor.fire('focus');
-                });
-                editor.on('focus',function( e ){
-                    if($('#cke_editor1').width() != $('#editor1').outerWidth()) {
-                        $('#cke_editor1').width($('#editor1').outerWidth());
-                        if(notes.is('.edit-note')) {
-                            editor.fire('blur');
-                            editor.fire('focus');
-                        }
-                    }
-                });
-                $(window).resize(function () {
-                    $('#cke_editor1').width($('#editor1').outerWidth());
-                    editor.fire('resize');
-                });
-                editor.setReadOnly(false);
-                var rules = {
-                    indent: false,
-                    breakBeforeOpen: true,
-                    breakAfterOpen: false,
-                    breakBeforeClose: false,
-                    breakAfterClose: true
-                };
-                editor.dataProcessor.writer.setRules( 'p',rules);
-                editor.dataProcessor.writer.setRules( 'div',rules);
-                editor.dataProcessor.writer.setRules( 'hr',rules);
-                editor.dataProcessor.writer.setRules( 'br',rules);
-            });
-            CKEDITOR.on( 'instanceCreated', function( event ) {
-                var editor = event.editor,
-                    element = editor.element;
-
-                // Customize editors for headers and tag list.
-                // These editors don't need features like smileys, templates, iframes etc.
-                if ( element.is( 'h1', 'h2', 'h3' ) || element.getAttribute( 'id' ) == 'taglist' ) {
-                    // Customize the editor configurations on "configLoaded" event,
-                    // which is fired after the configuration file loading and
-                    // execution. This makes it possible to change the
-                    // configurations before the editor initialization takes place.
-                    editor.on( 'configLoaded', function() {
-
-                        debugger;
-                        // Remove unnecessary plugins to make the editor simpler.
-                        editor.config.removePlugins = 'colorbutton,find,flash,font,' +
-                        'forms,iframe,image,newpage,removeformat,' +
-                        'smiley,specialchar,stylescombo,templates';
-
-                        // Rearrange the layout of the toolbar.
-                        editor.config.toolbarGroups = [
-                            { name: 'editing',		groups: [ 'basicstyles', 'links' ] },
-                            { name: 'undo' },
-                            { name: 'clipboard',	groups: [ 'selection', 'clipboard' ] },
-                            { name: 'about' }
-                        ];
-                    });
-                }
-
-            });
-
             // initialize tags selectize
             notes.find('.input.tags input').selectize({
                 persist:false,
@@ -295,6 +230,15 @@ $(document).ready(function () {
                     }
                 }
             });
+
+            CKEDITOR.on('dialogDefinition', function(e) {
+                var dialogDefinition = e.data.definition;
+                dialogDefinition.onShow = function() {
+                    this.move($(window).width() - this.getSize().width,0); // Top center
+                }
+            });
+
+            setTimeout(initializeCKE, 100);
         }
         else {
             if(notes.is('.edit-note')) {
@@ -303,6 +247,38 @@ $(document).ready(function () {
         }
     });
 
+    function initializeCKE()
+    {
+        var notes = $('#notes');
+        if(typeof CKEDITOR.instances.editor1 == 'undefined' ||
+            typeof CKEDITOR.instances.editor1.setReadOnly == 'undefined' ||
+            typeof CKEDITOR.instances.editor1.editable() == 'undefined') {
+            setTimeout(initializeCKE, 100);
+            return;
+        }
+        var editor = CKEDITOR.instances.editor1;
+        editor.on('blur',function( e ){
+            if(notes.is('.edit-note') && notes.is(':visible'))
+                editor.fire('focus');
+        });
+        editor.on('focus',function( e ){
+            CKEDITOR.instances.editor1.setReadOnly(false);
+            if($('#cke_editor1').width() != $('#editor1').outerWidth()) {
+                $('#cke_editor1').width($('#editor1').outerWidth());
+                if(notes.is('.edit-note')) {
+                    editor.fire('blur');
+                    editor.fire('focus');
+                }
+            }
+        });
+        editor.setReadOnly(false);
+    }
+
+    $(window).resize(function () {
+        $('#cke_editor1').width($('#editor1').outerWidth());
+        if(typeof CKEDITOR.instances.editor1 != 'undefined')
+            CKEDITOR.instances.editor1.fire('resize');
+    });
 
 });
 

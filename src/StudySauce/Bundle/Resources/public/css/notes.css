@@ -85,6 +85,7 @@
     padding: 10px;
     cursor: pointer;
     font-size: 80%;
+    vertical-align: top;
 }
 
 #notes .note-row h4 a
