@@ -53,3 +53,10 @@ services:
             - "itekIO^#("
         calls:
             - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+
+hwi_oauth:
+    resource_owners:
+        evernote:
+            request_token_url: https://www.evernote.com/oauth
+            authorization_url: https://www.evernote.com/OAuth.action
+            access_token_url: https://www.evernote.com/oauth

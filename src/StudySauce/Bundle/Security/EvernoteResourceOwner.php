@@ -12,6 +12,7 @@
 namespace StudySauce\Bundle\Security;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Buzz\Message\RequestInterface;
@@ -47,7 +48,6 @@ class EvernoteResourceOwner extends GenericOAuth1ResourceOwner
         if (!class_exists('Evernote\\Client')) {
             throw new \RuntimeException('Install evernote\'s php sdk to use the Evernote resource owner');
         }
-
         $this->options['request_token_url'] = sprintf($this->options['request_token_url'], $this->options['sandbox'] ? 'sandbox' : 'www');
         $this->options['authorization_url'] = sprintf($this->options['authorization_url'], $this->options['sandbox'] ? 'sandbox' : 'www');
         $this->options['access_token_url'] = sprintf($this->options['access_token_url'], $this->options['sandbox'] ? 'sandbox' : 'www');
@@ -56,7 +56,7 @@ class EvernoteResourceOwner extends GenericOAuth1ResourceOwner
     /** {@inheritDoc} */
     public function getUserInformation(array $accessToken, array $extraParameters = [])
     {
-        $client = new EvernoteClient($accessToken['oauth_token'], $this->options['sandbox']);
+        $client = new EvernoteClient($accessToken['oauth_token'], strpos($this->options['request_token_url'], 'www') === false);
         $user = $client->getUserNotestore();
 
         $response = $this->getUserResponse();
@@ -75,12 +75,12 @@ class EvernoteResourceOwner extends GenericOAuth1ResourceOwner
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'sandbox' => true,
             'infos_url' => null,
             'request_token_url' => 'https://%s.evernote.com/oauth',
             'authorization_url' => 'https://%s.evernote.com/OAuth.action',
             'access_token_url' => 'https://%s.evernote.com/oauth'
-        ));
+        ]);
     }
 }
