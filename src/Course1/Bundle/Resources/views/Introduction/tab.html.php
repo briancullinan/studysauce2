@@ -29,9 +29,3 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
 </div>
 <?php $view['slots']->stop();
 
-$view['slots']->start('sincludes');
-if(!empty($services))
-{
-    print $this->render('StudySauceBundle:Dialogs:account-options.html.php', ['id' => 'account-options', 'services' => $services]);
-}
-$view['slots']->stop();

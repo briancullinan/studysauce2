@@ -37,13 +37,14 @@ class Course1Cest
     {
         $I->wantTo('complete all the free courses');
         $I->seeInCurrentUrl('/course/1/lesson/1/step');
+        $I->click('#account-options a[href="#close"]');
         $I->test('tryCourse1Introduction');
         $I->seeInCurrentUrl('/course/1/lesson/2/step');
         $I->test('tryCourse1SettingGoals');
         $I->seeInCurrentUrl('/goals');
         $I->test('tryNewGoals');
         // use the menu to get to lesson 3
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 1');
         $I->click('Distractions');
         $I->wait(5);
@@ -52,7 +53,7 @@ class Course1Cest
         $I->seeInCurrentUrl('/schedule');
         $I->test('tryNewSchedule');
         // use the menu to get to lesson 4
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 1');
         $I->click('Procrastination');
         $I->wait(5);
@@ -61,7 +62,7 @@ class Course1Cest
         $I->seeInCurrentUrl('/deadlines');
         $I->test('tryNewDeadlines');
         // use the menu to get to lesson 5
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 1');
         $I->click('Study environment');
         $I->wait(5);
@@ -71,7 +72,7 @@ class Course1Cest
         $I->test('tryNewCheckin');
         $I->seeInCurrentUrl('/metrics');
         // use the menu to get to lesson 6
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 1');
         $I->click('Partners');
         $I->wait(5);
@@ -81,7 +82,7 @@ class Course1Cest
         $I->test('tryNewPartner');
         // use the menu to get to lesson 7
         /*
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 1');
         $I->click('End of Level 1');
         $I->wait(5);

@@ -41,7 +41,7 @@ class Course2Cest
         $I->seeInCurrentUrl('/metrics');
         $I->test('tryNewMetrics');
         // use the menu to get to the next lesson
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 2');
         $I->click('Study plan');
         $I->wait(5);
@@ -50,7 +50,7 @@ class Course2Cest
         $I->seeInCurrentUrl('/plan');
         $I->test('tryNewPlan');
         // use the menu to get to lesson 4
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 2');
         $I->click('Interleaving');
         $I->wait(5);
@@ -59,7 +59,7 @@ class Course2Cest
         $I->seeInCurrentUrl('/checkin');
         $I->test('tryNewCheckin');
         // use the menu to get to lesson 5
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 2');
         $I->click('Studying for tests');
         $I->wait(5);
@@ -67,7 +67,7 @@ class Course2Cest
         $I->test('tryCourse2StudyTests');
         $I->test('tryNewHome');
         // use the menu to get to lesson 6
-        $I->click('#left-panel a[href="#expand"]');
+        $I->click('#left-panel a[href="#expand"] span');
         $I->click('Level 2');
         $I->click('Test-taking');
         $I->wait(5);

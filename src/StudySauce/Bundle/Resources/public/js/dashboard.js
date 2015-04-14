@@ -166,7 +166,9 @@ $(document).ready(function () {
         if((to = $(this).data('timer')) != null)
             clearTimeout(to);
         $(this).tipsy({trigger: 'manual'});
-        $(this).tipsy('show');
+        setTimeout(function () {
+            $(this).tipsy('show');
+        }, 500);
         var tip = $(this).data('tipsy').$tip;
         if(tip == null)
             return;

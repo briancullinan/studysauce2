@@ -61,6 +61,11 @@
     float:none;
 }
 
+#notes .term-editor .big-add span
+{
+    font-size: 30px;
+}
+
 #notes .notes:last-of-type
 {
     margin-bottom:0;
@@ -436,6 +441,18 @@
     #notes .note-row
     {
         width:50%;
+    }
+
+    #notes-connect .evernote-name,
+    #notes-connect .site-name
+    {
+        display:block;
+        width:auto;
+    }
+
+    .connect-or
+    {
+        margin: 20px 0;
     }
 }
 

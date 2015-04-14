@@ -92,6 +92,8 @@
 {
     padding: 5px 0 5px 40px;
     text-align: left;
+    margin-top:20px;
+    white-space: nowrap;
 }
 
 #metrics ol {
@@ -240,11 +242,19 @@
         display:inline;
     }
 
-    #metrics .checkin-row .class-name,
-    #metrics .checkin-row .class-date,
+    #metrics .checkin-row .class-name
+    {
+        width:40%;
+    }
+
+    #metrics .checkin-row .class-date
+    {
+        width: 40%;
+    }
+
     #metrics .checkin-row .class-time
     {
-        width:33.33%;
+        width:20%;
     }
 
     #metrics #legend,
@@ -280,4 +290,21 @@
         margin:0 auto;
         position:static;
     }
+
+
+    #metrics .checkin-row .class-name
+    {
+        width:50%;
+    }
+
+    #metrics .checkin-row .class-date
+    {
+        width: 30%;
+    }
+
+    #metrics .checkin-row .class-time
+    {
+        width:20%;
+    }
+
 }

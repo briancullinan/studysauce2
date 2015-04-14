@@ -361,10 +361,10 @@ class PageLoaderCest
         $I->seeAmOnUrl('/deadlines');
         $I->selectOption('.deadline-row.edit .class-name select', 'PHIL 101');
         $I->fillField('.deadline-row.edit .assignment input', 'Exam 1');
-        $I->checkOption('.deadline-row.edit input[value="86400"]');
-        $I->checkOption('.deadline-row.edit input[value="172800"]');
-        $I->checkOption('.deadline-row.edit input[value="345600"]');
-        $I->checkOption('.deadline-row.edit input[value="604800"]');
+        $I->checkOption('.deadline-row.edit input[value="86400"] + i');
+        $I->checkOption('.deadline-row.edit input[value="172800"] + i');
+        $I->checkOption('.deadline-row.edit input[value="345600"] + i');
+        $I->checkOption('.deadline-row.edit input[value="604800"] + i');
         $I->click('.deadline-row.edit .due-date input');
         $d = date_add(new \DateTime(), new \DateInterval('P8D'))->format('j');
         if($d < 8) {
@@ -568,6 +568,20 @@ class PageLoaderCest
             $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
         });
         $I->see('Exam 1');
+    }
+
+    /**
+     * @depends tryStudentRegister
+     * @param AcceptanceTester $I
+     */
+    public function trySocialLogin(AcceptanceTester $I)
+    {
+        $I->amOnPage('/course/1/lesson/1/step');
+        $I->click('a[href*="/google"]');
+        $I->fillField('input[name="username"]', 'brian@studysauce.com');
+        $I->fillField('input[name="password"]', 'Da1ddy23');
+        $I->click('[type="submit"]');
+        $I->seeInCurrentUrl('/course/1/lesson/1/step');
     }
 
     /**

@@ -3,18 +3,23 @@
 namespace StudySauce\Bundle\Controller;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
 use EDAM\Types\Tag;
 use Evernote\Model\Note;
 use Evernote\Model\Notebook;
 use Evernote\Model\PlainTextNoteContent;
 use Evernote\Model\SearchResult;
+use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Evernote\Client as EvernoteClient;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class ScheduleController
@@ -22,6 +27,31 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class NotesController extends Controller
 {
+    /**
+     * @param ContainerInterface $container
+     */
+    public static function getDemoNotes($container)
+    {
+
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $container->get('fos_user.user_manager');
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
+            $guest = $userManager->findUserByUsername('guest');
+
+            $user->setEvernoteId($guest->getEvernoteId());
+            $user->setEvernoteAccessToken($guest->getEvernoteAccessToken());
+            $userManager->updateUser($user);
+        }
+
+    }
+
     /**
      * @param $name
      * @param Collection $schedules
@@ -121,6 +151,12 @@ class NotesController extends Controller
 
                         $notes[empty($s) ? '' : $s->getId()][!empty($c) ? $c->getId() : $b->getGuid()][] = $n;
                     }
+
+                }
+
+                // show empty notebooks in current term
+                if(empty($results)) {
+                    $notes[empty($schedules->first())?'':$schedules->first()->getId()][$b->getGuid()] = [];
                 }
             }
         }

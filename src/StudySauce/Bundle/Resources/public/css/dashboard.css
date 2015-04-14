@@ -384,6 +384,22 @@ a[href="#remove-deadline"]:hover
     display:none;
 }
 */
+@media print
+{
+    .header-wrapper,
+    .footer,
+    .highlighted-link,
+    #left-panel, #right-panel
+    {
+        display:none;
+    }
+
+    body
+    {
+        background: transparent;
+    }
+
+}
 
 @media all and (max-width: 1300px)
 {
@@ -522,3 +538,4 @@ a[href="#remove-deadline"]:hover
     }
 
 }
+

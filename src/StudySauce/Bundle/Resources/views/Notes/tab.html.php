@@ -63,9 +63,9 @@ $view['slots']->start('body'); ?>
                         if(!isset($notes[$s->getId()]))
                             $notes[$s->getId()] = [];
 
-                        $keys = array_map(function ($i) use ($classes) {return is_numeric($i) && isset($classes[$i])
+                        $keys = array_map(function ($i) use ($classes, $notes, $s) {return is_numeric($i) && isset($classes[$i])
                             ? $classes[$i]->getIndex()
-                            : 9999999999;}, array_keys($notes[$s->getId()]));
+                            : empty($notes[$s->getId()][$i]) ? 99999999999 : 9999999999;}, array_keys($notes[$s->getId()]));
                         $orig = array_keys($notes[$s->getId()]);
                         array_multisort($keys, SORT_ASC, SORT_NUMERIC, $notes[$s->getId()], $orig);
                         $notes[$s->getId()] = array_combine($orig, array_values($notes[$s->getId()]));
@@ -94,9 +94,10 @@ $view['slots']->start('body'); ?>
                             }
                             ?>
                             <div class="class-row notebook-id-<?php print $id; ?> course-id-<?php print (is_numeric($i) ? $i : '');
-                                print ($first ? ' selected' : ' '); ?>">
+                                print ($first && !empty($books) ? ' selected' : ' '); ?>">
                                 <div class="class-name read-only">
-                                    <label class="input"><span>Class name</span><i class="class<?php print $classI; ?>"></i>
+                                    <label class="input"><span>Class name</span>
+                                        <?php if(!empty($classI)) { ?><i class="class<?php print $classI; ?>"></i><?php } ?>
                                         <input type="text" value="<?php print $name; ?>" placeholder="Class name">
                                     </label>
                                 </div>
@@ -107,9 +108,7 @@ $view['slots']->start('body'); ?>
                                     /** @var Note $n */
                                     ?>
                                     <div class="note-row note-id-<?php print $n->getGuid(); ?>" data-tags="<?php print htmlentities(json_encode($n->getEdamNote()->tagGuids)); ?>">
-                                        <h4 class="note-name">
-                                            <a href="#view-note"><?php print $n->getTitle(); ?></a>
-                                        </h4>
+                                        <h4 class="note-name"><a href="#view-note"><?php print $n->getTitle(); ?></a></h4>
                                         <div class="summary">
                                             <small class="date"><?php print date_timestamp_set(new \DateTime(), $n->getEdamNote()->updated / 1000)->format('j M'); ?></small>
                                             <?php print $n->getContent()->toEnml(); ?></div>

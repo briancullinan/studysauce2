@@ -30,6 +30,10 @@ if (!$courseIncluded) {
         $view['slots']->stop();
     }
     $view['slots']->start('sincludes');
+    if(!empty($services))
+    {
+        print $this->render('StudySauceBundle:Dialogs:account-options.html.php', ['id' => 'account-options', 'services' => $services]);
+    }
     $view['slots']->output('sincludes2');
     $pos = strpos($request->getUri(), '/_fragment');
     if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment')) {

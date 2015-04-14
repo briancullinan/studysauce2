@@ -160,11 +160,6 @@
     display:none;
 }
 
-.schedule .read-only .class-name label span
-{
-    margin-left:-40px;
-}
-
 .schedule .class-row .recurring
 {
     text-align: center;

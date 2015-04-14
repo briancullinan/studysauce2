@@ -20,6 +20,7 @@ use StudySauce\Bundle\Controller\DeadlinesController;
 use StudySauce\Bundle\Controller\GoalsController;
 use StudySauce\Bundle\Controller\HomeController;
 use StudySauce\Bundle\Controller\MetricsController;
+use StudySauce\Bundle\Controller\NotesController;
 use StudySauce\Bundle\Controller\PartnerController;
 use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -208,6 +209,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
                 CalcController::getDemoCalculations($this->container);
                 CourseController::getDemoCourses($this->container);
                 PartnerController::getDemoPartner($this->container);
+                NotesController::getDemoNotes($this->container);
             }
             list($route, $options) = HomeController::getUserRedirect($user);
             $response = new RedirectResponse($router->generate($route, $options));
