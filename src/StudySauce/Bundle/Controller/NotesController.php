@@ -78,7 +78,9 @@ class NotesController extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws EDAMSystemException
+     * @throws \Exception
      */
     public function indexAction()
     {
@@ -93,7 +95,17 @@ class NotesController extends Controller
         $allTags = [];
         if(!empty($user->getEvernoteAccessToken())) {
             $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
-            $notebooks = $client->listNotebooks();
+            try {
+                $notebooks = $client->listPersonalNotebooks();
+            }
+            catch(EDAMSystemException $e) {
+                if($e->errorCode == 19) {
+                    sleep(ceil($e->rateLimitDuration / 1000));
+                    $notebooks = $client->listPersonalNotebooks();
+                }
+                else throw $e;
+            }
+            $notebooks = array_map(function (\EDAM\Types\Notebook $book) { return new Notebook($book);}, $notebooks);
             foreach($notebooks as $b) {
                 /** @var Notebook $b */
                 $bookTags = $client->getUserNotestore()
@@ -195,6 +207,8 @@ class NotesController extends Controller
      * @param array $noteIds
      * @param Request $request
      * @return Response
+     * @throws EDAMSystemException
+     * @throws \Exception
      */
     public function noteSummaryAction($noteIds = null, Request $request = null)
     {
@@ -218,6 +232,7 @@ class NotesController extends Controller
                 if($e->errorCode == 19) {
                     sleep(ceil($e->rateLimitDuration / 1000));
                 }
+                else throw $e;
             }
         }
         /** @var Note $n */
