@@ -114,6 +114,12 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $files;
 
     /**
+     * @ORM\OneToMany(targetEntity="StudyNote", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $notes;
+
+    /**
      * @ORM\OneToMany(targetEntity="ContactMessage", mappedBy="user")
      * @ORM\OrderBy({"created" = "DESC"})
      */

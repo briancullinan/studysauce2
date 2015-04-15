@@ -14,6 +14,7 @@ use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
+use StudySauce\Bundle\Entity\StudyNote;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Evernote\Client as EvernoteClient;
@@ -86,6 +87,9 @@ class NotesController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
 
         $schedules = $user->getSchedules();
 
@@ -163,6 +167,18 @@ class NotesController extends Controller
                                 })->first();
                         }
 
+                        // check our cache of notes, if it has been updated, remove it from the database to force it to redownload from evernote
+                        /** @var StudyNote[] $stored */
+                        $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
+                            ->andWhere('n.id = :id')
+                            ->setParameter('id', $r->guid)
+                            ->getQuery()
+                            ->getResult();
+                        if(!empty($stored) && $stored[0]->getUpdated()->getTimestamp() < $r->updated / 1000) {
+                            $orm->remove($stored);
+                            $orm->flush();
+                        }
+
                         $notes[empty($s) ? '' : $s->getId()][!empty($c) ? $c->getId() : $b->getGuid()][] = $r;
                     }
 
@@ -212,6 +228,8 @@ class NotesController extends Controller
      */
     public function noteSummaryAction($noteIds = null, Request $request = null)
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         /** @var User $user */
         $user = $this->getUser();
         $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
@@ -222,8 +240,20 @@ class NotesController extends Controller
         $i = 0;
         while($i < count($noteIds)) {
             try {
-                $n = $client->getNote($noteIds[$i]);
-                $content = $n->getContent()->toEnml();
+                /** @var StudyNote[] $stored */
+                $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
+                    ->andWhere('n.id = :id')
+                    ->setParameter('id', $noteIds[$i])
+                    ->getQuery()
+                    ->getResult();
+                if(!empty($stored)) {
+                    $content = $stored[0]->getContent();
+                }
+                else {
+                    $n = $client->getNote($noteIds[$i]);
+                    $content = $n->getContent()->toEnml();
+                    $this->saveNote($n->getEdamNote());
+                }
                 $cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
                 $result[$noteIds[$i]] = $cleaned;
                 $i++;
@@ -235,8 +265,31 @@ class NotesController extends Controller
                 else throw $e;
             }
         }
-        /** @var Note $n */
+
         return new JsonResponse($result);
+    }
+
+    /**
+     * @param \EDAM\Types\Note $note
+     */
+    public function saveNote(\EDAM\Types\Note $note)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        $stored = new StudyNote();
+        $stored->setContent($note->content);
+        $stored->setId($note->guid);
+        $stored->setCreated(date_timestamp_set(new \DateTime(), $note->created / 1000));
+        $stored->setUpdated(date_timestamp_set(new \DateTime(), $note->updated / 1000));
+        $props = (array)$note;
+        unset($props['content']);
+        unset($props['contentHash']);
+        unset($props['attributes']);
+        unset($props['resources']);
+        //$props['attributes'] = (array)$props['attributes'];
+        $stored->setProperties($props);
+        $orm->persist($stored);
+        $orm->flush();
     }
 
     /**
@@ -247,10 +300,25 @@ class NotesController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
-        /** @var Note $n */
-        $n = $client->getNote($request->get('noteId'));
-        return new Response($n->getContent()->toEnml());
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var StudyNote[] $stored */
+        $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
+            ->andWhere('n.id = :id')
+            ->setParameter('id', $request->get('noteId'))
+            ->getQuery()
+            ->getResult();
+        if(!empty($stored)) {
+            return new Response($stored[0]->getContent());
+        }
+        else {
+            $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
+
+            /** @var Note $n */
+            $n = $client->getNote($request->get('noteId'));
+            return new Response($n->getContent()->toEnml());
+        }
     }
 
     /**
