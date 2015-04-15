@@ -277,7 +277,8 @@ class NotesController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
         $stored = new StudyNote();
-        $stored->setContent($note->content);
+        $content = mb_convert_encoding($note->content, "ISO-8859-1", mb_detect_encoding($note->content, "UTF-8, ISO-8859-1, ISO-8859-15", true));
+        $stored->setContent($content);
         $stored->setId($note->guid);
         $stored->setCreated(date_timestamp_set(new \DateTime(), $note->created / 1000));
         $stored->setUpdated(date_timestamp_set(new \DateTime(), $note->updated / 1000));
