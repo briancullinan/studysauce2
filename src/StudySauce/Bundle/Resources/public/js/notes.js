@@ -231,7 +231,7 @@ $(document).ready(function () {
                 }
                 var noteIds = notes.find('.note-row.loading').map(function () {
                     return (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
-                }).toArray();
+                }).toArray().splice(0, 10);
                 loading = true;
                 $.ajax({
                     url: window.callbackPaths['notes_summary'],
