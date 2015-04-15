@@ -10,12 +10,15 @@ class PathUserResponse extends \HWI\Bundle\OAuthBundle\OAuth\Response\PathUserRe
 {
     public $username;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getUsername()
     {
         if(!empty($this->username))
             return $this->username;
         else
-            parent::getUsername();
+            return parent::getUsername();
     }
 
     /**
