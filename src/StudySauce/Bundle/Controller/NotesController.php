@@ -247,7 +247,7 @@ class NotesController extends Controller
                     ->getQuery()
                     ->getResult();
                 if(!empty($stored)) {
-                    $content = $stored[0]->getContent();
+                    $content = base64_decode($stored[0]->getContent());
                 }
                 else {
                     $n = $client->getNote($noteIds[$i]);
@@ -277,7 +277,7 @@ class NotesController extends Controller
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
         $stored = new StudyNote();
-        $content = mb_convert_encoding($note->content, "ISO-8859-1", mb_detect_encoding($note->content, "UTF-8, ISO-8859-1, ISO-8859-15", true));
+        $content = base64_encode($note->content);
         $stored->setContent($content);
         $stored->setId($note->guid);
         $stored->setCreated(date_timestamp_set(new \DateTime(), $note->created / 1000));
@@ -311,7 +311,7 @@ class NotesController extends Controller
             ->getQuery()
             ->getResult();
         if(!empty($stored)) {
-            return new Response($stored[0]->getContent());
+            return new Response(base64_decode($stored[0]->getContent()));
         }
         else {
             $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
