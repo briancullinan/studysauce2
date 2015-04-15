@@ -13,4 +13,6 @@ class SearchResult
     public $created;
 
     public $updated;
+
+    public $tagGuids;
 } 

@@ -2,6 +2,7 @@
 
 use Evernote\Model\Note;
 use Evernote\Model\Notebook;
+use Evernote\Model\SearchResult;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 
@@ -38,6 +39,7 @@ $view['slots']->start('body'); ?>
             </div>
             <?php
             $first = true;
+            $notesCount = 0;
             foreach ($schedules as $s) {
                 /** @var Schedule $s */
                 $classes = array_combine(
@@ -105,13 +107,14 @@ $view['slots']->start('body'); ?>
                             <div class="notes">
                                 <?php
                                 foreach ($books as $n) {
-                                    /** @var Note $n */
+                                    /** @var SearchResult $n */
+                                    $guid = $n->guid;
                                     ?>
-                                    <div class="note-row note-id-<?php print $n->getGuid(); ?>" data-tags="<?php print htmlentities(json_encode($n->getEdamNote()->tagGuids)); ?>">
-                                        <h4 class="note-name"><a href="#view-note"><?php print $n->getTitle(); ?></a></h4>
+                                    <div class="note-row note-id-<?php print $n->guid; ?> <?php print ($notesCount < 10 ? 'loaded' : 'loading'); ?>" data-tags="<?php print htmlentities(json_encode($n->tagGuids)); ?>">
+                                        <h4 class="note-name"><a href="#view-note"><?php print $n->title; ?></a></h4>
                                         <div class="summary">
-                                            <small class="date"><?php print date_timestamp_set(new \DateTime(), $n->getEdamNote()->updated / 1000)->format('j M'); ?></small>
-                                            <?php print $n->getContent()->toEnml(); ?></div>
+                                            <small class="date"><?php print date_timestamp_set(new \DateTime(), $n->updated / 1000)->format('j M'); ?></small>
+                                            <?php print ($notesCount++ < 10 ? json_decode($summary([$n->guid])->getContent())->$guid : ''); ?></div>
                                     </div>
                                 <?php } ?>
                             </div>

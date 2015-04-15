@@ -38,6 +38,17 @@ $(document).ready(function () {
         noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notes.addClass('edit-note');
         CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
+        $.ajax({
+            url: window.callbackPaths['notes_note'],
+            type: 'GET',
+            dataType: 'text',
+            data: {
+                noteId: noteId
+            },
+            success: function (data) {
+                CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
+            }
+        });
         setTimeout(function () {
             CKEDITOR.instances.editor1.fire('focus');
         }, 20);
@@ -201,7 +212,8 @@ $(document).ready(function () {
 
     body.on('show', '#notes', function () {
 
-        var notes = $('#notes');
+        var notes = $('#notes'),
+            loading = false;
 
         if($('#notes-connect').modal({
                 backdrop: 'static',
@@ -212,6 +224,35 @@ $(document).ready(function () {
 
         // load editor
         if(!$(this).is('.loaded')) {
+
+            setInterval(function () {
+                if(notes.find('.note-row.loading').length == 0 || loading) {
+                    return;
+                }
+                var noteIds = notes.find('.note-row.loading').map(function () {
+                    return (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
+                }).toArray();
+                loading = true;
+                $.ajax({
+                    url: window.callbackPaths['notes_summary'],
+                    type: 'GET',
+                    dateType: 'json',
+                    data: {
+                        noteIds: noteIds
+                    },
+                    success: function (data) {
+                        for(var i in data) {
+                            if(data.hasOwnProperty(i)) {
+                                notes.find('.note-row.note-id-' + i).removeClass('loading').addClass('loaded').find('.summary').html(data[i]);
+                            }
+                        }
+                        loading = false;
+                    },
+                    error: function () {
+                        loading = false;
+                    }
+                })
+            }, 1000);
 
             $(this).addClass('loaded');
 

@@ -17,7 +17,9 @@ use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Evernote\Client as EvernoteClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -101,13 +103,12 @@ class NotesController extends Controller
                 $results = $client->findNotesWithSearch(null, $b);
                 foreach($results as $r) {
                     /** @var SearchResult $r */
+
                     if($r->type === 1) {
-                        /** @var Note $n */
-                        $n = $client->getNote($r->guid);
                         $s = null;
 
                         $tags = array_map(function ($t) use ($allTags) {
-                            return $allTags[$t];}, $n->getEdamNote()->tagGuids ?: []);
+                            return $allTags[$t];}, $r->tagGuids ?: []);
 
                         // find course with matching name
                         /** @var Course $c */
@@ -149,7 +150,7 @@ class NotesController extends Controller
                                 })->first();
                         }
 
-                        $notes[empty($s) ? '' : $s->getId()][!empty($c) ? $c->getId() : $b->getGuid()][] = $n;
+                        $notes[empty($s) ? '' : $s->getId()][!empty($c) ? $c->getId() : $b->getGuid()][] = $r;
                     }
 
                 }
@@ -182,8 +183,49 @@ class NotesController extends Controller
                 $notebooks),
             'notes' => $notes,
             'allTags' => array_values(array_map(function (Tag $t) {
-                return ['value' => $t->guid, 'text' => $t->name];}, $allTags))
+                return ['value' => $t->guid, 'text' => $t->name];}, $allTags)),
+            'summary' => function ($noteId) {
+                return $this->noteSummaryAction($noteId);
+            }
         ]);
+    }
+
+    /**
+     * @param array $noteIds
+     * @param Request $request
+     * @return Response
+     */
+    public function noteSummaryAction($noteIds = null, Request $request = null)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
+        $result = [];
+        if(empty($noteIds) && !empty($request)) {
+            $noteIds = $request->get('noteIds');
+        }
+        foreach($noteIds as $noteId) {
+            $n = $client->getNote($noteId);
+            $content = $n->getContent()->toEnml();
+            $cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
+            $result[$noteId] = $cleaned;
+        }
+        /** @var Note $n */
+        return new JsonResponse($result);
+    }
+
+    /**
+     * @param $request
+     * @return Response
+     */
+    public function noteAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
+        /** @var Note $n */
+        $n = $client->getNote($request->get('noteId'));
+        return new Response($n->getContent()->toEnml());
     }
 
     /**

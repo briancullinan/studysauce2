@@ -761,6 +761,10 @@ class Client
         $resultSpec->includeCreated           = true;
         $resultSpec->includeUpdated           = true;
         $resultSpec->includeUpdateSequenceNum = true;
+        $resultSpec->includeTagGuids          = true;
+        $resultSpec->includeAttributes        = true;
+        $resultSpec->includeLargestResourceMime = true;
+        $resultSpec->includeLargestResourceSize = true;
 
         $noteFilter = new NoteFilter();
         $noteFilter->words = $noteSearch->getSearchString();
@@ -1185,6 +1189,7 @@ class Client
             $result->created           = $metadata->created;
             $result->updated           = $metadata->updated;
             $result->updateSequenceNum = $metadata->updateSequenceNum;
+            $result->tagGuids          = $metadata->tagGuids;
 
             $findNotesResults[] = $result;
 
