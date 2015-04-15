@@ -323,7 +323,7 @@ class Client
                     try {
                         $resultNotebooks[] = $this->getNoteBookByLinkedNotebook($linkedNotebook);
                     } catch (\Exception $e) {
-                        echo "\nNope";
+
                     }
                 };
             }
