@@ -91,13 +91,12 @@ class UserProvider extends BaseUserProvider
         /** @var Request $request */
         //$request = $this->container->get('request');
         /** @var PathUserResponse $response */
-        $username = $response->getUsername();
-        if(empty($username)) {
-            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $username));
+        if(empty($response->getUsername()) && empty($response->getEmail())) {
+            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $response->getUsername()));
         }
         /** @var User $user */
         $prop = $this->getProperty($response);
-        $user = $this->userManager->findUserBy([$prop => $username]);
+        $user = $this->userManager->findUserBy([$prop => $response->getUsername()]);
         // allow user with same email address to connect because we trust facebook and google auth
         if(empty($user))
             $user = $this->userManager->findUserBy(['email' => $response->getEmail()]);
@@ -107,23 +106,10 @@ class UserProvider extends BaseUserProvider
 
         // create new user here
         if (null !== $user) {
-            //I have set all requested data with the user's username
-            //modify here with relevant data
-            /*
-            $user = $this->userManager->createUser();
-            $user->setUsername($service.'.'.$username);
-            $factory = $this->encoderFactory->getEncoder($user);
-            $user->setPassword($factory->encodePassword(md5(uniqid(mt_rand(), true)), $user->getSalt()));
-            $user->setEnabled(true);
-            $user->setEmail($response->getEmail() ?: ($username . '@example.org'));
-            $this->userManager->updateCanonicalFields($user);
-            // reconnect social users to adviser invites
-            InviteListener::setInviteRelationship($orm, $request, $user);
-            */
 
             // these fields can always be updated and sync from the service
             $setter_id = $setter.'Id';
-            $user->$setter_id($username);
+            $user->$setter_id($response->getUsername());
             $setter_token = $setter.'AccessToken';
             $user->$setter_token($response->getAccessToken());
             if($response instanceof PathUserResponse) {
@@ -136,7 +122,7 @@ class UserProvider extends BaseUserProvider
             $this->userManager->updateUser($user);
         }
         else
-            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $username));
+            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $response->getUsername()));
 
         return $user;
     }
