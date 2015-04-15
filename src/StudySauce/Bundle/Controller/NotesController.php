@@ -205,17 +205,18 @@ class NotesController extends Controller
         if(empty($noteIds) && !empty($request)) {
             $noteIds = $request->get('noteIds');
         }
-        foreach($noteIds as $noteId) {
+        $i = 0;
+        while($i < count($noteIds)) {
             try {
-                $n = $client->getNote($noteId);
+                $n = $client->getNote($noteIds[$i]);
                 $content = $n->getContent()->toEnml();
                 $cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
-                $result[$noteId] = $cleaned;
+                $result[$noteIds[$i]] = $cleaned;
+                $i++;
             }
             catch (EDAMSystemException $e) {
                 if($e->errorCode == 19) {
                     sleep(ceil($e->rateLimitDuration / 1000));
-                    return $this->noteSummaryAction($noteIds, $request);
                 }
             }
         }
