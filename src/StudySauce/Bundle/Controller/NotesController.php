@@ -89,7 +89,7 @@ class NotesController extends Controller
         $notes = [];
         $allTags = [];
         if(!empty($user->getEvernoteAccessToken())) {
-            $client = new EvernoteClient($user->getEvernoteAccessToken(), true);
+            $client = new EvernoteClient($user->getEvernoteAccessToken(), strpos($this->get('hwi_oauth.resource_owners.evernote.request_token_url'), 'www') === false);
             $notebooks = $client->listNotebooks();
             foreach($notebooks as $b) {
                 /** @var Notebook $b */
@@ -194,7 +194,7 @@ class NotesController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $client = new EvernoteClient($user->getEvernoteAccessToken(), true);
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), strpos($this->get('hwi_oauth.resource_owners.evernote.request_token_url'), 'www') === false);
         $store = $client->getUserNotestore();
 
         $nb = new \EDAM\Types\Notebook(['name' => $request->get('name')]);
@@ -214,7 +214,7 @@ class NotesController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $client = new EvernoteClient($user->getEvernoteAccessToken(), true);
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), strpos($this->get('hwi_oauth.resource_owners.evernote.request_token_url'), 'www') === false);
         $store = $client->getUserNotestore();
 
         $allTags = [];
@@ -302,7 +302,7 @@ class NotesController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $client = new EvernoteClient($user->getEvernoteAccessToken(), true);
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), strpos($this->get('hwi_oauth.resource_owners.evernote.request_token_url'), 'www') === false);
         $store = $client->getUserNotestore();
         if($request->get('remove')) {
             $store->deleteNote($user->getEvernoteAccessToken(), $request->get('noteId'));
