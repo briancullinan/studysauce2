@@ -4,6 +4,7 @@ namespace StudySauce\Bundle\Controller;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
+use EDAM\Error\EDAMSystemException;
 use EDAM\Types\Tag;
 use Evernote\Model\Note;
 use Evernote\Model\Notebook;
@@ -205,10 +206,18 @@ class NotesController extends Controller
             $noteIds = $request->get('noteIds');
         }
         foreach($noteIds as $noteId) {
-            $n = $client->getNote($noteId);
-            $content = $n->getContent()->toEnml();
-            $cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
-            $result[$noteId] = $cleaned;
+            try {
+                $n = $client->getNote($noteId);
+                $content = $n->getContent()->toEnml();
+                $cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
+                $result[$noteId] = $cleaned;
+            }
+            catch (EDAMSystemException $e) {
+                if($e->errorCode == 19) {
+                    sleep(ceil($e->rateLimitDuration / 1000));
+                    return $this->noteSummaryAction($noteIds, $request);
+                }
+            }
         }
         /** @var Note $n */
         return new JsonResponse($result);
