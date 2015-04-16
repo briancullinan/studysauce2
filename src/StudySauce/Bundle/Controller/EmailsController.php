@@ -302,7 +302,7 @@ class EmailsController extends Controller
                 if($reminder->getAssignment() == 'Course completion' && ($reminder->getUser()->hasRole('ROLE_ADVISER')
                         ||  $reminder->getUser()->hasRole('ROLE_MASTER_ADVISER')))
                 {
-                    $reminderOutput .= '<br /><strong>Assignment:</strong><br /><span style="height:24px;width:24px;background-image:url(https://studysauce.com/bundles/studysauce/images/course_icon.png);display:inline-block;vertical-align: middle;">&nbsp;</span> Complete the Study Sauce course<br /><br /><strong>Days until due date:</strong><br />' . $reminder->getDaysUntilDue() . '<br /><br />';
+                    $reminderOutput .= '<br /><strong>Assignment:</strong><br /><img style="height:24px;width:24px;display:inline-block;vertical-align: middle;" src="https://studysauce.com/bundles/studysauce/images/course_icon.png" /> Complete the Study Sauce course<br /><br /><strong>Days until due date:</strong><br />' . $reminder->getDaysUntilDue() . '<br /><br />';
                     $classes[] = 'the Study Sauce course';
                 }
                 else {

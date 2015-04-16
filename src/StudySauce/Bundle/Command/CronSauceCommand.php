@@ -180,7 +180,8 @@ EOF
                 usort($complete, function ($a, $b) {
                     return strcmp($a->getLast(), $b->getLast());
                 });
-                if(!empty($adviserCompletion) && $adviserCompletion->shouldSend()) {
+                if(!empty($adviserCompletion) && $adviserCompletion->shouldSend() &&
+                    !empty($incomplete)) {
                     $emails->adviserCompletionAction($d->getUser(), $d, $incomplete, $nosignup, $complete);
                     $adviserCompletion->markSent();
                     $orm->merge($adviserCompletion);

@@ -162,58 +162,15 @@ $(document).ready(function () {
 
     function showTip()
     {
-        var to;
-        if((to = $(this).data('timer')) != null)
-            clearTimeout(to);
-        $(this).tipsy({trigger: 'manual'});
-        setTimeout(function () {
-            $(this).tipsy('show');
-        }, 500);
-        var tip = $(this).data('tipsy').$tip;
-        if(tip == null)
-            return;
-        tip.data('el', this);
-        $('.tipsy').not(tip).remove();
-    }
-
-    function hideTip()
-    {
         var that = $(this);
-        that.data('timer', setTimeout(function () {
-            that.tipsy('hide');
-        }, 15));
+        if(!that.is('[original-title]')) {
+            that.tipsy({delayIn: 500}).trigger('mouseenter');
+        }
     }
 
-    function cancelHide()
-    {
-        var to, el;
-        if((el = $(this).data('el')) != null && (to = $(el).data('timer')) != null)
-            clearTimeout(to);
-    }
-
-    body.on('click', '.tipsy', function (evt) {
-        evt.preventDefault();
-        cancelHide.apply(this);
-        $(this).toggleClass('focus');
-    });
-
-    body.on('mouseover', '.tipsy', cancelHide);
-
-    body.on('focus', '.tipsy', cancelHide);
-
-    body.on('mouseout', '.tipsy', function () {
-        hideTip.apply($(this).data('el'));
-    });
-
-    body.on('mouseover', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
-
+    body.on('mouseenter', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
     body.on('click', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
-
     body.on('focus', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
-
-    body.on('mouseout', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', hideTip);
-
-    body.on('blur', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', hideTip);
 
     body.on('show', '#home', function () {
         // TODO: add mobile check here?
