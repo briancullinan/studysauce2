@@ -111,8 +111,7 @@ EOF
         // send deadline reminders
         $reminders = new ArrayCollection($orm->getRepository('StudySauceBundle:Deadline')->createQueryBuilder('d')
             ->select('d')
-            ->andWhere('d.dueDate > :date AND d.deleted != 1')
-            ->setParameter('date', new \DateTime())
+            ->andWhere('d.user IS NOT NULL AND d.deleted != 1')
             ->getQuery()
             ->getResult());
         $deadlines = [];

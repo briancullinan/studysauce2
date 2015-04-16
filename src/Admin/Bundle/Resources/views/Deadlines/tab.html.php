@@ -39,7 +39,7 @@ $view['slots']->start('body'); ?>
                                         checked="checked"/><i></i>Date</label>
             <label class="radio"><input type="radio" name="deadlines-sort" value="class"><i></i>Class</label>
             <label class="checkbox" title="Click here to see deadlines that have already passed."><input
-                    type="checkbox"><i></i>Past deadlines</label>
+                    type="checkbox" checked="checked"><i></i>Past deadlines</label>
         </div>
         <?php if($isEmpty) { ?>
             <div class="deadline-row invalid edit course-id- deadline-id-">

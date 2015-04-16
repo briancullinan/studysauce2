@@ -45,7 +45,7 @@ $(document).ready(function () {
             that.find('.due-date input').datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
-                minDate: 0,
+                minDate: body.is('.adviser') ? null : 0,
                 autoPopUp:'focus',
                 changeMonth: true,
                 changeYear: true,
@@ -81,6 +81,8 @@ $(document).ready(function () {
             $('#deadlines-empty').modal('hide');
             datesFunc.apply($(this).find('.deadline-row'));
         }
+
+        body.find('#deadlines .sort-by .checkbox input').trigger('change');
     });
 
     body.on('click', '#deadlines .deadline-row a[href="#edit-deadline"]', function (evt) {

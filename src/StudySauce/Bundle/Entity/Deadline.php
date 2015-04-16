@@ -78,7 +78,9 @@ class Deadline
         if(empty($this->getDueDate()))
             return '';
         $timespan = floor(($this->getDueDate()->getTimestamp() - time()) / 86400);
-        if ($timespan <= 0) {
+        if($timespan < 0) {
+            $days = 'past due';
+        } else if ($timespan < 1) {
             $days = 'today';
         } elseif ($timespan > 1) {
             $days = $timespan . ' days';
