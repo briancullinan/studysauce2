@@ -24,7 +24,7 @@ class StudyNote
     protected $user;
 
     /**
-     * @ORM\Column(type="string", name="content")
+     * @ORM\Column(type="text", name="content")
      */
     protected $content;
 
