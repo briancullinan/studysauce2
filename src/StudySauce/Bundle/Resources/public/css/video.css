@@ -2,118 +2,8 @@
     text-align: center;
     position:relative;
     overflow:hidden;
+    background: url(../images/SMU_blur.jpg) fixed no-repeat 50% 0 #999999;
 }
-
-.landing-home .video video {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    background: #555;
-    background-size: cover;
-    -webkit-transition: 1s opacity;
-    transition: 1s opacity;
-    max-width: none;
-}
-
-.landing-home .price-section
-{
-    max-width: 940px;
-    margin: 0 auto;
-}
-
-.landing-home .price-wrapper
-{
-    background: #fff;
-    text-align: center;
-}
-
-.landing-home .price-wrapper a
-{
-    margin: 20px 0;
-}
-
-.landing-home .price-wrapper img
-{
-    padding: 20px 50px;
-}
-
-.landing-home .price-wrapper h2,
-.landing-home .price-wrapper h3,
-.landing-home .price-wrapper h4
-{
-    text-align: center;
-}
-
-.landing-home .price-section > *
-{
-    width:33.33%;
-    display:inline-block;
-    margin: 0 -2px;
-    padding: 20px;
-    vertical-align: top;
-}
-
-.landing-home #site-name
-{
-    font-family: 'Ubuntu',Arial,sans-serif;
-    width: 50%;
-    display: inline-block;
-    clear: left;
-    text-align: left;
-    vertical-align: top;
-}
-
-.landing-home a[href*="/login"]
-{
-    position:absolute;
-    top:0;
-    right:0;
-    padding: 5px 10px;
-    border: 2px solid #fff;
-    margin: 10px;
-    color: #fff;
-    border-radius: 5px;
-}
-
-.landing-home #site-name a
-{
-    color: #fff;
-    padding: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    display: inline-block;
-}
-
-.landing-home #site-name a:hover
-{
-    text-shadow: none;
-}
-
-.landing-home #site-name a > span
-{
-    font-size: 42px;
-    line-height: 110%;
-    display:inline-block;
-    white-space: normal;
-}
-
-.landing-home #site-name a > *
-{
-    vertical-align: top;
-}
-
-.landing-home #site-name img
-{
-    width: 65px;
-    margin: 0 5px;
-    max-height: 48px;
-    max-width: 48px;
-}
-
 
 .landing-home .video > img {
     width: auto;
@@ -156,7 +46,7 @@
     padding:0;
     overflow:visible;
     display:inline-block;
-    margin:20px -2px;
+    margin:0 -2px;
     vertical-align: middle;
 }
 
@@ -182,7 +72,22 @@
     background: url(../images/down_arrow_solid.png) no-repeat 50% bottom transparent;
     max-width: 940px;
     margin: 0 auto 40px auto;
-    position: relative;
+}
+
+.landing-home .video .highlighted-link a:last-child
+{
+    color: #ffffff;
+    padding: 8px 30px;
+    margin-left: -25px;
+    display: inline-block;
+    clear: both;
+    text-shadow: 1px 2px 3px rgba(0,0,0,.5);
+    font-weight: bold;
+}
+
+.landing-home .video .highlighted-link span:last-of-type
+{
+    color: #ffffff;
 }
 
 @media all and (max-width:700px)
@@ -238,7 +143,7 @@
 {
 
     .landing-home .video {
-
+        background-image: url(../images/SMU_blur_small_small.jpg);
     }
 
 }
