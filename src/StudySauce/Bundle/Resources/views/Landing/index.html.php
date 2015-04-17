@@ -44,8 +44,7 @@ $view['slots']->stop();
 
 $view['slots']->start('body');
 echo $view->render('StudySauceBundle:Landing:video.html.php');
-echo $view->render('StudySauceBundle:Landing:scr.html.php');
-echo $view->render('StudySauceBundle:Landing:banner.html.php');
-echo $view->render('StudySauceBundle:Landing:features.html.php');
+echo $view->render('StudySauceBundle:Landing:benefits.html.php');
 echo $view->render('StudySauceBundle:Landing:testimony.html.php');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:scheduleDemo'), ['strategy' => 'sinclude']);
 $view['slots']->stop();

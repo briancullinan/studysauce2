@@ -15,13 +15,21 @@
     padding:0 20px;
 }
 
+.landing-home .testimony-inner:nth-of-type(1),
+.landing-home .testimony-inner:nth-of-type(2)
+{
+    width: 50%;
+}
+
 .landing-home .testimony-inner
 {
     border-top: 2px solid #CCCCCC;
     border-bottom: 2px solid #CCCCCC;
-    padding: 20px 0 20px 64px;
+    padding: 20px 12px 20px 76px;
     position:relative;
-    margin-bottom:40px;
+    width:33.33%;
+    display:inline-block;
+    margin: 0 -2px 40px -2px;
 }
 
 .landing-home .testimony-inner img

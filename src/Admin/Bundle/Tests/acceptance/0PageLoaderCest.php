@@ -582,6 +582,8 @@ class PageLoaderCest
         $I->fillField('input[name="password"]', 'Da1ddy23');
         $I->click('[type="submit"]');
         $I->seeInCurrentUrl('/course/1/lesson/1/step');
+
+        // TODO: log out and log back in using social login
     }
 
     /**

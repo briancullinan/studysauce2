@@ -192,5 +192,8 @@ class AdviserCest
         $I->seeLink('Study Sauce course');
         $I->click('//a[contains(.,"Study Sauce course")]');
 
+        // TODO: add past due test
+
+
     }
 }
