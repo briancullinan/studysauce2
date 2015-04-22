@@ -32,11 +32,7 @@ foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/admin
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    ['@AdminBundle/Resources/public/js/admin.js'],
-    [],
-    ['output' => 'bundles/admin/js/*.js']
-) as $url): ?>
+foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/admin.js'],[],['output' => 'bundles/admin/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach; ?>
 <?php $view['slots']->stop();
@@ -363,9 +359,9 @@ $view['slots']->start('body'); ?>
                 ); ?></td>
             <td><?php print ($u->hasRole('ROLE_PAID') ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getSchedules()->exists(function ($_, Schedule $s) {return $s->getCourses()->exists(function ($__, Course $c) {return $c->getGrades()->count() > 0;});}) ? 'Y' : 'N'); ?></td>
+            <td><?php print $u->getDeadlines()->count(); ?></td>
+            <td><?php print $u->getSchedules()->count(); ?></td>
+            <td><?php print array_sum($u->getSchedules()->map(function (Schedule $s) {return $s->getCourses()->filter(function (Course $c) {return $c->getGrades()->count() > 0;})->count();})->toArray()); ?></td>
             <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
             <td><?php print (!empty($u->getEvernoteAccessToken()) ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1(

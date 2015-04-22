@@ -242,6 +242,7 @@ a[href="#edit-deadline"]:hover
 }
 
 .social-login a[href*="#remove-"],
+a[href="#delete-notebook"],
 a[href="#remove-grade"],
 a[href="#remove-class"],
 a[href="#remove-deadline"] {
@@ -253,6 +254,7 @@ a[href="#remove-deadline"] {
 }
 
 .social-login a[href*="#remove-"]:hover,
+a[href="#delete-notebook"]:hover,
 a[href="#remove-grade"]:hover,
 a[href="#remove-class"]:hover,
 a[href="#remove-deadline"]:hover

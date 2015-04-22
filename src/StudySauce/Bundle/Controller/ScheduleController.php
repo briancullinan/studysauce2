@@ -380,6 +380,19 @@ class ScheduleController extends Controller
                 $schedule = new Schedule();
                 $schedule->setUser($user);
                 $user->addSchedule($schedule);
+
+                // default profile settings to previous schedule
+                /** @var Schedule $first */
+                $first = $user->getSchedules()->first();
+                if(!empty($first)) {
+                    $schedule->setUniversity($first->getUniversity());
+                    $schedule->setGrades($first->getGrades());
+                    $schedule->setWeekends($first->getWeekends());
+                    $schedule->setSharp6am11am($first->getSharp6am11am());
+                    $schedule->setSharp11am4pm($first->getSharp11am4pm());
+                    $schedule->setSharp4pm9pm($first->getSharp4pm9pm());
+                    $schedule->setSharp9pm2am($first->getSharp9pm2am());
+                }
             }
 
             // remove empty schedules

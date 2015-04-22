@@ -61,7 +61,7 @@ class AdviserCest
 
         $I->wantTo('Try to register as a new student without clicking the email');
         $I->click('a[href*="/logout"]');
-        $I->click('a[href*="/register"]');
+        $I->seeAmOnUrl('/register');
         $I->fillField('#register .first-name input', $last);
         $I->fillField('#register .last-name input', 'last' . $last);
         $I->fillField('#register .email input', 'firstlast' . $last . '@mailinator.com');
@@ -128,7 +128,7 @@ class AdviserCest
 
         $I->wantTo('Register as a new student before my adviser has a chance to invite me');
         $I->click('a[href*="/logout"]');
-        $I->click('a[href*="/register"]');
+        $I->seeAmOnUrl('/register');
         $last = 'tester' . substr(md5(microtime()), -5);
         $I->fillField('#register .first-name input', $last);
         $I->fillField('#register .last-name input', 'last' . $last);

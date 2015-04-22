@@ -34,8 +34,14 @@ $view['slots']->start('body'); ?>
     <div class="panel-pane" id="notes">
         <div class="pane-content">
             <h2>Study notes</h2>
-            <div class="new-study-note">
-                <a href="#add-note" class="big-add">Add <span>+</span> study note</a>
+            <div class="new-study-note highlighted-link">
+                <form action="<?php print $view['router']->generate('notes_search'); ?>">
+                    <a href="#add-note" class="big-add">Add <span>+</span> study note</a>
+                    <label class="input">
+                        <input type="text" name="search" placeholder="Search" />
+                    </label>
+                    <button type="submit" value="search" class="more">Search</button>
+                </form>
             </div>
             <?php
             $first = true;
@@ -102,6 +108,7 @@ $view['slots']->start('body'); ?>
                                         <?php if($classI !== '') { ?><i class="class<?php print $classI; ?>"></i><?php } ?>
                                         <input type="text" value="<?php print $name; ?>" placeholder="Class name">
                                     </label>
+                                    <a href="#delete-notebook" data-toggle="modal">&nbsp;</a>
                                 </div>
                             </div>
                             <div class="notes">
@@ -174,4 +181,5 @@ if (!empty($services)) {
     print $this->render('StudySauceBundle:Dialogs:notes-connect.html.php',['id' => 'notes-connect', 'services' => $services]);
 }
 print $this->render('StudySauceBundle:Dialogs:add-notebook.html.php',['id' => 'add-notebook']);
+print $this->render('StudySauceBundle:Dialogs:delete-notebook.html.php',['id' => 'delete-notebook']);
 $view['slots']->stop();

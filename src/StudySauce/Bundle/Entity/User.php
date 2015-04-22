@@ -19,6 +19,21 @@ use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
  *     @ORM\UniqueConstraint(name="email_idx", columns={"email"}),
  *     @ORM\UniqueConstraint(name="username_idx", columns={"username"})})
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\NamedNativeQueries({
+ *      @ORM\NamedNativeQuery(
+ *          name            = "sessionCount",
+ *          resultSetMapping= "mappingSessionCount",
+ *          query           = "SELECT COUNT(*) AS sessions FROM ss_user INNER JOIN visit ON id = user_id GROUP BY session_id"
+ *      )
+ * })
+ * @ORM\SqlResultSetMappings({
+ *      @ORM\SqlResultSetMapping(
+ *          name    = "mappingSessionCount",
+ *          columns = {
+ *              @ORM\ColumnResult("sessions")
+ *          }
+ *      )
+ * })
  */
 class User extends BaseUser implements EncoderAwareInterface
 {
@@ -301,7 +316,6 @@ class User extends BaseUser implements EncoderAwareInterface
     public function __construct()
     {
         $this->schedules = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->sessions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
         $this->goals = new \Doctrine\Common\Collections\ArrayCollection();
         $this->deadlines = new \Doctrine\Common\Collections\ArrayCollection();
@@ -581,39 +595,6 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getPayments()
     {
         return $this->payments;
-    }
-
-    /**
-     * Add sessions
-     *
-     * @param \StudySauce\Bundle\Entity\Session $sessions
-     * @return User
-     */
-    public function addSession(\StudySauce\Bundle\Entity\Session $sessions)
-    {
-        $this->sessions[] = $sessions;
-
-        return $this;
-    }
-
-    /**
-     * Remove sessions
-     *
-     * @param \StudySauce\Bundle\Entity\Session $sessions
-     */
-    public function removeSession(\StudySauce\Bundle\Entity\Session $sessions)
-    {
-        $this->sessions->removeElement($sessions);
-    }
-
-    /**
-     * Get sessions
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSessions()
-    {
-        return $this->sessions;
     }
 
     /**
@@ -1244,5 +1225,38 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getEvernoteAccessToken()
     {
         return $this->evernote_access_token;
+    }
+
+    /**
+     * Add notes
+     *
+     * @param \StudySauce\Bundle\Entity\StudyNote $notes
+     * @return User
+     */
+    public function addNote(\StudySauce\Bundle\Entity\StudyNote $notes)
+    {
+        $this->notes[] = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Remove notes
+     *
+     * @param \StudySauce\Bundle\Entity\StudyNote $notes
+     */
+    public function removeNote(\StudySauce\Bundle\Entity\StudyNote $notes)
+    {
+        $this->notes->removeElement($notes);
+    }
+
+    /**
+     * Get notes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }

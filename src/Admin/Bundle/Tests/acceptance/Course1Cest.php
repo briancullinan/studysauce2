@@ -30,13 +30,13 @@ class Course1Cest
     // tests
 
     /**
-     * @depends tryStudentRegister
+     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryFreeCourse(AcceptanceTester $I)
     {
         $I->wantTo('complete all the free courses');
-        $I->seeInCurrentUrl('/course/1/lesson/1/step');
+        $I->seeAmOnUrl('/course/1/lesson/1/step');
         $I->click('#account-options a[href="#close"]');
         $I->test('tryCourse1Introduction');
         $I->seeInCurrentUrl('/course/1/lesson/2/step');

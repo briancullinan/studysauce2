@@ -2,10 +2,13 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Buzz\Browser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use EDAM\Error\EDAMSystemException;
 use EDAM\Types\Tag;
+use Evernote\Model\EnmlNoteContent;
+use Evernote\Model\HtmlNoteContent;
 use Evernote\Model\Note;
 use Evernote\Model\Notebook;
 use Evernote\Model\PlainTextNoteContent;
@@ -22,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -174,8 +178,10 @@ class NotesController extends Controller
                             ->setParameter('id', $r->guid)
                             ->getQuery()
                             ->getResult();
-                        if(!empty($stored) && $stored[0]->getUpdated()->getTimestamp() < $r->updated / 1000) {
-                            $orm->remove($stored);
+                        if(!empty($stored) && $stored[0]->getUpdated() != null &&
+                            $stored[0]->getUpdated()->getTimestamp() < $r->updated / 1000) {
+                            $stored[0]->setContent(null);
+                            $orm->merge($stored[0]);
                             $orm->flush();
                         }
 
@@ -232,7 +238,6 @@ class NotesController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var User $user */
         $user = $this->getUser();
-        $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
         $result = [];
         if(empty($noteIds) && !empty($request)) {
             $noteIds = $request->get('noteIds');
@@ -242,19 +247,39 @@ class NotesController extends Controller
             try {
                 /** @var StudyNote[] $stored */
                 $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
-                    ->andWhere('n.id = :id')
+                    ->andWhere('n.id = :id AND n.user = :uid')
                     ->setParameter('id', $noteIds[$i])
+                    ->setParameter('uid', $user->getId())
                     ->getQuery()
                     ->getResult();
+                $new = false;
                 if(!empty($stored)) {
-                    $content = $stored[0]->getContent();
+                    $stored = $stored[0];
+                    //$content = $stored[0]->getContent();
+                    //$cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
                 }
                 else {
-                    $n = $client->getNote($noteIds[$i]);
-                    $content = $n->getContent()->toEnml();
-                    $this->saveNote($n->getEdamNote());
+                    /** @var StudyNote $stored */
+                    $stored = new StudyNote();
+                    $stored->setUser($user);
+                    $stored->setId($noteIds[$i]);
+                    $new = true;
                 }
-                $cleaned = substr(trim(preg_replace('/\n+/i', "\n", preg_replace('/<[^>]*>/i', "\n", $content))), 0, 1000);
+                if(empty($stored->getThumbnail())) {
+                    // get the thumbnail only
+                    $src = 'https://' . ($this->get('kernel')->getEnvironment() != 'prod' ? 'sandbox' : 'www') . '.evernote.com/shard/s1/thm/note/' . $noteIds[$i] . '.jpg';
+                    $content = http_build_query(['auth' => $user->getEvernoteAccessToken(), 'size' => 150]);
+                    $browser = new Browser();
+                    $browser->getClient()->setVerifyPeer(false);
+                    $thumb = $browser->post($src, ['Content-Type' => 'application/x-www-form-urlencoded' . "\r\n"], $content);
+                    $stored->setThumbnail($thumb->getContent());
+                    if($new)
+                        $orm->persist($stored);
+                    else
+                        $orm->merge($stored);
+                    $orm->flush();
+                }
+                $cleaned = '<img src="' . $this->generateUrl('notes_thumb', ['id' => $noteIds[$i]]) . '" />';
                 $result[$noteIds[$i]] = $cleaned;
                 $i++;
             }
@@ -267,6 +292,51 @@ class NotesController extends Controller
         }
 
         return new JsonResponse($result);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
+        $results = $client->findNotesWithSearch($request->get('search'));
+        $result = [];
+        foreach ($results as $r) {
+            /** @var SearchResult $r */
+
+            if ($r->type === 1) {
+                $result[] = $r->guid;
+            }
+        }
+
+        return new JsonResponse($result);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function thumbAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        /** @var User $user */
+        $user = $this->getUser();
+        /** @var StudyNote[] $stored */
+        $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
+            ->andWhere('n.id = :id AND n.user = :uid')
+            ->setParameter('id', $request->get('id'))
+            ->setParameter('uid', $user->getId())
+            ->getQuery()
+            ->getResult();
+        if(!empty($stored)) {
+            return new Response(stream_get_contents($stored[0]->getThumbnail()), 200, ['Content-Type' => 'image/jpeg']);
+        }
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -309,7 +379,7 @@ class NotesController extends Controller
             ->setParameter('id', $request->get('noteId'))
             ->getQuery()
             ->getResult();
-        if(!empty($stored)) {
+        if(!empty($stored) && $stored[0]->getContent() !== null) {
             return new Response($stored[0]->getContent());
         }
         else {
@@ -332,9 +402,13 @@ class NotesController extends Controller
         $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
         $store = $client->getUserNotestore();
 
-        $nb = new \EDAM\Types\Notebook(['name' => $request->get('name')]);
-        $store->createNotebook($user->getEvernoteAccessToken(), $nb);
-
+        if(!empty($request->get('name'))) {
+            $nb = new \EDAM\Types\Notebook(['name' => $request->get('name')]);
+            $store->createNotebook($user->getEvernoteAccessToken(), $nb);
+        }
+        elseif(!empty($request->get('remove'))) {
+            $store->expungeNotebook($user->getEvernoteAccessToken(), $request->get('remove'));
+        }
         $store->close();
 
         return $this->forward('StudySauceBundle:Notes:index', ['_format' => 'tab']);
@@ -386,7 +460,8 @@ class NotesController extends Controller
         else {
             $note = $client->getNote($request->get('noteId'))->getEdamNote();
         }
-        $note->content = (new PlainTextNoteContent($request->get('body')))->toEnml();
+        $note->content = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>' .
+            (new HtmlNoteContent($request->get('body')))->toEnml() . '</en-note>';
         $note->title = $request->get('title');
         $moved = false;
         if($note->notebookGuid != $notebook->guid) {

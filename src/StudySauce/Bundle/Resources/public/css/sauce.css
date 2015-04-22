@@ -221,9 +221,9 @@ input[type="button"].more
     appearance: none;
     margin: 0;
     text-align: center;
-    padding: 15px 20px;
+    padding: 10px 40px;
     font-weight: 700;
-    border-radius: 5px;
+    border-radius: 4px;
     -webkit-border-radius: 5px;
     display:inline-block;
     cursor: pointer;
@@ -237,8 +237,8 @@ input[type="button"].more
     outline: none;
     color: #ffffff;
     background-color: #0099BB;
-    border-bottom: 3px solid #004477;
-    transition: background-color ease-in-out .15s;
+    border-bottom: 1px solid #0099BB;
+    transition: background-color ease-in-out .15s, border-color ease-in-out .15s;
     position: relative;
 }
 
@@ -250,7 +250,7 @@ button.subtle
     background-origin: padding-box;
     background: #eee;
     border:none;
-    border-bottom:2px solid #ddd;
+    border-bottom:1px solid #ddd;
     box-shadow: none;
     display:inline-block;
     margin:0;
@@ -276,7 +276,7 @@ button.subtle.disabled:focus,
 {
     margin-top:0;
     background-color: #eeeeee;
-    border-bottom:2px solid #ddd;
+    border-bottom:1px solid #ddd;
     color:#999;
 }
 
@@ -285,8 +285,8 @@ button.subtle.disabled:focus,
 {
     color: #222222;
     background-color: #FF9900;
-    border-color: #993300;
-    text-shadow: 0px 1px 2px rgba(255,255,255,.5);
+    border-color: #FF9900;
+    text-shadow: 0 1px 2px rgba(255,255,255,.5);
 }
 
 .btn:hover,
@@ -321,7 +321,7 @@ a.subtle:hover,
 #plan .fc-button:hover
 {
     background: #dddddd;
-    border-bottom:2px solid #bbb;
+    border-bottom:1px solid #bbb;
     color:#555;
 }
 
@@ -370,8 +370,6 @@ input[type="button"].more:active
     -webkit-appearance: none;
     -moz-appearance:none;
     appearance: none;
-    border-bottom-width: 1px;
-    margin-top: 2px;
     color: #ffffff;
     background-color: #0088BB;
     border-color: #004477;
@@ -381,7 +379,6 @@ input[type="button"].more:active
 a.subtle:active,
 #plan .fc-button:active
 {
-    margin-top:1px;
     border-bottom-width: 1px;
     color:#555;
 }
@@ -465,9 +462,8 @@ input[type="button"].more:focus[disabled]
 {
     color: #555555;
     background-color: #CCCCCC;
-    border-color: #555555;
+    border-color: #CCCCCC;
     margin-top:0;
-    border-bottom-width:3px;
     cursor: not-allowed;
 }
 

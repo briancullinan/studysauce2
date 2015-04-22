@@ -50,7 +50,8 @@ $(document).ready(function () {
             }
         });
         setTimeout(function () {
-            CKEDITOR.instances.editor1.fire('focus');
+            if(typeof CKEDITOR.instances.editor1 != 'undefined')
+                CKEDITOR.instances.editor1.fire('focus');
         }, 20);
     });
 
@@ -93,7 +94,8 @@ $(document).ready(function () {
         notes.addClass('edit-note');
         CKEDITOR.instances['editor1'].setData('');
         setTimeout(function () {
-            CKEDITOR.instances.editor1.fire('focus');
+            if(typeof CKEDITOR.instances.editor1 != 'undefined')
+                CKEDITOR.instances.editor1.fire('focus');
         }, 20);
     });
 
@@ -149,7 +151,8 @@ $(document).ready(function () {
     body.on('scheduled', updateNotes);
 
     body.on('hide', '#notes', function () {
-        CKEDITOR.instances.editor1.fire('blur');
+        if(typeof CKEDITOR.instances.editor1 != 'undefined')
+            CKEDITOR.instances.editor1.fire('blur');
         $('#cke_editor1').hide();
         var notes = $('#notes');
         if(notes.is('.edit-note')) {
@@ -176,9 +179,46 @@ $(document).ready(function () {
             success: function (data) {
                 dialog.find('.squiggle').remove();
                 var response = $(data);
+                notes.find('.term-row').remove();
+                response.find('.term-row').insertAfter('.new-study-note');
                 notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
                 notes.find('select[name="notebook"]').val(notes.find('option:contains(' + dialog.find('input').val().trim() + ')').attr('value'));
                 dialog.find('input').val('');
+                dialog.modal('hide');
+            },
+            error: function () {
+                dialog.find('.squiggle').remove();
+            }
+        });
+    });
+
+    body.on('click', '#notes a[href="#delete-notebook"]', function () {
+        var notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).parents('.class-row').attr('class'))[1];
+        var dialog = $('#delete-notebook');
+        var current = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(dialog.attr('class'));
+        if(current != null)
+            dialog.removeClass(current[0]);
+        dialog.addClass('notebook-id-' + notebook);
+    });
+
+    body.on('click', '#delete-notebook a[href="#confirm-delete-notebook"]', function (evt) {
+        evt.preventDefault();
+        var notes = $('#notes'),
+            dialog = $('#delete-notebook');
+        var notebookId = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(dialog.attr('class'))[1];
+        loadingAnimation($(this));
+        $.ajax({
+            url: window.callbackPaths['notes_notebook'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                remove: notebookId
+            },
+            success: function (data) {
+                dialog.find('.squiggle').remove();
+                var response = $(data);
+                notes.find('.term-row').remove();
+                response.find('.term-row').insertAfter('.new-study-note');
                 dialog.modal('hide');
             },
             error: function () {
@@ -208,6 +248,42 @@ $(document).ready(function () {
             dialog.find('.highlighted-link').removeClass('invalid').addClass('valid');
         else
             dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
+    });
+
+    body.on('keyup change', '#notes input[name="search"]', function () {
+        if($(this).val().trim() == '') {
+            notes.find('.note-row').show();
+        }
+    });
+
+    body.on('submit', '#notes form', function (evt) {
+        evt.preventDefault();
+        var notes = $('#notes');
+        loadingAnimation(notes.find('[value="search"]'));
+        $.ajax({
+            url: window.callbackPaths['notes_search'],
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                search: notes.find('input[name="search"]').val().trim()
+            },
+            success: function (data) {
+                notes.find('.squiggle').remove();
+                // TODO: only show notes and sections with results in them
+                notes.find('.note-row').each(function () {
+                    var noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
+                    if(data.indexOf(noteId) > -1) {
+                        $(this).show();
+                    }
+                    else {
+                        $(this).hide();
+                    }
+                });
+            },
+            error: function () {
+                notes.find('.squiggle').remove();
+            }
+        })
     });
 
     body.on('show', '#notes', function () {

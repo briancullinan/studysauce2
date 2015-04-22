@@ -1,43 +1,52 @@
-<div class="features clearfix">
-    <div class="two-column-guide">
-        <h2>Study Sauce features</h2>
-        <div class="grid_6">
-            <div>
-                <h3>Video instruction</h3>
-                <p>Our study curriculum provides invaluable tips on how to study, and more importantly how not to study. It is a safe bet that you will be surprised by the results.</p>
-            </div>
-            <div>
-                <h3>Study plans</h3>
-                <p>Take your studying to the next level with one of our custom study plans. We build your personalized plan based on your study preferences and your goals.</p>
-            </div>
-            <div>
-                <h3>Deadline reminders</h3>
-                <p>Enter in your important dates and study sauce will send you email reminders so nothing sneaks up on you.</p>
-            </div>
-        </div>
-        <div class="grid_6">
-            <div>
-                <h3>Proven science</h3>
-                <p>We incorporate the leading science in memory retention to ensure you are maximizing your study time.  Improve your study skills and stop cramming for exams only to forget all of the information a few days later.</p>
-            </div>
-            <div>
-                <h3>Study metrics</h3>
-                <p>Track your study sessions over time. See all of your hard work aggregated in custom charts that we create when you check in.</p>
-            </div>
-            <div>
-                <h3>Set goals</h3>
-                <p>Goal setting is a terrific way to improve your performance.  Establish different types of goals and incentives to improve your academic results.</p>
+<div class="page-top clearfix">
+    <div class="scr">
+        <div class="swap clearfix">
+            <div class="grid_6">
+                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/iphone.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>
+                <?php endforeach; ?></div>
+            <div class="grid_6">
+                <h3><span>Learn</span></h3>
+                <ul>
+                    <li>Has anyone ever actually taught you how to study? Odds are good you have fallen into some bad habits.</li>
+                    <li>Our video-based course will teach you the most effective study methods, so you can get on with your life.</li>
+                    <li>Study Sauce uses memory retention science, so you can stop cramming for exams.</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
-
-<div class="support-box clearfix">
-    <h3><a href="#contact-support" class="cloak highlighted-link" data-toggle="modal">
-            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/chat_icon.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                <img width="48" height="48" src="<?php echo $view->escape($url) ?>" alt="CHAT" />
-            <?php endforeach; ?>Still have questions? <span class="reveal">Talk to a study tutor.</span></a>
-    </h3>
-
-    <p class="highlighted-link"><a class="more" href="<?php print $view['router']->generate('register'); ?>">Sign up to help - it's free</a></p>
+<div class="page-top clearfix section-2">
+    <div class="scr">
+        <div class="grid_6">
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/ipad_small.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Complication"/>
+            <?php endforeach; ?></div>
+        <div class="grid_6">
+            <h3><span>Organize</span></h3>
+            <ul>
+                <li>Once you have learned how to study, our study tools keep you organized and on track.</li>
+                <li>Learn to take better notes and keep them all in one place with our study notes that are integrated with Evernote.</li>
+                <li>Get organized with a custom study plan tailored to your schedule.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="page-top clearfix section-3">
+    <div class="scr">
+        <div class="swap clearfix">
+            <div class="grid_6">
+                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/iair.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Resolution"/>
+                <?php endforeach; ?></div>
+            <div class="grid_6">
+                <h3><span>Track</span></h3>
+                <ul>
+                    <li>Personalized deadline reminders will make sure nothing sneaks up on you.</li>
+                    <li>See your hard work in custom charts that track your study progress over time.</li>
+                    <li>Take the guesswork out of calculating your class grades. Know what grades you need to reach your goals.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

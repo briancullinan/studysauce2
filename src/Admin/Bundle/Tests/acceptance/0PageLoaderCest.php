@@ -224,25 +224,6 @@ class PageLoaderCest
     /**
      * @param AcceptanceTester $I
      */
-    public function tryStudentRegister(AcceptanceTester $I)
-    {
-        $I->wantTo('register as a new student');
-        $I->seeAmOnUrl('/students');
-        $I->click('Sign up for free');
-        $I->seeInCurrentUrl('/register');
-        $I->fillField('.first-name input', 'test');
-        $last = 'tester' . substr(md5(microtime()), -5);
-        $I->fillField('.last-name input', $last);
-        $I->fillField('.email input', 'test' . $last . '@mailinator.com');
-        $I->fillField('.password input', 'password');
-        $I->click('Register');
-        $I->wait(10);
-        $I->seeInCurrentUrl('/course/1/lesson/1/step');
-    }
-
-    /**
-     * @param AcceptanceTester $I
-     */
     public function tryStudyFunnel(AcceptanceTester $I)
     {
         $I->wantTo('finish the study assessment');
@@ -426,7 +407,7 @@ class PageLoaderCest
 
     /**
      * @param AcceptanceTester $I
-     * @depends tryStudentRegister
+     * @depends tryGuestCheckout
      */
     public function tryDetailedSchedule(AcceptanceTester $I)
     {
@@ -571,23 +552,27 @@ class PageLoaderCest
     }
 
     /**
-     * @depends tryStudentRegister
+     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function trySocialLogin(AcceptanceTester $I)
     {
         $I->amOnPage('/course/1/lesson/1/step');
         $I->click('a[href*="/google"]');
-        $I->fillField('input[name="username"]', 'brian@studysauce.com');
-        $I->fillField('input[name="password"]', 'Da1ddy23');
+        $I->fillField('input[name="Email"]', 'brian@studysauce.com');
+        $I->fillField('input[name="Passwd"]', 'Da1ddy23');
         $I->click('[type="submit"]');
-        $I->seeInCurrentUrl('/course/1/lesson/1/step');
+        $I->seeAmOnUrl('/course/1/lesson/1/step');
 
-        // TODO: log out and log back in using social login
+        // log out and log back in using social login
+        $I->click('a[href*="/logout"]');
+        $I->click('a[href*="/login"]');
+        $I->click('a[href*="/google"]');
+        $I->seeInCurrentUrl('/profile/funnel');
     }
 
     /**
-     * @depends tryStudentRegister
+     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
     public function tryStudyNotes(AcceptanceTester $I)

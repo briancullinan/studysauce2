@@ -14,7 +14,6 @@ foreach ($view['assetic']->stylesheets(
         '@StudySauceBundle/Resources/public/css/video.css',
         '@StudySauceBundle/Resources/public/css/scr.css',
         '@StudySauceBundle/Resources/public/css/banner.css',
-        '@StudySauceBundle/Resources/public/css/features.css',
         '@StudySauceBundle/Resources/public/css/testimony.css',
         '@StudySauceBundle/Resources/public/css/footer.css'
     ],

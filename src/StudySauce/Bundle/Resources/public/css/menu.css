@@ -857,7 +857,7 @@
 a[href*="/redirect/google"]
 {
     width:160px;
-    border-bottom-color:#771100;
+    border-bottom-color:#DD4433;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5500px #DD4433;
     padding-left:50px;
@@ -874,7 +874,7 @@ a[href*="/redirect/google"]:focus {
 a[href*="/redirect/evernote"]
 {
     width:160px;
-    border-bottom-color:#447711;
+    border-bottom-color:#77CC44;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -7100px #77CC44;
     padding-left:50px;
@@ -891,7 +891,7 @@ a[href*="/redirect/evernote"]:focus {
 a[href*="/redirect/facebook"]
 {
     width:160px;
-    border-bottom-color:#224477;
+    border-bottom-color:#5577AA;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5400px #5577AA;
     padding-left:50px;

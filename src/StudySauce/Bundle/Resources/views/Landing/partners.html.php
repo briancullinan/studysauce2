@@ -12,10 +12,8 @@ foreach ($view['assetic']->stylesheets(
         '@StudySauceBundle/Resources/public/css/video.css',
         '@StudySauceBundle/Resources/public/css/scr.css',
         '@StudySauceBundle/Resources/public/css/banner.css',
-        '@StudySauceBundle/Resources/public/css/features.css',
         '@StudySauceBundle/Resources/public/css/testimony.css',
         '@StudySauceBundle/Resources/public/css/footer.css',
-        '@StudySauceBundle/Resources/public/css/landing.css'
     ],
     [],
     ['output' => 'bundles/studysauce/css/*.css']
@@ -43,8 +41,6 @@ $view['slots']->stop();
 
 $view['slots']->start('body');
 echo $view->render('StudySauceBundle:Landing:partner-video.html.php');
-echo $view->render('StudySauceBundle:Landing:partner-scr.html.php');
-echo $view->render('StudySauceBundle:Landing:partner-banner.html.php');
 echo $view->render('StudySauceBundle:Landing:partner-features.html.php');
 echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();

@@ -1,45 +1,99 @@
+.landing-home
+{
+    background: url(../images/Study_girl.jpg) no-repeat bottom left #eee;
+    background-size: cover;
+}
+
 .landing-home .video {
     text-align: center;
-    position:relative;
     overflow:hidden;
 }
 
 .landing-home .video video {
     position: fixed;
-    right: 0;
-    bottom: 0;
+    left: 0;
+    top: 0;
     min-width: 100%;
     min-height: 100%;
     width: auto;
     height: auto;
-    z-index: -100;
-    background: #555;
+    z-index: -1;
     background-size: cover;
-    -webkit-transition: 1s opacity;
-    transition: 1s opacity;
     max-width: none;
+    background: url(../images/Study_girl.jpg) no-repeat bottom left #eee;
+    background-size: cover;
 }
 
 .landing-home .price-section
 {
-    max-width: 940px;
+    max-width: 1100px;
     margin: 0 auto;
+    text-align: center;
 }
 
 .landing-home .price-wrapper
 {
-    background: #fff;
     text-align: center;
+    position:relative;
+    z-index: 5;
+    min-height: 500px;
+    background: url(../images/noise.png) repeat rgba(0,0,0,.85);
 }
 
 .landing-home .price-wrapper a
 {
-    margin: 20px 0;
+    margin: 40px 0;
 }
 
 .landing-home .price-wrapper img
 {
-    padding: 20px 50px;
+    padding: 100px 50px;
+}
+
+.landing-home .price-wrapper h4
+{
+    margin: 20px 0 10px 0;
+}
+
+.landing-home .price-wrapper h2
+{
+    font-family: 'Ubuntu',Arial,sans-serif;
+    font-weight: normal;
+    font-size:40px;
+}
+
+.landing-home .price-wrapper h3
+{
+    font-style: italic;
+    font-size:32px;
+    margin-top:10px;
+    font-weight: normal;
+}
+
+.landing-home .price-wrapper h2,
+.landing-home .price-wrapper h3,
+.landing-home .price-wrapper h4
+{
+    color:#EE7700;
+    text-shadow: 1px 1px 10px rgba(0,0,0,.50);
+}
+
+.landing-home .price-wrapper .business h3
+{
+    letter-spacing: 2px;
+}
+
+.landing-home .price-wrapper .business h2,
+.landing-home .price-wrapper .business h3,
+.landing-home .price-wrapper .business h4
+{
+    color:#993300;
+}
+
+.landing-home .price-wrapper .business h4,
+.landing-home .price-wrapper h4
+{
+    color:#DDD;
 }
 
 .landing-home .price-wrapper h2,
@@ -51,46 +105,61 @@
 
 .landing-home .price-section > *
 {
-    width:33.33%;
+    width:33.32%;
     display:inline-block;
     margin: 0 -2px;
-    padding: 20px;
+    padding: 100px 20px;
     vertical-align: top;
 }
 
 .landing-home #site-name
 {
     font-family: 'Ubuntu',Arial,sans-serif;
-    width: 50%;
     display: inline-block;
     clear: left;
     text-align: left;
     vertical-align: top;
+    position:absolute;
+    top:0;
+    right:0;
+    z-index: 100;
 }
 
 .landing-home a[href*="/login"]
 {
-    position:absolute;
-    top:0;
-    right:0;
+    display:inline-block;
+    float:right;
     padding: 5px 10px;
-    border: 2px solid #fff;
+    border: 2px solid #555;
     margin: 10px;
-    color: #fff;
+    color: #555;
     border-radius: 5px;
 }
 
-.landing-home #site-name a
+.landing-home #site-name a[title="Home"]
 {
-    color: #fff;
+    color: #555;
     padding: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     display: inline-block;
+    text-shadow: 0 0 1px rgba(0,153,187,0);
+    transition: ease-in-out .15s;
 }
 
 .landing-home #site-name a:hover
 {
-    text-shadow: none;
+    border-color: #f90;
+    color: #f90;
+    text-shadow: 0 0 3px rgba(255,255,255,.75);
+    box-shadow: 0 0 3px rgba(255,255,255,.75);
+    /*
+    text-shadow: 0 0 15px rgba(0,153,187,.50);
+    text-shadow:
+    3px 3px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px  1px 0 #000,
+    1px  1px 0 #000;
+    */
 }
 
 .landing-home #site-name a > span
@@ -128,12 +197,22 @@
 }
 
 .landing-home .video h1 {
-    color: #FFFFFF;
+    font-size: 50px;
+    color: #555;
     padding: 10px;
-    margin: 20px 0 70px 0;
+    margin: 20px 0;
     border-radius: 10px;
     text-align: center;
     font-family: 'Rufina',serif;
+    font-weight: bold;
+    position:relative;
+    left:40px;
+    opacity: 0;
+}
+
+.landing-home .player-wrapper
+{
+    opacity: 0;
 }
 
 .landing-home .video .slides
@@ -149,80 +228,90 @@
     position: relative;
 }
 
-.landing-home .video .slides .highlighted-link
-{
-    text-align: center;
-    width:39%;
-    padding:0;
-    overflow:visible;
-    display:inline-block;
-    margin:20px -2px;
-    vertical-align: middle;
-}
-
-.landing-home .video .slides .highlighted-link p {
-    width: 100%;
-    padding-top: 20px;
-    position: relative;
-}
-
 .landing-home .video .player-divider
 {
-    margin: 0 -2px;
-    width:59%;
-    display:inline-block;
+    margin: 0 0 0 auto;
+    width:50%;
     vertical-align: middle;
+    padding: 100px 0 300px;
 }
 
 .landing-home .flexslider {
     box-shadow: none;
     display: block;
-    padding: 0 20px 120px 20px;
+    padding: 0 20px;
     text-align: center;
-    background: url(../images/down_arrow_solid.png) no-repeat 50% bottom transparent;
-    max-width: 940px;
+    max-width: 1100px;
     margin: 0 auto 40px auto;
     position: relative;
 }
 
-@media all and (max-width:700px)
+.landing-home .video .slides .highlighted-link
 {
+    padding-top: 40px;
+    position:relative;
+    top:40px;
+    opacity: 0;
+}
 
-    .landing-home .flexslider
+@media all and (max-width: 1000px) and (max-height: 700px)
+{
+    .landing-home .video video {
+        height: 700px;
+    }
+}
+
+@media all and (max-width: 900px) and (max-height: 600px)
+{
+    .landing-home .video video {
+        height: 600px;
+    }
+}
+
+@media all and (max-width: 800px) and (max-height: 500px)
+{
+    .landing-home .video video {
+        height: 500px;
+    }
+}
+
+@media all and (max-width: 700px) and (max-height: 400px)
+{
+    .landing-home .video video {
+        height: 400px;
+    }
+}
+
+@media all and (max-width:1000px)
+{
+    .landing-home .video video
     {
-        padding-bottom: 80px;
+        display:none;
     }
 
-    .landing-home .video {
-        background-image: url(../images/SMU_blur_small.jpg);
-        background-position: 50% 0 !important;
-    }
-
-    .landing-home .video .slides .highlighted-link
+    .landing-home .price-section > *
     {
-        float:none;
-        display:block;
         width:auto;
-        max-width: 400px;
-        position:absolute;
-        bottom:0;
-        left:50%;
-        margin:0 0 0 -95px;
+        display:block;
+        padding: 10px;
+        margin: 0;
+    }
+
+    .landing-home .price-wrapper img
+    {
+        display:none;
+    }
+
+    .landing-home .video .player-divider
+    {
+        padding:300px 0 100px;
     }
 
     .landing-home .video h1
     {
         margin-bottom:30px;
-    }
-
-    .landing-home .video .slides li
-    {
-        padding-bottom:150px;
-    }
-
-    .landing-home .video .slides .highlighted-link p
-    {
-        padding-top: 40px;
+        left:0;
+        opacity: 1;
     }
 
     .landing-home .video .player-divider
@@ -231,14 +320,97 @@
         max-width: 400px;
     }
 
+    .landing-home .video .slides .highlighted-link,
+    .landing-home .player-wrapper
+    {
+        opacity: 1;
+        top:0;
+        left:0;
+    }
+
 }
 
+@media all and (max-height:  800px) {
 
-@media all and (max-width:380px)
+    .landing-home .video .player-divider
+    {
+        padding:200px 0 200px;
+    }
+
+}
+
+@media all and (max-width: 700px)
 {
+
+    .landing-home .video .player-divider
+    {
+        margin: 0 auto;
+        max-width: 70%;
+    }
+}
+
+@media all and (max-height:  700px) {
+
+    .landing-home .video .player-divider
+    {
+        padding:100px 0 200px;
+    }
+
+}
+
+@media all and (max-height:  700px) and (max-width: 700px)
+{
+    .landing-home .video h1 {
+        display: none;
+    }
+
+    .landing-home .video .player-divider
+    {
+        padding:250px 0 200px;
+    }
+}
+
+@media all and (max-height: 600px)
+{
+    .landing-home .video h1 {
+        display: none;
+    }
+
+    .landing-home .video .player-divider
+    {
+        padding:250px 0 200px;
+    }
+}
+
+@media all and (max-height: 500px)
+{
+
+    .landing-home .video .player-divider
+    {
+        padding:200px 0 100px;
+    }
+}
+
+@media all and (max-width:500px)
+{
+    .landing-home #site-name
+    {
+        left:0;
+        right:auto;
+    }
 
     .landing-home .video {
 
     }
 
 }
+
+@media all and (max-height: 400px)
+{
+
+    .landing-home .video .player-divider
+    {
+        padding:100px 0 100px;
+    }
+}
+

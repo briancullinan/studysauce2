@@ -2,24 +2,50 @@ $(document).ready(function () {
 
     var pan = null;
 
-    $('body').on('show', '.page-top', function () {
-        $('.scr h3').textfill({widthOnly: true});
-    });
+    setTimeout(function () {
+        var title = $('.landing-home .video h1');
+        title.animate({left: 0, opacity: 1}, 1200);
+        setTimeout(function () {
+            // TODO: fade in video
+            var video = $('.landing-home .player-wrapper');
+            video.animate({opacity: 1}, 1200);
+            setTimeout(function () {
+                // fade in cta
+                var cta = $('.landing-home .video .slides .highlighted-link');
+                cta.animate({top: 0, opacity: 1}, 1200);
+            }, 500)
+        }, 500)
+    }, 200);
 
-    $(window).resize(function () {
-        $('.scr h3').textfill({widthOnly: true});
-        $(this).trigger('scroll');
-    });
+    var testimonies = false;
 
-    $(window).scroll(function () {
-        if(pan != null)
-            clearTimeout(pan);
-        pan = setTimeout(function () {
-            var video = $('.landing-home .video');
-            var percent = $(this).scrollTop() / video.height();
-            video.stop().animate({'background-position-y': 20 * percent - 20}, 100);
-        }, 10);
-    });
+    $(window).on('DOMContentLoaded load resize scroll', checkForVisibility);
 
-    $(window).trigger('scroll');
+    function checkForVisibility()
+    {
+        var shouldLoad = false;
+        var quotes = $('.landing-home .testimony-inner');
+        quotes.each(function () {
+            if(isElementInViewport($(this))) {
+                shouldLoad = true;
+            }
+        });
+        if(shouldLoad) {
+
+            // make all testimonies visible
+            if(!testimonies) {
+                testimonies = true;
+
+                quotes.each(function (i, el) {
+                    setTimeout(function () {
+                        // fade in cta
+                        $(el).animate({left: 0, top: 0, opacity: 1}, 1200);
+                    }, i * 500)
+                });
+            }
+        }
+    }
+
+    checkForVisibility();
+
 });

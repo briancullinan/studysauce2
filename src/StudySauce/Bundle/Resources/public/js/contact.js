@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     function validateContact()
     {
-        var contact = $(this).closest('#contact-support, #schedule-demo');
+        var contact = $(this).closest('#contact-support');
         if(contact.find('.name input').val().trim() == '') {
             contact.addClass('name-required');
         }
@@ -34,13 +34,13 @@ $(document).ready(function () {
         }
     }
 
-    body.on('show.bs.modal', '#contact-support, #schedule-demo', validateContact);
-    body.on('keyup', '#contact-support input, #schedule-demo input, #contact-support textarea, #schedule-demo textarea', validateContact);
-    body.on('change', '#contact-support input, #schedule-demo input, #contact-support textarea, #schedule-demo textarea', validateContact);
+    body.on('show.bs.modal', '#contact-support', validateContact);
+    body.on('keyup', '#contact-support input, #contact-support textarea', validateContact);
+    body.on('change', '#contact-support input, #contact-support textarea', validateContact);
 
-    body.on('submit', '#contact-support form, #schedule-demo form', function (evt) {
+    body.on('submit', '#contact-support form', function (evt) {
         evt.preventDefault();
-        var contact = $('#contact-support:visible, #schedule-demo:visible');
+        var contact = $('#contact-support');
         if(contact.find('.highlighted-link').is('.invalid')) {
             contact.addClass('invalid-only');
             if(contact.is('.name-required')) {
@@ -64,6 +64,99 @@ $(document).ready(function () {
                 name: contact.find('.name input').val(),
                 email: contact.find('.email input').val(),
                 message: contact.find('.message textarea').val()
+            },
+            success: function () {
+                contact.find('.message textarea').val('');
+                contact.modal('hide');
+            },
+            error: function () {
+                contact.removeClass('invalid').addClass('valid');
+            }
+        });
+    });
+
+    function validateDemo()
+    {
+        var contact = $(this).closest('#schedule-demo');
+        if(contact.find('.first-name input').val().trim() == '') {
+            contact.addClass('first-required');
+        }
+        else {
+            contact.removeClass('first-required');
+        }
+        if(contact.find('.last-name input').val().trim() == '') {
+            contact.addClass('last-required');
+        }
+        else {
+            contact.removeClass('last-required');
+        }
+        if(contact.find('.email input').val().trim() == '' ||
+            !(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i).test(contact.find('.email input').val())) {
+            contact.addClass('email-required');
+        }
+        else {
+            contact.removeClass('email-required');
+        }
+        if(contact.find('.company input').val().trim() == '') {
+            contact.addClass('company-required');
+        }
+        else {
+            contact.removeClass('company-required');
+        }
+        if(contact.find('.phone input').val().trim() == '') {
+            contact.addClass('phone-required');
+        }
+        else {
+            contact.removeClass('phone-required');
+        }
+
+        if(contact.is('.first-required') || contact.is('.last-required') || contact.is('.email-required') || contact.is('.company-required') || contact.is('.phone-required')) {
+            contact.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        }
+        else {
+            contact.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
+        }
+    }
+
+    body.on('show.bs.modal', '#schedule-demo', validateDemo);
+    body.on('keyup', '#schedule-demo input, #schedule-demo textarea', validateDemo);
+    body.on('change', '#schedule-demo input, #schedule-demo textarea', validateDemo);
+
+    body.on('submit', '#schedule-demo form', function (evt) {
+        evt.preventDefault();
+        var contact = $('#schedule-demo');
+        if(contact.find('.highlighted-link').is('.invalid')) {
+            contact.addClass('invalid-only');
+            if(contact.is('.first-required')) {
+                contact.find('.first-name input').focus();
+            }
+            else if(contact.is('.last-required')) {
+                contact.find('.last-name input').focus();
+            }
+            else if(contact.is('.company-required')) {
+                contact.find('.company input').focus();
+            }
+            else if(contact.is('.email-required')) {
+                contact.find('.email input').focus();
+            }
+            else if(contact.is('.phone-required')) {
+                contact.find('.phone input').focus();
+            }
+            return;
+        }
+        contact.find('.highlighted-link').removeClass('valid').addClass('invalid');
+
+        jQuery.ajax({
+            url: window.callbackPaths['contact_send'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                name: contact.find('.first-name input').val() + ' ' + contact.find('.last-name input').val(),
+                email: contact.find('.email input').val(),
+                message: 'First: ' + contact.find('.first-name input').val() + "\r\n" +
+                         'Last: ' + contact.find('.last-name input').val() + "\r\n" +
+                         'Company: ' + contact.find('.company input').val() + "\r\n" +
+                         'Phone: ' + contact.find('.phone input').val()
             },
             success: function () {
                 contact.find('.message textarea').val('');

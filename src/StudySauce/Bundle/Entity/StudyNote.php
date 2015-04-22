@@ -24,9 +24,14 @@ class StudyNote
     protected $user;
 
     /**
-     * @ORM\Column(type="text", name="content")
+     * @ORM\Column(type="text", name="content", nullable=true)
      */
     protected $content;
+
+    /**
+     * @ORM\Column(type="blob", name="thumbnail", nullable=true)
+     */
+    protected $thumbnail;
 
     /**
      * @ORM\Column(type="array", name="properties")
@@ -34,14 +39,14 @@ class StudyNote
     protected $properties;
 
     /**
-     * @ORM\Column(type="datetime", name="created")
+     * @ORM\Column(type="datetime", name="created", nullable=true)
      */
-    protected $created;
+    protected $created = null;
 
     /**
-     * @ORM\Column(type="datetime", name="updated")
+     * @ORM\Column(type="datetime", name="updated", nullable=true)
      */
-    protected $updated;
+    protected $updated = null;
 
     /**
      * @ORM\PrePersist
@@ -189,5 +194,28 @@ class StudyNote
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set thumbnail
+     *
+     * @param string $thumbnail
+     * @return StudyNote
+     */
+    public function setThumbnail($thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    /**
+     * Get thumbnail
+     *
+     * @return string 
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 }

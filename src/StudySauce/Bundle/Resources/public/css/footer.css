@@ -6,7 +6,7 @@
     font-size: 12px;
     text-align: center;
     vertical-align: middle;
-    padding-top: 0;
+    padding: 10px 0;
     position: static;
     bottom: 0;
     top: auto;
@@ -80,11 +80,13 @@
 }
 
 .footer a[href*="twitter"] {
-    background-position: 0 -104px;
+    background-position: 0 -105px;
 }
 
 .footer iframe
 {
     border:none;
     overflow:hidden;
+    vertical-align: middle;
+    margin-top:1px;
 }

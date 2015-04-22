@@ -135,6 +135,8 @@
     top:0;
 }
 
+#schedule-demo .first-name,
+#schedule-demo .last-name,
 #student-invite .first-name,
 #student-invite .last-name,
 #student-invite .your-first,
@@ -150,6 +152,11 @@
     display:inline-block;
 }
 
+#schedule-demo.invalid-only.first-required .first-name input,
+#schedule-demo.invalid-only.last-required .last-name input,
+#schedule-demo.invalid-only.email-required .email input,
+#schedule-demo.invalid-only.company-required .company input,
+#schedule-demo.invalid-only.phone-required .phone input,
 #contact-support.invalid-only.name-required .name input,
 #contact-support.invalid-only.email-required .email input,
 #contact-support.invalid-only.message-required .message textarea,
@@ -466,5 +473,10 @@ body.right-menu #bookmark
         margin-left:10px;
         margin-right:10px;
         width:auto;
+    }
+
+    #unsupported a[href*="firefox"]
+    {
+        display:none;
     }
 }

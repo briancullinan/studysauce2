@@ -63,7 +63,7 @@ class DialogsController extends Controller
         }
         $contact->setName($request->get('name'));
         $contact->setEmail($request->get('email'));
-        $contact->setMessage($request->get('message'));
+        $contact->setMessage(str_replace(["\n"], ['<br />'], $request->get('message')));
         $orm->persist($contact);
         $orm->flush();
 
