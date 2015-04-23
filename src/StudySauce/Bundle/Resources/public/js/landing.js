@@ -11,7 +11,7 @@ $(document).ready(function () {
             video.animate({opacity: 1}, 1200);
             setTimeout(function () {
                 // fade in cta
-                var cta = $('.landing-home .video .slides .highlighted-link');
+                var cta = $('.landing-home .video .highlighted-link');
                 cta.animate({top: 0, opacity: 1}, 1200);
             }, 500)
         }, 500)

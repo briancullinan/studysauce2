@@ -1,12 +1,17 @@
 
 .landing-home .video
 {
-    background: url(../images/landing_logo_compressed.png) fixed 50% -50px #999999;
 }
 
-.landing-home .video h1
+.landing-home .did-you-know
 {
-    margin: 20px -75px 70px -75px;
+    background: url(../images/landing_logo_compressed.png) repeat 50% -50px #999999;
+}
+
+.landing-home .did-you-know h2,
+.landing-home .did-you-know .two h3,
+.landing-home .did-you-know .one h3 {
+    color:#fff;
 }
 
 h2, h3, h4, h5

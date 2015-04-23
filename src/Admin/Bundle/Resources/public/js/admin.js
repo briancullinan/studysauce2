@@ -33,6 +33,7 @@ $(document).ready(function () {
             deadlines: admin.find('select[name="hasDeadlines"]').val().trim(),
             schedules: admin.find('select[name="hasSchedules"]').val().trim(),
             partners: admin.find('select[name="hasPartners"]').val().trim(),
+            notes: admin.find('select[name="hasNotes"]').val().trim(),
             lastLogin: admin.find('input[name="lastLogin"]').val().trim(),
             created: admin.find('input[name="created"]').val().trim()
         };

@@ -147,7 +147,7 @@ class ScheduleController extends Controller
             $class1->sub(new \DateInterval('P3W'));
             $course = new Course();
             $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
+            $course->setName('ENG 101');
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class1);
@@ -164,7 +164,7 @@ class ScheduleController extends Controller
             $class2->setTime(9, 0, 0);
             $class2->sub(new \DateInterval('P3W'));
             $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
+            $course->setName('ENG 102');
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class2);
@@ -181,7 +181,7 @@ class ScheduleController extends Controller
             $class3->setTime(10, 0, 0);
             $class3->sub(new \DateInterval('P3W'));
             $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
+            $course->setName('HIST 103');
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class3);
@@ -198,7 +198,7 @@ class ScheduleController extends Controller
             $class4->setTime(11, 0, 0);
             $class4->sub(new \DateInterval('P3W'));
             $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
+            $course->setName('BIO 254');
             $course->setType('c');
             $course->setDotw(['M', 'W', 'F']);
             $course->setStartTime($class4);

@@ -1,20 +1,20 @@
-.landing-home.partners .page-top {
-    background: url("../images/noise.png") repeat scroll 0 0 #555;
+
+.landing-home.partners .price-wrapper h1
+{
+    max-width: 1100px;
+    margin:0 auto;
+    color: #f90;
 }
 
-
-.landing-home.partners .banner
+.landing-home.partners .price-wrapper
 {
-    border-bottom: 10px solid #EF7E00;
-    border-top: 10px solid #EF7E00;
+    padding: 40px 0 0;
 }
 
-.landing-home.partners .page-top h1
+.landing-home.partners .features-content
 {
-    text-align: center;
-    color: #ff9900;
-    margin: 30px 0;
-    font-size: 32px;
+    max-width: 1100px;
+    margin:40px auto 0;
 }
 
 .landing-home.partners .feature-block.first-block,
@@ -102,6 +102,7 @@
     margin:0;
     text-align: center;
     font-weight: bold;
+    text-shadow: none;
 }
 
 .landing-home.partners .second-block a.features-cta

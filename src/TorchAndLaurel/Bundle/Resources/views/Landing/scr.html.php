@@ -1,32 +1,52 @@
 <div class="page-top clearfix">
     <div class="scr">
-        <h2>Studying is the name of the game in college</h2>
-        <div class="grid_6">
-            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/situation_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>
-            <?php endforeach; ?></div>
-        <div class="grid_6">
-            <h3><span>Why aren't we taught how to study?</span></h3>
-            <p>An incredible amount of time and effort is devoted to learning in the classroom.  However, up to 75% of our time in school is spent outside class.  Considering how much time we spend studying, it is stunning that we are never taught effective study methods to employ once we leave the classroom.</p>
-        </div>
         <div class="swap clearfix">
             <div class="grid_6">
-                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/complication_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                    <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Complication"/>
+                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/iphone.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Situation"/>
                 <?php endforeach; ?></div>
             <div class="grid_6">
-                <h3><span>Your study habits are hurting you</span></h3>
-                <p>To make things worse, many of the methods we use are either ineffective or oftentimes counterproductive.  For example, highlighting or underlining while studying offers no benefit and can even impede learning.</p>
+                <h3><span>Learn</span></h3>
+                <ul>
+                    <li>Has anyone ever actually taught you how to study? Odds are good you have fallen into some bad habits.</li>
+                    <li>Our video-based course will teach you the most effective study methods, so you can get on with your life.</li>
+                    <li>Study Sauce uses memory retention science, so you can stop cramming for exams.</li>
+                </ul>
             </div>
         </div>
+    </div>
+</div>
+<div class="page-top clearfix section-2">
+    <div class="scr">
         <div class="grid_6">
-            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/resolution_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
-                <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Resolution"/>
+            <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/ipad_small.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Complication"/>
             <?php endforeach; ?></div>
         <div class="grid_6">
-            <h3><span>We make becoming a great studier easy</span></h3>
-            <p>We have studied the best scientific research and have incorporated the findings into our site.  Study Sauce automatically detects good and bad study behaviors and teaches you by simply logging in when you study.  You are already putting in the time, use it effectively!  Become a great studier and improve your retention, performance, and your grades.</p>
+            <h3><span>Organize</span></h3>
+            <ul>
+                <li>Once you have learned how to study, our study tools keep you organized and on track.</li>
+                <li>Learn to take better notes and keep them all in one place with our study notes that are integrated with Evernote.</li>
+                <li>Get organized with a custom study plan tailored to your schedule.</li>
+            </ul>
         </div>
-        <p class="highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Get the Deal</a></p>
+    </div>
+</div>
+<div class="page-top clearfix section-3">
+    <div class="scr">
+        <div class="swap clearfix">
+            <div class="grid_6">
+                <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/iair.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                    <img width="200" height="200" src="<?php echo $view->escape($url) ?>" alt="Resolution"/>
+                <?php endforeach; ?></div>
+            <div class="grid_6">
+                <h3><span>Track</span></h3>
+                <ul>
+                    <li>Personalized deadline reminders will make sure nothing sneaks up on you.</li>
+                    <li>See your hard work in custom charts that track your study progress over time.</li>
+                    <li>Take the guesswork out of calculating your class grades. Know what grades you need to reach your goals.</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

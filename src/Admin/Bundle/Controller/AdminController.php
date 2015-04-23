@@ -255,7 +255,7 @@ class AdminController extends Controller
                 $qb = $qb->andWhere('u.evernote_access_token IS NOT NULL AND u.evernote_access_token!=\'\'');
             }
             else {
-                $qb = $qb->andWhere('u.evernote_access_token IS NULL OR e.evernote_access_token=\'\'');
+                $qb = $qb->andWhere('u.evernote_access_token IS NULL OR u.evernote_access_token=\'\'');
             }
         }
 
