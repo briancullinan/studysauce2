@@ -261,7 +261,6 @@ class NotesController extends Controller
                 $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
                     ->andWhere('n.id = :id AND n.user = :uid')
                     ->setParameter('id', $noteIds[$i])
-                    ->setParameter('uid', $user->getId())
                     ->getQuery()
                     ->getResult();
                 $new = false;
