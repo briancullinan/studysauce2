@@ -87,7 +87,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="highlighted-link read-only">
                     <a href="#goal-edit">&nbsp;</a>
-                    <a class="more" href="#claim">Brag</a>
+                    <?php /* <a class="more" href="#claim">Brag</a> */ ?>
                 </div>
             </div>
             <div class="goal-row valid <?php
@@ -120,7 +120,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="highlighted-link read-only">
                     <a href="#goal-edit">&nbsp;</a>
-                    <a class="more" href="#claim">Brag</a>
+                    <?php /* <a class="more" href="#claim">Brag</a> */ ?>
                 </div>
             </div>
             <div class="goal-row valid <?php
@@ -152,7 +152,7 @@ $view['slots']->start('body'); ?>
                 </div>
                 <div class="highlighted-link read-only">
                     <a href="#goal-edit">&nbsp;</a>
-                    <a class="more" href="#claim" data-target="#claim">Brag</a>
+                    <?php /* <a class="more" href="#claim" data-target="#claim">Brag</a> */ ?>
                 </div>
             </div>
             <div class="highlighted-link form-actions invalid"
