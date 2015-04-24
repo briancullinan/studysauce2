@@ -13,7 +13,7 @@
                 <iframe id="landing-intro-player" src="https://www.youtube.com/embed/xY-LuIsFpio?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;origin=<?php print $app->getRequest()->getScheme() . '://' . $app->getRequest()->getHttpHost(); ?>"></iframe>
             </div>
             <div class="highlighted-link">
-                <a class="more" href="<?php print $view['router']->generate('register'); ?>">Sign up to help!</a>
+                <a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Sign up to help!</a>
             </div>
         </div>
     </div>

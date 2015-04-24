@@ -6,6 +6,12 @@
 .landing-home .did-you-know
 {
     background: url(../images/landing_logo_compressed.png) repeat 50% -50px #999999;
+    min-height: 500px;
+}
+
+.landing-home .did-you-know > div
+{
+    padding:100px 0;
 }
 
 .landing-home .did-you-know h2,
