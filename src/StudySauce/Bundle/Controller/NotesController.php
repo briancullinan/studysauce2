@@ -342,7 +342,6 @@ class NotesController extends Controller
         $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
             ->andWhere('n.id = :id AND n.user = :uid')
             ->setParameter('id', $request->get('id'))
-            ->setParameter('uid', $user->getId())
             ->getQuery()
             ->getResult();
         if(!empty($stored)) {
