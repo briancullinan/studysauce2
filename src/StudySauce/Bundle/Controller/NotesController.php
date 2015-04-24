@@ -225,6 +225,17 @@ class NotesController extends Controller
         ]);
     }
 
+    private static function getShardIdFromToken($token)
+    {
+        $result = preg_match('/:?S=(s[0-9]+):?/', $token, $matches);
+
+        if ($result === 1 && array_key_exists(1, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
     /**
      * @param array $noteIds
      * @param Request $request
@@ -238,6 +249,7 @@ class NotesController extends Controller
         $orm = $this->get('doctrine')->getManager();
         /** @var User $user */
         $user = $this->getUser();
+
         $result = [];
         if(empty($noteIds) && !empty($request)) {
             $noteIds = $request->get('noteIds');
@@ -267,7 +279,8 @@ class NotesController extends Controller
                 }
                 if(empty($stored->getThumbnail())) {
                     // get the thumbnail only
-                    $src = 'https://' . ($this->get('kernel')->getEnvironment() != 'prod' ? 'sandbox' : 'www') . '.evernote.com/shard/s1/thm/note/' . $noteIds[$i] . '.jpg';
+                    $shardId = self::getShardIdFromToken($user->getEvernoteAccessToken());
+                    $src = 'https://' . ($this->get('kernel')->getEnvironment() != 'prod' ? 'sandbox' : 'www') . '.evernote.com/shard/' . $shardId . '/thm/note/' . $noteIds[$i] . '.jpg';
                     $content = http_build_query(['auth' => $user->getEvernoteAccessToken(), 'size' => 150]);
                     $browser = new Browser();
                     $browser->getClient()->setVerifyPeer(false);
