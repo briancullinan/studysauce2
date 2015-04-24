@@ -259,7 +259,7 @@ class NotesController extends Controller
             try {
                 /** @var StudyNote[] $stored */
                 $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
-                    ->andWhere('n.id = :id AND n.user = :uid')
+                    ->andWhere('n.id = :id')
                     ->setParameter('id', $noteIds[$i])
                     ->getQuery()
                     ->getResult();
@@ -340,7 +340,7 @@ class NotesController extends Controller
         $user = $this->getUser();
         /** @var StudyNote[] $stored */
         $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
-            ->andWhere('n.id = :id AND n.user = :uid')
+            ->andWhere('n.id = :id')
             ->setParameter('id', $request->get('id'))
             ->getQuery()
             ->getResult();
