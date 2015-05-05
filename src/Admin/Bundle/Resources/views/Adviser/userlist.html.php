@@ -7,6 +7,7 @@ use Course3\Bundle\Course3Bundle;
 use Course3\Bundle\Entity\Course3;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\Partner;
 use StudySauce\Bundle\Entity\PartnerInvite;
@@ -31,13 +32,13 @@ $permissions = !empty($partner) ? $partner->getPermissions() : [
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/userlist.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
+foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/userlist.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/userlist.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
+foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/userlist.js'],[],['output' => 'bundles/admin/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -45,6 +46,10 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
 <div class="panel-pane" id="userlist">
     <div class="pane-content">
+        <form action="<?php print $view['router']->generate('save_group'); ?>" method="post">
+            <div class="search">
+                <label class="input"><input name="search" type="text" value="" placeholder="Search"/></label>
+            </div>
         <div id="select-status" style="display: none;">
             <a href="#green"><span>&nbsp;</span></a>
             <a href="#yellow"><span>&nbsp;</span></a>
@@ -87,34 +92,61 @@ $view['slots']->start('body'); ?>
                             <option>Descending (Z-A)</option>
                         </select></th>
                 <?php } ?>
+                <th><label><select name="hasGrades">
+                            <option value="">Grades</option>
+                            <option value="yes">Y</option>
+                            <option value="no">N</option>
+                        </select></label></th>
+                <th><label><select name="hasDeadlines">
+                            <option value="">Deadlines</option>
+                            <option value="yes">Y</option>
+                            <option value="no">N</option>
+                        </select></label></th>
+                <th><label><select name="hasNotes">
+                            <option value="">Notes</option>
+                            <option value="yes">Y</option>
+                            <option value="no">N</option>
+                        </select></label></th>
             </tr>
             </thead>
             <tbody>
             <?php
-            foreach($sessions as $i => $s)
+            foreach($users as $i => $u)
             {
-                /** @var Visit $s */
-                $parts = explode('/', $s->getPath());
+                /** @var User $u */
+                if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER') || $u->hasRole('ROLE_ADMIN'))
+                    continue;
+                /** @var Visit $v */
+                $v = $u->getVisits()->first();
+                $parts = explode('/', !empty($v) ? $v->getPath() : '/');
                 $path = implode('', $parts);
+                $uri = $view['router']->generate('adviser', ['_user' => $u->getId(), '_tab' => $path == '' ? 'home' : $path]);
                 /** @var Schedule $schedule */
-                $schedule = $s->getUser()->getSchedules()->first();
+                $schedule = $u->getSchedules()->first();
                 /** @var User $adviser */
-                $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_ADVISER');})->first();})->first();
-                if(!empty($adviser))
-                    $adviser = $s->getUser()->getGroups()->map(function (Group $g) { return $g->getUsers()->filter(function (User $u) {return $u->hasRole('ROLE_MASTER_ADVISER');})->first();})->first();
-                ?><tr class="user-id-<?php print $s->getUser()->getId(); ?> status_<?php print ($s->getUser()->getProperty('adviser_status') ?: 'green'); ?>">
+                $adviser = $u->getPartnerOrAdviser();
+                ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td data-timestamp="<?php print $s->getCreated()->getTimestamp(); ?>"><?php print $s->getCreated()->format('j M'); ?></td>
-                <td><?php print $s->getUser()->getCompleted(); ?>%</td>
-                <td><a title="<?php print (!empty($parts[1]) ? ucfirst($parts[1]) : 'Home'); ?>" href="<?php print $view['router']->generate('adviser', ['_user' => $s->getUser()->getId(), '_tab' => $path == '' ? 'home' : $path]); ?>"><?php print $s->getUser()->getFirst() . ' ' . $s->getUser()->getLast(); ?></a></td>
+                <td data-timestamp="<?php print $u->getLastLogin()->getTimestamp(); ?>"><?php print $u->getLastLogin()->format('j M'); ?></td>
+                <td><?php print $u->getCompleted(); ?>%</td>
+                <td><a title="<?php print (!empty($parts[1]) ? ucfirst($parts[1]) : 'Home'); ?>" href="<?php print $uri; ?>">
+                        <?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
                 <td><?php print (empty($schedule) || empty($schedule->getUniversity()) ? 'Not set' : $schedule->getUniversity()); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>
-                <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>
+                    <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>
                 <?php } ?>
+                <td><?php print array_sum($u->getSchedules()->map(function (Schedule $s) {
+                        return $s->getCourses()->filter(function (Course $c) {
+                            return $c->getGrades()->count() > 0;
+                        })->count();
+                    })->toArray()); ?></td>
+                <td><?php print $u->getDeadlines()->count(); ?></td>
+                <td><?php print (!empty($u->getEvernoteAccessToken()) ? $u->getNotes()->count() : 'N'); ?></td>
                 </tr><?php
             } ?>
             </tbody>
         </table>
+        </form>
     </div>
 </div>
 <?php $view['slots']->stop();

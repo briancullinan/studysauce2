@@ -206,6 +206,171 @@ $view['slots']->start('body'); ?>
                     </table>
                 </div>
                 <div id="aggregate" class="tab-pane">
+                    <table class="results">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td><h3>Course 1</h3></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td><h4>Introduction</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz1']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Settings goals</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz2']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Distractions</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz4']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Procrastination</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz3']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Study environment</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz5']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Partners<h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz6']; ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h3>Course 2</h3></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td><h4>Study metrics</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['studyMetrics']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Study plans</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['studyPlan']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Interleaving</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['interleaving']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Studying for tests</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['studyTests']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Test taking</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['testTaking']; ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h3>Course 3</h3></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td><h4>Intro to strategies</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz1']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Group study</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz1']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Teach to learn</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz1']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Active reading</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz1']; ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h4>Spaced repetition</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="read-only">
+                                                            <?php print $aggregate['quiz1']; ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -213,3 +378,6 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 
+$view['slots']->start('sincludes'); ?>
+
+<?php $view['slots']->stop();

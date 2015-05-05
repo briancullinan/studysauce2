@@ -47,5 +47,6 @@ $(document).ready(function () {
     }
 
     checkForVisibility();
+    onYouTubeIframeAPIReady.apply($('.landing-home'));
 
 });

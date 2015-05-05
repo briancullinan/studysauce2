@@ -10,8 +10,12 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
+use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Templating\Helper\SlotsHelper;
 
 /**
  * Class PartnerController
@@ -237,6 +241,90 @@ class ResultsController extends Controller
             ->getQuery()
             ->getResult();
 
+        // TODO: get aggregate data for every quiz answer
+        $courses = [
+            'course1' => [
+                'Course1Bundle:Introduction:quiz.html.php' => 'quiz1',
+                'Course1Bundle:SettingGoals:quiz.html.php' => 'quiz2',
+                'Course1Bundle:Distractions:quiz.html.php' => 'quiz4',
+                'Course1Bundle:Procrastination:quiz.html.php' => 'quiz3',
+                'Course1Bundle:Environment:quiz.html.php' => 'quiz5',
+                'Course1Bundle:Partners:quiz.html.php' => 'quiz6'
+            ],
+            'course2' => [
+                'Course2Bundle:StudyMetrics:quiz.html.php' => 'studyMetrics',
+                'Course2Bundle:StudyPlan:quiz.html.php' => 'studyPlan',
+                'Course2Bundle:Interleaving:quiz.html.php' => 'interleaving',
+                'Course2Bundle:StudyTests:quiz.html.php' => 'studyTests',
+                'Course2Bundle:TestTaking:quiz.html.php' => 'testTaking',
+            ],
+        ];
+        foreach($courses as $course => $quizes) {
+            foreach ($quizes as $t => $q) {
+                $data = $orm->getMetadataFactory()->getMetadataFor(ucfirst($course) . 'Bundle:' . ucfirst($q));
+                $fields = $data->getFieldNames();
+                $questions = [];
+                foreach ($fields as $f) {
+                    if (in_array($f, $data->getAssociationNames()) || $f == 'id' || $f == 'created') {
+                        continue;
+                    }
+
+                    $groupBy = self::searchBuilder($orm, $request, $joins)->distinct(true)->select(
+                        'q1.' . $f . ', count(q1) AS cnt'
+                    );
+                    $counts = $groupBy
+                        ->leftJoin('u.' . $course . 's', 'c1')
+                        ->leftJoin('c1.' . $q, 'q1')
+                        ->groupBy('q1.' . $f)
+                        ->getQuery()
+                        ->getResult();
+                    $questions[$f] = $counts;
+                }
+                $cn = '\\' . ucfirst($course) . '\\Bundle\\Entity\\' . ucfirst($q);
+                $quizContent = $this->forward(
+                    'AdminBundle:Results:template',
+                    ['_format' => 'tab', 'template' => $t, 'class' => $cn]
+                )->getContent();
+                foreach ($questions as $f => $c) {
+                    $total = array_sum(
+                        array_map(
+                            function ($field) {
+                                return $field['cnt'];
+                            },
+                            $c
+                        )
+                    );
+                    $answers = '<div class="answer">' . join(
+                            '</div><div>',
+                            array_map(
+                                function ($field) use ($f, $total) {
+                                    $val = $field[$f];
+                                    if (is_array($val)) {
+                                        $val = join(', ', $val);
+                                    }
+                                    if (is_bool($val)) {
+                                        $val = $val ? 'true' : 'false';
+                                    }
+                                    if (is_null($val)) {
+                                        $val = 'No answer';
+                                    }
+
+                                    return $val . ' - ' . $field['cnt'] . ' (' . round(
+                                        $field['cnt'] * 100.0 / $total
+                                    ) . '%)';
+                                },
+                                $c
+                            )
+                        ) . '</div>';
+                    $quizContent = preg_replace(
+                        '/(<label[\s\S]*?<input.*name="quiz-' . $f . '".*?>[\s\S]*?<\/label>[\s]*)+/i',
+                        $answers,
+                        $quizContent
+                    );
+                }
+                $aggregate[$q] = $quizContent;
+            }
+        }
 
         $parents = self::searchBuilder($orm, $request)
             ->select('COUNT(DISTINCT u.id)')
@@ -329,7 +417,25 @@ class ResultsController extends Controller
             'csa' => $csa,
             'completed' => $completed,
             'total' => $total,
+            'aggregate' => $aggregate
         ]);
+    }
+
+    /**
+     * @param $template
+     * @param $class
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function templateAction($template, $class)
+    {
+        /** @var DelegatingEngine $tpl */
+        $tpl = $this->container->get('templating');
+        /** @var TimedPhpEngine $engine */
+        $engine = $tpl->getEngine($template);
+        $tpl->render($template, ['quiz' => new $class(), 'csrf_token' => '']);
+        /** @var SlotsHelper $slots */
+        $slots = $engine->get('slots');
+        return new Response($slots->get('body'));
     }
 
     /**
@@ -338,13 +444,10 @@ class ResultsController extends Controller
      */
     public function userAction(Request $request)
     {
-        /** @var $orm EntityManager */
-        $orm = $this->get('doctrine')->getManager();
         /** @var User $user */
         $user = $this->getUser();
 
         return $this->render('AdminBundle:Results:result.html.php', [
-            'orm' => $orm,
             'course1' => $user->getCourse1s()->first() ?: new Course1(),
             'course2' => $user->getCourse2s()->first() ?: new Course2(),
             'course3' => $user->getCourse3s()->first() ?: new Course3()

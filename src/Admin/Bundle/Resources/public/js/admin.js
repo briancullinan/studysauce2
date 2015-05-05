@@ -80,6 +80,80 @@ $(document).ready(function () {
         row.removeClass('edit').addClass('read-only');
     });
 
+    var ctrlDown = false;
+    var ctrlKey = 17, vKey = 86, cKey = 67;
+
+    $(document).keydown(function(e)
+    {
+        if (e.keyCode == ctrlKey) ctrlDown = true;
+    }).keyup(function(e)
+    {
+        if (e.keyCode == ctrlKey) ctrlDown = false;
+    });
+
+
+    body.find('#command_control').on('keydown', function(e)
+    {
+        var command = $('#command_control');
+        if (ctrlDown && (e.keyCode == vKey || e.keyCode == cKey)) {
+
+            // get the clipboard text
+            var that = $(this),
+                text = $('<textarea></textarea>')
+                    .css('opacity', '0')
+                    .css('height', 1)
+                    .css('width', 1).appendTo(command).focus();
+            // generate rows in current view
+            var currentView =
+                command.find('.results > thead > tr > th:visible:not(:last-child)').map(function (i) {
+                    if(i == 0) {
+                        return 'Visited';
+                    }
+                    if(i == 5) {
+                        return 'Sign up';
+                    }
+                    if(i == 3) {
+                        return "First name\tLast name\tEmail";
+                    }
+                    return $(this).find('> label > select option:first-child').text();
+                }).toArray().join("\t") + "\r\n" +
+                command.find('.results > tbody > tr').map(function () {
+                return $(this).find('> td:visible:not(:last-child)').map(function (i) {
+                    if(i == 1 || i == 2) {
+                        return $(this).find(':checked ~ span').map(function () {
+                            return $(this).text();
+                        }).toArray().join(', ');
+                    }
+                    if(i == 3) {
+                        return $(this).find('input').map(function () {return $(this).val();}).toArray().join("\t");
+                    }
+                    return $(this).text();
+                }).toArray().join("\t");
+            }).toArray().join("\r\n");
+            text.val(currentView);
+            text.selectRange(0, currentView.length);
+
+            setTimeout(function () {
+                var clipText = text.val(), i;
+                text.remove();
+                that.focus();
+
+                // split into rows
+                var clipRows = clipText.split(/\n/ig);
+
+                // split rows into columns
+                for (i=0; i<clipRows.length; i++) {
+                    clipRows[i] = clipRows[i].split(/\t|\s\s\s\s+/ig);
+                }
+
+                // write out in a table
+                for (i=0; i<clipRows.length; i++) {
+
+                }
+            }, 100);
+        }
+    });
+
     body.on('click', '#group-manager a[href="#cancel-edit"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr'),

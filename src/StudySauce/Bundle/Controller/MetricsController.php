@@ -63,21 +63,6 @@ class MetricsController extends Controller
     }
 
     /**
-     * @param $_user
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAction($_user)
-    {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
-        /** @var $user User */
-        $user = $userManager->findUserBy(['id' => intval($_user)]);
-
-        return $this->indexAction($user, ['Partner', 'metrics']);
-    }
-
-    /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function widgetAction()

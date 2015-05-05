@@ -136,16 +136,6 @@ class PlanController extends Controller
     }
 
     /**
-     * @param $_user
-     * @param $_week
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAction(User $_user, $_week = null)
-    {
-        return $this->indexAction($_user, $_week, ['Partner', 'plan']);
-    }
-
-    /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function widgetAction()

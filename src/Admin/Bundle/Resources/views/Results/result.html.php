@@ -16,73 +16,73 @@ use Course3\Bundle\Entity\Course3;
 ?>
 <table>
     <tr>
-        <td>Course 1</td>
+        <td><h3>Course 1</h3></td>
     </tr>
     <tr><td>
             <table>
                 <tr>
-                    <td>Introduction</td>
+                    <td><h4>Introduction</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
-                        <?php $view->render('Course1Bundle:Introduction:quiz.html.php', ['quiz' => $course1->getQuiz1s()->first() ?: new Quiz1(), 'csrf_token' => '']); ?>
+                        <?php $view->render('Course1Bundle:Introduction:quiz.html.php', ['quiz' => $course1->getQuiz1()->first() ?: new Quiz1(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Settings goals</td>
+                    <td><h4>Settings goals</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
-                        <?php $view->render('Course1Bundle:SettingGoals:quiz.html.php', ['quiz' => $course1->getQuiz2s()->first() ?: new Quiz2(), 'csrf_token' => '']); ?>
+                        <?php $view->render('Course1Bundle:SettingGoals:quiz.html.php', ['quiz' => $course1->getQuiz2()->first() ?: new Quiz2(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Distractions</td>
+                    <td><h4>Distractions</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
-                        <?php $view->render('Course1Bundle:Distractions:quiz.html.php', ['quiz' => $course1->getQuiz4s()->first() ?: new Quiz4(), 'csrf_token' => '']); ?>
+                        <?php $view->render('Course1Bundle:Distractions:quiz.html.php', ['quiz' => $course1->getQuiz4()->first() ?: new Quiz4(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Procrastination</td>
+                    <td><h4>Procrastination</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
-                        <?php $view->render('Course1Bundle:Procrastination:quiz.html.php', ['quiz' => $course1->getQuiz3s()->first() ?: new Quiz3(), 'csrf_token' => '']); ?>
+                        <?php $view->render('Course1Bundle:Procrastination:quiz.html.php', ['quiz' => $course1->getQuiz3()->first() ?: new Quiz3(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Study environment</td>
+                    <td><h4>Study environment</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
-                        <?php $view->render('Course1Bundle:Environment:quiz.html.php', ['quiz' => $course1->getQuiz5s()->first() ?: new Quiz5(), 'csrf_token' => '']); ?>
+                        <?php $view->render('Course1Bundle:Environment:quiz.html.php', ['quiz' => $course1->getQuiz5()->first() ?: new Quiz5(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Partners</td>
+                    <td><h4>Partners<h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
-                        <?php $view->render('Course1Bundle:Partners:quiz.html.php', ['quiz' => $course1->getQuiz6s()->first() ?: new Quiz6(), 'csrf_token' => '']); ?>
+                        <?php $view->render('Course1Bundle:Partners:quiz.html.php', ['quiz' => $course1->getQuiz6()->first() ?: new Quiz6(), 'csrf_token' => '']); ?>
                         <?php $view['slots']->output('body'); ?>
                     </td>
                 </tr>
             </table>
         </td></tr>
     <tr>
-        <td>Course 2</td>
+        <td><h3>Course 2</h3></td>
     </tr>
     <tr><td>
             <table>
                 <tr>
-                    <td>Study metrics</td>
+                    <td><h4>Study metrics</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -91,7 +91,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Study plans</td>
+                    <td><h4>Study plans</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -100,7 +100,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Interleaving</td>
+                    <td><h4>Interleaving</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -109,7 +109,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Studying for tests</td>
+                    <td><h4>Studying for tests</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -118,7 +118,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Test taking</td>
+                    <td><h4>Test taking</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -129,12 +129,12 @@ use Course3\Bundle\Entity\Course3;
             </table>
         </td></tr>
     <tr>
-        <td>Course 3</td>
+        <td><h3>Course 3</h3></td>
     </tr>
     <tr><td>
             <table>
                 <tr>
-                    <td>Intro to strategies</td>
+                    <td><h4>Intro to strategies</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -143,7 +143,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Group study</td>
+                    <td><h4>Group study</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -152,7 +152,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Teach to learn</td>
+                    <td><h4>Teach to learn</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -161,7 +161,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Active reading</td>
+                    <td><h4>Active reading</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">
@@ -170,7 +170,7 @@ use Course3\Bundle\Entity\Course3;
                     </td>
                 </tr>
                 <tr>
-                    <td>Spaced repetition</td>
+                    <td><h4>Spaced repetition</h4></td>
                 </tr>
                 <tr>
                     <td class="read-only">

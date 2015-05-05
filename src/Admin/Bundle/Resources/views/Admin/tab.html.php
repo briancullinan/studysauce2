@@ -361,7 +361,11 @@ $view['slots']->start('body'); ?>
             <td><?php print ($u->getGoals()->count() > 0 ? 'Y' : 'N'); ?></td>
             <td><?php print $u->getDeadlines()->count(); ?></td>
             <td><?php print $u->getSchedules()->count(); ?></td>
-            <td><?php print array_sum($u->getSchedules()->map(function (Schedule $s) {return $s->getCourses()->filter(function (Course $c) {return $c->getGrades()->count() > 0;})->count();})->toArray()); ?></td>
+            <td><?php print array_sum($u->getSchedules()->map(function (Schedule $s) {
+                    return $s->getCourses()->filter(function (Course $c) {
+                        return $c->getGrades()->count() > 0;
+                    })->count();
+                })->toArray()); ?></td>
             <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
             <td><?php print (!empty($u->getEvernoteAccessToken()) ? 'Y' : 'N'); ?></td>
             <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1(

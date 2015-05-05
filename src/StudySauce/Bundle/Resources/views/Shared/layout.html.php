@@ -116,15 +116,37 @@ $collection = $router->getRouteCollection();
         window.callbackKeys = JSON.parse('<?php print json_encode($callbackKeys); ?>');
         window.callbackUri = JSON.parse('<?php print json_encode($callbackUri); ?>');
         window.musicLinks = [
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_2_Bb_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_15_Bb_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/C_Major_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_17_G_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_16_D_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_6_Bb_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_5_D_Andante.mp3',
-            window.callbackPaths['_welcome'] + 'bundles/studysauce/music/No_1_F_Andante.mp3'
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_2_Bb_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_15_Bb_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/C_Major_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_17_G_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_16_D_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_6_Bb_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_5_D_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_1_F_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_12_B_Allegro.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_27_B_Allegro.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_21_C.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_20_D_Allegro.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_19_F_Allegro.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_10_E_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_14_E.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_13_G.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_13_G_Minuet.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_3_G_Adagio.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_23_F_Andante.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_23_F_Allegro.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_23_F_Allegro4.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_6_E.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_5_D_Andante5.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_5_D_Allegro3.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_5_D_Allegro1.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_9_D_Andantino.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_9_D_Andante3.mp3',
+            'https://s3-us-west-2.amazonaws.com/studysauce/No_11_E_Allegro.mp3'
+
         ];
+        window.musicAlarm = 'https://s3-us-west-2.amazonaws.com/studysauce/study_alarm.mp3';
     </script>
 </head>
 <body class="<?php $view['slots']->output('classes') ?>">

@@ -20,7 +20,7 @@ class Quiz2
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Course1", inversedBy="quiz2s")
+     * @ORM\ManyToOne(targetEntity="Course1", inversedBy="quiz2")
      * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
      */
     protected $course;

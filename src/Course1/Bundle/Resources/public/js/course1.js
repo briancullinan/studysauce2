@@ -24,7 +24,7 @@ $(document).ready(function () {
         if(step.find('input[name="quiz-education"]:checked').length == 0 ||
             step.find('input[name="quiz-mindset"]:checked').length == 0 ||
             step.find('input[name="quiz-devices"]:checked').length == 0 ||
-            step.find('input[name="quiz-study-much"]:checked').length == 0 ||
+            step.find('input[name="quiz-studyMuch"]:checked').length == 0 ||
             step.find('input[name="quiz-time-management"]:checked').length == 0)
             valid = false;
         if(!valid)
@@ -36,14 +36,14 @@ $(document).ready(function () {
     function validateQuiz2() {
         var step = body.find('#course1_setting_goals-step2'),
             valid = true;
-        if(step.find('input[name="quiz-goal-performance"]:checked').length == 0 ||
-            step.find('input[name="quiz-smart-acronym-S"]').val().trim() == '' ||
-            step.find('input[name="quiz-smart-acronym-M"]').val().trim() == '' ||
-            step.find('input[name="quiz-smart-acronym-A"]').val().trim() == '' ||
-            step.find('input[name="quiz-smart-acronym-R"]').val().trim() == '' ||
-            step.find('input[name="quiz-smart-acronym-T"]').val().trim() == '' ||
-            step.find('input[name="quiz-motivation-I"]').val().trim() == '' ||
-            step.find('input[name="quiz-motivation-E"]').val().trim() == '')
+        if(step.find('input[name="quiz-goalPerformance"]:checked').length == 0 ||
+            step.find('input[name="quiz-specific"]').val().trim() == '' ||
+            step.find('input[name="quiz-measurable"]').val().trim() == '' ||
+            step.find('input[name="quiz-achievable"]').val().trim() == '' ||
+            step.find('input[name="quiz-relevant"]').val().trim() == '' ||
+            step.find('input[name="timeBound"]').val().trim() == '' ||
+            step.find('input[name="quiz-intrinsic"]').val().trim() == '' ||
+            step.find('input[name="quiz-extrinsic"]').val().trim() == '')
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -54,12 +54,12 @@ $(document).ready(function () {
     function validateQuiz3() {
         var step = body.find('#course1_procrastination-step2'),
             valid = true;
-        if(step.find('input[name="quiz-memory-A"]').val().trim() == '' ||
-            step.find('input[name="quiz-memory-R"]').val().trim() == '' ||
-            step.find('input[name="quiz-study-goal"]').val().trim() == '' ||
-            step.find('input[name="quiz-stop-procrastinating"]').val().trim() == '' ||
-            step.find('input[name="quiz-reduce-procrastination-D"]').val().trim() == '' ||
-            step.find('input[name="quiz-reduce-procrastination-P"]').val().trim() == '')
+        if(step.find('input[name="quiz-activeMemory"]').val().trim() == '' ||
+            step.find('input[name="quiz-referenceMemory"]').val().trim() == '' ||
+            step.find('input[name="quiz-studyGoal"]').val().trim() == '' ||
+            step.find('input[name="quiz-procrastinating"]').val().trim() == '' ||
+            step.find('input[name="quiz-deadlines"]').val().trim() == '' ||
+            step.find('input[name="quiz-plan"]').val().trim() == '')
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -200,7 +200,7 @@ $(document).ready(function () {
                 mindset: step.find('input[name="quiz-mindset"]:checked').val(),
                 time: step.find('input[name="quiz-time-management"]:checked').val(),
                 devices: step.find('input[name="quiz-devices"]:checked').val(),
-                study: step.find('input[name="quiz-study-much"]:checked').val()
+                study: step.find('input[name="quiz-studyMuch"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -229,14 +229,14 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                performance: step.find('input[name="quiz-goal-performance"]:checked').val(),
-                acronymS: step.find('input[name="quiz-smart-acronym-S"]').val(),
-                acronymM: step.find('input[name="quiz-smart-acronym-M"]').val(),
-                acronymA: step.find('input[name="quiz-smart-acronym-A"]').val(),
-                acronymR: step.find('input[name="quiz-smart-acronym-R"]').val(),
-                acronymT: step.find('input[name="quiz-smart-acronym-T"]').val(),
-                motivationE: step.find('input[name="quiz-motivation-E"]').val(),
-                motivationI: step.find('input[name="quiz-motivation-I"]').val()
+                performance: step.find('input[name="quiz-goalPerformance"]:checked').val(),
+                acronymS: step.find('input[name="specific"]').val(),
+                acronymM: step.find('input[name="measurable"]').val(),
+                acronymA: step.find('input[name="achievable"]').val(),
+                acronymR: step.find('input[name="relevant"]').val(),
+                acronymT: step.find('input[name="timeBound"]').val(),
+                motivationE: step.find('input[name="quiz-extrinsic"]').val(),
+                motivationI: step.find('input[name="quiz-intrinsic"]').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -273,12 +273,12 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                memoryA: step.find('input[name="quiz-memory-A"]').val().trim(),
-                memoryR: step.find('input[name="quiz-memory-R"]').val().trim(),
-                studyGoal: step.find('input[name="quiz-study-goal"]').val().trim(),
-                procrastinating: step.find('input[name="quiz-stop-procrastinating"]').val().trim(),
-                procrastinationD: step.find('input[name="quiz-reduce-procrastination-D"]').val().trim(),
-                procrastinationP: step.find('input[name="quiz-reduce-procrastination-P"]').val().trim()
+                memoryA: step.find('input[name="quiz-activeMemory"]').val().trim(),
+                memoryR: step.find('input[name="quiz-referenceMemory"]').val().trim(),
+                studyGoal: step.find('input[name="quiz-studyGoal"]').val().trim(),
+                procrastinating: step.find('input[name="quiz-procrastinating"]').val().trim(),
+                procrastinationD: step.find('input[name="quiz-deadlines"]').val().trim(),
+                procrastinationP: step.find('input[name="quiz-plan"]').val().trim()
             },
             success: function (data) {
                 var content = $(data);
@@ -340,10 +340,10 @@ $(document).ready(function () {
     function validateQuiz5() {
         var step = body.find('#course1_environment-step2'),
             valid = true;
-        if(step.find('input[name="quiz-environment-bed"]:checked').length == 0 ||
-            step.find('input[name="quiz-environment-mozart"]:checked').length == 0 ||
-            step.find('input[name="quiz-environment-nature"]:checked').length == 0 ||
-            step.find('input[name="quiz-environment-breaks"]:checked').length == 0)
+        if(step.find('input[name="quiz-bed"]:checked').length == 0 ||
+            step.find('input[name="quiz-mozart"]:checked').length == 0 ||
+            step.find('input[name="quiz-nature"]:checked').length == 0 ||
+            step.find('input[name="quiz-breaks"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -367,10 +367,10 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                bed: step.find('input[name="quiz-environment-bed"]:checked').val(),
-                mozart: step.find('input[name="quiz-environment-mozart"]:checked').val(),
-                nature: step.find('input[name="quiz-environment-nature"]:checked').val(),
-                breaks: step.find('input[name="quiz-environment-breaks"]:checked').val()
+                bed: step.find('input[name="quiz-bed"]:checked').val(),
+                mozart: step.find('input[name="quiz-mozart"]:checked').val(),
+                nature: step.find('input[name="quiz-nature"]:checked').val(),
+                breaks: step.find('input[name="quiz-breaks"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -394,7 +394,7 @@ $(document).ready(function () {
     function validateQuiz6() {
         var step = body.find('#course1_partners-step2'),
             valid = true;
-        if(step.find('input[name="quiz-partners-help"]:checked').length == 0 ||
+        if(step.find('input[name="quiz-help"]:checked').length == 0 ||
             step.find('input[name="quiz-partners-attribute"]:checked').length == 0 ||
             step.find('input[name="quiz-partners-often"]').val().trim() == '' ||
             step.find('input[name="quiz-partners-usage"]:checked').length == 0)
@@ -422,10 +422,10 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                help: step.find('input[name="quiz-partners-help"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
-                attribute: step.find('input[name="quiz-partners-attribute"]:checked').val(),
-                often: step.find('input[name="quiz-partners-often"]').val().trim(),
-                usage: step.find('input[name="quiz-partners-usage"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
+                help: step.find('input[name="quiz-help"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
+                attribute: step.find('input[name="quiz-attribute"]:checked').val(),
+                often: step.find('input[name="quiz-often"]').val().trim(),
+                usage: step.find('input[name="quiz-Dusage"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
             },
             success: function (data) {
                 var content = $(data);

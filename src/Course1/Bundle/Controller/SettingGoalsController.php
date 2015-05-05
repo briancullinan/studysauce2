@@ -53,7 +53,7 @@ class SettingGoalsController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:SettingGoals:quiz.html.php', [
-                        'quiz' => $course->getQuiz2s()->first() ?: new Quiz2(),
+                        'quiz' => $course->getQuiz2()->first() ?: new Quiz2(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;

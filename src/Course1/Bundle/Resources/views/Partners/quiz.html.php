@@ -12,10 +12,10 @@ $complete = !empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty(
         <h2>Now let's see how much you remember</h2>
         <h3>Select the two main ways an accountability partners can help you in school from the list below:</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="motivate" <?php print (in_array('motivate', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>To motivate you</span></label>
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="tutor" <?php print (in_array('tutor', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>Tutoring for your most difficult classes</span></label>
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="focus" <?php print (in_array('focus', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>Help keep you focused</span></label>
-            <label class="checkbox"><input name="quiz-partners-help" type="checkbox" value="incentive" <?php print (in_array('incentive', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>To incentivize you to achieve your goals</span></label>
+            <label class="checkbox"><input name="quiz-help" type="checkbox" value="motivate" <?php print (in_array('motivate', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>To motivate you</span></label>
+            <label class="checkbox"><input name="quiz-help" type="checkbox" value="tutor" <?php print (in_array('tutor', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>Tutoring for your most difficult classes</span></label>
+            <label class="checkbox"><input name="quiz-help" type="checkbox" value="focus" <?php print (in_array('focus', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>Help keep you focused</span></label>
+            <label class="checkbox"><input name="quiz-help" type="checkbox" value="incentive" <?php print (in_array('incentive', $quiz->getHelp()) ? 'checked="checked"' : ''); ?>><i></i><span>To incentivize you to achieve your goals</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -24,10 +24,10 @@ $complete = !empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty(
         <?php } ?>
         <h3>Which of the following is not a key attribute to look for when choosing your accountability partner?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="trust" <?php print ($quiz->getAttribute() == 'trust' ? 'checked="checked"' : ''); ?>><i></i><span>Someone you trust.</span></label>
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="challenge" <?php print ($quiz->getAttribute() == 'challenge' ? 'checked="checked"' : ''); ?>><i></i><span>Someone that will challenge you.</span></label>
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="knows" <?php print ($quiz->getAttribute() == 'knows' ? 'checked="checked"' : ''); ?>><i></i><span>Someone that knows you best.</span></label>
-            <label class="radio"><input name="quiz-partners-attribute" type="radio" value="celebrate" <?php print ($quiz->getAttribute() == 'celebrate' ? 'checked="checked"' : ''); ?>><i></i><span>Someone that will celebrate your successes.</span></label>
+            <label class="radio"><input name="quiz-attribute" type="radio" value="trust" <?php print ($quiz->getAttribute() == 'trust' ? 'checked="checked"' : ''); ?>><i></i><span>Someone you trust.</span></label>
+            <label class="radio"><input name="quiz-attribute" type="radio" value="challenge" <?php print ($quiz->getAttribute() == 'challenge' ? 'checked="checked"' : ''); ?>><i></i><span>Someone that will challenge you.</span></label>
+            <label class="radio"><input name="quiz-attribute" type="radio" value="knows" <?php print ($quiz->getAttribute() == 'knows' ? 'checked="checked"' : ''); ?>><i></i><span>Someone that knows you best.</span></label>
+            <label class="radio"><input name="quiz-attribute" type="radio" value="celebrate" <?php print ($quiz->getAttribute() == 'celebrate' ? 'checked="checked"' : ''); ?>><i></i><span>Someone that will celebrate your successes.</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -36,7 +36,7 @@ $complete = !empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty(
         <?php } ?>
         <h3>How often should you talk with your accountability partner?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-partners-often" type="text" value="<?php print $view->escape($quiz->getOften()); ?>"></label>
+            <label class="input"><input name="quiz-often" type="text" value="<?php print $view->escape($quiz->getOften()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -45,10 +45,10 @@ $complete = !empty($quiz->getHelp()) && !empty($quiz->getAttribute()) && !empty(
         <?php } ?>
         <h3>According to the video, which of the following are examples of other ways accountability partners are used?</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="drive" <?php print (in_array('drive', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Learning to drive</span></label>
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="dieting" <?php print (in_array('dieting', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Dieting</span></label>
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="gyms" <?php print (in_array('gyms', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Gyms</span></label>
-            <label class="checkbox"><input name="quiz-partners-usage" type="checkbox" value="churches" <?php print (in_array('churches', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Churches</span></label>
+            <label class="checkbox"><input name="quiz-usage" type="checkbox" value="drive" <?php print (in_array('drive', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Learning to drive</span></label>
+            <label class="checkbox"><input name="quiz-usage" type="checkbox" value="dieting" <?php print (in_array('dieting', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Dieting</span></label>
+            <label class="checkbox"><input name="quiz-usage" type="checkbox" value="gyms" <?php print (in_array('gyms', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Gyms</span></label>
+            <label class="checkbox"><input name="quiz-usage" type="checkbox" value="churches" <?php print (in_array('churches', $quiz->getUsage()) ? 'checked="checked"' : ''); ?>><i></i><span>Churches</span></label>
         </div>
         <?php if($complete) { ?>
             <div class="results">

@@ -129,13 +129,13 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $files;
 
     /**
-     * @ORM\OneToMany(targetEntity="StudyNote", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="StudyNote", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="ContactMessage", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="ContactMessage", mappedBy="user", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $messages;

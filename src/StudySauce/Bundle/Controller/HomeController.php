@@ -28,7 +28,7 @@ class HomeController extends Controller
             ? $this->get('form.csrf_provider')->generateCsrfToken('account_update')
             : null;
 
-        $showBookmark = false; // TODO: false in production
+        $showBookmark = true; // TODO: false in production
         if(empty($user->getProperty('seen_bookmark'))) {
             $showBookmark = true;
             /** @var $userManager UserManager */
@@ -64,6 +64,8 @@ class HomeController extends Controller
             return ['thanks', []];
         elseif($user->hasRole('ROLE_PAID') && ($step = ProfileController::getFunnelState($user)))
             return [$step, ['_format' => 'funnel']];
+        elseif(!$user->hasRole('ROLE_PAID') && !$user->hasRole('ROLE_ADMIN'))
+            return ['checkout', []];
         elseif(empty($user->getProperty('first_time')))
             return ['course1_introduction', []];
         return ['home', []];

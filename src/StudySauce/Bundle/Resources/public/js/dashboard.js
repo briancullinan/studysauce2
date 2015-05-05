@@ -176,7 +176,8 @@ $(document).ready(function () {
         // TODO: add mobile check here?
         if (typeof navigator != 'undefined' &&
             (navigator.userAgent.toLowerCase().indexOf("iphone") > -1 ||
-            navigator.userAgent.toLowerCase().indexOf("ipad") > -1)) {
+            navigator.userAgent.toLowerCase().indexOf("ipad") > -1 ||
+            navigator.userAgent.toLowerCase().indexOf("android") > -1)) {
             // show empty
             $('#bookmark').modal({show:true});
         }
@@ -264,6 +265,7 @@ $(document).ready(function () {
     window.musicIndex = 0;
     if(typeof $.fn.jPlayer == 'function') {
         var jp = jQuery('#jquery_jplayer');
+        window.musicIndex = Math.floor(Math.random() * window.musicLinks.length);
         jp.jPlayer({
             swfPath: window.callbackPaths['_welcome'] + 'bundles/studysauce/js',
             solution: 'html,flash',
@@ -277,7 +279,7 @@ $(document).ready(function () {
                 pause: '.minplayer-default-pause'
             },
             ready: function() {
-                var index = window.musicIndex++;
+                var index = ++window.musicIndex % window.musicLinks.length;
                 $(this).jPlayer( "setMedia", {
                     mp3: window.musicLinks[index],
                     m4a: window.musicLinks[index].substr(0, window.musicLinks[index].length - 4) + '.mp4',
@@ -287,7 +289,11 @@ $(document).ready(function () {
         });
 
         jp.bind($.jPlayer.event.ended, function () {
-            var index = window.musicIndex++;
+            if(window.musicIndex == -1) {
+                window.musicIndex = Math.floor(Math.random() * window.musicLinks.length);
+                return;
+            }
+            var index = ++window.musicIndex % window.musicLinks.length;
             jp.jPlayer("setMedia", {
                 mp3: window.musicLinks[index],
                 m4a: window.musicLinks[index].substr(0, window.musicLinks[index].length - 4) + '.mp4',

@@ -23,8 +23,8 @@ $view['slots']->start('body'); ?>
             }*/
             ?></h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-memory-A" type="text" value="<?php print $view->escape($quiz->getActiveMemory()); ?>"></label>
-            <label class="input"><span>2</span><input name="quiz-memory-R" type="text" value="<?php print $view->escape($quiz->getReferenceMemory()); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-activeMemory" type="text" value="<?php print $view->escape($quiz->getActiveMemory()); ?>"></label>
+            <label class="input"><span>2</span><input name="quiz-referenceMemory" type="text" value="<?php print $view->escape($quiz->getReferenceMemory()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -44,7 +44,7 @@ $view['slots']->start('body'); ?>
             }*/
             ?></h3>
         <div class="questions">
-            <label class="input"><input name="quiz-study-goal" type="text" value="<?php print $view->escape($quiz->getStudyGoal()); ?>"></label>
+            <label class="input"><input name="quiz-studyGoal" type="text" value="<?php print $view->escape($quiz->getStudyGoal()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -66,7 +66,7 @@ $view['slots']->start('body'); ?>
             }*/
             ?></h3>
         <div class="questions">
-            <label class="input"><input name="quiz-stop-procrastinating" type="text" value="<?php print $view->escape($quiz->getProcrastinating()); ?>"></label>
+            <label class="input"><input name="quiz-procrastinating" type="text" value="<?php print $view->escape($quiz->getProcrastinating()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -88,8 +88,8 @@ $view['slots']->start('body'); ?>
             }*/
             ?></h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-reduce-procrastination-D" type="text" value="<?php print $view->escape($quiz->getDeadlines()); ?>"></label>
-            <label class="input"><span>2</span><input name="quiz-reduce-procrastination-P" type="text" value="<?php print $view->escape($quiz->getPlan()); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-deadlines" type="text" value="<?php print $view->escape($quiz->getDeadlines()); ?>"></label>
+            <label class="input"><span>2</span><input name="quiz-plan" type="text" value="<?php print $view->escape($quiz->getPlan()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

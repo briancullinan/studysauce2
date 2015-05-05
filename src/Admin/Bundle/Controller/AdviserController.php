@@ -4,8 +4,14 @@
 namespace Admin\Bundle\Controller;
 
 
+use Course1\Bundle\Entity\Course1;
+use Course2\Bundle\Entity\Course2;
+use Course3\Bundle\Entity\Course3;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use StudySauce\Bundle\Controller\GoalsController;
+use StudySauce\Bundle\Controller\MetricsController;
+use StudySauce\Bundle\Controller\PlanController;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
@@ -13,6 +19,7 @@ use StudySauce\Bundle\Entity\Visit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -22,7 +29,7 @@ class AdviserController extends Controller
 {
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function userlistAction()
     {
@@ -55,26 +62,6 @@ class AdviserController extends Controller
         }
 
         $users = array_unique($users);
-        // show sessions
-        $sessions = $orm->getRepository('StudySauceBundle:Visit')->createQueryBuilder('v')
-            ->leftJoin('v.user', 'u')
-            ->select(['v', 'u'])
-            ->andWhere('v.user IN (\'' . implode('\',\'', array_map(function (User $u) {return $u->getId();}, $users)) . '\')')
-            ->andWhere('v.path LIKE \'/schedule%\' OR v.path LIKE \'/metrics%\' OR v.path LIKE \'/goals%\' OR v.path LIKE \'/plan%\' OR v.path LIKE \'/course%\' OR v.path LIKE \'/account%\' OR v.path LIKE \'/premium%\' OR v.path LIKE \'/deadlines%\' OR v.path LIKE \'/checkin%\' OR v.path LIKE \'/home%\' OR v.path LIKE \'/partner%\' OR v.path LIKE \'/profile%\' OR v.path LIKE \'/calculator%\'')
-            ->andWhere('u.roles NOT LIKE \'%ADVISER%\' AND u.roles NOT LIKE \'%ADMIN%\'')
-            ->groupBy('v.session')
-            ->orderBy('v.created', 'DESC')
-            ->getQuery()
-            ->getResult();
-
-        // group sessions by day
-        $groups = [];
-        foreach($sessions as $v) {
-            /** @var Visit $v */
-            $groups[$v->getCreated()->format('Y-m-d')][$v->getUser()->getId()] = $v;
-        }
-        if(count($groups))
-            $sessions = call_user_func_array('array_merge', $groups);
 
         $showPartnerIntro = false;
         if(count($users) && empty($user->getProperty('seen_partner_intro'))) {
@@ -85,18 +72,8 @@ class AdviserController extends Controller
             $userManager->updateUser($user);
         }
 
-        $uniqueUsers = array_unique(array_map(function (Visit $v) {return $v->getUser();}, $sessions));
-        $diffUsers = array_diff($users, $uniqueUsers);
-        foreach($diffUsers as $u) {
-            /** @var User $u */
-            $v = new Visit();
-            $v->setUser($u);
-            $v->setCreated($u->getCreated());
-            $sessions[] = $v;
-        }
-
         return $this->render('AdminBundle:Adviser:userlist.html.php', [
-            'sessions' => $sessions,
+            'total' => count($users),
             'users' => $users,
             'showPartnerIntro' => $showPartnerIntro
         ]);
@@ -105,20 +82,7 @@ class AdviserController extends Controller
     /**
      * @param $_user
      * @param $_tab
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAction(User $_user, $_tab)
-    {
-        return $this->render('StudySauceBundle:Partner:partner.html.php', [
-            'user' => $_user,
-            'tab' => $_tab
-        ]);
-    }
-
-    /**
-     * @param $_user
-     * @param $_tab
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function adviserAction(User $_user, $_tab)
     {
@@ -149,5 +113,64 @@ class AdviserController extends Controller
         $user->setProperty('adviser_status', $request->get('status'));
         $userManager->updateUser($user);
         return new JsonResponse(true);
+    }
+
+    /**
+     * @param User $_user
+     * @return Response
+     */
+    public function goalsAction(User $_user)
+    {
+        $goals = new GoalsController();
+        $goals->setContainer($this->container);
+        return $goals->indexAction($_user, ['Partner', 'goals']);
+    }
+
+    /**
+     * @param User $_user
+     * @return Response
+     */
+    public function metricsAction(User $_user)
+    {
+        $metrics = new MetricsController();
+        $metrics->setContainer($this->container);
+        return $metrics->indexAction($_user, ['Partner', 'metrics']);
+    }
+
+    /**
+     * @param Request $request
+     * @param User $_user
+     * @return Response
+     */
+    public function deadlinesAction(Request $request, User $_user)
+    {
+        $deadlines = new \StudySauce\Bundle\Controller\DeadlinesController();
+        $deadlines->setContainer($this->container);
+        return $deadlines->indexAction($request, $_user, ['Partner', 'deadlines']);
+    }
+
+    /**
+     * @param User $_user
+     * @param $_week
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function planAction(User $_user, $_week = null)
+    {
+        $plan = new PlanController();
+        $plan->setContainer($this->container);
+        return $plan->indexAction($_user, $_week, ['Partner', 'plan']);
+    }
+
+    /**
+     * @param User $_user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resultsAction(User $_user)
+    {
+        return $this->render('AdminBundle:Adviser:results.html.php', [
+            'course1' => $_user->getCourse1s()->first() ?: new Course1(),
+            'course2' => $_user->getCourse2s()->first() ?: new Course2(),
+            'course3' => $_user->getCourse3s()->first() ?: new Course3()
+        ]);
     }
 }

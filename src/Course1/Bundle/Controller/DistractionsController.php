@@ -53,7 +53,7 @@ class DistractionsController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:Distractions:quiz.html.php', [
-                        'quiz' => $course->getQuiz4s()->first() ?: new Quiz4(),
+                        'quiz' => $course->getQuiz4()->first() ?: new Quiz4(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;

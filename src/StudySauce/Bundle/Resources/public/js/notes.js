@@ -38,6 +38,7 @@ $(document).ready(function () {
         noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notes.addClass('edit-note');
         CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
+        notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['notes_note'],
             type: 'GET',
@@ -47,6 +48,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
+                notes.find('.highlighted-link').removeClass('invalid').addClass('valid');
             }
         });
         setTimeout(function () {
@@ -101,7 +103,8 @@ $(document).ready(function () {
 
     body.on('click', 'a[href="#save-note"]', function (evt) {
         evt.preventDefault();
-        var notes = $('#notes');
+        var notes = $('#notes'),
+            notebookId = notes.find('select[name="notebook"]').val();
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation($(this));
         $.ajax({
@@ -112,7 +115,7 @@ $(document).ready(function () {
                 noteId: noteId,
                 tags: notes.find('.input.tags input')[0].selectize.getValue(),
                 title: notes.find('.note-title .title input').val().trim(),
-                notebookId: notes.find('select[name="notebook"]').val(),
+                notebookId: notebookId,
                 body: CKEDITOR.instances['editor1'].getData()
             },
             success: function (data) {
@@ -122,6 +125,14 @@ $(document).ready(function () {
                 notes.find('.term-row').remove();
                 response.find('.term-row').insertAfter('.new-study-note');
                 notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
+                var row = notes.find('.class-row.notebook-id-' + notebookId + ', .class-row.course-id-' + notebookId);
+                if(!row.parents('.term-row').is('.selected')) {
+                    row.parents('.term-row').find('> :first-child').trigger('click');
+                }
+                if(!row.is('.selected')) {
+                    row.find('> :first-child').trigger('click');
+                }
+                row.scrollintoview(DASHBOARD_MARGINS);
                 $('#editor1').blur();
                 CKEDITOR.instances.editor1.fire('blur');
             },
@@ -183,6 +194,14 @@ $(document).ready(function () {
                 response.find('.term-row').insertAfter('.new-study-note');
                 notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
                 notes.find('select[name="notebook"]').val(notes.find('option:contains(' + dialog.find('input').val().trim() + ')').attr('value'));
+                var row = notes.find('[value="' + dialog.find('input').val().trim() + '"]').parents('.class-row');
+                if(!row.parents('.term-row').is('.selected')) {
+                    row.parents('.term-row').find('> :first-child').trigger('click');
+                }
+                if(!row.is('.selected')) {
+                    row.find('> :first-child').trigger('click');
+                }
+                row.scrollintoview(DASHBOARD_MARGINS);
                 dialog.find('input').val('');
                 dialog.modal('hide');
             },
@@ -251,6 +270,7 @@ $(document).ready(function () {
     });
 
     body.on('keyup change', '#notes input[name="search"]', function () {
+        var notes = $('#notes');
         if($(this).val().trim() == '') {
             notes.find('.note-row').show();
         }

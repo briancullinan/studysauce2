@@ -118,7 +118,7 @@ function setupSelectize()
                         callback(res.slice(0, 100));
                     }
                 });
-            }, 500)
+            }, 500);
         }
     });
 }
@@ -144,9 +144,12 @@ $(document).ready(function () {
 
             // get the clipboard text
             var that = $(this),
-                text = $('<textarea></textarea>').css('opacity', '0').css('height', 1).css('width', 1).appendTo(email).focus();
+                text = $('<textarea></textarea>')
+                    .css('opacity', '0')
+                    .css('height', 1)
+                    .css('width', 1).appendTo(email).focus();
             setTimeout(function () {
-                var clipText = text.val();
+                var clipText = text.val(), i;
                 text.remove();
                 that.focus();
 
@@ -159,7 +162,7 @@ $(document).ready(function () {
                 }
 
                 // write out in a table
-                for (var i=0; i<clipRows.length; i++) {
+                for (i=0; i<clipRows.length; i++) {
                     if(clipRows[i].length == 0 || clipRows[i][0].length == 0 || clipRows[i].indexOf('email') > -1 ||
                         clipRows[i].indexOf('e-mail') > -1 || clipRows[i].indexOf('E-mail') > -1)
                         continue;

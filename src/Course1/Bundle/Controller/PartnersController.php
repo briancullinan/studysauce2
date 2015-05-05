@@ -53,7 +53,7 @@ class PartnersController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:Partners:quiz.html.php', [
-                        'quiz' => $course->getQuiz6s()->first() ?: new Quiz6(),
+                        'quiz' => $course->getQuiz6()->first() ?: new Quiz6(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;

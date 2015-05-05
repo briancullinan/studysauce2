@@ -47,11 +47,8 @@
 
 
 
-#results.panel-pane,
-#validation.panel-pane,
-#emails.panel-pane,
-#activity.panel-pane,
-#command_control.panel-pane
+.dashboard-home.adviser .panel-pane,
+.dashboard-home.admin .panel-pane
 {
     padding-left:20px;
     padding-right:70px;

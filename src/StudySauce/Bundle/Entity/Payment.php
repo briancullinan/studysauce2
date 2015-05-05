@@ -60,7 +60,8 @@ class Payment
     protected $subscription;
 
     /**
-     * @ORM\Column(type="string", length=256, name="coupon", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Coupon", inversedBy="payments")
+     * @ORM\JoinColumn(name="coupon_id", referencedColumnName="id", nullable=true)
      */
     protected $coupon;
 
@@ -255,29 +256,6 @@ class Payment
     }
 
     /**
-     * Set coupon
-     *
-     * @param string $coupon
-     * @return Payment
-     */
-    public function setCoupon($coupon)
-    {
-        $this->coupon = $coupon;
-
-        return $this;
-    }
-
-    /**
-     * Get coupon
-     *
-     * @return string 
-     */
-    public function getCoupon()
-    {
-        return $this->coupon;
-    }
-
-    /**
      * Set created
      *
      * @param \DateTime $created
@@ -344,5 +322,28 @@ class Payment
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set coupon
+     *
+     * @param \StudySauce\Bundle\Entity\Coupon $coupon
+     * @return Payment
+     */
+    public function setCoupon(\StudySauce\Bundle\Entity\Coupon $coupon = null)
+    {
+        $this->coupon = $coupon;
+
+        return $this;
+    }
+
+    /**
+     * Get coupon
+     *
+     * @return \StudySauce\Bundle\Entity\Coupon 
+     */
+    public function getCoupon()
+    {
+        return $this->coupon;
     }
 }

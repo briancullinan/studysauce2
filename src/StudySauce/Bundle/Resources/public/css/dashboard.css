@@ -17,6 +17,12 @@
     padding-right:0;
 }
 
+.dashboard-home .player-wrapper iframe.yt-state-1,
+.dashboard-home iframe.yt-state-1
+{
+    padding: 50px 50px 0 50px;
+}
+
 .tipsy
 {
     font-size:14px;

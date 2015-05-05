@@ -33,7 +33,7 @@ swiftmailer:
     auth_mode: login
     host:      smtp.sendgrid.net
     username:  Study Sauce
-    password:  2StudyBetter!
+    password:  2StudyBetter#
     spool:     { type: db }
 
 doctrine:

@@ -1,4 +1,5 @@
 <?php
+use StudySauce\Bundle\Entity\Coupon;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -132,22 +133,23 @@ $view['slots']->start('body'); ?>
             <fieldset id="payment-pane">
                 <legend>Payment method</legend>
                 <div class="product-option">
-                    <?php if(!empty($coupon)) { ?>
-                        <label class="radio"><input name="reoccurs" type="radio" value="custom" checked="checked"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][0] : '9.99'); ?>/<?php print (!empty($coupon['term']) ? ($coupon['term'] . ' months') : ' one time'); ?></span></label>
-                        <?php if(!empty($coupon)) {
-                            foreach($coupon['lines'] as $i => $line) {
-                                ?><div class="line-item"><?php print $line; ?></div><?php
-                            }
-                        } ?>
-                    <?php } else { ?>
-                        <label class="radio"><input name="reoccurs" type="radio" value="monthly" checked="checked"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][0] : '9.99'); ?>/mo</span></label><br />
-                        <label class="radio"><input name="reoccurs" type="radio" value="yearly"><i></i><span>$<?php print (!empty($coupon) ? $coupon['options'][1] : '99'); ?>/year <sup class="premium">Recommended</sup></span></label>
-                        <?php if(!empty($coupon)) {
-                            foreach($coupon['lines'] as $i => $line) {
-                                ?><div class="line-item"><?php print $line; ?></div><?php
-                            }
-                        } ?>
-                    <?php } ?>
+                    <?php /** @var Coupon $coupon */
+                    if(empty($coupon) || empty($options = $coupon->getOptions())) {
+                        $options = \StudySauce\Bundle\Controller\BuyController::$defaultOptions;
+                    }
+                    $first = true;
+                    foreach($options as $o => $option) {
+                        ?><label class="radio">
+                            <input name="reoccurs" type="radio" value="<?php print $o; ?>" <?php
+                            print ($first || empty($option) || $option == $o ? 'checked="checked"' : ''); ?>>
+                            <i></i>
+                            <span><?php print $option['description']; ?></span>
+                        </label><?php
+                        $first = false;
+                    }
+                    if(!empty($coupon)) {
+                        ?><div class="line-item"><?php print $coupon->getDescription();; ?></div><?php
+                    } ?>
                 </div>
                 <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/money_back_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
                     <img src="<?php echo $view->escape($url) ?>" />
@@ -210,12 +212,10 @@ $view['slots']->start('body'); ?>
             </fieldset>
             <fieldset id="coupon-pane">
                 <legend>Coupon discount</legend>
-                <?php if(!empty($coupon)) {
-                    foreach($coupon['lines'] as $i => $line) { ?>
-                        <div class="coupon-code"><strong><?php print $app->getRequest()->getSession()->get('coupon'); ?> - </strong><?php print $line; ?></div>
+                <?php if(!empty($coupon)) { ?>
+                        <div class="coupon-code"><strong><?php print $coupon->getName(); ?> - </strong><?php print $coupon->getDescription(); ?></div>
                         <a href="#coupon-remove" class="more">Remove</a>
-                    <?php }
-                } else { ?>
+                <?php } else { ?>
                     <div class="coupon-code">
                         <label class="input"><input name="coupon-code" type="text" placeholder="Enter code" value=""></label>
                     </div>

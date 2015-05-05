@@ -29,20 +29,15 @@ class Coupon
     protected $description;
 
     /**
-     * @ORM\Column(type="string", length=256, name="type")
-     */
-    protected $type;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="coupons")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=true)
      */
     protected $group;
 
     /**
-     * @ORM\Column(type="integer", name="term", nullable=true)
+     * @ORM\Column(type="array", name="options", nullable=true)
      */
-    protected $term;
+    protected $options;
 
     /**
      * @ORM\Column(type="datetime", name="valid_from", nullable=true)
@@ -73,6 +68,12 @@ class Coupon
      * @ORM\Column(type="boolean", name="deleted")
      */
     protected $deleted = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Payment", mappedBy="coupon")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $payments;
 
     /**
      * @ORM\PrePersist
@@ -137,29 +138,6 @@ class Coupon
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return Coupon
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -301,29 +279,6 @@ class Coupon
     }
 
     /**
-     * Set term
-     *
-     * @param integer $term
-     * @return Coupon
-     */
-    public function setTerm($term)
-    {
-        $this->term = $term;
-
-        return $this;
-    }
-
-    /**
-     * Get term
-     *
-     * @return integer 
-     */
-    public function getTerm()
-    {
-        return $this->term;
-    }
-
-    /**
      * Set group
      *
      * @param \StudySauce\Bundle\Entity\Group $group
@@ -344,5 +299,68 @@ class Coupon
     public function getGroup()
     {
         return $this->group;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set options
+     *
+     * @param array $options
+     * @return Coupon
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * Get options
+     *
+     * @return array 
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Add payments
+     *
+     * @param \StudySauce\Bundle\Entity\Payment $payments
+     * @return Coupon
+     */
+    public function addPayment(\StudySauce\Bundle\Entity\Payment $payments)
+    {
+        $this->payments[] = $payments;
+
+        return $this;
+    }
+
+    /**
+     * Remove payments
+     *
+     * @param \StudySauce\Bundle\Entity\Payment $payments
+     */
+    public function removePayment(\StudySauce\Bundle\Entity\Payment $payments)
+    {
+        $this->payments->removeElement($payments);
+    }
+
+    /**
+     * Get payments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPayments()
+    {
+        return $this->payments;
     }
 }

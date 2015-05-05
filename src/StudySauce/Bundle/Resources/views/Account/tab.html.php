@@ -10,13 +10,18 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var $view TimedPhpEngine */
 /** @var $user User */
 /** @var Payment $payment */
-$payment = $user->getPayments()->first();
 /** @var ParentInvite $parent */
-$parent = $user->getParentInvites()->filter(
-    function (ParentInvite $p) {
-        return !empty($p->getParent());
-    }
-)->first();
+$payment = $user->getPayments()->first()
+    ?: (!empty($user->getPartnerOrAdviser())
+    ? $user->getPartnerOrAdviser()->getPayments()->first()
+    : null)
+    ?: (!empty($parent = $user->getParentInvites()->filter(
+        function (ParentInvite $p) {
+            return !empty($p->getParent());
+        }
+    )->first())
+    ? $parent->getParent()->getPayments()->first()
+    : null);
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
@@ -38,16 +43,39 @@ $view['slots']->start('body'); ?>
             <h2>Account settings</h2>
             <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
                 <div class="type">
-                    <label><span>Account type</span><?php if (!$user->hasRole('ROLE_PAID')) {
+                    <label><span>Account type</span><?php
+                        if (!$user->hasRole('ROLE_PAID')) {
                             print 'Free';
-                        } elseif ((!empty($payment) && $payment->getProduct() == 'monthly') ||
-                            (!empty($parent) && !empty($parent->getParent()->getPayments()->first()) &&
-                                $parent->getParent()->getPayments()->first()->getProduct() == 'monthly')
-                        ) {
+                        }
+                        elseif (!empty($payment) && $payment->getProduct() == 'monthly') {
                             print 'Monthly';
-                        } else {
+                        }
+                        elseif (!empty($payment) && !empty($payment->getCoupon()) &&
+                            !empty($payment->getCoupon()[$payment->getProduct()])) {
+                            print $payment->getCoupon()[$payment->getProduct()]['description'];
+                        }
+                        else {
                             print 'Yearly';
-                        } ?>
+                        }
+                        if($user->hasRole('ROLE_PAID') && !empty($payment)) {
+                            $options = !empty($payment->getCoupon()) && !empty($payment->getCoupon()->getOptions())
+                                ? $payment->getCoupon()->getOptions()
+                                : \StudySauce\Bundle\Controller\BuyController::$defaultOptions;
+
+                            if(!empty($options[$payment->getProduct()]) &&
+                                !empty($options[$payment->getProduct()]['reoccurs'])) {
+                                $increment = $options[$payment->getProduct()]['reoccurs'];
+                                $i = clone $payment->getCreated();
+                                do {
+                                    $i = date_add($i, new DateInterval('P' . $increment . 'M'));
+                                } while($i < new \DateTime());
+                                print ' next renewal ' . $i->format('Y/m/d');
+                            }
+                            if(!empty($payment->getCoupon()) && !empty($payment->getCoupon()->getValidTo())) {
+                                print ' expires ' . $payment->getCoupon()->getValidTo()->format('Y/m/d');
+                            }
+                        }
+                        ?>
                     </label>
                 </div>
                 <div class="account-info read-only">

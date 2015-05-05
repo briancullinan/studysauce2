@@ -120,19 +120,9 @@
 
 #bookmark .modal-body
 {
-    padding-top:100px;
+    padding-top:50px;
     padding-bottom:50px;
-}
-
-#bookmark .sauce
-{
-    position:absolute;
-    display:block;
-    left:50%;
-    margin-left:-50px;
-    width:100px;
-    height:100px;
-    top:0;
+    text-align: center;
 }
 
 #schedule-demo .first-name,
@@ -265,13 +255,45 @@ body.right-menu #bookmark
 {
     position:absolute;
     display:block;
-    left:50%;
-    top:auto;
-    bottom:0;
-    margin-left:-25px;
+    right:0;
+    left:auto;
+    top:0;
+    bottom:auto;
+    margin-left:0;
     width:50px;
     height:50px;
     background:url(../images/menu_new_compressed.png) no-repeat 0 -7600px transparent;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    -moz-transform-origin: center center;
+    -ms-transform-origin: center center;
+    -o-transform-origin: center center;
+}
+
+#bookmark p ~ i.arrow
+{
+    margin-left:-25px;
+    top:auto;
+    bottom:0;
+    left:50%;
+    right:auto;
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    -moz-transform-origin: center center;
+    -ms-transform-origin: center center;
+    -o-transform-origin: center center;
 }
 
 .modal-dialog

@@ -58,11 +58,11 @@ $view['slots']->start('body'); ?>
             </div>
             <div class="reminder">
                 <label>Reminders</label>
-                <label class="checkbox"><input type="checkbox" value="1209600"><i></i><br/>2 wk</label>
-                <label class="checkbox"><input type="checkbox" value="604800"><i></i><br/>1 wk</label>
-                <label class="checkbox"><input type="checkbox" value="345600"><i></i><br/>4 days</label>
-                <label class="checkbox"><input type="checkbox" value="172800"><i></i><br/>2 days</label>
-                <label class="checkbox"><input type="checkbox" value="86400"><i></i><br/>1 day</label>
+                <label class="checkbox"><input type="checkbox" value="1209600" checked="checked"><i></i><br/>2 wk</label>
+                <label class="checkbox"><input type="checkbox" value="604800" checked="checked"><i></i><br/>1 wk</label>
+                <label class="checkbox"><input type="checkbox" value="345600" checked="checked"><i></i><br/>4 days</label>
+                <label class="checkbox"><input type="checkbox" value="172800" checked="checked"><i></i><br/>2 days</label>
+                <label class="checkbox"><input type="checkbox" value="86400" checked="checked"><i></i><br/>1 day</label>
             </div>
             <div class="due-date">
                 <label class="input">

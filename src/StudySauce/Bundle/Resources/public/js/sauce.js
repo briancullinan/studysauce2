@@ -63,7 +63,30 @@ function setupYoutubePlayer()
         ytPlayer = new YT.Player(frame.attr('id'), {
             events: {
                 'onStateChange': function (e) {
-                    frame.trigger('yt' + e.data);
+                    var x = frame.offset().left,
+                        y = frame.offset().top,
+                        w = frame.width(),
+                        h = frame.height();
+                    frame.attr('class', (frame.attr('class') || '').replace(/yt-state-([0-9]*)(\s|$)/ig, '') + 'yt-state-' + e.data).trigger('yt' + e.data);
+                    if(e.data == 1)
+                    {
+                        frame.css({
+                            top: y,
+                            left: x,
+                            bottom: window.innerHeight - y + h,
+                            right: window.innerWidth - x + w,
+                            width: w / window.innerWidth * 100 + '%',
+                            height: w / window.innerHeight * 100 + '%',
+                            opacity: 0})
+                            .animate({
+                                top: 0,
+                                bottom: 0,
+                                right: 0,
+                                left: 0,
+                                height: '100%',
+                                width: '100%',
+                                opacity: 1}, 159);
+                    }
                     /*
                      -1 – unstarted
                      0 – ended
@@ -396,6 +419,22 @@ Date.prototype.getFirstDayOfWeek = function () {
 Date.prototype.addHours = function(h){
     this.setHours(this.getHours()+h);
     return this;
+};
+
+$.fn.selectRange = function(start, end) {
+    if(!end) end = start;
+    return this.each(function() {
+        if (this.setSelectionRange) {
+            this.focus();
+            this.setSelectionRange(start, end);
+        } else if (this.createTextRange) {
+            var range = this.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', start);
+            range.select();
+        }
+    });
 };
 
 $.fn.redraw = function(){

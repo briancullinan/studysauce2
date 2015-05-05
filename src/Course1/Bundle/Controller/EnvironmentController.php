@@ -53,7 +53,7 @@ class EnvironmentController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:Environment:quiz.html.php', [
-                        'quiz' => $course->getQuiz5s()->first() ?: new Quiz5(),
+                        'quiz' => $course->getQuiz5()->first() ?: new Quiz5(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;

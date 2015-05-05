@@ -91,6 +91,11 @@
     vertical-align: middle;
 }
 
+#payment-pane .product-option .radio
+{
+    display:block;
+}
+
 #payment-pane .product-option + img
 {
     vertical-align: middle;
@@ -100,8 +105,8 @@
 {
     display:inline-block;
     width:100%;
-    padding-right:200px;
-    margin-right: -185px;
+    padding-right:235px;
+    margin-right: -225px;
     vertical-align: middle;
 }
 

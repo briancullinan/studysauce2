@@ -80,22 +80,6 @@ class DeadlinesController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param $_user
-     * @return Response
-     */
-    public function partnerAction(Request $request, $_user)
-    {
-        /** @var $userManager UserManager */
-        $userManager = $this->get('fos_user.user_manager');
-
-        /** @var $user User */
-        $user = $userManager->findUserBy(['id' => intval($_user)]);
-
-        return $this->indexAction($request, $user, ['Partner', 'deadlines']);
-    }
-
-    /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function widgetAction()
@@ -103,8 +87,8 @@ class DeadlinesController extends Controller
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->getUser();
         $deadlines = $user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
-            $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')) &&
-            $d->getDueDate() <= date_add(new \DateTime(), new \DateInterval('P7D')); })->toArray();
+            $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D')); })->toArray();
+        $deadlines = array_slice($deadlines, 0, 15);
         $schedule = $user->getSchedules()->first();
         if(!empty($schedule))
             $courses = $schedule->getClasses()->toArray();

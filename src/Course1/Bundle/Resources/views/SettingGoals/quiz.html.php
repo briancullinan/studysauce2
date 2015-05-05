@@ -20,10 +20,10 @@ $complete = !empty($quiz->getGoalPerformance()) &&
             //        : '<span class="answer wrong">Wrong.</span>');
             ?></h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-goal-performance" type="radio" value="20" <?php print ($quiz->getGoalPerformance() == '20' ? 'checked="checked"' : ''); ?>><i></i><span>20%</span></label>
-            <label class="radio"><input name="quiz-goal-performance" type="radio" value="40" <?php print ($quiz->getGoalPerformance() == '40' ? 'checked="checked"' : ''); ?>><i></i><span>40%</span></label>
-            <label class="radio"><input name="quiz-goal-performance" type="radio" value="60" <?php print ($quiz->getGoalPerformance() == '60' ? 'checked="checked"' : ''); ?>><i></i><span>60%</span></label>
-            <label class="radio"><input name="quiz-goal-performance" type="radio" value="90" <?php print ($quiz->getGoalPerformance() == '90' ? 'checked="checked"' : ''); ?>><i></i><span>90%</span></label>
+            <label class="radio"><input name="quiz-goalPerformance" type="radio" value="20" <?php print ($quiz->getGoalPerformance() == '20' ? 'checked="checked"' : ''); ?>><i></i><span>20%</span></label>
+            <label class="radio"><input name="quiz-goalPerformance" type="radio" value="40" <?php print ($quiz->getGoalPerformance() == '40' ? 'checked="checked"' : ''); ?>><i></i><span>40%</span></label>
+            <label class="radio"><input name="quiz-goalPerformance" type="radio" value="60" <?php print ($quiz->getGoalPerformance() == '60' ? 'checked="checked"' : ''); ?>><i></i><span>60%</span></label>
+            <label class="radio"><input name="quiz-goalPerformance" type="radio" value="90" <?php print ($quiz->getGoalPerformance() == '90' ? 'checked="checked"' : ''); ?>><i></i><span>90%</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -42,11 +42,11 @@ $complete = !empty($quiz->getGoalPerformance()) &&
                     : '<span class="answer wrong">Wrong.</span>'); */
             ?></h3>
         <div class="questions">
-            <label class="input"><span>S</span><input name="quiz-smart-acronym-S" type="text" value="<?php print $view->escape($quiz->getSpecific()); ?>"></label>
-            <label class="input"><span>M</span><input name="quiz-smart-acronym-M" type="text" value="<?php print $view->escape($quiz->getMeasurable()); ?>"></label>
-            <label class="input"><span>A</span><input name="quiz-smart-acronym-A" type="text" value="<?php print $view->escape($quiz->getAchievable()); ?>"></label>
-            <label class="input"><span>R</span><input name="quiz-smart-acronym-R" type="text" value="<?php print $view->escape($quiz->getRelevant()); ?>"></label>
-            <label class="input"><span>T</span><input name="quiz-smart-acronym-T" type="text" value="<?php print $view->escape($quiz->getTimeBound()); ?>"></label>
+            <label class="input"><span>S</span><input name="quiz-specific" type="text" value="<?php print $view->escape($quiz->getSpecific()); ?>"></label>
+            <label class="input"><span>M</span><input name="quiz-measurable" type="text" value="<?php print $view->escape($quiz->getMeasurable()); ?>"></label>
+            <label class="input"><span>A</span><input name="quiz-achievable" type="text" value="<?php print $view->escape($quiz->getAchievable()); ?>"></label>
+            <label class="input"><span>R</span><input name="quiz-relevant" type="text" value="<?php print $view->escape($quiz->getRelevant()); ?>"></label>
+            <label class="input"><span>T</span><input name="quiz-timeBound" type="text" value="<?php print $view->escape($quiz->getTimeBound()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -61,8 +61,8 @@ $complete = !empty($quiz->getGoalPerformance()) &&
                     : '<span class="answer wrong">Wrong.</span>');*/
             ?></h3>
         <div class="questions">
-            <label class="input"><span>1</span><input name="quiz-motivation-I" type="text" value="<?php print $view->escape($quiz->getIntrinsic()); ?>"></label>
-            <label class="input"><span>2</span><input name="quiz-motivation-E" type="text" value="<?php print $view->escape($quiz->getExtrinsic()); ?>"></label>
+            <label class="input"><span>1</span><input name="quiz-intrinsic" type="text" value="<?php print $view->escape($quiz->getIntrinsic()); ?>"></label>
+            <label class="input"><span>2</span><input name="quiz-extrinsic" type="text" value="<?php print $view->escape($quiz->getExtrinsic()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

@@ -51,10 +51,10 @@ $complete = !empty($quiz->getEducation()) &&
         </div>
         <h3>How much do you study per day?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-study-much" type="radio" value="one" <?php print ($quiz->getStudyMuch() == 'one' ? 'checked="checked"' : ''); ?>><i></i><span>0-1 hour</span></label>
-            <label class="radio"><input name="quiz-study-much" type="radio" value="two" <?php print ($quiz->getStudyMuch() == 'two' ? 'checked="checked"' : ''); ?>><i></i><span>1-2 hours</span></label>
-            <label class="radio"><input name="quiz-study-much" type="radio" value="four" <?php print ($quiz->getStudyMuch() == 'four' ? 'checked="checked"' : ''); ?>><i></i><span>2-4 hours</span></label>
-            <label class="radio"><input name="quiz-study-much" type="radio" value="more" <?php print ($quiz->getStudyMuch() == 'more' ? 'checked="checked"' : ''); ?>><i></i><span>4+ hours</span></label>
+            <label class="radio"><input name="quiz-studyMuch" type="radio" value="one" <?php print ($quiz->getStudyMuch() == 'one' ? 'checked="checked"' : ''); ?>><i></i><span>0-1 hour</span></label>
+            <label class="radio"><input name="quiz-studyMuch" type="radio" value="two" <?php print ($quiz->getStudyMuch() == 'two' ? 'checked="checked"' : ''); ?>><i></i><span>1-2 hours</span></label>
+            <label class="radio"><input name="quiz-studyMuch" type="radio" value="four" <?php print ($quiz->getStudyMuch() == 'four' ? 'checked="checked"' : ''); ?>><i></i><span>2-4 hours</span></label>
+            <label class="radio"><input name="quiz-studyMuch" type="radio" value="more" <?php print ($quiz->getStudyMuch() == 'more' ? 'checked="checked"' : ''); ?>><i></i><span>4+ hours</span></label>
         </div>
         <div class="results">
             <p>We will help you develop a plan to make sure that you are spending the right amount of time studying.</p>

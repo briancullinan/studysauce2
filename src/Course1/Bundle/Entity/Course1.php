@@ -28,37 +28,37 @@ class Course1
      * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz1", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $quiz1s;
+    protected $quiz1;
 
     /**
      * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz2", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $quiz2s;
+    protected $quiz2;
 
     /**
      * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz3", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $quiz3s;
+    protected $quiz3;
 
     /**
      * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz4", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $quiz4s;
+    protected $quiz4;
 
     /**
      * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz5", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $quiz5s;
+    protected $quiz5;
 
     /**
      * @ORM\OneToMany(targetEntity="Course1\Bundle\Entity\Quiz6", mappedBy="course")
      * @ORM\OrderBy({"created" = "DESC"})
      */
-    protected $quiz6s;
+    protected $quiz6;
 
     /**
      * @ORM\Column(type="boolean", name="enjoyed", nullable = true)
@@ -128,12 +128,12 @@ class Course1
      */
     public function __construct()
     {
-        $this->quiz1s = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->quiz2s = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->quiz3s = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->quiz4s = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->quiz5s = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->quiz6s = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz1 = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz2 = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz3 = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz4 = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz5 = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->quiz6 = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -193,135 +193,135 @@ class Course1
     }
 
     /**
-     * Add quiz1s
+     * Add quiz1
      *
-     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
+     * @param \Course1\Bundle\Entity\Quiz1 $quiz1
      * @return Course1
      */
-    public function addQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
+    public function addQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1)
     {
-        $this->quiz1s[] = $quiz1s;
+        $this->quiz1[] = $quiz1;
 
         return $this;
     }
 
     /**
-     * Remove quiz1s
+     * Remove quiz1
      *
-     * @param \Course1\Bundle\Entity\Quiz1 $quiz1s
+     * @param \Course1\Bundle\Entity\Quiz1 $quiz1
      */
-    public function removeQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1s)
+    public function removeQuiz1(\Course1\Bundle\Entity\Quiz1 $quiz1)
     {
-        $this->quiz1s->removeElement($quiz1s);
+        $this->quiz1->removeElement($quiz1);
     }
 
     /**
-     * Get quiz1s
+     * Get quiz1
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuiz1s()
+    public function getQuiz1()
     {
-        return $this->quiz1s;
+        return $this->quiz1;
     }
 
     /**
-     * Add quiz2s
+     * Add quiz2
      *
-     * @param \Course1\Bundle\Entity\Quiz2 $quiz2s
+     * @param \Course1\Bundle\Entity\Quiz2 $quiz2
      * @return Course1
      */
-    public function addQuiz2(\Course1\Bundle\Entity\Quiz2 $quiz2s)
+    public function addQuiz2(\Course1\Bundle\Entity\Quiz2 $quiz2)
     {
-        $this->quiz2s[] = $quiz2s;
+        $this->quiz2[] = $quiz2;
 
         return $this;
     }
 
     /**
-     * Remove quiz2s
+     * Remove quiz2
      *
-     * @param \Course1\Bundle\Entity\Quiz2 $quiz2s
+     * @param \Course1\Bundle\Entity\Quiz2 $quiz2
      */
-    public function removeQuiz2(\Course1\Bundle\Entity\Quiz2 $quiz2s)
+    public function removeQuiz2(\Course1\Bundle\Entity\Quiz2 $quiz2)
     {
-        $this->quiz2s->removeElement($quiz2s);
+        $this->quiz2->removeElement($quiz2);
     }
 
     /**
-     * Get quiz2s
+     * Get quiz2
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuiz2s()
+    public function getQuiz2()
     {
-        return $this->quiz2s;
+        return $this->quiz2;
     }
 
     /**
-     * Add quiz3s
+     * Add quiz3
      *
-     * @param \Course1\Bundle\Entity\Quiz3 $quiz3s
+     * @param \Course1\Bundle\Entity\Quiz3 $quiz3
      * @return Course1
      */
-    public function addQuiz3(\Course1\Bundle\Entity\Quiz3 $quiz3s)
+    public function addQuiz3(\Course1\Bundle\Entity\Quiz3 $quiz3)
     {
-        $this->quiz3s[] = $quiz3s;
+        $this->quiz3[] = $quiz3;
 
         return $this;
     }
 
     /**
-     * Remove quiz3s
+     * Remove quiz3
      *
-     * @param \Course1\Bundle\Entity\Quiz3 $quiz3s
+     * @param \Course1\Bundle\Entity\Quiz3 $quiz3
      */
-    public function removeQuiz3(\Course1\Bundle\Entity\Quiz3 $quiz3s)
+    public function removeQuiz3(\Course1\Bundle\Entity\Quiz3 $quiz3)
     {
-        $this->quiz3s->removeElement($quiz3s);
+        $this->quiz3->removeElement($quiz3);
     }
 
     /**
-     * Get quiz3s
+     * Get quiz3
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuiz3s()
+    public function getQuiz3()
     {
-        return $this->quiz3s;
+        return $this->quiz3;
     }
 
     /**
-     * Add quiz4s
+     * Add quiz4
      *
-     * @param \Course1\Bundle\Entity\Quiz4 $quiz4s
+     * @param \Course1\Bundle\Entity\Quiz4 $quiz4
      * @return Course1
      */
-    public function addQuiz4(\Course1\Bundle\Entity\Quiz4 $quiz4s)
+    public function addQuiz4(\Course1\Bundle\Entity\Quiz4 $quiz4)
     {
-        $this->quiz4s[] = $quiz4s;
+        $this->quiz4[] = $quiz4;
 
         return $this;
     }
 
     /**
-     * Remove quiz4s
+     * Remove quiz4
      *
-     * @param \Course1\Bundle\Entity\Quiz4 $quiz4s
+     * @param \Course1\Bundle\Entity\Quiz4 $quiz4
      */
-    public function removeQuiz4(\Course1\Bundle\Entity\Quiz4 $quiz4s)
+    public function removeQuiz4(\Course1\Bundle\Entity\Quiz4 $quiz4)
     {
-        $this->quiz4s->removeElement($quiz4s);
+        $this->quiz4->removeElement($quiz4);
     }
 
     /**
-     * Get quiz4s
+     * Get quiz4
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuiz4s()
+    public function getQuiz4()
     {
-        return $this->quiz4s;
+        return $this->quiz4;
     }
 
     /**
@@ -348,69 +348,69 @@ class Course1
     }
 
     /**
-     * Add quiz5s
+     * Add quiz5
      *
-     * @param \Course1\Bundle\Entity\Quiz5 $quiz5s
+     * @param \Course1\Bundle\Entity\Quiz5 $quiz5
      * @return Course1
      */
-    public function addQuiz5(\Course1\Bundle\Entity\Quiz5 $quiz5s)
+    public function addQuiz5(\Course1\Bundle\Entity\Quiz5 $quiz5)
     {
-        $this->quiz5s[] = $quiz5s;
+        $this->quiz5[] = $quiz5;
 
         return $this;
     }
 
     /**
-     * Remove quiz5s
+     * Remove quiz5
      *
-     * @param \Course1\Bundle\Entity\Quiz5 $quiz5s
+     * @param \Course1\Bundle\Entity\Quiz5 $quiz5
      */
-    public function removeQuiz5(\Course1\Bundle\Entity\Quiz5 $quiz5s)
+    public function removeQuiz5(\Course1\Bundle\Entity\Quiz5 $quiz5)
     {
-        $this->quiz5s->removeElement($quiz5s);
+        $this->quiz5->removeElement($quiz5);
     }
 
     /**
-     * Get quiz5s
+     * Get quiz5
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuiz5s()
+    public function getQuiz5()
     {
-        return $this->quiz5s;
+        return $this->quiz5;
     }
 
     /**
-     * Add quiz6s
+     * Add quiz6
      *
-     * @param \Course1\Bundle\Entity\Quiz6 $quiz6s
+     * @param \Course1\Bundle\Entity\Quiz6 $quiz6
      * @return Course1
      */
-    public function addQuiz6(\Course1\Bundle\Entity\Quiz6 $quiz6s)
+    public function addQuiz6(\Course1\Bundle\Entity\Quiz6 $quiz6)
     {
-        $this->quiz6s[] = $quiz6s;
+        $this->quiz6[] = $quiz6;
 
         return $this;
     }
 
     /**
-     * Remove quiz6s
+     * Remove quiz6
      *
-     * @param \Course1\Bundle\Entity\Quiz6 $quiz6s
+     * @param \Course1\Bundle\Entity\Quiz6 $quiz6
      */
-    public function removeQuiz6(\Course1\Bundle\Entity\Quiz6 $quiz6s)
+    public function removeQuiz6(\Course1\Bundle\Entity\Quiz6 $quiz6)
     {
-        $this->quiz6s->removeElement($quiz6s);
+        $this->quiz6->removeElement($quiz6);
     }
 
     /**
-     * Get quiz6s
+     * Get quiz6
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuiz6s()
+    public function getQuiz6()
     {
-        return $this->quiz6s;
+        return $this->quiz6;
     }
 
     /**

@@ -12,8 +12,8 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>Your bed is a great place to study since getting comfortable is critical to memory retention.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-bed" type="radio" value="1" <?php print ($quiz->getBed() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-bed" type="radio" value="0" <?php print ($quiz->getBed() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-bed" type="radio" value="1" <?php print ($quiz->getBed() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-bed" type="radio" value="0" <?php print ($quiz->getBed() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -22,8 +22,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Listening to Mozart is proven to help you study better.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="1" <?php print ($quiz->getMozart() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-mozart" type="radio" value="0" <?php print ($quiz->getMozart() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-mozart" type="radio" value="1" <?php print ($quiz->getMozart() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-mozart" type="radio" value="0" <?php print ($quiz->getMozart() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -32,8 +32,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>A nature walk can be an effective way to take a break between study sessions.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-nature" type="radio" value="1" <?php print ($quiz->getNature() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-nature" type="radio" value="0" <?php print ($quiz->getNature() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-nature" type="radio" value="1" <?php print ($quiz->getNature() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-nature" type="radio" value="0" <?php print ($quiz->getNature() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -42,8 +42,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Your study sessions should last a minimum of 1 hour and ideally you should stick with a topic for several hours to get the greatest benefit of prolonged focus.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-environment-breaks" type="radio" value="1" <?php print ($quiz->getBreaks() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-environment-breaks" type="radio" value="0" <?php print ($quiz->getBreaks() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-breaks" type="radio" value="1" <?php print ($quiz->getBreaks() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-breaks" type="radio" value="0" <?php print ($quiz->getBreaks() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
             <div class="results">

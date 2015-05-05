@@ -80,7 +80,7 @@ class IntroductionController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:Introduction:quiz.html.php', [
-                        'quiz' => $course->getQuiz1s()->first() ?: new Quiz1(),
+                        'quiz' => $course->getQuiz1()->first() ?: new Quiz1(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;

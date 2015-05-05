@@ -865,27 +865,27 @@ class AdminController extends Controller
             }
             foreach($u->getCourse1s()->toArray() as $i => $c1) {
                 /** @var Course1 $c1 */
-                foreach($c1->getQuiz1s()->toArray() as $j => $q1) {
+                foreach($c1->getQuiz1()->toArray() as $j => $q1) {
                     $c1->removeQuiz1($q1);
                     $orm->remove($q1);
                 }
-                foreach($c1->getQuiz2s()->toArray() as $j => $q2) {
+                foreach($c1->getQuiz2()->toArray() as $j => $q2) {
                     $c1->removeQuiz2($q2);
                     $orm->remove($q2);
                 }
-                foreach($c1->getQuiz3s()->toArray() as $j => $q3) {
+                foreach($c1->getQuiz3()->toArray() as $j => $q3) {
                     $c1->removeQuiz3($q3);
                     $orm->remove($q3);
                 }
-                foreach($c1->getQuiz4s()->toArray() as $j => $q4) {
+                foreach($c1->getQuiz4()->toArray() as $j => $q4) {
                     $c1->removeQuiz4($q4);
                     $orm->remove($q4);
                 }
-                foreach($c1->getQuiz5s()->toArray() as $j => $q5) {
+                foreach($c1->getQuiz5()->toArray() as $j => $q5) {
                     $c1->removeQuiz5($q5);
                     $orm->remove($q5);
                 }
-                foreach($c1->getQuiz6s()->toArray() as $j => $q6) {
+                foreach($c1->getQuiz6()->toArray() as $j => $q6) {
                     $c1->removeQuiz6($q6);
                     $orm->remove($q6);
                 }

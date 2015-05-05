@@ -218,7 +218,7 @@ $(document).ready(function () {
             .replace(/course-id-([0-9]*)(\s|$)/ig, ' course-id- '));
         newDeadline.find('.class-name select, .assignment input, .percent input').val('');
         newDeadline.find('.due-date input').removeClass('hasDatepicker').val('');
-        newDeadline.find('.reminder input').removeAttr('checked').prop('checked', false);
+        newDeadline.find('.reminder input').removeAttr('checked').prop('checked', true);
         datesFunc.apply(newDeadline);
         deadlines.find('.highlighted-link').last().detach().insertAfter(newDeadline);
     });

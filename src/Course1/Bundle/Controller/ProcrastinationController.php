@@ -53,7 +53,7 @@ class ProcrastinationController extends Controller
                     : null;
 
                 return $this->render('Course1Bundle:Procrastination:quiz.html.php', [
-                        'quiz' => $course->getQuiz3s()->first() ?: new Quiz3(),
+                        'quiz' => $course->getQuiz3()->first() ?: new Quiz3(),
                         'csrf_token' => $csrfToken
                     ]);
                 break;

@@ -30,6 +30,11 @@ class BuyController extends Controller
     const AUTHORIZENET_TRANSACTION_KEY = "6AWm5h4nSu472Z52";
     const AUTHORIZENET_SANDBOX = true;
 
+    public static $defaultOptions = [
+        'monthly' => ['price' => 9.99, 'reoccurs' => 1, 'description' => '$9.99/mo'],
+        'yearly' => ['price' => 99, 'reoccurs' => 12, 'description' => '$99/year <sup class="premium">Recommended</sup>']
+    ];
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -151,13 +156,8 @@ class BuyController extends Controller
         }
 
         // check for coupon
-        if($request->getSession()->has('coupon')) {
-            $code = $request->getSession()->get('coupon');
-            $coupon = $this->getCoupon($code);
-            if (!empty($coupon)) {
-                $options = $this->getCouponPrice($coupon);
-            }
-        }
+        $coupon = $this->getCoupon($request);
+        $option = $request->get('option');
 
         return $this->render('StudySauceBundle:Buy:checkout.html.php', [
                 'email' => $email,
@@ -166,31 +166,41 @@ class BuyController extends Controller
                 'studentemail' => $studentemail,
                 'studentfirst' => $studentfirst,
                 'studentlast' => $studentlast,
-                'coupon' => isset($options) ? $options : null,
+                'coupon' => $coupon,
+                'option' => $option,
                 'csrf_token' => $csrfToken
             ]);
     }
 
     /**
-     * @param $coupon
-     * @return \StudySauce\Bundle\Entity\Coupon
+     * @param Request $request
+     * @return Coupon
      */
-    private function getCoupon($coupon)
+    private function getCoupon(Request $request)
     {
+        if(!empty($request)) {
+            $code = $request->get('coupon');
+            if($request->getSession()->has('coupon')) {
+                $code = $request->getSession()->get('coupon');
+            }
+        }
+        if(empty($code))
+            return null;
+
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
         $result = $orm->getRepository('StudySauceBundle:Coupon')->findAll();
         foreach($result as $i => $c) {
             /** @var Coupon $c */
-            if(strtolower(substr($coupon, 0, strlen($c->getName()))) == strtolower($c->getName())) {
+            if(strtolower(substr($code, 0, strlen($c->getName()))) == strtolower($c->getName())) {
                 // one use coupons should match exactly
-                if($c->getMaxUses() <= 1 && strtolower($coupon) == strtolower($c->getName()))
+                if($c->getMaxUses() <= 1 && strtolower($code) == strtolower($c->getName()))
                     return $c;
 
                 // ensure code exists in random value
                 for ($i = 0; $i < $c->getMaxUses(); $i++) {
                     $compareCode = $c->getName() . substr(md5($c->getSeed() . $i), 0, 6);
-                    if (strtolower($coupon) == strtolower($compareCode)) {
+                    if (strtolower($code) == strtolower($compareCode)) {
                         return $c;
                     }
                 }
@@ -206,41 +216,24 @@ class BuyController extends Controller
     public function applyCouponAction(Request $request)
     {
         if(!empty($request->get('remove'))) {
+            $coupon = $this->getCoupon($request);
             $request->getSession()->remove('coupon');
+            if(!empty($coupon) && !empty($coupon->getGroup())) {
+                $request->getSession()->remove('organization');
+            }
             return $this->forward('StudySauceBundle:Buy:checkout', ['_format' => 'tab']);
         }
         $code = $request->get('coupon');
-        $coupon = $this->getCoupon($code);
+        $coupon = $this->getCoupon($request);
         if(!empty($coupon)) {
             // store coupon in session for use at checkout
             $request->getSession()->set('coupon', $code);
+            if(!empty($coupon->getGroup())) {
+                $request->getSession()->set('organization', $coupon->getGroup()->getName());
+            }
             return $this->forward('StudySauceBundle:Buy:checkout', ['_format' => 'tab']);
         }
         return new JsonResponse(['error' => 'Coupon not found.']);
-    }
-
-    /**
-     * @param Coupon $coupon
-     * @return array|null
-     */
-    public static function getCouponPrice(Coupon $coupon)
-    {
-        // percentage discount
-        if(substr($coupon->getType(), 0, 1) == '.') {
-            $percent = floatval($coupon->getType());
-            if($coupon->getTerm() !== null)
-                return ['options' => [number_format(99 * $percent, 2)], 'term' => $coupon->getTerm(), 'lines' => [$coupon->getDescription()]];
-            else
-                return ['options' => [number_format(9.99 * $percent, 2), number_format(99 * $percent, 2)], 'lines' => [$coupon->getDescription()]];
-        }
-        if(substr($coupon->getType(), 0, 1) == '=') {
-            $value = floatval(substr($coupon->getType(), 1));
-            if($coupon->getTerm() !== null)
-                return ['options' => [number_format($value, 2)], 'term' => $coupon->getTerm(), 'lines' => [$coupon->getDescription()]];
-            else
-                return ['options' => [number_format($value, 2)], 'term' => 12, 'lines' => [$coupon->getDescription()]];
-        }
-        throw new Exception('Unknown coupon type');
     }
 
     /**
@@ -258,34 +251,27 @@ class BuyController extends Controller
         /** @var $user \StudySauce\Bundle\Entity\User */
         $user = $this->findAndCreateUser($request);
 
-        $amount = $request->get('reoccurs') == 'yearly' ? '99.00' : '9.99';
+        $option = $request->get('reoccurs');
         // apply coupon if it exists
-        if($request->getSession()->has('coupon')) {
-            $code = $request->getSession()->get('coupon');
-            $coupon = $this->getCoupon($code);
-            if(!empty($coupon)) {
-                if(!empty($options = $this->getCouponPrice($coupon)))
-                    $amount = $request->get('reoccurs') == 'custom'
-                        ? $options['options'][0]
-                        : ($request->get('reoccurs') == 'yearly'
-                            ? $options['options'][1]
-                            : $options['options'][0]);
-            }
-        }
+        $coupon = $this->getCoupon($request);
+        $options = empty($coupon) || empty($coupon->getOptions()) ? self::$defaultOptions : $coupon->getOptions();
 
         // create a new payment entity
         $payment = new Payment();
         $payment->setUser($user);
         $user->addPayment($payment);
-        $payment->setAmount($amount);
+        $payment->setAmount($options[$option]['price']);
         $payment->setFirst($request->get('first'));
         $payment->setLast($request->get('last'));
-        $payment->setProduct($request->get('reoccurs'));
+        $payment->setProduct($option);
         $payment->setEmail($user->getEmail());
+        if(!empty($coupon)) {
+            $payment->setCoupon($coupon);
+        }
 
         try {
             $sale = new \AuthorizeNetAIM(self::AUTHORIZENET_API_LOGIN_ID, self::AUTHORIZENET_TRANSACTION_KEY);
-            $sale->setField('amount', $amount);
+            $sale->setField('amount', $options[$option]['price']);
             $sale->setField('card_num', $request->get('number'));
             $sale->setField('exp_date', $request->get('month') . '/' . $request->get('year'));
             $sale->setField('first_name', $request->get('first'));
@@ -315,15 +301,13 @@ class BuyController extends Controller
             }
 
             // only set up reoccurring if the term is greater than zero
-            if($request->get('reoccurs') != 'custom' || (isset($options['term']) && $options['term'] > 0)) {
+            if(!empty($reoccurs = intval($options[$option]['reoccurs'])) && $reoccurs < 12) {
                 $subscription = new \AuthorizeNet_Subscription();
-                $subscription->name = 'Study Sauce ' . ($request->get('reoccurs') == 'yearly' ? 'Yearly' : 'Monthly') . ' Plan';
-                $subscription->intervalLength = $request->get('reoccurs') == 'custom' && isset($options['term'])
-                    ? $options['term']
-                    : ($request->get('reoccurs') == 'yearly' ? '12' : '1');
+                $subscription->name = 'Study Sauce ' . ucfirst($option) . ' Plan';
+                $subscription->intervalLength = $reoccurs;
                 $subscription->intervalUnit = 'months';
                 $subscription->startDate = date('Y-m-d');
-                $subscription->amount = $amount;
+                $subscription->amount = $options[$option]['price'];
                 $subscription->creditCardCardNumber = $request->get('number');
                 $subscription->creditCardExpirationDate = '20' . $request->get('year') . '-' . $request->get('month');
                 $subscription->creditCardCardCode = $request->get('ccv');
@@ -528,6 +512,7 @@ class BuyController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function thanksAction(Request $request)

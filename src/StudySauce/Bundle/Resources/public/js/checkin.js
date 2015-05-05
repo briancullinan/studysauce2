@@ -104,7 +104,14 @@ $(document).ready(function () {
                 clock = null;
                 resetClock();
                 // show expire message
-                $('#jquery_jplayer').jPlayer("pause");
+                var jPlayer = $('#jquery_jplayer');
+                window.musicIndex = -1;
+                jPlayer.jPlayer("setMedia", {
+                    mp3: window.musicAlarm,
+                    m4a: window.musicAlarm.substr(0, window.musicAlarm.length - 4) + '.mp4',
+                    oga: window.musicAlarm.substr(0, window.musicAlarm.length - 4) + '.ogg'
+                });
+                jPlayer.jPlayer("play");
                 body.find(checkedInBtn).first().trigger('click');
             }
         }, 1000);
@@ -115,7 +122,9 @@ $(document).ready(function () {
             clearInterval(clock);
             clock = null;
         }
-        $('#jquery_jplayer').jPlayer("pause");
+        if(window.musicIndex != -1) {
+            $('#jquery_jplayer').jPlayer("pause");
+        }
         resetClock();
     }
 

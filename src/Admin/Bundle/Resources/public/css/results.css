@@ -108,6 +108,27 @@
     display:none;
 }
 
+#results table.results > tbody > tr > td > table > tbody > tr > td > h3
+{
+    color:#555;
+    cursor: pointer;
+}
+
+#results table.results > tbody > tr > td > table > tbody > tr > td > h3:hover
+{
+    color:#09B;
+}
+
+#results table.results > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > h4
+{
+    cursor: pointer;
+}
+
+#results table.results > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > h4:hover
+{
+    color:#0CE;
+}
+
 #results table.results > thead > tr > th.filtered > label > input,
 #results table.results > thead > tr > th.filtered > label > select
 {
