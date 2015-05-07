@@ -34,7 +34,7 @@ $complete = !empty($quiz->getMultiply()) && !empty($quiz->getProcrastination()) 
         <?php } ?>
         <h3>How should you use the time in your free study sessions?</h3>
         <div class="questions">
-            <label class="input"><textarea name="quiz-study-sessions"><?php print $view->escape($quiz->getStudySessions()); ?></textarea></label>
+            <label class="input"><textarea name="quiz-studySessions"><?php print $view->escape($quiz->getStudySessions()); ?></textarea></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -43,7 +43,7 @@ $complete = !empty($quiz->getMultiply()) && !empty($quiz->getProcrastination()) 
         <?php } ?>
         <h3>What are two methods you can use to help yourself stick with a study plan?</h3>
         <div class="questions">
-            <label class="input"><textarea name="quiz-stick-plan"><?php print $view->escape($quiz->getStickPlan()); ?></textarea></label>
+            <label class="input"><textarea name="quiz-stickPlan"><?php print $view->escape($quiz->getStickPlan()); ?></textarea></label>
         </div>
         <?php if($complete) { ?>
             <div class="results">

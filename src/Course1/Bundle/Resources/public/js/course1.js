@@ -25,7 +25,7 @@ $(document).ready(function () {
             step.find('input[name="quiz-mindset"]:checked').length == 0 ||
             step.find('input[name="quiz-devices"]:checked').length == 0 ||
             step.find('input[name="quiz-studyMuch"]:checked').length == 0 ||
-            step.find('input[name="quiz-time-management"]:checked').length == 0)
+            step.find('input[name="quiz-timeManagement"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -41,7 +41,7 @@ $(document).ready(function () {
             step.find('input[name="quiz-measurable"]').val().trim() == '' ||
             step.find('input[name="quiz-achievable"]').val().trim() == '' ||
             step.find('input[name="quiz-relevant"]').val().trim() == '' ||
-            step.find('input[name="timeBound"]').val().trim() == '' ||
+            step.find('input[name="quiz-timeBound"]').val().trim() == '' ||
             step.find('input[name="quiz-intrinsic"]').val().trim() == '' ||
             step.find('input[name="quiz-extrinsic"]').val().trim() == '')
             valid = false;
@@ -198,7 +198,7 @@ $(document).ready(function () {
             data: {
                 education: step.find('input[name="quiz-education"]:checked').val(),
                 mindset: step.find('input[name="quiz-mindset"]:checked').val(),
-                time: step.find('input[name="quiz-time-management"]:checked').val(),
+                time: step.find('input[name="quiz-timeManagement"]:checked').val(),
                 devices: step.find('input[name="quiz-devices"]:checked').val(),
                 study: step.find('input[name="quiz-studyMuch"]:checked').val()
             },
@@ -395,9 +395,9 @@ $(document).ready(function () {
         var step = body.find('#course1_partners-step2'),
             valid = true;
         if(step.find('input[name="quiz-help"]:checked').length == 0 ||
-            step.find('input[name="quiz-partners-attribute"]:checked').length == 0 ||
-            step.find('input[name="quiz-partners-often"]').val().trim() == '' ||
-            step.find('input[name="quiz-partners-usage"]:checked').length == 0)
+            step.find('input[name="quiz-attribute"]:checked').length == 0 ||
+            step.find('input[name="quiz-often"]').val().trim() == '' ||
+            step.find('input[name="quiz-usage"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');

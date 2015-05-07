@@ -77,7 +77,7 @@ $(document).ready(function () {
     function validateStrategies() {
         var step = body.find('#course3_strategies-step2'),
             valid = true;
-        if(step.find('input[name="quiz-self-testing"]:checked').length == 0)
+        if(step.find('input[name="quiz-selfTesting"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -101,7 +101,7 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                selfTesting: step.find('input[name="quiz-self-testing"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
+                selfTesting: step.find('input[name="quiz-selfTesting"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
             },
             success: function (data) {
                 var content = $(data);
@@ -124,10 +124,10 @@ $(document).ready(function () {
     function validateGroupStudy() {
         var step = body.find('#course3_group_study-step2'),
             valid = true;
-        if(step.find('input[name="quiz-bad-times"]:checked').length == 0 ||
+        if(step.find('input[name="quiz-badTimes"]:checked').length == 0 ||
             step.find('input[name="quiz-building"]:checked').length == 0 ||
-            step.find('input[name="quiz-group-role"]').val().trim() == '' ||
-            step.find('input[name="quiz-group-breaks"]:checked').length == 0)
+            step.find('input[name="quiz-groupRole"]').val().trim() == '' ||
+            step.find('input[name="quiz-groupBreaks"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -152,10 +152,10 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                badTimes: step.find('input[name="quiz-bad-times"]:checked').val(),
+                badTimes: step.find('input[name="quiz-badTimes"]:checked').val(),
                 building: step.find('input[name="quiz-building"]:checked').val(),
-                groupRole: step.find('input[name="quiz-group-role"]').val().trim(),
-                groupBreaks: step.find('input[name="quiz-group-breaks"]:checked').val()
+                groupRole: step.find('input[name="quiz-groupRole"]').val().trim(),
+                groupBreaks: step.find('input[name="quiz-groupBreaks"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -217,7 +217,7 @@ $(document).ready(function () {
     function validateTeaching() {
         var step = body.find('#course3_teaching-step2'),
             valid = true;
-        if(step.find('input[name="quiz-new-language"]').val().trim() == '' ||
+        if(step.find('input[name="quiz-newLanguage"]').val().trim() == '' ||
             step.find('input[name="quiz-memorizing"]:checked').length == 0 ||
             step.find('input[name="quiz-videotaping"]').val().trim() == '')
             valid = false;
@@ -244,7 +244,7 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                newLanguage: step.find('input[name="quiz-new-language"]').val().trim(),
+                newLanguage: step.find('input[name="quiz-newLanguage"]').val().trim(),
                 memorizing: step.find('input[name="quiz-memorizing"]:checked').val(),
                 videotaping: step.find('input[name="quiz-videotaping"]').val().trim()
             },
@@ -271,10 +271,10 @@ $(document).ready(function () {
     function validateActiveReading() {
         var step = body.find('#course3_active_reading-step2'),
             valid = true;
-        if(step.find('textarea[name="quiz-what-reading"]').val().trim() == '' ||
+        if(step.find('textarea[name="quiz-whatReading"]').val().trim() == '' ||
             step.find('input[name="quiz-highlighting"]:checked').length == 0 ||
             step.find('input[name="quiz-skimming"]:checked').length == 0 ||
-            step.find('input[name="quiz-self-explanation"]:checked').length == 0)
+            step.find('input[name="quiz-selfExplanation"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -299,10 +299,10 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                whatReading: step.find('textarea[name="quiz-what-reading"]').val().trim(),
+                whatReading: step.find('textarea[name="quiz-whatReading"]').val().trim(),
                 highlighting: step.find('input[name="quiz-highlighting"]:checked').val(),
                 skimming: step.find('input[name="quiz-skimming"]:checked').val(),
-                selfExplanation: step.find('input[name="quiz-self-explanation"]:checked').val()
+                selfExplanation: step.find('input[name="quiz-selfExplanation"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -327,10 +327,10 @@ $(document).ready(function () {
     function validateSpacedRepetition() {
         var step = body.find('#course3_spaced_repetition-step2'),
             valid = true;
-        if(step.find('input[name="quiz-space-out"]:checked').length == 0 ||
+        if(step.find('input[name="quiz-spaceOut"]:checked').length == 0 ||
             step.find('textarea[name="quiz-forgetting"]').val().trim() == '' ||
             step.find('input[name="quiz-revisiting"]:checked').length == 0 ||
-            step.find('input[name="quiz-another-name"]:checked').length == 0)
+            step.find('input[name="quiz-anotherName"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -355,10 +355,10 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                spaceOut: step.find('input[name="quiz-space-out"]:checked').val(),
+                spaceOut: step.find('input[name="quiz-spaceOut"]:checked').val(),
                 forgetting: step.find('textarea[name="quiz-forgetting"]').val().trim(),
                 revisiting: step.find('input[name="quiz-revisiting"]:checked').val(),
-                anotherName: step.find('input[name="quiz-another-name"]:checked').val()
+                anotherName: step.find('input[name="quiz-anotherName"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);

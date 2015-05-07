@@ -34,9 +34,9 @@ $complete = !empty($quiz->getEducation()) &&
         </div>
         <h3>How do you manage your time studying for exams?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-time-management" type="radio" value="advance" <?php print ($quiz->getTimeManagement() == 'advance' ? 'checked="checked"' : ''); ?>><i></i><span>I have to space out my studying far in advance of my exam. Otherwise, I get too stressed out.</span></label>
-            <label class="radio"><input name="quiz-time-management" type="radio" value="cram" <?php print ($quiz->getTimeManagement() == 'cram' ? 'checked="checked"' : ''); ?>><i></i><span>I try to space it out, but usually end up cramming a day or two before my exam.</span></label>
-            <label class="radio"><input name="quiz-time-management" type="radio" value="pressure" <?php print ($quiz->getTimeManagement() == 'pressure' ? 'checked="checked"' : ''); ?>><i></i><span>I do my best work under pressure and plan to cram before each exam.</span></label>
+            <label class="radio"><input name="quiz-timeManagement" type="radio" value="advance" <?php print ($quiz->getTimeManagement() == 'advance' ? 'checked="checked"' : ''); ?>><i></i><span>I have to space out my studying far in advance of my exam. Otherwise, I get too stressed out.</span></label>
+            <label class="radio"><input name="quiz-timeManagement" type="radio" value="cram" <?php print ($quiz->getTimeManagement() == 'cram' ? 'checked="checked"' : ''); ?>><i></i><span>I try to space it out, but usually end up cramming a day or two before my exam.</span></label>
+            <label class="radio"><input name="quiz-timeManagement" type="radio" value="pressure" <?php print ($quiz->getTimeManagement() == 'pressure' ? 'checked="checked"' : ''); ?>><i></i><span>I do my best work under pressure and plan to cram before each exam.</span></label>
         </div>
         <div class="results">
             <p>Our study tools will help you break the procrastination habit.</p>

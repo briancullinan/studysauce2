@@ -13,11 +13,11 @@ $complete = !empty($quiz->getTypesTests()) && !empty($quiz->getMostImportant()) 
         <h2>Now let's see how much you remember</h2>
         <h3>Which of the following types of tests are objective?</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-types-tests" type="checkbox" value="essay" <?php print (in_array('essay', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Essay</span></label>
-            <label class="checkbox"><input name="quiz-types-tests" type="checkbox" value="short" <?php print (in_array('short', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Short Answer</span></label>
-            <label class="checkbox"><input name="quiz-types-tests" type="checkbox" value="math" <?php print (in_array('math', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Math &amp; Science</span></label>
-            <label class="checkbox"><input name="quiz-types-tests" type="checkbox" value="multiple" <?php print (in_array('multiple', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Multiple Choice</span></label>
-            <label class="checkbox"><input name="quiz-types-tests" type="checkbox" value="true" <?php print (in_array('true', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>True False</span></label>
+            <label class="checkbox"><input name="quiz-typesTests" type="checkbox" value="essay" <?php print (in_array('essay', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Essay</span></label>
+            <label class="checkbox"><input name="quiz-typesTests" type="checkbox" value="short" <?php print (in_array('short', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Short Answer</span></label>
+            <label class="checkbox"><input name="quiz-typesTests" type="checkbox" value="math" <?php print (in_array('math', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Math &amp; Science</span></label>
+            <label class="checkbox"><input name="quiz-typesTests" type="checkbox" value="multiple" <?php print (in_array('multiple', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>Multiple Choice</span></label>
+            <label class="checkbox"><input name="quiz-typesTests" type="checkbox" value="true" <?php print (in_array('true', $quiz->getTypesTests()) ? 'checked="checked"' : ''); ?>><i></i><span>True False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -26,7 +26,7 @@ $complete = !empty($quiz->getTypesTests()) && !empty($quiz->getMostImportant()) 
         <?php } ?>
         <h3>What is the most important thing in studying for tests?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-most-important" type="text" value="<?php print $view->escape($quiz->getMostImportant()); ?>"></label>
+            <label class="input"><input name="quiz-mostImportant" type="text" value="<?php print $view->escape($quiz->getMostImportant()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -35,8 +35,8 @@ $complete = !empty($quiz->getTypesTests()) && !empty($quiz->getMostImportant()) 
         <?php } ?>
         <h3>What are two tips for open notes tests?</h3>
         <div class="questions">
-            <label class="input"><span>1:</span><input name="quiz-open-tips-1" type="text" value="<?php print $view->escape($quiz->getOpenTips1()); ?>"></label>
-            <label class="input"><span>2:</span><input name="quiz-open-tips-2" type="text" value="<?php print $view->escape($quiz->getOpenTips2()); ?>"></label>
+            <label class="input"><span>1:</span><input name="quiz-openTips1" type="text" value="<?php print $view->escape($quiz->getOpenTips1()); ?>"></label>
+            <label class="input"><span>2:</span><input name="quiz-openTips2" type="text" value="<?php print $view->escape($quiz->getOpenTips2()); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

@@ -12,7 +12,7 @@ $complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()
         <h2>To help us better tailor Study Sauce to you, please answer the below questions.</h2>
         <h3>What is it called when you study the same class material for multiple study session?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-multiple-sessions" type="text" value="<?php print $quiz->getMultipleSessions(); ?>"></label>
+            <label class="input"><input name="quiz-multipleSessions" type="text" value="<?php print $quiz->getMultipleSessions(); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -21,7 +21,7 @@ $complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()
         <?php } ?>
         <h3>What is another name for interleaving?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-other-name" type="text" value="<?php print $quiz->getOtherName(); ?>"></label>
+            <label class="input"><input name="quiz-otherName" type="text" value="<?php print $quiz->getOtherName(); ?>"></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">
@@ -30,8 +30,8 @@ $complete = !empty($quiz->getMultipleSessions()) && !empty($quiz->getOtherName()
         <?php } ?>
         <h3>When interleaving, alternating similar types of courses is most effective because your brain is already in the right mode.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-types-courses" type="radio" value="1" <?php print ($quiz->getTypesCourses() === true ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-types-courses" type="radio" value="0" <?php print ($quiz->getTypesCourses() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-typesCourses" type="radio" value="1" <?php print ($quiz->getTypesCourses() === true ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-typesCourses" type="radio" value="0" <?php print ($quiz->getTypesCourses() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if($complete) { ?>
         <div class="results">

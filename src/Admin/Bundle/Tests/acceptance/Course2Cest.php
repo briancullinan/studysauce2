@@ -31,6 +31,7 @@ class Course2Cest
 
     /**
      * @depends tryGuestCheckout
+     * @depends tryStudyFunnel
      * @param AcceptanceTester $I
      */
     public function tryAllCourse2(AcceptanceTester $I)
@@ -88,8 +89,8 @@ class Course2Cest
         $I->click('#course2_study_metrics-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[value="procrastination"] + i');
-        $I->click('input[name="quiz-doing-well"][value="1"] + i');
-        $I->fillField('input[name="quiz-all-together"]', 'they don\'t');
+        $I->click('input[name="quiz-doingWell"][value="1"] + i');
+        $I->fillField('input[name="quiz-allTogether"]', 'they don\'t');
         $I->click('#course2_study_metrics-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course2_study_metrics-step2 .highlighted-link a:nth-of-type(2)');
@@ -112,8 +113,8 @@ class Course2Cest
         $I->wait(5);
         $I->click('input[name="quiz-multiply"][value="3"] + i');
         $I->fillField('textarea[name="quiz-procrastination"]', 'helps your commit time');
-        $I->fillField('textarea[name="quiz-study-sessions"]', 'good for projects');
-        $I->fillField('textarea[name="quiz-stick-plan"]', 'start immediately');
+        $I->fillField('textarea[name="quiz-studySessions"]', 'good for projects');
+        $I->fillField('textarea[name="quiz-stickPlan"]', 'start immediately');
         $I->click('#course2_study_plan-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course2_study_plan-step2 .highlighted-link a:nth-of-type(2)');
@@ -136,9 +137,9 @@ class Course2Cest
         $I->wait(25);
         $I->click('#course2_interleaving-step1 .highlighted-link a');
         $I->wait(5);
-        $I->fillField('input[name="quiz-multiple-sessions"]', 'blocked practice');
-        $I->fillField('input[name="quiz-other-name"]', 'varied practice');
-        $I->click('input[name="quiz-types-courses"][value="0"] + i');
+        $I->fillField('input[name="quiz-multipleSessions"]', 'blocked practice');
+        $I->fillField('input[name="quiz-otherName"]', 'varied practice');
+        $I->click('input[name="quiz-typesCourses"][value="0"] + i');
         $I->click('#course2_interleaving-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course2_interleaving-step2 .highlighted-link a:nth-of-type(2)');
@@ -160,10 +161,10 @@ class Course2Cest
         $I->wait(25);
         $I->click('#course2_study_tests-step1 .highlighted-link a');
         $I->wait(5);
-        $I->click('input[name="quiz-types-tests"][value="essay"] + i');
-        $I->fillField('input[name="quiz-most-important"]', 'space out your studying');
-        $I->fillField('input[name="quiz-open-tips-1"]', 'study more');
-        $I->fillField('input[name="quiz-open-tips-2"]', 'get organized');
+        $I->click('input[name="quiz-typesTests"][value="essay"] + i');
+        $I->fillField('input[name="quiz-mostImportant"]', 'space out your studying');
+        $I->fillField('input[name="quiz-openTips1"]', 'study more');
+        $I->fillField('input[name="quiz-openTips2"]', 'get organized');
         $I->click('#course2_study_tests-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course2_study_tests-step2 .highlighted-link a:nth-of-type(2)');
@@ -189,14 +190,14 @@ class Course2Cest
         $I->click('input[name="quiz-idea-cram"][value="0"] + i');
         $I->fillField('input[name="quiz-breathing"]', 'four part breathing');
         $I->fillField('input[name="quiz-skimming"]', 'number of questions');
-        $I->click('#course2_test_taking-step2 .highlighted-link a:first-child');
+        $I->click('#course2_test_taking-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
-        $I->click('#course2_test_taking-step2 .highlighted-link a:last-child');
+        $I->click('#course2_test_taking-step2 .highlighted-link a:nth-of-type(2)');
         $I->wait(5);
         $I->click('#course2_test_taking-step3 .highlighted-link a');
         $I->wait(5);
-        $I->seeLink('Check in');
-        $I->click('Check in');
+        $I->seeLink('Go home');
+        $I->click('Go home');
         $I->wait(15);
     }
 

@@ -92,21 +92,21 @@ $view['slots']->start('body'); ?>
                             <option>Descending (Z-A)</option>
                         </select></th>
                 <?php } ?>
-                <th><label><select name="hasGrades">
-                            <option value="">Grades</option>
-                            <option value="yes">Y</option>
-                            <option value="no">N</option>
-                        </select></label></th>
-                <th><label><select name="hasDeadlines">
-                            <option value="">Deadlines</option>
-                            <option value="yes">Y</option>
-                            <option value="no">N</option>
-                        </select></label></th>
-                <th><label><select name="hasNotes">
-                            <option value="">Notes</option>
-                            <option value="yes">Y</option>
-                            <option value="no">N</option>
-                        </select></label></th>
+                <th><select name="hasGrades">
+                            <option>Grades</option>
+                            <option>Y</option>
+                            <option>N</option>
+                        </select></th>
+                <th><select name="hasDeadlines">
+                            <option>Deadlines</option>
+                            <option>Y</option>
+                            <option>N</option>
+                        </select></th>
+                <th><select name="hasNotes">
+                            <option>Notes</option>
+                            <option>Y</option>
+                            <option>N</option>
+                        </select></th>
             </tr>
             </thead>
             <tbody>
@@ -125,9 +125,10 @@ $view['slots']->start('body'); ?>
                 $schedule = $u->getSchedules()->first();
                 /** @var User $adviser */
                 $adviser = $u->getPartnerOrAdviser();
+                $ts = !empty($u->getLastLogin()) ? $u->getLastLogin() : $u->getCreated();
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
-                <td data-timestamp="<?php print $u->getLastLogin()->getTimestamp(); ?>"><?php print $u->getLastLogin()->format('j M'); ?></td>
+                <td data-timestamp="<?php print $ts->getTimestamp(); ?>"><?php print $ts->format('j M'); ?></td>
                 <td><?php print $u->getCompleted(); ?>%</td>
                 <td><a title="<?php print (!empty($parts[1]) ? ucfirst($parts[1]) : 'Home'); ?>" href="<?php print $uri; ?>">
                         <?php print $u->getFirst() . ' ' . $u->getLast(); ?></a></td>
@@ -135,13 +136,15 @@ $view['slots']->start('body'); ?>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>
                     <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>
                 <?php } ?>
-                <td><?php print array_sum($u->getSchedules()->map(function (Schedule $s) {
-                        return $s->getCourses()->filter(function (Course $c) {
-                            return $c->getGrades()->count() > 0;
-                        })->count();
-                    })->toArray()); ?></td>
-                <td><?php print $u->getDeadlines()->count(); ?></td>
-                <td><?php print (!empty($u->getEvernoteAccessToken()) ? $u->getNotes()->count() : 'N'); ?></td>
+                <td data-value="<?php
+                $gradesCount = array_sum($u->getSchedules()->map(function (Schedule $s) {
+                    return $s->getCourses()->filter(function (Course $c) {
+                        return $c->getGrades()->count() > 0;
+                    })->count();
+                })->toArray());
+                print ($gradesCount > 0 ? 'Y' : 'N'); ?>"><?php print $gradesCount; ?></td>
+                <td data-value="<?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?>"><?php print $u->getDeadlines()->count(); ?></td>
+                <td data-value="<?php print (!empty($u->getEvernoteAccessToken()) && $u->getNotes()->count() > 0 ? 'Y' : 'N'); ?>"><?php print (!empty($u->getEvernoteAccessToken()) ? $u->getNotes()->count() : 'N'); ?></td>
                 </tr><?php
             } ?>
             </tbody>

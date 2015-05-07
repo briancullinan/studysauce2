@@ -75,6 +75,8 @@ class AdviserCest
         $I->click('a[href*="/logout"]');
         $I->click('a[href*="/login"]');
         $I->test('tryAdviserLogin');
+        // search for student name
+        $I->fillField('[name="search"]', $last);
         $I->see('last' . $last); // check for student name in user list
         $I->click('last' . $last); // load the student
         $I->see('last' . $last); // check the name in the corner of the tab
@@ -136,6 +138,7 @@ class AdviserCest
         $I->fillField('#register .password input', 'password');
         $I->click('[value="#user-register"]');
         $I->wait(5);
+        $I->seeAmOnUrl('/schedule');
 
         $I->wantTo('invite a user that already jump the gun and signed up early');
         $I->click('a[href*="/logout"]');

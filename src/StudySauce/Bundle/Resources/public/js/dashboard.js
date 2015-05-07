@@ -50,7 +50,7 @@ $(document).ready(function () {
                 dataType: 'text',
                 success: function (tab) {
                     var content = $(tab),
-                        panes = $.merge(content.filter('.panel-pane'), content.find('.panel-pane')),
+                        panes = content.filter('.panel-pane'),
                         styles = ssMergeStyles(content),
                         scripts = ssMergeScripts(content);
                     content = content.not(styles).not(scripts);

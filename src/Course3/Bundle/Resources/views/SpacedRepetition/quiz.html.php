@@ -12,8 +12,8 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>Spacing out your study sessions isn't important at all.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-space-out" type="radio" value="1" <?php print ($quiz->getSpaceOut() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-space-out" type="radio" value="0" <?php print ($quiz->getSpaceOut() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-spaceOut" type="radio" value="1" <?php print ($quiz->getSpaceOut() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-spaceOut" type="radio" value="0" <?php print ($quiz->getSpaceOut() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -43,9 +43,9 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Which of the following is <strong>not</strong> another name for Spaced Repetition?</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-another-name" type="radio" value="practice" <?php print ($quiz->getAnotherName() == 'practice' ? 'checked="checked"' : ''); ?>><i></i><span>Spaced practice</span></label>
-            <label class="radio"><input name="quiz-another-name" type="radio" value="distributed" <?php print ($quiz->getAnotherName() == 'distributed' ? 'checked="checked"' : ''); ?>><i></i><span>Distributed practice</span></label>
-            <label class="radio"><input name="quiz-another-name" type="radio" value="blocked" <?php print ($quiz->getAnotherName() == 'blocked' ? 'checked="checked"' : ''); ?>><i></i><span>Blocked practice</span></label>
+            <label class="radio"><input name="quiz-anotherName" type="radio" value="practice" <?php print ($quiz->getAnotherName() == 'practice' ? 'checked="checked"' : ''); ?>><i></i><span>Spaced practice</span></label>
+            <label class="radio"><input name="quiz-anotherName" type="radio" value="distributed" <?php print ($quiz->getAnotherName() == 'distributed' ? 'checked="checked"' : ''); ?>><i></i><span>Distributed practice</span></label>
+            <label class="radio"><input name="quiz-anotherName" type="radio" value="blocked" <?php print ($quiz->getAnotherName() == 'blocked' ? 'checked="checked"' : ''); ?>><i></i><span>Blocked practice</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

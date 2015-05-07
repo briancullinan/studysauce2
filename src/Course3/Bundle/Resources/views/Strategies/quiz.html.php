@@ -12,10 +12,10 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>Which of the following are examples of self-testing?</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-self-testing" type="checkbox" value="reading" <?php print (in_array('reading', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Reading and rereading your notes</span></label>
-            <label class="checkbox"><input name="quiz-self-testing" type="checkbox" value="flash" <?php print (in_array('flash', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Flash cards</span></label>
-            <label class="checkbox"><input name="quiz-self-testing" type="checkbox" value="teaching" <?php print (in_array('teaching', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Teaching others</span></label>
-            <label class="checkbox"><input name="quiz-self-testing" type="checkbox" value="practice" <?php print (in_array('practice', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Creating practice tests</span></label>
+            <label class="checkbox"><input name="quiz-selfTesting" type="checkbox" value="reading" <?php print (in_array('reading', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Reading and rereading your notes</span></label>
+            <label class="checkbox"><input name="quiz-selfTesting" type="checkbox" value="flash" <?php print (in_array('flash', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Flash cards</span></label>
+            <label class="checkbox"><input name="quiz-selfTesting" type="checkbox" value="teaching" <?php print (in_array('teaching', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Teaching others</span></label>
+            <label class="checkbox"><input name="quiz-selfTesting" type="checkbox" value="practice" <?php print (in_array('practice', $quiz->getSelfTesting()) ? 'checked="checked"' : ''); ?>><i></i><span>Creating practice tests</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

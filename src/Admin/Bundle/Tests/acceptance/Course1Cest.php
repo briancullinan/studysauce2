@@ -31,6 +31,7 @@ class Course1Cest
 
     /**
      * @depends tryGuestCheckout
+     * @depends tryStudyFunnel
      * @param AcceptanceTester $I
      */
     public function tryFreeCourse(AcceptanceTester $I)
@@ -239,7 +240,7 @@ class Course1Cest
         $I->click('input[value="focus"] + i');
         $I->click('input[value="incentive"] + i');
         $I->click('input[value="knows"] + i');
-        $I->fillField('input[name="quiz-partners-often"]', 'Once a week');
+        $I->fillField('input[name="quiz-often"]', 'Once a week');
         $I->click('input[value="dieting"] + i');
         $I->click('#course1_partners-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);

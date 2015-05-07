@@ -13,10 +13,10 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>Which of the following are usually bad times to study as a group?</h3>
         <div class="questions">
-            <label class="checkbox"><input name="quiz-bad-times" type="checkbox" value="writing" <?php print (in_array('writing', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Writing a paper</span></label>
-            <label class="checkbox"><input name="quiz-bad-times" type="checkbox" value="difficult" <?php print (in_array('difficult', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Trying to clarify difficult concepts</span></label>
-            <label class="checkbox"><input name="quiz-bad-times" type="checkbox" value="material" <?php print (in_array('material', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Looking at material for the first time</span></label>
-            <label class="checkbox"><input name="quiz-bad-times" type="checkbox" value="memorizing" <?php print (in_array('memorizing', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Memorizing information</span></label>
+            <label class="checkbox"><input name="quiz-badTimes" type="checkbox" value="writing" <?php print (in_array('writing', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Writing a paper</span></label>
+            <label class="checkbox"><input name="quiz-badTimes" type="checkbox" value="difficult" <?php print (in_array('difficult', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Trying to clarify difficult concepts</span></label>
+            <label class="checkbox"><input name="quiz-badTimes" type="checkbox" value="material" <?php print (in_array('material', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Looking at material for the first time</span></label>
+            <label class="checkbox"><input name="quiz-badTimes" type="checkbox" value="memorizing" <?php print (in_array('memorizing', $quiz->getBadTimes()) ? 'checked="checked"' : ''); ?>><i></i><span>Memorizing information</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -37,7 +37,7 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>What role should be rotated every week when the study group meets?</h3>
         <div class="questions">
-            <label class="input"><input name="quiz-group-role" type="text" value="<?php print $view->escape($quiz->getGroupRole()); ?>"></label>
+            <label class="input"><input name="quiz-groupRole" type="text" value="<?php print $view->escape($quiz->getGroupRole()); ?>"></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -46,8 +46,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Study groups should take breaks too.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-group-breaks" type="radio" value="1" <?php print ($quiz->getGroupBreaks() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-group-breaks" type="radio" value="0" <?php print ($quiz->getGroupBreaks() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-groupBreaks" type="radio" value="1" <?php print ($quiz->getGroupBreaks() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-groupBreaks" type="radio" value="0" <?php print ($quiz->getGroupBreaks() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

@@ -67,7 +67,7 @@ function setupYoutubePlayer()
                         y = frame.offset().top,
                         w = frame.width(),
                         h = frame.height();
-                    frame.attr('class', (frame.attr('class') || '').replace(/yt-state-([0-9]*)(\s|$)/ig, '') + 'yt-state-' + e.data).trigger('yt' + e.data);
+                    frame.attr('class', (frame.attr('class') || '').replace(/yt-state-([0-9\-]*)(\s|$)/ig, '') + ' yt-state-' + e.data).trigger('yt' + e.data);
                     if(e.data == 1)
                     {
                         frame.css({
@@ -228,6 +228,16 @@ function ssMergeScripts(content)
 
 $(document).ready(function () {
     var body = $('body');
+
+    body.on('click', 'a[href="#yt-pause"]', function (evt) {
+        evt.preventDefault();
+        var frame = $(this).prev().closest('iframe');
+        for(var i = 0; i < window.players.length; i++) {
+            if ($(window.players[i]).data('frame').is(frame)) {
+                window.players[i].pauseVideo();
+            }
+        }
+    });
 
     $(window).resize(function () {
         DASHBOARD_MARGINS = {padding: {top: $('.header-wrapper').outerHeight(), bottom: 0, left: 0, right: 0}};

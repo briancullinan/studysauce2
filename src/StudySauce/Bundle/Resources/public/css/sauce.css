@@ -884,6 +884,25 @@ textarea
     border: none;
 }
 
+a[href="#yt-pause"]
+{
+    position:fixed;
+    right:0;
+    top:0;
+    padding:20px;
+    font-size:80px;
+    line-height: 40px;
+    font-weight: bold;
+    color:#CCC;
+    z-index: 110;
+    display:none;
+}
+
+a[href="#yt-pause"]:hover
+{
+    color:#FFF;
+}
+
 .player-wrapper iframe.yt-state-1,
 iframe.yt-state-1
 {
@@ -896,6 +915,11 @@ iframe.yt-state-1
     height: 100%;
     border:none;
     z-index: 100;
+}
+
+iframe.yt-state-1 + a[href="#yt-pause"]
+{
+    display:inline-block;
 }
 
 .radio input[type=radio]~i,

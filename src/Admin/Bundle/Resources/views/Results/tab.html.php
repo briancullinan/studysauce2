@@ -328,7 +328,7 @@ $view['slots']->start('body'); ?>
                                                     </tr>
                                                     <tr>
                                                         <td class="read-only">
-                                                            <?php print $aggregate['quiz1']; ?>
+                                                            <?php print $aggregate['strategies']; ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -336,7 +336,7 @@ $view['slots']->start('body'); ?>
                                                     </tr>
                                                     <tr>
                                                         <td class="read-only">
-                                                            <?php print $aggregate['quiz1']; ?>
+                                                            <?php print $aggregate['groupStudy']; ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -344,7 +344,7 @@ $view['slots']->start('body'); ?>
                                                     </tr>
                                                     <tr>
                                                         <td class="read-only">
-                                                            <?php print $aggregate['quiz1']; ?>
+                                                            <?php print $aggregate['teaching']; ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -352,7 +352,7 @@ $view['slots']->start('body'); ?>
                                                     </tr>
                                                     <tr>
                                                         <td class="read-only">
-                                                            <?php print $aggregate['quiz1']; ?>
+                                                            <?php print $aggregate['activeReading']; ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -360,7 +360,7 @@ $view['slots']->start('body'); ?>
                                                     </tr>
                                                     <tr>
                                                         <td class="read-only">
-                                                            <?php print $aggregate['quiz1']; ?>
+                                                            <?php print $aggregate['spacedRepetition']; ?>
                                                         </td>
                                                     </tr>
                                                 </table>

@@ -31,6 +31,7 @@ class Course3Cest
 
     /**
      * @depends tryGuestCheckout
+     * @depends tryStudyFunnel
      * @param AcceptanceTester $I
      */
     public function tryAllCourse3(AcceptanceTester $I)
@@ -105,8 +106,8 @@ class Course3Cest
         $I->click('input[value="writing"] + i');
         $I->click('input[value="memorizing"] + i');
         $I->click('input[name="quiz-building"][value="3"] + i');
-        $I->fillField('input[name="quiz-group-role"]', 'The leader role');
-        $I->click('input[name="quiz-group-breaks"][value="1"]');
+        $I->fillField('input[name="quiz-groupRole"]', 'The leader role');
+        $I->click('input[name="quiz-groupBreaks"][value="1"]');
         $I->click('#course3_group_study-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course3_group_study-step2 .highlighted-link a:nth-of-type(2)');
@@ -129,7 +130,7 @@ class Course3Cest
         $I->wait(25);
         $I->click('#course3_teaching-step1 .highlighted-link a');
         $I->wait(5);
-        $I->fillField('input[name="quiz-new-language"]', 'can\'t guess answers');
+        $I->fillField('input[name="quiz-newLanguage"]', 'can\'t guess answers');
         $I->click('input[name="quiz-memorizing"] + i');
         $I->fillField('input[name="quiz-videotaping"]', 'You can tell if you understand it by watching yourself');
         $I->click('#course3_teaching-step2 .highlighted-link a:nth-of-type(1)');
@@ -152,10 +153,10 @@ class Course3Cest
         $I->wait(25);
         $I->click('#course3_active_reading-step1 .highlighted-link a');
         $I->wait(5);
-        $I->fillField('textarea[name="quiz-what-reading"]', 'recognizing the important parts');
+        $I->fillField('textarea[name="quiz-whatReading"]', 'recognizing the important parts');
         $I->click('input[name="quiz-highlighting"][value="0"] + i');
         $I->click('input[name="quiz-skimming"][value="1"] + i');
-        $I->click('input[name="quiz-self-explanation"][value="1"] + i');
+        $I->click('input[name="quiz-selfExplanation"][value="1"] + i');
         $I->click('#course3_active_reading-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course3_active_reading-step2 .highlighted-link a:nth-of-type(2)');
@@ -176,7 +177,7 @@ class Course3Cest
         $I->wait(25);
         $I->click('#course3_spaced_repetition-step1 .highlighted-link a');
         $I->wait(5);
-        $I->click('input[name="quiz-space-out"][value="0"] + i');
+        $I->click('input[name="quiz-spaceOut"][value="0"] + i');
         $I->fillField('textarea[name="quiz-forgetting"]', 'forgetting everything in a few days');
         $I->click('input[value="weekly"] + i');
         $I->click('input[value="blocked"] + i');

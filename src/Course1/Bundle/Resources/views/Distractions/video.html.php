@@ -14,6 +14,7 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
 
         <div class="player-wrapper">
             <iframe id="course1_distractions-player" src="https://www.youtube.com/embed/fkF0jueJYDQ?rel=0&amp;autohide=0&amp;controls=<?php print ($course->getLesson3() > 1 ? 1 : 0); ?>&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;origin=<?php print $app->getRequest()->getScheme() . '://' . $app->getRequest()->getHttpHost(); ?>"></iframe>
+            <a href="#yt-pause">&times;</a>
         </div>
         <div class="highlighted-link invalid">
             <a href="<?php print $view['router']->generate('course1_distractions', ['_step' => 2]); ?>" class="more">Next</a>

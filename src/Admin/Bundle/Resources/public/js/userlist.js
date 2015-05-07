@@ -2,6 +2,23 @@ $(document).ready(function () {
 
     var body = $('body');
 
+    body.on('keyup change', '#userlist [name="search"]', function () {
+        var userlist = $('#userlist');
+        if($(this).val().trim() == '') {
+            userlist.find('tr').show();
+        }
+        else {
+            userlist.find('tbody tr').each(function () {
+                if($(this).find('> td').text().toLowerCase().indexOf(userlist.find('[name="search"]').val().trim().toLowerCase()) == -1) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        }
+    });
+
     function sortSelect(a, b) {
         if(a == 'Student' || a == 'Status' || a == 'Adviser' || a == 'School' || a == 'Date' || a == 'Completion')
             return -1;
@@ -34,39 +51,39 @@ $(document).ready(function () {
 
             var dates = ['Date', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('td:nth-child(2)').each(function () {
-                if(dates.indexOf(jQuery(this).text()) == -1)
-                    dates[dates.length] = jQuery(this).text();
+                if(dates.indexOf(jQuery(this).text().trim()) == -1)
+                    dates[dates.length] = jQuery(this).text().trim();
             });
             userlist.find('th:nth-child(2)').html('<select><option>' + dates.join("</option><option>") + '</option></select>');
 
             var completion = ['Completion', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('td:nth-child(3)').each(function () {
-                if(completion.indexOf(jQuery(this).text()) == -1)
-                    completion[completion.length] = jQuery(this).text();
+                if(completion.indexOf(jQuery(this).text().trim()) == -1)
+                    completion[completion.length] = jQuery(this).text().trim();
             });
             completion.sort(sortSelect);
             userlist.find('th:nth-child(3)').html('<select><option>' + completion.join("</option><option>") + '</option></select>');
 
             var students = ['Student', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('td:nth-child(4)').each(function () {
-                if(students.indexOf(jQuery(this).text()) == -1)
-                    students[students.length] = jQuery(this).text();
+                if(students.indexOf(jQuery(this).text().trim()) == -1)
+                    students[students.length] = jQuery(this).text().trim();
             });
             students.sort(sortSelect);
             userlist.find('th:nth-child(4)').html('<select><option>' + students.join("</option><option>") + '</option></select>');
 
             var schools = ['School', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('td:nth-child(5)').each(function () {
-                if(schools.indexOf(jQuery(this).text()) == -1)
-                    schools[schools.length] = jQuery(this).text();
+                if(schools.indexOf(jQuery(this).text().trim()) == -1)
+                    schools[schools.length] = jQuery(this).text().trim();
             });
             schools.sort(sortSelect);
             userlist.find('th:nth-child(5)').html('<select><option>' + schools.join("</option><option>") + '</option></select>');
 
             var advisers = ['Adviser', 'Ascending (A-Z)', 'Descending (Z-A)'];
             userlist.find('.master td:nth-child(6)').each(function () {
-                if(advisers.indexOf(jQuery(this).text()) == -1)
-                    advisers[advisers.length] = jQuery(this).text();
+                if(advisers.indexOf(jQuery(this).text().trim()) == -1)
+                    advisers[advisers.length] = jQuery(this).text().trim();
             });
             advisers.sort(sortSelect);
             userlist.find('.master th:nth-child(6)').html('<select><option>' + advisers.join("</option><option>") + '</option></select>');
@@ -162,22 +179,24 @@ $(document).ready(function () {
                 jQuery(this).val() != 'Student' &&
                 jQuery(this).val() != 'Completion' &&
                 jQuery(this).val() != 'School' &&
-                jQuery(this).val() != 'Adviser')
+                jQuery(this).val() != 'Adviser' &&
+                jQuery(this).val() != 'Deadlines' &&
+                jQuery(this).val() != 'Notes' &&
+                jQuery(this).val() != 'Grades')
             {
                 jQuery(this).parent().removeClass('unfiltered').addClass('filtered');
                 jQuery(this).data('last', jQuery(this).val());
                 var j = jQuery(this).parents('th').index() + 1,
                     filter = jQuery(this).val();
                 // if we are changing the status, select rows by class name
-                if(j == 1)
-                {
+                if(j == 1) {
                     userlist.find('tbody tr').hide();
                     userlist.find('tr.status_' + filter.toLowerCase()).show();
                 }
-                else
-                {
+                else {
                     userlist.find('td:nth-child(' + j + ')').each(function () {
-                        if(jQuery(this).text() != filter)
+                        if(jQuery(this).text().trim().indexOf(filter) == -1 &&
+                            (jQuery(this).attr('data-value') == null || jQuery(this).attr('data-value').indexOf(filter) == -1))
                             jQuery(this).parents('tr').hide();
                     });
                 }

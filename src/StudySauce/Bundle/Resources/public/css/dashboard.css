@@ -23,6 +23,12 @@
     padding: 50px 50px 0 50px;
 }
 
+.dashboard-home a[href="#yt-pause"]
+{
+    padding-top:70px;
+    padding-right:70px;
+}
+
 .tipsy
 {
     font-size:14px;

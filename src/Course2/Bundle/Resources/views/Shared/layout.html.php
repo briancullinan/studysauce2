@@ -37,7 +37,7 @@ if (!$courseIncluded) {
         $view['slots']->start('sincludes');
         $controller = $request->get('_controller');
         $pos = strpos($request->getUri(), '/_fragment');
-        if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment')) {
+        if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment') && !strpos($controller, ':template')) {
             // include courses from the index page
             if ($app->getRequest()->get('_step') != 3) {
                 echo $view['actions']->render(

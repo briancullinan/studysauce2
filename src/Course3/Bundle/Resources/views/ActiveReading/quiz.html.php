@@ -13,7 +13,7 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>What is active reading?</h3>
         <div class="questions">
-            <label class="input"><textarea name="quiz-what-reading"><?php print $view->escape($quiz->getWhatReading()); ?></textarea>
+            <label class="input"><textarea name="quiz-whatReading"><?php print $view->escape($quiz->getWhatReading()); ?></textarea>
         </div>
         <?php if ($complete) { ?>
             <div class="results">
@@ -42,8 +42,8 @@ $view['slots']->start('body'); ?>
         <?php } ?>
         <h3>Self-explanation is an effective tool for active reading</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-self-explanation" type="radio" value="1" <?php print ($quiz->getSelfExplanation() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-self-explanation" type="radio" value="0" <?php print ($quiz->getSelfExplanation() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-selfExplanation" type="radio" value="1" <?php print ($quiz->getSelfExplanation() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-selfExplanation" type="radio" value="0" <?php print ($quiz->getSelfExplanation() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

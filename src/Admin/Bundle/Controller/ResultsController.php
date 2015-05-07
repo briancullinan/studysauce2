@@ -258,6 +258,13 @@ class ResultsController extends Controller
                 'Course2Bundle:StudyTests:quiz.html.php' => 'studyTests',
                 'Course2Bundle:TestTaking:quiz.html.php' => 'testTaking',
             ],
+            'course3' => [
+                'Course3Bundle:Strategies:quiz.html.php' => 'strategies',
+                'Course3Bundle:GroupStudy:quiz.html.php' => 'groupStudy',
+                'Course3Bundle:Teaching:quiz.html.php' => 'teaching',
+                'Course3Bundle:ActiveReading:quiz.html.php' => 'activeReading',
+                'Course3Bundle:SpacedRepetition:quiz.html.php' => 'spacedRepetition',
+            ],
         ];
         foreach($courses as $course => $quizes) {
             foreach ($quizes as $t => $q) {
@@ -281,10 +288,7 @@ class ResultsController extends Controller
                     $questions[$f] = $counts;
                 }
                 $cn = '\\' . ucfirst($course) . '\\Bundle\\Entity\\' . ucfirst($q);
-                $quizContent = $this->forward(
-                    'AdminBundle:Results:template',
-                    ['_format' => 'tab', 'template' => $t, 'class' => $cn]
-                )->getContent();
+                $quizContent = $this->forward('AdminBundle:Results:template',['_format' => 'tab', 'template' => $t, 'class' => $cn])->getContent();
                 foreach ($questions as $f => $c) {
                     $total = array_sum(
                         array_map(
@@ -317,7 +321,7 @@ class ResultsController extends Controller
                             )
                         ) . '</div>';
                     $quizContent = preg_replace(
-                        '/(<label[\s\S]*?<input.*name="quiz-' . $f . '".*?>[\s\S]*?<\/label>[\s]*)+/i',
+                        '/(<label[\s\S]*?<(input|textarea).*name="quiz-' . $f . '".*?>[\s\S]*?<\/label>[\s]*)+/i',
                         $answers,
                         $quizContent
                     );
@@ -432,7 +436,7 @@ class ResultsController extends Controller
         $tpl = $this->container->get('templating');
         /** @var TimedPhpEngine $engine */
         $engine = $tpl->getEngine($template);
-        $tpl->render($template, ['quiz' => new $class(), 'csrf_token' => '']);
+        $engine->render($template, ['quiz' => new $class(), 'csrf_token' => '']);
         /** @var SlotsHelper $slots */
         $slots = $engine->get('slots');
         return new Response($slots->get('body'));

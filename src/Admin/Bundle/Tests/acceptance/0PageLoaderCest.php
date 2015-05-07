@@ -37,6 +37,16 @@ class PageLoaderCest
         $I->wantTo('see StudySauce in title');
         $I->amOnPage('/');
         $I->seeInTitle('StudySauce');
+        $I->executeInSelenium(function (WebDriver $driver) {
+            $driver->switchTo()->defaultContent();
+            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[src*="youtube.com"]')));
+        });
+        $I->click('[role="button"]');
+        $I->wait(2);
+        $I->executeInSelenium(function (WebDriver $driver) {
+            $driver->switchTo()->window($driver->getWindowHandle());
+        });
+        $I->click('a[href="#yt-pause"]');
         $I->wantTo('read the About us page');
         $I->seeLink('About us');
         $I->click('About us');
@@ -599,8 +609,11 @@ class PageLoaderCest
         }
         $I->click('#notes a[href="#save-note"]');
         $I->wait(15);
-        $I->see('This is a new note');
-        $I->click('This is a new note');
+        $I->fillField('#notes [name="search"]', date('Y-m-d'));
+        $I->wait(5);
+        $I->see('This is a new note ' . date('Y-m-d'));
+        $I->fillField('#notes [name="search"]', '');
+        $I->click('This is a new note ' . date('Y-m-d'));
         $I->click('#notes a[href="#delete-note"]');
         $I->wait(5);
     }

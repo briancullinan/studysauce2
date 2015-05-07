@@ -11,6 +11,7 @@
             <h1>STOP THE STRESS!</h1>
             <div class="player-wrapper">
                 <iframe id="landing-intro-player" src="https://www.youtube.com/embed/xY-LuIsFpio?rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1&amp;origin=<?php print $app->getRequest()->getScheme() . '://' . $app->getRequest()->getHttpHost(); ?>"></iframe>
+                <a href="#yt-pause">&times;</a>
             </div>
             <div class="highlighted-link">
                 <a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Sign up</a>

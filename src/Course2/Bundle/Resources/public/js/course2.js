@@ -77,9 +77,9 @@ $(document).ready(function () {
     function validateInterleaving() {
         var step = body.find('#course2_interleaving-step2'),
             valid = true;
-        if(step.find('input[name="quiz-multiple-sessions"]').val().trim() == '' ||
-            step.find('input[name="quiz-other-name"]').val().trim() == '' ||
-            step.find('input[name="quiz-types-courses"]:checked').length == 0)
+        if(step.find('input[name="quiz-multipleSessions"]').val().trim() == '' ||
+            step.find('input[name="quiz-otherName"]').val().trim() == '' ||
+            step.find('input[name="quiz-typesCourses"]:checked').length == 0)
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -104,9 +104,9 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                multipleSessions: step.find('input[name="quiz-multiple-sessions"]').val().trim(),
-                otherName: step.find('input[name="quiz-other-name"]').val().trim(),
-                typesCourses: step.find('input[name="quiz-types-courses"]:checked').val()
+                multipleSessions: step.find('input[name="quiz-multipleSessions"]').val().trim(),
+                otherName: step.find('input[name="quiz-otherName"]').val().trim(),
+                typesCourses: step.find('input[name="quiz-typesCourses"]:checked').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -129,9 +129,9 @@ $(document).ready(function () {
     function validateStudyMetrics() {
         var step = body.find('#course2_study_metrics-step2'),
             valid = true;
-        if(step.find('input[name="quiz-track-hours"]:checked').length == 0 ||
-            step.find('input[name="quiz-doing-well"]:checked').length == 0 ||
-            step.find('input[name="quiz-all-together"]').val().trim() == '')
+        if(step.find('input[name="quiz-trackHours"]:checked').length == 0 ||
+            step.find('input[name="quiz-doingWell"]:checked').length == 0 ||
+            step.find('input[name="quiz-allTogether"]').val().trim() == '')
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -156,9 +156,9 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                trackHours: step.find('input[name="quiz-track-hours"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
-                doingWell: step.find('input[name="quiz-doing-well"]:checked').val(),
-                allTogether: step.find('input[name="quiz-all-together"]').val().trim()
+                trackHours: step.find('input[name="quiz-trackHours"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
+                doingWell: step.find('input[name="quiz-doingWell"]:checked').val(),
+                allTogether: step.find('input[name="quiz-allTogether"]').val().trim()
             },
             success: function (data) {
                 var content = $(data);
@@ -183,8 +183,8 @@ $(document).ready(function () {
             valid = true;
         if(step.find('input[name="quiz-multiply"]:checked').length == 0 ||
             step.find('textarea[name="quiz-procrastination"]').val().trim() == '' ||
-            step.find('textarea[name="quiz-study-sessions"]').val().trim() == '' ||
-            step.find('textarea[name="quiz-stick-plan"]').val().trim() == '')
+            step.find('textarea[name="quiz-studySessions"]').val().trim() == '' ||
+            step.find('textarea[name="quiz-stickPlan"]').val().trim() == '')
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -211,8 +211,8 @@ $(document).ready(function () {
             data: {
                 multiply: step.find('input[name="quiz-multiply"]:checked').val(),
                 procrastination: step.find('textarea[name="quiz-procrastination"]').val(),
-                studySessions: step.find('textarea[name="quiz-study-sessions"]').val(),
-                stickPlan: step.find('textarea[name="quiz-stick-plan"]').val()
+                studySessions: step.find('textarea[name="quiz-studySessions"]').val(),
+                stickPlan: step.find('textarea[name="quiz-stickPlan"]').val()
             },
             success: function (data) {
                 var content = $(data);
@@ -235,10 +235,10 @@ $(document).ready(function () {
     function validateStudyTests() {
         var step = body.find('#course2_study_tests-step2'),
             valid = true;
-        if(step.find('input[name="quiz-types-tests"]:checked').length == 0 ||
-            step.find('input[name="quiz-most-important"]').val().trim() == '' ||
-            step.find('input[name="quiz-open-tips-1"]').val().trim() == '' ||
-            step.find('input[name="quiz-open-tips-2"]').val().trim() == '')
+        if(step.find('input[name="quiz-typesTests"]:checked').length == 0 ||
+            step.find('input[name="quiz-mostImportant"]').val().trim() == '' ||
+            step.find('input[name="quiz-openTips1"]').val().trim() == '' ||
+            step.find('input[name="quiz-openTips2"]').val().trim() == '')
             valid = false;
         if(!valid)
             step.find('.highlighted-link').removeClass('valid').addClass('invalid');
@@ -263,10 +263,10 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                typesTests: step.find('input[name="quiz-types-tests"]:checked').val(),
-                mostImportant: step.find('input[name="quiz-most-important"]').val(),
-                openTips1: step.find('input[name="quiz-open-tips-1"]').val(),
-                openTips2: step.find('input[name="quiz-open-tips-2"]').val()
+                typesTests: step.find('input[name="quiz-typesTests"]:checked').val(),
+                mostImportant: step.find('input[name="quiz-mostImportant"]').val(),
+                openTips1: step.find('input[name="quiz-openTips1"]').val(),
+                openTips2: step.find('input[name="quiz-openTips2"]').val()
             },
             success: function (data) {
                 var content = $(data);
