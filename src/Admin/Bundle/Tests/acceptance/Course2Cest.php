@@ -86,6 +86,7 @@ class Course2Cest
         $I->seeAmOnUrl('/course/2/lesson/1/step');
         $I->click('#course2_study_metrics .highlighted-link a');
         $I->wait(25);
+        $I->click('#course2_study_metrics-step1 a[href="#yt-pause"]');
         $I->click('#course2_study_metrics-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[value="procrastination"] + i');
@@ -109,6 +110,7 @@ class Course2Cest
         $I->seeAmOnUrl('/course/2/lesson/2/step');
         $I->click('#course2_study_plan .highlighted-link a');
         $I->wait(25);
+        $I->click('#course2_study_plan-step1 a[href="#yt-pause"]');
         $I->click('#course2_study_plan-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[name="quiz-multiply"][value="3"] + i');
@@ -135,6 +137,7 @@ class Course2Cest
         $I->seeAmOnUrl('/course/2/lesson/3/step');
         $I->click('#course2_interleaving .highlighted-link a');
         $I->wait(25);
+        $I->click('#course2_interleaving-step1 a[href="#yt-pause"]');
         $I->click('#course2_interleaving-step1 .highlighted-link a');
         $I->wait(5);
         $I->fillField('input[name="quiz-multipleSessions"]', 'blocked practice');
@@ -159,6 +162,7 @@ class Course2Cest
         $I->seeAmOnUrl('/course/2/lesson/4/step');
         $I->click('#course2_study_tests .highlighted-link a');
         $I->wait(25);
+        $I->click('#course2_study_tests-step1 a[href="#yt-pause"]');
         $I->click('#course2_study_tests-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[name="quiz-typesTests"][value="essay"] + i');
@@ -185,9 +189,10 @@ class Course2Cest
         $I->seeAmOnUrl('/course/2/lesson/5/step');
         $I->click('#course2_test_taking .highlighted-link a');
         $I->wait(25);
+        $I->click('#course2_test_taking-step1 a[href="#yt-pause"]');
         $I->click('#course2_test_taking-step1 .highlighted-link a');
         $I->wait(5);
-        $I->click('input[name="quiz-idea-cram"][value="0"] + i');
+        $I->click('input[name="quiz-ideaCram"][value="0"] + i');
         $I->fillField('input[name="quiz-breathing"]', 'four part breathing');
         $I->fillField('input[name="quiz-skimming"]', 'number of questions');
         $I->click('#course2_test_taking-step2 .highlighted-link a:nth-of-type(1)');
@@ -196,8 +201,8 @@ class Course2Cest
         $I->wait(5);
         $I->click('#course2_test_taking-step3 .highlighted-link a');
         $I->wait(5);
-        $I->seeLink('Go home');
-        $I->click('Go home');
+        $I->seeLink('Go to grade calculator');
+        $I->click('Go to grade calculator');
         $I->wait(15);
     }
 

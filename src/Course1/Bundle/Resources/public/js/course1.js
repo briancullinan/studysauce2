@@ -230,11 +230,11 @@ $(document).ready(function () {
             dataType: 'text',
             data: {
                 performance: step.find('input[name="quiz-goalPerformance"]:checked').val(),
-                acronymS: step.find('input[name="specific"]').val(),
-                acronymM: step.find('input[name="measurable"]').val(),
-                acronymA: step.find('input[name="achievable"]').val(),
-                acronymR: step.find('input[name="relevant"]').val(),
-                acronymT: step.find('input[name="timeBound"]').val(),
+                acronymS: step.find('input[name="quiz-specific"]').val(),
+                acronymM: step.find('input[name="quiz-measurable"]').val(),
+                acronymA: step.find('input[name="quiz-achievable"]').val(),
+                acronymR: step.find('input[name="quiz-relevant"]').val(),
+                acronymT: step.find('input[name="quiz-timeBound"]').val(),
                 motivationE: step.find('input[name="quiz-extrinsic"]').val(),
                 motivationI: step.find('input[name="quiz-intrinsic"]').val()
             },
@@ -425,7 +425,7 @@ $(document).ready(function () {
                 help: step.find('input[name="quiz-help"]:checked').map(function (i, x) {return $(x).val();}).get().join(','),
                 attribute: step.find('input[name="quiz-attribute"]:checked').val(),
                 often: step.find('input[name="quiz-often"]').val().trim(),
-                usage: step.find('input[name="quiz-Dusage"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
+                usage: step.find('input[name="quiz-usage"]:checked').map(function (i, x) {return $(x).val();}).get().join(',')
             },
             success: function (data) {
                 var content = $(data);

@@ -298,8 +298,8 @@ class ResultsController extends Controller
                             $c
                         )
                     );
-                    $answers = '<div class="answer">' . join(
-                            '</div><div>',
+                    $answers = '<div class="response">' . join(
+                            '</div><div class="response">',
                             array_map(
                                 function ($field) use ($f, $total) {
                                     $val = $field[$f];
@@ -329,6 +329,108 @@ class ResultsController extends Controller
                 $aggregate[$q] = $quizContent;
             }
         }
+
+        // get why study? answers
+        $aggregate['whyStudy'] = '<div class="response">' . join(
+                '</div><div class="response">',
+                array_map(
+                    function ($field) use ($total) {
+                        $val = $field['whyStudy'];
+                        if (is_array($val)) {
+                            $val = join(', ', $val);
+                        }
+                        if (is_bool($val)) {
+                            $val = $val ? 'true' : 'false';
+                        }
+                        if (is_null($val)) {
+                            $val = 'No answer';
+                        }
+
+                        return $val . ' - ' . $field['cnt'];
+                    },
+                    self::searchBuilder($orm, $request, $joins)->distinct(true)->select(
+                        'c1.whyStudy, count(c1) AS cnt'
+                    )
+                        ->leftJoin('u.course1s', 'c1')
+                        ->groupBy('c1.whyStudy')
+                        ->getQuery()
+                        ->getResult()
+                )
+            ) . '</div>';
+
+        // get all feedback
+        $aggregate['feedback'] = '<div class="response">' . join(
+                '</div><div class="response">',
+                array_map(
+                    function ($field) use ($total) {
+                        $val = $field['feedback'];
+                        if (is_array($val)) {
+                            $val = join(', ', $val);
+                        }
+                        if (is_bool($val)) {
+                            $val = $val ? 'true' : 'false';
+                        }
+                        if (is_null($val)) {
+                            $val = 'No answer';
+                        }
+
+                        return $val . ' - ' . $field['cnt'];
+                    },
+                    self::searchBuilder($orm, $request, $joins)->distinct(true)->select(
+                        'c1.feedback, count(c1) AS cnt'
+                    )
+                        ->leftJoin('u.course3s', 'c1')
+                        ->groupBy('c1.feedback')
+                        ->getQuery()
+                        ->getResult()
+                )
+            ) . '</div>';
+
+        // get net promoter score
+        $good = 0.0;
+        $bad = 0.0;
+        $netTotal = 0.0;
+        $aggregate['net-promoter'] = '<div class="response">' . join(
+                '</div><div class="response">',
+                array_map(
+                    function ($field) use ($total, &$good, &$bad, &$netTotal) {
+                        $val = $field['netPromoter'];
+                        if (is_array($val)) {
+                            $val = join(', ', $val);
+                        }
+                        if (is_bool($val)) {
+                            $val = $val ? 'true' : 'false';
+                        }
+                        if (is_null($val)) {
+                            $val = 'No answer';
+                        }
+                        if (is_numeric($val)) {
+                            $val = empty($val) ? 'No answer' : $val;
+                        }
+                        if($val >= 9) {
+                            $good += $field['cnt'];
+                        }
+                        if($val <= 6 && $val > 0) {
+                            $bad += $field['cnt'];
+                        }
+                        if($val > 0) {
+                            $netTotal += $field['cnt'];
+                        }
+
+                        return $val . ' - ' . $field['cnt'] . ' (' . round(
+                            $field['cnt'] * 100.0 / $total
+                        ) . '%)';
+                    },
+                    self::searchBuilder($orm, $request, $joins)->distinct(true)->select(
+                        'c1.netPromoter, count(c1) AS cnt'
+                    )
+                        ->leftJoin('u.course3s', 'c1')
+                        ->groupBy('c1.netPromoter')
+                        ->getQuery()
+                        ->getResult()
+                )
+            ) . '</div>';
+        $aggregate['net-promoter'] .= '<div class="response">Total: ' . round(($good / $netTotal - $bad / $netTotal) * 100) . '</div>';
 
         $parents = self::searchBuilder($orm, $request)
             ->select('COUNT(DISTINCT u.id)')

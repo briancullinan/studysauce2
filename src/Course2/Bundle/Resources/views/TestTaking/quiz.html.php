@@ -12,8 +12,8 @@ $view['slots']->start('body'); ?>
         <h2>Now let's see how much you remember</h2>
         <h3>Leading up to the test, it is a super good idea to cram.</h3>
         <div class="questions">
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="1" <?php print ($quiz->getIdeaCram() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
-            <label class="radio"><input name="quiz-idea-cram" type="radio" value="0" <?php print ($quiz->getIdeaCram() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
+            <label class="radio"><input name="quiz-ideaCram" type="radio" value="1" <?php print ($quiz->getIdeaCram() ? 'checked="checked"' : ''); ?>><i></i><span>True</span></label>
+            <label class="radio"><input name="quiz-ideaCram" type="radio" value="0" <?php print ($quiz->getIdeaCram() === false ? 'checked="checked"' : ''); ?>><i></i><span>False</span></label>
         </div>
         <?php if ($complete) { ?>
             <div class="results">

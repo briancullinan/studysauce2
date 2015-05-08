@@ -180,4 +180,25 @@ use Course3\Bundle\Entity\Course3;
                 </tr>
             </table>
         </td></tr>
+    <tr>
+        <td><h3>Feedback</h3></td>
+    </tr>
+    <tr><td>
+            <div class="panel-pane course1 step2" id="course1_introduction-step4">
+                <div class="pane-content">
+                    <h3>Why do you want to become better at studying?</h3>
+                    <label class="input">
+                        <textarea placeholder="" cols="60" rows="2"><?php print $view->escape($course1->getWhyStudy()); ?></textarea>
+                    </label>
+                    <h3>Do you have any feedback?</h3>
+                    <label class="input">
+                        <textarea name="investment-feedback"><?php print $course3->getFeedback(); ?></textarea>
+                    </label>
+                    <h3>Score</h3>
+                    <label class="radio">
+                        <input type="radio" name="investment-net-promoter" checked="checked"/><i></i><br/><span><?php print $course3->getNetPromoter(); ?></span>
+                    </label>
+                </div>
+            </div>
+    </td></tr>
 </table>

@@ -1,7 +1,7 @@
 <div class="video clearfix">
     <video autoplay="" loop="" id="bgvid">
         <source src="https://s3-us-west-2.amazonaws.com/studysauce/Study_Difficulties.webm" type="video/webm">
-        <source src="https://s3-us-west-2.amazonaws.com/studysauce/Study_Difficulties.mp4" type="video/mp4">
+        <source src="https://s3-us-west-2.amazonaws.com/studysauce/Study_Difficulties_compressed.mp4" type="video/mp4">
     </video>
     <div id="site-name" class="navbar-header">
         <a href="<?php print $view['router']->generate('login'); ?>">Sign in</a>

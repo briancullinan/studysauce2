@@ -328,7 +328,7 @@ $(document).ready(function () {
     function validateTestTaking() {
         var step = body.find('#course2_test_taking-step2'),
             valid = true;
-        if(step.find('input[name="quiz-idea-cram"]:checked').length == 0 ||
+        if(step.find('input[name="quiz-ideaCram"]:checked').length == 0 ||
             step.find('input[name="quiz-breathing"]').val().trim() == '' ||
             step.find('input[name="quiz-skimming"]').val().trim() == '')
             valid = false;
@@ -355,7 +355,7 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                ideaCram: step.find('input[name="quiz-idea-cram"]:checked').val(),
+                ideaCram: step.find('input[name="quiz-ideaCram"]:checked').val(),
                 breathing: step.find('input[name="quiz-breathing"]').val().trim(),
                 skimming: step.find('input[name="quiz-skimming"]').val().trim()
             },

@@ -9,6 +9,7 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
         <div class="grid_6">
             <h3>Assignment:</h3>
             <p>Take a few seconds and try out the four part breathing exercise.  For extra credit, check out how it affects your pulse (it should drop quite a bit).</p>
+            <p>After you try the breathing exercise, tour our grade calculator to stay on top of your class grades.</p>
         </div>
         <div class="grid_6">
             <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/complication_compressed.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
@@ -16,7 +17,7 @@ $view->extend('Course2Bundle:Shared:layout.html.php');
             <?php endforeach; ?>
         </div>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('home'); ?>" class="more">Go home</a>
+            <a href="<?php print $view['router']->generate('calculator'); ?>" class="more">Go to grade calculator</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

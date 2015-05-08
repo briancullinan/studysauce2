@@ -21,7 +21,7 @@ $view['slots']->start('modal-body') ?>
         </div>
         <div class="highlighted-link invalid clearfix">
             <br/>
-            <button type="submit" value="#save-notebook" class="more">Save</button>
+            <button type="submit" value="#save-notebook" class="more">Create</button>
             <br />
         </div>
     </form>

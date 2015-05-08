@@ -1,7 +1,7 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
-    No account found - please register or log in with email
+    No account found. Please register or log in with email
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>

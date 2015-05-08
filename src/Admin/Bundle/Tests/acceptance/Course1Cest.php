@@ -102,6 +102,7 @@ class Course1Cest
         $I->seeLink('Launch');
         $I->click('Launch');
         $I->wait(25);
+        $I->click('#course1_introduction-step1 a[href="#yt-pause"]');
         $I->click('#course1_introduction-step1 .highlighted-link a');
         $I->wait(5);
         $I->checkOption('input[value="college-senior"]');
@@ -128,6 +129,7 @@ class Course1Cest
         $I->seeAmOnUrl('/course/1/lesson/2/step');
         $I->click('#course1_setting_goals .highlighted-link a');
         $I->wait(25);
+        $I->click('#course1_setting_goals-step1 a[href="#yt-pause"]');
         $I->click('#course1_setting_goals-step1 .highlighted-link a');
         $I->wait(5);
         $I->checkOption('input[value="60"]');
@@ -158,6 +160,7 @@ class Course1Cest
         $I->seeAmOnUrl('/course/1/lesson/3/step');
         $I->click('#course1_distractions .highlighted-link a');
         $I->wait(25);
+        $I->click('#course1_distractions-step1 a[href="#yt-pause"]');
         $I->click('#course1_distractions-step1 .highlighted-link a');
         $I->wait(5);
         $I->checkOption('input[name="quiz-multitask"][value="false"]');
@@ -183,6 +186,7 @@ class Course1Cest
         $I->seeAmOnUrl('/course/1/lesson/4/step');
         $I->click('#course1_procrastination .highlighted-link a');
         $I->wait(25);
+        $I->click('#course1_procrastination-step1 a[href="#yt-pause"]');
         $I->click('#course1_procrastination-step1 .highlighted-link a');
         $I->wait(5);
         $I->fillField('input[name="quiz-activeMemory"]', 'active');
@@ -210,6 +214,7 @@ class Course1Cest
         $I->seeAmOnUrl('/course/1/lesson/5/step');
         $I->click('#course1_environment .highlighted-link a');
         $I->wait(25);
+        $I->click('#course1_environment-step1 a[href="#yt-pause"]');
         $I->click('#course1_environment-step1 .highlighted-link a');
         $I->wait(5);
         $I->checkOption('input[name="quiz-bed"][value="0"]');
@@ -235,6 +240,7 @@ class Course1Cest
         $I->seeAmOnUrl('/course/1/lesson/6/step');
         $I->click('#course1_partners .highlighted-link a');
         $I->wait(25);
+        $I->click('#course1_partners-step1 a[href="#yt-pause"]');
         $I->click('#course1_partners-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[value="focus"] + i');
@@ -261,6 +267,7 @@ class Course1Cest
         $I->seeAmOnUrl('/course/1/lesson/7/step');
         $I->click('#course1_upgrade .highlighted-link a');
         $I->wait(25);
+        $I->click('#course1_upgrade-step1 a[href="#yt-pause"]');
         $I->click('#course1_upgrade-step1 .highlighted-link a');
         $I->wait(5);
         $I->checkOption('input[name="quiz-enjoyed"][value="1"]');

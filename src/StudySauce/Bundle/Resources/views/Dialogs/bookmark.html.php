@@ -13,7 +13,9 @@ $view['slots']->start('modal-body') ?>
     <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/Study_Sauce_Logo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
         <img class="sauce" width="100" height="100" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
     <?php endforeach; ?>
-    <p>Launch faster from your phone.  Tap the menu and select "Add to home screen" to create an icon.</p>
+    <p>Launch faster from your phone.  Tap <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/chrome-menu.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+            <img class="sauce" width="4" height="16" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+        <?php endforeach; ?> and select "Add to home screen" to create an icon.</p>
 <?php } else { ?>
     <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/Study_Sauce_Logo.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
         <img class="sauce" width="100" height="100" src="<?php echo $view->escape($url) ?>" alt="LOGO" />

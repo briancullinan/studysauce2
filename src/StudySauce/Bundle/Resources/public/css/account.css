@@ -46,6 +46,7 @@ a[href="#sign-in-with-email"]
     padding: 100px 140px 0 2px;
     vertical-align: middle;
     text-align: right;
+    width:30%;
 }
 
 #login .social-login a
@@ -53,6 +54,11 @@ a[href="#sign-in-with-email"]
     display:block;
     margin-left:auto;
     margin-bottom:10px;
+}
+
+#login .social-login a:last-of-type
+{
+    margin-bottom: 0;
 }
 
 #login .signup-or
@@ -69,22 +75,6 @@ a[href="#sign-in-with-email"]
     max-width: 600px;
     margin:0 auto;
     padding-top: 100px;
-}
-
-#account-not-found a[href*="/reset"]
-{
-    float:left;
-}
-
-#account-not-found .social-login,
-#account-not-found form
-{
-    margin:0 -2px;
-    padding: 0 2px 0 2px;
-    display:inline-block;
-    width:50%;
-    vertical-align: middle;
-    text-align: center;
 }
 
 #login form
@@ -198,7 +188,6 @@ a[href="#sign-in-with-email"]
 #register .form-actions .error,
 #account .form-actions .error,
 #account .invalid-only,
-#account-not-found .invalid-only,
 #login .invalid-only,
 #register .invalid-only
 {
@@ -210,7 +199,6 @@ a[href="#sign-in-with-email"]
     border-radius: 5px;
 }
 
-#account-not-found .invalid-only,
 #login .invalid-only,
 #account .invalid-only,
 #register .invalid-only
@@ -218,7 +206,6 @@ a[href="#sign-in-with-email"]
     display:none;
 }
 
-#account-not-found.invalid-only .invalid-only,
 #login.invalid-only .invalid-only,
 #account.invalid-only .invalid-only,
 #register.invalid-only .invalid-only
@@ -232,8 +219,6 @@ a[href="#sign-in-with-email"]
 #account.invalid-only.last-required .last-name input,
 #account.invalid-only.email-required .email input,
 #account.invalid-only.confirm-required .confirm-password input,
-#account-not-found.invalid-only.email-required .email input,
-#account-not-found.invalid-only.password-required .password input,
 #login.invalid-only.email-required .email input,
 #login.invalid-only.password-required .password input,
 #register.invalid-only.first-required .first-name input,

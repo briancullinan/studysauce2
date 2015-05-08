@@ -40,4 +40,12 @@ class EnvironmentCest
         $I->assertGreaterThanOrEqual(preg_replace_callback('/([0-9])+(m|k|g)*b?$/i', $getValue, strtolower(ini_get('memory_limit'))), 128 * 1024 * 1024, ' memory_limit is high enough');
         $I->assertContains(ini_get('date.timezone'), 'US/Arizona', 'timezone matches database');
     }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function tryDialogTitleLength(FunctionalTester $I)
+    {
+
+    }
 }

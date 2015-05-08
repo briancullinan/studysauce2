@@ -1,7 +1,7 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
  $view['slots']->start('modal-header') ?>
-Here is your study checklist before you get started.
+Study checklist
 <?php $view['slots']->stop();
 
  $view['slots']->start('modal-body') ?>

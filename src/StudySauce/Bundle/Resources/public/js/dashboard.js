@@ -175,8 +175,8 @@ $(document).ready(function () {
     body.on('show', '#home', function () {
         // TODO: add mobile check here?
         if (typeof navigator != 'undefined' &&
-            (navigator.userAgent.toLowerCase().indexOf("iphone") > -1 ||
-            navigator.userAgent.toLowerCase().indexOf("ipad") > -1 ||
+            ((navigator.userAgent.toLowerCase().indexOf("iphone") > -1 &&
+            navigator.userAgent.toLowerCase().indexOf("ipad") == -1) ||
             navigator.userAgent.toLowerCase().indexOf("android") > -1)) {
             // show empty
             $('#bookmark').modal({show:true});

@@ -366,6 +366,27 @@ $view['slots']->start('body'); ?>
                                                 </table>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td><h3>Feedback</h3></td>
+                                        </tr>
+                                        <tr><td>
+                                                <div class="panel-pane course1 step2" id="course1_introduction-step4">
+                                                    <div class="pane-content">
+                                                        <h3>Why do you want to become better at studying?</h3>
+                                                        <label class="input">
+                                                            <?php print $aggregate['whyStudy']; ?>
+                                                        </label>
+                                                        <h3>Do you have any feedback?</h3>
+                                                        <label class="input">
+                                                            <?php print $aggregate['feedback']; ?>
+                                                        </label>
+                                                        <h3>Score</h3>
+                                                        <label class="radio">
+                                                            <?php print $aggregate['net-promoter']; ?>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </td></tr>
                                     </table>
                                 </td>
                             </tr>

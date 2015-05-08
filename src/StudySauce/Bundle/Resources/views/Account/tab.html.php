@@ -43,7 +43,7 @@ $view['slots']->start('body'); ?>
             <h2>Account settings</h2>
             <form action="<?php print $view['router']->generate('update_goals'); ?>" method="post">
                 <div class="type">
-                    <label><span>Account type</span><?php
+                    <label><span>Account type</span><span style="font-weight: normal;"><?php
                         if (!$user->hasRole('ROLE_PAID')) {
                             print 'Free';
                         }
@@ -69,13 +69,13 @@ $view['slots']->start('body'); ?>
                                 do {
                                     $i = date_add($i, new DateInterval('P' . $increment . 'M'));
                                 } while($i < new \DateTime());
-                                print ' next renewal ' . $i->format('Y/m/d');
+                                print ' (next renewal - ' . $i->format('n/j/y') . ')';
                             }
                             if(!empty($payment->getCoupon()) && !empty($payment->getCoupon()->getValidTo())) {
-                                print ' expires ' . $payment->getCoupon()->getValidTo()->format('Y/m/d');
+                                print ' expires ' . $payment->getCoupon()->getValidTo()->format('n/j/y');
                             }
                         }
-                        ?>
+                        ?></span>
                     </label>
                 </div>
                 <div class="account-info read-only">

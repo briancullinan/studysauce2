@@ -78,6 +78,7 @@ class Course3Cest
         $I->seeAmOnUrl('/course/3/lesson/1/step');
         $I->click('#course3_strategies .highlighted-link a');
         $I->wait(25);
+        $I->click('#course3_strategies-step1 a[href="#yt-pause"]');
         $I->click('#course3_strategies-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[value="flash"] + i');
@@ -101,6 +102,7 @@ class Course3Cest
         $I->seeAmOnUrl('/course/3/lesson/2/step');
         $I->click('#course3_group_study .highlighted-link a');
         $I->wait(25);
+        $I->click('#course3_group_study-step1 a[href="#yt-pause"]');
         $I->click('#course3_group_study-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[value="writing"] + i');
@@ -128,6 +130,7 @@ class Course3Cest
         $I->seeAmOnUrl('/course/3/lesson/3/step');
         $I->click('#course3_teaching .highlighted-link a');
         $I->wait(25);
+        $I->click('#course3_teaching-step1 a[href="#yt-pause"]');
         $I->click('#course3_teaching-step1 .highlighted-link a');
         $I->wait(5);
         $I->fillField('input[name="quiz-newLanguage"]', 'can\'t guess answers');
@@ -151,6 +154,7 @@ class Course3Cest
         $I->seeAmOnUrl('/course/3/lesson/4/step');
         $I->click('#course3_active_reading .highlighted-link a');
         $I->wait(25);
+        $I->click('#course3_active_reading-step1 a[href="#yt-pause"]');
         $I->click('#course3_active_reading-step1 .highlighted-link a');
         $I->wait(5);
         $I->fillField('textarea[name="quiz-whatReading"]', 'recognizing the important parts');
@@ -175,6 +179,7 @@ class Course3Cest
         $I->seeAmOnUrl('/course/3/lesson/5/step');
         $I->click('#course3_spaced_repetition .highlighted-link a');
         $I->wait(25);
+        $I->click('#course3_spaced_repetition-step1 a[href="#yt-pause"]');
         $I->click('#course3_spaced_repetition-step1 .highlighted-link a');
         $I->wait(5);
         $I->click('input[name="quiz-spaceOut"][value="0"] + i');

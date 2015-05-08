@@ -32,16 +32,23 @@ $view['slots']->start('body'); ?>
 
 <div class="panel-pane" id="login">
     <div class="pane-content">
-        <h2>Welcome back!</h2>
-        <div class="social-login">
-            <?php foreach($services as $o => $url) {
-                if($o == 'evernote')
-                    continue;
+        <?php if(!empty($error)) { ?>
+            <h2>Account not found.&nbsp; Please register or log in with email.</h2>
+            <div class="social-login highlighted-link" style="width:30%;">
+                <a href="<?php print $view['router']->generate('register'); ?>" class="more">Register</a>
+            </div>
+        <?php } else { ?>
+            <h2>Welcome back!</h2>
+            <div class="social-login">
+                <?php foreach($services as $o => $url) {
+                    if($o == 'evernote')
+                        continue;
 
-                ?>
-                <a href="<?php print $url; ?>" class="more">Sign in</a>
-            <?php } ?>
-        </div>
+                    ?>
+                    <a href="<?php print $url; ?>" class="more">Sign in</a>
+                <?php } ?>
+            </div>
+        <?php } ?>
         <div class="signup-or"><span>Or</span></div>
         <form action="<?php print $view['router']->generate('account_auth'); ?>" method="post">
             <input type="hidden" name="_remember_me" value="on" />
@@ -58,13 +65,14 @@ $view['slots']->start('body'); ?>
                 <button type="submit" value="#user-login" class="more">Login</button>
             </div>
         </form>
+        <?php if(!empty($error)) { ?>
+            <div><br /><br /><br /><br /><br />* Note - You can connect with Facebook or Google once you log in.</div>
+        <?php } ?>
     </div>
 </div>
 
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-if($error instanceof \HWI\Bundle\OAuthBundle\Security\Core\Exception\AccountNotLinkedException) {
-    print $this->render('StudySauceBundle:Dialogs:account-not-found.html.php', ['id' => 'account-not-found', 'csrf_token' => $csrf_token]);
-}
+
 $view['slots']->stop();
