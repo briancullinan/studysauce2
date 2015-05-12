@@ -58,14 +58,6 @@ $view['slots']->start('body'); ?>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed">
             <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planEmpty')); ?>
         </div>
-        <div class="sort-by clearfix">
-            <label>Sort by: </label>
-            <label class="radio"><input type="radio" name="plan-sort" value="date"
-                                        checked="checked"/><i></i>Date</label>
-            <label class="radio"><input type="radio" name="plan-sort" value="class"><i></i>Class</label>
-            <label class="checkbox" title="Click here to see sessions that have already passed.">
-                <input type="checkbox"><i></i>Past session</label>
-        </div>
         <?php
         $first = true;
         $headStr = '';
@@ -160,10 +152,13 @@ $view['slots']->start('body'); ?>
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-if($isEmpty) {
+if($step !== false) {
+    print $this->render('StudySauceBundle:Dialogs:plan-step-' . $step . '.html.php', ['id' => 'plan-step-' . $step, 'courses' => $courses, 'schedule' => $schedule]);
+}
+else if($isEmpty) {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planEmptySchedule'));
 }
-if($isDemo) {
+else if($isDemo) {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planUpgrade'));
 }
 if($showPlanIntro) {

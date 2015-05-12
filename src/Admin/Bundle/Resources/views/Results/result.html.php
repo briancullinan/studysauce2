@@ -183,7 +183,7 @@ use Course3\Bundle\Entity\Course3;
     <tr>
         <td><h3>Feedback</h3></td>
     </tr>
-    <tr><td>
+    <tr><td class="read-only">
             <div class="panel-pane course1 step2" id="course1_introduction-step4">
                 <div class="pane-content">
                     <h3>Why do you want to become better at studying?</h3>

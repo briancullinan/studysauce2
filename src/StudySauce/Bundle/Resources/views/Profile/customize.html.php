@@ -49,7 +49,7 @@ $view['slots']->start('body'); ?>
             <?php } ?>
         </div>
         <div class="study-difficulty">
-            <h3>What is the primary type of studying you expect to do in this class? <span>Q: 2/2</span></h3>
+            <h3>How difficult will each class be? <span>Q: 2/2</span></h3>
             <header>
                 <label title="Class should require less homework and/or be less difficult than most classes.  Will require less than 2 hours of studying for every hour of class">Easy</label>
                 <label title="Class will be a pretty standard amount of homework/difficulty.  Will require ~2 hours studying for every hour of class">Average</label>

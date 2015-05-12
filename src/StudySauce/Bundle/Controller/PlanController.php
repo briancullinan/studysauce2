@@ -122,17 +122,54 @@ class PlanController extends Controller
         $emails->setContainer($this->container);
         $events = self::rebuildSchedule($schedule, $schedule->getCourses(), $_user->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted();}), $_week, $orm, $emails);
         $courses = $schedule->getClasses()->toArray();
+        $step = self::getPlanStep($_user);
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'events' => $events,
+                'schedule' => $schedule,
                 'courses' => array_values($courses),
                 'jsonEvents' =>  self::getJsonEvents($events),
                 'user' => $_user,
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week,
                 'showPlanIntro' => $showPlanIntro,
+                'step' => $step,
                 'isDemo' => $isDemo,
                 'isEmpty' => $isEmpty
             ]);
+    }
+
+    /**
+     * @param User $user
+     * @return bool|string
+     */
+    public static function getPlanStep(User $user)
+    {
+        /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
+        $schedule = $user->getSchedules()->first() ?: new Schedule();
+
+        if($schedule->getClasses()->exists(function ($i, Course $c) {
+            return empty($c->getStudyDifficulty()); }))
+        {
+            return 1;
+        }
+
+        /*
+        if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
+            return 'profile';
+
+        if (empty($schedule->getUniversity()) ||
+            empty($schedule->getClasses()->count())) {
+            return 'schedule';
+        }
+
+        if($schedule->getClasses()->exists(function ($i, Course $c) {
+            return empty($c->getStudyType()) || empty($c->getStudyDifficulty()); }))
+        {
+            return 'customization';
+        }
+        */
+
+        return 0;
     }
 
     /**

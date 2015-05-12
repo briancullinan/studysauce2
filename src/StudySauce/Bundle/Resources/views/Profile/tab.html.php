@@ -12,26 +12,13 @@ if(!$user->hasRole('ROLE_PAID'))
 
 /** @var Schedule $schedule */
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/profile.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/profile.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/profile.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url): ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/profile.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();

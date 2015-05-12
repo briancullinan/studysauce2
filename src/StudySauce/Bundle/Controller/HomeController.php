@@ -62,8 +62,6 @@ class HomeController extends Controller
             return ['userlist', []];
         elseif($user->hasRole('ROLE_PARENT'))
             return ['thanks', []];
-        elseif($user->hasRole('ROLE_PAID') && ($step = ProfileController::getFunnelState($user)))
-            return [$step, ['_format' => 'funnel']];
         elseif(!$user->hasRole('ROLE_PAID') && !$user->hasRole('ROLE_ADMIN'))
             return ['checkout', []];
         elseif(empty($user->getProperty('first_time')))

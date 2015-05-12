@@ -130,7 +130,7 @@ $(document).ready(function () {
             header: {
                 left: '',
                 center: '',
-                right: 'prev,next today'
+                right: 'prev,next today,month,agendaWeek,agendaDay'
             },
             defaultView: 'agendaWeek',
             selectable: false,
@@ -266,15 +266,22 @@ $(document).ready(function () {
             });
         else
             $('#plan-upgrade').modal('hide');
-        if($('#plan-intro-1').modal({show:true}).length == 0) {
-            if (plan.is('.empty-schedule'))
-                $('#plan-empty-schedule').modal({
-                    backdrop: 'static',
-                    keyboard: false,
-                    show: true
-                });
-            else
-                $('#plan-empty-schedule').modal('hide');
+
+        if($('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-3, #plan-step-5').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: true
+            }).length == 0) {
+            if($('#plan-intro-1').modal({show:true}).length == 0) {
+                if (plan.is('.empty-schedule'))
+                    $('#plan-empty-schedule').modal({
+                        backdrop: 'static',
+                        keyboard: false,
+                        show: true
+                    });
+                else
+                    $('#plan-empty-schedule').modal('hide');
+            }
         }
     }
 
@@ -310,6 +317,62 @@ $(document).ready(function () {
             show: true
         });
     });
+
+    function submitStep1(evt)
+    {
+        evt.preventDefault();
+        var customization = $('#plan-step-1');
+        if(customization.find('.highlighted-link').is('.invalid')) {
+            customization.addClass('invalid-only');
+            customization.find('.type-required').first().nextAll('label').find('input').first().focus();
+            return;
+        }
+        customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this).find('[value="#save-profile"]'));
+        var scheduleData = { };
+        customization.find('input:checked').each(function () {
+            scheduleData[$(this).attr('name')] = $(this).val();
+        });
+
+        $.ajax({
+            url: window.callbackPaths['profile_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: scheduleData,
+            success: function () {
+                customization.find('.squiggle').stop().remove();
+                // TODO update calendar events
+                // TODO: update plan tab
+            },
+            error: function () {
+                customization.find('.squiggle').stop().remove();
+            }
+        });
+    }
+
+    function step1Func() {
+        var customization = $('#plan-step-1'),
+            valid = true;
+
+        customization.find('input').each(function () {
+            var inputSet;
+            if((inputSet = customization.find('input[name="' + $(this).attr('name') + '"]')).filter(':checked').length == 0) {
+                inputSet.parents('label').prev('h4').addClass('type-required');
+                valid = false;
+            }
+            else
+                inputSet.parents('label').prev('h4').removeClass('type-required');
+        });
+
+        if(valid)
+            customization.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
+        else
+            customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
+    }
+
+    body.on('submit', '#plan-step-1 form', submitStep1);
+    body.on('change', '#plan-step-1 input', step1Func);
+    body.on('shown.bs.modal', '#plan-step-1', step1Func);
 
     body.on('scheduled', function () {
         var plan = $('#plan');

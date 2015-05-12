@@ -68,7 +68,8 @@
 #profile-upgrade .close,
 #plan-upgrade .close,
 #metrics-empty .close,
-#plan-empty .close
+#plan-empty .close,
+#plan-empty-schedule .close
 {
     display:none;
 }

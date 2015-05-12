@@ -54,32 +54,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param User $user
-     * @return bool|string
-     */
-    public static function getFunnelState(User $user)
-    {
-        /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
-        $schedule = $user->getSchedules()->first() ?: new Schedule();
-
-        if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
-            return 'profile';
-
-        if (empty($schedule->getUniversity()) ||
-            empty($schedule->getClasses()->count())) {
-            return 'schedule';
-        }
-
-        if($schedule->getClasses()->exists(function ($i, Course $c) {
-            return empty($c->getStudyType()) || empty($c->getStudyDifficulty()); }))
-        {
-            return 'customization';
-        }
-
-        return false;
-    }
-
-    /**
      * @param Request $request
      * @return RedirectResponse
      */
@@ -134,14 +108,6 @@ class ProfileController extends Controller
         $orm->flush();
 
         // check if schedule is empty
-        if(strpos($request->headers->get('referer'), '/funnel') > -1) {
-            if (($step = self::getFunnelState($user))) {
-                return new RedirectResponse($this->generateUrl($step, ['_format' => 'funnel']));
-            }
-            else {
-                return new RedirectResponse($this->generateUrl('plan'));
-            }
-        }
         return new JsonResponse(true);
     }
 }

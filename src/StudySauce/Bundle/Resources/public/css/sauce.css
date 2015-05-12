@@ -20,7 +20,6 @@ html, body
     outline: 0 none;
     vertical-align: baseline;
     text-align: justify;
-    text-align: justify;
     position:relative;
     width:100%;
     left:0;
@@ -356,7 +355,7 @@ a.subtle:hover,
 .more.parents
 {
     background: url(../images/parent-portal.png) no-repeat right 50% #11BB00;
-    border-bottom: 3px solid #116600;
+    border-bottom: 1px solid #11BB00;
     padding-right: 65px;
 }
 

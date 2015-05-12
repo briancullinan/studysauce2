@@ -464,14 +464,6 @@ class ScheduleController extends Controller
         }
 
         // redirect to customization page in buy funnel
-        if(strpos($request->headers->get('referer'), '/funnel') > -1) {
-            if (($step = ProfileController::getFunnelState($user))) {
-                return new RedirectResponse($this->generateUrl($step, ['_format' => 'funnel']));
-            }
-            else
-                return new RedirectResponse($this->generateUrl('plan'));
-        }
-
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
     }
 

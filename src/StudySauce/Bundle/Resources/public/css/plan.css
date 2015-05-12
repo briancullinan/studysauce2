@@ -37,6 +37,11 @@ a.fc-event:not([href])
     color: #FFFFFF;
 }
 
+.fc-month-view .fc-event:not(.event-type-d)
+{
+    display:none;
+}
+
 #plan .fc-time-grid-event.fc-short .fc-title,
 #plan .fc-title
 {
@@ -260,10 +265,10 @@ a.fc-event:not([href])
 #plan .session-row
 {
     clear: both;
-    display: block;
     vertical-align: top;
     position: relative;
     white-space: nowrap;
+    display:none;
 }
 
 #plan .session-row.event-type-d .class-name
@@ -354,6 +359,7 @@ a.fc-event:not([href])
     margin-top: 30px;
     padding: 5px;
     clear: both;
+    display:none;
 }
 
 #plan .mini-checkin
@@ -508,6 +514,94 @@ a.fc-event:not([href])
     display:inline;
 }
 
+#plan-step-5 h4,
+#plan-step-1 h4
+{
+    display:inline-block;
+    width:100%;
+    margin-top:0;
+    margin-right:-326px;
+    padding:5px 330px 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#plan-step-5 h4
+{
+    margin-right:-306px;
+    padding:5px 300px 5px 0;
+}
+
+#plan-step-5 label,
+#plan-step-1 label
+{
+    margin:0 -2px;
+    padding: 0 2px;
+    width:80px;
+    text-align: center;
+    vertical-align: top;
+}
+
+#plan-step-5 label
+{
+    width:100px;
+}
+
+#plan-step-5 label span,
+#plan-step-1 label span
+{
+    display:none;
+}
+
+#plan-step-5 header,
+#plan-step-1 header
+{
+    width:320px;
+    margin-left:auto;
+    margin-right:0;
+}
+
+#plan-step-5 header
+{
+    width:300px;
+}
+
+#plan-step-5 header > label,
+#plan-step-1 header > label
+{
+    display: inline-block;
+    margin:0 -2px;
+    padding: 0 2px;
+    vertical-align: bottom;
+}
+
+#plan-step-5 .invalid-only,
+#plan-step-1 .invalid-only
+{
+    display:none;
+    clear: both;
+    position: relative;
+    padding: 2px 3px;
+    border: 2px solid #CC0000;
+    color:#660000;
+    border-radius: 5px;
+}
+
+#plan-step-5.invalid-only .invalid-only,
+#plan-step-1.invalid-only .invalid-only
+{
+    display:inline-block;
+}
+
+#plan-step-5.invalid-only .type-required,
+#plan-step-1.invalid-only .type-required
+{
+    border-bottom:3px solid #CC0000;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 @media all and (max-width:1000px)
 {
     #plan .selected .mini-checkin
@@ -541,5 +635,40 @@ a.fc-event:not([href])
         display:block;
         position:static;
         float:none;
+    }
+
+    #plan-step-5 label span,
+    #plan-step-1 label span
+    {
+        display:inline-block;
+    }
+
+    #plan-step-5 header,
+    #plan-step-1 header
+    {
+        display: none;
+    }
+
+    #plan-step-5 label span br,
+    #plan-step-1 label span br
+    {
+        display:none;
+    }
+
+    #plan-step-5 label,
+    #plan-step-1 label
+    {
+        display: block;
+        width:auto;
+        margin:0;
+        text-align: right;
+    }
+
+    #plan-step-5 h4,
+    #plan-step-1 h4
+    {
+        text-align: left;
+        margin-right:0;
+        padding-right:0;
     }
 }
