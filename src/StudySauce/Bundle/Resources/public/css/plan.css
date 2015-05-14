@@ -288,22 +288,6 @@ a.fc-event:not([href])
     display:block;
 }
 
-#plan .return-to-top
-{
-    display: none;
-    position: fixed;
-    left: 100%;
-    margin-left: -250px;
-    width: 100px;
-    background: url(../images/arrow-up.png) no-repeat 0 0 transparent;
-    bottom: 50px;
-    text-align: center;
-    padding-top: 14px;
-    z-index: 96;
-    padding-bottom: 6px;
-    color: #ffffff;
-}
-
 #plan a[href="#expand"]
 {
     float:left;
@@ -514,6 +498,7 @@ a.fc-event:not([href])
     display:inline;
 }
 
+#plan-step-4 h4,
 #plan-step-5 h4,
 #plan-step-1 h4
 {
@@ -527,12 +512,14 @@ a.fc-event:not([href])
     text-overflow: ellipsis;
 }
 
+#plan-step-4 h4,
 #plan-step-5 h4
 {
     margin-right:-306px;
     padding:5px 300px 5px 0;
 }
 
+#plan-step-4 label,
 #plan-step-5 label,
 #plan-step-1 label
 {
@@ -541,19 +528,23 @@ a.fc-event:not([href])
     width:80px;
     text-align: center;
     vertical-align: top;
+    display:inline-block;
 }
 
+#plan-step-4 label,
 #plan-step-5 label
 {
     width:100px;
 }
 
+#plan-step-4 label span,
 #plan-step-5 label span,
 #plan-step-1 label span
 {
     display:none;
 }
 
+#plan-step-4 header,
 #plan-step-5 header,
 #plan-step-1 header
 {
@@ -562,11 +553,13 @@ a.fc-event:not([href])
     margin-right:0;
 }
 
+#plan-step-4 header,
 #plan-step-5 header
 {
     width:300px;
 }
 
+#plan-step-4 header > label,
 #plan-step-5 header > label,
 #plan-step-1 header > label
 {
@@ -576,6 +569,7 @@ a.fc-event:not([href])
     vertical-align: bottom;
 }
 
+#plan-step-4 .invalid-only,
 #plan-step-5 .invalid-only,
 #plan-step-1 .invalid-only
 {
@@ -588,12 +582,14 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
+#plan-step-4.invalid-only .invalid-only,
 #plan-step-5.invalid-only .invalid-only,
 #plan-step-1.invalid-only .invalid-only
 {
     display:inline-block;
 }
 
+#plan-step-4.invalid-only .type-required,
 #plan-step-5.invalid-only .type-required,
 #plan-step-1.invalid-only .type-required
 {
@@ -637,24 +633,28 @@ a.fc-event:not([href])
         float:none;
     }
 
+    #plan-step-4 label span,
     #plan-step-5 label span,
     #plan-step-1 label span
     {
         display:inline-block;
     }
 
+    #plan-step-4 header,
     #plan-step-5 header,
     #plan-step-1 header
     {
         display: none;
     }
 
+    #plan-step-4 label span br,
     #plan-step-5 label span br,
     #plan-step-1 label span br
     {
         display:none;
     }
 
+    #plan-step-4 label,
     #plan-step-5 label,
     #plan-step-1 label
     {
@@ -664,6 +664,7 @@ a.fc-event:not([href])
         text-align: right;
     }
 
+    #plan-step-4 h4,
     #plan-step-5 h4,
     #plan-step-1 h4
     {

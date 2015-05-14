@@ -98,7 +98,7 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:profileUpgrade'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents1'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents2'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'profile-upgrade']));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bill-parents']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bill-parents-confirm']), ['strategy' => 'sinclude']);
 $view['slots']->stop();

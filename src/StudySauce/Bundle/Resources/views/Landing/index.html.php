@@ -28,14 +28,7 @@ $view['slots']->stop();
 
 $view['slots']->start('javascripts');
 
-foreach ($view['assetic']->javascripts(
-    [
-        '@landing_scripts'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@landing_scripts'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 
@@ -45,5 +38,5 @@ $view['slots']->start('body');
 echo $view->render('StudySauceBundle:Landing:video.html.php');
 echo $view->render('StudySauceBundle:Landing:benefits.html.php');
 echo $view->render('StudySauceBundle:Landing:testimony.html.php');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:scheduleDemo'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'schedule-demo']), ['strategy' => 'sinclude']);
 $view['slots']->stop();

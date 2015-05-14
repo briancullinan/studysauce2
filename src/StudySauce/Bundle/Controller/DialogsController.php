@@ -21,27 +21,12 @@ use TorchAndLaurel\Bundle\Controller\EmailsController as TorchEmailsController;
 class DialogsController extends Controller
 {
     /**
+     * @param string $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contactAction()
+    public function deferredAction($template)
     {
-        return $this->render('StudySauceBundle:Dialogs:contact.html.php', ['id' => 'contact-support']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function cancelConfirmAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:cancel-confirm.html.php', ['id' => 'cancel-confirm']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function bookmarkAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:bookmark.html.php', ['id' => 'bookmark']);
+        return $this->render('StudySauceBundle:Dialogs:' . $template . '.html.php', ['id' => $template]);
     }
 
     /**
@@ -77,46 +62,6 @@ class DialogsController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function achievementAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:achievement.html.php', ['id' => 'claim']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerConfirmAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:partner-confirm.html.php', ['id' => 'partner-confirm']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function errorAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:error-dialog.html.php', ['id' => 'error-dialog']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function checkinEmptyAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:checkin-empty.html.php', ['id' => 'checkin-empty']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deadlinesEmptyAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:deadlines-empty.html.php', ['id' => 'deadlines-empty']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function sdsMessagesAction()
     {
         // get the total number of checkins
@@ -129,118 +74,6 @@ class DialogsController extends Controller
 
         $count = array_sum($schedule->getClasses()->map(function (Course $c) {return $c->getCheckins()->count();})->toArray());
         return $this->render('StudySauceBundle:Dialogs:sds-messages.html.php', ['id' => 'sds-messages', 'count' => $count]);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function timerExpireAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:timer-expire.html.php', ['id' => 'timer-expire']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function mozartAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:mozart.html.php', ['id' => 'mozart-effect']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function checklistAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:checklist.html.php', ['id' => 'checklist']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function metricsEmptyAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:metrics-empty.html.php', ['id' => 'metrics-empty']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planEmptyAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty', 'attributes' => 'data-backdrop="false"']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planEmptyScheduleAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-empty-schedule.html.php', ['id' => 'plan-empty-schedule']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planUpgradeAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-upgrade.html.php', ['id' => 'plan-upgrade']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function profileUpgradeAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:profile-upgrade.html.php', ['id' => 'profile-upgrade']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planIntro1Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-intro-1.html.php', ['id' => 'plan-intro-1']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planIntro2Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-intro-2.html.php', ['id' => 'plan-intro-2']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planIntro3Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-intro-3.html.php', ['id' => 'plan-intro-3']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function planIntro4Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:plan-intro-4.html.php', ['id' => 'plan-intro-4']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function scheduleDemoAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:schedule-demo.html.php', ['id' => 'schedule-demo']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function billParents1Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:bill-parents.html.php', ['id' => 'bill-parents']);
     }
 
     /**
@@ -299,22 +132,6 @@ class DialogsController extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function billParents2Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:bill-parents-confirm.html.php', ['id' => 'bill-parents-confirm']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function studentInviteAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:student-invite.html.php', ['id' => 'student-invite']);
-    }
-
-    /**
      * @param Request $request
      * @return JsonResponse
      */
@@ -368,59 +185,5 @@ class DialogsController extends Controller
 
         return new JsonResponse(true);
     }
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function studentInviteConfirmAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:student-invite-confirm.html.php', ['id' => 'student-invite-confirm']);
-    }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function ccvInfoAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:ccv-info.html.php', ['id' => 'ccv-info']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function unsupportedAction()
-    {
-        return $this->render('StudySauceBundle:Dialogs:unsupported.html.php', ['id' => 'unsupported']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAdvice1Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:partner-advice-1.html.php', ['id' => 'partner-advice-1']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAdvice2Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:partner-advice-2.html.php', ['id' => 'partner-advice-2']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAdvice3Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:partner-advice-3.html.php', ['id' => 'partner-advice-3']);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function partnerAdvice4Action()
-    {
-        return $this->render('StudySauceBundle:Dialogs:partner-advice-4.html.php', ['id' => 'partner-advice-4']);
-    }
 }

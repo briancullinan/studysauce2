@@ -156,7 +156,6 @@ $view['slots']->start('body'); ?>
                         </div>
                     </div>
                 <?php } ?>
-                <a class="return-to-top" href="#return-to-top">Top</a>
                 <?php echo $view->render('StudySauceBundle:Partner:strategies.html.php');
             } ?>
         </div>

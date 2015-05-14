@@ -181,8 +181,5 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(
-    new ControllerReference('StudySauceBundle:Dialogs:achievement'),
-    ['strategy' => 'sinclude']
-);
+
 $view['slots']->stop();

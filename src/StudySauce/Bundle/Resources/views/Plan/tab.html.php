@@ -55,8 +55,20 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane <?php print ($isDemo ? ' demo' : ''); ?> <?php print ($isEmpty ? ' empty-schedule' : ''); ?>" id="plan">
     <div class="pane-content">
         <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
+        <div id="external-events">
+            <h4>Draggable Events</h4>
+            <div class="fc-event ui-draggable ui-draggable-handle event-type-sr class2">Spaced repetition</div>
+            <div class="fc-event ui-draggable ui-draggable-handle event-type-sr class2">Spaced repetition</div>
+            <div class="fc-event ui-draggable ui-draggable-handle event-type-p class3">Prework</div>
+            <div class="fc-event ui-draggable ui-draggable-handle event-type-p class3">Prework</div>
+            <div class="fc-event ui-draggable ui-draggable-handle event-type-f">Free study</div>
+            <p>
+                <input type="checkbox" id="drop-remove">
+                <label for="drop-remove">remove after drop</label>
+            </p>
+        </div>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed">
-            <?php echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planEmpty')); ?>
+            <?php echo $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty', 'attributes' => 'data-backdrop="false"']) ?>
         </div>
         <?php
         $first = true;
@@ -145,7 +157,9 @@ $view['slots']->start('body'); ?>
                         print ($event->getCompleted() ? 'checked="checked"' : ''); ?>><i></i></label></div>
             </div>
         <?php } ?>
-        <a class="return-to-top" href="#return-to-top">Top</a>
+        <div class="highlighted-link">
+            <a href="#save-plan" class="more">Save</a>
+        </div>
         <?php echo $view->render('StudySauceBundle:Plan:strategies.html.php'); ?>
     </div>
 </div><?php
@@ -154,23 +168,33 @@ $view['slots']->stop();
 $view['slots']->start('sincludes');
 if($step !== false) {
     print $this->render('StudySauceBundle:Dialogs:plan-step-' . $step . '.html.php', ['id' => 'plan-step-' . $step, 'courses' => $courses, 'schedule' => $schedule]);
+    if($step < 7) {
+        print $this->render('StudySauceBundle:Dialogs:plan-step-' . ($step + 1) . '.html.php', ['id' => 'plan-step-' . ($step + 1), 'courses' => $courses, 'schedule' => $schedule]);
+    }
+    $steps = array_merge(range(0, $step), range($step+1, 7));
+    foreach($steps as $i) {
+        print $this->render('StudySauceBundle:Dialogs:plan-step-' . $i . '.html.php', ['id' => 'plan-step-' . $i, 'courses' => $courses, 'schedule' => $schedule]);
+    }
+    print $this->render('StudySauceBundle:Dialogs:plan-step-32.html.php', ['id' => 'plan-step-32', 'courses' => $courses, 'schedule' => $schedule]);
+    print $this->render('StudySauceBundle:Dialogs:plan-step-33.html.php', ['id' => 'plan-step-33', 'courses' => $courses, 'schedule' => $schedule]);
+
 }
 else if($isEmpty) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planEmptySchedule'));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-empty-schedule']));
 }
 else if($isDemo) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planUpgrade'));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-upgrade']));
 }
 if($showPlanIntro) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro1'));
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro2'),['strategy' => 'sinclude']);
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro3'),['strategy' => 'sinclude']);
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:planIntro4'),['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-1']));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-2']),['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-3']),['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-4']),['strategy' => 'sinclude']);
 }
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents1'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents2'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'checklist']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'timer-expire']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bill-parents']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bill-parents-confirm']), ['strategy' => 'sinclude']);
 $view['slots']->stop();
 

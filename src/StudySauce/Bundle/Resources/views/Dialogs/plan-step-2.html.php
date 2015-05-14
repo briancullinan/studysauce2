@@ -15,7 +15,7 @@ $view['slots']->start('modal-body') ?>
                                 value="cs-degrees" <?php print ($schedule->getGrades() == 'cs-degrees' ? 'checked="checked"' : ''); ?>><i></i><span>Cs get degrees (multiple of 1.5 hours)</span></label>
     <div class="highlighted-link">
         <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
-        <button type="submit" value="#plan-step-2" class="more">Next</button>
+        <a href="#plan-step-3" data-toggle="modal" class="more">Get started</a>
     </div>
 </form>
 <?php $view['slots']->stop();

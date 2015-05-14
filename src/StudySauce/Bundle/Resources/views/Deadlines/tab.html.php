@@ -201,5 +201,5 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deadlinesEmpty'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'deadlines-empty']));
 $view['slots']->stop();

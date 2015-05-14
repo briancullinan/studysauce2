@@ -122,6 +122,6 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:metricsEmpty'), $isDemo ? []: ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'metrics-empty']), $isDemo ? []: ['strategy' => 'sinclude']);
 print $this->render('StudySauceBundle:Dialogs:add-study-hours.html.php', ['id' => 'add-study-hours']);
 $view['slots']->stop();

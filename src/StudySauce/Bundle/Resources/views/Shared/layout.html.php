@@ -158,15 +158,15 @@ $collection = $router->getRouteCollection();
 $agent = strtolower($app->getRequest()->server->get('HTTP_USER_AGENT'));
 if((strpos($agent, 'android') && strpos($agent, 'chrome') === false) ||
     preg_match('/(?i)msie/', $agent)) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:unsupported'));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'unsupported']));
 }
 $view['slots']->output('javascripts');
 $view['slots']->output('sincludes');
 // show error dialogs in debug environment
 if($app->getEnvironment() == 'dev' || $app->getEnvironment() == 'test') {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:error'));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'error']));
 }
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:contact'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'contact-support']), ['strategy' => 'sinclude']);
 echo $view->render('StudySauceBundle:Shared:footer.html.php');
 ?>
 <script>

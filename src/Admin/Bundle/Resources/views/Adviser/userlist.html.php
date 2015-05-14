@@ -156,9 +156,9 @@ $view['slots']->start('body'); ?>
 
 $view['slots']->start('sincludes');
 if($showPartnerIntro) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerAdvice1'));
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerAdvice2'),['strategy' => 'sinclude']);
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerAdvice3'),['strategy' => 'sinclude']);
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:partnerAdvice4'),['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'partner-advice-1']));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'partner-advice-2']), ['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'partner-advice-3']), ['strategy' => 'sinclude']);
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'partner-advice-4']), ['strategy' => 'sinclude']);
 }
 $view['slots']->stop();

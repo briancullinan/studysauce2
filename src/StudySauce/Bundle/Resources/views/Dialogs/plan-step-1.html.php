@@ -30,7 +30,7 @@ $view['slots']->start('modal-body') ?>
     <?php } ?>
     <div class="highlighted-link">
         <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
-        <button type="submit" value="#plan-step-1" class="more">Next</button>
+        <a href="#plan-step-2" data-toggle="modal" class="more">Get started</a>
     </div>
 </form>
 <?php $view['slots']->stop();

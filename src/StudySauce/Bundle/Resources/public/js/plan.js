@@ -79,6 +79,26 @@ $(document).ready(function () {
         if (isInitialized)
             return;
         isInitialized = true;
+
+        /* initialize the external events
+         -----------------------------------------------------------------*/
+        plans.find('.fc-event').each(function() {
+
+            // store data so the calendar knows to render an event upon drop
+            $(this).data('event', {
+                title: $.trim($(this).text()), // use the element's text as the event title
+                stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: 0  //  original position after the drag
+            });
+
+        });
+
         // find min an max time
         var early = -1,
             morning = 10,
@@ -116,6 +136,7 @@ $(document).ready(function () {
             titleFormat: 'MMMM',
             editable: true,
             draggable: true,
+            droppable: true, // this allows things to be dropped onto the calendar
             aspectRatio: 1.9,
             height: 'auto',
             timezone: 'local',
@@ -149,6 +170,14 @@ $(document).ready(function () {
                 if(window.planLoaded.length <= 1) {
                     var w0 = new Date(w.getTime() + 604800000);
                     loadWeek(w0);
+                }
+            },
+            drop: function() {
+                // TODO: count down to remove with numbers in event
+                // is the "remove after drop" checkbox checked?
+                if ($('#drop-remove').is(':checked')) {
+                    // if so, remove the element from the "Draggable Events" list
+                    $(this).remove();
                 }
             },
             eventClick: function (calEvent) {
@@ -267,7 +296,7 @@ $(document).ready(function () {
         else
             $('#plan-upgrade').modal('hide');
 
-        if($('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-3, #plan-step-5').modal({
+        if($('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6, #plan-step-7').first().modal({
                 backdrop: 'static',
                 keyboard: false,
                 show: true
@@ -284,6 +313,27 @@ $(document).ready(function () {
             }
         }
     }
+
+    body.on('click', '#plan-step-3 a[href="#add-prework"]', function (evt) {
+        body.one('click', '#plan a[href="#save-plan"]', function (evt) {
+            evt.preventDefault();
+            $('#plan-step-32').modal({show: true})
+        });
+    });
+
+    body.on('click', '#plan-step-32 a[href="#add-spaced-repetition"]', function (evt) {
+        body.one('click', '#plan a[href="#save-plan"]', function (evt) {
+            evt.preventDefault();
+            $('#plan-step-33').modal({show: true})
+        });
+    });
+
+    body.on('click', '#plan-step-33 a[href="#add-free-study"]', function (evt) {
+        body.one('click', '#plan a[href="#save-plan"]', function (evt) {
+            evt.preventDefault();
+            $('#plan-step-4').modal({show: true})
+        });
+    });
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
     //   we will activate the calendar only once, when the menu is clicked

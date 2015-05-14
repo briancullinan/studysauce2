@@ -28,14 +28,7 @@ $view['slots']->stop();
 
 $view['slots']->start('javascripts');
 
-foreach ($view['assetic']->javascripts(
-    [
-        '@landing_scripts'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url):
-    ?>
+foreach ($view['assetic']->javascripts(['@landing_scripts'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 
@@ -50,6 +43,6 @@ echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInvite'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInviteConfirm'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'student-invite']));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'student-invite-confirm']));
 $view['slots']->stop();

@@ -57,11 +57,11 @@ $view['slots']->start('body'); ?>
 $view['slots']->start('sincludes');
 if($showBookmark)
 {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:bookmark'));
+    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bookmark']));
 }
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checklist'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:checkinEmpty'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:timerExpire'), ['strategy' => 'sinclude']);
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:mozart'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'checklist']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'timer-expire']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'mozart']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'checkin-empty']), ['strategy' => 'sinclude']);
 $view['slots']->stop();

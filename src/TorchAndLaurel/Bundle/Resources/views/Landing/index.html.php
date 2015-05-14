@@ -44,6 +44,6 @@ echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents1'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:billParents2'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bill-parents']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'bill-parents-confirm']), ['strategy' => 'sinclude']);
 $view['slots']->stop();

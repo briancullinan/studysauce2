@@ -227,5 +227,5 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:ccvInfo'), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'ccv-info']), ['strategy' => 'sinclude']);
 $view['slots']->stop();

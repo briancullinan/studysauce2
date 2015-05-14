@@ -41,6 +41,6 @@ echo $view->render('StudySauceBundle:Landing:testimony.html.php');
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInvite'));
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:studentInviteConfirm'));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'student-invite']));
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'student-invite-confirm']));
 $view['slots']->stop();
