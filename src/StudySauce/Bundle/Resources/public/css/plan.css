@@ -1,25 +1,33 @@
 
 
+#plan .pane-content
+{
+    padding-bottom:40px;
+}
+
 #plan #calendar
 {
-    margin-bottom:20px;
     position: relative;
     overflow:visible;
+    display: inline-block;
+    width: 100%;
 }
 
 .fc-toolbar
 {
     z-index: 10;
     position:relative;
-    display:inline-block;
-    margin-bottom:0;
-    float:right;
-    margin-top:-50px;
+}
+
+#plan a[href="#edit-settings"]
+{
+    position:absolute;
+    left:10px;
+    bottom:10px;
 }
 
 #plan h2
 {
-    margin-right: -175px;
     display: inline-block;
     width: 100%;
     padding-right:175px;
@@ -54,18 +62,18 @@ a.fc-event:not([href])
     font-size: inherit;
 }
 
-#plan .fc-time-grid-container
-{
-    transition: max-height ease-in-out .4s, min-height ease-in-out .4s;
-    max-height:2000px;
-    min-height:100%;
+#plan #editor2 {
+    outline: none;
+    background-color: #fff;
+    margin: 86px -20px;
+    padding: 20px;
+    min-height: 400px;
+    display: none;
 }
 
-#plan .fc-time-grid-container.fc-scroller
+#plan.edit-note #editor2
 {
-    overflow-x:auto;
-    max-height:375px;
-    min-height:375px;
+    display:block;
 }
 
 #plan .sort-by {
@@ -201,11 +209,6 @@ a.fc-event:not([href])
     display:none;
 }
 
-#plan .fc-toolbar .fc-right
-{
-    float:none;
-}
-
 #plan .fc-resizer
 {
     display: none !important;
@@ -288,6 +291,177 @@ a.fc-event:not([href])
     display:block;
 }
 
+#plan #external-events
+{
+    display:none;
+    width: 160px;
+    vertical-align: top;
+    z-index: 10;
+    position:relative;
+    clear:left;
+}
+
+#plan.add-events #external-events
+{
+    display:inline-block;
+}
+
+#plan.add-events #calendar
+{
+    display:inline-block;
+    margin-left:-166px;
+    padding-left:180px;
+    width:100%;
+    vertical-align: top;
+}
+
+#plan.session-selected #calendar
+{
+    width: 30%;
+    vertical-align: top;
+}
+
+#plan .session-strategy
+{
+    display:none;
+    width:70%;
+    margin: 0 -4px;
+    padding: 0 20px;
+    vertical-align: top;
+    text-align: center;
+}
+
+#plan #editor2 ~ .highlighted-link
+{
+    display:none;
+}
+
+#plan.edit-note #editor2 ~ .highlighted-link
+{
+    display:none;
+}
+
+#plan.edit-note .session-strategy,
+#plan.edit-note #calendar
+{
+    display:none;
+}
+
+#plan .session-strategy .big-add
+{
+    float:none;
+}
+
+#plan .session-strategy *
+{
+    text-align: center;
+}
+
+#plan.session-selected .session-strategy
+{
+    display:inline-block;
+}
+
+#edit-event .day-of-the-week label span {
+    display: block;
+}
+
+#plan .note-row
+{
+    width: 25%;
+    display:inline-block;
+    margin: 0 -2px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 80%;
+    vertical-align: top;
+}
+
+#plan .note-row h4 a
+{
+    color:#555;
+}
+
+#plan .note-row h4
+{
+    border: 2px solid transparent;
+    margin:0;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: none #FFF;
+    border-bottom: 0;
+    font-size: 16px;
+}
+
+#plan .note-row .date
+{
+    color:#888;
+    font-weight: bold;
+    position:absolute;
+    right: 2px;
+    top: 0;
+}
+
+#plan .note-row .summary
+{
+    border: 2px solid transparent;
+    border-top: 0;
+    padding: 10px;
+    height: 150px;
+    overflow:hidden;
+    position: relative;
+    background: none #FFFFFF;
+    border-radius: 0 0 5px 5px;
+}
+
+#plan .note-row:hover h4,
+#plan .note-row:hover .summary
+{
+    border-color: #09B;
+}
+
+#edit-event .day-of-the-week label {
+    display: inline-block;
+    width: 14.28%;
+    text-align: center;
+    overflow: hidden;
+    margin: 0 -2px;
+    padding: 0 2px;
+}
+
+#edit-event .start-date .input.mobile-only,
+#edit-event .end-date .input.mobile-only,
+#edit-event .start-time .input.mobile-only,
+#edit-event .end-time .input.mobile-only {
+    display: none;
+}
+
+#edit-event .start-time, #edit-event .end-time,
+#edit-event .start-date, #edit-event .end-date {
+    display:inline-block;
+    width: 50%;
+    padding: 0 2px;
+    margin: 0 -2px;
+}
+
+#plan #external-events .fc-event
+{
+    display:block;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+#plan .fc-highlight
+{
+    background: #09B;
+    border: 2px solid #555;
+}
+
 #plan a[href="#expand"]
 {
     float:left;
@@ -348,9 +522,10 @@ a.fc-event:not([href])
 
 #plan .mini-checkin
 {
-    float:right;
     text-align: center;
-    display:none;
+    display:inline-block;
+    margin-top:-80px;
+    float:right;
 }
 
 #plan .selected .mini-checkin
@@ -510,13 +685,19 @@ a.fc-event:not([href])
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color:#555;
 }
 
-#plan-step-4 h4,
-#plan-step-5 h4
+#plan-step-4 h4
 {
     margin-right:-306px;
     padding:5px 300px 5px 0;
+}
+
+#plan-step-5 h4
+{
+    margin-right:-204px;
+    padding:5px 200px 5px 0;
 }
 
 #plan-step-4 label,
@@ -531,10 +712,14 @@ a.fc-event:not([href])
     display:inline-block;
 }
 
-#plan-step-4 label,
-#plan-step-5 label
+#plan-step-4 label
 {
     width:100px;
+}
+
+#plan-step-5 label
+{
+    width:200px;
 }
 
 #plan-step-4 label span,
@@ -553,10 +738,14 @@ a.fc-event:not([href])
     margin-right:0;
 }
 
-#plan-step-4 header,
-#plan-step-5 header
+#plan-step-4 header
 {
     width:300px;
+}
+
+#plan-step-5 header
+{
+    width:200px;
 }
 
 #plan-step-4 header > label,
@@ -596,6 +785,16 @@ a.fc-event:not([href])
     border-bottom:3px solid #CC0000;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+}
+
+#plan-step-7 a[href*="download"]
+{
+    width: 100px;
+    height: 100px;
+    background: url(../images/menu_new_compressed.png) no-repeat 0 99.45% transparent;
+    background-size: cover;
+    display: block;
+    margin: 0 auto;
 }
 
 @media all and (max-width:1000px)

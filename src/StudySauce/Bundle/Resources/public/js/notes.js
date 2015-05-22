@@ -261,6 +261,7 @@ $(document).ready(function () {
         else
             dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
     });
+
     body.on('keyup', '#add-notebook input', function () {
         var dialog = $('#add-notebook');
         if($(this).val().trim() != '')
@@ -400,8 +401,10 @@ $(document).ready(function () {
         });
         editor.on('focus',function( e ){
             CKEDITOR.instances.editor1.setReadOnly(false);
-            if($('#cke_editor1').width() != $('#editor1').outerWidth()) {
-                $('#cke_editor1').width($('#editor1').outerWidth());
+            var cke = $('#cke_editor1'),
+                edit = $('#editor1');
+            if(cke.width() != edit.outerWidth()) {
+                cke.width(edit.outerWidth());
                 if(notes.is('.edit-note')) {
                     editor.fire('blur');
                     editor.fire('focus');

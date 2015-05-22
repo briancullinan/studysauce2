@@ -249,7 +249,7 @@ button.subtle
     background-origin: padding-box;
     background: #eee;
     border:none;
-    border-bottom:1px solid #ddd;
+    border-bottom:1px solid #eee;
     box-shadow: none;
     display:inline-block;
     margin:0;
@@ -275,7 +275,7 @@ button.subtle.disabled:focus,
 {
     margin-top:0;
     background-color: #eeeeee;
-    border-bottom:1px solid #ddd;
+    border-bottom:1px solid #eeeeee;
     color:#999;
 }
 

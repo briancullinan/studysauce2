@@ -188,45 +188,6 @@ $(document).ready(function () {
         row.toggleClass('expanded').scrollintoview();
     });
 
-    body.on('change', '#plan select[name="strategy-select"]', renderStrategies);
-
-    body.on('click', '#plan .assignment, #plan .class-name, #plan .percent', function () {
-        var plans = $('#plan');
-        var row = $(this).parents('.session-row'),
-            strategy = (/default-([a-z]*)(\s|$)/ig).exec(row.attr('class'))[1],
-            courseId = ((/course-id-([0-9]+)(\s|$)/ig).exec(row.attr('class')) || ['', ''])[1],
-            classname = row.find('.class-name').not('span').text().trim();
-        row.toggleClass('selected');
-
-        // add mini-checkin if class number is set
-        if(courseId != null && row.find('.mini-checkin').length == 0 && strategy != 'other' &&
-            plans.find('.mini-checkin').length > 0)
-        {
-            var newMiniCheckin = plans.find('.mini-checkin').first().clone();
-            row.append(newMiniCheckin);
-            newMiniCheckin.html(newMiniCheckin.html().replace(/\{classname}/g, classname).replace(/\{courseId}/g, courseId));
-            setTimeout(function () {newMiniCheckin.setClock();}, 200);
-        }
-
-        // add the default strategy
-        if(courseId != null && row.find('.strategy-' + strategy).length == 0 &&
-            plans.find('.strategy-' + strategy).length > 0 && strategy != 'other' && strategy != 'prework')
-        {
-            var newStrategySelect = plans.find('.field-select-strategy').first().clone();
-            row.append(newStrategySelect);
-        }
-
-        // display the default strategy
-        renderStrategies.apply(this);
-
-        //
-        if(!row.is('.selected'))
-            row.find('.strategy-spaced, .strategy-active, .strategy-teach, .strategy-other, .strategy-prework').hide();
-        else
-            row.find('.mini-checkin:visible, .strategy-spaced:visible, .strategy-active:visible, .strategy-teach:visible, .strategy-other:visible, .strategy-prework:visible').first().scrollintoview({padding: {top:120,bottom:100,left:0,right:0}});
-
-    });
-
     body.on('keyup', '#plan div[class^="strategy"] input[type="text"], #plan div[class^="strategy"] textarea', function () {
         jQuery(this).parents('div[class^="strategy"]').removeClass('invalid').addClass('valid');
     });

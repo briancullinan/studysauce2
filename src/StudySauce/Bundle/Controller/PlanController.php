@@ -131,6 +131,7 @@ class PlanController extends Controller
                 'user' => $_user,
                 'strategies' => self::getStrategies($schedule),
                 'week' => $_week,
+                'overlap' => false,
                 'showPlanIntro' => $showPlanIntro,
                 'step' => $step,
                 'isDemo' => $isDemo,
@@ -345,64 +346,8 @@ class PlanController extends Controller
         // bucket all classes
         self::bucketEvents($reoccurring, $buckets);
 
-        // add meals just for proper spacing
-        $meals = self::getMeals($week, $buckets);
-
-        // order classes by most days to least days
-        $labsLast = [];
-        foreach ($classes as $i => $course) {
-            /** @var Course $course */
-            $difficulty = 4;
-            if ($course->getStudyDifficulty() == 'tough') {
-                $difficulty = 6;
-            }
-            if ($course->getStudyDifficulty() == 'easy') {
-                $difficulty = 2;
-            }
-
-            $priority = (count($labsLast) / 2.0) - count($course->getDotw()) + $difficulty;
-            $labsLast[] = ['sr', $course, $priority];
-        }
-        foreach ($classes as $i => $course) {
-            /** @var Course $course */
-            $difficulty = 4;
-            if ($course->getStudyDifficulty() == 'tough') {
-                $difficulty = 6;
-            }
-            if ($course->getStudyDifficulty() == 'easy') {
-                $difficulty = 2;
-            }
-
-            $priority = (count($labsLast) / 2.0) - count($course->getDotw()) + $difficulty;
-            $labsLast[] = ['p', $course, $priority];
-        }
-        usort($labsLast, function ($a, $b) {return $a[2] - $b[2];});
-
-        $studySessions = [];
-        foreach ($labsLast as $i => $count) {
-            // set up pre-work
-            if ($count[0] == 'p') {
-                /** @var Course $course */
-                $course = $count[1];
-                $studySessions = array_merge($studySessions, self::getPrework($course, $week));
-            } // set up sr-sessions
-            elseif ($count[0] == 'sr') {
-                $course = $count[1];
-                $studySessions = array_merge($studySessions, self::getStudy($course, $week));
-            }
-        }
-
-        // get totals for study events in current position
-        self::bucketEvents($studySessions, $buckets);
-
-        // get free events
-        $freeStudy = self::getFree($buckets, $week, $schedule);
-
         // merge events
         $events = array_merge($events, $reoccurring);
-        $events = array_merge($events, $meals);
-        $events = array_merge($events, $studySessions);
-        $events = array_merge($events, $freeStudy);
         $allDay = self::getAllDay($deadlines, $week);
         $events = array_merge($events, $allDay);
 
@@ -453,52 +398,7 @@ class PlanController extends Controller
             $buckets->classTotals = 0;
             self::bucketEvents($reoccurring, $buckets);
             self::sortEvents($reoccurring);
-            self::sortEvents($meals);
-            self::sortEvents($studySessions);
-            // remove overlaps on all events
-            $workingEvents = array_values($reoccurring);
-            foreach($meals as $i => $event)
-            {
-                list($notBefore, $notAfter) = self::getBoundaries(
-                    $event,
-                    $workingEvents,
-                    $week,
-                    $schedule);
-                $currentEvents = self::getWorkingEvents($workingEvents, $notBefore, $notAfter);
-                self::removeOverlaps($currentEvents, $event, $buckets, $notBefore, $notAfter);
-                $workingEvents[] = $event;
-            }
-            // TODO: resort events so getWorkingEvents doesn't have to
-            self::sortEvents($workingEvents);
-            foreach($studySessions as $i => $event)
-            {
-                list($notBefore, $notAfter) = self::getBoundaries(
-                    $event,
-                    $workingEvents,
-                    $week,
-                    $schedule);
-                $currentEvents = self::getWorkingEvents($workingEvents, $notBefore, $notAfter);
-                self::removeOverlaps($currentEvents, $event, $buckets, $notBefore, $notAfter);
-                $workingEvents[] = $event;
-                self::bucketEvents([$event], $buckets);
-            }
-            // TODO: resort events so getWorkingEvents doesn't have to
-            self::sortEvents($workingEvents);
-            foreach($freeStudy as $i => $event)
-            {
-                list($notBefore, $notAfter) = self::getBoundaries(
-                    $event,
-                    $workingEvents,
-                    $week,
-                    $schedule);
-                $currentEvents = self::getWorkingEvents($workingEvents, $notBefore, $notAfter);
-                self::removeOverlaps($currentEvents, $event, $buckets, $notBefore, $notAfter);
-                $workingEvents[] = $event;
-                self::bucketEvents([$event], $buckets);
-            }
-            $workingEvents = array_merge($workingEvents, $allDay);
-            self::sortEvents($workingEvents);
-            $events = $workingEvents;
+            $events = $reoccurring;
         }
 
         // get the current week

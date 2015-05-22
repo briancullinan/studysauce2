@@ -9,5 +9,4 @@
             <textarea name="strategy-notes"></textarea>
         </label>
     </div>
-    <div class="highlighted-link"><a href="#expand">Expand</a><a class="more" href="#save-strategy">Save</a></div>
 </div>

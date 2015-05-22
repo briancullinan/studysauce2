@@ -5,11 +5,11 @@ Step 3 - Now let's customize your study plan
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<p>Next, add your spaced repetition study sessions.  Drag the colored boxes onto your calendar to create your plan.</p>
-<p>* Remember - Spaced repetition sessions should be within 24 hours after your class</p>
-<p>Watch the study plan video if you have no idea what we are talking about...</p>
+<p>Next, add your spaced repetition study sessions.  Drag the colored boxes onto your calendar to create your plan.<br/><br/></p>
+<p>Note - Spaced repetition sessions should be within 24 hours after your class.<br/><br/><br/><br/></p>
 <div class="highlighted-link">
-    <a href="#add-spaced-repetition" data-dismiss="modal" class="more">Add spaced-repetition sessions</a>
+    <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
+    <a href="#add-spaced-repetition" data-dismiss="modal" class="more">Add spaced-repetition</a>
 </div>
 <?php $view['slots']->stop();
 

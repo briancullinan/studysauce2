@@ -1,11 +1,8 @@
 $(document).ready(function () {
 
     var body = $('body'),
-        date = new Date(),
         original,
         isInitialized = false,
-        d = date.getDate(),
-        m = date.getMonth(),
         calendar, planTimeout;
 
     function loadWeek(w, callback, s, e)
@@ -74,72 +71,153 @@ $(document).ready(function () {
         return events;
     }
 
+    body.on('dblclick', '#plan .fc-event', function () {
+        $('#edit-event').modal({show:true});
+    });
+
+    body.on('click', '#plan .fc-agendaDay-button', function () {
+        $('#plan').addClass('session-selected');
+    });
+
+    body.on('click', '#plan .fc-agendaWeek-button, #plan .fc-month-button', function () {
+        $('#plan').removeClass('session-selected');
+    });
+
+    var prevDropLocation, shortlist;
+    function shouldRevert() {
+
+        if($(this).is('.event-type-p')) {
+            var next = null;
+            // find the next occurring event of the same class, must come before that.
+            for(var i = 0; i < shortlist.length; i++) {
+                if(shortlist[i].start.getTime() > prevDropLocation.start.valueOf() &&
+                    (next == null || shortlist[i].start.getTime() < next.start.getTime())) {
+                    next = shortlist[i];
+                }
+            }
+
+            if(next == null || prevDropLocation.start.valueOf() + 3600000 > next.start.getTime() ||
+                prevDropLocation.start.valueOf() < next.start.getTime() - 86400000) {
+                $(this).addClass('invalid');
+                return true;
+            }
+        }
+        else if($(this).is('.event-type-sr'))
+        {
+            var prev = null;
+            // find the prev occurring event of the same class, must come before that.
+            for(var i = 0; i < shortlist.length; i++) {
+                if(shortlist[i].start.getTime() < prevDropLocation.start.valueOf() &&
+                    (prev == null || shortlist[i].start.getTime() > prev.start.getTime())) {
+                    prev = shortlist[i];
+                }
+            }
+
+            if(prev == null || prevDropLocation.start.valueOf() < prev.start.getTime() ||
+                prevDropLocation.start.valueOf() + 3600000 > prev.start.getTime() + 86400000) {
+                $(this).addClass('invalid');
+                return true;
+            }
+        }
+
+        $(this).removeClass('invalid');
+
+    }
+
     function initialize() {
         var plans = $('#plan');
         if (isInitialized)
             return;
         isInitialized = true;
 
-        /* initialize the external events
-         -----------------------------------------------------------------*/
-        plans.find('.fc-event').each(function() {
-
-            // store data so the calendar knows to render an event upon drop
-            $(this).data('event', {
-                title: $.trim($(this).text()), // use the element's text as the event title
-                stick: true // maintain when user navigates (see docs on the renderEvent method)
-            });
-
-            // make the event draggable using jQuery UI
-            $(this).draggable({
-                zIndex: 999,
-                revert: true,      // will cause the event to go back to its
-                revertDuration: 0  //  original position after the drag
-            });
-
-        });
-
         // find min an max time
-        var early = -1,
-            morning = 10,
-            late = 18,
-            localOffset = (3600000 * 7) - (new Date()).getTimezoneOffset() * 60000;
+        var localOffset = (3600000 * 7) - (new Date()).getTimezoneOffset() * 60000;
         for (var i = 0; i < window.planEvents.length; i++) {
             var s = new Date(new Date(window.planEvents[i].start) - localOffset),
                 e = new Date(new Date(window.planEvents[i].end) - localOffset);
             window.planEvents[i].start = s;
             window.planEvents[i].end = e;
-
-            if (window.planEvents[i].allDay ||
-                window.planEvents[i].className.indexOf('event-type-z') > -1 ||
-                window.planEvents[i].className.indexOf('event-type-m') > -1)
-                continue;
-            if (e.getHours() < 5 && e.getHours() > early)
-                early = e.getHours();
-            if (e.getHours() > late)
-                late = e.getHours();
-            if (s.getHours() > 3 && s.getHours() < morning)
-                morning = s.getHours();
         }
 
-        // use early morning as end time
-        var min, max;
-        if (early > -1)
-            max = (24 + early + 1) + ':00:00';
-        else
-            max = (late + 1) + ':00:00';
-        min = morning + ':00:00';
+        var origExternalDrag = $.fullCalendar.Grid.prototype.startExternalDrag,
+            prevDragged,
+            origRenderDrag = $.fullCalendar.View.prototype.renderDrag;
+
+        $.fullCalendar.View.prototype.renderDrag = function (dropLocation, seg) {
+            prevDropLocation = dropLocation;
+            if(prevDragged.is('.fc-event.event-type-p')) {
+                var next = null;
+                // find the next occurring event of the same class, must come before that.
+                for(var i = 0; i < shortlist.length; i++) {
+                    if(shortlist[i].start.getTime() > dropLocation.start.valueOf() &&
+                        (next == null || shortlist[i].start.getTime() < next.start.getTime())) {
+                        next = shortlist[i];
+                    }
+                }
+
+                if(next != null) {
+                    this.renderHighlight(
+                        this.view.calendar.ensureVisibleEventRange({
+                            start: moment(new Date(next.start.getTime() - 86400000)),
+                            end: moment(new Date(next.start.getTime()))}) // needs to be a proper range
+                    );
+                }
+            }
+            else if(prevDragged.is('.fc-event.event-type-sr')) {
+                var prev = null;
+                // find the prev occurring event of the same class, must come before that.
+                for(var i = 0; i < shortlist.length; i++) {
+                    if(shortlist[i].start.getTime() < dropLocation.start.valueOf() &&
+                        (prev == null || shortlist[i].start.getTime() > prev.start.getTime())) {
+                        prev = shortlist[i];
+                    }
+                }
+
+                if(prev != null) {
+                    this.renderHighlight(
+                        this.view.calendar.ensureVisibleEventRange({
+                            start: moment(new Date(prev.start.getTime())),
+                            end: moment(new Date(prev.start.getTime() + 86400000))}) // needs to be a proper range
+                    );
+                }
+            }
+            else
+                origRenderDrag.apply(this, [dropLocation, seg]);
+        };
+
+        $.fullCalendar.Grid.prototype.startExternalDrag = function (el, ev, ui) {
+            var classI = (/class([0-9])(\s|$)/ig).exec(el.attr('class'));
+            if(classI != null) {
+                shortlist = window.planEvents.filter(function (e) {
+                    return e.className.indexOf('class' + classI[1]) > -1 && e.className.indexOf('event-type-c') > -1;
+                });
+            }
+            else {
+                shortlist = [];
+            }
+            prevDragged = el;
+            if(this.renderDrag != $.fullCalendar.View.prototype.renderDrag)
+                this.renderDrag = $.fullCalendar.View.prototype.renderDrag;
+            // stupid dropAccept option should be used when dropping not with initiating
+            var originalExternalDrop = this.view.reportExternalDrop;
+            this.view.reportExternalDrop = function (meta, dropLocation, el, ev, ui) {
+                if(el.is('.invalid'))
+                    return false;
+                originalExternalDrop.apply(this, [meta, dropLocation, el, ev, ui]);
+            };
+            origExternalDrag.apply(this, [el, ev, ui]);
+        };
 
         calendar = $('#calendar').fullCalendar({
-            minTime: '06:00:00',
-            maxTime: '26:00:00',
+            //minTime: '06:00:00',
+            //maxTime: '26:00:00',
             titleFormat: 'MMMM',
             editable: true,
             draggable: true,
             droppable: true, // this allows things to be dropped onto the calendar
             aspectRatio: 1.9,
-            height: 'auto',
             timezone: 'local',
+            businessHours: true,
             timeslotsPerHour: 4,
             slotEventOverlap: false,
             slotMinutes: 15,
@@ -149,9 +227,9 @@ $(document).ready(function () {
                 return true;
             },
             header: {
-                left: '',
+                left: 'prev,next today',
                 center: '',
-                right: 'prev,next today,month,agendaWeek,agendaDay'
+                right: 'agendaDay,agendaWeek,month'
             },
             defaultView: 'agendaWeek',
             selectable: false,
@@ -172,21 +250,23 @@ $(document).ready(function () {
                     loadWeek(w0);
                 }
             },
-            drop: function() {
+            drop: function(date, jsEvent, ui) {
                 // TODO: count down to remove with numbers in event
-                // is the "remove after drop" checkbox checked?
-                if ($('#drop-remove').is(':checked')) {
-                    // if so, remove the element from the "Draggable Events" list
+                if(!$(this).is('.invalid'))
                     $(this).remove();
-                }
             },
-            eventClick: function (calEvent) {
+            eventClick: function (event, jsEvent, view) {
                 // change the border color just for fun
-                if (plans.find('.event-id-' + calEvent.eventId).length > 0) {
-                    if (!plans.find('.event-id-' + calEvent.eventId).is('.selected'))
-                        plans.find('.event-id-' + calEvent.eventId).find('.assignment').trigger('click');
-                    plans.find('.event-id-' + calEvent.eventId).scrollintoview(DASHBOARD_MARGINS);
+                if (plans.find('.event-id-' + event.eventId).length > 0) {
+                    if (!plans.find('.event-id-' + event.eventId).is('.selected'))
+                        plans.find('.event-id-' + event.eventId).find('.assignment').trigger('click');
+                    plans.find('.event-id-' + event.eventId).scrollintoview(DASHBOARD_MARGINS);
                 }
+
+                var plan = $('#plan');
+                plan.addClass('session-selected');
+                $('#calendar').fullCalendar('gotoDate', event.start);
+                $('#calendar').fullCalendar('changeView', 'agendaDay');
 
             },
             eventDragStart: function (event) {
@@ -195,83 +275,24 @@ $(document).ready(function () {
             eventDragStop: function (event, jsEvent, ui, view) {
             },
             eventDrop: function (event, delta, revertFunc) {
-
                 if (event.allDay) {
                     revertFunc();
                     return;
                 }
 
-                var prev = null, next = null;
-
-                // find the next event of the same type
-                for (var i = 0; i < window.planEvents.length; i++) {
-                    if ((window.planEvents[i].className[1] == event.className[1] ||
-                        window.planEvents[i].className[0] == event.className[1]) &&
-                        window.planEvents[i].className[0] != 'event-type-r' &&
-                        window.planEvents[i].className[0] != 'event-type-h' &&
-                        window.planEvents[i].className[0] != 'event-type-d' &&
-                        i != event.eventId) {
-                        // TODO: update this if classes are draggable
-                        if ((next == null || window.planEvents[i].start.getTime() < next.start.getTime()) &&
-                            window.planEvents[i].start.getTime() > original.getTime()) {
-                            next = window.planEvents[i];
-                        }
-                        else if ((prev == null || window.planEvents[i].start.getTime() > prev.start.getTime()) &&
-                            window.planEvents[i].start.getTime() < original.getTime())
-                            prev = window.planEvents[i];
-                    }
-                }
-
-                // check for last event of type or first event of type
-                if ((prev != null && event.start.getTime() < prev.end.getTime()) ||
-                    (next != null && event.end.getTime() > next.start.getTime())) {
+                if(shouldRevert.apply(this)) {
                     revertFunc();
-                    return;
                 }
 
-                // TODO: fix this
-                $.ajax({
-                    url: window.callbackPaths['plan_update'],
-                    type: 'POST',
-                    dataType: 'text',
-                    data: {
-                        eventId: event['eventId'],
-                        start: event['start'].toJSON(),
-                        end: event['end'].toJSON(),
-                        type: event['className'].indexOf('event-type-p') != -1
-                            ? 'p'
-                            : (event['className'].indexOf('event-type-sr') != -1
-                            ? 'sr'
-                            : (event['className'].indexOf('event-type-f') != -1
-                            ? 'f'
-                            : (event['className'].indexOf('event-type-o') != -1
-                            ? 'o'
-                            : (event['className'].indexOf('event-type-d') != -1
-                            ? 'd'
-                            : ''))))
-                    },
-                    error: revertFunc,
-                    success: function (data) {
-                        var content = $(data);
-                        window.planEvents = [];
-                        window.planLoaded = [];
-                        // merge scripts
-                        ssMergeScripts(content.filter('script:not([src])'));
-                        for (var j = 0; j < window.planEvents.length; j++) {
-                            window.planEvents[j].start = new Date(window.planEvents[j].start);
-                            window.planEvents[j].end = new Date(window.planEvents[j].end);
-                        }
-
-                        // merge rows
-                        plans.find('.head,.session-row').remove();
-                        content.find('.head,.session-row').insertAfter(plans.find('.sort-by'));
-
-                        if (calendar != null && typeof calendar.fullCalendar != 'undefined')
-                            calendar.fullCalendar('refetchEvents');
-                    }
-                });
+            },
+            views: {
+                month: { // name of view
+                    titleFormat: 'MMM DD'
+                    // other view-specific options here
+                }
             }
         });
+
     }
 
     function setupPlan()
@@ -314,31 +335,177 @@ $(document).ready(function () {
         }
     }
 
-    body.on('click', '#plan-step-3 a[href="#add-prework"]', function (evt) {
+    body.on('click', '#plan-step-3 a[href="#add-prework"]', function () {
+        $('#plan').addClass('add-events');
+        var external = $('#external-events');
+        external.find('.fc-event').remove();
+        external.find('h4').text('Pre-work');
+        $('#plan-step-1').find('h4').each(function () {
+            var event = $('<div class="fc-event ui-draggable ui-draggable-handle event-type-p ' + $(this).find('span').attr('class') +
+                '"><div class="fc-title"><h4>P</h4>' + $(this).text().trim() +
+                '</div></div>').insertAfter(external.find('> h4'));
+
+            // store data so the calendar knows to render an event upon drop
+            event.data('event', {
+                title: $.trim(event.find('.fc-title').html()), // use the element's text as the event title
+                allDay: false,
+                className: 'event-type-p ' + $(this).find('span').attr('class'),
+                editable: true,
+                overlap:false,
+                stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+
+            // make the event draggable using jQuery UI
+            event.draggable({
+                zIndex: 999,
+                revert: shouldRevert,      // will cause the event to go back to its
+                revertDuration:.15  //  original position after the drag
+            });
+        });
+
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
+            $('#plan').removeClass('add-events');
             $('#plan-step-32').modal({show: true})
         });
     });
 
-    body.on('click', '#plan-step-32 a[href="#add-spaced-repetition"]', function (evt) {
+    body.on('click', '#plan-step-32 a[href="#add-spaced-repetition"]', function () {
+        $('#plan').addClass('add-events');
+
+        var external = $('#external-events');
+        external.find('.fc-event').remove();
+        external.find('h4').text('Spaced-repetition');
+        $('#plan-step-1').find('h4').each(function () {
+            var event = $('<div class="fc-event ui-draggable ui-draggable-handle event-type-sr ' + $(this).find('span').attr('class') +
+            '"><div class="fc-title"><h4>SR</h4>' + $(this).text().trim() +
+            '</div></div>').insertAfter(external.find('> h4'));
+
+            // store data so the calendar knows to render an event upon drop
+            event.data('event', {
+                title: $.trim(event.find('.fc-title').html()), // use the element's text as the event title
+                allDay: false,
+                className: 'event-type-sr ' + $(this).find('span').attr('class'),
+                editable: true,
+                overlap:false,
+                stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+
+            // make the event draggable using jQuery UI
+            event.draggable({
+                zIndex: 999,
+                revert: shouldRevert,      // will cause the event to go back to its
+                revertDuration:.15  //  original position after the drag
+            });
+        });
+
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
+            $('#plan').removeClass('add-events');
             $('#plan-step-33').modal({show: true})
         });
     });
 
-    body.on('click', '#plan-step-33 a[href="#add-free-study"]', function (evt) {
+    body.on('click', '#plan-step-33 a[href="#add-free-study"]', function () {
+        $('#plan').addClass('add-events');
+
+        var external = $('#external-events');
+        external.find('.fc-event').remove();
+        external.find('h4').text('Free study');
+        $('#plan-step-1').find('h4').each(function () {
+            var event = $('<div class="fc-event ui-draggable ui-draggable-handle event-type-f"><div class="fc-title"><h4>F</h4>Free study</div></div>').insertAfter(external.find('> h4'));
+
+            // store data so the calendar knows to render an event upon drop
+            event.data('event', {
+                title: $.trim(event.find('.fc-title').html()), // use the element's text as the event title
+                allDay: false,
+                className: 'event-type-f',
+                editable: true,
+                overlap:false,
+                stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+
+            // make the event draggable using jQuery UI
+            event.draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration:.15  //  original position after the drag
+            });
+        });
+
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
+            $('#plan').removeClass('add-events');
             $('#plan-step-4').modal({show: true})
         });
     });
+
+    body.on('click', '#plan a[href="#add-note"]', function (evt) {
+        evt.preventDefault();
+        var plan = $('#plan');
+        plan.removeClass('session-selected').addClass('edit-note');
+        plan.find('#editor2').focus();
+        var strategy = plan.find('[name="strategy-select"]').val();
+        CKEDITOR.instances.editor2.setData(plan.find('.strategy-' + strategy).html());
+    });
+
+    body.on('hide', '#plan', function () {
+        if(typeof CKEDITOR.instances.editor2 != 'undefined')
+            CKEDITOR.instances.editor2.fire('blur');
+        $('#cke_editor2').hide();
+        var notes = $('#plan');
+        if(notes.is('.edit-note')) {
+            notes.find('a[href="#save-note"]').trigger('click');
+        }
+    });
+
+    function initializeCKE()
+    {
+        var notes = $('#plan');
+        if(typeof CKEDITOR.instances.editor2 == 'undefined' ||
+            typeof CKEDITOR.instances.editor2.setReadOnly == 'undefined' ||
+            typeof CKEDITOR.instances.editor2.editable() == 'undefined') {
+            setTimeout(initializeCKE, 100);
+            return;
+        }
+        var editor = CKEDITOR.instances.editor2;
+        editor.on('blur',function( e ){
+            if(notes.is('.edit-note') && notes.is(':visible'))
+                editor.fire('focus');
+        });
+        editor.on('focus',function( e ){
+            CKEDITOR.instances.editor2.setReadOnly(false);
+            var cke = $('#cke_editor2'),
+                edit = $('#editor2');
+            if(cke.width() != edit.outerWidth()) {
+                cke.width(edit.outerWidth());
+                if(notes.is('.edit-note')) {
+                    editor.fire('blur');
+                    editor.fire('focus');
+                }
+            }
+        });
+        editor.setReadOnly(false);
+    }
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
     //   we will activate the calendar only once, when the menu is clicked
     body.on('show', '#plan', function () {
         setupPlan();
+
+        var notes = $('#notes');
+        // load editor
+        if(!$(this).is('.loaded')) {
+            $(this).addClass('loaded');
+
+            setTimeout(initializeCKE, 100);
+        }
+    });
+
+    $(window).resize(function () {
+        $('#cke_editor2').width($('#editor2').outerWidth());
+        if(typeof CKEDITOR.instances.editor2 != 'undefined')
+            CKEDITOR.instances.editor2.fire('resize');
     });
 
     body.on('click', 'a[href="#bill-parents"]', function () {
@@ -469,18 +636,6 @@ $(document).ready(function () {
                 }
             });
         }, 100);
-    });
-
-    body.on('click', '#plan .sort-by a[href="#expand"]', function () {
-        var plans = $('#plan');
-        if (plans.is('.fullcalendar')) {
-            plans.removeClass('fullcalendar');
-            $('#calendar').fullCalendar('option', 'height', 500);
-        }
-        else {
-            plans.addClass('fullcalendar');
-            $('#calendar').fullCalendar('option', 'height', 'auto');
-        }
     });
 
     body.on('change', '#plan .completed input, .plan-widget .completed input', function () {

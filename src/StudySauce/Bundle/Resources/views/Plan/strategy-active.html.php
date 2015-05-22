@@ -18,5 +18,4 @@
     <label><span>What possible exam questions will result from this reading?</span>
         <textarea name="strategy-exam"></textarea>
     </label>
-    <div class="highlighted-link"><a href="#expand">Expand</a><a class="more" href="#save-strategy">Save</a></div>
 </div>

@@ -63,6 +63,19 @@
     /* color: #FF0D00; */
 }
 
+#plan .mini-checkin .checkin
+{
+    vertical-align: middle;
+}
+
+#plan .mini-checkin .flip-counter
+{
+    display:inline-block;
+    width:200px;
+    margin: 25px 0;
+    vertical-align: middle;
+}
+
 .checkin-widget .classes .checkin
 {
     margin: 25px 10px;

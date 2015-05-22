@@ -8,5 +8,4 @@
     </div>
     <h3>Notes:</h3>
     <label class="input"><textarea name="strategy-notes" cols="60" rows="2"></textarea></label>
-    <div class="highlighted-link"><a href="#expand">Expand</a><a class="more" href="#save-strategy">Save</a></div>
 </div>
