@@ -244,9 +244,10 @@ class DeadlinesController extends Controller
             {
                 $orm->merge($deadline);
             }
-
-            $orm->flush();
         }
+
+        PlanController::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
+        $orm->flush();
 
         $request->attributes->set('_format', 'tab');
         /** @var Response $deadlines */

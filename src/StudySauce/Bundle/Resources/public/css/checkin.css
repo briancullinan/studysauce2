@@ -66,13 +66,14 @@
 #plan .mini-checkin .checkin
 {
     vertical-align: middle;
+    margin: 10px;
 }
 
 #plan .mini-checkin .flip-counter
 {
     display:inline-block;
     width:200px;
-    margin: 25px 0;
+    margin: 10px;
     vertical-align: middle;
 }
 
@@ -94,7 +95,7 @@
 }
 
 .checkin-widget .classes .class1,
-#plan .checkin1 .mini-checkin .checkin,
+#plan .mini-checkin .class1,
 #checkin .classes .class1,
 #checkin .classes a:nth-child(2)
 {
@@ -103,7 +104,7 @@
 }
 
 .checkin-widget .classes .class2,
-#plan .checkin2 .mini-checkin .checkin,
+#plan .mini-checkin .class2,
 #checkin .classes .class2,
 #checkin .classes a:nth-child(3)
 {
@@ -112,7 +113,7 @@
 }
 
 .checkin-widget .classes .class3,
-#plan .checkin3 .mini-checkin .checkin,
+#plan .mini-checkin .class3,
 #checkin .classes .class3,
 #checkin .classes a:nth-child(4)
 {
@@ -121,7 +122,7 @@
 }
 
 .checkin-widget .classes .class4,
-#plan .checkin4 .mini-checkin .checkin,
+#plan .mini-checkin .class4,
 #checkin .classes .class4,
 #checkin .classes a:nth-child(5)
 {
@@ -130,7 +131,7 @@
 }
 
 .checkin-widget .classes .class5,
-#plan .checkin5 .mini-checkin .checkin,
+#plan .mini-checkin .class5,
 #checkin .classes .class5,
 #checkin .classes a:nth-child(6)
 {
@@ -139,7 +140,7 @@
 }
 
 .checkin-widget .classes .class6,
-#plan .checkin6 .mini-checkin .checkin,
+#plan .mini-checkin .class6,
 #checkin .classes .class6,
 #checkin .classes a:nth-child(7)
 {
@@ -148,7 +149,7 @@
 }
 
 .checkin-widget .classes .class7,
-#plan .checkin7 .mini-checkin .checkin,
+#plan .mini-checkin .class7,
 #checkin .classes .class7,
 #checkin .classes a:nth-child(8)
 {
@@ -157,7 +158,7 @@
 }
 
 .checkin-widget .classes .class8,
-#plan .checkin8 .mini-checkin .checkin,
+#plan .mini-checkin .class8,
 #checkin .classes .class8,
 #checkin .classes a:nth-child(9)
 {

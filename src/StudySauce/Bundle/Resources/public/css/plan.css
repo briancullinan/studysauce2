@@ -19,11 +19,21 @@
     position:relative;
 }
 
-#plan a[href="#edit-settings"]
+#plan a[href="#plan-step-1"]
 {
     position:absolute;
     left:10px;
     bottom:10px;
+}
+
+#plan.setup-mode ~ #plan-step-1 .highlighted-link:not(.setup-mode),
+#plan:not(.setup-mode) ~ #plan-step-1 .highlighted-link.setup-mode,
+#plan.setup-mode ~ #plan-step-3 .highlighted-link:not(.setup-mode),
+#plan:not(.setup-mode) ~ #plan-step-3 .highlighted-link.setup-mode,
+#plan.setup-mode ~ #plan-step-4 .highlighted-link:not(.setup-mode),
+#plan:not(.setup-mode) ~ #plan-step-4 .highlighted-link.setup-mode
+{
+    display:none;
 }
 
 #plan h2
@@ -43,6 +53,49 @@
 a.fc-event:not([href])
 {
     color: #FFFFFF;
+}
+
+#plan .event-selected
+{
+    overflow: visible;
+    z-index: 10 !important;
+}
+
+#plan .event-selected:after
+{
+    display: block;
+    content: " ";
+    position: absolute;
+    top: -6px;
+    left: -82px;
+    right: -6px;
+    bottom: -6px;
+    border: 2px solid #F90;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+#plan .event-selected:before
+{
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    transform-origin: left bottom;
+    -webkit-transform-origin: center center;
+    -moz-transform-origin: left bottom;
+    -ms-transform-origin: left bottom;
+    -o-transform-origin: left bottom;
+    height: 50px;
+    content: " ";
+    display: block;
+    background: url("../images/menu_new_compressed.png") no-repeat 50% 10px transparent;
+    width: 50px;
+    position: absolute;
+    left: -100px;
+    top: -10px;
 }
 
 .fc-month-view .fc-event:not(.event-type-d)
@@ -231,14 +284,6 @@ a.fc-event:not([href])
     position: relative;
 }
 
-#plan .session-row:hover:not(.selected) .assignment,
-#plan .session-row:hover:not(.selected) .class-name,
-#plan .session-row:hover:not(.selected) .percent,
-#plan .session-row:hover:not(.selected) .completed {
-    color: #00CCEE;
-    cursor: pointer;
-}
-
 .plan-widget .session-row > *
 {
     width:30%;
@@ -299,6 +344,20 @@ a.fc-event:not([href])
     z-index: 10;
     position:relative;
     clear:left;
+    border: 2px solid #555;
+    margin-top:60px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#plan.setup-mode .fc-toolbar .fc-right
+{
+    display:none;
+}
+
+#plan #external-events .highlighted-link
+{
+    text-align: center;
 }
 
 #plan.add-events #external-events
@@ -321,6 +380,12 @@ a.fc-event:not([href])
     vertical-align: top;
 }
 
+#plan.edit-note .mini-checkin,
+#plan.session-selected .mini-checkin
+{
+    display: block;
+}
+
 #plan .session-strategy
 {
     display:none;
@@ -328,33 +393,50 @@ a.fc-event:not([href])
     margin: 0 -4px;
     padding: 0 20px;
     vertical-align: top;
-    text-align: center;
 }
 
-#plan #editor2 ~ .highlighted-link
+#plan-step-1 .dialog-tracker li:nth-child(1),
+#plan-step-2 .dialog-tracker li:nth-child(2),
+#plan-step-2-2 .dialog-tracker li:nth-child(2),
+#plan-step-2-3 .dialog-tracker li:nth-child(2),
+#plan.setup-mode ~ #plan-step-3 .dialog-tracker li:nth-child(3),
+#plan:not(.setup-mode) ~ #plan-step-3 .dialog-tracker li:nth-child(2),
+#plan.setup-mode ~ #plan-step-4 .dialog-tracker li:nth-child(4),
+#plan:not(.setup-mode) ~ #plan-step-4 .dialog-tracker li:nth-child(3),
+#plan-step-5 .dialog-tracker li:nth-child(5),
+#plan-step-6 .dialog-tracker li:nth-child(6)
+{
+    font-size: 60px;
+    color: #0099BB;
+}
+
+#plan.setup-mode ~ #plan-step-0 .close,
+#plan.setup-mode ~ #plan-step-1 .close,
+#plan.setup-mode ~ #plan-step-2 .close,
+#plan.setup-mode ~ #plan-step-3 .close,
+#plan.setup-mode ~ #plan-step-4 .close,
+#plan.setup-mode ~ #plan-step-5 .close,
+#plan.setup-mode ~ #plan-step-6 .close
 {
     display:none;
 }
 
-#plan.edit-note #editor2 ~ .highlighted-link
-{
-    display:none;
-}
-
+#plan #editor2 ~ .highlighted-link,
+#plan.edit-note #external-events,
 #plan.edit-note .session-strategy,
 #plan.edit-note #calendar
 {
     display:none;
 }
 
+#plan.edit-note #editor2 ~ .highlighted-link
+{
+    display:block;
+}
+
 #plan .session-strategy .big-add
 {
     float:none;
-}
-
-#plan .session-strategy *
-{
-    text-align: center;
 }
 
 #plan.session-selected .session-strategy
@@ -364,6 +446,15 @@ a.fc-event:not([href])
 
 #edit-event .day-of-the-week label span {
     display: block;
+}
+
+#edit-event.class-only .start-time,
+#edit-event.class-only .end-time,
+#edit-event.class-only .day-of-the-week,
+#edit-event.class-only .start-date,
+#edit-event.class-only .end-date
+{
+    display:none;
 }
 
 #plan .note-row
@@ -447,13 +538,49 @@ a.fc-event:not([href])
     margin: 0 -2px;
 }
 
+#plan .fc-event
+{
+    cursor:pointer;
+}
+
 #plan #external-events .fc-event
 {
     display:block;
-    padding: 10px;
+    padding: 3px;
     border-radius: 5px;
     margin: 10px;
     cursor: pointer;
+}
+
+#plan .notes-or {
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    clear: both;
+    display:inline-block;
+    width: 200px;
+    vertical-align: middle;
+    margin: 0 20px 20px 20px;
+}
+
+#plan .notes-or span {
+    background: url("../images/noise_darkgray.png") repeat scroll 0 0 #111111;
+    border-radius: 4px 4px 4px 4px;
+    color: #CCCCCC;
+    font-style: italic;
+    padding: 3px 20px;
+    position: relative;
+    text-transform: uppercase;
+    top: 12px;
+}
+
+#plan #external-events .fc-event[data-duration="01:00"]
+{
+    height: 30px;
+}
+
+#plan #external-events .fc-event[data-duration="02:00"]
+{
+    height: 44px;
 }
 
 #plan .fc-highlight
@@ -523,25 +650,10 @@ a.fc-event:not([href])
 #plan .mini-checkin
 {
     text-align: center;
-    display:inline-block;
-    margin-top:-80px;
-    float:right;
-}
-
-#plan .selected .mini-checkin
-{
-    display: block;
-    position: absolute;
-    left: 50%;
-    margin-left: 235px;
-    width:165px;
-}
-
-#plan .selected.expanded .mini-checkin
-{
-    left:auto;
+    position:absolute;
+    top:0;
     right:0;
-    margin-left:0;
+    display:none;
 }
 
 #plan .session-row.expanded .strategy-prework,
@@ -673,8 +785,8 @@ a.fc-event:not([href])
     display:inline;
 }
 
+#plan-step-3 h4,
 #plan-step-4 h4,
-#plan-step-5 h4,
 #plan-step-1 h4
 {
     display:inline-block;
@@ -688,20 +800,20 @@ a.fc-event:not([href])
     color:#555;
 }
 
-#plan-step-4 h4
+#plan-step-3 h4
 {
     margin-right:-306px;
     padding:5px 300px 5px 0;
 }
 
-#plan-step-5 h4
+#plan-step-4 h4
 {
     margin-right:-204px;
     padding:5px 200px 5px 0;
 }
 
+#plan-step-3 label,
 #plan-step-4 label,
-#plan-step-5 label,
 #plan-step-1 label
 {
     margin:0 -2px;
@@ -712,44 +824,45 @@ a.fc-event:not([href])
     display:inline-block;
 }
 
-#plan-step-4 label
+#plan-step-3 label
 {
     width:100px;
 }
 
-#plan-step-5 label
+#plan-step-4 label
 {
     width:200px;
 }
 
+#plan-step-3 label span,
 #plan-step-4 label span,
-#plan-step-5 label span,
 #plan-step-1 label span
 {
     display:none;
 }
 
+#plan-step-3 header,
 #plan-step-4 header,
-#plan-step-5 header,
 #plan-step-1 header
 {
     width:320px;
     margin-left:auto;
     margin-right:0;
+    margin-bottom:10px;
 }
 
-#plan-step-4 header
+#plan-step-3 header
 {
     width:300px;
 }
 
-#plan-step-5 header
+#plan-step-4 header
 {
     width:200px;
 }
 
+#plan-step-3 header > label,
 #plan-step-4 header > label,
-#plan-step-5 header > label,
 #plan-step-1 header > label
 {
     display: inline-block;
@@ -758,8 +871,8 @@ a.fc-event:not([href])
     vertical-align: bottom;
 }
 
+#plan-step-3 .invalid-only,
 #plan-step-4 .invalid-only,
-#plan-step-5 .invalid-only,
 #plan-step-1 .invalid-only
 {
     display:none;
@@ -771,15 +884,15 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
+#plan-step-3.invalid-only .invalid-only,
 #plan-step-4.invalid-only .invalid-only,
-#plan-step-5.invalid-only .invalid-only,
 #plan-step-1.invalid-only .invalid-only
 {
     display:inline-block;
 }
 
+#plan-step-3.invalid-only .type-required,
 #plan-step-4.invalid-only .type-required,
-#plan-step-5.invalid-only .type-required,
 #plan-step-1.invalid-only .type-required
 {
     border-bottom:3px solid #CC0000;
@@ -787,7 +900,7 @@ a.fc-event:not([href])
     border-bottom-right-radius: 5px;
 }
 
-#plan-step-7 a[href*="download"]
+#plan-step-6 a[href*="download"]
 {
     width: 100px;
     height: 100px;

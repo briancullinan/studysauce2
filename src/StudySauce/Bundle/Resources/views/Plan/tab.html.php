@@ -42,23 +42,20 @@ foreach ($view['assetic']->javascripts(['@plan_scripts',],[],['output' => 'bundl
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 ?>
-    <script type="text/javascript">
-        // convert events array to object to keep track of keys better
-        if(typeof(window.planEvents) == 'undefined')
-            window.planEvents = [];
-        if(typeof(window.planLoaded) == 'undefined')
-            window.planLoaded = [];
-        if(window.planLoaded.indexOf(<?php print date_timestamp_set(new \DateTime(), $week)->format('W'); ?>) == -1) {
-            window.planEvents = $.merge(window.planEvents, JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>'));
-            window.planLoaded = $.merge(window.planLoaded, [<?php print date_timestamp_set(new \DateTime(), $week)->format('W'); ?>]);
-        }
-        // insert strategies
-        window.strategies = JSON.parse('<?php print json_encode($strategies); ?>');
-    </script>
+<script type="text/javascript">
+    // convert events array to object to keep track of keys better
+    if(typeof(window.planEvents) == 'undefined')
+        window.planEvents = [];
+    window.planEvents = $.merge(window.planEvents, JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>'));
+</script>
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane <?php print ($isDemo ? ' demo' : ''); ?> <?php print ($isEmpty ? ' empty-schedule' : ''); ?>" id="plan">
+<div class="panel-pane <?php
+    print ($isDemo ? ' demo' : '');
+    print ($isEmpty ? ' empty-schedule' : '');
+    print ($step !== false ? ' setup-mode' : '');
+    print ($step === false ? ' session-selected' : ''); ?>" id="plan">
     <div class="pane-content">
         <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
         <div id="external-events">
@@ -75,9 +72,9 @@ $view['slots']->start('body'); ?>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed">
             <?php echo $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty', 'attributes' => 'data-backdrop="false"']) ?>
         </div>
+        <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
         <div class="session-strategy">
-            <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
-            <h3>Recommended strategy</h3>
+            <h3 style="margin-top:40px;">Recommended strategy</h3>
             <label class="input">
                 <select name="strategy-select">
                     <option value="teach">Teach</option>
@@ -86,15 +83,10 @@ $view['slots']->start('body'); ?>
                     <option value="prework">Prework</option>
                 </select>
             </label>
-            <a href="#add-note" class="big-add">Create <span>+</span> new note</a>
-            <div class="signup-or"><span>Or</span></div>
-            <h3>Open an existing note</h3>
-            <div class="class-name"><span class="class0"></span>Calc 101</div>
-            <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
-                <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
-                <div class="summary">
-                    <small class="date">14 Apr</small>
-                    <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
+            <div style="padding: 40px 0;">
+                <a href="#add-note" class="big-add">Create <span>+</span> new note</a>
+                <div class="notes-or"><span>Or</span></div>
+                <h3 style="display:inline-block;">Open an existing note</h3>
             </div>
             <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
                 <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
@@ -114,8 +106,14 @@ $view['slots']->start('body'); ?>
                     <small class="date">14 Apr</small>
                     <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
             </div>
-            <a href="#edit-settings">Edit Study Plan Settings</a>
+            <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
+                <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
+                <div class="summary">
+                    <small class="date">14 Apr</small>
+                    <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
+            </div>
         </div>
+        <a href="#plan-step-1" data-toggle="modal">Edit Study Plan Settings</a>
         <div id="editor2" contenteditable="true">This is note content</div>
         <div class="highlighted-link"><a href="#save-note" class="more">Save</a></div>
         <?php echo $view->render('StudySauceBundle:Plan:strategies.html.php'); ?>
@@ -124,20 +122,19 @@ $view['slots']->start('body'); ?>
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-if($step !== false) {
-    print $this->render('StudySauceBundle:Dialogs:plan-step-' . $step . '.html.php', ['id' => 'plan-step-' . $step, 'courses' => $courses, 'schedule' => $schedule]);
-    if($step < 7) {
-        print $this->render('StudySauceBundle:Dialogs:plan-step-' . ($step + 1) . '.html.php', ['id' => 'plan-step-' . ($step + 1), 'courses' => $courses, 'schedule' => $schedule]);
-    }
-    $steps = array_merge($step > 0 ? range(0, $step - 1) : [], $step < 6 ? range($step+2, 7) : []);
-    foreach($steps as $i) {
-        print $this->render('StudySauceBundle:Dialogs:plan-step-' . $i . '.html.php', ['id' => 'plan-step-' . $i, 'courses' => $courses, 'schedule' => $schedule]);
-    }
-    print $this->render('StudySauceBundle:Dialogs:plan-step-32.html.php', ['id' => 'plan-step-32', 'courses' => $courses, 'schedule' => $schedule]);
-    print $this->render('StudySauceBundle:Dialogs:plan-step-33.html.php', ['id' => 'plan-step-33', 'courses' => $courses, 'schedule' => $schedule]);
-
+if($step === false)
+    $step = 0;
+print $this->render('StudySauceBundle:Dialogs:plan-step-' . $step . '.html.php', ['id' => 'plan-step-' . $step, 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+if($step < 6) {
+    print $this->render('StudySauceBundle:Dialogs:plan-step-' . ($step + 1) . '.html.php', ['id' => 'plan-step-' . ($step + 1), 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 }
-else if($isEmpty) {
+$steps = array_merge($step > 0 ? range(0, $step - 1) : [], $step < 5 ? range($step+2, 6) : []);
+foreach($steps as $i) {
+    print $this->render('StudySauceBundle:Dialogs:plan-step-' . $i . '.html.php', ['id' => 'plan-step-' . $i, 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+}
+print $this->render('StudySauceBundle:Dialogs:plan-step-2-2.html.php', ['id' => 'plan-step-2-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-2-3.html.php', ['id' => 'plan-step-2-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+if($isEmpty) {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-empty-schedule']));
 }
 else if($isDemo) {

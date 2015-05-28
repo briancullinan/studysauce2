@@ -1,41 +1,40 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
-Step 4 - Would you like calendar alerts?
+Step 4 - Type of classes
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>
-<br /><br/>
-<header>
-    <label>Yes</label>
-    <label>No</label>
-    <label>Alert</label>
-</header>
-<h4>Classes</h4>
-<label class="radio"><span>Yes</span><input name="classes-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="classes-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="classes-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
-<h4>Prework</h4>
-<label class="radio"><span>Yes</span><input name="prework-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="prework-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="prework-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
-<h4>Spaced repetition</h4>
-<label class="radio"><span>Yes</span><input name="spaced-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="spaced-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="spaced-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
-<h4>Free study</h4>
-<label class="radio"><span>Yes</span><input name="free-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="free-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="free-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
-<h4>Non-academic events</h4>
-<label class="radio"><span>Yes</span><input name="other-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="other-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="other-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
-<br/><br/><br/><br/>
-<div class="highlighted-link">
-    <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
-    <a href="#plan-step-5" data-toggle="modal" class="more">Next</a>
-</div>
+<form action="<?php print $view['router']->generate('profile_update'); ?>" method="post">
+    <p>What is the primary type of studying you expect to do in this class?<br/><br/></p>
+    <header>
+        <label>Type of studying</label>
+    </header>
+    <?php
+    foreach($courses as $i => $c)
+    {
+        /** @var Course $c */
+        ?>
+        <h4><span class="class<?php print $i; ?>"></span><?php print $c->getName(); ?></h4>
+        <label class="input"><span>Type of studying</span>
+            <select name="profile-type-<?php print $c->getId(); ?>">
+                <option value="">- Select study type -</option>
+                <option value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'checked="checked"' : ''); ?>>Memorization</option>
+                <option value="memorization" <?php print ($c->getStudyType() == 'reading' ? 'checked="checked"' : ''); ?>>Reading / writing</option>
+                <option value="memorization" <?php print ($c->getStudyType() == 'conceptual' ? 'checked="checked"' : ''); ?>>Memorization</option>
+            </select>
+        </label>
+    <?php } ?>
+    <br/><br/><br/><br/>
+    <div class="highlighted-link setup-mode invalid">
+        <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
+        <a href="#plan-step-5" data-toggle="modal" class="more">Next</a>
+    </div>
+    <div class="highlighted-link invalid">
+        <ul class="dialog-tracker"><li><a href="#plan-step-1" title="Class difficulty" data-toggle="modal">&bullet;</a></li><li><a href="#plan-step-3" title="Notifications" data-toggle="modal">&bullet;</a></li><li><a href="#plan-step-4" title="Class type" data-toggle="modal">&bullet;</a></li></ul>
+        <a href="#close" data-dismiss="modal" class="more">Next</a>
+    </div>
+</form>
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-footer') ?>

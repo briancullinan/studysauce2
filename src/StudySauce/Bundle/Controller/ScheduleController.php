@@ -46,14 +46,20 @@ class ScheduleController extends Controller
             : null;
 
         /** @var Schedule $schedule */
-        $needsNew = !empty($schedule = $user->getSchedules()->first()) && !empty($schedule->getCourses()->count())
-            && !$schedule->getCourses()->exists(function ($_, Course $c) {
+        /** @var \DateTime $prev */
+        $needsNew = !empty(
+            // check that there are classes set up
+            $schedule = $user->getSchedules()->first()) && !empty($schedule->getClasses()->count())
+            // check that all the courses have ended
+            && !$schedule->getClasses()->exists(function ($_, Course $c) {
                     return $c->getEndTime() > new \DateTime();})
-            && empty($user->getProperty('needs_new'));
+            // check that message hasn't been displayed in at least 6 months
+            && (empty($user->getProperty('needs_new')) || true === ($prev = $user->getProperty('needs_new')) ||
+                $prev->getTimestamp() < date_sub(new \DateTime(), new \DateInterval('P3M'))->getTimestamp());
         if($needsNew) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
-            $user->setProperty('needs_new', true);
+            $user->setProperty('needs_new', new \DateTime());
             $userManager->updateUser($user);
         }
 
@@ -433,6 +439,7 @@ class ScheduleController extends Controller
 
                 // remove course
                 if($c['remove'] == 'true') {
+                    PlanController::mergeSaved($course->getSchedule(), $course->getEvents(), [], $orm);
                     self::removeCourse($course, $schedule, $orm);
                 }
                 // save course settings
@@ -457,6 +464,7 @@ class ScheduleController extends Controller
                     }
                     else
                         $orm->merge($course);
+                    PlanController::createCourseEvents($course, $orm);
                 }
 
                 $orm->flush();
@@ -509,6 +517,7 @@ class ScheduleController extends Controller
                 $co->removeDeadline($d);
                 $orm->remove($d);
             }
+            PlanController::mergeSaved($co->getSchedule(), $co->getEvents(), [], $orm);
             $s->removeCourse($co);
             $orm->remove($co);
         }
@@ -537,12 +546,6 @@ class ScheduleController extends Controller
             $orm->merge($course);
         }
         else {
-            $events = $course->getEvents()->toArray();
-            foreach($events as $event) {
-                $course->removeEvent($event);
-                $schedule->removeEvent($event);
-                $orm->remove($event);
-            }
             foreach($course->getGrades()->toArray() as $g) {
                 $course->removeGrade($g);
                 $orm->remove($g);

@@ -75,18 +75,18 @@ $view['slots']->start('modal-body') ?>
                value="">
     </label>
 </div>
-<div class="location">
-    <label class="input">
-        <span>Location</span>
-        <input type="text" placeholder="Location" title="Where will you be studying?"
-               autocomplete="off"
-               value="">
-    </label>
-</div>
 <div class="title">
     <label class="input">
         <span>Title</span>
         <input type="text" placeholder="Title" title="What do you want to call this event?"
+               autocomplete="off"
+               value="">
+    </label>
+</div>
+<div class="location">
+    <label class="input">
+        <span>Location</span>
+        <input type="text" placeholder="Location" title="Where will you be studying?"
                autocomplete="off"
                value="">
     </label>
