@@ -53,6 +53,7 @@
 a.fc-event:not([href])
 {
     color: #FFFFFF;
+    border: 3px solid transparent;
 }
 
 #plan .event-selected
@@ -95,7 +96,8 @@ a.fc-event:not([href])
     width: 50px;
     position: absolute;
     left: -100px;
-    top: -10px;
+    top: 50%;
+    margin-top: -25px;
 }
 
 .fc-month-view .fc-event:not(.event-type-d)

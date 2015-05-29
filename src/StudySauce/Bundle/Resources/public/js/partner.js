@@ -132,7 +132,7 @@ $(document).ready(function () {
         loadingAnimation(partner.find('[value="#partner-save"]'));
         var hash = getHash();
         jQuery.ajax({
-            url: window.callbackPaths['update_partner'],
+            url: window.callbackPaths['partner_update'],
             type: 'POST',
             dataType: 'json',
             data: {

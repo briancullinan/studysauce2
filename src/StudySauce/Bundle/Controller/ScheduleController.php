@@ -471,7 +471,6 @@ class ScheduleController extends Controller
             }
         }
 
-        // redirect to customization page in buy funnel
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
     }
 

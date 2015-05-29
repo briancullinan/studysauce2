@@ -230,7 +230,7 @@ $collection->add(
     )
 );
 $collection->add(
-    'update_partner',
+    'partner_update',
     new Route(
         '/partner/update',
         ['_controller' => 'StudySauceBundle:Partner:update'],
@@ -327,18 +327,10 @@ $collection->add(
     )
 );
 $collection->add(
-    'profile',
+    'plan_create',
     new Route(
-        '/profile/{_format}',
-        ['_controller' => 'StudySauceBundle:Profile:index', '_format' => 'index',],
-        ['_format' => DASHBOARD_VIEWS,]
-    )
-);
-$collection->add(
-    'profile_update',
-    new Route(
-        '/profile/update',
-        ['_controller' => 'StudySauceBundle:Profile:update'],
+        '/plan/create',
+        ['_controller' => 'StudySauceBundle:Plan:createStudy'],
         [],
         [],
         '',
@@ -348,11 +340,16 @@ $collection->add(
     )
 );
 $collection->add(
-    'customization',
+    'profile_update',
     new Route(
-        '/customization/{_format}',
-        ['_controller' => 'StudySauceBundle:Profile:customize', '_format' => 'index'],
-        ['_format' => DASHBOARD_VIEWS]
+        '/profile/update',
+        ['_controller' => 'StudySauceBundle:Plan:updateProfile'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
     )
 );
 $collection->add(

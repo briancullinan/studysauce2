@@ -123,11 +123,17 @@ class PlanController extends Controller
         $schedule = $user->getSchedules()->first() ?: new Schedule();
 
         if($schedule->getClasses()->exists(function ($_, Course $c) {
-            return empty($c->getStudyDifficulty()); }))
-        {
+            return empty($c->getStudyDifficulty()); })) {
             return 1;
         }
-
+        if($schedule->getClasses()->exists(function ($_, Course $c) {
+            return $c->getStudyDifficulty() != 'none'; }) &&
+            !$schedule->getEvents()->exists(function ($_, Event $e) {
+            return ($e->getType() == 'sr' || $e->getType() == 'p') &&
+                $e->getDeleted() == false;
+        })) {
+            return 2;
+        }
         /*
         if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
             return 'profile';
@@ -360,28 +366,8 @@ class PlanController extends Controller
 
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
-        $isNew = false;
         if(empty($schedule)) {
-            $isNew = true;
             $schedule = new Schedule();
-            $schedule->setUser($user);
-            $user->addSchedule($schedule);
-        }
-
-        if(!empty($request->get('grades')) && !empty($request->get('weekends'))) {
-            $schedule->setGrades($request->get('grades'));
-            $schedule->setWeekends($request->get('weekends'));
-            $schedule->setSharp6am11am($request->get('6-am-11-am'));
-            $schedule->setSharp11am4pm($request->get('11-am-4-pm'));
-            $schedule->setSharp4pm9pm($request->get('4-pm-9-pm'));
-            $schedule->setSharp9pm2am($request->get('9-pm-2-am'));
-        }
-
-        if($isNew) {
-            $orm->persist($schedule);
-        }
-        else {
-            $orm->merge($schedule);
         }
 
         $courses = $schedule->getClasses()->toArray();
@@ -616,6 +602,72 @@ class PlanController extends Controller
             }
         }
         $orm->flush();
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createStudyAction(Request $request)
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var $user User */
+        $user = $this->getUser();
+
+        $schedule = $user->getSchedules()->first();
+
+        foreach($request->get('events') as $event) {
+
+            /** @var Course $course */
+            $course = $schedule->getCourses()->filter(function (Course $x) use($event) {
+                return !$x->getDeleted() && $x->getId() == $event['courseId'];})->first();
+
+            if(!empty($course)) {
+                $events = [];
+                $classStart = $course->getStartTime();
+                $classEnd = $course->getEndTime();
+
+                $newStart = new \DateTime($request->get('start'));
+                $newStart->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                $newEnd = new \DateTime($request->get('end'));
+                $newEnd->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                $length = $newEnd->getTimestamp() - $newStart->getTimestamp();
+
+                // get day of the week from start
+                for($week = strtotime('last Sunday', $classStart->getTimestamp());
+                    $week < strtotime('last Sunday', $classEnd->getTimestamp()) + 604800;
+                    $week += 604800) {
+
+
+                    $t = $week + self::$weekConversion[$d];
+                    if ($t < $classStart->getTimestamp() || $t > $classEnd->getTimestamp()) {
+                        continue;
+                    }
+
+                    $classT = new \DateTime();
+                    $classT->setTimestamp($t);
+                    $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
+                    $classT->sub(new \DateInterval('P1D'));
+
+                    $event = [
+                        'course' => $course,
+                        'name' => $course->getName(),
+                        'type' => 'p',
+                        'start' => $classT,
+                        'end' => date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
+                    ];
+                    $events[] = $event;
+                }
+
+                // merge events with saved
+                self::mergeSaved($course->getSchedule(), $course->getEvents(), $events, $orm);
+
+            }
+        }
+
+        return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
 
     /**

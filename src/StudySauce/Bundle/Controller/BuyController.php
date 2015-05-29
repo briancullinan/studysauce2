@@ -349,10 +349,11 @@ class BuyController extends Controller
                 if($user->hasRole('ROLE_PARENT') || $user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER')) {
                     $response = $this->redirect($this->generateUrl('thanks', ['_format' => 'funnel']));
                 }
-                // redirect to buy funnel
-                else
-                    $response = $this->redirect($this->generateUrl('profile', ['_format' => 'funnel']));
-
+                // redirect to user area
+                else {
+                    list($route, $options) = HomeController::getUserRedirect($user);
+                    $response = $this->redirect($this->generateUrl($route, $options));
+                }
             }
         } catch(\AuthorizeNetException $ex) {
             $this->get('logger')->error('Authorize.Net payment failed');

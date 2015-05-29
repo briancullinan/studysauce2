@@ -194,6 +194,7 @@ $(document).ready(function () {
             slotMinutes: 15,
             firstHour: new Date().getHours(),
             eventRender: function (event, element) {
+                element.data('event', event);
                 element.addClass('event-id-' + event.eventId);
                 element.find('.fc-title').html(event.title);
                 element.bind('dblclick', function () {
@@ -208,6 +209,22 @@ $(document).ready(function () {
                         else {
                             dialog.removeClass('class-only');
                             dialog.find('.title').removeClass('read-only');
+                            dialog.find('.start-time input.is-timeEntry').timeEntry('setTime', event.start.toDate());
+                            dialog.find('.end-time input.is-timeEntry').timeEntry('setTime', event.end.toDate());
+                            dialog.find('.day-of-the-week input:checked').prop('checked', false);
+                            dialog.find('.day-of-the-week .checkbox:nth-child(' + event.start.isoWeekday() + ') input').prop('checked', true);
+                            // find the earliest occurence of this event
+                            var start = Math.min.apply(null, window.planEvents.map(function (e) {return e.start;}));
+                            var end = Math.min.apply(null, window.planEvents.map(function (e) {return e.end;}));
+                            dialog.find('.start-date input[type="text"]').datepicker('setDate', start);
+                            dialog.find('.end-date input[type="text"]').datepicker('setDate', end);
+                            dialog.find('.title input').val(event.title
+                                .replace(/<h4>C<\/h4>/, 'Class: ')
+                                .replace(/<h4>F<\/h4>/, 'Free study: ')
+                                .replace(/<h4>D<\/h4>/, 'Deadline: ')
+                                .replace(/<h4>P<\/h4>/, 'Pre-work: ')
+                                .replace(/<h4>SR<\/h4>/, 'Study sessions: ')
+                                .replace(/<h4>D<\/h4>/, 'Deadlines: '));
                         }
                         dialog.modal({show:true});
                     }, 300);
@@ -241,11 +258,16 @@ $(document).ready(function () {
                             plan.find('.mini-checkin a').attr('href', '#' + classI[0]);
                             plan.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
                         }
+                        else {
+                            plan.find('.mini-checkin').hide();
+                        }
                         plan.find('.event-selected').removeClass('event-selected');
                         plan.find('#calendar .event-id-' + event.eventId).addClass('event-selected');
                         plan.find('h2').text(event.title
                             .replace(/<h4>C<\/h4>/, 'Class: ')
-                            .replace(/<h4>P<\/h4>/, 'Prework: ')
+                            .replace(/<h4>F<\/h4>/, 'Free study: ')
+                            .replace(/<h4>D<\/h4>/, 'Deadline: ')
+                            .replace(/<h4>P<\/h4>/, 'Pre-work: ')
                             .replace(/<h4>SR<\/h4>/, 'Study sessions: ')
                             .replace(/<h4>D<\/h4>/, 'Deadlines: '));
                         plan.setClock();
@@ -266,6 +288,9 @@ $(document).ready(function () {
                 if(shouldRevert.apply(this)) {
                     revertFunc();
                 }
+
+            },
+            eventReceive: function () {
 
             }
         });
@@ -318,6 +343,7 @@ $(document).ready(function () {
         external.find('.fc-event').remove();
         external.find('h4').text('Pre-work');
         $('#plan-step-1').find('h4').each(function () {
+            var courseId = (/course-id-([0-9]*)(\s|$)/ig).exec($(this).find('span').attr('class'))[1];
             var difficulty = $(this).nextAll('.radio').find(':checked').val();
             // skip none events
             if(difficulty == 'none')
@@ -331,6 +357,7 @@ $(document).ready(function () {
 
                 // store data so the calendar knows to render an event upon drop
                 event.data('event', {
+                    courseId: courseId,
                     title: $.trim(event.find('.fc-title').html()), // use the element's text as the event title
                     allDay: false,
                     className: 'event-type-p ' + $(this).find('span').attr('class'),
@@ -350,8 +377,30 @@ $(document).ready(function () {
 
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
+            var events = $('#calendar').fullCalendar('clientEvents'),
+                studyEvents = [];
+            for(var i = 0; i < events.length; i++) {
+                if(events[i].className.indexOf('event-type-p') > -1) {
+                    studyEvents[studyEvents.length] = {
+                        start: event.start.toDate().toJSON(),
+                        end: event.end.toDate().toJSON(),
+                        courseId: event.courseId
+                    };
+                }
+            }
             $('#plan').removeClass('add-events');
-            $('#plan-step-2-2').modal({show: true})
+            $('#plan-step-2-2').modal({show: true});
+            $.ajax({
+                url: window.callbackPaths['plan_create'],
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    events: studyEvents
+                },
+                success: function (data) {
+
+                }
+            });
         });
     });
 
@@ -362,6 +411,7 @@ $(document).ready(function () {
         external.find('.fc-event').remove();
         external.find('h4').text('Spaced-repetition');
         $('#plan-step-1').find('h4').each(function () {
+            var courseId = (/course-id-([0-9]*)(\s|$)/ig).exec($(this).find('span').attr('class'))[1];
             var difficulty = $(this).nextAll('.radio').find(':checked').val();
             // skip none events
             if(difficulty == 'none')
@@ -375,6 +425,7 @@ $(document).ready(function () {
 
                 // store data so the calendar knows to render an event upon drop
                 event.data('event', {
+                    courseId: courseId,
                     title: $.trim(event.find('.fc-title').html()), // use the element's text as the event title
                     allDay: false,
                     className: 'event-type-sr ' + $(this).find('span').attr('class'),
@@ -526,6 +577,74 @@ $(document).ready(function () {
 
             setTimeout(initializeCKE, 100);
         }
+
+        var editEvent = $('#edit-event');
+        editEvent.find('.start-date input[type="text"], .end-date input[type="text"]')
+            .datepicker({
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                autoPopUp:'focus',
+                changeMonth: true,
+                changeYear: true,
+                closeAtTop: false,
+                dateFormat: 'mm/dd/y',
+                defaultDate:'0y',
+                firstDay:0,
+                fromTo:false,
+                speed:'immediate',
+                yearRange: '-3:+3'
+            }).on('focus', function () {
+                setTimeout(function () {
+                    $('#ui-datepicker-div').scrollintoview(DASHBOARD_MARGINS);
+                }, 50);
+            });
+
+        editEvent.find('.start-time input[type="text"]:not(.is-timeEntry), .end-time input[type="text"]:not(.is-timeEntry)')
+            .timeEntry({
+                defaultTime: new Date(0, 0, 0, 6, 0, 0),
+                ampmNames: ['AM', 'PM'],
+                ampmPrefix: ' ',
+                fromTo: false,
+                show24Hours: false,
+                showSeconds: false,
+                spinnerImage: '',
+                timeSteps: [1,1,"1"]
+            })
+            .on('keypress', function (event) {
+                var that = $(this),
+                    row = that.parents('.class-row'),
+                    from = row.find('.start-time input[type="text"]').timeEntry('getTime'),
+                    to = row.find('.end-time input[type="text"]').timeEntry('getTime');
+
+                if(that.data('processing'))
+                    return;
+                that.data('processing', true);
+
+                var chr = String.fromCharCode(event.charCode === undefined ? event.keyCode : event.charCode);
+                if (chr < ' ') {
+                    return;
+                }
+                var ampmSet = that.data('ampmSet') || false;
+                if(chr.toLowerCase() == 'a' || chr.toLowerCase() == 'p')
+                    that.data('ampmSet', true);
+                else if (chr >= '0' && chr <= '9' && !ampmSet)
+                {
+                    var time = that.timeEntry('getTime');
+                    var hours = time.getHours();
+                    var newTime = time;
+                    if(hours < 7)
+                        newTime = new Date(0, 0, 0, hours + 12, time.getMinutes(), 0);
+                    // check the length in between to see if its longer than 12 hours
+                    else if(hours >= 19)
+                        newTime = new Date(0, 0, 0, hours - 12, time.getMinutes(), 0);
+
+                    if((that.parents('.start-time') && to == null || newTime.getTime() < to.getTime()) ||
+                        (that.parents('.end-time') && from == null || newTime.getTime() > from.getTime()))
+                        that.timeEntry('setTime', newTime);
+                }
+
+                that.data('processing', false);
+            });
     });
 
     $(window).resize(function () {

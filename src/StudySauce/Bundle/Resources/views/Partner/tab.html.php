@@ -16,26 +16,13 @@ $permissions = !empty($partner) && $partner instanceof PartnerInvite ? $partner-
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/partner.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/partner.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(
-    [
-        '@StudySauceBundle/Resources/public/js/partner.js'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/js/*.js']
-) as $url): ?>
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/partner.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -44,7 +31,7 @@ $view['slots']->start('body'); ?>
     <div class="panel-pane" id="partner">
         <div class="pane-content">
             <h2>Choosing an accountability partner can be invaluable to achieving your goals</h2>
-            <form action="<?php print $view['router']->generate('profile_update'); ?>" method="post">
+            <form action="<?php print $view['router']->generate('partner_update'); ?>" method="post">
             <div class="partner-setup">
                 <div class="plupload">
                     <h3>I am accountable to:</h3>
@@ -105,18 +92,15 @@ $view['slots']->start('body'); ?>
                         <li><label class="checkbox"><input type="checkbox" value="uploads" <?php print (in_array(
                                     'uploads',
                                     $permissions
-                                ) ? 'checked="checked"' : ''); ?>><i></i><span>My uploaded content </span><sup
-                                    class="premium">Premium</sup></label></li>
+                                ) ? 'checked="checked"' : ''); ?>><i></i><span>My uploaded content </span></label></li>
                         <li><label class="checkbox"><input type="checkbox" value="plan" <?php print (in_array(
                                     'plan',
                                     $permissions
-                                ) ? 'checked="checked"' : ''); ?>><i></i><span>My study plan </span><sup
-                                    class="premium">Premium</sup></label></li>
+                                ) ? 'checked="checked"' : ''); ?>><i></i><span>My study plan </span></label></li>
                         <li><label class="checkbox"><input type="checkbox" value="profile" <?php print (in_array(
                                     'profile',
                                     $permissions
-                                ) ? 'checked="checked"' : ''); ?>><i></i><span>My study profiles </span><sup
-                                    class="premium">Premium</sup></label></li>
+                                ) ? 'checked="checked"' : ''); ?>><i></i><span>My study profiles </span></label></li>
                     </ul>
                 </div>
             </div>
