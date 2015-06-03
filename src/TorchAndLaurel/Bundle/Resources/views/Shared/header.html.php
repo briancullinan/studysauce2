@@ -64,6 +64,9 @@ $user = $app->getUser();
         <?php } ?>
         <?php if($app->getRequest()->get('_format') != 'funnel') { ?>
             <div id="welcome-message"><strong><?php print (!empty($user) ? $user->getFirst() : ''); ?></strong>
+                <a href="<?php print $view['router']->generate('plan_download'); ?>"><?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/plan-download-blue.gif'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
+                        <img width="40" height="40" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
+                    <?php endforeach; ?></a>
                 <a href="<?php print $view['router']->generate('logout'); ?>" title="Log out">logout</a></div>
             <div id="jquery_jplayer" style="width: 0; height: 0;"></div>
         <?php } ?>

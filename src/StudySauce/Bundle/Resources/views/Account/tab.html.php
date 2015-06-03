@@ -145,6 +145,6 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop(); ?>
 
 <?php $view['slots']->start('sincludes');
-echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['cancel-confirm']), ['strategy' => 'sinclude']);
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'cancel-confirm']), ['strategy' => 'sinclude']);
 $view['slots']->stop();
 

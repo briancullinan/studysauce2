@@ -310,6 +310,7 @@ $(document).ready(function () {
         schedule.find('[value="#save-class"]').css('visibility', '');
         planFunc();
         body.trigger('scheduled');
+        body.addClass('download-plan');
     }
 
     function addClass()

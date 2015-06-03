@@ -4,7 +4,7 @@
             <img width="165" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
         <?php endforeach; ?>
         <h2>Torch & Laurel students receive a huge discount.</h2>
-        <div class="one"><h3><span>1</span>Sponsor now at 75% off</h3></div>
+        <div class="one"><h3><span>1</span>Get Torch & Laurel discount</h3></div>
         <div class="two"><h3><span>2</span>Spread the word</h3></div>
         <div class="one highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Sponsor
                 student</a></div>

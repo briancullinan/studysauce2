@@ -10,6 +10,10 @@ $user = $app->getUser();
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
+$view['slots']->start('includeNotes');
+echo $view['actions']->render(new ControllerReference('StudySauceBundle:Notes:index', ['_format' => 'tab']),['strategy' => 'sinclude']);
+$view['slots']->stop();
+
 $view['slots']->start('stylesheets');
 foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'],[],['output' => 'bundles/studysauce/js/fullcalendar/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
@@ -33,6 +37,9 @@ $view['slots']->start('javascripts'); ?>
     CKEDITOR_BASEPATH = '<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/ckeditor/';
 </script>
 <?php foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/ckeditor/ckeditor.js',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
+    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
+<?php endforeach;
+foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/notes.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 foreach ($view['assetic']->javascripts(['@checkin_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
@@ -88,30 +95,6 @@ $view['slots']->start('body'); ?>
                 <div class="notes-or"><span>Or</span></div>
                 <h3 style="display:inline-block;">Open an existing note</h3>
             </div>
-            <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
-                <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
-                <div class="summary">
-                    <small class="date">14 Apr</small>
-                    <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
-            </div>
-            <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
-                <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
-                <div class="summary">
-                    <small class="date">14 Apr</small>
-                    <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
-            </div>
-            <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
-                <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
-                <div class="summary">
-                    <small class="date">14 Apr</small>
-                    <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
-            </div>
-            <div class="note-row note-id-66999bb4-5f79-4cbe-a5d9-618c1ec7de04 loaded" data-tags="null">
-                <h4 class="note-name"><a href="#view-note">This is a new note2015-04-14</a></h4>
-                <div class="summary">
-                    <small class="date">14 Apr</small>
-                    <img src="/notes/thumb?id=66999bb4-5f79-4cbe-a5d9-618c1ec7de04"></div>
-            </div>
         </div>
         <a href="#plan-step-1" data-toggle="modal">Edit Study Plan Settings</a>
         <div id="editor2" contenteditable="true">This is note content</div>
@@ -142,6 +125,7 @@ else if($isDemo) {
 }
 
 print $this->render('StudySauceBundle:Dialogs:edit-event.html.php', ['id' => 'edit-event']);
+print $view['slots']->output('includeNotes');
 
 if($showPlanIntro) {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-1']));

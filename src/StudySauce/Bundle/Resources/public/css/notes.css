@@ -166,8 +166,8 @@
 #notes .new-study-note .input
 {
     display:inline-block;
-    margin: 0 -150px 0 -205px;
-    padding: 0 155px 0 220px;
+    margin: 0 -160px 0 -205px;
+    padding: 0 165px 0 220px;
     width:100%;
 }
 
@@ -181,6 +181,11 @@
     position: relative;
     background: none #FFFFFF;
     border-radius: 0 0 5px 5px;
+}
+
+#notes .note-row .summary img
+{
+    width: 100%;
 }
 
 #notes .term-row .term-name
@@ -465,6 +470,12 @@
     {
         width:33.33%;
     }
+
+    #notes .new-study-note .input
+    {
+        margin-left: 0;
+        padding-left: 0;
+    }
 }
 
 @media all and (max-width: 914px)
@@ -477,6 +488,15 @@
 
 @media all and (max-width: 700px)
 {
+
+    #cke_14,
+    #cke_22,
+    #cke_24,
+    #cke_28,
+    #cke_10
+    {
+        display:none;
+    }
 
     #notes .note-row
     {
@@ -503,5 +523,29 @@
     {
         width:100%;
     }
+
+    #notes .new-study-note .input
+    {
+        margin-right: 0;
+        padding-right: 0;
+    }
+
+    #notes .new-study-note
+    {
+        text-align: center;
+    }
+
 }
+
+
+@media all and (max-width: 500px)
+{
+
+    #cke_39
+    {
+        display:none;
+    }
+}
+
+
 

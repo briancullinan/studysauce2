@@ -1,9 +1,8 @@
 $(document).ready(function () {
 
     var body = $('body'),
-        original,
         isInitialized = false,
-        calendar, planTimeout;
+        calendar, notebookId;
 
     function filterEvents(s, e) {
         var plans = $('#plan'),
@@ -46,6 +45,9 @@ $(document).ready(function () {
 
     var prevDropLocation, shortlist;
     function shouldRevert() {
+
+        if(prevDropLocation == null)
+            return true;
 
         if($(this).is('.event-type-p')) {
             var next = null;
@@ -119,8 +121,8 @@ $(document).ready(function () {
                 }
 
                 if(next != null) {
-                    this.renderHighlight(
-                        this.view.calendar.ensureVisibleEventRange({
+                    this.renderSelection(
+                        this.calendar.ensureVisibleEventRange({
                             start: moment(new Date(next.start.getTime() - 86400000)),
                             end: moment(new Date(next.start.getTime()))}) // needs to be a proper range
                     );
@@ -137,8 +139,8 @@ $(document).ready(function () {
                 }
 
                 if(prev != null) {
-                    this.renderHighlight(
-                        this.view.calendar.ensureVisibleEventRange({
+                    this.renderSelection(
+                        this.calendar.ensureVisibleEventRange({
                             start: moment(new Date(prev.end.getTime())),
                             end: moment(new Date(prev.start.getTime() + 86400000))}) // needs to be a proper range
                     );
@@ -159,8 +161,9 @@ $(document).ready(function () {
                 shortlist = [];
             }
             prevDragged = el;
-            if(this.renderDrag != $.fullCalendar.View.prototype.renderDrag)
-                this.renderDrag = $.fullCalendar.View.prototype.renderDrag;
+            this.renderDrag = function (dropLocation, seg) {
+                $.fullCalendar.View.prototype.renderDrag.apply(this.view, [dropLocation, seg]);
+            };
             // stupid dropAccept option should be used when dropping not with initiating
             var originalExternalDrop = this.view.reportExternalDrop;
             this.view.reportExternalDrop = function (meta, dropLocation, el, ev, ui) {
@@ -193,6 +196,18 @@ $(document).ready(function () {
             slotEventOverlap: false,
             slotMinutes: 15,
             firstHour: new Date().getHours(),
+            viewRender: function( view, element )
+            {
+                if(this.renderDrag != $.fullCalendar.View.prototype.renderDrag)
+                    this.renderDrag = $.fullCalendar.View.prototype.renderDrag;
+                // stupid dropAccept option should be used when dropping not with initiating
+                var originalExternalDrop = this.reportExternalDrop;
+                this.reportExternalDrop = function (meta, dropLocation, el, ev, ui) {
+                    if(el.is('.invalid'))
+                        return false;
+                    originalExternalDrop.apply(this, [meta, dropLocation, el, ev, ui]);
+                };
+            },
             eventRender: function (event, element) {
                 element.data('event', event);
                 element.addClass('event-id-' + event.eventId);
@@ -223,9 +238,12 @@ $(document).ready(function () {
                                 .replace(/<h4>F<\/h4>/, 'Free study: ')
                                 .replace(/<h4>D<\/h4>/, 'Deadline: ')
                                 .replace(/<h4>P<\/h4>/, 'Pre-work: ')
-                                .replace(/<h4>SR<\/h4>/, 'Study sessions: ')
+                                .replace(/<h4>SR<\/h4>/, 'Study session: ')
                                 .replace(/<h4>D<\/h4>/, 'Deadlines: '));
                         }
+                        var type = (/event-type-([a-z]*)(\s|$)/ig).exec(event.className.join(' '))[1];
+                        var alert = $('#plan-step-3').find('[name="event-type-' + type + '"][value="0"]:checked, select[name="event-type-' + type + '"]').first().val();
+                        dialog.find('.reminder select').val(alert);
                         dialog.modal({show:true});
                     }, 300);
                 });
@@ -246,6 +264,8 @@ $(document).ready(function () {
             },
             eventClick: function (event, jsEvent, view) {
                 var plan = $('#plan');
+                if(body.is('.adviser'))
+                    return;
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
                 if(!plan.is('.setup-mode')) {
                     clickTimeout = setTimeout(function () {
@@ -253,29 +273,70 @@ $(document).ready(function () {
                         calendar.fullCalendar('changeView', 'agendaDay');
                         plan.addClass('session-selected');
                         // change mini checkin color
+                        var notes;
                         if(typeof event.courseId != 'undefined') {
+                            notebookId = event.courseId;
                             plan.find('.mini-checkin').show();
-                            plan.find('.mini-checkin a').attr('href', '#' + classI[0]);
+                            plan.find('.mini-checkin a').attr('href', '#class' + classI[1]);
                             plan.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
+
+                            // show related notes
+                            notes = $('#notes').find('.class-row.course-id-' + event.courseId).find('~ .notes .note-row');
                         }
                         else {
+                            notebookId = '';
                             plan.find('.mini-checkin').hide();
                         }
+
+                        if(notes.length == 0) {
+                            notes = $('#notes').find('.note-row');
+                        }
+                        plan.find('.session-strategy .note-row').remove();
+                        notes.slice(0, Math.min(8, notes.length)).clone().appendTo(plan.find('.session-strategy'));
+
+                        // highlight selected event
                         plan.find('.event-selected').removeClass('event-selected');
                         plan.find('#calendar .event-id-' + event.eventId).addClass('event-selected');
+
+                        // set the title
                         plan.find('h2').text(event.title
                             .replace(/<h4>C<\/h4>/, 'Class: ')
                             .replace(/<h4>F<\/h4>/, 'Free study: ')
                             .replace(/<h4>D<\/h4>/, 'Deadline: ')
                             .replace(/<h4>P<\/h4>/, 'Pre-work: ')
-                            .replace(/<h4>SR<\/h4>/, 'Study sessions: ')
+                            .replace(/<h4>SR<\/h4>/, 'Study session: ')
                             .replace(/<h4>D<\/h4>/, 'Deadlines: '));
+                        // set the template for notes
+                        if(event.className.indexOf('event-type-p') > -1)
+                            plan.find('[name="strategy-select"]').val('prework');
+                        else if(typeof event.courseId != 'undefined') {
+                            var type = $('#plan-step-4').find('[name="profile-type-' + event.courseId + '"]').val();
+                            if(type == 'memorization') {
+                                plan.find('[name="strategy-select"]').val('spaced');
+                            }
+                            else if(type == 'reading') {
+                                plan.find('[name="strategy-select"]').val('active');
+                            }
+                            else if(type == 'conceptual') {
+                                plan.find('[name="strategy-select"]').val('teach');
+                            }
+                        }
+                        else
+                            plan.find('[name="strategy-select"]').val('spaced');
                         plan.setClock();
                     }, 300);
                 }
             },
             eventDragStart: function (event) {
-                original = new Date(event.start.unix() * 1000);
+                var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
+                if(classI != null) {
+                    shortlist = window.planEvents.filter(function (e) {
+                        return e.className.indexOf('class' + classI[1]) > -1 && e.className.indexOf('event-type-c') > -1;
+                    });
+                }
+                else {
+                    shortlist = [];
+                }
             },
             eventDragStop: function (event, jsEvent, ui, view) {
             },
@@ -289,6 +350,30 @@ $(document).ready(function () {
                     revertFunc();
                 }
 
+                $.ajax({
+                    url: window.callbackPaths['plan_update'],
+                    type: 'POST',
+                    dataType: 'text',
+                    data: {
+                        eventId: event['eventId'],
+                        start: event['start'].toJSON(),
+                        end: event['end'].toJSON()
+                    },
+                    error: revertFunc,
+                    success: function (data) {
+                        var content = $(data);
+                        body.addClass('download-plan');
+                        window.planEvents = [];
+                        // merge scripts
+                        ssMergeScripts(content.filter('script:not([src])'));
+                        for (var j = 0; j < window.planEvents.length; j++) {
+                            window.planEvents[j].start = new Date(window.planEvents[j].start);
+                            window.planEvents[j].end = new Date(window.planEvents[j].end);
+                        }
+                        if (calendar != null && typeof calendar.fullCalendar != 'undefined')
+                            calendar.fullCalendar('refetchEvents');
+                    }
+                });
             },
             eventReceive: function () {
 
@@ -380,11 +465,12 @@ $(document).ready(function () {
             var events = $('#calendar').fullCalendar('clientEvents'),
                 studyEvents = [];
             for(var i = 0; i < events.length; i++) {
-                if(events[i].className.indexOf('event-type-p') > -1) {
+                if(events[i].className.indexOf('event-type-p') > -1 && typeof events[i].eventId == 'undefined') {
                     studyEvents[studyEvents.length] = {
-                        start: event.start.toDate().toJSON(),
-                        end: event.end.toDate().toJSON(),
-                        courseId: event.courseId
+                        type: 'p',
+                        start: events[i].start.toDate().toJSON(),
+                        end: events[i].end.toDate().toJSON(),
+                        courseId: events[i].courseId
                     };
                 }
             }
@@ -421,7 +507,7 @@ $(document).ready(function () {
             for(var i = 0; i < count; i++) {
                 var event = $('<div class="fc-event ui-draggable ui-draggable-handle event-type-sr ' + $(this).find('span').attr('class') +
                 '" data-event="1" data-duration="' + length + '"><div class="fc-title"><h4>SR</h4>' + $(this).text().trim() +
-                '</div></div>').insertAfter(external.find('> h4'));
+                '</div></div>').insertBefore(external.find('.highlighted-link'));
 
                 // store data so the calendar knows to render an event upon drop
                 event.data('event', {
@@ -445,8 +531,31 @@ $(document).ready(function () {
 
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
+            var events = $('#calendar').fullCalendar('clientEvents'),
+                studyEvents = [];
+            for(var i = 0; i < events.length; i++) {
+                if(events[i].className.indexOf('event-type-sr') > -1 && typeof events[i].eventId == 'undefined') {
+                    studyEvents[studyEvents.length] = {
+                        type: 'sr',
+                        start: events[i].start.toDate().toJSON(),
+                        end: events[i].end.toDate().toJSON(),
+                        courseId: events[i].courseId
+                    };
+                }
+            }
             $('#plan').removeClass('add-events');
-            $('#plan-step-2-3').modal({show: true})
+            $('#plan-step-2-3').modal({show: true});
+            $.ajax({
+                url: window.callbackPaths['plan_create'],
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    events: studyEvents
+                },
+                success: function (data) {
+
+                }
+            });
         });
     });
 
@@ -491,8 +600,30 @@ $(document).ready(function () {
 
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
+            var events = $('#calendar').fullCalendar('clientEvents'),
+                studyEvents = [];
+            for(var i = 0; i < events.length; i++) {
+                if(events[i].className.indexOf('event-type-f') > -1 && typeof events[i].eventId == 'undefined') {
+                    studyEvents[studyEvents.length] = {
+                        type: 'f',
+                        start: events[i].start.toDate().toJSON(),
+                        end: events[i].end.toDate().toJSON()
+                    };
+                }
+            }
             $('#plan').removeClass('add-events');
-            $('#plan-step-3').modal({show: true})
+            $('#plan-step-3').modal({show: true});
+            $.ajax({
+                url: window.callbackPaths['plan_create'],
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    events: studyEvents
+                },
+                success: function (data) {
+
+                }
+            });
         });
     });
 
@@ -520,50 +651,75 @@ $(document).ready(function () {
     body.on('click', '#plan a[href="#add-note"]', function (evt) {
         evt.preventDefault();
         var plan = $('#plan');
+        noteId = '';
         plan.removeClass('session-selected').addClass('edit-note');
         plan.find('#editor2').focus();
         var strategy = plan.find('[name="strategy-select"]').val();
         CKEDITOR.instances.editor2.setData(plan.find('.strategy-' + strategy).html());
     });
 
-    body.on('hide', '#plan', function () {
-        if(typeof CKEDITOR.instances.editor2 != 'undefined')
-            CKEDITOR.instances.editor2.fire('blur');
-        $('#cke_editor2').hide();
-        var notes = $('#plan');
-        if(notes.is('.edit-note')) {
-            notes.find('a[href="#save-note"]').trigger('click');
-        }
-    });
-
-    function initializeCKE()
-    {
-        var notes = $('#plan');
-        if(typeof CKEDITOR.instances.editor2 == 'undefined' ||
-            typeof CKEDITOR.instances.editor2.setReadOnly == 'undefined' ||
-            typeof CKEDITOR.instances.editor2.editable() == 'undefined') {
-            setTimeout(initializeCKE, 100);
-            return;
-        }
-        var editor = CKEDITOR.instances.editor2;
-        editor.on('blur',function( e ){
-            if(notes.is('.edit-note') && notes.is(':visible'))
-                editor.fire('focus');
-        });
-        editor.on('focus',function( e ){
-            CKEDITOR.instances.editor2.setReadOnly(false);
-            var cke = $('#cke_editor2'),
-                edit = $('#editor2');
-            if(cke.width() != edit.outerWidth()) {
-                cke.width(edit.outerWidth());
-                if(notes.is('.edit-note')) {
-                    editor.fire('blur');
-                    editor.fire('focus');
-                }
+    var noteId, tags;
+    body.on('click', '#plan .note-row', function (evt) {
+        evt.preventDefault();
+        var plan = $('#plan'),
+            note = $(this);
+        tags = JSON.parse(note.attr('data-tags'));
+        noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
+        notebookId = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
+        plan.removeClass('session-selected').addClass('edit-note');
+        CKEDITOR.instances.editor2.setData(note.find('.summary en-note').html());
+        plan.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        $.ajax({
+            url: window.callbackPaths['notes_note'],
+            type: 'GET',
+            dataType: 'text',
+            data: {
+                noteId: noteId
+            },
+            success: function (data) {
+                CKEDITOR.instances.editor2.setData($(data).filter('en-note').html());
+                plan.find('.highlighted-link').removeClass('invalid').addClass('valid');
             }
         });
-        editor.setReadOnly(false);
-    }
+        setTimeout(function () {
+            if(typeof CKEDITOR.instances.editor2 != 'undefined')
+                CKEDITOR.instances.editor2.fire('focus');
+        }, 20);
+    });
+
+    body.on('click', '#plan a[href="#save-note"]', function (evt) {
+        evt.preventDefault();
+        var plan = $('#plan');
+        plan.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        loadingAnimation($(this));
+        $.ajax({
+            url: window.callbackPaths['notes_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                noteId: noteId,
+                tags: tags.join(','),
+                title: plan.find('h2').text(),
+                notebookId: notebookId,
+                body: CKEDITOR.instances['editor2'].getData()
+            },
+            success: function (data) {
+                plan.find('.squiggle').remove();
+                plan.removeClass('edit-note').addClass('session-selected').find('.highlighted-link').removeClass('invalid').addClass('valid');
+                $('#editor2').blur();
+                CKEDITOR.instances.editor2.fire('blur');
+            },
+            error: function () {
+                plan.find('.squiggle').remove();
+            }
+        });
+    });
+
+    body.on('click', '#edit-event [type="submit"]', function (evt) {
+        evt.preventDefault();
+        body.addClass('download-plan');
+        
+    });
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
     //   we will activate the calendar only once, when the menu is clicked
@@ -571,12 +727,6 @@ $(document).ready(function () {
         setupPlan();
 
         var notes = $('#notes');
-        // load editor
-        if(!$(this).is('.loaded')) {
-            $(this).addClass('loaded');
-
-            setTimeout(initializeCKE, 100);
-        }
 
         var editEvent = $('#edit-event');
         editEvent.find('.start-date input[type="text"], .end-date input[type="text"]')
@@ -645,12 +795,6 @@ $(document).ready(function () {
 
                 that.data('processing', false);
             });
-    });
-
-    $(window).resize(function () {
-        $('#cke_editor2').width($('#editor2').outerWidth());
-        if(typeof CKEDITOR.instances.editor2 != 'undefined')
-            CKEDITOR.instances.editor2.fire('resize');
     });
 
     body.on('click', 'a[href="#bill-parents"]', function () {
@@ -810,7 +954,6 @@ $(document).ready(function () {
                 success: function (data) {
                     var content = $(data);
                     window.planEvents = [];
-                    window.planLoaded = [];
                     ssMergeScripts(content.filter('script:not([src])'));
                     if(content.filter('#plan').is('.demo'))
                         plan.addClass('demo');

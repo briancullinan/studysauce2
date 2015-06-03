@@ -117,7 +117,10 @@ $view['slots']->start('body'); ?>
                                     /** @var SearchResult $n */
                                     $guid = $n->guid;
                                     ?>
-                                    <div class="note-row note-id-<?php print $n->guid; ?> <?php print ($notesCount < 10 ? 'loaded' : 'loading'); ?>" data-tags="<?php print htmlentities(json_encode($n->tagGuids)); ?>">
+                                    <div class="note-row note-id-<?php print $n->guid;
+                                    print ($notesCount < 10 ? ' loaded' : ' loading'); ?>
+                                    notebook-id-<?php print $id; ?>
+                                    course-id-<?php print (is_numeric($i) ? $i : ''); ?>" data-tags="<?php print htmlentities(json_encode($n->tagGuids)); ?>">
                                         <h4 class="note-name"><a href="#view-note"><?php print $n->title; ?></a></h4>
                                         <div class="summary">
                                             <small class="date"><?php print date_timestamp_set(new \DateTime(), $n->updated / 1000)->format('j M'); ?></small>
@@ -140,7 +143,7 @@ $view['slots']->start('body'); ?>
             <h3 class="note-title">
                 <label class="input books"><select name="notebook">
                     <option value="">Select a notebook</option><?php
-                    $allnotebooks = [];
+                    $allNotebooks = [];
                     if(isset($schedules[0])) {
                         $s = $schedules[0];
                         $courses = $s->getClasses()->toArray();
@@ -152,7 +155,7 @@ $view['slots']->start('body'); ?>
                             foreach($notebooks as $b) {
                                 if($b->getName() == $c->getName()) {
                                     $id = $b->getGuid();
-                                    $allnotebooks[] = $id;
+                                    $allNotebooks[] = $id;
                                     break;
                                 }
                             }
@@ -160,7 +163,7 @@ $view['slots']->start('body'); ?>
                         }
                     }
                     foreach($notebooks as $b) {
-                        if(!in_array($id = $b->getGuid(), $allnotebooks)) {
+                        if(!in_array($id = $b->getGuid(), $allNotebooks)) {
                             ?><option value="<?php print $id; ?>"><?php print $b->getName(); ?></option><?php
                         }
                     }

@@ -62,7 +62,8 @@ class HomeController extends Controller
             return ['userlist', []];
         elseif($user->hasRole('ROLE_PARENT'))
             return ['thanks', []];
-        elseif(!$user->hasRole('ROLE_PAID') && !$user->hasRole('ROLE_ADMIN'))
+        elseif(!$user->hasRole('ROLE_PAID') && !$user->hasRole('ROLE_ADMIN') &&
+            $user->getCreated()->getTimestamp() > (new \DateTime('2015-06-01'))->getTimestamp())
             return ['checkout', []];
         elseif(empty($user->getProperty('first_time')))
             return ['course1_introduction', []];

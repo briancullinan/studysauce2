@@ -212,10 +212,12 @@ class StudyNote
     /**
      * Get thumbnail
      *
-     * @return string 
+     * @return resource
      */
     public function getThumbnail()
     {
+        if(is_resource($this->thumbnail))
+            return stream_get_contents($this->thumbnail);
         return $this->thumbnail;
     }
 }

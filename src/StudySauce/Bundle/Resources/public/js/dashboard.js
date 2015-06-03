@@ -5,6 +5,10 @@ $(document).ready(function () {
     // TODO: remove old unused tabs
     var body = $('body');
 
+    body.on('click', 'a[href*="/plan/download"]', function () {
+        body.removeClass('download-plan');
+    });
+
     function activateMenu(path, noPush) {
         var that = $(this);
         var i = window.callbackUri.indexOf(path),

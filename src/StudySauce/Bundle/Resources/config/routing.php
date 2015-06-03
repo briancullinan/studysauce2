@@ -272,6 +272,13 @@ $collection->add(
     )
 );
 $collection->add(
+    'plan_download',
+    new Route(
+        '/plan/download',
+        ['_controller' => 'StudySauceBundle:Plan:download']
+    )
+);
+$collection->add(
     'plan_complete',
     new Route(
         '/plan/complete',

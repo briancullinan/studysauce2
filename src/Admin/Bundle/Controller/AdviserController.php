@@ -151,14 +151,13 @@ class AdviserController extends Controller
 
     /**
      * @param User $_user
-     * @param $_week
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function planAction(User $_user, $_week = null)
+    public function planAction(User $_user = null)
     {
         $plan = new PlanController();
         $plan->setContainer($this->container);
-        return $plan->indexAction($_user, $_week, ['Partner', 'plan']);
+        return $plan->indexAction($_user, ['Partner', 'plan']);
     }
 
     /**

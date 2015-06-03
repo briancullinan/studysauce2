@@ -12,25 +12,25 @@ $view['slots']->start('modal-body') ?>
     <label>Alert</label>
 </header>
 <h4>Classes</h4>
-<label class="radio"><span>Yes</span><input name="classes-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="classes-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="classes-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
+<label class="radio"><span>Yes</span><input name="event-type-c" type="radio" value="1" checked="checked"><i></i></label>
+<label class="radio"><span>No</span><input name="event-type-c" type="radio" value="0"><i></i></label>
+<label class="input"><span>Alert</span><select name="event-type-c"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
 <h4>Prework</h4>
-<label class="radio"><span>Yes</span><input name="prework-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="prework-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="prework-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
+<label class="radio"><span>Yes</span><input name="event-type-p" type="radio" value="1" checked="checked"><i></i></label>
+<label class="radio"><span>No</span><input name="event-type-p" type="radio" value="0"><i></i></label>
+<label class="input"><span>Alert</span><select name="event-type-p"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
 <h4>Spaced repetition</h4>
-<label class="radio"><span>Yes</span><input name="spaced-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="spaced-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="spaced-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
+<label class="radio"><span>Yes</span><input name="event-type-sr" type="radio" value="1" checked="checked"><i></i></label>
+<label class="radio"><span>No</span><input name="event-type-sr" type="radio" value="0"><i></i></label>
+<label class="input"><span>Alert</span><select name="event-type-sr"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
 <h4>Free study</h4>
-<label class="radio"><span>Yes</span><input name="free-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="free-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="free-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
+<label class="radio"><span>Yes</span><input name="event-type-f" type="radio" value="1" checked="checked"><i></i></label>
+<label class="radio"><span>No</span><input name="event-type-f" type="radio" value="0"><i></i></label>
+<label class="input"><span>Alert</span><select name="event-type-f"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
 <h4>Non-academic events</h4>
-<label class="radio"><span>Yes</span><input name="other-alert" type="radio" value="1" checked="checked"><i></i></label>
-<label class="radio"><span>No</span><input name="other-alert" type="radio" value="0"><i></i></label>
-<label class="input"><span>Alert</span><select name="other-alert"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
+<label class="radio"><span>Yes</span><input name="event-type-o" type="radio" value="1" checked="checked"><i></i></label>
+<label class="radio"><span>No</span><input name="event-type-o" type="radio" value="0"><i></i></label>
+<label class="input"><span>Alert</span><select name="event-type-o"><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 hour</option></select></label>
 <br/><br/><br/><br/>
 <div class="highlighted-link setup-mode">
     <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>

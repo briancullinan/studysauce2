@@ -26,9 +26,8 @@ $(document).ready(function () {
         evt.preventDefault();
         var notes = $('#notes'),
             note = $(this),
-            classes = $(this).parents('.notes').prev('.class-row').attr('class'),
-            notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(classes)[1],
-            courseId = (/course-id-([a-z0-9\-]*)(\s|$)/ig).exec(classes)[1];
+            notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(note.attr('class'))[1],
+            courseId = (/course-id-([a-z0-9\-]*)(\s|$)/ig).exec(note.attr('class'))[1];
         notes.find('.note-title .title input').val($(this).find('h4 a').text());
         if(notebook != '')
             notes.find('select[name="notebook"]').val(notebook);
@@ -101,7 +100,7 @@ $(document).ready(function () {
         }, 20);
     });
 
-    body.on('click', 'a[href="#save-note"]', function (evt) {
+    body.on('click', '#notes a[href="#save-note"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes'),
             notebookId = notes.find('select[name="notebook"]').val();
@@ -161,13 +160,15 @@ $(document).ready(function () {
 
     body.on('scheduled', updateNotes);
 
-    body.on('hide', '#notes', function () {
-        if(typeof CKEDITOR.instances.editor1 != 'undefined')
-            CKEDITOR.instances.editor1.fire('blur');
-        $('#cke_editor1').hide();
-        var notes = $('#notes');
-        if(notes.is('.edit-note')) {
-            notes.find('a[href="#save-note"]').trigger('click');
+    body.on('hide', '#notes, #plan', function () {
+        $(this).find('[contenteditable="true"]').each(function () {
+            var id = $(this).attr('id').substring(1);
+            if(typeof CKEDITOR.instances[id] != 'undefined')
+                CKEDITOR.instances[id].fire('blur');
+            $('#cke_' + id).hide();
+        });
+        if($(this).is('.edit-note')) {
+            $(this).find('a[href="#save-note"]').trigger('click');
         }
     });
 
@@ -320,7 +321,7 @@ $(document).ready(function () {
         }
 
         // load editor
-        if(!$(this).is('.loaded')) {
+        if(!$(this).is('.setup')) {
 
             setInterval(function () {
                 if(notes.find('.note-row.loading').length == 0 || loading) {
@@ -351,7 +352,7 @@ $(document).ready(function () {
                 })
             }, 1000);
 
-            $(this).addClass('loaded');
+            $(this).addClass('setup');
 
             // initialize tags selectize
             notes.find('.input.tags input').selectize({
@@ -376,48 +377,65 @@ $(document).ready(function () {
                 }
             });
 
+        }
+
+    });
+
+    body.on('show', '#notes, #plan', function () {
+        // load editor
+        if(!$(this).is('.loaded')) {
+            $(this).addClass('loaded');
             setTimeout(initializeCKE, 100);
         }
         else {
-            if(notes.is('.edit-note')) {
-                CKEDITOR.instances.editor1.fire('focus');
+            if($(this).is('.edit-note')) {
+                $(this).find('[contenteditable="true"]').each(function () {
+                    var id = $(this).attr('id').substring(1);
+                    CKEDITOR.instances[id].fire('focus');
+                });
             }
         }
     });
 
     function initializeCKE()
     {
-        var notes = $('#notes');
-        if(typeof CKEDITOR.instances.editor1 == 'undefined' ||
-            typeof CKEDITOR.instances.editor1.setReadOnly == 'undefined' ||
-            typeof CKEDITOR.instances.editor1.editable() == 'undefined') {
-            setTimeout(initializeCKE, 100);
-            return;
-        }
-        var editor = CKEDITOR.instances.editor1;
-        editor.on('blur',function( e ){
-            if(notes.is('.edit-note') && notes.is(':visible'))
-                editor.fire('focus');
-        });
-        editor.on('focus',function( e ){
-            CKEDITOR.instances.editor1.setReadOnly(false);
-            var cke = $('#cke_editor1'),
-                edit = $('#editor1');
-            if(cke.width() != edit.outerWidth()) {
-                cke.width(edit.outerWidth());
-                if(notes.is('.edit-note')) {
-                    editor.fire('blur');
-                    editor.fire('focus');
-                }
+        var notes = $('#notes, #plan').find('[contenteditable="true"]:not(.loaded)');
+        notes.each(function () {
+            var that = $(this),
+                id = that.attr('id');
+            if(typeof CKEDITOR.instances[id] == 'undefined' ||
+                typeof CKEDITOR.instances[id].setReadOnly == 'undefined') {
+                CKEDITOR.inline(id);
             }
+            that.addClass('loaded');
+            var editor = CKEDITOR.instances[id];
+            editor.on('blur',function( e ){
+                if(notes.is('.edit-note') && notes.is(':visible'))
+                    editor.fire('focus');
+            });
+            editor.on('focus',function( e ){
+                editor.setReadOnly(false);
+                var cke = $('#cke_' + id);
+                if(cke.width() != that.outerWidth()) {
+                    cke.width(that.outerWidth());
+                    if(notes.is('.edit-note')) {
+                        editor.fire('blur');
+                        editor.fire('focus');
+                    }
+                }
+            });
+            editor.fire('resize');
         });
-        editor.setReadOnly(false);
     }
 
     $(window).resize(function () {
-        $('#cke_editor1').width($('#editor1').outerWidth());
-        if(typeof CKEDITOR.instances.editor1 != 'undefined')
-            CKEDITOR.instances.editor1.fire('resize');
+        $('[contenteditable="true"]:visible').each(function () {
+            var id = $(this).attr('id').substring(1);
+            $('#cke_' + id + ':visible').width($(this).outerWidth());
+            if(typeof CKEDITOR.instances[id] != 'undefined')
+                CKEDITOR.instances[id].fire('resize');
+        });
+
     });
 
 });

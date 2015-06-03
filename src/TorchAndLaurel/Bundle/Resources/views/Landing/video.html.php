@@ -26,7 +26,7 @@
         <?php endforeach; ?>
         <h2>Torch & Laurel students receive a huge discount.</h2>
         <div class="one"><h3><span>1</span>Broke? &nbsp; Get sponsored.</h3></div>
-        <div class="two"><h3><span>2</span>Buy now at 75% off</h3></div>
+        <div class="two"><h3><span>2</span>Use the Torch &amp; Laurel discount</h3></div>
         <div class="one"><a class="more" href="#bill-parents" data-toggle="modal">Ask your parents</a></div>
         <div class="two highlighted-link"><a class="more" href="<?php print $view['router']->generate('checkout'); ?>">Get the Deal</a></div>
     </div>

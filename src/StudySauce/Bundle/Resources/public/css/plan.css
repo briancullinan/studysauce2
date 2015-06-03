@@ -67,12 +67,12 @@ a.fc-event:not([href])
     display: block;
     content: " ";
     position: absolute;
-    top: -6px;
+    top: -3px;
     left: -82px;
-    right: -6px;
-    bottom: -6px;
+    right: -3px;
+    bottom: -3px;
     border: 2px solid #F90;
-    border-radius: 5px;
+    border-radius: 3px;
     z-index: 10;
 }
 
@@ -461,7 +461,7 @@ a.fc-event:not([href])
 
 #plan .note-row
 {
-    width: 25%;
+    width: 33.33%;
     display:inline-block;
     margin: 0 -2px;
     padding: 10px;
@@ -508,6 +508,11 @@ a.fc-event:not([href])
     position: relative;
     background: none #FFFFFF;
     border-radius: 0 0 5px 5px;
+}
+
+#plan .note-row .summary img
+{
+    width: 100%;
 }
 
 #plan .note-row:hover h4,
@@ -902,12 +907,10 @@ a.fc-event:not([href])
     border-bottom-right-radius: 5px;
 }
 
-#plan-step-6 a[href*="download"]
+#plan-step-6 a[href*="/plan/download"]
 {
     width: 100px;
     height: 100px;
-    background: url(../images/menu_new_compressed.png) no-repeat 0 99.45% transparent;
-    background-size: cover;
     display: block;
     margin: 0 auto;
 }
@@ -921,6 +924,20 @@ a.fc-event:not([href])
         margin-left:0;
     }
 
+    #plan .note-row
+    {
+        width:50%;
+    }
+
+    #plan.session-selected #calendar
+    {
+        width:40%;
+    }
+
+    #plan .session-strategy
+    {
+        width:60%;
+    }
 }
 
 @media all and (max-width:700px)

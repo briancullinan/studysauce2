@@ -7,11 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use EDAM\Error\EDAMSystemException;
 use EDAM\Types\Tag;
-use Evernote\Model\EnmlNoteContent;
 use Evernote\Model\HtmlNoteContent;
 use Evernote\Model\Note;
 use Evernote\Model\Notebook;
-use Evernote\Model\PlainTextNoteContent;
 use Evernote\Model\SearchResult;
 use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
@@ -41,8 +39,6 @@ class NotesController extends Controller
     public static function getDemoNotes($container)
     {
 
-        /** @var $orm EntityManager */
-        $orm = $container->get('doctrine')->getManager();
         /** @var $userManager UserManager */
         $userManager = $container->get('fos_user.user_manager');
         /** @var SecurityContext $context */
@@ -83,6 +79,37 @@ class NotesController extends Controller
     }
 
     /**
+     * @param ContainerInterface $container
+     * @return \Evernote\Model\Notebook[]
+     * @throws EDAMSystemException
+     * @throws \Exception
+     */
+    public static function getNotebooks($container)
+    {
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser())) {
+            $client = new EvernoteClient($user->getEvernoteAccessToken(), $container->get('kernel')->getEnvironment() != 'prod');
+            try {
+                $notebooks = $client->listPersonalNotebooks();
+            }
+            catch(EDAMSystemException $e) {
+                if($e->errorCode == 19) {
+                    sleep(ceil($e->rateLimitDuration));
+                    $notebooks = $client->listPersonalNotebooks();
+                }
+                else throw $e;
+            }
+            $notebooks = array_map(function (\EDAM\Types\Notebook $book) { return new Notebook($book);}, $notebooks);
+            return $notebooks;
+        }
+        return [];
+    }
+
+    /**
      * @return Response
      * @throws EDAMSystemException
      * @throws \Exception
@@ -103,17 +130,7 @@ class NotesController extends Controller
         $allTags = [];
         if(!empty($user->getEvernoteAccessToken())) {
             $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
-            try {
-                $notebooks = $client->listPersonalNotebooks();
-            }
-            catch(EDAMSystemException $e) {
-                if($e->errorCode == 19) {
-                    sleep(ceil($e->rateLimitDuration));
-                    $notebooks = $client->listPersonalNotebooks();
-                }
-                else throw $e;
-            }
-            $notebooks = array_map(function (\EDAM\Types\Notebook $book) { return new Notebook($book);}, $notebooks);
+            $notebooks = self::getNotebooks($this->container);
             foreach($notebooks as $b) {
                 /** @var Notebook $b */
                 $bookTags = $client->getUserNotestore()
@@ -225,6 +242,10 @@ class NotesController extends Controller
         ]);
     }
 
+    /**
+     * @param $token
+     * @return null
+     */
     private static function getShardIdFromToken($token)
     {
         $result = preg_match('/:?S=(s[0-9]+):?/', $token, $matches);
@@ -276,11 +297,12 @@ class NotesController extends Controller
                     $stored->setId($noteIds[$i]);
                     $new = true;
                 }
-                if(empty($stored->getThumbnail())) {
+                $thumb = $stored->getThumbnail();
+                if(empty($thumb)) {
                     // get the thumbnail only
                     $shardId = self::getShardIdFromToken($user->getEvernoteAccessToken());
                     $src = 'https://' . ($this->get('kernel')->getEnvironment() != 'prod' ? 'sandbox' : 'www') . '.evernote.com/shard/' . $shardId . '/thm/note/' . $noteIds[$i] . '.jpg';
-                    $content = http_build_query(['auth' => $user->getEvernoteAccessToken(), 'size' => 150]);
+                    $content = http_build_query(['auth' => $user->getEvernoteAccessToken(), 'size' => 200]);
                     $browser = new Browser();
                     $browser->getClient()->setVerifyPeer(false);
                     $thumb = $browser->post($src, ['Content-Type' => 'application/x-www-form-urlencoded' . "\r\n"], $content);
@@ -336,8 +358,6 @@ class NotesController extends Controller
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
-        /** @var User $user */
-        $user = $this->getUser();
         /** @var StudyNote[] $stored */
         $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
             ->andWhere('n.id = :id')
@@ -345,7 +365,17 @@ class NotesController extends Controller
             ->getQuery()
             ->getResult();
         if(!empty($stored)) {
-            return new Response(stream_get_contents($stored[0]->getThumbnail()), 200, ['Content-Type' => 'image/jpeg']);
+            $thumb = $stored[0]->getThumbnail();
+            if(empty($thumb)) {
+                $this->noteSummaryAction([$request->get('id')]);
+                $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
+                    ->andWhere('n.id = :id')
+                    ->setParameter('id', $request->get('id'))
+                    ->getQuery()
+                    ->getResult();
+                $thumb = $stored[0]->getThumbnail();
+            }
+            return new Response($thumb, 200, ['Content-Type' => 'image/jpeg']);
         }
         throw new NotFoundHttpException();
     }
@@ -440,12 +470,17 @@ class NotesController extends Controller
         $allTags = [];
         /** @var \EDAM\Types\Notebook $notebook */
         if(!empty($request->get('notebookId'))) {
+            // get course
+            /** @var Course $c */
+            if(is_numeric($request->get('notebookId'))) {
+                $c = self::getCourseByName($request->get('notebookId'), $user->getSchedules());
+            }
             $notebooks = $client->listNotebooks();
             foreach($notebooks as $b) {
                 /** @var Notebook $b */
                 $bookTags = $store->listTagsByNotebook($user->getEvernoteAccessToken(), $b->getGuid());
                 $allTags = array_merge($allTags, array_combine(array_map(function (Tag $t) {return $t->guid;}, $bookTags), $bookTags));
-                if($b->getGuid() == $request->get('notebookId')) {
+                if($b->getGuid() == $request->get('notebookId') || (!empty($c) && $b->getEdamNotebook()->name == $c->getName())) {
                     $notebook = $b->getEdamNotebook();
                     break;
                 }

@@ -35,9 +35,9 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCHANDLAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '$50.00/one time']]);
+                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '<s style=\'color:#CC0000;margin-top:-22px;position:absolute;\'>Normally $99 for 12 months</s>$50 for 18 months<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Torch &amp; Laurel Scholars)']]);
                 $coupon->setName('TORCHANDLAUREL');
-                $coupon->setDescription('75% off from Torch & Laurel');
+                $coupon->setDescription('');
                 $coupon->setMaxUses(1);
                 $coupon->setSeed(md5(uniqid()));
                 $coupon->setGroup($group);
@@ -50,9 +50,9 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCH&LAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '$50.00/one time']]);
+                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '<s style=\'color:#CC0000;margin-top:-22px;position:absolute;\'>Normally $99 for 12 months</s>$50 for 18 months<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Torch &amp; Laurel Scholars)']]);
                 $coupon->setName('TORCH&LAUREL');
-                $coupon->setDescription('75% off from Torch & Laurel');
+                $coupon->setDescription('');
                 $coupon->setMaxUses(1);
                 $coupon->setSeed(md5(uniqid()));
                 $coupon->setGroup($group);
@@ -65,9 +65,9 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCH AND LAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '$50.00/one time']]);
+                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '<s style=\'color:#CC0000;margin-top:-22px;position:absolute;\'>Normally $99 for 12 months</s>$50 for 18 months<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Torch &amp; Laurel Scholars)']]);
                 $coupon->setName('TORCH AND LAUREL');
-                $coupon->setDescription('75% off from Torch & Laurel');
+                $coupon->setDescription('');
                 $coupon->setMaxUses(1);
                 $coupon->setSeed(md5(uniqid()));
                 $coupon->setGroup($group);
@@ -80,9 +80,9 @@ class TorchAndLaurelBundle extends Bundle
             $coupon = $orm->getRepository('StudySauceBundle:Coupon')->findOneBy(['name' => 'TORCH & LAUREL']);
             if (empty($coupon)) {
                 $coupon = new Coupon();
-                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '$50.00/one time']]);
+                $coupon->setOptions(['torch' => ['price' => 50, 'description' => '<s style=\'color:#CC0000;margin-top:-22px;position:absolute;\'>Normally $99 for 12 months</s>$50 for 18 months<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Torch &amp; Laurel Scholars)']]);
                 $coupon->setName('TORCH & LAUREL');
-                $coupon->setDescription('75% off from Torch & Laurel');
+                $coupon->setDescription('');
                 $coupon->setMaxUses(1);
                 $coupon->setSeed(md5(uniqid()));
                 $coupon->setGroup($group);
