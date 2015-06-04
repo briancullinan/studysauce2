@@ -416,11 +416,6 @@
     margin: 40px 0 20px 0;
 }
 
-#notes-connect a[href="#close"]
-{
-    display:none;
-}
-
 #notes-connect .evernote-name,
 #notes-connect .site-name
 {

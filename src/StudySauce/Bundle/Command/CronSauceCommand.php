@@ -227,5 +227,68 @@ EOF
         /** @var Swift_Transport $queue */
         $queue = $container->get('swiftmailer.transport.real');
         $spool->flushQueue($queue);
+
+
+        // TODO: sync user notes
+//        if(empty($notebook) && !empty($request->get('notebookId'))) {
+//            // get class name
+//            /** @var Course $c */
+//            $c = self::getCourseByName($request->get('notebookId'), $user->getSchedules());
+//            $nb = new \EDAM\Types\Notebook(['name' => $c->getName()]);
+//            $notebook = $store->createNotebook($user->getEvernoteAccessToken(), $nb);
+//        }
+//
+//        if(empty($notebook)) {
+//            $notebook = $store->getDefaultNotebook($user->getEvernoteAccessToken());
+//        }
+//
+//        /** @var \EDAM\Types\Note $note */
+//        if(empty($request->get('noteId'))) {
+//            $note = new \EDAM\Types\Note();
+//        }
+//        else {
+//            $note = $client->getNote($request->get('noteId'))->getEdamNote();
+//        }
+    /*
+//        $note->content = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>' .
+//            (new HtmlNoteContent($request->get('body')))->toEnml() . '</en-note>';
+//        $note->title = $request->get('title');
+//        $moved = false;
+//        if($note->notebookGuid != $notebook->guid) {
+//            $note->notebookGuid = $notebook->guid;
+//            $moved = true;
+//        }
+//
+//        // update and create tags
+//        if(!empty($request->get('tags'))) {
+//            $tags = explode(',', $request->get('tags'));
+//            $newTags = array_diff($tags, array_keys($allTags));
+//            $existing = array_intersect($tags, array_keys($allTags));
+//            foreach($newTags as $t) {
+//                $tag = new Tag();
+//                $tag->name = $t;
+//                /** @var Tag $t */
+//                $t = $store->createTag($user->getEvernoteAccessToken(), $tag);
+//                $existing[] = $t->guid;
+//                $allTags[$t->guid] = $t;
+//            }
+//            $note->tagGuids = $existing;
+//            $note->tagNames = array_values(array_map(function (Tag $t) {
+//                return $t->name;}, array_intersect_key($allTags, array_flip($existing))));
+//        }
+//
+//
+//        if(empty($request->get('noteId')) || $moved) {
+//            $oldGuid = $note->guid;
+//            $store->createNote($user->getEvernoteAccessToken(), $note);
+//            if($moved && !empty($request->get('noteId'))) {
+//                // delete the old note an it will be recreated below
+//                $store->deleteNote($user->getEvernoteAccessToken(), $oldGuid);
+//            }
+//        }
+//        else {
+//            $store->updateNote($user->getEvernoteAccessToken(), $note);
+//        }
+//        $store->close();
     }
 }

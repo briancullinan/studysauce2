@@ -6,16 +6,22 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="study_note")
+ * @ORM\Table(name="study_note", uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class StudyNote
 {
     /**
-     * @ORM\Column(type="string", length=255, name="id")
      * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, name="remote_id", nullable=true)
+     */
+    protected $remoteId;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="notes")
@@ -74,9 +80,9 @@ class StudyNote
      * @param string $id
      * @return StudyNote
      */
-    public function setId($id)
+    public function setRemoteId($id)
     {
-        $this->id = $id;
+        $this->remoteId = $id;
 
         return $this;
     }
@@ -86,9 +92,9 @@ class StudyNote
      *
      * @return string 
      */
-    public function getId()
+    public function getRemoteId()
     {
-        return $this->id;
+        return $this->remoteId;
     }
 
     /**
@@ -295,5 +301,15 @@ class StudyNote
     public function getRemoteUpdated()
     {
         return $this->remoteUpdated;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

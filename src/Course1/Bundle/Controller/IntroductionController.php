@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\User;
+use StudySauce\Bundle\Security\UserProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +63,11 @@ class IntroductionController extends Controller
                     // list oauth services
                     /** @var OAuthHelper $oauth */
                     $oauth = $this->get('hwi_oauth.templating.helper.oauth');
+                    /** @var UserProvider $provider */
+                    $provider =$this->get('my_user_provider');
                     foreach($oauth->getResourceOwners() as $o) {
+                        if(!$provider->isConnectible($o))
+                            continue;
                         $services[$o] = $oauth->getLoginUrl($o);
                     }
                 }

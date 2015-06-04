@@ -99,7 +99,7 @@ $view['slots']->start('body'); ?>
                     <?php foreach($services as $o => $url) {
                         $getter = 'get' . ucfirst($o) . 'AccessToken';
                         ?>
-                        <label><span><?php print ucfirst($o); ?> account</span>
+                        <label><span><?php print ($o == 'gcal' ? 'Google Calendar' : ucfirst($o)); ?> account</span>
                         <?php if (!empty($user->$getter())) { ?>
                             Connected <a href="#remove-<?php print $o; ?>"></a>
                         <?php } else { ?>

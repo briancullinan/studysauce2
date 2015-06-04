@@ -45,6 +45,15 @@ class UserProvider extends BaseUserProvider
     }
 
     /**
+     * @param string $owner
+     * @return bool
+     */
+    public function isConnectible($owner)
+    {
+        return isset($this->properties[$owner]);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function connect(UserInterface $user, UserResponseInterface $response)

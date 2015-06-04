@@ -112,16 +112,18 @@ $view['slots']->start('body'); ?>
                                 <?php
                                 foreach ($books as $n) {
                                     /** @var StudyNote $n */
-                                    $guid = $n->getId();
+                                    $guid = $n->getRemoteId();
                                     ?>
-                                    <div class="note-row note-id-<?php print $guid;
+                                    <div class="note-row note-id-<?php print $n->getId();
                                     print ($notesCount < 10 ? ' loaded' : ' loading'); ?>
                                     notebook-id-<?php print $id; ?>
                                     course-id-<?php print (is_numeric($i) ? $i : ''); ?>" data-tags="<?php print htmlentities(json_encode(array_keys($n->getProperty('tags')))); ?>">
                                         <h4 class="note-name"><a href="#view-note"><?php print $n->getTitle(); ?></a></h4>
                                         <div class="summary">
-                                            <small class="date"><?php print $n->getUpdated()->format('j M'); ?></small>
-                                            <?php print json_decode($summary([$n->getId()])->getContent())->$guid; ?></div>
+                                            <small class="date"><?php print (!empty($n->getUpdated())
+                                                    ? $n->getUpdated()->format('j M')
+                                                    : $n->getRemoteUpdated()->format('j M')); ?></small>
+                                            <?php print json_decode($summary([$guid])->getContent())->$guid; ?></div>
                                     </div>
                                 <?php } ?>
                             </div>

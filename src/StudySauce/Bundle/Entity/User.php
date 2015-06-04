@@ -197,6 +197,12 @@ class User extends BaseUser implements EncoderAwareInterface
     /** @ORM\Column(name="evernote_access_token", type="string", length=255, nullable=true) */
     protected $evernote_access_token;
 
+    /** @ORM\Column(name="gcal_id", type="string", length=255, nullable=true) */
+    protected $gcal_id;
+
+    /** @ORM\Column(name="gcal_access_token", type="string", length=255, nullable=true) */
+    protected $gcal_access_token;
+
     /**
      * @ORM\ManyToMany(targetEntity="Group")
      * @ORM\JoinTable(name="ss_user_group",
@@ -1258,5 +1264,51 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * Set gcal_id
+     *
+     * @param string $gcalId
+     * @return User
+     */
+    public function setGcalId($gcalId)
+    {
+        $this->gcal_id = $gcalId;
+
+        return $this;
+    }
+
+    /**
+     * Get gcal_id
+     *
+     * @return string 
+     */
+    public function getGcalId()
+    {
+        return $this->gcal_id;
+    }
+
+    /**
+     * Set gcal_access_token
+     *
+     * @param string $gcalAccessToken
+     * @return User
+     */
+    public function setGcalAccessToken($gcalAccessToken)
+    {
+        $this->gcal_access_token = $gcalAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get gcal_access_token
+     *
+     * @return string 
+     */
+    public function getGcalAccessToken()
+    {
+        return $this->gcal_access_token;
     }
 }

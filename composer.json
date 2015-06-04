@@ -25,7 +25,8 @@
         "aws/aws-sdk-php": "2.*",
         "whiteoctober/swiftmailerdbbundle": "~1.0",
         "codeception/codeception": "*",
-        "evernote/evernote-cloud-sdk-php": "dev-master"
+        "evernote/evernote-cloud-sdk-php": "dev-master",
+        "google/apiclient": "~1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

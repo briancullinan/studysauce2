@@ -171,7 +171,7 @@ $(document).ready(function () {
 
     body.on('hide', '#notes, #plan', function () {
         $(this).find('[contenteditable="true"]').each(function () {
-            var id = $(this).attr('id').substring(1);
+            var id = $(this).attr('id');
             if(typeof CKEDITOR.instances[id] != 'undefined')
                 CKEDITOR.instances[id].fire('blur');
             $('#cke_' + id).hide();
@@ -322,11 +322,7 @@ $(document).ready(function () {
         var notes = $('#notes'),
             loading = false;
 
-        if($('#notes-connect').modal({
-                backdrop: 'static',
-                keyboard: false,
-                show: true
-            }).length > 0) {
+        if($('#notes-connect').modal({show: true}).length > 0) {
         }
 
         // load editor
@@ -370,7 +366,7 @@ $(document).ready(function () {
         else {
             if($(this).is('.edit-note')) {
                 $(this).find('[contenteditable="true"]').each(function () {
-                    var id = $(this).attr('id').substring(1);
+                    var id = $(this).attr('id');
                     CKEDITOR.instances[id].fire('focus');
                 });
             }
@@ -389,16 +385,18 @@ $(document).ready(function () {
             }
             that.addClass('loaded');
             var editor = CKEDITOR.instances[id];
-            editor.on('blur',function( e ){
-                if(notes.is('.edit-note') && notes.is(':visible'))
+            editor.on('blur',function( evt ){
+                if(that.parents('.panel-pane').is('.edit-note') && that.is(':visible'))
                     editor.fire('focus');
+                evt.cancel();
             });
             editor.on('focus',function( e ){
-                editor.setReadOnly(false);
+                if(typeof editor.editable() != 'undefined')
+                    editor.setReadOnly(false);
                 var cke = $('#cke_' + id);
                 if(cke.width() != that.outerWidth()) {
                     cke.width(that.outerWidth());
-                    if(notes.is('.edit-note')) {
+                    if(that.parents('.panel-pane').is('.edit-note')) {
                         editor.fire('blur');
                         editor.fire('focus');
                     }
@@ -410,7 +408,7 @@ $(document).ready(function () {
 
     $(window).resize(function () {
         $('[contenteditable="true"]:visible').each(function () {
-            var id = $(this).attr('id').substring(1);
+            var id = $(this).attr('id');
             $('#cke_' + id + ':visible').width($(this).outerWidth());
             if(typeof CKEDITOR.instances[id] != 'undefined')
                 CKEDITOR.instances[id].fire('resize');

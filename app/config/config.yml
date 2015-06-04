@@ -26,7 +26,7 @@ services:
     my_user_provider:
         class: StudySauce\Bundle\Security\UserProvider
         #this is the place where the properties are passed to the UserProvider - see config.yml
-        arguments: [@fos_user.user_manager, @service_container, @security.encoder_factory, {facebook: facebook_id, google: google_id, evernote: evernote_id}]
+        arguments: [@fos_user.user_manager, @service_container, @security.encoder_factory, {facebook: facebook_id, google: google_id, evernote: evernote_id, gcal: gcal_id}]
 
     studysauce.drupal_encoder:
         class: StudySauce\Bundle\DependencyInjection\DrupalPasswordEncoder
@@ -175,7 +175,8 @@ hwi_oauth:
             # these properties will be used/redefined later in the custom FOSUBUserProvider service.
             facebook: facebook_id
             google: google_id
-            evernote: evernote_id
+            evernote: evernote_id,
+            gcal: gcal_id
 
     resource_owners:
         facebook:
@@ -195,6 +196,17 @@ hwi_oauth:
             client_id:           648236823314.apps.googleusercontent.com
             client_secret:       ViH13EFLjELlf3vUCeSY81G8
             scope:               "email profile"
+            user_response_class: StudySauce\Bundle\Security\PathUserResponse
+            paths:
+                realname:  ["given_name", "family_name"]
+                last: family_name
+                first: given_name
+
+        gcal:
+            type:                google
+            client_id:           648236823314.apps.googleusercontent.com
+            client_secret:       ViH13EFLjELlf3vUCeSY81G8
+            scope:               "email profile https://www.googleapis.com/auth/calendar"
             user_response_class: StudySauce\Bundle\Security\PathUserResponse
             paths:
                 realname:  ["given_name", "family_name"]
