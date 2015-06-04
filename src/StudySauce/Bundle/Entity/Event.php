@@ -37,6 +37,16 @@ class Event
     protected $type;
 
     /**
+     * @ORM\Column(type="string", length=256, name="location")
+     */
+    protected $location;
+
+    /**
+     * @ORM\Column(type="integer", name="alert")
+     */
+    protected $alert;
+
+    /**
      * @ORM\Column(type="datetime", name="start")
      */
     protected $start;
@@ -380,5 +390,51 @@ class Event
     public function getWeek()
     {
         return $this->week;
+    }
+
+    /**
+     * Set location
+     *
+     * @param string $location
+     * @return Event
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return string 
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * Set alert
+     *
+     * @param integer $alert
+     * @return Event
+     */
+    public function setAlert($alert)
+    {
+        $this->alert = $alert;
+
+        return $this;
+    }
+
+    /**
+     * Get alert
+     *
+     * @return integer 
+     */
+    public function getAlert()
+    {
+        return $this->alert;
     }
 }

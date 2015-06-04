@@ -822,6 +822,7 @@ textarea
     border:0;
     background: transparent;
     pointer-events:none;
+    cursor: default;
 }
 
 .read-only .radio input[type=radio]~i:after,
@@ -921,11 +922,13 @@ iframe.yt-state-1 + a[href="#yt-pause"]
     display:inline-block;
 }
 
+en-todo,
 .radio input[type=radio]~i,
 .radio-inline input[type=radio]~i,
 .checkbox input[type=checkbox]~i,
 .checkbox-inline input[type=checkbox]~i
 {
+    cursor: pointer;
     position: relative;
     display: inline-block;
     width: 16px;
@@ -947,6 +950,7 @@ iframe.yt-state-1 + a[href="#yt-pause"]
 }
 */
 
+en-todo:after,
 .radio input[type=radio]~i:after,
 .radio-inline input[type=radio]~i:after,
 .checkbox input[type=checkbox]~i:after,
@@ -966,12 +970,7 @@ iframe.yt-state-1 + a[href="#yt-pause"]
     transition: opacity ease-in-out .15s, border-color ease-in-out .15s, background-color ease-in-out .15s;
 }
 
-.radio input[type=radio]~i:after,
-.radio-inline input[type=radio]~i:after
-{
-    border-radius: 100%;
-}
-
+en-todo[checked]:after,
 .radio input[type=radio]:checked~i:after,
 .radio-inline input[type=radio]:checked~i:after,
 .checkbox input[type=checkbox]:checked~i:after,

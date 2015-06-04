@@ -24,6 +24,11 @@ class StudyNote
     protected $user;
 
     /**
+     * @ORM\Column(type="text", name="title", nullable=true)
+     */
+    protected $title;
+
+    /**
      * @ORM\Column(type="text", name="content", nullable=true)
      */
     protected $content;
@@ -47,6 +52,11 @@ class StudyNote
      * @ORM\Column(type="datetime", name="updated", nullable=true)
      */
     protected $updated = null;
+
+    /**
+     * @ORM\Column(type="datetime", name="remote_updated", nullable=true)
+     */
+    protected $remoteUpdated = null;
 
     /**
      * @ORM\PrePersist
@@ -102,6 +112,26 @@ class StudyNote
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @param $prop
+     * @param $value
+     */
+    public function setProperty($prop, $value)
+    {
+        $this->properties[$prop] = $value;
+    }
+
+    /**
+     * @param $prop
+     * @return null
+     */
+    public function getProperty($prop)
+    {
+        if(isset($this->properties[$prop]))
+            return $this->properties[$prop];
+        return null;
     }
 
     /**
@@ -219,5 +249,51 @@ class StudyNote
         if(is_resource($this->thumbnail))
             return stream_get_contents($this->thumbnail);
         return $this->thumbnail;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return StudyNote
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set remoteUpdated
+     *
+     * @param \DateTime $remoteUpdated
+     * @return StudyNote
+     */
+    public function setRemoteUpdated($remoteUpdated)
+    {
+        $this->remoteUpdated = $remoteUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get remoteUpdated
+     *
+     * @return \DateTime 
+     */
+    public function getRemoteUpdated()
+    {
+        return $this->remoteUpdated;
     }
 }

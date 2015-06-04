@@ -878,6 +878,7 @@ a.fc-event:not([href])
     vertical-align: bottom;
 }
 
+#plan-step-6 .invalid-only,
 #plan-step-3 .invalid-only,
 #plan-step-4 .invalid-only,
 #plan-step-1 .invalid-only
@@ -891,6 +892,7 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
+#plan-step-6.invalid-only .invalid-only,
 #plan-step-3.invalid-only .invalid-only,
 #plan-step-4.invalid-only .invalid-only,
 #plan-step-1.invalid-only .invalid-only

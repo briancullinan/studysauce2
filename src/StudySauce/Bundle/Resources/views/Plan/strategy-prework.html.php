@@ -7,5 +7,5 @@
         <label class="checkbox"><input type="checkbox" value="questions"><i></i><span>Prepare questions that you would like answered during class.</span></label>
     </div>
     <h3>Notes:</h3>
-    <label class="input"><textarea name="strategy-notes" cols="60" rows="2"></textarea></label>
+    <p style="border: 1px solid #555; border-radius: 2px; padding 5px; margin: 5px;">&nbsp;<br /><br /><br /><br /></p></label>
 </div>

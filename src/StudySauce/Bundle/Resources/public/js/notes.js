@@ -56,6 +56,15 @@ $(document).ready(function () {
         }, 20);
     });
 
+    body.on('click', 'en-todo', function () {
+        if($(this).is('[checked]')) {
+            $(this).removeAttr('checked');
+        }
+        else {
+            $(this).attr('checked', 'true');
+        }
+    });
+
     body.on('click', '#notes a[href="#delete-note"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes');
@@ -322,35 +331,6 @@ $(document).ready(function () {
 
         // load editor
         if(!$(this).is('.setup')) {
-
-            setInterval(function () {
-                if(notes.find('.note-row.loading').length == 0 || loading) {
-                    return;
-                }
-                var noteIds = notes.find('.note-row.loading').map(function () {
-                    return (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
-                }).toArray().splice(0, 10);
-                loading = true;
-                $.ajax({
-                    url: window.callbackPaths['notes_summary'],
-                    type: 'GET',
-                    dateType: 'json',
-                    data: {
-                        noteIds: noteIds
-                    },
-                    success: function (data) {
-                        for(var i in data) {
-                            if(data.hasOwnProperty(i)) {
-                                notes.find('.note-row.note-id-' + i).removeClass('loading').addClass('loaded').find('.summary').html(data[i]);
-                            }
-                        }
-                        loading = false;
-                    },
-                    error: function () {
-                        loading = false;
-                    }
-                })
-            }, 1000);
 
             $(this).addClass('setup');
 

@@ -233,13 +233,7 @@ $(document).ready(function () {
                             var end = Math.min.apply(null, window.planEvents.map(function (e) {return e.end;}));
                             dialog.find('.start-date input[type="text"]').datepicker('setDate', start);
                             dialog.find('.end-date input[type="text"]').datepicker('setDate', end);
-                            dialog.find('.title input').val(event.title
-                                .replace(/<h4>C<\/h4>/, 'Class: ')
-                                .replace(/<h4>F<\/h4>/, 'Free study: ')
-                                .replace(/<h4>D<\/h4>/, 'Deadline: ')
-                                .replace(/<h4>P<\/h4>/, 'Pre-work: ')
-                                .replace(/<h4>SR<\/h4>/, 'Study session: ')
-                                .replace(/<h4>D<\/h4>/, 'Deadlines: '));
+                            dialog.find('.title input').val(event.title.replace(/<h4>[^<]*<\/h4>/, ''));
                         }
                         var type = (/event-type-([a-z]*)(\s|$)/ig).exec(event.className.join(' '))[1];
                         var alert = $('#plan-step-3').find('[name="event-type-' + type + '"][value="0"]:checked, select[name="event-type-' + type + '"]').first().val();
@@ -641,8 +635,17 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#plan-step-6 a[href="#done"]', function (evt) {
-        var plan = $('#plan');
+    body.on('click', '#plan-step-6 a[href*="/plan/download"]', function (evt) {
+        $('#plan-step-6').find('.highlighted-link').removeClass('invalid').addClass('valid');
+    });
+
+    body.on('click', '#plan-step-6 a[href="#done"]', function () {
+        var plan = $('#plan'),
+            dialog = $('#plan-step-6');
+        if(dialog.find('.highlighted-link').is('.invalid')) {
+            dialog.addClass('invalid-only');
+            return;
+        }
         plan.setClock();
         calendar.fullCalendar('changeView', 'agendaDay');
         plan.removeClass('setup-mode').addClass('session-selected');
@@ -699,7 +702,7 @@ $(document).ready(function () {
             data: {
                 noteId: noteId,
                 tags: tags.join(','),
-                title: plan.find('h2').text(),
+                title: plan.find('.pane-content > h2').text(),
                 notebookId: notebookId,
                 body: CKEDITOR.instances['editor2'].getData()
             },
@@ -715,10 +718,169 @@ $(document).ready(function () {
         });
     });
 
+    function editEventFunc()
+    {
+        var dialog = $('#edit-event');
+        if(dialog.find('.day-of-the-week input:checked').length == 0) {
+            dialog.addClass('dotw-required');
+        }
+        else {
+            dialog.removeClass('dotw-required');
+        }
+        if(dialog.find('.start-time input').val().trim() == '') {
+            dialog.addClass('start-time-required');
+        }
+        else {
+            dialog.removeClass('start-time-required');
+        }
+        if(dialog.find('.end-time input').val().trim() == '') {
+            dialog.addClass('end-time-required');
+        }
+        else {
+            dialog.removeClass('end-time-required');
+        }
+        if(dialog.find('.start-date input').val().trim() == '') {
+            dialog.addClass('start-date-required');
+        }
+        else {
+            dialog.removeClass('start-date-required');
+        }
+        if(dialog.find('.end-date input').val().trim() == '') {
+            dialog.addClass('end-date-required');
+        }
+        else {
+            dialog.removeClass('end-date-required');
+        }
+
+        // check for invalid time entry
+        var from = dialog.find('.start-time input.is-timeEntry').timeEntry('getTime'),
+            to = dialog.find('.end-time input.is-timeEntry').timeEntry('getTime');
+        if(from != null && to != null) {
+            var length = (to.getTime() - from.getTime()) / 1000;
+            if (length < 0)
+                length += 86400;
+            // check if the length is less than 12 hours
+            if (from.getTime() == to.getTime() || length > 12 * 60 * 60)
+                dialog.addClass('invalid-time');
+            else
+                dialog.removeClass('invalid-time');
+        }
+
+        // check if there are any overlaps with the other rows
+        var startDate = new Date(dialog.find('.start-date input.hasDatepicker').val());
+        var endDate = new Date(dialog.find('.end-time input.hasDatepicker').val());
+
+        // check if dates are reverse
+        if(!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && startDate.getTime() > endDate.getTime()) {
+            dialog.addClass('invalid-date');
+        }
+        else {
+            dialog.removeClass('invalid-date')
+        }
+
+        if(dialog.is('.class-required') || dialog.is('.dotw-required') || dialog.is('.start-time-required') ||
+            dialog.is('.end-time-required') || dialog.is('.start-date-required') || dialog.is('.end-date-required') ||
+            dialog.is('.invalid-date') || dialog.is('.invalid-time'))
+            dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        else
+            dialog.removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
+    }
+
+    function copyTimes() {
+        if($(this).is('[type="time"]')) {
+            $(this).parents('.start-time, .end-time').find('input[type="text"]').timeEntry('setTime', $(this).val());
+        }
+        if($(this).is('.is-timeEntry[type="text"]'))
+        {
+            var t = $(this).timeEntry('getTime');
+            if(typeof t != 'undefined' && t != null)
+                $(this).parents('.start-time, .end-time').find('input[type="time"]').val((t.getHours() < 10
+                    ? ('0' + t.getHours())
+                    : t.getHours()) + ':' + (t.getMinutes() < 10
+                    ? ('0' + t.getMinutes())
+                    : t.getMinutes()) + ':00');
+        }
+        if($(this).is('[type="date"]')) {
+            var date = new Date;
+            date.setFullYear(parseInt($(this).val().substr(0, 4)));
+            date.setMonth(parseInt($(this).val().substr(5, 2))-1);
+            date.setDate(parseInt($(this).val().substr(8, 2)));
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            $(this).parents('.start-date, .end-date').find('input[type="text"]').datepicker('setDate', date);
+        }
+        if($(this).is('.hasDatepicker')) {
+            var d = $(this).datepicker('getDate');
+            if(d != null) {
+                $(this).parents('.start-date, .end-date').find('input[type="date"]').val(d.getFullYear() + '-' +
+                (d.getMonth() + 1 < 10 ? ('0' + (d.getMonth() + 1)) : (d.getMonth() + 1)) + '-' +
+                (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate()));
+            }
+        }
+    }
+    body.on('change', '#edit-event .start-time input, #edit-event .end-time input, ' +
+    '#edit-event .start-date input, #edit-event .end-date input', copyTimes);
+    body.on('blur', '#edit-event .start-time input, #edit-event .end-time input, ' +
+    '#edit-event .start-date input, #edit-event .end-date input', copyTimes);
+    body.on('keyup', '#edit-event .class-name input, #edit-event .start-time input, #edit-event .end-time input, ' +
+    '#edit-event .start-date input, #edit-event .end-date input, #edit-event .university input', editEventFunc);
+    body.on('focus', '#edit-event .start-time input[type="time"], #edit-event .end-time input[type="time"]', function () {
+        if($(this).val() == '')
+            $(this).val('12:00:00');
+    });
+    body.on('change', '#edit-event .start-date input[type="text"], #edit-event .end-date input[type="text"]', function () {
+        var row = $(this).parents('.class-row'),
+            start = row.find('.start-date input').datepicker('getDate'),
+            end = row.find('.end-date input').datepicker('getDate');
+        if(start != null) {
+            row.find('.end-date input').datepicker('option', 'minDate', start);
+        }
+        if(end != null) {
+            row.find('.start-date input').datepicker('option', 'maxDate', end);
+        }
+    });
+    body.on('change', '#edit-event .class-name input, #edit-event .day-of-the-week input, #edit-event .start-time input, ' +
+    '#edit-event .end-time input, #edit-event .start-date input, #edit-event .end-date input, #edit-event .university input', editEventFunc);
+
+    body.on('show.bs.modal', '#edit-event', editEventFunc);
+
     body.on('click', '#edit-event [type="submit"]', function (evt) {
         evt.preventDefault();
         body.addClass('download-plan');
+        var dialog = $('#edit-event');
+        if(dialog.find('.highlighted-link').is('.invalid')) {
+            dialog.addClass('invalid-only');
+            return false;
+        }
+        dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        loadingAnimation(dialog.find('[type="submit"]'));
         
+        $.ajax({
+            url: window.callbackPaths['plan_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                eventId: event['eventId'],
+                start: event['start'].toJSON(),
+                end: event['end'].toJSON()
+            },
+            success: function (data) {
+                dialog.find('.squiggle').remove();
+                var content = $(data);
+                body.addClass('download-plan');
+                window.planEvents = [];
+                // merge scripts
+                ssMergeScripts(content.filter('script:not([src])'));
+                for (var j = 0; j < window.planEvents.length; j++) {
+                    window.planEvents[j].start = new Date(window.planEvents[j].start);
+                    window.planEvents[j].end = new Date(window.planEvents[j].end);
+                }
+                if (calendar != null && typeof calendar.fullCalendar != 'undefined')
+                    calendar.fullCalendar('refetchEvents');
+            }
+        });
     });
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead

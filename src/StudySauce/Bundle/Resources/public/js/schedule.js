@@ -666,6 +666,8 @@ $(document).ready(function () {
 
     body.on('change', '#schedule .class-name input', autoFillDate);
     body.on('keyup', '#schedule .class-name input', autoFillDate);
+    body.on('keyup', '#schedule .start-time input, #schedule .end-time input, ' +
+    '#schedule .start-date input, #schedule .end-date input', autoFillDate);
 
     function copyTimes() {
         if($(this).is('[type="time"]')) {
@@ -706,8 +708,6 @@ $(document).ready(function () {
         '#schedule .start-date input, #schedule .end-date input', copyTimes);
     body.on('blur', '#schedule .start-time input, #schedule .end-time input, ' +
         '#schedule .start-date input, #schedule .end-date input', copyTimes);
-    body.on('keyup', '#schedule .start-time input, #schedule .end-time input, ' +
-        '#schedule .start-date input, #schedule .end-date input', autoFillDate);
     body.on('keyup', '#schedule .class-name input, #schedule .start-time input, #schedule .end-time input, ' +
         '#schedule .start-date input, #schedule .end-date input, #schedule .university input', planFunc);
     body.on('focus', '#schedule .start-time input[type="time"], #schedule .end-time input[type="time"]', function () {
