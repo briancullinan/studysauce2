@@ -147,7 +147,7 @@ swiftmailer:
     host:      smtp.gmail.com
     username:  brian@studysauce.com
     password:  Da1ddy23
-    spool:     { type: db }
+    spool: { type: db }
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
@@ -204,6 +204,8 @@ hwi_oauth:
 
         gcal:
             type:                google
+            options:
+                access_type:         offline
             client_id:           648236823314.apps.googleusercontent.com
             client_secret:       ViH13EFLjELlf3vUCeSY81G8
             scope:               "email profile https://www.googleapis.com/auth/calendar"

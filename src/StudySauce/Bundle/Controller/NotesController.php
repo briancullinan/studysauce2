@@ -142,7 +142,7 @@ class NotesController extends Controller
             $allTags = [];
             foreach($notes as $n) {
                 /** @var StudyNote $n */
-                $allTags = array_merge($allTags, $n->getProperty('tags'));
+                $allTags = array_merge($allTags, $n->getProperty('tags') ?: []);
 
             }
 
@@ -624,9 +624,9 @@ class NotesController extends Controller
         $notebooks = self::getNotebooks($this->container);
         $notebook = isset($notebooks[$request->get('notebookId')])
             ? [$request->get('notebookId'), $notebooks[$request->get('notebookId')]]
-            : !empty($c)
+            : (!empty($c)
                 ? array_search($c->getName(), $notebooks)
-                : [];
+                : []);
 
         $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
             ->andWhere('n.id = :id')

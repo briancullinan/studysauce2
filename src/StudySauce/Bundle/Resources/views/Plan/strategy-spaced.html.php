@@ -4,9 +4,6 @@
     <div class="strategy-review">
         <label>Review material from:</label>
     </div>
-    <div class="strategy-notes">
-        <label class="input"><span>Write down any notes below:</span>
-            <textarea name="strategy-notes"></textarea>
-        </label>
-    </div>
+    <h3>Write down any notes below:</h3>
+    <p style="border: 1px solid #555; border-radius: 2px; padding: 5px; margin: 5px;">&nbsp;<br /><br /><br /><br /></p>
 </div>

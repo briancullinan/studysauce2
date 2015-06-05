@@ -655,6 +655,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var plan = $('#plan');
         noteId = '';
+        tags = [];
         plan.removeClass('session-selected').addClass('edit-note');
         plan.find('#editor2').focus();
         var strategy = plan.find('[name="strategy-select"]').val();
@@ -666,7 +667,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var plan = $('#plan'),
             note = $(this);
-        tags = JSON.parse(note.attr('data-tags'));
+        tags = JSON.parse(note.attr('data-tags')) || [];
         noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notebookId = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         plan.removeClass('session-selected').addClass('edit-note');

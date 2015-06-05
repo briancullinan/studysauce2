@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * TODO: unique on start, end, and type when all overlaps are removed?
  * @ORM\Table(name="event",indexes={
- *     @ORM\Index(name="week_idx", columns={"week_id", "schedule_id"})})
+ *     @ORM\Index(name="week_idx", columns={"week_id", "schedule_id"})}, uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class Event
@@ -19,6 +19,11 @@ class Event
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, name="remote_id", nullable=true)
+     */
+    protected $remoteId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Schedule", inversedBy="events")
@@ -436,5 +441,28 @@ class Event
     public function getAlert()
     {
         return $this->alert;
+    }
+
+    /**
+     * Set remoteId
+     *
+     * @param string $remoteId
+     * @return Event
+     */
+    public function setRemoteId($remoteId)
+    {
+        $this->remoteId = $remoteId;
+
+        return $this;
+    }
+
+    /**
+     * Get remoteId
+     *
+     * @return string 
+     */
+    public function getRemoteId()
+    {
+        return $this->remoteId;
     }
 }

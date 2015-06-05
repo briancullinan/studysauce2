@@ -18,6 +18,7 @@ use Swift_Transport_SpoolTransport;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use WhiteOctober\SwiftMailerDBBundle\Spool\DatabaseSpool;
 
 /**
  * Hello World command for demo purposes.
@@ -55,7 +56,9 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        set_time_limit(0);
+        // set the timeout to 4 and a half minutes
+        set_time_limit(60*4.5);
+        $startTime = time();
 
         $container = $this->getContainer();
         /** @var $orm EntityManager */
@@ -222,8 +225,10 @@ EOF
         $mailer = $container->get('mailer');
         /** @var Swift_Transport_SpoolTransport $transport */
         $transport = $mailer->getTransport();
-        /** @var  $spool */
+        /** @var DatabaseSpool $spool */
         $spool = $transport->getSpool();
+        $spoolTime = time() - $startTime;
+        $spool->setTimeLimit(60*4.5 - $spoolTime);
         /** @var Swift_Transport $queue */
         $queue = $container->get('swiftmailer.transport.real');
         $spool->flushQueue($queue);
@@ -290,5 +295,8 @@ EOF
 //            $store->updateNote($user->getEvernoteAccessToken(), $note);
 //        }
 //        $store->close();
+
+         // TODO: sync calendar
+
     }
 }
