@@ -85,7 +85,12 @@ class UserProvider extends BaseUserProvider
         //$user->setFirst($response->getFirst());
         //$user->setLast($response->getLast());
         $user->$setter_id($username);
-        $user->$setter_token($response->getAccessToken());
+        if(!empty($response->getRefreshToken())) {
+            $user->$setter_token($response->getRefreshToken());
+        }
+        else {
+            $user->$setter_token($response->getAccessToken());
+        }
 
         $this->userManager->updateUser($user);
     }

@@ -741,8 +741,9 @@ $collection->add(
 $collection->add(
     'notes_thumb',
     new Route(
-        '/notes/thumb',
-        ['_controller' => 'StudySauceBundle:Notes:thumb']
+        '/notes/thumb/{note}',
+        ['_controller' => 'StudySauceBundle:Notes:thumb'],
+        ['note' => '[0-9]+']
     )
 );
 /*$collection->add('course', new Route('/course/{_course}/{_format}', array(            '_controller' => 'StudySauceBundle:Courses:Course{_course}:index',            '_format'     => 'dashboard'        )));$collection->add('default', new Route('/{_controller}'));$acmeHello = $loader->import('@StudySauceBundle/Resources/public/images/', 'directory');$acmeHello->addPrefix('/bundles/studysauce/images/');$collection->addCollection($acmeHello);*/

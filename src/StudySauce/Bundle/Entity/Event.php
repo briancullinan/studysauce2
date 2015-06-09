@@ -42,12 +42,12 @@ class Event
     protected $type;
 
     /**
-     * @ORM\Column(type="string", length=256, name="location")
+     * @ORM\Column(type="string", length=256, name="location", nullable=true)
      */
     protected $location;
 
     /**
-     * @ORM\Column(type="integer", name="alert")
+     * @ORM\Column(type="integer", name="alert", nullable=true)
      */
     protected $alert;
 

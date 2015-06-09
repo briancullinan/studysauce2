@@ -5,12 +5,16 @@ namespace StudySauce\Bundle\Controller;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
+use Google_Auth_OAuth2;
+use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GoogleResourceOwner;
+use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +63,179 @@ class PlanController extends Controller
 
     /**
      * @param User $user
+     * @param ContainerInterface $container
+     * @param \Google_Client $client
+     * @param \Google_Service_Calendar $service
+     */
+    public static function syncEvents(User $user, ContainerInterface $container, \Google_Client &$client = null, \Google_Service_Calendar &$service = null) {
+        // do initial sync
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
+        $schedule = $user->getSchedules()->first();
+
+        $id = self::getCalendar($user, $container, $client, $service);
+
+        $sync = $user->getProperty('eventSync');
+        try {
+            if(empty($sync))
+                $list = $service->events->listEvents($id);
+            else
+                $list = $service->events->listEvents($id, ['syncToken' => $sync]);
+        }
+        catch(\Exception $e) {
+            if($e->getCode() == 410)
+                $list = $service->events->listEvents($id);
+        }
+        $items = $list->getItems();
+        $user->setProperty('eventSync', $list->getNextSyncToken());
+        $existing = [];
+        foreach($items as $item) {
+            /** @var \Google_Service_Calendar_Event $item */
+            /** @var Event[] $stored */
+            $stored = $orm->getRepository('StudySauceBundle:Event')->createQueryBuilder('n')
+                ->andWhere('n.remoteId = :id')
+                ->setParameter('id', $item->getId())
+                ->getQuery()
+                ->getResult();
+            /** @var Event $event */
+            if(empty($stored)) {
+                $event = new Event();
+                $event->setSchedule($schedule);
+                $event->setCreated(new \DateTime());
+            }
+            else {
+                $event = $stored[0];
+            }
+            /** @var \Google_Service_Calendar_EventDateTime $start */
+            $start = $item->getStart();
+            /** @var \Google_Service_Calendar_EventDateTime $end */
+            $end = $item->getEnd();
+            $event->setStart(new \DateTime($start->getDateTime()));
+            $event->setEnd(new \DateTime($end->getDateTime()));
+            if(!empty($stored)) {
+                $orm->merge($event);
+            }
+            $existing[] = $item->getId();
+        }
+
+        // TODO: sync changes from google
+        foreach($schedule->getEvents()->toArray() as $event)
+        {
+            /** @var Event $event */
+            if(empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $existing)) {
+                $newEvent = new \Google_Service_Calendar_Event([
+                    'summary' => $event->getName(),
+                    'location' => $event->getLocation(),
+                    'description' => 'Log in to StudySauce to take notes.',
+                    'start' => [
+                        'dateTime' => $event->getStart()->format('c'),
+                        'timeZone' => date_default_timezone_get(),
+                    ],
+                    'end' => [
+                        'dateTime' => $event->getEnd()->format('c'),
+                        'timeZone' => date_default_timezone_get(),
+                    ],
+                    //'recurrence' => [
+                    //    'RRULE:FREQ=DAILY;COUNT=2'
+                    //],
+                    'attendees' => [
+                        ['email' => $user->getEmail()]
+                    ],
+                    'reminders' => [
+                        'useDefault' => FALSE,
+                        'overrides' => [
+                            ['method' => 'email', 'minutes' => $event->getAlert()?:15],
+                            ['method' => 'sms', 'minutes' => $event->getAlert()?:15],
+                        ],
+                    ],
+                ]);
+                $newEvent = $service->events->insert($id, $newEvent);
+                $event->setRemoteId($newEvent->getId());
+                $orm->merge($event);
+            }
+        }
+        $orm->flush();
+    }
+
+    /**
+     * @param User $user
+     * @param ContainerInterface $container
+     * @param \Google_Client $client
+     * @param \Google_Service_Calendar $service
+     * @return \Google_Service_Calendar_CalendarList
+     */
+    public static function getCalendars(User $user, ContainerInterface $container, \Google_Client &$client = null, \Google_Service_Calendar &$service = null)
+    {
+        require_once(__DIR__ . '/../../../../vendor/google/apiclient/autoload.php');
+        $client = new \Google_Client();
+        /** @var OAuthHelper $oauth */
+        $ownerMap = $container->get('hwi_oauth.resource_ownermap.main');
+        /** @var GoogleResourceOwner $resourceOwner */
+        $resourceOwner = $ownerMap->getResourceOwnerByName('gcal');
+        $client->setAccessType('offline');
+        $client->setClientId($resourceOwner->getOption('client_id'));
+        $client->setClientSecret($resourceOwner->getOption('client_secret'));
+        $client->setAccessToken(json_encode(['access_token' => $user->getGcalAccessToken(), 'created' => time(), 'expires_in' => 86400]));
+        $service = new \Google_Service_Calendar($client);
+
+        try {
+            // list calendars so the user can select which calendar to sync with
+            $calendars = $service->calendarList->listCalendarList();
+        }
+        catch (\Exception $e) {
+            if ($e->getCode() == 401) {
+                /** @var Google_Auth_OAuth2 $auth */
+                $auth = $client->getAuth();
+                $auth->refreshToken($user->getGcalAccessToken());
+                //$user->setGcalAccessToken($auth->getAccessToken());
+                $calendars = $service->calendarList->listCalendarList();
+            }
+        }
+        return $calendars;
+    }
+
+    /**
+     * @param User $user
+     * @param ContainerInterface $container
+     * @param \Google_Client $client
+     * @param \Google_Service_Calendar $service
+     * @return string
+     */
+    public static function getCalendar(User $user, ContainerInterface $container, \Google_Client &$client = null, \Google_Service_Calendar &$service = null) {
+
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+
+        $calendars = self::getCalendars($user, $container, $client, $service);
+        /** @var \Google_Client $client */
+        /** @var \Google_Service_Calendar $service */
+        $id = '';
+        foreach($calendars->getItems() as $cal) {
+            /** @var \Google_Service_Calendar_CalendarListEntry $cal */
+            if($cal->getId() == $user->getProperty('calendarId') || $cal->getSummary() == 'StudySauce') {
+                $id = $cal->getId();
+                break;
+            }
+        }
+
+        // check if studysauce calendar already exists
+        if(empty($user->getProperty('calendarId')) || empty($id)) {
+            $calendar = new \Google_Service_Calendar_Calendar();
+            $calendar->setSummary('StudySauce');
+            $calendar->setDescription('Take notes with your classes using StudySauce, check-in to track your studying.');
+            $calendar = $service->calendars->insert($calendar);
+            $user->setProperty('calendarId', $calendar->getId());
+            $orm->merge($user);
+            $orm->flush();
+            $id = $calendar->getId();
+        }
+
+        return $id;
+    }
+
+    /**
+     * @param User $user
      * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -92,81 +269,6 @@ class PlanController extends Controller
             $userManager = $this->get('fos_user.user_manager');
             $user->setProperty('seen_plan_intro', true);
             $userManager->updateUser($user);
-        }
-
-        if(!empty($user->getGcalAccessToken())) {
-            require_once(__DIR__ . '/../../../../vendor/google/apiclient/autoload.php');
-            $client = new \Google_Client();
-            $client->setAccessToken(json_encode(['access_token' => $user->getGcalAccessToken(), 'created' => time(), 'expires_in' => 86400]));
-            $service = new \Google_Service_Calendar($client);
-            if ($client->isAccessTokenExpired()) {
-                $client->refreshToken($client->getRefreshToken());
-            }
-            // list calendars so the user can select which calendar to sync with
-            $calendars = $service->calendarList->listCalendarList();
-            $id = '';
-            foreach($calendars->getItems() as $cal) {
-                /** @var \Google_Service_Calendar_CalendarListEntry $cal */
-                if($cal->getId() == $user->getProperty('calendarId') || $cal->getSummary() == 'StudySauce') {
-                    $id = $cal->getId();
-                    break;
-                }
-            }
-
-            // check if studysauce calendar already exists
-            if(empty($user->getProperty('calendarId')) && empty($id)) {
-                $calendar = new \Google_Service_Calendar_Calendar();
-                $calendar->setSummary('StudySauce');
-                $calendar->setDescription('Take notes with your classes using StudySauce, check-in to track your studying.');
-                $calendar = $service->calendars->insert($calendar);
-                $user->setProperty('calendarId', $calendar->getId());
-                $userManager = $this->get('fos_user.user_manager');
-                $userManager->updateUser($user);
-                $id = $calendar->getId();
-            }
-
-            // do initial sync
-            $list = $service->events->listEvents($id);
-            if(empty($items = $list->getItems())) {
-                /** @var $orm EntityManager */
-                $orm = $this->get('doctrine')->getManager();
-
-                $user->setProperty('eventSync', $list->getNextSyncToken());
-                foreach($schedule->getEvents()->toArray() as $event)
-                {
-                    /** @var Event $event */
-                    $newEvent = new \Google_Service_Calendar_Event([
-                        'summary' => $event->getName(),
-                        'location' => $event->getLocation(),
-                        'description' => 'Log in to StudySauce to take notes.',
-                        'start' => [
-                            'dateTime' => $event->getStart()->format('c'),
-                            'timeZone' => date_default_timezone_get(),
-                        ],
-                        'end' => [
-                            'dateTime' => $event->getEnd()->format('c'),
-                            'timeZone' => date_default_timezone_get(),
-                        ],
-                        //'recurrence' => [
-                        //    'RRULE:FREQ=DAILY;COUNT=2'
-                        //],
-                        'attendees' => [
-                            ['email' => $user->getEmail()]
-                        ],
-                        'reminders' => [
-                            'useDefault' => FALSE,
-                            'overrides' => [
-                                ['method' => 'email', 'minutes' => $event->getAlert()],
-                                ['method' => 'sms', 'minutes' => $event->getAlert()],
-                            ],
-                        ],
-                    ]);
-                    $newEvent = $service->events->insert($id, $newEvent);
-                    $event->setRemoteId($newEvent->getId());
-                    $orm->merge($event);
-                    $orm->flush();
-                }
-            }
         }
 
         // get events for current week
@@ -714,6 +816,7 @@ EOCAL;
         $lastModified = $last->format('Ymd') . 'T' . $last->format('His') . 'Z';
         foreach($events->toArray() as $event) {
             /** @var Event $event */
+            $id = $event->getId();
             $title = $event->getName();
             $start = $event->getStart()->format('Ymd') . 'T' . $event->getStart()->format('His') . 'Z';
             $end = $event->getEnd()->format('Ymd') . 'T' . $event->getEnd()->format('His') . 'Z';
@@ -726,7 +829,7 @@ DTSTART:$start
 DTEND:$end
 DTSTAMP:$stamp
 ORGANIZER;CN=$name:mailto:$email
-UID:
+UID:STUDYSAUCE-$id
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=$name;X-NUM-GUESTS=0:mailto:$email
 CREATED:$created
 DESCRIPTION:Log in to studysauce.com to take notes

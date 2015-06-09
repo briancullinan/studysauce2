@@ -386,9 +386,10 @@ $(document).ready(function () {
             that.addClass('loaded');
             var editor = CKEDITOR.instances[id];
             editor.on('blur',function( evt ){
-                if(that.parents('.panel-pane').is('.edit-note') && that.is(':visible'))
+                if(that.parents('.panel-pane').is('.edit-note') && that.is(':visible')) {
                     editor.fire('focus');
-                evt.cancel();
+                    evt.cancel();
+                }
             });
             editor.on('focus',function( e ){
                 if(typeof editor.editable() != 'undefined')

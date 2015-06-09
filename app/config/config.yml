@@ -206,6 +206,7 @@ hwi_oauth:
             type:                google
             options:
                 access_type:         offline
+                approval_prompt: force
             client_id:           648236823314.apps.googleusercontent.com
             client_secret:       ViH13EFLjELlf3vUCeSY81G8
             scope:               "email profile https://www.googleapis.com/auth/calendar"
