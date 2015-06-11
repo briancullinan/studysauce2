@@ -112,18 +112,19 @@ $view['slots']->start('body'); ?>
                                 <?php
                                 foreach ($books as $n) {
                                     /** @var StudyNote $n */
+                                    $time = (!empty($n->getUpdated())
+                                        ? $n->getUpdated()
+                                        : (!empty($n->getRemoteUpdated())
+                                            ? $n->getRemoteUpdated()
+                                            : $n->getCreated()))
                                     ?>
-                                    <div class="note-row note-id-<?php print $n->getId();
-                                    print ($notesCount < 10 ? ' loaded' : ' loading'); ?>
-                                    notebook-id-<?php print $id; ?>
-                                    course-id-<?php print (is_numeric($i) ? $i : ''); ?>" data-tags="<?php print htmlentities(json_encode(array_keys($n->getProperty('tags')?:[]))); ?>">
+                                    <div data-timestamp="<?php print $time->getTimestamp(); ?>" class="note-row note-id-<?php print $n->getId();
+                                    print ($notesCount < 10 ? ' loaded' : ' loading');
+                                    print ' notebook-id-' . $id;
+                                    print ' course-id-' . (is_numeric($i) ? $i : ''); ?>" data-tags="<?php print htmlentities(json_encode(array_keys($n->getProperty('tags')?:[]))); ?>">
                                         <h4 class="note-name"><a href="#view-note"><?php print $n->getTitle(); ?></a></h4>
                                         <div class="summary">
-                                            <small class="date"><?php print (!empty($n->getUpdated())
-                                                    ? $n->getUpdated()->format('j M')
-                                                    : (!empty($n->getRemoteUpdated())
-                                                        ? $n->getRemoteUpdated()->format('j M')
-                                                        : $n->getCreated()->format('j M'))); ?></small>
+                                            <small class="date"><?php print $time->format('j M'); ?></small>
                                             <img src="<?php print $view['router']->generate('notes_thumb', ['note' => $n->getId()]); ?>" /></div>
                                     </div>
                                 <?php } ?>

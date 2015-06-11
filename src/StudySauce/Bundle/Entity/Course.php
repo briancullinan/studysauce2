@@ -100,7 +100,7 @@ class Course
     protected $deleted = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="course")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="course", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"created" = "DESC"})
      */
     protected $events;

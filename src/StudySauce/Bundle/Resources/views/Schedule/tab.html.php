@@ -26,7 +26,9 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/s
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-<div class="panel-pane <?php print (count($schedules) <= 1 ? 'single' : 'multi'); ?>" id="schedule">
+<div class="panel-pane <?php
+    print (count($schedules) <= 1 ? ' single' : ' multi');
+    print ($step !== false ? ' setup-mode' : ''); ?> " id="schedule">
     <div class="pane-content">
     <?php if($app->getRequest()->get('_format') == 'funnel') {
         echo $view->render('StudySauceBundle:Buy:funnel.html.php');

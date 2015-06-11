@@ -287,6 +287,11 @@ $(document).ready(function () {
                 $(this).remove();
         });
 
+        if(response.filter('#schedule').is('.setup-mode'))
+            schedule.addClass('setup-mode');
+        else
+            schedule.removeClass('setup-mode');
+
         // update remaining terms
         response.find('.pane-content .term-row').each(function (j) {
             var responseTerm = $(this),
@@ -306,11 +311,14 @@ $(document).ready(function () {
         if(schedule.find('.term-row').length == 1)
             schedule.removeClass('multi').addClass('single');
         schedule.scrollintoview(DASHBOARD_MARGINS);
+
         // remove visibility setting, CSS sets it if row is editable
         schedule.find('[value="#save-class"]').css('visibility', '');
         planFunc();
         body.trigger('scheduled');
-        body.addClass('download-plan');
+
+        if(!schedule.is('.setup-mode'))
+            body.addClass('download-plan');
     }
 
     function addClass()

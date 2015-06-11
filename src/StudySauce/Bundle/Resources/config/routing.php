@@ -715,14 +715,9 @@ $collection->add(
 $collection->add(
     'notes_note',
     new Route(
-        '/notes/body',
+        '/notes/body/{note}',
         ['_controller' => 'StudySauceBundle:Notes:note'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
+        ['note' => '[0-9]+']
     )
 );
 $collection->add(

@@ -98,11 +98,12 @@ a.fc-event:not([href])
     left: -100px;
     top: 50%;
     margin-top: -25px;
+    z-index: 11;
 }
 
-.fc-month-view .fc-event:not(.event-type-d)
+.fc-month-view.fc-basic-view tbody .fc-row
 {
-    display:none;
+    height:auto !important;
 }
 
 #plan .fc-time-grid-event.fc-short .fc-title,
@@ -343,7 +344,7 @@ a.fc-event:not([href])
     display:none;
     width: 160px;
     vertical-align: top;
-    z-index: 10;
+    z-index: 15;
     position:relative;
     clear:left;
     border: 2px solid #555;
@@ -352,7 +353,7 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
-#plan.setup-mode .fc-toolbar .fc-right
+#plan.setup-mode .fc-toolbar .fc-left .fc-button-group:last-child
 {
     display:none;
 }
@@ -557,6 +558,7 @@ a.fc-event:not([href])
     border-radius: 5px;
     margin: 10px;
     cursor: pointer;
+    height: 30px;
 }
 
 #plan .notes-or {
@@ -580,14 +582,29 @@ a.fc-event:not([href])
     top: 12px;
 }
 
-#plan #external-events .fc-event[data-duration="01:00"]
+#plan #external-events .fc-event[data-duration="00:30"]
+{
+    height: 20px;
+}
+
+#plan #external-events .fc-event[data-duration="00:45"]
 {
     height: 30px;
 }
 
+#plan #external-events .fc-event[data-duration="01:00"]
+{
+    height: 40px;
+}
+
+#plan #external-events .fc-event[data-duration="01:30"]
+{
+    height: 60px;
+}
+
 #plan #external-events .fc-event[data-duration="02:00"]
 {
-    height: 44px;
+    height: 80px;
 }
 
 #plan .fc-highlight

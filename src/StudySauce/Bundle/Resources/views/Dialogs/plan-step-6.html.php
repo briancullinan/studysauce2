@@ -13,7 +13,7 @@ $view['slots']->start('modal-body') ?>
 <div class="highlighted-link invalid">
     <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     <div class="invalid-only">Please download your plan before you proceed.</div>
-    <a href="#done" data-dismiss="modal" class="more">Go to study plan</a>
+    <a href="#done" class="more">Go to study plan</a>
 </div>
 <?php $view['slots']->stop();
 

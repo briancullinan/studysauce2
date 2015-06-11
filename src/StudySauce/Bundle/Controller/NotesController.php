@@ -557,7 +557,7 @@ class NotesController extends Controller
      * @return Response
      * @throws \HttpRuntimeException
      */
-    public function noteAction($note)
+    public function noteAction(StudyNote $note)
     {
         /** @var User $user */
         $user = $this->getUser();

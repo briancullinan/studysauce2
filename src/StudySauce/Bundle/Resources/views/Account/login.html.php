@@ -40,7 +40,10 @@ $view['slots']->start('body'); ?>
         <?php } else { ?>
             <h2>Welcome back!</h2>
             <div class="social-login">
-                <?php foreach($services as $o => $url) { ?>
+                <?php foreach($services as $o => $url) {
+                    if($o == 'evernote' || $o == 'gcal')
+                        continue;
+                    ?>
                     <a href="<?php print $url; ?>" class="more">Sign in</a>
                 <?php } ?>
             </div>

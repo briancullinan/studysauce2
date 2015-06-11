@@ -125,6 +125,8 @@ else if($isDemo) {
 }
 
 print $this->render('StudySauceBundle:Dialogs:edit-event.html.php', ['id' => 'edit-event']);
+print $this->render('StudySauceBundle:Dialogs:plan-science.html.php', ['id' => 'plan-science']);
+print $this->render('StudySauceBundle:Dialogs:plan-drag.html.php', ['id' => 'plan-drag']);
 print $view['slots']->output('includeNotes');
 
 if($showPlanIntro) {

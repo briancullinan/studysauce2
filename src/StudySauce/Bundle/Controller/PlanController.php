@@ -2,6 +2,7 @@
 
 namespace StudySauce\Bundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
@@ -77,7 +78,7 @@ class PlanController extends Controller
         $id = self::getCalendar($user, $container, $client, $service);
 
         $sync = $user->getProperty('eventSync');
-        try {
+        /*try {
             if(empty($sync))
                 $list = $service->events->listEvents($id);
             else
@@ -86,7 +87,8 @@ class PlanController extends Controller
         catch(\Exception $e) {
             if($e->getCode() == 410)
                 $list = $service->events->listEvents($id);
-        }
+        }*/
+        $list = $service->events->listEvents($id);
         $items = $list->getItems();
         $user->setProperty('eventSync', $list->getNextSyncToken());
         $existing = [];
@@ -111,8 +113,8 @@ class PlanController extends Controller
             $start = $item->getStart();
             /** @var \Google_Service_Calendar_EventDateTime $end */
             $end = $item->getEnd();
-            $event->setStart(new \DateTime($start->getDateTime()));
-            $event->setEnd(new \DateTime($end->getDateTime()));
+            $event->setStart(date_timezone_set(new \DateTime($start->getDateTime()), new \DateTimeZone(date_default_timezone_get())));
+            $event->setEnd(date_timezone_set(new \DateTime($end->getDateTime()), new \DateTimeZone(date_default_timezone_get())));
             if(!empty($stored)) {
                 $orm->merge($event);
             }
@@ -150,7 +152,12 @@ class PlanController extends Controller
                         ],
                     ],
                 ]);
-                $newEvent = $service->events->insert($id, $newEvent);
+                try {
+                    $newEvent = $service->events->insert($id, $newEvent);
+                }
+                catch (\Exception $e) {
+                    break;
+                }
                 $event->setRemoteId($newEvent->getId());
                 $orm->merge($event);
             }
@@ -226,6 +233,7 @@ class PlanController extends Controller
             $calendar->setDescription('Take notes with your classes using StudySauce, check-in to track your studying.');
             $calendar = $service->calendars->insert($calendar);
             $user->setProperty('calendarId', $calendar->getId());
+            $user->setProperty('eventSync', '');
             $orm->merge($user);
             $orm->flush();
             $id = $calendar->getId();
@@ -241,6 +249,8 @@ class PlanController extends Controller
      */
     public function indexAction(User $user = null, $template = ['Plan', 'tab'])
     {
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
         /** @var $user \StudySauce\Bundle\Entity\User */
         if(empty($user))
             $user = $this->getUser();
@@ -276,6 +286,11 @@ class PlanController extends Controller
         $emails->setContainer($this->container);
         $courses = $schedule->getClasses()->toArray();
         $step = self::getPlanStep($user);
+        foreach($schedule->getClasses()->toArray() as $c) {
+            /** @var Course $c */
+            if(empty($c->getEvents()->count()))
+                self::createCourseEvents($c, $orm);
+        }
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'schedule' => $schedule,
                 'courses' => array_values($courses),
@@ -302,16 +317,19 @@ class PlanController extends Controller
             return empty($c->getStudyDifficulty()); })) {
             return 1;
         }
-        if($schedule->getClasses()->exists(function ($_, Course $c) {
+        elseif($schedule->getClasses()->exists(function ($_, Course $c) {
             return $c->getStudyDifficulty() != 'none'; }) && (
-                !$schedule->getEvents()->exists(function ($_, Event $e) {
-                    return $e->getType() == 'p' && $e->getDeleted() == false;
-                }) || !$schedule->getEvents()->exists(function ($_, Event $e) {
-                    return $e->getType() == 'sr' && $e->getDeleted() == false;
-                }))) {
+                $schedule->getClasses()->exists(function ($_, Course $c) {
+                    return !$c->getEvents()->exists(function ($_, Event $e) {
+                        return $e->getType() == 'p' && $e->getDeleted() == false;
+                    });}) ||
+                $schedule->getClasses()->exists(function ($_, Course $c) {
+                    return !$c->getEvents()->exists(function ($_, Event $e) {
+                        return $e->getType() == 'sr' && $e->getDeleted() == false;
+                    });}))) {
             return 2;
         }
-        if($schedule->getClasses()->exists(function ($_, Course $c) {
+        elseif($schedule->getClasses()->exists(function ($_, Course $c) {
             return empty($c->getStudyType()); })) {
             return 4;
         }
@@ -747,7 +765,6 @@ class PlanController extends Controller
         //   unless they have data attached we will just hide them in historic view
         $remove = $saved->toArray();
         foreach ($remove as $i => $save) {
-            // TODO: check if in strategies
             /** @var Event $save */
             if(!empty($save->getCompleted()))
             {
@@ -803,7 +820,7 @@ PRODID:STUDYSAUCE.COM
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:$email
+X-WR-CALNAME:Study Sauce
 X-WR-TIMEZONE:America/Phoenix
 
 EOCAL;
@@ -818,8 +835,8 @@ EOCAL;
             /** @var Event $event */
             $id = $event->getId();
             $title = $event->getName();
-            $start = $event->getStart()->format('Ymd') . 'T' . $event->getStart()->format('His') . 'Z';
-            $end = $event->getEnd()->format('Ymd') . 'T' . $event->getEnd()->format('His') . 'Z';
+            $start = date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
+            $end = date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('His') . 'Z';
             $created = $event->getCreated()->format('Ymd') . 'T' . $event->getCreated()->format('His') . 'Z';
             // TODO: load alert from settings
             $alert = '30M';
@@ -830,7 +847,7 @@ DTEND:$end
 DTSTAMP:$stamp
 ORGANIZER;CN=$name:mailto:$email
 UID:STUDYSAUCE-$id
-ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=$name;X-NUM-GUESTS=0:mailto:$email
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=$name;X-NUM-GUESTS=0:mailto:$email
 CREATED:$created
 DESCRIPTION:Log in to studysauce.com to take notes
 LAST-MODIFIED:$lastModified
@@ -887,7 +904,7 @@ END:VCALENDAR');
                 $classStart = $course->getStartTime();
                 $classEnd = $course->getEndTime();
                 $title = $course->getName();
-                $existing = $course->getEvents()->filter(function (Event $e) use($event){return $e->getType() == $event['type'];});
+                $existing = array_merge($existing, $course->getEvents()->filter(function (Event $e) use($event){return $e->getType() == $event['type'];})->toArray());
             }
             elseif($event['type'] == 'f') {
                 $course = null;
@@ -895,7 +912,7 @@ END:VCALENDAR');
                 $classStart = min(array_map(function (Course $c) {return $c->getStartTime();}, $schedule->getClasses()->toArray()));
                 $classEnd = max(array_map(function (Course $c) {return $c->getEndTime();}, $schedule->getClasses()->toArray()));
                 $title = 'Free study';
-                $existing = $schedule->getEvents()->filter(function (Event $e) {return $e->getType() == 'f';});
+                $existing = array_merge($existing, $schedule->getEvents()->filter(function (Event $e) {return $e->getType() == 'f';})->toArray());
             }
             else
                 continue;
@@ -933,7 +950,7 @@ END:VCALENDAR');
 
         }
         // merge events with saved
-        self::mergeSaved($schedule, $existing, $events, $orm);
+        self::mergeSaved($schedule, new ArrayCollection($existing), $events, $orm);
 
         return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
@@ -946,11 +963,12 @@ END:VCALENDAR');
     {
         $events = [];
         $once = false;
-        // TODO: uncomment this to bring back singly occuring events
+        // TODO: uncomment this to bring back singly occurring events
         // if ($course->getType() == 'o' && !in_array('Weekly', $course->getDotw())) {
         //    $once = true;
         //}
-        $existing = $course->getEvents()->filter(function (Event $e) {return $e->getType() == 'c';});
+        $existing = $course->getEvents()->filter(function (Event $e) use ($course) {
+            return $e->getType() == 'c' && $e->getCourse() == $course;});
 
         $classStart = $course->getStartTime();
         $classEnd = $course->getEndTime();
@@ -964,7 +982,7 @@ END:VCALENDAR');
                 }
 
                 $t = $week + self::$weekConversion[$d];
-                if ($t < $classStart->getTimestamp() || $t > $classEnd->getTimestamp()) {
+                if ($t < $classStart->getTimestamp() - 86400 || $t > $classEnd->getTimestamp() + 86400) {
                     continue;
                 }
 
@@ -1100,6 +1118,7 @@ END:VCALENDAR');
                             $e->setEnd($tempEnd);
                             $e->setMoved(true);
                             $orm->merge($e);
+                            break;
                         }
                     }
                 }

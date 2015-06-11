@@ -39,11 +39,10 @@ $(document).ready(function () {
         CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
         $.ajax({
-            url: window.callbackPaths['notes_note'],
+            url: window.callbackPaths['notes'].replace('/tab', '/body/' + noteId),
             type: 'GET',
             dataType: 'text',
             data: {
-                noteId: noteId
             },
             success: function (data) {
                 CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());

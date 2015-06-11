@@ -63,6 +63,8 @@ class ScheduleController extends Controller
             $userManager->updateUser($user);
         }
 
+        $step = PlanController::getPlanStep($user);
+
         return $this->render('StudySauceBundle:Schedule:tab.html.php', [
                 'needsNew' => $needsNew,
                 'schedules' => $user->getSchedules()->isEmpty()
@@ -70,7 +72,8 @@ class ScheduleController extends Controller
                     : $user->getSchedules()->toArray(),
                 'demoSchedules' => [$demo],
                 'isDemo' => $user->getSchedules()->isEmpty() || $user->getSchedules()->first()->getCourses()->isEmpty(),
-                'csrf_token' => $csrfToken
+                'csrf_token' => $csrfToken,
+                'step' => $step
             ]);
     }
 
@@ -532,22 +535,35 @@ class ScheduleController extends Controller
     private static function removeCourse(Course $course, Schedule $schedule, EntityManager $orm)
     {
         if($course->getEvents()->exists(function ($k, Event $save) {
-                return !empty($save->getActive()) || !empty($save->getCompleted()) || !empty($save->getOther()) ||
-                !empty($save->getPrework()) || !empty($save->getTeach()) || !empty($save->getSpaced());
+                return !empty($save->getCompleted());
             }) || $course->getCheckins()->count() > 0 || $course->getDeadlines()->count() > 0) {
             $course->setDeleted(true);
-            foreach($course->getDeadlines() as $d) {
+            foreach($course->getDeadlines()->toArray() as $d) {
                 /** @var Deadline $d */
                 $d->setDeleted(true);
                 $orm->merge($d);
             }
-            // events will be deleted automatically when returning to the plan tab
+            foreach($course->getEvents()->toArray() as $e) {
+                /** @var Event $e */
+                $e->setDeleted(true);
+                $orm->merge($e);
+            }
             $orm->merge($course);
         }
         else {
             foreach($course->getGrades()->toArray() as $g) {
                 $course->removeGrade($g);
                 $orm->remove($g);
+            }
+            foreach($course->getDeadlines()->toArray() as $d) {
+                /** @var Deadline $d */
+                $course->removeDeadline($d);
+                $orm->remove($d);
+            }
+            foreach($course->getEvents()->toArray() as $e) {
+                /** @var Event $e */
+                $course->removeEvent($e);
+                $orm->remove($e);
             }
             $schedule->removeCourse($course);
             $orm->remove($course);

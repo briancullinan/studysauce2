@@ -10,6 +10,8 @@ $view['slots']->start('modal-body') ?>
         <br />
         <?php $first = true;
         foreach($services as $o => $url) {
+            if($o == 'evernote' || $o == 'gcal')
+                continue;
             if(!$first) { ?>
                 <div class="signup-or"><span>Or</span></div>
             <?php }

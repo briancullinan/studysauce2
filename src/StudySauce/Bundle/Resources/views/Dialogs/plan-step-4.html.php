@@ -23,7 +23,7 @@ $view['slots']->start('modal-body') ?>
                 <option value="" <?php print (empty($c->getStudyType()) ? 'selected="selected"' : ''); ?>>- Select study type -</option>
                 <option value="memorization" <?php print ($c->getStudyType() == 'memorization' ? 'selected="selected"' : ''); ?>>Memorization</option>
                 <option value="reading" <?php print ($c->getStudyType() == 'reading' ? 'selected="selected"' : ''); ?>>Reading / writing</option>
-                <option value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'selected="selected"' : ''); ?>>Memorization</option>
+                <option value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'selected="selected"' : ''); ?>>Conceptual</option>
             </select>
         </label>
     <?php } ?>
