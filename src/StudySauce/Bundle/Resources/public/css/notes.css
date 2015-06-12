@@ -257,6 +257,7 @@
     opacity: .75;
     transition:opacity ease-in-out .15s;
     z-index: 999 !important;
+    max-width: 100%;
 }
 
 #notes #editor1 h1
@@ -483,12 +484,29 @@
 
 @media all and (max-width: 700px)
 {
+    .left-menu #cke_editor1,
+    .right-menu #cke_editor1
+    {
+        display:none;
+    }
 
-    #cke_14,
-    #cke_22,
-    #cke_24,
-    #cke_28,
-    #cke_10
+    .cke_toolbar
+    {
+        float:none !important;
+    }
+
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7)
+    {
+        display: inline;
+    }
+
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(1),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(2),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(3),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(4),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(3),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(4),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(5)
     {
         display:none;
     }
@@ -536,7 +554,7 @@
 @media all and (max-width: 500px)
 {
 
-    #cke_39
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(6)
     {
         display:none;
     }

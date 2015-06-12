@@ -100,7 +100,7 @@ class ScheduleController extends Controller
         }
 
         $schedule = $guest->getSchedules()->first();
-        // TODO: generate valid schedules and courses
+        // generate valid schedules and courses
         if($schedule == null)
         {
             // create new empty schedule for all guest users
@@ -133,7 +133,6 @@ class ScheduleController extends Controller
      */
     private static function getDemoCourses(Schedule $schedule, EntityManager $orm)
     {
-        // TODO: remap demo functions to studysauce static functions used by testers?
         $old = $schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted() &&
             $b->getEndTime() > new \DateTime(); })->toArray();
         if(count($old) < 4) {
@@ -146,7 +145,6 @@ class ScheduleController extends Controller
             $orm->flush();
         }
 
-        // TODO: remap demo functions to studysauce static functions used by testers?
         $courses = $schedule->getClasses()->toArray();
         if(empty($courses))
         {
@@ -218,77 +216,6 @@ class ScheduleController extends Controller
             $orm->persist($course);
             $courses[] = $course;
             $schedule->addCourse($course);
-
-            /*
-            $course = new Course();
-            $class5 = new \DateTime('last Sunday');
-            $class5->setTime(12, 0, 0);
-            $class5->sub(new \DateInterval('P3W'));
-            $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
-            $course->setType('c');
-            $course->setDotw(['M', 'W', 'F']);
-            $course->setStartTime($class5);
-            $course->setEndTime(date_add(clone $class5, new \DateInterval('P8WT50M')));
-            $course->setStudyDifficulty('tough');
-            $course->setStudyType('reading');
-
-            $orm->persist($course);
-            $courses[] = $course;
-            $schedule->addCourse($course);
-
-            $course = new Course();
-            $class6 = new \DateTime('last Sunday');
-            $class6->setTime(9, 0, 0);
-            $class6->sub(new \DateInterval('P3W'));
-            $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
-            $course->setType('c');
-            $course->setDotw(['Tu', 'Th']);
-            $course->setStartTime($class6);
-            $course->setEndTime(date_add(clone $class6, new \DateInterval('P8WT120M')));
-            $course->setStudyDifficulty('easy');
-            $course->setStudyType('reading');
-
-            $orm->persist($course);
-            $courses[] = $course;
-            $schedule->addCourse($course);
-
-            $course = new Course();
-            $class7 = new \DateTime('last Sunday');
-            $class7->setTime(11, 15, 0);
-            $class7->sub(new \DateInterval('P3W'));
-            $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
-            $course->setType('c');
-            $course->setDotw(['Tu', 'Th']);
-            $course->setStartTime($class7);
-            $course->setEndTime(date_add(clone $class7, new \DateInterval('P8WT90M')));
-            $course->setStudyDifficulty('easy');
-            $course->setStudyType('conceptual');
-
-            $orm->persist($course);
-            $courses[] = $course;
-            $schedule->addCourse($course);
-
-            $course = new Course();
-            $class8 = new \DateTime('last Sunday');
-            $class8->setTime(14, 50, 0);
-            $class8->sub(new \DateInterval('P3W'));
-            $course->setSchedule($schedule);
-            $course->setName(self::getRandomName());
-            $course->setType('c');
-            $course->setDotw(['Tu', 'Th']);
-            $course->setStartTime($class8);
-            $course->setEndTime(date_add(clone $class8, new \DateInterval('P8WT50M')));
-            $course->setStudyDifficulty('easy');
-            $course->setStudyType('memorization');
-
-            $orm->persist($course);
-            $courses[] = $course;
-            $schedule->addCourse($course);
-            */
-
         }
 
         $orm->flush();

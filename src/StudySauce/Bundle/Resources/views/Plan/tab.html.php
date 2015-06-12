@@ -18,31 +18,19 @@ $view['slots']->start('stylesheets');
 foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.min.css'],[],['output' => 'bundles/studysauce/js/fullcalendar/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
-foreach ($view['assetic']->stylesheets(
-    [
-        '@StudySauceBundle/Resources/public/css/clock.css',
-        '@StudySauceBundle/Resources/public/css/checkin.css',
-        '@StudySauceBundle/Resources/public/css/plan.css'
-    ],
-    [],
-    ['output' => 'bundles/studysauce/css/*.css']
-) as $url):
-    ?>
+foreach ($view['assetic']->stylesheets([
+    '@StudySauceBundle/Resources/public/css/clock.css',
+    '@StudySauceBundle/Resources/public/css/checkin.css'
+], [], ['output' => 'bundles/studysauce/css/*.css']) as $url):
+    ?><link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
+<?php endforeach;
+foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/plan.css',],[],['output' => 'bundles/studysauce/css/*.css']) as $url):?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts'); ?>
-<script type="text/javascript">
-    CKEDITOR_BASEPATH = '<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/ckeditor/';
-</script>
-<?php foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/ckeditor/ckeditor.js',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
-    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/notes.js'],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
-    <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-foreach ($view['assetic']->javascripts(['@checkin_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
+<?php foreach ($view['assetic']->javascripts(['@checkin_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 foreach ($view['assetic']->javascripts(['@plan_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
@@ -51,9 +39,7 @@ foreach ($view['assetic']->javascripts(['@plan_scripts',],[],['output' => 'bundl
 ?>
 <script type="text/javascript">
     // convert events array to object to keep track of keys better
-    if(typeof(window.planEvents) == 'undefined')
-        window.planEvents = [];
-    window.planEvents = $.merge(window.planEvents, JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>'));
+    window.planEvents = JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>');
 </script>
 <?php $view['slots']->stop();
 
@@ -61,8 +47,7 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane <?php
     print ($isDemo ? ' demo' : '');
     print ($isEmpty ? ' empty-schedule' : '');
-    print ($step !== false ? ' setup-mode' : '');
-    print ($step === false ? ' session-selected' : ''); ?>" id="plan">
+    print ($step !== false ? ' setup-mode' : ''); ?>" id="plan">
     <div class="pane-content">
         <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
         <div id="external-events">
@@ -81,47 +66,43 @@ $view['slots']->start('body'); ?>
         </div>
         <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
         <div class="session-strategy">
-            <h3 style="margin-top:40px;">Recommended strategy</h3>
+            <h3>Recommended strategy</h3>
             <label class="input">
                 <select name="strategy-select">
+                    <option value="blank">Blank</option>
                     <option value="teach">Teach</option>
                     <option value="spaced">Spaced repetition</option>
                     <option value="active">Active reading</option>
                     <option value="prework">Prework</option>
                 </select>
             </label>
-            <div style="padding: 40px 0;">
-                <a href="#add-note" class="big-add">Create <span>+</span> new note</a>
+            <div>
+                <a href="/notes" class="big-add">Create <span>+</span> new note</a>
                 <div class="notes-or"><span>Or</span></div>
-                <h3 style="display:inline-block;">Open an existing note</h3>
+                <h3>Open an existing note</h3>
             </div>
         </div>
         <a href="#plan-step-1" data-toggle="modal">Edit Study Plan Settings</a>
-        <div id="editor2" contenteditable="true">This is note content</div>
-        <div class="highlighted-link"><a href="#save-note" class="more">Save</a></div>
         <?php echo $view->render('StudySauceBundle:Plan:strategies.html.php'); ?>
     </div>
 </div><?php
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-if($step === false)
-    $step = 0;
-print $this->render('StudySauceBundle:Dialogs:plan-step-' . $step . '.html.php', ['id' => 'plan-step-' . $step, 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-if($step < 6) {
-    print $this->render('StudySauceBundle:Dialogs:plan-step-' . ($step + 1) . '.html.php', ['id' => 'plan-step-' . ($step + 1), 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-}
-$steps = array_merge($step > 0 ? range(0, $step - 1) : [], $step < 5 ? range($step+2, 6) : []);
+$steps = range(0, 6);
 foreach($steps as $i) {
     print $this->render('StudySauceBundle:Dialogs:plan-step-' . $i . '.html.php', ['id' => 'plan-step-' . $i, 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 }
 print $this->render('StudySauceBundle:Dialogs:plan-step-2-2.html.php', ['id' => 'plan-step-2-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-2-3.html.php', ['id' => 'plan-step-2-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 if($isEmpty) {
+    print $this->render('StudySauceBundle:Dialogs:plan-empty-schedule.html.php', ['id' => 'plan-empty-schedule']);
+}
+else {
     echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-empty-schedule']));
 }
-else if($isDemo) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-upgrade']));
+if($isDemo) {
+    print $this->render('StudySauceBundle:Dialogs:plan-upgrade.html.php', ['id' => 'plan-upgrade']);
 }
 
 print $this->render('StudySauceBundle:Dialogs:edit-event.html.php', ['id' => 'edit-event']);
@@ -129,12 +110,6 @@ print $this->render('StudySauceBundle:Dialogs:plan-science.html.php', ['id' => '
 print $this->render('StudySauceBundle:Dialogs:plan-drag.html.php', ['id' => 'plan-drag']);
 print $view['slots']->output('includeNotes');
 
-if($showPlanIntro) {
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-1']));
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-2']),['strategy' => 'sinclude']);
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-3']),['strategy' => 'sinclude']);
-    echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'plan-intro-4']),['strategy' => 'sinclude']);
-}
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:sdsMessages'), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'checklist']), ['strategy' => 'sinclude']);
 echo $view['actions']->render(new ControllerReference('StudySauceBundle:Dialogs:deferred', ['template' => 'timer-expire']), ['strategy' => 'sinclude']);

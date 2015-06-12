@@ -42,8 +42,7 @@ $(document).ready(function () {
             url: window.callbackPaths['notes'].replace('/tab', '/body/' + noteId),
             type: 'GET',
             dataType: 'text',
-            data: {
-            },
+            data: {},
             success: function (data) {
                 CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
                 notes.find('.highlighted-link').removeClass('invalid').addClass('valid');
@@ -70,13 +69,10 @@ $(document).ready(function () {
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation($(this));
         $.ajax({
-            url: window.callbackPaths['notes_remove'],
+            url: window.callbackPaths['notes'].replace('/tab', '/remove/' + noteId),
             type: 'POST',
             dataType: 'text',
-            data: {
-                noteId: noteId,
-                remove: true
-            },
+            data: {},
             success: function (data) {
                 notes.find('.squiggle').remove();
                 notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
@@ -95,6 +91,7 @@ $(document).ready(function () {
 
     body.on('click', '#notes a[href="#add-note"]', function (evt) {
         evt.preventDefault();
+        $('#notes-connect').modal('hide');
         var notes = $('#notes');
         notes.find('.note-title input').val('');
         notes.find('select[name="notebook"]').val('');
@@ -168,7 +165,7 @@ $(document).ready(function () {
 
     body.on('scheduled', updateNotes);
 
-    body.on('hide', '#notes, #plan', function () {
+    body.on('hide', '#notes', function () {
         $(this).find('[contenteditable="true"]').each(function () {
             var id = $(this).attr('id');
             if(typeof CKEDITOR.instances[id] != 'undefined')
@@ -356,7 +353,7 @@ $(document).ready(function () {
 
     });
 
-    body.on('show', '#notes, #plan', function () {
+    body.on('show', '#notes', function () {
         // load editor
         if(!$(this).is('.loaded')) {
             $(this).addClass('loaded');
@@ -374,7 +371,7 @@ $(document).ready(function () {
 
     function initializeCKE()
     {
-        var notes = $('#notes, #plan').find('[contenteditable="true"]:not(.loaded)');
+        var notes = $('#notes').find('[contenteditable]:not(.loaded)');
         notes.each(function () {
             var that = $(this),
                 id = that.attr('id');

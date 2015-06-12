@@ -54,6 +54,9 @@ $view['slots']->start('body'); ?>
                     $isDemo = true;
                     $schedule = $demoSchedules[0];
                     $courses = array_values($schedule->getClasses()->toArray());
+                    for($i = count($courses); $i < 6; $i++) {
+                        $courses[] = new Course();
+                    }
                 } ?>
                 <input type="hidden" name="term-name" value="<?php print ($isDemo ? '' : (empty($schedule->getTerm()) ? $schedule->getCreated()->format('n/Y') : $schedule->getTerm()->format('n/Y'))); ?>" />
                 <div class="university">

@@ -1,4 +1,4 @@
-<div class="strategy-prework invalid">
+<div class="strategy-prework">
     <h3>Prework - Get prepared for your class tomorrow.</h3>
     <p>
         <en-todo></en-todo>Look at your syllabus to see what topics will be covered.<br />
@@ -7,5 +7,5 @@
         <en-todo></en-todo>Prepare questions that you would like answered during class.<br />
     </p>
     <h3>Notes:</h3>
-    <p style="border: 1px solid #555; border-radius: 2px; padding: 5px; margin: 5px;">&nbsp;<br /><br /><br /><br /></p>
+    <p>&nbsp;<br /><br /><br /><br /></p>
 </div>

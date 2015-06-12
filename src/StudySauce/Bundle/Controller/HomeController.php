@@ -60,11 +60,11 @@ class HomeController extends Controller
             return ['adviser', ['_user' => $user->getInvitedPartners()->first()->getUser()->getId(), '_tab' => 'metrics']];
         elseif($user->hasRole('ROLE_PARTNER') || $user->hasRole('ROLE_ADVISER') || $user->hasRole('ROLE_MASTER_ADVISER'))
             return ['userlist', []];
-        elseif($user->hasRole('ROLE_PARENT'))
-            return ['thanks', []];
         elseif(!$user->hasRole('ROLE_PAID') && !$user->hasRole('ROLE_ADMIN') &&
             $user->getCreated()->getTimestamp() > (new \DateTime('2015-06-01'))->getTimestamp())
             return ['checkout', []];
+        elseif($user->hasRole('ROLE_PARENT'))
+            return ['thanks', []];
         elseif(empty($user->getProperty('first_time')))
             return ['course1_introduction', []];
         return ['home', []];

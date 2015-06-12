@@ -56,41 +56,41 @@ class NotesController extends Controller
     }
 
     /**
-     * @param $u
+     * @param $user
      * @param ContainerInterface $container
      * @throws EDAMSystemException
      * @throws \Exception
      */
-    public static function syncNotes(User $u, ContainerInterface $container)
+    public static function syncNotes(User $user, ContainerInterface $container)
     {
         /** @var $orm EntityManager */
         $orm = $container->get('doctrine')->getManager();
         try {
-            /** @var User $u */
+            /** @var User $user */
             // list all notebooks from evernote and compare notes
-            $notebooks = NotesController::getNotebooksFromEvernote($u, $container->get('kernel')->getEnvironment());
-            $allTags = NotesController::getTags($u);
+            $notebooks = NotesController::getNotebooksFromEvernote($user, $container->get('kernel')->getEnvironment());
+            $allTags = NotesController::getTags($user);
             $existing = [];
             foreach ($notebooks as $guid => $notebookName) {
                 // list all notes
                 $notes = NotesController::getNotesFromEvernote(
-                    $u,
+                    $user,
                     [$guid, $notebookName],
                     $container->get('kernel')->getEnvironment(),
                     $orm
                 );
 
                 // download note from Evernote if content is empty or note on server is newer
-                foreach ($notes as $n) {
-                    /** @var StudyNote $n */
-                    $existing[] = $n->getRemoteId();
-                    if (empty($n->getContent()) || empty($n->getUpdated()) || $n->getRemoteUpdated(
-                        ) > $n->getUpdated()
+                foreach ($notes as $note) {
+                    /** @var StudyNote $note */
+                    $existing[] = $note->getRemoteId();
+                    if (empty($note->getContent()) || empty($note->getUpdated()) || $note->getRemoteUpdated(
+                        ) > $note->getUpdated()
                     ) {
                         // download the newer note content from Evernote
                         NotesController::getNoteFromEvernote(
-                            $u,
-                            $n,
+                            $user,
+                            $note,
                             $container->get('kernel')->getEnvironment(),
                             $orm
                         );
@@ -100,63 +100,63 @@ class NotesController extends Controller
 
             // loop through user notes and sync back to evernote
             $client = new EvernoteClient(
-                $u->getEvernoteAccessToken(),
+                $user->getEvernoteAccessToken(),
                 $container->get('kernel')->getEnvironment() != 'prod'
             );
             $store = $client->getUserNotestore();
 
-            foreach($u->getNotes()->toArray() as $n) {
-                if(!empty($n->getRemoteId()) && !in_array($n->getRemoteId(), $existing)) {
+            foreach($user->getNotes()->toArray() as $note) {
+                if(!empty($note->getRemoteId()) && !in_array($note->getRemoteId(), $existing)) {
                     // TODO: mark the note as deleted from our store
 
                 }
-                /** @var StudyNote $n */
-                if(empty($n->getRemoteUpdated()) || $n->getUpdated() > $n->getRemoteUpdated()) {
+                /** @var StudyNote $note */
+                if(empty($note->getRemoteUpdated()) || $note->getUpdated() > $note->getRemoteUpdated()) {
                     // figure out what has changed and update evernote
 
                     // use default notebook if it isn't assigned to one already
-                    if(empty($n->getProperty('notebook'))) {
-                        $notebook = $store->getDefaultNotebook($u->getEvernoteAccessToken())->guid;
+                    if(empty($note->getProperty('notebook'))) {
+                        $notebook = $store->getDefaultNotebook($user->getEvernoteAccessToken())->guid;
                     }
                     else
                     {
                         // must be a class name
-                        if(is_numeric($n->getProperty('notebook')[0])) {
-                            $c = NotesController::getCourseByName($n->getProperty('notebook')[0], $u->getSchedules());
+                        if(is_numeric($note->getProperty('notebook')[0])) {
+                            $c = NotesController::getCourseByName($note->getProperty('notebook')[0], $user->getSchedules());
                             $notebook = array_search($c->getName(), $notebooks);
                             if(empty($notebook)) {
                                 // create a notebook based on class name
                                 $nb = new \EDAM\Types\Notebook(['name' => $c->getName()]);
-                                $notebook = $store->createNotebook($u->getEvernoteAccessToken(), $nb)->guid;
+                                $notebook = $store->createNotebook($user->getEvernoteAccessToken(), $nb)->guid;
                             }
                         }
-                        elseif(isset($notebooks[$n->getProperty('notebook')[0]])) {
-                            $notebook = $n->getProperty('notebook')[0];
+                        elseif(isset($notebooks[$note->getProperty('notebook')[0]])) {
+                            $notebook = $note->getProperty('notebook')[0];
                         }
                         else {
-                            $notebook = $store->getDefaultNotebook($u->getEvernoteAccessToken())->guid;
+                            $notebook = $store->getDefaultNotebook($user->getEvernoteAccessToken())->guid;
                         }
                     }
 
-                    $n->setProperty('notebook', [$notebook, $notebooks[$notebook]]);
+                    $note->setProperty('notebook', [$notebook, $notebooks[$notebook]]);
 
-                    /** @var Note $note */
-                    if(empty($n->getRemoteId())) {
-                        $note = new Note();
+                    /** @var Note $evernote */
+                    if(empty($note->getRemoteId())) {
+                        $evernote = new Note();
                     }
                     else {
-                        $note = $client->getNote($n->getRemoteId())->getEdamNote();
+                        $evernote = $client->getNote($note->getRemoteId())->getEdamNote();
                     }
-                    if(empty($n->getContent()))
+                    if(empty($note->getContent()))
                         continue;
-                    $note->content = $n->getContent();
-                    if(empty($title = $n->getTitle()))
+                    $evernote->content = $note->getContent();
+                    if(empty($title = $note->getTitle()))
                         $title = 'Untitled-' . (new \DateTime())->format('Y-m-d');
-                    $note->title = $title;
-                    $note->notebookGuid = $notebook;
+                    $evernote->title = $title;
+                    $evernote->notebookGuid = $notebook;
 
                     // update and create tags
-                    if(!empty($tags = $n->getProperty('tags'))) {
+                    if(!empty($tags = $note->getProperty('tags'))) {
                         $existing = array_intersect_key($tags, $allTags);
                         $newTags = array_diff_key($tags, $existing);
                         foreach($newTags as $k => $t) {
@@ -165,23 +165,24 @@ class NotesController extends Controller
                                 $t = $k;
                             $tag->name = $t;
                             /** @var Tag $t */
-                            $t = $store->createTag($u->getEvernoteAccessToken(), $tag);
+                            $t = $store->createTag($user->getEvernoteAccessToken(), $tag);
                             $existing[] = $t->guid;
                             $allTags[$t->guid] = $t->getName();
                         }
-                        $n->setProperty('tags', $tags = array_intersect_key($allTags, array_flip($existing)));
-                        $note->tagGuids = $existing;
-                        $note->tagNames = array_values($tags);
+                        $note->setProperty('tags', $tags = array_intersect_key($allTags, array_flip($existing)));
+                        $evernote->tagGuids = $existing;
+                        $evernote->tagNames = array_values($tags);
                     }
 
-                    if(empty($n->getRemoteId())) {
-                        $store->createNote($u->getEvernoteAccessToken(), $note);
+                    if(empty($note->getRemoteId())) {
+                        $evernote = $store->createNote($user->getEvernoteAccessToken(), $evernote);
+                        $note->setRemoteId($evernote->guid);
                     }
                     else {
-                        $store->updateNote($u->getEvernoteAccessToken(), $note);
+                        $store->updateNote($user->getEvernoteAccessToken(), $evernote);
                     }
 
-                    $orm->merge($n);
+                    $orm->merge($note);
                     $orm->flush();
                 }
             }
@@ -435,21 +436,19 @@ class NotesController extends Controller
 
                 // find first schedule that was set up before the note
                 if(empty($s)) {
-                    $s = $schedules->count() < 2
+                    $s = $schedules->filter(function (Schedule $s) {
+                        return $s->getClasses()->count() > 0;})->count() < 2
                         ? $schedules->first()
                         : $schedules->filter(function (Schedule $s) use ($note) {
 
                             // get earliest class time
-                            $start = min(
-                                array_map(
-                                    function (Course $c) {
-                                        return empty($c->getStartTime())
-                                            ? 0
-                                            : $c->getStartTime()->getTimestamp();
-                                    },
-                                    $s->getClasses()->toArray()
-                                )
-                            );
+                            $start = empty($s->getClasses()->count())
+                                ? $s->getCreated()->getTimestamp()
+                                : min(array_map(function (Course $c) {
+                                    return empty($c->getStartTime())
+                                        ? 0
+                                        : $c->getStartTime()->getTimestamp();
+                                    }, $s->getClasses()->toArray()));
 
                             // candidate schedule if note was created and modified after the start of the schedule
                             return !empty($note->getRemoteUpdated()) && $note->getRemoteUpdated()->getTimestamp() > min($s->getCreated()->getTimestamp(), $start) ||

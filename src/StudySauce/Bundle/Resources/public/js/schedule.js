@@ -208,7 +208,8 @@ $(document).ready(function () {
             term.find('.class-row.invalid-date:visible').length == 0 &&
             term.find('.class-row.invalid-time:visible').length == 0 &&
             term.find('.class-row.overlaps:visible').length == 0 &&
-            term.find('.class-row.valid:not(.blank)').length > 0 &&
+                // we must have at least one valid class on the page
+            term.find('.schedule:not(.other) .class-row.valid:not(.blank)').length > 0 &&
             term.find('.university input').val().trim() != '' && (
                 // make sure there are rows to save that are not blank
                 term.find('.class-row.edit.valid:visible:not(.blank)').length > 0 ||

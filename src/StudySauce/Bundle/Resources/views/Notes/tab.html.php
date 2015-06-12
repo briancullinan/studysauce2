@@ -159,7 +159,7 @@ $view['slots']->start('body'); ?>
                                     break;
                                 }
                             }
-                            ?><option value="<?php print (!empty($id) ? $id : $c->getId()); ?>"><?php print $c->getName(); ?></option><?php
+                            ?><option value="<?php print $c->getId(); ?>"><?php print $c->getName(); ?></option><?php
                         }
                     }
                     foreach($notebooks as $guid => $notebookName) {

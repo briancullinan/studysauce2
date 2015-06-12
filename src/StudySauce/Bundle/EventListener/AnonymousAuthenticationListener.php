@@ -22,6 +22,7 @@ use StudySauce\Bundle\Controller\HomeController;
 use StudySauce\Bundle\Controller\MetricsController;
 use StudySauce\Bundle\Controller\NotesController;
 use StudySauce\Bundle\Controller\PartnerController;
+use StudySauce\Bundle\Controller\PlanController;
 use StudySauce\Bundle\Controller\ScheduleController;
 use StudySauce\Bundle\Entity\PartnerInvite;
 use StudySauce\Bundle\Entity\User;
@@ -203,6 +204,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
             }
             elseif($user->hasRole('ROLE_GUEST') || $user->hasRole('ROLE_DEMO')) {
                 ScheduleController::getDemoSchedule($this->container);
+                PlanController::createDemoEvents($this->container);
                 DeadlinesController::getDemoDeadlines($this->container);
                 MetricsController::getDemoCheckins($this->container);
                 GoalsController::getDemoGoals($this->container);

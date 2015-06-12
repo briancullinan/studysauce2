@@ -2,32 +2,7 @@ $(document).ready(function () {
 
     var body = $('body'),
         isInitialized = false,
-        calendar, notebookId;
-
-    function filterEvents(s, e) {
-        var plans = $('#plan'),
-            events = [];
-        for (var i = 0; i < window.planEvents.length; i++) {
-            if (window.planEvents[i].start.getTime() > s - 86400 && window.planEvents[i].end.getTime() < e + 86400) {
-                events[events.length] = window.planEvents[i];
-            }
-        }
-        if (events.length == 0 && $('#plan-intro-1').length == 0) {
-            plans.addClass('empty');
-            $('#plan-empty').modal({
-                backdrop:false,
-                keyboard:false,
-                show:true
-            });
-            $(document).off('focusin.bs.modal');
-            $('body').removeClass('modal-open');
-        }
-        else {
-            plans.removeClass('empty');
-            $('#plan-empty').modal('hide');
-        }
-        return events;
-    }
+        calendar;
 
     var clickTimeout;
     body.on('dblclick', '#plan #calendar .fc-event', function () {
@@ -61,14 +36,25 @@ $(document).ready(function () {
             var next = null;
             // find the next occurring event of the same class, must come before that.
             for(var i = 0; i < shortlist.length; i++) {
-                if(shortlist[i].start.getTime() > prevDropLocation.start.valueOf() &&
-                    (next == null || shortlist[i].start.getTime() < next.start.getTime())) {
+                if(shortlist[i].className.indexOf('event-type-c') > -1 &&
+                    shortlist[i].start.valueOf() > prevDropLocation.start.valueOf() &&
+                    (next == null || shortlist[i].start.valueOf() < next.start.valueOf())) {
                     next = shortlist[i];
-                }d
+                }
             }
 
-            if(next == null || prevDropLocation.start.valueOf() + length > next.start.getTime() ||
-                prevDropLocation.start.valueOf() < next.start.getTime() - 86400000) {
+            // find a study session already in the space
+            for(var i = 0; i < shortlist.length; i++) {
+                if(next != null && shortlist[i].className.indexOf('event-type-p') > -1 &&
+                    shortlist[i].start.valueOf() < next.start.valueOf() &&
+                    shortlist[i].start.valueOf() > next.start.valueOf() - 86400000) {
+                    // cancel highlighting
+                    next = null;
+                }
+            }
+
+            if(next == null || prevDropLocation.start.valueOf() + length > next.start.valueOf() ||
+                prevDropLocation.start.valueOf() < next.start.valueOf() - 86400000) {
                 $('#plan-science').modal({show: true});
                 $(this).addClass('invalid');
                 return true;
@@ -79,14 +65,25 @@ $(document).ready(function () {
             var prev = null;
             // find the prev occurring event of the same class, must come before that.
             for(var i = 0; i < shortlist.length; i++) {
-                if(shortlist[i].start.getTime() < prevDropLocation.start.valueOf() &&
-                    (prev == null || shortlist[i].start.getTime() > prev.start.getTime())) {
+                if(shortlist[i].className.indexOf('event-type-c') > -1 &&
+                    shortlist[i].start.valueOf() < prevDropLocation.start.valueOf() &&
+                    (prev == null || shortlist[i].start.valueOf() > prev.start.valueOf())) {
                     prev = shortlist[i];
                 }
             }
 
-            if(prev == null || prevDropLocation.start.valueOf() < prev.start.getTime() ||
-                prevDropLocation.start.valueOf() + length > prev.start.getTime() + 86400000) {
+            // find a study session already in the space
+            for(var i = 0; i < shortlist.length; i++) {
+                if(prev != null && shortlist[i].className.indexOf('event-type-sr') > -1 &&
+                    shortlist[i].start.valueOf() < prev.start.valueOf() + 86400000 &&
+                    shortlist[i].start.valueOf() > prev.start.valueOf()) {
+                    // cancel highlighting
+                    prev = null;
+                }
+            }
+
+            if(prev == null || prevDropLocation.start.valueOf() < prev.start.valueOf() ||
+                prevDropLocation.start.valueOf() + length > prev.start.valueOf() + 86400000) {
                 $('#plan-science').modal({show: true});
                 $(this).addClass('invalid');
                 return true;
@@ -140,17 +137,29 @@ $(document).ready(function () {
                 var next = null;
                 // find the next occurring event of the same class, must come before that.
                 for(var i = 0; i < shortlist.length; i++) {
-                    if(shortlist[i].start.getTime() > dropLocation.start.valueOf() &&
-                        (next == null || shortlist[i].start.getTime() < next.start.getTime())) {
+                    if(shortlist[i].className.indexOf('event-type-c') > -1 &&
+                        shortlist[i].start.valueOf() > dropLocation.start.valueOf() &&
+                        (next == null || shortlist[i].start.valueOf() < next.start.valueOf())) {
                         next = shortlist[i];
                     }
                 }
 
                 if(next != null) {
+
+                    // find a study session already in the space
+                    for(var i = 0; i < shortlist.length; i++) {
+                        if(shortlist[i].className.indexOf('event-type-p') > -1 &&
+                            shortlist[i].start.valueOf() < next.start.valueOf() &&
+                            shortlist[i].start.valueOf() > next.start.valueOf() - 86400000) {
+                            // cancel highlighting
+                            return;
+                        }
+                    }
+
                     this.renderSelection(
                         this.calendar.ensureVisibleEventRange({
-                            start: moment(new Date(next.start.getTime() - 86400000)),
-                            end: moment(new Date(next.start.getTime()))}) // needs to be a proper range
+                            start: moment(new Date(next.start.valueOf() - 86400000)),
+                            end: moment(new Date(next.start.valueOf()))}) // needs to be a proper range
                     );
                 }
             }
@@ -158,17 +167,29 @@ $(document).ready(function () {
                 var prev = null;
                 // find the prev occurring event of the same class, must come before that.
                 for(var i = 0; i < shortlist.length; i++) {
-                    if(shortlist[i].start.getTime() < dropLocation.start.valueOf() &&
-                        (prev == null || shortlist[i].start.getTime() > prev.start.getTime())) {
+                    if(shortlist[i].className.indexOf('event-type-c') > -1 &&
+                        shortlist[i].start.valueOf() < dropLocation.start.valueOf() &&
+                        (prev == null || shortlist[i].start.valueOf() > prev.start.valueOf())) {
                         prev = shortlist[i];
                     }
                 }
 
                 if(prev != null) {
+
+                    // find a study session already in the space
+                    for(var i = 0; i < shortlist.length; i++) {
+                        if(shortlist[i].className.indexOf('event-type-sr') > -1 &&
+                            shortlist[i].start.valueOf() < prev.start.valueOf() + 86400000 &&
+                            shortlist[i].start.valueOf() > prev.start.valueOf()) {
+                            // cancel highlighting
+                            return;
+                        }
+                    }
+
                     this.renderSelection(
                         this.calendar.ensureVisibleEventRange({
-                            start: moment(new Date(prev.end.getTime())),
-                            end: moment(new Date(prev.start.getTime() + 86400000))}) // needs to be a proper range
+                            start: moment(new Date(prev.end.valueOf())),
+                            end: moment(new Date(prev.start.valueOf() + 86400000))}) // needs to be a proper range
                     );
                 }
             }
@@ -180,8 +201,8 @@ $(document).ready(function () {
         $.fullCalendar.Grid.prototype.listenToExternalDrag = function (el, ev, ui) {
             var classI = (/class([0-9])(\s|$)/ig).exec(el.attr('class'));
             if(classI != null) {
-                shortlist = window.planEvents.filter(function (e) {
-                    return e.className.indexOf('class' + classI[1]) > -1 && e.className.indexOf('event-type-c') > -1;
+                shortlist = calendar.fullCalendar('clientEvents').filter(function (e) {
+                    return e.className.indexOf('class' + classI[1]) > -1 && e != ev;
                 });
             }
             else {
@@ -226,6 +247,7 @@ $(document).ready(function () {
             firstHour: new Date().getHours(),
             viewRender: function( view, element )
             {
+                $('#plan').removeClass('agendaDay agendaWeek month').addClass(view.name);
                 if(this.renderDrag != $.fullCalendar.View.prototype.renderDrag)
                     this.renderDrag = $.fullCalendar.View.prototype.renderDrag;
                 // stupid dropAccept option should be used when dropping not with initiating
@@ -238,6 +260,8 @@ $(document).ready(function () {
             },
             eventRender: function (event, element) {
                 element.data('event', event);
+                var view = $('#calendar').fullCalendar('getView');
+                if (view.name == 'month' && !event.allDay) return false;
                 element.addClass('event-id-' + (typeof event.eventId == 'undefined' ? '' : event.eventId));
                 element.find('.fc-title').html(event.title);
                 element.bind('dblclick', function () {
@@ -254,20 +278,21 @@ $(document).ready(function () {
                         else {
                             dialog.removeClass('class-only');
                             dialog.find('.title').removeClass('read-only');
+                            dialog.find('.title input').val(event.title.replace(/<h4>[^<]*<\/h4>/, ''));
                             dialog.find('.start-time input.is-timeEntry').timeEntry('setTime', event.start.toDate());
                             dialog.find('.end-time input.is-timeEntry').timeEntry('setTime', event.end.toDate());
                             dialog.find('.day-of-the-week input:checked').prop('checked', false);
                             dialog.find('.day-of-the-week .checkbox:nth-child(' + event.start.isoWeekday() + ') input').prop('checked', true);
-                            // find the earliest occurence of this event
+                            // find the earliest occurrence of this event
                             var start = Math.min.apply(null, window.planEvents.map(function (e) {return e.start;}));
                             var end = Math.min.apply(null, window.planEvents.map(function (e) {return e.end;}));
                             dialog.find('.start-date input[type="text"]').datepicker('setDate', start);
                             dialog.find('.end-date input[type="text"]').datepicker('setDate', end);
-                            dialog.find('.title input').val(event.title.replace(/<h4>[^<]*<\/h4>/, ''));
                         }
                         var type = (/event-type-([a-z]*)(\s|$)/ig).exec(event.className.join(' '))[1];
                         var alert = $('#plan-step-3').find('[name="event-type-' + type + '"][value="0"]:checked, select[name="event-type-' + type + '"]').first().val();
                         dialog.find('.reminder select').val(alert);
+                        dialog.find('.location input').val(event.location);
                         dialog.modal({show:true});
                     }, 300);
                 });
@@ -299,7 +324,6 @@ $(document).ready(function () {
                         // change mini checkin color
                         var notes;
                         if(typeof event.courseId != 'undefined') {
-                            notebookId = event.courseId;
                             plan.find('.mini-checkin').show();
                             plan.find('.mini-checkin a').attr('href', '#class' + classI[1]);
                             plan.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
@@ -308,7 +332,6 @@ $(document).ready(function () {
                             notes = $('#notes').find('.class-row.course-id-' + event.courseId).find('~ .notes .note-row');
                         }
                         else {
-                            notebookId = '';
                             plan.find('.mini-checkin').hide();
                             notes = [];
                         }
@@ -328,7 +351,7 @@ $(document).ready(function () {
                         // set the title
                         plan.find('h2').text(event.title
                             .replace(/<h4>C<\/h4>/, 'Class: ')
-                            .replace(/<h4>F<\/h4>/, 'Free study: ')
+                            .replace(/<h4>F<\/h4>/, '')
                             .replace(/<h4>D<\/h4>/, 'Deadline: ')
                             .replace(/<h4>P<\/h4>/, 'Pre-work: ')
                             .replace(/<h4>SR<\/h4>/, 'Study session: ')
@@ -349,7 +372,7 @@ $(document).ready(function () {
                             }
                         }
                         else
-                            plan.find('[name="strategy-select"]').val('spaced');
+                            plan.find('[name="strategy-select"]').val('blank');
                         plan.setClock();
                     }, 300);
                 }
@@ -357,8 +380,8 @@ $(document).ready(function () {
             eventDragStart: function (event) {
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
                 if(classI != null) {
-                    shortlist = window.planEvents.filter(function (e) {
-                        return e.className.indexOf('class' + classI[1]) > -1 && e.className.indexOf('event-type-c') > -1;
+                    shortlist = calendar.fullCalendar('clientEvents').filter(function (e) {
+                        return e.className.indexOf('class' + classI[1]) > -1 && e != event;
                     });
                 }
                 else {
@@ -378,22 +401,25 @@ $(document).ready(function () {
                     revertFunc();
                 }
 
-                $.ajax({
-                    url: window.callbackPaths['plan_update'],
-                    type: 'POST',
-                    dataType: 'text',
-                    data: {
-                        eventId: event['eventId'],
-                        start: event['start'].toJSON(),
-                        end: event['end'].toJSON()
-                    },
-                    error: revertFunc,
-                    success: function (content) {
-                        if(!$('#plan').is('.setup-mode'))
-                            body.addClass('download-plan');
-                        updatePlan(content)
-                    }
-                });
+                // setup mode saves events when we are all done with the step
+                if(!$('#plan').is('.add-events')) {
+                    $.ajax({
+                        url: window.callbackPaths['plan_update'],
+                        type: 'POST',
+                        dataType: 'text',
+                        data: {
+                            eventId: event['eventId'],
+                            start: event['start'].toJSON(),
+                            end: event['end'].toJSON()
+                        },
+                        error: revertFunc,
+                        success: function (content) {
+                            if (!$('#plan').is('.setup-mode'))
+                                body.addClass('download-plan');
+                            updatePlan(content)
+                        }
+                    });
+                }
             },
             eventReceive: function () {
 
@@ -429,16 +455,14 @@ $(document).ready(function () {
                 keyboard: false,
                 show: true
             }).length == 0) {
-            if($('#plan-intro-1').modal({show:true}).length == 0) {
-                if (plan.is('.empty-schedule'))
-                    $('#plan-empty-schedule').modal({
-                        backdrop: 'static',
-                        keyboard: false,
-                        show: true
-                    });
-                else
-                    $('#plan-empty-schedule').modal('hide');
-            }
+            if (plan.is('.empty-schedule'))
+                $('#plan-empty-schedule').modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: true
+                });
+            else
+                $('#plan-empty-schedule').modal('hide');
         }
     }
 
@@ -683,71 +707,31 @@ $(document).ready(function () {
         dialog.modal('hide');
     });
 
-    body.on('click', '#plan a[href="#add-note"]', function (evt) {
+    body.on('click', '#plan a[href="/notes"]', function (evt) {
         evt.preventDefault();
         var plan = $('#plan');
-        noteId = '';
-        tags = [];
-        plan.removeClass('session-selected').addClass('edit-note');
-        plan.find('#editor2').focus();
         var strategy = plan.find('[name="strategy-select"]').val();
-        CKEDITOR.instances.editor2.setData(plan.find('.strategy-' + strategy).html());
+        var event = plan.find('.event-selected').data('event');
+        body.one('show', '#notes', function () {
+            var notes = $('#notes');
+            setTimeout(function () {
+                notes.find('a[href="#add-note"]').trigger('click');
+                notes.find('select[name="notebook"]').val(event.courseId);
+                var content = plan.find('.strategy-' + strategy).html();
+                if(strategy == 'spaced' && typeof event.dates != 'undefined') {
+                    content = content.replace(/<div class="strategy-review">[\s\S]*?<\/div>/i,
+                        '<div class="strategy-review"><label>Review material from:</label>' +
+                        event.dates.map(function (d) {return '<en-todo></en-todo>'+d+'<br />';}).join('')) +
+                        '</div>';
+                }
+                CKEDITOR.instances['editor1'].setData(content);
+            }, 500);
+        });
     });
 
-    var noteId, tags;
     body.on('click', '#plan .note-row', function (evt) {
         evt.preventDefault();
-        var plan = $('#plan'),
-            note = $(this);
-        tags = JSON.parse(note.attr('data-tags')) || [];
-        noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
-        notebookId = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
-        plan.removeClass('session-selected').addClass('edit-note');
-        CKEDITOR.instances.editor2.setData(note.find('.summary en-note').html());
-        plan.find('.highlighted-link').removeClass('valid').addClass('invalid');
-        $.ajax({
-            url: window.callbackPaths['notes'].replace('/tab', '/body/' + noteId),
-            type: 'GET',
-            dataType: 'text',
-            data: {
-            },
-            success: function (data) {
-                CKEDITOR.instances.editor2.setData($(data).filter('en-note').html());
-                plan.find('.highlighted-link').removeClass('invalid').addClass('valid');
-            }
-        });
-        setTimeout(function () {
-            if(typeof CKEDITOR.instances.editor2 != 'undefined')
-                CKEDITOR.instances.editor2.fire('focus');
-        }, 20);
-    });
 
-    body.on('click', '#plan a[href="#save-note"]', function (evt) {
-        evt.preventDefault();
-        var plan = $('#plan');
-        plan.find('.highlighted-link').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this));
-        $.ajax({
-            url: window.callbackPaths['notes_update'],
-            type: 'POST',
-            dataType: 'text',
-            data: {
-                noteId: noteId,
-                tags: tags.join(','),
-                title: plan.find('.pane-content > h2').text(),
-                notebookId: notebookId,
-                body: CKEDITOR.instances['editor2'].getData()
-            },
-            success: function (data) {
-                plan.find('.squiggle').remove();
-                plan.removeClass('edit-note').addClass('session-selected').find('.highlighted-link').removeClass('invalid').addClass('valid');
-                $('#editor2').blur();
-                CKEDITOR.instances.editor2.fire('blur');
-            },
-            error: function () {
-                plan.find('.squiggle').remove();
-            }
-        });
     });
 
     function editEventFunc()
@@ -898,7 +882,10 @@ $(document).ready(function () {
             data: {
                 eventId: eventId,
                 start: dialog.find('.start-time input').val() + ' ' + dialog.find('.start-date input').val(),
-                end: dialog.find('.end-time input').val() + ' ' + dialog.find('.end-date input').val()
+                end: dialog.find('.end-time input').val() + ' ' + dialog.find('.end-date input').val(),
+                title: dialog.find('.title input').val(),
+                location: dialog.find('.location input').val(),
+                alert: dialog.find('.reminder select').val()
             },
             success: function (content) {
                 dialog.find('.squiggle').remove();
@@ -986,19 +973,6 @@ $(document).ready(function () {
 
     body.on('click', 'a[href="#bill-parents"]', function () {
         $('#plan-upgrade').modal('hide');
-    });
-
-    body.on('hidden.bs.modal', '#plan-intro-1', function () {
-        $(this).remove();
-        var plan = $('#plan');
-        if (plan.is(':visible') && plan.is('.empty-schedule'))
-            $('#plan-empty-schedule').modal({
-                backdrop: 'static',
-                keyboard: false,
-                show: true
-            });
-        else
-            $('#plan-empty-schedule').modal('hide');
     });
 
     body.on('hidden.bs.modal', '#bill-parents', function () {
@@ -1152,9 +1126,12 @@ $(document).ready(function () {
                 type: 'GET',
                 dataType: 'text',
                 success: function (data) {
+                    // update events
                     var content = $(data);
                     window.planEvents = [];
                     ssMergeScripts(content.filter('script:not([src])'));
+
+                    // update view settings
                     if(content.filter('#plan').is('.demo'))
                         plan.addClass('demo');
                     else
@@ -1165,6 +1142,12 @@ $(document).ready(function () {
                     else
                         plan.removeClass('setup-mode');
 
+                    // update dialogs
+                    content.filter('#plan-step-1, #plan-step-3, #plan-step-4').each(function () {
+                        $('#' + $(this).attr('id')).find('.modal-body').replaceWith($(this).find('.modal-body'));
+                    });
+
+                    // show empty dialog if needed
                     if(content.filter('#plan').is('.empty-schedule')) {
                         plan.addClass('empty-schedule');
                         $('#plan-empty-schedule').modal({
@@ -1178,10 +1161,6 @@ $(document).ready(function () {
                         $('#plan-empty-schedule').modal('hide');
                     }
 
-                    // merge rows
-                    plan.find('.head,.session-row').remove();
-                    content.find('.head,.session-row').insertAfter(plan.find('.sort-by'));
-
                     // reset calendar
                     $('#calendar').fullCalendar('destroy');
                     isInitialized = false;
@@ -1191,7 +1170,7 @@ $(document).ready(function () {
         }, 100);
     });
 
-    body.on('change', '#plan .completed input, .plan-widget .completed input', function () {
+    body.on('change', '.plan-widget .completed input', function () {
         var that = jQuery(this),
             row = that.parents('.session-row'),
             eventId = (/event-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
@@ -1213,63 +1192,4 @@ $(document).ready(function () {
         });
     });
 
-    body.on('change', '#plan .sort-by .checkbox input', function () {
-        var plan = $('#plan');
-        if(jQuery(this).is(':checked'))
-            plan.addClass('show-historic');
-        else
-            plan.removeClass('show-historic');
-    });
-
-    body.on('change', '#plan .sort-by input[type="radio"]', function () {
-        var plans = $('#plan');
-        var headings = {},
-            that = jQuery(this);
-        plans.find('.head').each(function () {
-            var head = jQuery(this);
-            head.nextUntil(':not(.session-row)').each(function () {
-                var row = jQuery(this),
-                    that = row.find('.class-name');
-                if (typeof headings[that.text().trim()] == 'undefined')
-                    headings[that.text().trim()] = row;
-                else
-                    headings[that.text().trim()] = jQuery.merge(headings[that.text().trim()], row);
-                that.html('<span class="' + that.find('span').attr('class') + '">&nbsp;</span> ' + head.text().trim());
-            });
-        });
-        var rows = [];
-        // order by classes
-        if (that.val() == 'class') {
-            var keys = [];
-
-            for (var k in headings)
-                if (headings.hasOwnProperty(k) && keys.indexOf(k) == -1) {
-                    var i = (/checkin([0-9]*)(\s|$)/ig).exec(headings[k].first().attr('class'))[1];
-                    if(i != '')
-                        keys[i] = k;
-                }
-
-            for (var m in headings)
-                if (headings.hasOwnProperty(m) && keys.indexOf(m) == -1) {
-                    var l = (/checkin([0-9]*)(\s|$)/ig).exec(headings[m].first().attr('class'))[1];
-                    if(l == '')
-                        keys[keys.length] = m;
-                }
-
-            for (var j = 0; j < keys.length; j++) {
-                var h1 = headings[keys[j]].filter('.session-row:not(.historic)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h1 ? 'historic' : '') + '">' + keys[j] + '</div>'), headings[keys[j]].detach()));
-            }
-        }
-        else {
-            for (var h in headings) {
-                if (!headings.hasOwnProperty(h))
-                    continue;
-                var h2 = headings[h].filter('.session-row:not(.historic)').length == 0;
-                rows = jQuery.merge(rows, jQuery.merge(jQuery('<div class="head ' + (h2 ? 'historic' : '') + '">' + h + '</div>'), headings[h].detach()));
-            }
-        }
-        plans.find('.head').remove();
-        $(rows).insertAfter(plans.find('.sort-by'));
-    });
 });

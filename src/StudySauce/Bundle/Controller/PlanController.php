@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Class PlanController
@@ -243,6 +245,65 @@ class PlanController extends Controller
     }
 
     /**
+     * @param ContainerInterface $container
+     */
+    public static function createDemoEvents(ContainerInterface $container)
+    {
+        /** @var $orm EntityManager */
+        $orm = $container->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $container->get('fos_user.user_manager');
+        /** @var SecurityContext $context */
+        /** @var TokenInterface $token */
+        /** @var User $user */
+        /** @var User $guest */
+        if(!empty($context = $container->get('security.context')) && !empty($token = $context->getToken()) &&
+            !empty($user = $token->getUser()) && $user->hasRole('ROLE_DEMO')) {
+            $guest = $user;
+        }
+        else {
+            $guest = $userManager->findUserByUsername('guest');
+        }
+
+        $schedule = $guest->getSchedules()->first();
+        $eventInfo = [];
+        foreach($schedule->getClasses()->toArray() as $c)
+        {
+            self::createCourseEvents($c, $orm);
+            /** @var Course $c */
+            $week = strtotime('last Sunday', $c->getStartTime()->getTimestamp());
+            foreach ($c->getDotw() as $j => $d) {
+                if (!isset(self::$weekConversion[$d])) {
+                    continue;
+                }
+
+                $t = $week + self::$weekConversion[$d];
+                $classT = new \DateTime();
+                $classT->setTimestamp($t);
+                // skip class on holidays
+                if (isset(self::$holidays[$classT->format('Y/m/d')])) {
+                    continue;
+                }
+                $classT->setTime($c->getStartTime()->format('H'), $c->getStartTime()->format('i'), $c->getStartTime()->format('s'));
+
+                $eventInfo[] = [
+                    'courseId' => $c->getId(),
+                    'type' => 'p',
+                    'start' => date_timestamp_set(clone $classT, $classT->getTimestamp() - 86400 + 4 * 3600)->format('r'),
+                    'end' => date_timestamp_set(clone $classT, $classT->getTimestamp() - 86400 + 5 * 3600)->format('r')
+                ];
+                $eventInfo[] = [
+                    'courseId' => $c->getId(),
+                    'type' => 'sr',
+                    'start' => date_timestamp_set(clone $classT, $classT->getTimestamp() + 86400)->format('r'),
+                    'end' => date_timestamp_set(clone $classT, $classT->getTimestamp() + 86400 + 3600)->format('r')
+                ];
+            }
+        }
+        self::createStudyEvents($schedule, $eventInfo, $orm);
+    }
+
+    /**
      * @param User $user
      * @param array $template
      * @return \Symfony\Component\HttpFoundation\Response
@@ -259,26 +320,17 @@ class PlanController extends Controller
         $schedule = $user->getSchedules()->first();
 
         // get demo schedule instead
-        $showPlanIntro = false; // TODO: false in production
         $isDemo = false;
         $isEmpty = false;
         if (empty($schedule) ||
-            empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count()) ||
+            empty($schedule->getClasses()->count()) ||
             !$user->hasRole('ROLE_PAID')) {
             $schedule = ScheduleController::getDemoSchedule($this->container);
             if($user->hasRole('ROLE_PAID'))
                 $isEmpty = true;
             else
                 $isDemo = true;
-        }
-
-        // show intro for paid users
-        if($user->hasRole('ROLE_PAID') && empty($user->getProperty('seen_plan_intro'))) {
-            $showPlanIntro = true;
-            /** @var $userManager UserManager */
-            $userManager = $this->get('fos_user.user_manager');
-            $user->setProperty('seen_plan_intro', true);
-            $userManager->updateUser($user);
+            self::createDemoEvents($this->container);
         }
 
         // get events for current week
@@ -288,8 +340,9 @@ class PlanController extends Controller
         $step = self::getPlanStep($user);
         foreach($schedule->getClasses()->toArray() as $c) {
             /** @var Course $c */
-            if(empty($c->getEvents()->count()))
+            if(empty($c->getEvents()->count())) {
                 self::createCourseEvents($c, $orm);
+            }
         }
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'schedule' => $schedule,
@@ -297,7 +350,6 @@ class PlanController extends Controller
                 'jsonEvents' =>  self::getJsonEvents($schedule->getEvents()->toArray()),
                 'user' => $user,
                 'overlap' => false,
-                'showPlanIntro' => $showPlanIntro,
                 'step' => $step,
                 'isDemo' => $isDemo,
                 'isEmpty' => $isEmpty
@@ -469,7 +521,9 @@ class PlanController extends Controller
                 'allDay' => $x->getType() == 'd' || $x->getType() == 'h' ||
                     $x->getType() == 'r',
                 'editable' => ($x->getType() == 'sr' || $x->getType() == 'f' || $x->getType() == 'p'),
-                'dates' => isset($dates) ? $dates : null
+                'dates' => isset($dates) ? $dates : null,
+                'alert' => $x->getAlert(),
+                'location' => $x->getLocation()
             ];
             if(!empty($x->getCourse()))
                 $jsEvents[$i]['courseId'] = $x->getCourse()->getId();
@@ -883,19 +937,31 @@ END:VCALENDAR');
      */
     public function createStudyAction(Request $request)
     {
-        $events = [];
-        $existing = [];
 
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
-
         /** @var $user User */
         $user = $this->getUser();
 
         /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
 
-        foreach($request->get('events') as $event) {
+        self::createStudyEvents($schedule, $request->get('events'), $orm);
+
+        return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
+    }
+
+    /**
+     * @param Schedule $schedule
+     * @param $eventInfo
+     * @param EntityManager $orm
+     */
+    public static function createStudyEvents(Schedule $schedule, $eventInfo, EntityManager $orm)
+    {
+        $events = [];
+        $existing = [];
+
+        foreach($eventInfo as $event) {
 
             if(!empty($event['courseId'])) {
                 /** @var Course $course */
@@ -951,8 +1017,6 @@ END:VCALENDAR');
         }
         // merge events with saved
         self::mergeSaved($schedule, new ArrayCollection($existing), $events, $orm);
-
-        return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
 
     /**

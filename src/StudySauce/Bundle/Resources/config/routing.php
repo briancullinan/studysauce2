@@ -676,14 +676,9 @@ $collection->add(
 $collection->add(
     'notes_remove',
     new Route(
-        '/notes/remove',
+        '/notes/remove/{note}',
         ['_controller' => 'StudySauceBundle:Notes:remove'],
-        [],
-        [],
-        '',
-        [],
-        [],
-        'request.isXmlHttpRequest()'
+        ['note' => '[0-9]+']
     )
 );
 $collection->add(
