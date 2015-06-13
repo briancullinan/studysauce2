@@ -80,8 +80,7 @@ $container->loadFromExtension('assetic', [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/moment.min.js',
                 '@StudySauceBundle/Resources/public/js/fullcalendar/fullcalendar.js',
-                '@StudySauceBundle/Resources/public/js/plan.js',
-                '@StudySauceBundle/Resources/public/js/strategies.js'
+                '@StudySauceBundle/Resources/public/js/plan.js'
             ],
             'filters' => [],
             'options' => [

@@ -1,7 +1,7 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
-Put all of your notes in one place.
+Backup your notes with Evernote
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>

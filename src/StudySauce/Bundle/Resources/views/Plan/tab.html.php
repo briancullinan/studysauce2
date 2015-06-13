@@ -49,7 +49,6 @@ $view['slots']->start('body'); ?>
     print ($isEmpty ? ' empty-schedule' : '');
     print ($step !== false ? ' setup-mode' : ''); ?>" id="plan">
     <div class="pane-content">
-        <h2>Personalized study plan for <?php print $user->getFirst(); ?></h2>
         <div id="external-events">
             <h4>Draggable Events</h4>
             <div class="fc-event ui-draggable ui-draggable-handle event-type-sr class2"><div class="fc-title"><h4>SR</h4>ENG 102</div></div>
@@ -66,7 +65,10 @@ $view['slots']->start('body'); ?>
         </div>
         <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
         <div class="session-strategy">
-            <h3>Recommended strategy</h3>
+            <h2 class="title"></h2>
+            <h3 class="location"></h3>
+            <h3 class="duration"></h3>
+            <h3 class="strategy">Recommended strategy: </h3>
             <label class="input">
                 <select name="strategy-select">
                     <option value="blank">Blank</option>
@@ -76,10 +78,8 @@ $view['slots']->start('body'); ?>
                     <option value="prework">Prework</option>
                 </select>
             </label>
-            <div>
+            <div style="border-top:2px solid #555;padding-top:20px;margin-top:20px;">
                 <a href="/notes" class="big-add">Create <span>+</span> new note</a>
-                <div class="notes-or"><span>Or</span></div>
-                <h3>Open an existing note</h3>
             </div>
         </div>
         <a href="#plan-step-1" data-toggle="modal">Edit Study Plan Settings</a>

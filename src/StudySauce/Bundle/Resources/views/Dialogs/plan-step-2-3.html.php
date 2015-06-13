@@ -1,7 +1,7 @@
 <?php $view->extend('StudySauceBundle::Dialogs/dialog.html.php');
 
 $view['slots']->start('modal-header') ?>
-Step 3 - Now let's customize your study plan
+Step 2 - Now let's customize your study plan
 <?php $view['slots']->stop();
 
 $view['slots']->start('modal-body') ?>

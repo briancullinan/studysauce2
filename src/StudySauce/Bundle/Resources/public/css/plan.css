@@ -37,13 +37,6 @@
     display:none;
 }
 
-#plan h2
-{
-    display: inline-block;
-    width: 100%;
-    padding-right:175px;
-}
-
 .fc-event
 {
     border:none;
@@ -348,8 +341,37 @@ a.fc-event:not([href])
     display:inline-block;
     width:50%;
     margin: 0 -4px;
-    padding: 0 20px;
+    padding: 100px 20px;
     vertical-align: top;
+}
+
+#plan .session-strategy .duration,
+#plan .session-strategy .input
+{
+    display:inline-block;
+    width:100%;
+    margin-left:-50%;
+    padding-left:50%;
+}
+
+#plan .session-strategy h2
+{
+    margin-bottom: 0;
+}
+
+#plan .session-strategy .location,
+#plan .session-strategy .duration
+{
+    font-weight: normal;
+}
+
+#plan .session-strategy .strategy,
+#plan .session-strategy .location
+{
+    display:inline-block;
+    width: 50%;
+    margin-right: -8px;
+    padding-right: 8px;
 }
 
 #plan-step-1 .dialog-tracker li:nth-child(1),
@@ -383,13 +405,8 @@ a.fc-event:not([href])
     float:none;
 }
 
-#edit-event .day-of-the-week label span {
-    display: block;
-}
-
 #edit-event.class-only .start-time,
 #edit-event.class-only .end-time,
-#edit-event.class-only .day-of-the-week,
 #edit-event.class-only .start-date,
 #edit-event.class-only .end-date
 {
@@ -458,15 +475,6 @@ a.fc-event:not([href])
     border-color: #09B;
 }
 
-#edit-event .day-of-the-week label {
-    display: inline-block;
-    width: 14.28%;
-    text-align: center;
-    overflow: hidden;
-    margin: 0 -2px;
-    padding: 0 2px;
-}
-
 #edit-event .start-date .input.mobile-only,
 #edit-event .end-date .input.mobile-only,
 #edit-event .start-time .input.mobile-only,
@@ -502,7 +510,7 @@ a.fc-event:not([href])
     text-align: center;
     clear: both;
     vertical-align: middle;
-    margin: 40px 0;
+    margin: 40px 0 60px;
     padding: 0;
 }
 
@@ -765,6 +773,7 @@ a.fc-event:not([href])
     vertical-align: bottom;
 }
 
+#edit-event .invalid-only,
 #plan-step-6 .invalid-only,
 #plan-step-3 .invalid-only,
 #plan-step-4 .invalid-only,
@@ -779,6 +788,7 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
+#edit-event.invalid-only .invalid-only,
 #plan-step-6.invalid-only .invalid-only,
 #plan-step-3.invalid-only .invalid-only,
 #plan-step-4.invalid-only .invalid-only,
@@ -787,6 +797,11 @@ a.fc-event:not([href])
     display:inline-block;
 }
 
+#edit-event.invalid-only.title-required .title input,
+#edit-event.invalid-only.start-time-required .start-time input,
+#edit-event.invalid-only.end-time-required .end-time input,
+#edit-event.invalid-only.start-date-required .start-date input,
+#edit-event.invalid-only.end-date-required .end-date input,
 #plan-step-3.invalid-only .type-required,
 #plan-step-4.invalid-only .type-required,
 #plan-step-1.invalid-only .type-required

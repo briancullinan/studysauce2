@@ -125,7 +125,14 @@ $view['slots']->start('body'); ?>
                                         <h4 class="note-name"><a href="#view-note"><?php print $n->getTitle(); ?></a></h4>
                                         <div class="summary">
                                             <small class="date"><?php print $time->format('j M'); ?></small>
-                                            <img src="<?php print $view['router']->generate('notes_thumb', ['note' => $n->getId()]); ?>" /></div>
+                                            <?php if(!empty($n->getContent())) {
+                                                $summary = preg_replace('/<[^>]*>/i', '', substr($n->getContent(), 0, min(strlen($n->getContent()), 1000)));
+                                                print $summary;
+                                            }
+                                            else { ?>
+                                            <img src="<?php print $view['router']->generate('notes_thumb', ['note' => $n->getId()]); ?>" />
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                 <?php } ?>
                             </div>

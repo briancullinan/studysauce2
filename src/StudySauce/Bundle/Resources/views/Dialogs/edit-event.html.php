@@ -32,22 +32,6 @@ $view['slots']->start('modal-body') ?>
                    value="">
         </label>
     </div>
-    <div class="day-of-the-week">
-        <label class="checkbox"><span>M</span>
-            <input type="checkbox" value="M"><i></i></label>
-        <label class="checkbox"><span>Tu</span>
-            <input type="checkbox" value="Tu"><i></i></label>
-        <label class="checkbox"><span>W</span>
-            <input type="checkbox" value="W"><i></i></label>
-        <label class="checkbox"><span>Th</span>
-            <input type="checkbox" value="Th"><i></i></label>
-        <label class="checkbox"><span>F</span>
-            <input type="checkbox" value="F"><i></i></label>
-        <label class="checkbox"><span>Sa</span>
-            <input type="checkbox" value="Sa"><i></i></label>
-        <label class="checkbox"><span>Su</span>
-            <input type="checkbox" value="Su"><i></i></label>
-    </div>
     <div class="start-date">
         <label class="input">
             <span>Date</span>
@@ -103,8 +87,9 @@ $view['slots']->start('modal-body') ?>
             </select>
         </label>
     </div>
-    <div class="highlighted-link">
-        <button type="submit" data-dismiss="modal" class="more">Save</button>
+    <div class="highlighted-link invalid">
+        <div class="invalid-only">You must complete all fields before moving on.</div>
+        <button type="submit" class="more">Save</button>
     </div>
 </form>
 <?php $view['slots']->stop();

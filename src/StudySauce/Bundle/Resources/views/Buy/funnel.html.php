@@ -1,3 +1,10 @@
+<?php
+use StudySauce\Bundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
+
+/** @var GlobalVariables $app */
+/** @var User $user */
+?>
 <ol class="guide">
     <?php
     $user = $app->getUser();

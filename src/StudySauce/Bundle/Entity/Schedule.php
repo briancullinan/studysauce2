@@ -68,6 +68,11 @@ class Schedule
     protected $sharp9pm2am;
 
     /**
+     * @ORM\Column(type="array", name="alerts", nullable = true)
+     */
+    protected $alerts;
+
+    /**
      * @ORM\Column(type="json_array", name="grade_scale")
      */
     protected $gradeScale = [];
@@ -517,5 +522,28 @@ class Schedule
     public function getGradeScale()
     {
         return $this->gradeScale;
+    }
+
+    /**
+     * Set alerts
+     *
+     * @param array $alerts
+     * @return Schedule
+     */
+    public function setAlerts($alerts)
+    {
+        $this->alerts = $alerts;
+
+        return $this;
+    }
+
+    /**
+     * Get alerts
+     *
+     * @return array 
+     */
+    public function getAlerts()
+    {
+        return $this->alerts;
     }
 }

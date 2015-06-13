@@ -8,6 +8,8 @@ namespace StudySauce\Bundle\Controller;
     use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
     use HWI\Bundle\OAuthBundle\Templating\Helper\OAuthHelper;
     use StudySauce\Bundle\Entity\Invite;
+    use StudySauce\Bundle\Entity\ParentInvite;
+    use StudySauce\Bundle\Entity\PartnerInvite;
     use StudySauce\Bundle\Entity\User;
     use StudySauce\Bundle\EventListener\InviteListener;
     use StudySauce\Bundle\Security\UserProvider;
@@ -45,8 +47,27 @@ class AccountController extends Controller
             $services[$o] = $oauth->getLoginUrl($o);
         }
 
+        $payment = $user->getPayments()->first();
+        if(empty($payment)) {
+            $partner = $user->getPartnerOrAdviser();
+            if($partner instanceof User)
+                $payment = $partner->getPayments()->first();
+            elseif($partner instanceof PartnerInvite && !empty($partner->getPartner()))
+                $payment = $partner->getPartner()->getPayments()->first();
+        }
+        if(empty($payment)) {
+            /** @var ParentInvite $parent */
+            $parent = $user->getParentInvites()->filter(
+                function (ParentInvite $p) {
+                    return !empty($p->getParent());
+                })->first();
+            if(!empty($parent))
+                $payment = $parent->getParent()->getPayments()->first();
+        }
+
         return $this->render('StudySauceBundle:Account:tab.html.php', [
                 'user' => $user,
+                'payment' => $payment,
                 'csrf_token' => $csrfToken,
                 'services' => $services
             ]);

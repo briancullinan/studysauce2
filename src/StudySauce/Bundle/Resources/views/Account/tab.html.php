@@ -1,5 +1,4 @@
 <?php
-use StudySauce\Bundle\Entity\ParentInvite;
 use StudySauce\Bundle\Entity\Payment;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
@@ -10,18 +9,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 /** @var $view TimedPhpEngine */
 /** @var $user User */
 /** @var Payment $payment */
-/** @var ParentInvite $parent */
-$payment = $user->getPayments()->first()
-    ?: (!empty($user->getPartnerOrAdviser())
-    ? $user->getPartnerOrAdviser()->getPayments()->first()
-    : null)
-    ?: (!empty($parent = $user->getParentInvites()->filter(
-        function (ParentInvite $p) {
-            return !empty($p->getParent());
-        }
-    )->first())
-    ? $parent->getParent()->getPayments()->first()
-    : null);
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 

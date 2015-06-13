@@ -41,14 +41,12 @@ class PlanController extends Controller
         'Sa' => 518400,
         'Su' => 0
     ];
-    private static $holidays;
 
     /**
-     *
+     * @return array
      */
-    public function __construct()
-    {
-        self::$holidays = [
+    private static function holidays() {
+        $holidays = [
             date('Y') . '/09/01' => 'Memorial day',
             date('Y') . '/11/27' => 'Thanksgiving',
             date('Y') . '/11/28' => 'Thanksgiving',
@@ -62,6 +60,7 @@ class PlanController extends Controller
             date('Y') + 1 . '/12/26' => 'Christmas',
             date('Y') + 1 . '/01/19' => 'Martin Luther King Jr.'
         ];
+        return $holidays;
     }
 
     /**
@@ -281,7 +280,7 @@ class PlanController extends Controller
                 $classT = new \DateTime();
                 $classT->setTimestamp($t);
                 // skip class on holidays
-                if (isset(self::$holidays[$classT->format('Y/m/d')])) {
+                if (isset(self::holidays()[$classT->format('Y/m/d')])) {
                     continue;
                 }
                 $classT->setTime($c->getStartTime()->format('H'), $c->getStartTime()->format('i'), $c->getStartTime()->format('s'));
@@ -370,15 +369,13 @@ class PlanController extends Controller
             return 1;
         }
         elseif($schedule->getClasses()->exists(function ($_, Course $c) {
-            return $c->getStudyDifficulty() != 'none'; }) && (
-                $schedule->getClasses()->exists(function ($_, Course $c) {
-                    return !$c->getEvents()->exists(function ($_, Event $e) {
+                    return $c->getStudyDifficulty() != 'none' && !$c->getEvents()->exists(function ($_, Event $e) {
                         return $e->getType() == 'p' && $e->getDeleted() == false;
                     });}) ||
                 $schedule->getClasses()->exists(function ($_, Course $c) {
-                    return !$c->getEvents()->exists(function ($_, Event $e) {
+                    return $c->getStudyDifficulty() != 'none' && !$c->getEvents()->exists(function ($_, Event $e) {
                         return $e->getType() == 'sr' && $e->getDeleted() == false;
-                    });}))) {
+                    });})) {
             return 2;
         }
         elseif($schedule->getClasses()->exists(function ($_, Course $c) {
@@ -576,7 +573,7 @@ class PlanController extends Controller
             }
         }
 
-        foreach (self::$holidays as $k => $h) {
+        foreach (self::holidays() as $k => $h) {
             $classT = new \DateTime($k);
 
             $holiday = [
@@ -621,27 +618,36 @@ class PlanController extends Controller
 
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
-        if(empty($schedule)) {
-            $schedule = new Schedule();
-        }
-
-        $courses = $schedule->getClasses()->toArray();
-        foreach($courses as $i => $c)
-        {
-            /** @var Course $c */
-            if(!empty($request->get('profile-type-' . $c->getId()))) {
-                $c->setStudyType($request->get('profile-type-' . $c->getId()));
-                $orm->merge($c);
+        if(!empty($schedule)) {
+            if(!empty($alerts = $request->get('alerts'))) {
+                $toSave = [];
+                foreach(['c', 'p', 'sr', 'f', 'o'] as $t) {
+                    if(isset($alerts[$t]))
+                        $toSave[$t] = intval($alerts[$t]);
+                    else
+                        $toSave[$t] = 15;
+                }
+                $schedule->setAlerts($toSave);
+                $orm->merge($schedule);
             }
-            if(!empty($request->get('profile-difficulty-' . $c->getId()))) {
-                $c->setStudyDifficulty($request->get('profile-difficulty-' . $c->getId()));
-                $orm->merge($c);
+            $courses = $schedule->getClasses()->toArray();
+            foreach($courses as $i => $c)
+            {
+                /** @var Course $c */
+                if(!empty($request->get('profile-type-' . $c->getId()))) {
+                    $c->setStudyType($request->get('profile-type-' . $c->getId()));
+                    $orm->merge($c);
+                }
+                if(!empty($request->get('profile-difficulty-' . $c->getId()))) {
+                    $c->setStudyDifficulty($request->get('profile-difficulty-' . $c->getId()));
+                    $orm->merge($c);
+                }
             }
+            $orm->flush();
         }
-        $orm->flush();
 
         // check if schedule is empty
-        return new JsonResponse(true);
+        return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
 
     /**
@@ -1053,7 +1059,7 @@ END:VCALENDAR');
                 $classT = new \DateTime();
                 $classT->setTimestamp($t);
                 // skip class on holidays
-                if ($course->getType() == 'c' && isset(self::$holidays[$classT->format('Y/m/d')])) {
+                if ($course->getType() == 'c' && isset(self::holidays()[$classT->format('Y/m/d')])) {
                     continue;
                 }
                 $classT->setTime($classStart->format('H'), $classStart->format('i'), $classStart->format('s'));
@@ -1101,24 +1107,37 @@ END:VCALENDAR');
             $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
 
         if (!empty($event)) {
-            $oldStart = $event->getStart();
-            $newStart = new \DateTime($request->get('start'));
-            $newStart->setTimezone(new \DateTimeZone(date_default_timezone_get()));
-            $newEnd = new \DateTime($request->get('end'));
-            $newEnd->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+            $oldStart = clone $event->getStart();
+            if($request->get('start') !== null) {
+                $newStart = new \DateTime($request->get('start'));
+                $newStart->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                $newEnd = new \DateTime($request->get('end'));
+                $newEnd->setTimezone(new \DateTimeZone(date_default_timezone_get()));
 
-            $event->setStart($newStart);
-            $event->setEnd($newEnd);
-            $event->setMoved(true);
-            $orm->merge($event);
+                $event->setStart($newStart);
+                $event->setEnd($newEnd);
+                $event->setMoved(true);
 
-            if($newStart->getTimestamp() - $oldStart->getTimestamp() < 0) {
-                $diff = new \DateInterval('PT' . abs($newStart->getTimestamp() - $oldStart->getTimestamp()) . 'S');
-                $diff->invert = 1;
+                if ($newStart->getTimestamp() - $oldStart->getTimestamp() < 0) {
+                    $diff = new \DateInterval('PT' . abs($newStart->getTimestamp() - $oldStart->getTimestamp()) . 'S');
+                    $diff->invert = 1;
+                } else {
+                    $diff = new \DateInterval('PT' . ($newStart->getTimestamp() - $oldStart->getTimestamp()) . 'S');
+                }
             }
             else {
-                $diff = new \DateInterval('PT' . ($newStart->getTimestamp() - $oldStart->getTimestamp()) . 'S');
+                $diff = $diff = new \DateInterval('PT0S');
+                $newStart = clone $event->getStart();
             }
+
+            if($request->get('location') !== null)
+                $event->setLocation($request->get('location'));
+            if($request->get('alert') !== null)
+                $event->setAlert($request->get('alert'));
+            if($request->get('title') !== null)
+                $event->setName($request->get('title'));
+
+            $orm->merge($event);
 
             // move subsequent events of the same type
             $events = $schedule->getEvents()
@@ -1181,6 +1200,14 @@ END:VCALENDAR');
                             $e->setStart($tempStart);
                             $e->setEnd($tempEnd);
                             $e->setMoved(true);
+
+                            if($request->get('location') !== null)
+                                $event->setLocation($request->get('location'));
+                            if($request->get('alert') !== null)
+                                $event->setAlert($request->get('alert'));
+                            if($request->get('title') !== null)
+                                $event->setName($request->get('title'));
+
                             $orm->merge($e);
                             break;
                         }
