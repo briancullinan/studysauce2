@@ -440,6 +440,11 @@ class Event
      */
     public function getAlert()
     {
+        if(empty($this->alert) && $this->alert !== 0) {
+            $schedule = $this->getSchedule()->getAlerts();
+            if(isset($schedule[$this->type]))
+                return $schedule[$this->type];
+        }
         return $this->alert;
     }
 

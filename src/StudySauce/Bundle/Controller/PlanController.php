@@ -127,8 +127,17 @@ class PlanController extends Controller
         {
             /** @var Event $event */
             if(empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $existing)) {
-                $newEvent = new \Google_Service_Calendar_Event([
-                    'summary' => $event->getName(),
+                if($event->getType() == 'sr')
+                    $name = 'Study session: ' . $event->getName();
+                elseif($event->getType() == 'p')
+                    $name = 'Pre-work: ' . $event->getName();
+                elseif($event->getType() == 'c')
+                    $name = 'Class: ' . $event->getName();
+                else
+                    $name = $event->getName();
+
+                $config = [
+                    'summary' => $name,
                     'location' => $event->getLocation(),
                     'description' => 'Log in to StudySauce to take notes.',
                     'start' => [
@@ -144,15 +153,18 @@ class PlanController extends Controller
                     //],
                     'attendees' => [
                         ['email' => $user->getEmail()]
-                    ],
-                    'reminders' => [
+                    ]
+                ];
+                if(!empty($event->getAlert())) {
+                    $config['reminders'] = [
                         'useDefault' => FALSE,
                         'overrides' => [
-                            ['method' => 'email', 'minutes' => $event->getAlert()?:15],
-                            ['method' => 'sms', 'minutes' => $event->getAlert()?:15],
+                            ['method' => 'email', 'minutes' => $event->getAlert()],
+                            ['method' => 'sms', 'minutes' => $event->getAlert()],
                         ],
-                    ],
-                ]);
+                    ];
+                }
+                $newEvent = new \Google_Service_Calendar_Event($config);
                 try {
                     $newEvent = $service->events->insert($id, $newEvent);
                 }
@@ -898,8 +910,8 @@ EOCAL;
             $start = date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
             $end = date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('His') . 'Z';
             $created = $event->getCreated()->format('Ymd') . 'T' . $event->getCreated()->format('His') . 'Z';
-            // TODO: load alert from settings
-            $alert = '30M';
+            // load alert from settings
+            $alert = $event->getAlert();
             $eventStr = <<<EOEVT
 BEGIN:VEVENT
 DTSTART:$start

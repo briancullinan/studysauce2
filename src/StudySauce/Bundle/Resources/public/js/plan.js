@@ -2,11 +2,32 @@ $(document).ready(function () {
 
     var body = $('body'),
         isInitialized = false,
-        calendar;
+        calendar, clickTimeout;
 
-    var clickTimeout;
-    body.on('dblclick', '#plan #calendar .fc-event', function () {
-    });
+    function filterEvents(s, e) {
+        var plans = $('#plan'),
+            events = [];
+        for (var i = 0; i < window.planEvents.length; i++) {
+            if (window.planEvents[i].start.getTime() > s - 86400 && window.planEvents[i].end.getTime() < e + 86400) {
+                events[events.length] = window.planEvents[i];
+            }
+        }
+        if (events.length == 0 && $('#plan-intro-1').length == 0) {
+            plans.addClass('empty');
+            $('#plan-empty').modal({
+                backdrop:false,
+                keyboard:false,
+                show:true
+            });
+            $(document).off('focusin.bs.modal');
+            $('body').removeClass('modal-open');
+        }
+        else {
+            plans.removeClass('empty');
+            $('#plan-empty').modal('hide');
+        }
+        return events;
+    }
 
     body.on('click', '#plan .fc-agendaDay-button', function () {
         var plan = $('#plan');
@@ -250,7 +271,11 @@ $(document).ready(function () {
             firstHour: new Date().getHours(),
             viewRender: function( view, element )
             {
-                $('#plan').removeClass('agendaDay agendaWeek month').addClass(view.name);
+                var plan = $('#plan');
+                plan.removeClass('agendaDay agendaWeek month').addClass(view.name);
+                if(view.name != 'agendaDay') {
+                    plan.find('.mini-checkin').hide();
+                }
                 if(this.renderDrag != $.fullCalendar.View.prototype.renderDrag)
                     this.renderDrag = $.fullCalendar.View.prototype.renderDrag;
                 // stupid dropAccept option should be used when dropping not with initiating
@@ -262,9 +287,10 @@ $(document).ready(function () {
                 };
             },
             eventAfterAllRender: function () {
-                var view = $('#calendar').fullCalendar('getView');
+                var calendar = $('#calendar'),
+                    view = calendar.fullCalendar('getView');
                 if(view.name == 'agendaDay') {
-                    $('#calendar').find('.fc-event').first().trigger('click');
+                    calendar.find('.fc-event').first().trigger('click');
                 }
             },
             eventRender: function (event, element) {
@@ -311,7 +337,10 @@ $(document).ready(function () {
             defaultView: plans.is('.setup-mode') ? 'agendaWeek' : 'agendaDay',
             selectable: false,
             events: function (start, end, timezone, callback) {
-                callback(window.planEvents);
+                var s = start.unix() * 1000,
+                    e = end.unix() * 1000;
+                var events = filterEvents(s, e);
+                callback(events);
             },
             drop: function(date, jsEvent, ui) {
                 // TODO: count down to remove with numbers in event
@@ -325,9 +354,11 @@ $(document).ready(function () {
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
                 if(!plan.is('.setup-mode')) {
                     clickTimeout = setTimeout(function () {
-                        calendar.fullCalendar('gotoDate', event.start);
-                        calendar.fullCalendar('changeView', 'agendaDay');
-                        plan.addClass('session-selected');
+                        if($('#calendar').fullCalendar('getView').name != 'agendaDay') {
+                            calendar.fullCalendar('gotoDate', event.start);
+                            calendar.fullCalendar('changeView', 'agendaDay');
+                            plan.addClass('session-selected');
+                        }
                         // change mini checkin color
                         var notes;
                         if(typeof event.courseId != 'undefined') {
@@ -699,7 +730,7 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#plan-step-6 a[href*="/plan/download"]', function (evt) {
+    body.on('click', '#plan-step-6 a[href*="/plan/download"]', function () {
         $('#plan-step-6').removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     });
 

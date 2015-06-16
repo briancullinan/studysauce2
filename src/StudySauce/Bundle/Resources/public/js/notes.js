@@ -105,49 +105,58 @@ $(document).ready(function () {
         }, 20);
     });
 
+    function updateNotes()
+    {
+        var notes = $('#notes'),
+            notebookId = notes.find('select[name="notebook"]').val();
+        notes.find('.squiggle').remove();
+        notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
+        var response = $(data);
+        notes.find('.term-row').remove();
+        response.find('.term-row').insertAfter('.new-study-note');
+        notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
+        var row = notes.find('.class-row.notebook-id-' + notebookId + ', .class-row.course-id-' + notebookId);
+        if (!row.parents('.term-row').is('.selected')) {
+            row.parents('.term-row').find('> :first-child').trigger('click');
+        }
+        if (!row.is('.selected')) {
+            row.find('> :first-child').trigger('click');
+        }
+        row.scrollintoview(DASHBOARD_MARGINS);
+        $('#editor1').blur();
+        CKEDITOR.instances.editor1.fire('blur');
+    }
+
     body.on('click', '#notes a[href="#save-note"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes'),
             notebookId = notes.find('select[name="notebook"]').val();
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation($(this));
-        $.ajax({
-            url: window.callbackPaths['notes_update'],
-            type: 'POST',
-            dataType: 'text',
-            data: {
-                noteId: noteId,
-                tags: notes.find('.input.tags input')[0].selectize.getValue(),
-                title: notes.find('.note-title .title input').val().trim(),
-                notebookId: notebookId,
-                body: CKEDITOR.instances['editor1'].getData()
-            },
-            success: function (data) {
-                notes.find('.squiggle').remove();
-                notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
-                var response = $(data);
-                notes.find('.term-row').remove();
-                response.find('.term-row').insertAfter('.new-study-note');
-                notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
-                var row = notes.find('.class-row.notebook-id-' + notebookId + ', .class-row.course-id-' + notebookId);
-                if(!row.parents('.term-row').is('.selected')) {
-                    row.parents('.term-row').find('> :first-child').trigger('click');
+        if(notes.is(':visible') && CKEDITOR.instances['editor1'].getData().trim() == '') {
+
+        }
+        else {
+            $.ajax({
+                url: window.callbackPaths['notes_update'],
+                type: 'POST',
+                dataType: 'text',
+                data: {
+                    noteId: noteId,
+                    tags: notes.find('.input.tags input')[0].selectize.getValue(),
+                    title: notes.find('.note-title .title input').val().trim(),
+                    notebookId: notebookId,
+                    body: CKEDITOR.instances['editor1'].getData()
+                },
+                success: updateNotes,
+                error: function () {
+                    notes.find('.squiggle').remove();
                 }
-                if(!row.is('.selected')) {
-                    row.find('> :first-child').trigger('click');
-                }
-                row.scrollintoview(DASHBOARD_MARGINS);
-                $('#editor1').blur();
-                CKEDITOR.instances.editor1.fire('blur');
-            },
-            error: function () {
-                notes.find('.squiggle').remove();
-            }
-        });
+            });
+        }
     });
 
-    function updateNotes()
-    {
+    body.on('scheduled', function () {
         var notes = $('#notes');
         $.ajax({
             url: window.callbackPaths['notes'],
@@ -161,9 +170,7 @@ $(document).ready(function () {
                 notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
             }
         });
-    }
-
-    body.on('scheduled', updateNotes);
+    });
 
     body.on('hide', '#notes', function () {
         $(this).find('[contenteditable="true"]').each(function () {
@@ -260,15 +267,7 @@ $(document).ready(function () {
         }
     });
 
-    body.on('change', '#add-notebook input', function () {
-        var dialog = $('#add-notebook');
-        if($(this).val().trim() != '')
-            dialog.find('.highlighted-link').removeClass('invalid').addClass('valid');
-        else
-            dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
-    });
-
-    body.on('keyup', '#add-notebook input', function () {
+    body.on('keyup change', '#add-notebook input', function () {
         var dialog = $('#add-notebook');
         if($(this).val().trim() != '')
             dialog.find('.highlighted-link').removeClass('invalid').addClass('valid');
@@ -296,7 +295,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 notes.find('.squiggle').remove();
-                // TODO: only show notes and sections with results in them
+                // only show notes and sections with results in them
                 notes.find('.note-row').each(function () {
                     var noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
                     if(data.indexOf(noteId) > -1) {
@@ -315,8 +314,7 @@ $(document).ready(function () {
 
     body.on('show', '#notes', function () {
 
-        var notes = $('#notes'),
-            loading = false;
+        var notes = $('#notes');
 
         if($('#notes-connect').modal({show: true}).length > 0) {
         }
@@ -351,9 +349,6 @@ $(document).ready(function () {
 
         }
 
-    });
-
-    body.on('show', '#notes', function () {
         // load editor
         if(!$(this).is('.loaded')) {
             $(this).addClass('loaded');
@@ -387,30 +382,23 @@ $(document).ready(function () {
                     evt.cancel();
                 }
             });
-            editor.on('focus',function( e ){
+            editor.on('focus',function(){
                 if(typeof editor.editable() != 'undefined')
                     editor.setReadOnly(false);
-                var cke = $('#cke_' + id);
-                if(cke.width() != that.outerWidth()) {
-                    cke.width(that.outerWidth());
-                    if(that.parents('.panel-pane').is('.edit-note')) {
-                        editor.fire('blur');
-                        editor.fire('focus');
-                    }
-                }
+                $(window).trigger('resize');
             });
-            editor.fire('resize');
         });
     }
 
     $(window).resize(function () {
-        $('[contenteditable="true"]:visible').each(function () {
-            var id = $(this).attr('id');
-            $('#cke_' + id + ':visible').width($(this).outerWidth());
-            if(typeof CKEDITOR.instances[id] != 'undefined')
-                CKEDITOR.instances[id].fire('resize');
-        });
-
+        setTimeout(function () {
+            $('[contenteditable="true"]:visible').each(function () {
+                var id = $(this).attr('id');
+                $('#cke_' + id + ':visible').width($(this).outerWidth());
+                if(typeof CKEDITOR.instances[id] != 'undefined')
+                    CKEDITOR.instances[id].fire('resize');
+            });
+        }, 15);
     });
 
 });

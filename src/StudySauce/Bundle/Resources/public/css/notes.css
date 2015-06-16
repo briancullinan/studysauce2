@@ -246,7 +246,7 @@
 {
     outline: none;
     background-color: #fff;
-    margin: 86px -20px;
+    margin: 43px -20px;
     padding: 20px;
     min-height: 400px;
     display:none;
@@ -459,6 +459,30 @@
     font-size: 80px;
 }
 
+#cke_editor1 .cke_toolbar
+{
+    float:none !important;
+    display: inline;
+}
+
+@media all and (max-width: 1900px) {
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(1),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(2),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(3),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(4)
+    {
+        display:none;
+    }
+}
+
+@media all and (max-width: 1400px)
+{
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(3)
+    {
+        display:none;
+    }
+}
+
 @media all and (max-width: 1000px)
 {
 
@@ -472,13 +496,17 @@
         margin-left: 0;
         padding-left: 0;
     }
+
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(4),
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(5)
+    {
+        display:none;
+    }
 }
 
-@media all and (max-width: 914px)
-{
-    #notes #editor1
-    {
-        margin: 120px -20px;
+@media all and (max-width: 800px) {
+    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(6) {
+        display: none;
     }
 }
 
@@ -486,27 +514,6 @@
 {
     .left-menu #cke_editor1,
     .right-menu #cke_editor1
-    {
-        display:none;
-    }
-
-    .cke_toolbar
-    {
-        float:none !important;
-    }
-
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7)
-    {
-        display: inline;
-    }
-
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(1),
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(2),
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(3),
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(4),
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(3),
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(4),
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(7) > .cke_combo:nth-child(5)
     {
         display:none;
     }
@@ -541,6 +548,8 @@
     {
         margin-right: 0;
         padding-right: 0;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     #notes .new-study-note
@@ -549,16 +558,5 @@
     }
 
 }
-
-
-@media all and (max-width: 500px)
-{
-
-    #cke_editor1 .cke_toolbox > .cke_toolbar:nth-child(6)
-    {
-        display:none;
-    }
-}
-
 
 

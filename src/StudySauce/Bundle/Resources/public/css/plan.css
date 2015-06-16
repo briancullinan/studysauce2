@@ -27,6 +27,11 @@
     bottom:10px;
 }
 
+#plan.setup-mode a[href="#plan-step-1"]
+{
+    display:none;
+}
+
 #plan.setup-mode ~ #plan-step-1 .highlighted-link:not(.setup-mode),
 #plan:not(.setup-mode) ~ #plan-step-1 .highlighted-link.setup-mode,
 #plan.setup-mode ~ #plan-step-3 .highlighted-link:not(.setup-mode),
@@ -573,7 +578,6 @@ a.fc-event:not([href])
     position:absolute;
     top:0;
     right:0;
-    display:none;
 }
 
 #plan [class*="strategy-"]

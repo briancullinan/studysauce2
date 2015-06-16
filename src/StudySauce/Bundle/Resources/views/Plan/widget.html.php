@@ -3,7 +3,7 @@ use StudySauce\Bundle\Entity\Event;
 ?>
 <div class="widget-wrapper">
     <div class="widget plan-widget">
-        <h3>Today's study plan</h3>
+        <h3>Study plan</h3>
         <?php
         if(!$user->hasRole('ROLE_PAID')) {
             ?>
@@ -17,18 +17,19 @@ use StudySauce\Bundle\Entity\Event;
         <?php
         }
         else {
+            $count = 0;
             foreach($events as $i => $event) {
                 /** @var Event $event */
                 if ($event->getType() == 'm' || $event->getType() == 'r' || $event->getType() == 'z') {
                     continue;
                 }
-
-                if ($event->getStart() > new \DateTime('today') && $event->getStart() < new \DateTime('tomorrow')) {
-                    ?>
+                if ($count > 10)
+                    break;
+                ?>
                 <div class="session-row <?php
-                print ' event-type-' . $event->getType();
-                print ' event-id-' . $event->getId();
-                print ($event->getCompleted() ? ' done' : ''); ?>">
+                    print ' event-type-' . $event->getType();
+                    print ' event-id-' . $event->getId();
+                    print ($event->getCompleted() ? ' done' : ''); ?>">
                     <div class="class-name">
                         <span class="class<?php print (!empty($event->getCourse())
                             ? $event->getCourse()->getIndex()
@@ -45,8 +46,7 @@ use StudySauce\Bundle\Entity\Event;
                                 ? 'checked="checked"'
                                 : ''); ?>><i></i></label>
                     </div>
-                    </div><?php
-                }
+                </div><?php
             }
         } ?>
     </div>

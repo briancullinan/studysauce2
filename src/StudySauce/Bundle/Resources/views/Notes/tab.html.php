@@ -126,7 +126,8 @@ $view['slots']->start('body'); ?>
                                         <div class="summary">
                                             <small class="date"><?php print $time->format('j M'); ?></small>
                                             <?php if(!empty($n->getContent())) {
-                                                $summary = preg_replace('/<[^>]*>/i', '', substr($n->getContent(), 0, min(strlen($n->getContent()), 1000)));
+                                                $count = preg_match('/^[\s\S]{0,1000}([^\<]{0,500}?\>|$)/i', $n->getContent(), $matches);
+                                                $summary = preg_replace('/<[^>]*>/i', '', $matches[0]);
                                                 print $summary;
                                             }
                                             else { ?>
@@ -190,6 +191,7 @@ $view['slots']->start('sincludes');
 if (!empty($services)) {
     print $this->render('StudySauceBundle:Dialogs:notes-connect.html.php',['id' => 'notes-connect', 'services' => $services]);
 }
+print $this->render('StudySauceBundle:Dialogs:notes-discard.html.php',['id' => 'notes-discard']);
 print $this->render('StudySauceBundle:Dialogs:add-notebook.html.php',['id' => 'add-notebook']);
 print $this->render('StudySauceBundle:Dialogs:delete-notebook.html.php',['id' => 'delete-notebook']);
 $view['slots']->stop();
