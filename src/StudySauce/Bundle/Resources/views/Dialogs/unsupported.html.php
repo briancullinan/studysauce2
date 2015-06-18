@@ -18,8 +18,3 @@ $view['slots']->start('modal-body') ?>
     <a href="https://www.mozilla.org/en-US/firefox/new/">&nbsp;</a>
     <a href="http://support.apple.com/downloads/#safari">&nbsp;</a>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

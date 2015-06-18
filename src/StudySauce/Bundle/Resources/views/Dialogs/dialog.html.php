@@ -21,3 +21,10 @@
         </div>
     </div>
 </div>
+<?php
+$view['slots']->start('modal-header');
+$view['slots']->stop();
+$view['slots']->start('modal-body');
+$view['slots']->stop();
+$view['slots']->start('modal-footer');
+$view['slots']->stop();

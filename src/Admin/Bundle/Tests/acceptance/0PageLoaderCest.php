@@ -153,10 +153,6 @@ class PageLoaderCest
         $I->fillField('.password input', 'password');
         $I->click('Register');
         $I->wait(10);
-
-        $I->seeInCurrentUrl('/profile/funnel');
-        $I->test('tryStudyFunnel');
-        $I->seeInCurrentUrl('/plan');
     }
 
     /**
@@ -229,20 +225,6 @@ class PageLoaderCest
         $I->seeLink('Complete order');
         $I->click('Complete order');
         $I->wait(10);
-    }
-
-    /**
-     * @param AcceptanceTester $I
-     */
-    public function tryStudyFunnel(AcceptanceTester $I)
-    {
-        $I->wantTo('finish the study assessment');
-        $I->seeInCurrentUrl('/profile/funnel');
-        $I->test('tryFunnelProfile');
-        $I->seeInCurrentUrl('/schedule/funnel');
-        $I->test('tryFunnelSchedule');
-        $I->seeInCurrentUrl('/customization/funnel');
-        $I->test('tryFunnelCustomization');
     }
 
     /**
@@ -578,7 +560,6 @@ class PageLoaderCest
         $I->click('a[href*="/logout"]');
         $I->click('a[href*="/login"]');
         $I->click('a[href*="/google"]');
-        $I->seeInCurrentUrl('/profile/funnel');
     }
 
     /**

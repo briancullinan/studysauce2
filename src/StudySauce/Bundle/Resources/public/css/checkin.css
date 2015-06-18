@@ -49,7 +49,7 @@
 }
 
 .checkin-widget .classes .checkin,
-#plan .mini-checkin .checkin,
+.mini-checkin .checkin,
 #checkin .classes a {
     display: inline-block;
     height: 100px;
@@ -63,13 +63,13 @@
     /* color: #FF0D00; */
 }
 
-#plan .mini-checkin .checkin
+.mini-checkin .checkin
 {
     vertical-align: middle;
     margin: 10px;
 }
 
-#plan .mini-checkin .flip-counter
+.mini-checkin .flip-counter
 {
     display:inline-block;
     width:200px;
@@ -83,7 +83,7 @@
 }
 
 .checkin-widget .classes .checkin span,
-#plan .mini-checkin .checkin > span,
+.mini-checkin .checkin > span,
 #checkin .classes a span {
     display: block;
     max-height: 30px;
@@ -95,7 +95,7 @@
 }
 
 .checkin-widget .classes .class1,
-#plan .mini-checkin .class1,
+.mini-checkin .class1,
 #checkin .classes .class1,
 #checkin .classes a:nth-child(2)
 {
@@ -104,7 +104,7 @@
 }
 
 .checkin-widget .classes .class2,
-#plan .mini-checkin .class2,
+.mini-checkin .class2,
 #checkin .classes .class2,
 #checkin .classes a:nth-child(3)
 {
@@ -113,7 +113,7 @@
 }
 
 .checkin-widget .classes .class3,
-#plan .mini-checkin .class3,
+.mini-checkin .class3,
 #checkin .classes .class3,
 #checkin .classes a:nth-child(4)
 {
@@ -122,7 +122,7 @@
 }
 
 .checkin-widget .classes .class4,
-#plan .mini-checkin .class4,
+.mini-checkin .class4,
 #checkin .classes .class4,
 #checkin .classes a:nth-child(5)
 {
@@ -131,7 +131,7 @@
 }
 
 .checkin-widget .classes .class5,
-#plan .mini-checkin .class5,
+.mini-checkin .class5,
 #checkin .classes .class5,
 #checkin .classes a:nth-child(6)
 {
@@ -140,7 +140,7 @@
 }
 
 .checkin-widget .classes .class6,
-#plan .mini-checkin .class6,
+.mini-checkin .class6,
 #checkin .classes .class6,
 #checkin .classes a:nth-child(7)
 {
@@ -149,7 +149,7 @@
 }
 
 .checkin-widget .classes .class7,
-#plan .mini-checkin .class7,
+.mini-checkin .class7,
 #checkin .classes .class7,
 #checkin .classes a:nth-child(8)
 {
@@ -158,7 +158,7 @@
 }
 
 .checkin-widget .classes .class8,
-#plan .mini-checkin .class8,
+.mini-checkin .class8,
 #checkin .classes .class8,
 #checkin .classes a:nth-child(9)
 {
@@ -167,7 +167,7 @@
 }
 
 .checkin-widget .classes .class0.checked-in,
-#plan .checkin0 .mini-checkin .checked-in,
+.mini-checkin .checked-in,
 #checkin .classes .class0.checked-in,
 #checkin .classes a.checked-in
 {
@@ -175,7 +175,7 @@
 }
 
 .checkin-widget .classes .class1.checked-in,
-#plan .checkin1 .mini-checkin .checkin.checked-in,
+.mini-checkin .class1.checked-in,
 #checkin .classes .class1.checked-in,
 #checkin .classes a:nth-child(2).checked-in
 {
@@ -183,7 +183,7 @@
 }
 
 .checkin-widget .classes .class2.checked-in,
-#plan .checkin2 .mini-checkin .checkin.checked-in,
+.mini-checkin .class3.checked-in,
 #checkin .classes .class2.checked-in,
 #checkin .classes a:nth-child(3).checked-in
 {
@@ -191,7 +191,7 @@
 }
 
 .checkin-widget .classes .class3.checked-in,
-#plan .checkin3 .mini-checkin .checkin.checked-in,
+.mini-checkin .class3.checked-in,
 #checkin .classes .class3.checked-in,
 #checkin .classes a:nth-child(4).checked-in
 {
@@ -199,7 +199,7 @@
 }
 
 .checkin-widget .classes .class4.checked-in,
-#plan .checkin4 .mini-checkin .checkin.checked-in,
+.mini-checkin .class4.checked-in,
 #checkin .classes .class4.checked-in,
 #checkin .classes a:nth-child(5).checked-in
 {
@@ -207,7 +207,7 @@
 }
 
 .checkin-widget .classes .class5.checked-in,
-#plan .checkin5 .mini-checkin .checkin.checked-in,
+.mini-checkin .class5.checked-in,
 #checkin .classes .class5.checked-in,
 #checkin .classes a:nth-child(6).checked-in
 {
@@ -215,7 +215,7 @@
 }
 
 .checkin-widget .classes .class6.checked-in,
-#plan .checkin6 .mini-checkin .checkin.checked-in,
+.mini-checkin .class6.checked-in,
 #checkin .classes .class6.checked-in,
 #checkin .classes a:nth-child(7).checked-in
 {
@@ -223,7 +223,7 @@
 }
 
 .checkin-widget .classes .class7.checked-in,
-#plan .checkin7 .mini-checkin .checkin.checked-in,
+.mini-checkin .class7.checked-in,
 #checkin .classes .class7.checked-in,
 #checkin .classes a:nth-child(8).checked-in
 {
@@ -231,7 +231,7 @@
 }
 
 .checkin-widget .classes .class8.checked-in,
-#plan .checkin8 .mini-checkin .checkin.checked-in,
+.mini-checkin .class8.checked-in,
 #checkin .classes .class8.checked-in,
 #checkin .classes a:nth-child(9).checked-in
 {
@@ -240,7 +240,7 @@
 
 
 .checkin-widget .classes .class0:active,
-#plan .checkin0 .mini-checkin .checkin:active,
+.mini-checkin .class0:active,
 #checkin .classes .class0:active,
 #checkin .classes a:active
 {
@@ -248,7 +248,7 @@
 }
 
 .checkin-widget .classes .class1:active,
-#plan .checkin1 .mini-checkin .checkin:active,
+.mini-checkin .class1:active,
 #checkin .classes .class1:active,
 #checkin .classes a:active:nth-child(2)
 {
@@ -256,7 +256,7 @@
 }
 
 .checkin-widget .classes .class2:active,
-#plan .checkin2 .mini-checkin .checkin:active,
+.mini-checkin .class2:active,
 #checkin .classes .class2:active,
 #checkin .classes a:active:nth-child(3)
 {
@@ -264,7 +264,7 @@
 }
 
 .checkin-widget .classes .class3:active,
-#plan .checkin3 .mini-checkin .checkin:active,
+.mini-checkin .class3:active,
 #checkin .classes .class3:active,
 #checkin .classes a:active:nth-child(4)
 {
@@ -272,7 +272,7 @@
 }
 
 .checkin-widget .classes .class4:active,
-#plan .checkin4 .mini-checkin .checkin:active,
+.mini-checkin .class4:active,
 #checkin .classes .class4:active,
 #checkin .classes a:active:nth-child(5)
 {
@@ -280,7 +280,7 @@
 }
 
 .checkin-widget .classes .class5:active,
-#plan .checkin5 .mini-checkin .checkin:active,
+.mini-checkin .class5:active,
 #checkin .classes .class5:active,
 #checkin .classes a:active:nth-child(6)
 {
@@ -288,7 +288,7 @@
 }
 
 .checkin-widget .classes .class6:active,
-#plan .checkin6 .mini-checkin .checkin:active,
+.mini-checkin .class6:active,
 #checkin .classes .class6:active,
 #checkin .classes a:active:nth-child(7)
 {
@@ -296,7 +296,7 @@
 }
 
 .checkin-widget .classes .class7:active,
-#plan .checkin7 .mini-checkin .checkin:active,
+.mini-checkin .class7:active,
 #checkin .classes .class7:active,
 #checkin .classes a:active:nth-child(8)
 {
@@ -304,7 +304,7 @@
 }
 
 .checkin-widget .classes .class8:active,
-#plan .checkin8 .mini-checkin .checkin:active,
+.mini-checkin .class8:active,
 #checkin .classes .class8:active,
 #checkin .classes a:active:nth-child(9)
 {

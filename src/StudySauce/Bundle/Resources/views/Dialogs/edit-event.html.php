@@ -94,7 +94,3 @@ $view['slots']->start('modal-body') ?>
 </form>
 <?php $view['slots']->stop();
 
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

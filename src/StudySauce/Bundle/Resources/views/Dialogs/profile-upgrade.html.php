@@ -10,8 +10,3 @@ $view['slots']->start('modal-body') ?>
     <a href="<?php print $view['router']->generate('premium'); ?>" class="more">Go Premium</a>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer');
-
-$view['slots']->stop() ?>
-

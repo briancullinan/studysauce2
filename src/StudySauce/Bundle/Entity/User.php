@@ -8,6 +8,7 @@ use Course2\Bundle\Course2Bundle;
 use Course2\Bundle\Entity\Course2;
 use Course3\Bundle\Course3Bundle;
 use Course3\Bundle\Entity\Course3;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\GroupInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -545,7 +546,7 @@ class User extends BaseUser implements EncoderAwareInterface
      */
     public function addSchedule(\StudySauce\Bundle\Entity\Schedule $schedules)
     {
-        $this->schedules[] = $schedules;
+        $this->schedules = new ArrayCollection(array_merge([$schedules], $this->schedules->toArray()));
 
         return $this;
     }

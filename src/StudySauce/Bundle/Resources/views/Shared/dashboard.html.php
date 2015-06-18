@@ -113,6 +113,14 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         $view['slots']->output('tmp-javascripts');
         $view['slots']->stop();
     }
+
+    $view['slots']->start('tmp-stylesheets');
+    $view['slots']->stop();
+    $view['slots']->start('tmp-body');
+    $view['slots']->stop();
+    $view['slots']->start('tmp-javascripts');
+    $view['slots']->stop();
+
 }
 
 if($app->getRequest()->get('_format') == 'tab') {
@@ -153,6 +161,14 @@ if($app->getRequest()->get('_format') == 'tab') {
     $view['slots']->output('body');
     $view['slots']->output('javascripts');
     $view['slots']->output('sincludes');
-}
 
+    $view['slots']->start('stylesheets');
+    $view['slots']->stop();
+    $view['slots']->start('body');
+    $view['slots']->stop();
+    $view['slots']->start('javascripts');
+    $view['slots']->stop();
+    $view['slots']->start('sincludes');
+    $view['slots']->stop();
+}
 

@@ -1,6 +1,6 @@
 const TIMER_SECONDS = 3600;
-const checkinBtn = '#checkin .classes a, #home .checkin-widget .classes a, #plan .mini-checkin a';
-const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget .classes a.checked-in, #plan .mini-checkin a.checked-in';
+const checkinBtn = '#checkin .classes a, #home .checkin-widget .classes a, #plan .mini-checkin a, #notes .mini-checkin a';
+const checkedInBtn = '#checkin .classes a.checked-in, #home .checkin-widget .classes a.checked-in, #plan .mini-checkin a.checked-in, #notes .mini-checkin a.checked-in';
 
 $(document).ready(function () {
     var hours = -1,
@@ -14,6 +14,11 @@ $(document).ready(function () {
         var seconds = sessionCurrent - sessionStart + 59;
         hours = '' + Math.floor(seconds / 60 / 60);
         minutes = '' + Math.floor(seconds / 60 % 60);
+        var tmpThat = body.find(checkedInBtn).first();
+        if(tmpThat.length != 0) {
+            var courseId = (/course-id-([0-9]+)(\s|$)/ig).exec(tmpThat.attr('class'))[1];
+            body.find('.checkin.course-id-' + courseId).addClass('checked-in');
+        }
         body.find('.clock:visible').each(function () {
             var that = $(this).fitText(1/2);
             if (hours.length == 1) {

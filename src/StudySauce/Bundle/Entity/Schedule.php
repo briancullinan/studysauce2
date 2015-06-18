@@ -88,16 +88,10 @@ class Schedule
     protected $term;
 
     /**
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="schedule")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="schedule", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"start" = "DESC"})
      */
     protected $events;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Week", mappedBy="schedule")
-     * @ORM\OrderBy({"start" = "DESC"})
-     */
-    protected $weeks;
 
     /**
      * @return \Doctrine\Common\Collections\Collection
@@ -154,12 +148,6 @@ class Schedule
     {
         $this->courses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->events = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->active = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->other = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->prework = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->teach = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->spaced = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->weeks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -466,39 +454,6 @@ class Schedule
     public function getEvents()
     {
         return $this->events;
-    }
-
-    /**
-     * Add weeks
-     *
-     * @param \StudySauce\Bundle\Entity\Week $weeks
-     * @return Schedule
-     */
-    public function addWeek(\StudySauce\Bundle\Entity\Week $weeks)
-    {
-        $this->weeks[] = $weeks;
-
-        return $this;
-    }
-
-    /**
-     * Remove weeks
-     *
-     * @param \StudySauce\Bundle\Entity\Week $weeks
-     */
-    public function removeWeek(\StudySauce\Bundle\Entity\Week $weeks)
-    {
-        $this->weeks->removeElement($weeks);
-    }
-
-    /**
-     * Get weeks
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getWeeks()
-    {
-        return $this->weeks;
     }
 
     /**

@@ -92,23 +92,31 @@ class PlanController extends Controller
         $list = $service->events->listEvents($id);
         $items = $list->getItems();
         $user->setProperty('eventSync', $list->getNextSyncToken());
-        $existing = [];
+        $existing = array_map(function (\Google_Service_Calendar_Event $item) {return $item->getId();}, $items);
+        $results = $orm->getRepository('StudySauceBundle:Event')->createQueryBuilder('n')
+            ->andWhere('n.remoteId IN (:id)')
+            ->setParameter('id', $existing)
+            ->getQuery()
+            ->getResult();
+        $stored = new ArrayCollection($results);
         foreach($items as $item) {
             /** @var \Google_Service_Calendar_Event $item */
-            /** @var Event[] $stored */
-            $stored = $orm->getRepository('StudySauceBundle:Event')->createQueryBuilder('n')
-                ->andWhere('n.remoteId = :id')
-                ->setParameter('id', $item->getId())
-                ->getQuery()
-                ->getResult();
             /** @var Event $event */
-            if(empty($stored)) {
-                $event = new Event();
-                $event->setSchedule($schedule);
-                $event->setCreated(new \DateTime());
+            $event = $stored->filter(function (Event $e) use ($item){return $e->getRemoteId() == $item->getId();})->first();
+            if(empty($event)) {
+                // TODO: add events to calendar as other
+                continue;
             }
-            else {
-                $event = $stored[0];
+            if($event->getSchedule()->getId() != $schedule->getId()) {
+                try {
+                    if(!empty($event->getRemoteId())) {
+                        $service->events->delete($id, $event->getRemoteId());
+                    }
+                }
+                catch (\Exception $e) {
+
+                }
+                continue;
             }
             /** @var \Google_Service_Calendar_EventDateTime $start */
             $start = $item->getStart();
@@ -116,64 +124,76 @@ class PlanController extends Controller
             $end = $item->getEnd();
             $event->setStart(date_timezone_set(new \DateTime($start->getDateTime()), new \DateTimeZone(date_default_timezone_get())));
             $event->setEnd(date_timezone_set(new \DateTime($end->getDateTime()), new \DateTimeZone(date_default_timezone_get())));
-            if(!empty($stored)) {
-                $orm->merge($event);
-            }
-            $existing[] = $item->getId();
+            $orm->merge($event);
         }
 
-        // TODO: sync changes from google
+        // sync changes from google
         foreach($schedule->getEvents()->toArray() as $event)
         {
             /** @var Event $event */
-            if(empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $existing)) {
-                if($event->getType() == 'sr')
-                    $name = 'Study session: ' . $event->getName();
-                elseif($event->getType() == 'p')
-                    $name = 'Pre-work: ' . $event->getName();
-                elseif($event->getType() == 'c')
-                    $name = 'Class: ' . $event->getName();
-                else
-                    $name = $event->getName();
-
-                $config = [
-                    'summary' => $name,
-                    'location' => $event->getLocation(),
-                    'description' => 'Log in to StudySauce to take notes.',
-                    'start' => [
-                        'dateTime' => $event->getStart()->format('c'),
-                        'timeZone' => date_default_timezone_get(),
-                    ],
-                    'end' => [
-                        'dateTime' => $event->getEnd()->format('c'),
-                        'timeZone' => date_default_timezone_get(),
-                    ],
-                    //'recurrence' => [
-                    //    'RRULE:FREQ=DAILY;COUNT=2'
-                    //],
-                    'attendees' => [
-                        ['email' => $user->getEmail()]
-                    ]
-                ];
-                if(!empty($event->getAlert())) {
-                    $config['reminders'] = [
-                        'useDefault' => FALSE,
-                        'overrides' => [
-                            ['method' => 'email', 'minutes' => $event->getAlert()],
-                            ['method' => 'sms', 'minutes' => $event->getAlert()],
-                        ],
-                    ];
-                }
-                $newEvent = new \Google_Service_Calendar_Event($config);
+            if($event->getDeleted()) {
                 try {
-                    $newEvent = $service->events->insert($id, $newEvent);
+                    if(!empty($event->getRemoteId())) {
+                        $service->events->delete($id, $event->getRemoteId());
+                    }
                 }
                 catch (\Exception $e) {
-                    break;
+
                 }
-                $event->setRemoteId($newEvent->getId());
-                $orm->merge($event);
+                continue;
             }
+
+            if($event->getType() == 'sr')
+                $name = $event->getName() . ' : Study session';
+            elseif($event->getType() == 'p')
+                $name = $event->getName() . ' : Pre-work';
+            elseif($event->getType() == 'c')
+                $name = $event->getName() . ' : Class';
+            else
+                $name = $event->getName();
+
+            $config = [
+                'summary' => $name,
+                'location' => $event->getLocation(),
+                'description' => 'Log in to StudySauce to take notes.',
+                'start' => [
+                    'dateTime' => $event->getStart()->format('c'),
+                    'timeZone' => date_default_timezone_get(),
+                ],
+                'end' => [
+                    'dateTime' => $event->getEnd()->format('c'),
+                    'timeZone' => date_default_timezone_get(),
+                ],
+                //'recurrence' => [
+                //    'RRULE:FREQ=DAILY;COUNT=2'
+                //],
+                'attendees' => [
+                    ['email' => $user->getEmail()]
+                ]
+            ];
+            if(!empty($event->getAlert())) {
+                $config['reminders'] = [
+                    'useDefault' => FALSE,
+                    'overrides' => [
+                        ['method' => 'email', 'minutes' => $event->getAlert()],
+                        ['method' => 'sms', 'minutes' => $event->getAlert()],
+                    ],
+                ];
+            }
+            $newEvent = new \Google_Service_Calendar_Event($config);
+            try {
+                if(empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $existing)) {
+                    $newEvent = $service->events->insert($id, $newEvent);
+                }
+                else {
+                    $newEvent = $service->events->update($id, $event->getRemoteId(), $newEvent);
+                }
+            }
+            catch (\Exception $e) {
+                continue;
+            }
+            $event->setRemoteId($newEvent->getId());
+            $orm->merge($event);
         }
         $orm->flush();
     }
@@ -355,6 +375,16 @@ class PlanController extends Controller
                 self::createCourseEvents($c, $orm);
             }
         }
+
+        // list oauth services
+        /** @var OAuthHelper $oauth */
+        $oauth = $this->get('hwi_oauth.templating.helper.oauth');
+        foreach($oauth->getResourceOwners() as $o) {
+            if($o != 'gcal')
+                continue;
+            $services[$o] = $oauth->getLoginUrl($o);
+        }
+
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'schedule' => $schedule,
                 'courses' => array_values($courses),
@@ -363,7 +393,8 @@ class PlanController extends Controller
                 'overlap' => false,
                 'step' => $step,
                 'isDemo' => $isDemo,
-                'isEmpty' => $isEmpty
+                'isEmpty' => $isEmpty,
+                'services' => $services
             ]);
     }
 
@@ -838,15 +869,8 @@ class PlanController extends Controller
         $remove = $saved->toArray();
         foreach ($remove as $i => $save) {
             /** @var Event $save */
-            if(!empty($save->getCompleted()))
-            {
-                $save->setDeleted(true);
-                $orm->merge($save);
-            }
-            else {
-                $schedule->removeEvent($save);
-                $orm->remove($save);
-            }
+            $save->setDeleted(true);
+            $orm->merge($save);
         }
         $orm->flush();
 
@@ -906,12 +930,19 @@ EOCAL;
         foreach($events->toArray() as $event) {
             /** @var Event $event */
             $id = $event->getId();
-            $title = $event->getName();
+            if($event->getType() == 'sr')
+                $title = $event->getName() . ' : Study session';
+            elseif($event->getType() == 'p')
+                $title = $event->getName() . ' : Pre-work';
+            elseif($event->getType() == 'c')
+                $title = $event->getName() . ' : Class';
+            else
+                $title = $event->getName();
             $start = date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
             $end = date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('His') . 'Z';
             $created = $event->getCreated()->format('Ymd') . 'T' . $event->getCreated()->format('His') . 'Z';
             // load alert from settings
-            $alert = $event->getAlert();
+            $alert = $event->getAlert() . 'M';
             $eventStr = <<<EOEVT
 BEGIN:VEVENT
 DTSTART:$start
@@ -964,7 +995,8 @@ END:VCALENDAR');
         /** @var Schedule $schedule */
         $schedule = $user->getSchedules()->first();
 
-        self::createStudyEvents($schedule, $request->get('events'), $orm);
+        if(!empty($request->get('events')))
+            self::createStudyEvents($schedule, $request->get('events'), $orm);
 
         return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
@@ -1014,7 +1046,7 @@ END:VCALENDAR');
                 $week += 604800) {
 
                 $t = $week + self::$weekConversion[$d];
-                if ($t < $classStart->getTimestamp() || $t > $classEnd->getTimestamp()) {
+                if ($t < $classStart->getTimestamp() - 86400 || $t > $classEnd->getTimestamp() + 86400 * 7 * 4) {
                     continue;
                 }
 

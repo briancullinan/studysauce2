@@ -31,9 +31,15 @@ foreach ($view['assetic']->javascripts(['@StudySauceBundle/Resources/public/js/n
 $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
-    <div class="panel-pane" id="notes">
+    <div class="panel-pane <?php
+        print (empty($services) ? 'connected' : 'not-connected'); ?>" id="notes">
         <div class="pane-content">
             <h2>Study notes</h2>
+            <?php if(!empty($services)) {
+                foreach($services as $o => $url) { ?>
+                    <a href="<?php print $url; ?>?_target=<?php print $view['router']->generate('notes'); ?>" class="more">Connect Evernote</a>
+                <?php }
+            } ?>
             <div class="new-study-note highlighted-link">
                 <form action="<?php print $view['router']->generate('notes_search'); ?>">
                     <a href="#add-note" class="big-add">Add <span>+</span> study note</a>
@@ -180,7 +186,9 @@ $view['slots']->start('body'); ?>
                 <label class="input tags">
                     <input type="text" placeholder="Tags" data-data="" value="" autocomplete="off">
                 </label>
-                <label class="input title"><input type="text" placeholder="Title your note"/></label></h3>
+                <label class="input title"><input type="text" placeholder="Title your note"/></label>
+            </h3>
+            <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
             <div id="editor1" contenteditable="true">This is note content</div>
             <div class="highlighted-link"><a href="#delete-note">Delete note</a><a href="#save-note" class="more">Save</a></div>
         </div>

@@ -68,8 +68,6 @@ class AdviserCest
         $I->fillField('#register .password input', 'password');
         $I->click('[value="#user-register"]');
         $I->wait(5);
-        $I->seeInCurrentUrl('/profile/funnel');
-        $I->test('tryStudyFunnel');
 
         $I->wantTo('See the student\'s entries from the adviser view');
         $I->click('a[href*="/logout"]');
@@ -117,8 +115,6 @@ class AdviserCest
         $I->fillField('#register .password input', 'password');
         $I->click('[value="#user-register"]');
         $I->wait(5);
-        $I->seeInCurrentUrl('/profile/funnel');
-        $I->test('tryStudyFunnel');
 
         $I->wantTo('See the student\'s entries from the adviser view');
         $I->click('a[href*="/logout"]');

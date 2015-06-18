@@ -27,9 +27,7 @@ foreach ($view['assetic']->javascripts(['@plan_scripts'],[],['output' => 'bundle
 <?php endforeach; ?>
     <script type="text/javascript">
         // convert events array to object to keep track of keys better
-        if(typeof(window.planEvents) == 'undefined')
-            window.planEvents = [];
-        window.planEvents = $.merge(window.planEvents, JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>'));
+        window.planEvents = <?php print (json_encode(array_values($jsonEvents), JSON_HEX_QUOT) ?: '[]'); ?>;
     </script>
 <?php $view['slots']->stop();
 

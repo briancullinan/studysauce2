@@ -28,7 +28,8 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
 <div class="panel-pane <?php
     print (count($schedules) <= 1 ? ' single' : ' multi');
-    print ($step !== false ? ' setup-mode' : ''); ?> " id="schedule">
+    print ($step !== false ? ' setup-mode' : '');
+    print ($needsNew ? ' needs-new' : ''); ?> " id="schedule">
     <div class="pane-content">
     <?php if($app->getRequest()->get('_format') == 'funnel') {
         echo $view->render('StudySauceBundle:Buy:funnel.html.php');
@@ -368,9 +369,6 @@ $view['slots']->start('body'); ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-if($needsNew) {
-    print $this->render('StudySauceBundle:Dialogs:new-schedule.html.php', ['id' => 'new-schedule']);
-}
 print $this->render('StudySauceBundle:Dialogs:manage-terms.html.php', ['id' => 'manage-terms', 'schedule' => $schedules[0]]);
 $view['slots']->stop();
 

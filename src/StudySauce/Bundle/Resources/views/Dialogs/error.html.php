@@ -7,8 +7,3 @@ Sorry an error occurred.
 $view['slots']->start('modal-body') ?>
 {error}
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

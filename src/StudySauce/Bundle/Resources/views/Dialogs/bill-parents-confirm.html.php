@@ -7,8 +7,3 @@ Thanks!
 $view['slots']->start('modal-body') ?>
 We will let you know when your account has been activated.
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

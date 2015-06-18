@@ -19,8 +19,3 @@ $view['slots']->start('modal-body') ?>
     the right side above the credit card number.</p>
 
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

@@ -46,6 +46,10 @@ $(document).ready(function () {
             success: function (data) {
                 CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
                 notes.find('.highlighted-link').removeClass('invalid').addClass('valid');
+                setTimeout(function () {
+                    if(typeof CKEDITOR.instances.editor1 != 'undefined')
+                        CKEDITOR.instances.editor1.fire('focus');
+                }, 20);
             }
         });
         setTimeout(function () {
@@ -63,11 +67,12 @@ $(document).ready(function () {
         }
     });
 
-    body.on('click', '#notes a[href="#delete-note"]', function (evt) {
+    function deleteNote(evt)
+    {
         evt.preventDefault();
         var notes = $('#notes');
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this));
+        loadingAnimation(notes.find('a[href="#delete-note"]'));
         $.ajax({
             url: window.callbackPaths['notes'].replace('/tab', '/remove/' + noteId),
             type: 'POST',
@@ -86,8 +91,9 @@ $(document).ready(function () {
                 notes.find('.squiggle').remove();
             }
         });
+    }
 
-    });
+    body.on('click', '#notes a[href="#delete-note"]', deleteNote);
 
     body.on('click', '#notes a[href="#add-note"]', function (evt) {
         evt.preventDefault();
@@ -105,7 +111,7 @@ $(document).ready(function () {
         }, 20);
     });
 
-    function updateNotes()
+    function updateNotes(data)
     {
         var notes = $('#notes'),
             notebookId = notes.find('select[name="notebook"]').val();
@@ -125,35 +131,56 @@ $(document).ready(function () {
         row.scrollintoview(DASHBOARD_MARGINS);
         $('#editor1').blur();
         CKEDITOR.instances.editor1.fire('blur');
+        if(notes.is('.not-connected') && !notes.is('.connect-shown') && notes.is(':visible')) {
+            notes.addClass('connect-shown');
+            $('#notes-connect').modal({show:true});
+        }
+    }
+
+    function saveNote()
+    {
+        var notes = $('#notes'),
+            notebookId = notes.find('select[name="notebook"]').val();
+        notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
+        loadingAnimation(notes.find('a[href="#save-note"]'));
+        $.ajax({
+            url: window.callbackPaths['notes_update'],
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                noteId: noteId,
+                tags: notes.find('.input.tags input')[0].selectize.getValue(),
+                title: notes.find('.note-title .title input').val().trim(),
+                notebookId: notebookId,
+                body: CKEDITOR.instances['editor1'].getData()
+            },
+            success: updateNotes,
+            error: function () {
+                notes.find('.squiggle').remove();
+            }
+        });
     }
 
     body.on('click', '#notes a[href="#save-note"]', function (evt) {
         evt.preventDefault();
-        var notes = $('#notes'),
-            notebookId = notes.find('select[name="notebook"]').val();
-        notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this));
+        var notes = $('#notes');
         if(notes.is(':visible') && CKEDITOR.instances['editor1'].getData().trim() == '') {
-
+            var dialog = $('#notes-discard').modal({show:true});
+            dialog.one('click.discard', 'a[href="#close"]', saveNote);
+            // if the note is cleared and it has an id, we should delete it
+            if(noteId != '') {
+                dialog.one('click.discard', 'a[href="#discard-note"]', deleteNote);
+            }
         }
         else {
-            $.ajax({
-                url: window.callbackPaths['notes_update'],
-                type: 'POST',
-                dataType: 'text',
-                data: {
-                    noteId: noteId,
-                    tags: notes.find('.input.tags input')[0].selectize.getValue(),
-                    title: notes.find('.note-title .title input').val().trim(),
-                    notebookId: notebookId,
-                    body: CKEDITOR.instances['editor1'].getData()
-                },
-                success: updateNotes,
-                error: function () {
-                    notes.find('.squiggle').remove();
-                }
-            });
+            saveNote();
         }
+    });
+
+    body.on('hide.bs.modal', '#notes-discard', function () {
+        var that = $(this);
+        // make sure we remove it after it has a chance to fire
+        setTimeout(function () { that.off('.discard'); }, 15);
     });
 
     body.on('scheduled', function () {
@@ -316,9 +343,6 @@ $(document).ready(function () {
 
         var notes = $('#notes');
 
-        if($('#notes-connect').modal({show: true}).length > 0) {
-        }
-
         // load editor
         if(!$(this).is('.setup')) {
 
@@ -387,18 +411,20 @@ $(document).ready(function () {
                     editor.setReadOnly(false);
                 $(window).trigger('resize');
             });
+            $(window).trigger('resize');
         });
     }
 
     $(window).resize(function () {
-        setTimeout(function () {
-            $('[contenteditable="true"]:visible').each(function () {
-                var id = $(this).attr('id');
-                $('#cke_' + id + ':visible').width($(this).outerWidth());
+        $('[contenteditable="true"]:visible').each(function () {
+            var that = $(this),
+                id = that.attr('id');
+            setTimeout(function () {
+                $('#cke_' + id + ':visible').width(that.outerWidth());
                 if(typeof CKEDITOR.instances[id] != 'undefined')
                     CKEDITOR.instances[id].fire('resize');
-            });
-        }, 15);
+            }, 200);
+        });
     });
 
 });

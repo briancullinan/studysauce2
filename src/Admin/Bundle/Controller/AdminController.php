@@ -982,22 +982,8 @@ class AdminController extends Controller
                 /** @var Schedule $s */
                 foreach($s->getEvents()->toArray() as $j => $e) {
                     /** @var Event $e */
-                    if(!empty($ac = $e->getActive()))
-                        $orm->remove($ac);
-                    if(!empty($pr = $e->getPrework()))
-                        $orm->remove($pr);
-                    if(!empty($ot = $e->getOther()))
-                        $orm->remove($ot);
-                    if(!empty($sp = $e->getSpaced()))
-                        $orm->remove($sp);
-                    if(!empty($te = $e->getTeach()))
-                        $orm->remove($te);
                     $s->removeEvent($e);
                     $orm->remove($e);
-                }
-                foreach($s->getWeeks()->toArray() as $j => $w) {
-                    $s->removeWeek($w);
-                    $orm->remove($w);
                 }
                 foreach($s->getCourses()->toArray() as $j => $co) {
                     /** @var Course $co */

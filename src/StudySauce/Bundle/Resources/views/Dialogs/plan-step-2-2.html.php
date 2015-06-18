@@ -12,8 +12,3 @@ $view['slots']->start('modal-body') ?>
     <a href="#add-spaced-repetition" data-dismiss="modal" class="more">Add spaced-repetition</a>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

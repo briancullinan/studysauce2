@@ -242,11 +242,19 @@
     margin-bottom:-20px;
 }
 
+#notes .mini-checkin {
+    text-align: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display:none;
+}
+
 #notes #editor1
 {
     outline: none;
     background-color: #fff;
-    margin: 43px -20px;
+    margin: 55px -20px;
     padding: 20px;
     min-height: 400px;
     display:none;
@@ -337,7 +345,14 @@
 
 #notes .note-title
 {
-    margin: 0 -10px;
+    margin: -10px -10px 0 -10px;
+}
+
+#notes.is-checkin .note-title
+{
+    margin: -10px -325px 0 -10px;
+    padding-right: 325px;
+    width: 100%;
 }
 
 #notes .note-title .input:last-child input
@@ -354,6 +369,11 @@
 #notes .note-title
 {
     display:none;
+}
+
+#notes.edit-note.is-checkin .mini-checkin
+{
+    display:inline-block;
 }
 
 #notes.edit-note .note-title,
@@ -401,20 +421,29 @@
     background-position: left -1702px;
 }
 
-.class-row .class-name i
+#notes h2
 {
-
+    margin-right: -275px;
+    padding-right: 275px;
+    width:100%;
 }
 
+#notes a[href*="/redirect/evernote"]
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#notes.edit-note a[href*="/redirect/evernote"]
+{
+    display:none;
+}
+
+#notes a[href*="/redirect/evernote"],
 #notes-connect a[href*="/redirect/evernote"]
 {
     width: auto;
-}
-
-#notes-connect .form-actions
-{
-    text-align: center;
-    margin: 40px 0 20px 0;
 }
 
 #notes-connect .evernote-name,
@@ -429,13 +458,12 @@
     font-family: 'Ubuntu',Arial,sans-serif;
 }
 
-#notes-connect .connect-sketch
+#notes-connect .modal-body
 {
     text-align: center;
-    margin: 20px 0;
 }
 
-#notes-connect .connect-sketch img,
+#notes-connect img,
 #notes-connect .site-name img
 {
     margin:0 auto;

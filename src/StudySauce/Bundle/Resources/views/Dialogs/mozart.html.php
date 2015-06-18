@@ -13,8 +13,3 @@ The Mozart Effect®
     <a href="https://musopen.org/" target="_blank">Music provided by MusOpen</a>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

@@ -10,8 +10,3 @@ $view['slots']->start('modal-body') ?>
     <a href="#plan-step-1" data-toggle="modal" class="more">Get started</a>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

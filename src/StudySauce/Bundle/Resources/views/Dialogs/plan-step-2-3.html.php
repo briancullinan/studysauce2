@@ -11,8 +11,3 @@ $view['slots']->start('modal-body') ?>
     <a href="#add-free-study" data-dismiss="modal" class="more">Add free study</a>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

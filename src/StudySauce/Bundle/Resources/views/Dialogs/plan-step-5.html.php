@@ -13,8 +13,3 @@ $view['slots']->start('modal-body') ?>
     <a href="#make-final" data-dismiss="modal" class="more">Make final adjustments</a>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

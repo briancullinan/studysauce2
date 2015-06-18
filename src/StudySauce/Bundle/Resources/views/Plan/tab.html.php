@@ -30,17 +30,16 @@ foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/
 $view['slots']->stop();
 
 $view['slots']->start('javascripts'); ?>
+<script type="text/javascript">
+    // convert events array to object to keep track of keys better
+    window.planEvents = <?php print (json_encode(array_values($jsonEvents), JSON_HEX_QUOT) ?: '[]'); ?>;
+</script>
 <?php foreach ($view['assetic']->javascripts(['@checkin_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 foreach ($view['assetic']->javascripts(['@plan_scripts',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-?>
-<script type="text/javascript">
-    // convert events array to object to keep track of keys better
-    window.planEvents = JSON.parse('<?php print json_encode(array_values($jsonEvents)); ?>');
-</script>
+<?php endforeach; ?>
 <?php $view['slots']->stop();
 
 $view['slots']->start('body'); ?>
@@ -60,9 +59,7 @@ $view['slots']->start('body'); ?>
                 <a href="#save-plan" class="more">Save</a>
             </div>
         </div>
-        <div id="calendar" class="full-only fc fc-ltr fc-unthemed">
-            <?php echo $this->render('StudySauceBundle:Dialogs:plan-empty.html.php', ['id' => 'plan-empty', 'attributes' => 'data-backdrop="false"']) ?>
-        </div>
+        <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
         <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
         <div class="session-strategy">
             <h2 class="title"></h2>
@@ -89,12 +86,15 @@ $view['slots']->start('body'); ?>
 $view['slots']->stop();
 
 $view['slots']->start('sincludes');
-$steps = range(0, 6);
-foreach($steps as $i) {
-    print $this->render('StudySauceBundle:Dialogs:plan-step-' . $i . '.html.php', ['id' => 'plan-step-' . $i, 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-}
+print $this->render('StudySauceBundle:Dialogs:plan-step-0.html.php', ['id' => 'plan-step-0', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-1.html.php', ['id' => 'plan-step-1', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-2.html.php', ['id' => 'plan-step-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-3.html.php', ['id' => 'plan-step-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-4.html.php', ['id' => 'plan-step-4', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-5.html.php', ['id' => 'plan-step-5', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-2-2.html.php', ['id' => 'plan-step-2-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-2-3.html.php', ['id' => 'plan-step-2-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-6.html.php', ['id' => 'plan-step-6', 'courses' => $courses, 'schedule' => $schedule, 'services' => $services, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 if($isEmpty) {
     print $this->render('StudySauceBundle:Dialogs:plan-empty-schedule.html.php', ['id' => 'plan-empty-schedule']);
 }

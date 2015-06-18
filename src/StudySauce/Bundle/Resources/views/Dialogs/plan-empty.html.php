@@ -9,8 +9,3 @@ You have no activities scheduled this week.
 <h3>- or -</h3>
 <h3>Use the arrows above to the right to find a week with activities.</h3>
 <?php $view['slots']->stop();
-
- $view['slots']->start('modal-footer');
-
- $view['slots']->stop() ?>
-

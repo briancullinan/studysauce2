@@ -397,6 +397,8 @@ a.fc-event:not([href])
 #plan.setup-mode ~ #plan-step-0 .close,
 #plan.setup-mode ~ #plan-step-1 .close,
 #plan.setup-mode ~ #plan-step-2 .close,
+#plan.setup-mode ~ #plan-step-2-2 .close,
+#plan.setup-mode ~ #plan-step-2-3 .close,
 #plan.setup-mode ~ #plan-step-3 .close,
 #plan.setup-mode ~ #plan-step-4 .close,
 #plan.setup-mode ~ #plan-step-5 .close,
@@ -478,6 +480,31 @@ a.fc-event:not([href])
 #plan .note-row:hover .summary
 {
     border-color: #09B;
+}
+
+#plan-step-6 .evernote-name,
+#plan-step-6 .site-name
+{
+    font-size: 40px;
+    letter-spacing: -3px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 60px;
+    color: #777777;
+    font-family: 'Ubuntu',Arial,sans-serif;
+    width:40%;
+}
+
+#plan-step-6 .modal-body
+{
+    text-align: center;
+}
+
+#plan-step-6 img,
+#plan-step-6 .site-name img
+{
+    margin:0 auto;
+    display:block;
 }
 
 #edit-event .start-date .input.mobile-only,
@@ -691,6 +718,14 @@ a.fc-event:not([href])
     display:inline;
 }
 
+#plan-empty
+{
+    position: absolute;
+    top:0;
+    left:0;
+    z-index:1;
+}
+
 #plan-step-3 h4,
 #plan-step-4 h4,
 #plan-step-1 h4
@@ -817,20 +852,18 @@ a.fc-event:not([href])
 
 #plan-step-6 a[href*="/plan/download"]
 {
-    width: 100px;
-    height: 100px;
     display: block;
     margin: 0 auto;
 }
 
+#plan-step-6 a[href*="/redirect/gcal"]
+{
+    letter-spacing: normal;
+    line-height: normal;
+}
+
 @media all and (max-width:1000px)
 {
-    #plan .selected .mini-checkin
-    {
-        left:auto;
-        right:0;
-        margin-left:0;
-    }
 
     #plan .note-row
     {
@@ -850,6 +883,13 @@ a.fc-event:not([href])
 
 @media all and (max-width:700px)
 {
+
+    #plan-step-6 .evernote-name,
+    #plan-step-6 .site-name
+    {
+        display:block;
+        width:auto;
+    }
 
     #plan.session-selected #calendar
     {
@@ -875,13 +915,6 @@ a.fc-event:not([href])
     #plan .strategy-other,
     #plan .field-select-strategy {
         padding: 0;
-    }
-
-    #plan .selected .mini-checkin {
-        margin: 0 auto;
-        display:block;
-        position:static;
-        float:none;
     }
 
     #plan-step-4 label span,

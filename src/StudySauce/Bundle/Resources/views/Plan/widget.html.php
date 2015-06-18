@@ -20,11 +20,12 @@ use StudySauce\Bundle\Entity\Event;
             $count = 0;
             foreach($events as $i => $event) {
                 /** @var Event $event */
-                if ($event->getType() == 'm' || $event->getType() == 'r' || $event->getType() == 'z') {
+                if ($event->getType() == 'm' || $event->getType() == 'r' || $event->getType() == 'z' || $event->getType() == 'h') {
                     continue;
                 }
-                if ($count > 10)
-                    break;
+
+                if ($event->getStart() < new \DateTime('today') || $event->getStart() > new \DateTime('tomorrow'))
+                    continue;
                 ?>
                 <div class="session-row <?php
                     print ' event-type-' . $event->getType();
@@ -47,7 +48,9 @@ use StudySauce\Bundle\Entity\Event;
                                 : ''); ?>><i></i></label>
                     </div>
                 </div><?php
+                $count++;
             }
+            if(empty($count)) { ?>Nothing to do today<?php }
         } ?>
     </div>
 </div>

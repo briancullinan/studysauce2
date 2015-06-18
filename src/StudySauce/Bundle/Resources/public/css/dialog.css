@@ -51,14 +51,6 @@
     padding: 0 2px;
 }
 
-#plan-empty
-{
-    position: absolute;
-    top:0;
-    left:0;
-    z-index:1;
-}
-
 #calc-empty .close,
 #checkin-empty .close,
 #profile-upgrade .close,
@@ -297,6 +289,7 @@ body.right-menu #bookmark
     width:600px;
     margin-left:auto;
     margin-right:auto;
+    max-width: 100%;
 }
 
 .modal .modal-header

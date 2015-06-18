@@ -31,7 +31,6 @@ class Course1Cest
 
     /**
      * @depends tryGuestCheckout
-     * @depends tryStudyFunnel
      * @param AcceptanceTester $I
      */
     public function tryFreeCourse(AcceptanceTester $I)
@@ -105,11 +104,11 @@ class Course1Cest
         $I->click('#course1_introduction-step1 a[href="#yt-pause"]');
         $I->click('#course1_introduction-step1 .highlighted-link a');
         $I->wait(5);
-        $I->checkOption('input[value="college-senior"]');
-        $I->checkOption('input[value="born"]');
-        $I->checkOption('input[value="cram"]');
-        $I->checkOption('input[value="on"]');
-        $I->checkOption('input[value="two"]');
+        $I->click('input[value="college-senior"] + i');
+        $I->click('input[value="born"] + i');
+        $I->click('input[value="cram"] + i');
+        $I->click('input[value="on"] + i');
+        $I->click('input[value="two"] + i');
         $I->click('#course1_introduction-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course1_introduction-step2 .highlighted-link a:nth-of-type(2)');
@@ -132,7 +131,7 @@ class Course1Cest
         $I->click('#course1_setting_goals-step1 a[href="#yt-pause"]');
         $I->click('#course1_setting_goals-step1 .highlighted-link a');
         $I->wait(5);
-        $I->checkOption('input[value="60"]');
+        $I->click('input[value="60"] + i');
         $I->fillField('input[name="quiz-specific"]', 'specific');
         $I->fillField('input[name="quiz-measurable"]', 'measurable');
         $I->fillField('input[name="quiz-achievable"]', 'achievable');
@@ -163,10 +162,10 @@ class Course1Cest
         $I->click('#course1_distractions-step1 a[href="#yt-pause"]');
         $I->click('#course1_distractions-step1 .highlighted-link a');
         $I->wait(5);
-        $I->checkOption('input[name="quiz-multitask"][value="false"]');
-        $I->checkOption('input[name="quiz-downside"][value="remember"]');
-        $I->checkOption('input[name="quiz-lower-score"][value="30"]');
-        $I->checkOption('input[name="quiz-distraction"][value="40"]');
+        $I->click('input[name="quiz-multitask"][value="false"] + i');
+        $I->click('input[name="quiz-downside"][value="remember"] + i');
+        $I->click('input[name="quiz-lower-score"][value="30"] + i');
+        $I->click('input[name="quiz-distraction"][value="40"] + i');
         $I->click('#course1_distractions-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course1_distractions-step2 .highlighted-link a:nth-of-type(2)');
@@ -217,10 +216,10 @@ class Course1Cest
         $I->click('#course1_environment-step1 a[href="#yt-pause"]');
         $I->click('#course1_environment-step1 .highlighted-link a');
         $I->wait(5);
-        $I->checkOption('input[name="quiz-bed"][value="0"]');
-        $I->checkOption('input[name="quiz-mozart"][value="0"]');
-        $I->checkOption('input[name="quiz-nature"][value="1"]');
-        $I->checkOption('input[name="quiz-breaks"][value="1"]');
+        $I->click('input[name="quiz-bed"][value="0"] + i');
+        $I->click('input[name="quiz-mozart"][value="0"] + i');
+        $I->click('input[name="quiz-nature"][value="1"] + i');
+        $I->click('input[name="quiz-breaks"][value="1"] + i');
         $I->click('#course1_environment-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course1_environment-step2 .highlighted-link a:nth-of-type(2)');
@@ -270,14 +269,14 @@ class Course1Cest
         $I->click('#course1_upgrade-step1 a[href="#yt-pause"]');
         $I->click('#course1_upgrade-step1 .highlighted-link a');
         $I->wait(5);
-        $I->checkOption('input[name="quiz-enjoyed"][value="1"]');
+        $I->click('input[name="quiz-enjoyed"][value="1"] + i');
         $I->click('#course1_upgrade-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course1_upgrade-step2 .highlighted-link a:nth-of-type(2)');
         $I->wait(5);
         $I->click('#course1_upgrade-step3 .highlighted-link a');
         $I->wait(5);
-        $I->checkOption('input[name="investment-net-promoter"][value="5"]');
+        $I->click('input[name="investment-net-promoter"][value="5"] + i');
         $I->seeLink('Upgrade to premium');
         $I->click('Upgrade to premium');
         $I->wait(15);

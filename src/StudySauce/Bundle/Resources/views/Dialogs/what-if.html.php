@@ -54,8 +54,3 @@ $view['slots']->start('modal-body') ?>
     <div class="calc-unk">* To calculate you must designate hours for each class</div>
 </div>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

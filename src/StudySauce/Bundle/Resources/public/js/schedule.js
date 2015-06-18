@@ -268,10 +268,6 @@ $(document).ready(function () {
 
     body.on('click', '#schedule a[href="#remove-class"]', function (evt) {
         evt.preventDefault();
-        deleteCount++;
-        if(deleteCount == 4) {
-            $('#new-schedule').modal({show:true});
-        }
         removeCourse.apply(this);
         planFunc();
     });
@@ -292,6 +288,14 @@ $(document).ready(function () {
             schedule.addClass('setup-mode');
         else
             schedule.removeClass('setup-mode');
+
+        if(response.filter('#schedule').is('.needs-new'))
+            schedule.addClass('needs-new');
+        else
+            schedule.removeClass('needs-new');
+
+        if(schedule.is('.needs-new'))
+            $('#manage-terms').modal({show:true});
 
         // update remaining terms
         response.find('.pane-content .term-row').each(function (j) {
@@ -639,6 +643,7 @@ $(document).ready(function () {
         createSchedule.apply(this);
         // add new term to term manager
         updateTermControls();
+        dialog.modal('hide');
     });
 
     function autoFillDate() {
@@ -792,16 +797,13 @@ $(document).ready(function () {
                     select[0].selectize.focus();
             }
         });
-        $('#new-schedule').modal({show:true});
+        if(schedule.is('.needs-new'))
+            $('#manage-terms').modal({show:true});
         updateTermControls();
     }
 
     body.on('show', '#schedule', function () {
         setupSchedule();
-    });
-
-    body.on('hidden.bs.modal', '#new-schedule', function () {
-        $(this).remove();
     });
 
 

@@ -52,10 +52,10 @@ class ScheduleController extends Controller
             $schedule = $user->getSchedules()->first()) && !empty($schedule->getClasses()->count())
             // check that all the courses have ended
             && !$schedule->getClasses()->exists(function ($_, Course $c) {
-                    return $c->getEndTime() > new \DateTime();})
+                    return $c->getEndTime() > new \DateTime();});
             // check that message hasn't been displayed in at least 6 months
-            && (empty($user->getProperty('needs_new')) || true === ($prev = $user->getProperty('needs_new')) ||
-                $prev->getTimestamp() < date_sub(new \DateTime(), new \DateInterval('P3M'))->getTimestamp());
+            //&& (empty($user->getProperty('needs_new')) || true === ($prev = $user->getProperty('needs_new')) ||
+            //    $prev->getTimestamp() < date_sub(new \DateTime(), new \DateInterval('P3M'))->getTimestamp());
         if($needsNew) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
@@ -313,13 +313,13 @@ class ScheduleController extends Controller
             }
             // create new schedule if one does not exist
             else {
+                $first = $user->getSchedules()->first();
                 $schedule = new Schedule();
                 $schedule->setUser($user);
                 $user->addSchedule($schedule);
 
                 // default profile settings to previous schedule
                 /** @var Schedule $first */
-                $first = $user->getSchedules()->first();
                 if(!empty($first)) {
                     $schedule->setUniversity($first->getUniversity());
                     $schedule->setGrades($first->getGrades());
@@ -414,22 +414,8 @@ class ScheduleController extends Controller
         /** @var Schedule $s */
         foreach($s->getEvents()->toArray() as $j => $e) {
             /** @var Event $e */
-            if(!empty($ac = $e->getActive()))
-                $orm->remove($ac);
-            if(!empty($pr = $e->getPrework()))
-                $orm->remove($pr);
-            if(!empty($ot = $e->getOther()))
-                $orm->remove($ot);
-            if(!empty($sp = $e->getSpaced()))
-                $orm->remove($sp);
-            if(!empty($te = $e->getTeach()))
-                $orm->remove($te);
-            $s->removeEvent($e);
+             $s->removeEvent($e);
             $orm->remove($e);
-        }
-        foreach($s->getWeeks()->toArray() as $j => $w) {
-            $s->removeWeek($w);
-            $orm->remove($w);
         }
         foreach($s->getCourses()->toArray() as $j => $co) {
             /** @var Course $co */
@@ -461,40 +447,18 @@ class ScheduleController extends Controller
      */
     private static function removeCourse(Course $course, Schedule $schedule, EntityManager $orm)
     {
-        if($course->getEvents()->exists(function ($k, Event $save) {
-                return !empty($save->getCompleted());
-            }) || $course->getCheckins()->count() > 0 || $course->getDeadlines()->count() > 0) {
-            $course->setDeleted(true);
-            foreach($course->getDeadlines()->toArray() as $d) {
-                /** @var Deadline $d */
-                $d->setDeleted(true);
-                $orm->merge($d);
-            }
-            foreach($course->getEvents()->toArray() as $e) {
-                /** @var Event $e */
-                $e->setDeleted(true);
-                $orm->merge($e);
-            }
-            $orm->merge($course);
+       $course->setDeleted(true);
+        foreach($course->getDeadlines()->toArray() as $d) {
+            /** @var Deadline $d */
+            $d->setDeleted(true);
+            $orm->merge($d);
         }
-        else {
-            foreach($course->getGrades()->toArray() as $g) {
-                $course->removeGrade($g);
-                $orm->remove($g);
-            }
-            foreach($course->getDeadlines()->toArray() as $d) {
-                /** @var Deadline $d */
-                $course->removeDeadline($d);
-                $orm->remove($d);
-            }
-            foreach($course->getEvents()->toArray() as $e) {
-                /** @var Event $e */
-                $course->removeEvent($e);
-                $orm->remove($e);
-            }
-            $schedule->removeCourse($course);
-            $orm->remove($course);
+        foreach($course->getEvents()->toArray() as $e) {
+            /** @var Event $e */
+            $e->setDeleted(true);
+            $orm->merge($e);
         }
+        $orm->merge($course);
     }
 
     private static $institutions;

@@ -26,6 +26,3 @@ $view['slots']->start('modal-body') ?>
         </div>
     </form>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer');
-$view['slots']->stop();

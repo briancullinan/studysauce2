@@ -68,3 +68,10 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
 </div>
 </body>
 </html>
+<?php
+$view['slots']->start('greeting');
+$view['slots']->stop();
+$view['slots']->start('message');
+$view['slots']->stop();
+$view['slots']->start('salutation');
+$view['slots']->stop();

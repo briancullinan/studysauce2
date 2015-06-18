@@ -7,8 +7,3 @@ Another session is in the books
  $view['slots']->start('modal-body') ?>
 <p>You have completed another session, congrats.</p>
 <?php $view['slots']->stop();
-
-$view['slots']->start('modal-footer') ?>
-
-<?php $view['slots']->stop() ?>
-

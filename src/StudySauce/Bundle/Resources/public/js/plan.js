@@ -4,31 +4,6 @@ $(document).ready(function () {
         isInitialized = false,
         calendar, clickTimeout;
 
-    function filterEvents(s, e) {
-        var plans = $('#plan'),
-            events = [];
-        for (var i = 0; i < window.planEvents.length; i++) {
-            if (window.planEvents[i].start.getTime() > s - 86400 && window.planEvents[i].end.getTime() < e + 86400) {
-                events[events.length] = window.planEvents[i];
-            }
-        }
-        if (events.length == 0 && $('#plan-intro-1').length == 0) {
-            plans.addClass('empty');
-            $('#plan-empty').modal({
-                backdrop:false,
-                keyboard:false,
-                show:true
-            });
-            $(document).off('focusin.bs.modal');
-            $('body').removeClass('modal-open');
-        }
-        else {
-            plans.removeClass('empty');
-            $('#plan-empty').modal('hide');
-        }
-        return events;
-    }
-
     body.on('click', '#plan .fc-agendaDay-button', function () {
         var plan = $('#plan');
         plan.addClass('session-selected');
@@ -337,10 +312,7 @@ $(document).ready(function () {
             defaultView: plans.is('.setup-mode') ? 'agendaWeek' : 'agendaDay',
             selectable: false,
             events: function (start, end, timezone, callback) {
-                var s = start.unix() * 1000,
-                    e = end.unix() * 1000;
-                var events = filterEvents(s, e);
-                callback(events);
+                callback(window.planEvents);
             },
             drop: function(date, jsEvent, ui) {
                 // TODO: count down to remove with numbers in event
@@ -380,7 +352,8 @@ $(document).ready(function () {
                             });
                         }
                         plan.find('.session-strategy .note-row').remove();
-                        notes.slice(0, Math.min(8, notes.length)).clone().appendTo(plan.find('.session-strategy'));
+                        notes.slice(0, Math.min(8, notes.length)).clone().appendTo(plan.find('.session-strategy'))
+                            .find('a').attr('href', window.callbackPaths['notes'].replace(/\/tab$/i, ''));
 
                         // highlight selected event
                         plan.find('.event-selected').removeClass('event-selected');
@@ -550,7 +523,7 @@ $(document).ready(function () {
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
             var events = calendar.fullCalendar('clientEvents'),
-                studyEvents = [];
+                studyEvents = [], removeEvents = [];
             for(var i = 0; i < events.length; i++) {
                 if(events[i].className.indexOf('event-type-p') > -1 && (typeof events[i].eventId == 'undefined' ||
                     calendar.find('.event-type-p.event-id-' + events[i].eventId).is(':visible'))) {
@@ -560,10 +533,13 @@ $(document).ready(function () {
                         end: events[i].end.toDate().toJSON(),
                         courseId: events[i].courseId
                     };
+                    removeEvents[removeEvents.length] = events[i];
                 }
             }
             $('#plan').removeClass('add-events');
             $('#plan-step-2-2').modal({show: true});
+            if(studyEvents.length == 0)
+                return;
             $.ajax({
                 url: window.callbackPaths['plan_create'],
                 type: 'POST',
@@ -572,6 +548,7 @@ $(document).ready(function () {
                     events: studyEvents
                 },
                 success: function (content) {
+                    calendar.fullCalendar('removeEvents', function (e) {return removeEvents.indexOf(e) > -1;});
                     updatePlan(content);
                 }
             });
@@ -621,7 +598,7 @@ $(document).ready(function () {
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
             var events = calendar.fullCalendar('clientEvents'),
-                studyEvents = [];
+                studyEvents = [], removeEvents = [];
             for(var i = 0; i < events.length; i++) {
                 if(events[i].className.indexOf('event-type-sr') > -1 && (typeof events[i].eventId == 'undefined' ||
                     calendar.find('.event-type-sr.event-id-' + events[i].eventId).is(':visible'))) {
@@ -631,10 +608,13 @@ $(document).ready(function () {
                         end: events[i].end.toDate().toJSON(),
                         courseId: events[i].courseId
                     };
+                    removeEvents[removeEvents.length] = events[i];
                 }
             }
             $('#plan').removeClass('add-events');
             $('#plan-step-2-3').modal({show: true});
+            if(studyEvents.length == 0)
+                return;
             $.ajax({
                 url: window.callbackPaths['plan_create'],
                 type: 'POST',
@@ -643,6 +623,7 @@ $(document).ready(function () {
                     events: studyEvents
                 },
                 success: function (content) {
+                    calendar.fullCalendar('removeEvents', function (e) {return removeEvents.indexOf(e) > -1;});
                     updatePlan(content);
                 }
             });
@@ -690,7 +671,7 @@ $(document).ready(function () {
         body.one('click', '#plan a[href="#save-plan"]', function (evt) {
             evt.preventDefault();
             var events = $('#calendar').fullCalendar('clientEvents'),
-                studyEvents = [];
+                studyEvents = [], removeEvents = [];
             for(var i = 0; i < events.length; i++) {
                 if(events[i].className.indexOf('event-type-f') > -1 && typeof events[i].eventId == 'undefined') {
                     studyEvents[studyEvents.length] = {
@@ -699,9 +680,12 @@ $(document).ready(function () {
                         end: events[i].end.toDate().toJSON()
                     };
                 }
+                removeEvents[removeEvents.length] = events[i];
             }
             $('#plan').removeClass('add-events');
             $('#plan-step-3').modal({show: true});
+            if(studyEvents.length == 0)
+                return;
             $.ajax({
                 url: window.callbackPaths['plan_create'],
                 type: 'POST',
@@ -710,6 +694,7 @@ $(document).ready(function () {
                     events: studyEvents
                 },
                 success: function (content) {
+                    calendar.fullCalendar('removeEvents', function (e) {return removeEvents.indexOf(e) > -1;});
                     updatePlan(content);
                 }
             });
@@ -748,31 +733,54 @@ $(document).ready(function () {
         dialog.modal('hide');
     });
 
-    body.on('click', '#plan a[href="/notes"]', function (evt) {
+    body.on('click', '#plan a[href*="/notes"]', function (evt) {
         evt.preventDefault();
         var plan = $('#plan');
-        var strategy = plan.find('[name="strategy-select"]').val();
         var event = plan.find('.event-selected').data('event');
+        var classI = (/class([0-9])(\s|$)/ig).exec(event.className.join(' '));
+        var isNew = $(this).is('#plan .note-row a');
         body.one('show', '#notes', function () {
-            var notes = $('#notes');
-            setTimeout(function () {
-                notes.find('a[href="#add-note"]').trigger('click');
-                notes.find('select[name="notebook"]').val(event.courseId);
-                var content = plan.find('.strategy-' + strategy).html();
-                if(strategy == 'spaced' && typeof event.dates != 'undefined') {
-                    content = content.replace(/<div class="strategy-review">[\s\S]*?<\/div>/i,
-                        '<div class="strategy-review"><label>Review material from:</label>' +
-                        event.dates.map(function (d) {return '<en-todo></en-todo>'+d+'<br />';}).join('')) +
-                        '</div>';
-                }
-                CKEDITOR.instances['editor1'].setData(content);
-            }, 500);
+                var notes = $('#notes');
+            // show hide if it is visible on notes page just like click event
+            if(plan.find('.mini-checkin:visible').length == 0) {
+                notes.find('.mini-checkin a').attr('href', '#class' + classI[1]);
+                notes.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
+                notes.addClass('is-checkin');
+            }
+            else {
+                notes.find('.mini-checkin').hide();
+                notes.removeClass('is-checkin');
+            }
+            if(!isNew) {
+                var noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).parents('.note-row').attr('class'))[1];
+                setTimeout(function () {
+                    notes.find('.note-row.note-id-' + noteId + ' a[href="#view-note"]').trigger('click');
+                    notes.setClock();
+                }, 150);
+            }
+            else {
+                var strategy = plan.find('[name="strategy-select"]').val();
+                setTimeout(function () {
+                    notes.find('a[href="#add-note"]').trigger('click');
+                    notes.setClock();
+                    notes.find('select[name="notebook"]').val(event.courseId);
+                    var content = plan.find('.strategy-' + strategy).html();
+                    if(strategy == 'spaced' && typeof event.dates != 'undefined') {
+                        content = content.replace(/<div class="strategy-review">[\s\S]*?<\/div>/i,
+                            '<div class="strategy-review"><label>Review material from:</label>' +
+                            event.dates.map(function (d) {return '<en-todo></en-todo>'+d+'<br />';}).join('')) +
+                            '</div>';
+                    }
+                    CKEDITOR.instances['editor1'].setData(content);
+                }, 150);
+            }
         });
     });
 
     body.on('click', '#plan .note-row', function (evt) {
-        evt.preventDefault();
-
+        evt.stopPropagation();
+        if(!$(evt.target).is('a'))
+            $(this).find('a[href*="/notes"]').trigger('click');
     });
 
     function editEventFunc()
@@ -900,16 +908,15 @@ $(document).ready(function () {
 
     body.on('submit', '#edit-event form', function (evt) {
         evt.preventDefault();
-        if(!$('#plan').is('.setup-mode'))
-            body.addClass('download-plan');
-        var dialog = $('#edit-event'),
+        var plan = $('#plan'),
+            dialog = $('#edit-event'),
             eventId = (/event-id-([0-9]*)(\s|$)/ig).exec(dialog.attr('class'))[1];
         if(dialog.find('.highlighted-link').is('.invalid')) {
             dialog.addClass('invalid-only');
             return false;
         }
-        dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation(dialog.find('[type="submit"]'));
+        dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
         var changes = {
             eventId: eventId,
             location: dialog.find('.location input').val(),
@@ -929,11 +936,16 @@ $(document).ready(function () {
             dataType: 'text',
             data: changes,
             success: function (content) {
-                dialog.modal('hide');
                 dialog.find('.squiggle').remove();
-                if(!$('#plan').is('.setup-mode'))
+                dialog.modal('hide');
+                if(!plan.is('.setup-mode'))
                     body.addClass('download-plan');
                 updatePlan(content);
+                if(!plan.is('.setup-mode'))
+                    body.addClass('download-plan');
+            },
+            error: function () {
+                dialog.find('.squiggle').remove();
             }
         });
     });
@@ -1160,7 +1172,6 @@ $(document).ready(function () {
             customization.addClass('invalid-only');
             return;
         }
-        customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
         loadingAnimation($(this).find('[value="#save-profile"]'));
 
         $.ajax({
@@ -1169,11 +1180,11 @@ $(document).ready(function () {
             dataType: 'text',
             data: {
                 alerts: {
-                    c: customization.find('[name="event-type-c"]:checked, select[name="event-type-c"]').first().val(),
-                    p: customization.find('[name="event-type-p"]:checked, select[name="event-type-p"]').first().val(),
-                    sr: customization.find('[name="event-type-sr"]:checked, select[name="event-type-sr"]').first().val(),
-                    f: customization.find('[name="event-type-f"]:checked, select[name="event-type-f"]').first().val(),
-                    o: customization.find('[name="event-type-o"]:checked, select[name="event-type-o"]').first().val()
+                    c: customization.find('[name="event-type-c"][value="0"]:checked, select[name="event-type-c"]').first().val(),
+                    p: customization.find('[name="event-type-p"][value="0"]:checked, select[name="event-type-p"]').first().val(),
+                    sr: customization.find('[name="event-type-sr"][value="0"]:checked, select[name="event-type-sr"]').first().val(),
+                    f: customization.find('[name="event-type-f"][value="0"]:checked, select[name="event-type-f"]').first().val(),
+                    o: customization.find('[name="event-type-o"][value="0"]:checked, select[name="event-type-o"]').first().val()
                 }
             },
             success: function (content) {

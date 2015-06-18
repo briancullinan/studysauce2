@@ -7,8 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * TODO: unique on start, end, and type when all overlaps are removed?
- * @ORM\Table(name="event",indexes={
- *     @ORM\Index(name="week_idx", columns={"week_id", "schedule_id"})}, uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id"})})
+ * @ORM\Table(name="event", uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class Event
@@ -94,12 +93,6 @@ class Event
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Week", inversedBy="events")
-     * @ORM\JoinColumn(name="week_id", referencedColumnName="id")
-     */
-    protected $week;
 
     /**
      * @ORM\PrePersist
@@ -372,29 +365,6 @@ class Event
     public function getDeadline()
     {
         return $this->deadline;
-    }
-
-    /**
-     * Set week
-     *
-     * @param \StudySauce\Bundle\Entity\Week $week
-     * @return Event
-     */
-    public function setWeek(\StudySauce\Bundle\Entity\Week $week = null)
-    {
-        $this->week = $week;
-
-        return $this;
-    }
-
-    /**
-     * Get week
-     *
-     * @return \StudySauce\Bundle\Entity\Week 
-     */
-    public function getWeek()
-    {
-        return $this->week;
     }
 
     /**
