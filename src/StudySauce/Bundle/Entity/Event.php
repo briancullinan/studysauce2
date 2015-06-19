@@ -25,6 +25,11 @@ class Event
     protected $remoteId;
 
     /**
+     * @ORM\Column(type="datetime", name="remote_updated", nullable=true)
+     */
+    protected $remoteUpdated = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Schedule", inversedBy="events")
      * @ORM\JoinColumn(name="schedule_id", referencedColumnName="id")
      */
@@ -93,6 +98,11 @@ class Event
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", name="updated", nullable=true)
+     */
+    protected $updated = null;
 
     /**
      * @ORM\PrePersist
@@ -439,5 +449,51 @@ class Event
     public function getRemoteId()
     {
         return $this->remoteId;
+    }
+
+    /**
+     * Set remoteUpdated
+     *
+     * @param \DateTime $remoteUpdated
+     * @return Event
+     */
+    public function setRemoteUpdated($remoteUpdated)
+    {
+        $this->remoteUpdated = $remoteUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get remoteUpdated
+     *
+     * @return \DateTime 
+     */
+    public function getRemoteUpdated()
+    {
+        return $this->remoteUpdated;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Event
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 }

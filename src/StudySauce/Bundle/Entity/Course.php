@@ -101,7 +101,7 @@ class Course
 
     /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="course", fetch="EXTRA_LAZY")
-     * @ORM\OrderBy({"created" = "DESC"})
+     * @ORM\OrderBy({"start" = "DESC"})
      */
     protected $events;
 

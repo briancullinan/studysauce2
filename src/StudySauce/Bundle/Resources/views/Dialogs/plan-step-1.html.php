@@ -33,11 +33,11 @@ $view['slots']->start('modal-body') ?>
     <br/><br/><br/><br/>
     <div class="highlighted-link setup-mode invalid">
         <ul class="dialog-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
-        <button type="submit" data-target="#plan-step-2" data-toggle="modal" class="more">Next</button>
+        <button type="submit" class="more">Next</button>
     </div>
     <div class="highlighted-link invalid">
         <ul class="dialog-tracker"><li><a href="#plan-step-1" title="Class difficulty" data-toggle="modal">&bullet;</a></li><li><a href="#plan-step-3" title="Notifications" data-toggle="modal">&bullet;</a></li><li><a href="#plan-step-4" title="Class type" data-toggle="modal">&bullet;</a></li></ul>
-        <button type="submit" data-target="#plan-step-3" data-toggle="modal" class="more">Next</button>
+        <button type="submit" class="more">Next</button>
     </div>
 </form>
 <?php $view['slots']->stop();

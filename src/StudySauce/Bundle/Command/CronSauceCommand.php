@@ -67,11 +67,10 @@ EOF
         set_time_limit(60*4.5);
         $startTime = time();
 
-        $container = $this->getContainer();
         /** @var $orm EntityManager */
-        $orm = $container->get('doctrine')->getManager();
+        $orm = $this->getContainer()->get('doctrine')->getManager();
         $emails = new EmailsController();
-        $emails->setContainer($container);
+        $emails->setContainer($this->getContainer());
 
         // send reminders
         $notActivated = Criteria::create()->where(Criteria::expr()->isNull('activated'))->orWhere(
@@ -229,7 +228,7 @@ EOF
 
         // clear mail spool
         /** @var Swift_Mailer $mailer */
-        $mailer = $container->get('mailer');
+        $mailer = $this->getContainer()->get('mailer');
         /** @var Swift_Transport_SpoolTransport $transport */
         $transport = $mailer->getTransport();
         /** @var DatabaseSpool $spool */
@@ -237,7 +236,7 @@ EOF
         $spoolTime = time() - $startTime;
         $spool->setTimeLimit(60*4.5 - $spoolTime);
         /** @var Swift_Transport $queue */
-        $queue = $container->get('swiftmailer.transport.real');
+        $queue = $this->getContainer()->get('swiftmailer.transport.real');
         $spool->flushQueue($queue);
 
 
@@ -250,7 +249,7 @@ EOF
         $users = $qb->getQuery()->execute();
         foreach($users as $u) {
             try {
-                NotesController::syncNotes($u, $container);
+                NotesController::syncNotes($u, $this->getContainer());
             }
             catch (\Exception $e)
             {
@@ -266,7 +265,7 @@ EOF
         $users = $qb->getQuery()->execute();
         foreach($users as $u) {
             try {
-                PlanController::syncEvents($u, $container);
+                PlanController::syncEvents($u, $this->getContainer());
             }
             catch (\Exception $e) {
 

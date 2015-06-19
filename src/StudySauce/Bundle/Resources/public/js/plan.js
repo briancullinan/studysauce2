@@ -264,7 +264,7 @@ $(document).ready(function () {
             eventAfterAllRender: function () {
                 var calendar = $('#calendar'),
                     view = calendar.fullCalendar('getView');
-                if(view.name == 'agendaDay') {
+                if(view.name == 'agendaDay' && $('#plan').find('.session-strategy:visible').length > 0) {
                     calendar.find('.fc-event').first().trigger('click');
                 }
             },
@@ -329,8 +329,8 @@ $(document).ready(function () {
                         if($('#calendar').fullCalendar('getView').name != 'agendaDay') {
                             calendar.fullCalendar('gotoDate', event.start);
                             calendar.fullCalendar('changeView', 'agendaDay');
-                            plan.addClass('session-selected');
                         }
+                        plan.addClass('session-selected');
                         // change mini checkin color
                         var notes;
                         if(typeof event.courseId != 'undefined') {
@@ -360,13 +360,13 @@ $(document).ready(function () {
                         plan.find('#calendar .event-id-' + event.eventId).addClass('event-selected');
 
                         // set the title
-                        plan.find('h2.title').text(event.title
-                            .replace(/<h4>C<\/h4>/, 'Class: ')
+                        plan.find('h2.title').html(event.title
+                            .replace(/<h4>C<\/h4>/, 'Class:<br/>')
                             .replace(/<h4>F<\/h4>/, '')
-                            .replace(/<h4>D<\/h4>/, 'Deadline: ')
-                            .replace(/<h4>P<\/h4>/, 'Pre-work: ')
-                            .replace(/<h4>SR<\/h4>/, 'Study session: ')
-                            .replace(/<h4>D<\/h4>/, 'Deadlines: '));
+                            .replace(/<h4>D<\/h4>/, 'Deadline:<br/>')
+                            .replace(/<h4>P<\/h4>/, 'Pre-work:<br/>')
+                            .replace(/<h4>SR<\/h4>/, 'Study session:<br/>')
+                            .replace(/<h4>D<\/h4>/, 'Deadlines:<br/>'));
                         plan.find('h3.location').html('<strong>Location:</strong> ' + (event.location == null || event.location.trim() == '' ? 'Unspecified' : event.location));
                         plan.find('h3.duration').html('<strong>Duration:</strong> ' + ((event.end.valueOf() - event.start.valueOf()) / 60000) + ' minutes');
                         // set the template for notes
@@ -416,23 +416,26 @@ $(document).ready(function () {
 
                 // setup mode saves events when we are all done with the step
                 if(!$('#plan').is('.add-events')) {
-
-                    $.ajax({
-                        url: window.callbackPaths['plan_update'],
-                        type: 'POST',
-                        dataType: 'text',
-                        data: {
-                            eventId: event['eventId'],
-                            start: event['start'].toJSON(),
-                            end: event['end'].toJSON()
-                        },
-                        error: revertFunc,
-                        success: function (content) {
-                            if (!$('#plan').is('.setup-mode'))
-                                body.addClass('download-plan');
-                            updatePlan(content)
-                        }
-                    });
+                    $('#plan-drag').modal({show:true})
+                        .one('click.dragging', '.modal-footer a', function () {
+                            $.ajax({
+                                url: window.callbackPaths['plan_update'],
+                                type: 'POST',
+                                dataType: 'text',
+                                data: {
+                                    eventId: event['eventId'],
+                                    start: event['start'].toJSON(),
+                                    end: event['end'].toJSON(),
+                                    reoccurring: $(this).is('.more')
+                                },
+                                error: revertFunc,
+                                success: function (content) {
+                                    if (!$('#plan').is('.setup-mode'))
+                                        body.addClass('download-plan');
+                                    updatePlan(content)
+                                }
+                            });
+                        });
                 }
             },
             eventReceive: function () {
@@ -441,6 +444,13 @@ $(document).ready(function () {
         });
 
     }
+
+    body.on('hide.bs.modal', '#plan-drag', function () {
+        var that = $(this);
+        setTimeout(function () {
+            that.off('.dragging');
+        }, 150);
+    });
 
     function setupPlan()
     {
@@ -738,11 +748,12 @@ $(document).ready(function () {
         var plan = $('#plan');
         var event = plan.find('.event-selected').data('event');
         var classI = (/class([0-9])(\s|$)/ig).exec(event.className.join(' '));
-        var isNew = $(this).is('#plan .note-row a');
+        var that = $(this);
+        var isNew = !that.is('#plan .note-row a');
         body.one('show', '#notes', function () {
                 var notes = $('#notes');
             // show hide if it is visible on notes page just like click event
-            if(plan.find('.mini-checkin:visible').length == 0) {
+            if(classI != null) {
                 notes.find('.mini-checkin a').attr('href', '#class' + classI[1]);
                 notes.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
                 notes.addClass('is-checkin');
@@ -752,7 +763,7 @@ $(document).ready(function () {
                 notes.removeClass('is-checkin');
             }
             if(!isNew) {
-                var noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).parents('.note-row').attr('class'))[1];
+                var noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec(that.parents('.note-row').attr('class'))[1];
                 setTimeout(function () {
                     notes.find('.note-row.note-id-' + noteId + ' a[href="#view-note"]').trigger('click');
                     notes.setClock();
@@ -1049,7 +1060,7 @@ $(document).ready(function () {
             return;
         }
         customization.find('.highlighted-link').removeClass('valid').addClass('invalid');
-        loadingAnimation($(this).find('[value="#save-profile"]'));
+        loadingAnimation(customization.find('[type="#submit"]'));
         var scheduleData = { };
         customization.find('input:checked').each(function () {
             scheduleData[$(this).attr('name')] = $(this).val();
@@ -1060,10 +1071,13 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: scheduleData,
-            success: function () {
+            success: function (content) {
                 customization.find('.squiggle').stop().remove();
-                // TODO update calendar events
-                // TODO: update plan tab
+                updatePlan(content);
+                if($('#plan').is('.setup-mode'))
+                    $('#plan-step-2').modal({show:true});
+                else
+                    $('#plan-step-3').modal({show:true});
             },
             error: function () {
                 customization.find('.squiggle').stop().remove();
@@ -1153,6 +1167,10 @@ $(document).ready(function () {
             data: scheduleData,
             success: function (content) {
                 customization.find('.squiggle').stop().remove();
+                if($('#plan').is('.setup-mode'))
+                    $('#plan-step-5').modal({show:true});
+                else
+                    customization.modal('hide');
                 updatePlan(content);
             },
             error: function () {

@@ -297,7 +297,8 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
-#plan.setup-mode .fc-toolbar .fc-left .fc-button-group:last-child
+#plan.setup-mode .fc-toolbar .fc-left,
+#plan.setup-mode .fc-toolbar .fc-right
 {
     display:none;
 }
@@ -362,6 +363,7 @@ a.fc-event:not([href])
 #plan .session-strategy h2
 {
     margin-bottom: 0;
+    font-size: 24px;
 }
 
 #plan .session-strategy .location,
@@ -891,6 +893,12 @@ a.fc-event:not([href])
         width:auto;
     }
 
+    #plan #calendar
+    {
+        display:block;
+        width:auto;
+    }
+
     #plan.session-selected #calendar
     {
         display:none;
@@ -905,6 +913,11 @@ a.fc-event:not([href])
     #plan .session-strategy
     {
         width: auto;
+        display:none;
+    }
+
+    #plan.session-selected .session-strategy
+    {
         display:block;
     }
 

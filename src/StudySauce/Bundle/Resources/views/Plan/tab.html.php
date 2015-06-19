@@ -60,8 +60,8 @@ $view['slots']->start('body'); ?>
             </div>
         </div>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
-        <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
         <div class="session-strategy">
+            <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
             <h2 class="title"></h2>
             <h3 class="location"></h3>
             <h3 class="duration"></h3>

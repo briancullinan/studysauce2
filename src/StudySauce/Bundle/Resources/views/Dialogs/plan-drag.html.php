@@ -4,9 +4,7 @@ $view['slots']->start('modal-header') ?>
 Change all reoccurring events?
 <?php $view['slots']->stop();
 
-$view['slots']->start('modal-body') ?>
-<div class="highlighted-link">
-    <a href="#close" data-dismiss="modal">No, this one only</a>
-    <a href="#close" data-dismiss="modal" class="more">Yes, change all</a>
-</div>
+$view['slots']->start('modal-footer') ?>
+<a href="#close" data-dismiss="modal" class="btn">No, this one only</a>
+<a href="#close" data-dismiss="modal" class="btn btn-primary">Yes, change all</a>
 <?php $view['slots']->stop();

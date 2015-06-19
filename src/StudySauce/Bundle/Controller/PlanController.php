@@ -108,23 +108,37 @@ class PlanController extends Controller
                 continue;
             }
             if($event->getSchedule()->getId() != $schedule->getId()) {
-                try {
-                    if(!empty($event->getRemoteId())) {
-                        $service->events->delete($id, $event->getRemoteId());
-                    }
-                }
-                catch (\Exception $e) {
-
+                if(!empty($event->getRemoteId())) {
+                    $service->events->delete($id, $event->getRemoteId());
                 }
                 continue;
             }
-            /** @var \Google_Service_Calendar_EventDateTime $start */
-            $start = $item->getStart();
-            /** @var \Google_Service_Calendar_EventDateTime $end */
-            $end = $item->getEnd();
-            $event->setStart(date_timezone_set(new \DateTime($start->getDateTime()), new \DateTimeZone(date_default_timezone_get())));
-            $event->setEnd(date_timezone_set(new \DateTime($end->getDateTime()), new \DateTimeZone(date_default_timezone_get())));
-            $orm->merge($event);
+            if(!empty($item->getUpdated())) {
+                $updated = date_timezone_set(new \DateTime($item->getUpdated()), new \DateTimeZone(date_default_timezone_get()));
+                if(empty($event->getRemoteUpdated()) || $updated > $event->getRemoteUpdated()) {
+                    /** @var \Google_Service_Calendar_EventDateTime $start */
+                    $start = $item->getStart();
+                    /** @var \Google_Service_Calendar_EventDateTime $end */
+                    $end = $item->getEnd();
+                    /** @var \DateTime $updated */
+                    $event->setStart(
+                        date_timezone_set(
+                            new \DateTime($start->getDateTime()),
+                            new \DateTimeZone(date_default_timezone_get())
+                        )
+                    );
+                    $event->setEnd(
+                        date_timezone_set(
+                            new \DateTime($end->getDateTime()),
+                            new \DateTimeZone(date_default_timezone_get())
+                        )
+                    );
+
+                    $event->setRemoteUpdated($updated);
+                    $orm->merge($event);
+                }
+            }
+
         }
 
         // sync changes from google
@@ -144,11 +158,11 @@ class PlanController extends Controller
             }
 
             if($event->getType() == 'sr')
-                $name = $event->getName() . ' : Study session';
+                $name = $event->getName() . ': Study session';
             elseif($event->getType() == 'p')
-                $name = $event->getName() . ' : Pre-work';
+                $name = $event->getName() . ': Pre-work';
             elseif($event->getType() == 'c')
-                $name = $event->getName() . ' : Class';
+                $name = $event->getName() . ': Class';
             else
                 $name = $event->getName();
 
@@ -169,31 +183,31 @@ class PlanController extends Controller
                 //],
                 'attendees' => [
                     ['email' => $user->getEmail()]
-                ]
+                ],
+                'iCalUID' => 'STUDYSAUCE-' . $event->getId(),
+                'colorId' => 6
             ];
             if(!empty($event->getAlert())) {
                 $config['reminders'] = [
                     'useDefault' => FALSE,
                     'overrides' => [
-                        ['method' => 'email', 'minutes' => $event->getAlert()],
-                        ['method' => 'sms', 'minutes' => $event->getAlert()],
+                        ['method' => 'popup', 'minutes' => $event->getAlert()]
                     ],
                 ];
             }
             $newEvent = new \Google_Service_Calendar_Event($config);
-            try {
-                if(empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $existing)) {
-                    $newEvent = $service->events->insert($id, $newEvent);
-                }
-                else {
-                    $newEvent = $service->events->update($id, $event->getRemoteId(), $newEvent);
-                }
+            if(empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $existing)) {
+                $newEvent = $service->events->insert($id, $newEvent);
+                $event->setRemoteUpdated(new \DateTime());
+                $event->setRemoteId($newEvent->getId());
+                //$newEvent->getICalUID()
+                $orm->merge($event);
             }
-            catch (\Exception $e) {
-                continue;
+            elseif(!empty($event->getUpdated()) && (empty($event->getRemoteUpdated()) || $event->getUpdated() > $event->getRemoteUpdated())) {
+                $service->events->update($id, $event->getRemoteId(), $newEvent);
+                $event->setRemoteUpdated(new \DateTime());
+                $orm->merge($event);
             }
-            $event->setRemoteId($newEvent->getId());
-            $orm->merge($event);
         }
         $orm->flush();
     }
@@ -353,8 +367,7 @@ class PlanController extends Controller
         // get demo schedule instead
         $isDemo = false;
         $isEmpty = false;
-        if (empty($schedule) ||
-            empty($schedule->getClasses()->count()) ||
+        if (empty($schedule) || empty($schedule->getClasses()->count()) ||
             !$user->hasRole('ROLE_PAID')) {
             $schedule = ScheduleController::getDemoSchedule($this->container);
             if($user->hasRole('ROLE_PAID'))
@@ -371,7 +384,7 @@ class PlanController extends Controller
         $step = self::getPlanStep($user);
         foreach($schedule->getClasses()->toArray() as $c) {
             /** @var Course $c */
-            if(empty($c->getEvents()->count())) {
+            if(empty($c->getEvents()->filter(function(Event $e) {return !$e->getDeleted();})->count())) {
                 self::createCourseEvents($c, $orm);
             }
         }
@@ -413,11 +426,11 @@ class PlanController extends Controller
         }
         elseif($schedule->getClasses()->exists(function ($_, Course $c) {
                     return $c->getStudyDifficulty() != 'none' && !$c->getEvents()->exists(function ($_, Event $e) {
-                        return $e->getType() == 'p' && $e->getDeleted() == false;
+                        return $e->getType() == 'p' && !$e->getDeleted();
                     });}) ||
                 $schedule->getClasses()->exists(function ($_, Course $c) {
                     return $c->getStudyDifficulty() != 'none' && !$c->getEvents()->exists(function ($_, Event $e) {
-                        return $e->getType() == 'sr' && $e->getDeleted() == false;
+                        return $e->getType() == 'sr' && !$e->getDeleted();
                     });})) {
             return 2;
         }
@@ -455,22 +468,19 @@ class PlanController extends Controller
         $schedule = $user->getSchedules()->first();
 
         // get events for current week
-        if (empty($schedule) ||
-            empty($schedule->getCourses()->filter(function (Course $b) {return !$b->getDeleted();})->count())) {
-            $schedule = ScheduleController::getDemoSchedule($this->container);
+        $isDemo = false;
+        if (empty($schedule) || empty($schedule->getClasses()->count())) {
+            $events = [];
+            $isDemo = true;
+        }
+        else {
+            $events = $schedule->getEvents()->filter(function (Event $e) {return !$e->getDeleted();})->toArray();
         }
 
-        // TODO: get demo Deadlines?
-        $emails = new EmailsController();
-        $emails->setContainer($this->container);
-
-        $events = $schedule->getEvents();
-
-        $courses = $schedule->getClasses()->toArray();
         return $this->render('StudySauceBundle:Plan:widget.html.php', [
+                'isDemo' => $isDemo,
                 'events' => $events,
-                'user' => $user,
-                'classes' => array_map(function (Course $c) {return $c->getName();}, array_values($courses))
+                'user' => $user
             ]
         );
     }
@@ -629,7 +639,7 @@ class PlanController extends Controller
         }
 
         self::mergeSaved($schedule, $schedule->getEvents()->filter(function (Event $event) {
-            return $event->getType() == 'd' || $event->getType() == 'r' || $event->getType() == 'h';
+            return ($event->getType() == 'd' || $event->getType() == 'r' || $event->getType() == 'h') && !$event->getDeleted();
         }), $events, $orm);
     }
 
@@ -869,8 +879,14 @@ class PlanController extends Controller
         $remove = $saved->toArray();
         foreach ($remove as $i => $save) {
             /** @var Event $save */
-            $save->setDeleted(true);
-            $orm->merge($save);
+            if(empty($save->getRemoteId())) {
+                $orm->remove($save);
+                $schedule->removeEvent($save);
+            }
+            else {
+                $save->setDeleted(true);
+                $orm->merge($save);
+            }
         }
         $orm->flush();
 
@@ -893,6 +909,7 @@ class PlanController extends Controller
             else
             {
                 /** @var Event $event */
+                $event->setUpdated(new \DateTime());
                 $orm->merge($event);
             }
         }
@@ -922,20 +939,20 @@ X-WR-TIMEZONE:America/Phoenix
 EOCAL;
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
-        $events = $schedule->getEvents();
-        $max = max(array_map(function (Event $e) {return $e->getCreated()->getTimestamp();}, $events->toArray()));
+        $events = $schedule->getEvents()->filter(function (Event $e) {return !$e->getDeleted();})->toArray();
+        $max = max(array_map(function (Event $e) {return $e->getCreated()->getTimestamp();}, $events));
         $last = new \DateTime();
         $last->setTimestamp($max);
         $lastModified = $last->format('Ymd') . 'T' . $last->format('His') . 'Z';
-        foreach($events->toArray() as $event) {
+        foreach($events as $event) {
             /** @var Event $event */
             $id = $event->getId();
             if($event->getType() == 'sr')
-                $title = $event->getName() . ' : Study session';
+                $title = $event->getName() . ': Study session';
             elseif($event->getType() == 'p')
-                $title = $event->getName() . ' : Pre-work';
+                $title = $event->getName() . ': Pre-work';
             elseif($event->getType() == 'c')
-                $title = $event->getName() . ' : Class';
+                $title = $event->getName() . ': Class';
             else
                 $title = $event->getName();
             $start = date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
@@ -1020,7 +1037,8 @@ END:VCALENDAR');
                 $classStart = $course->getStartTime();
                 $classEnd = $course->getEndTime();
                 $title = $course->getName();
-                $existing = array_merge($existing, $course->getEvents()->filter(function (Event $e) use($event){return $e->getType() == $event['type'];})->toArray());
+                $existing = array_merge($existing, $course->getEvents()->filter(function (Event $e) use($event){
+                    return !$e->getDeleted() && $e->getType() == $event['type'];})->toArray());
             }
             elseif($event['type'] == 'f') {
                 $course = null;
@@ -1028,7 +1046,8 @@ END:VCALENDAR');
                 $classStart = min(array_map(function (Course $c) {return $c->getStartTime();}, $schedule->getClasses()->toArray()));
                 $classEnd = max(array_map(function (Course $c) {return $c->getEndTime();}, $schedule->getClasses()->toArray()));
                 $title = 'Free study';
-                $existing = array_merge($existing, $schedule->getEvents()->filter(function (Event $e) {return $e->getType() == 'f';})->toArray());
+                $existing = array_merge($existing, $schedule->getEvents()->filter(function (Event $e) {
+                    return !$e->getDeleted() && $e->getType() == 'f';})->toArray());
             }
             else
                 continue;
@@ -1081,9 +1100,6 @@ END:VCALENDAR');
         // if ($course->getType() == 'o' && !in_array('Weekly', $course->getDotw())) {
         //    $once = true;
         //}
-        $existing = $course->getEvents()->filter(function (Event $e) use ($course) {
-            return $e->getType() == 'c' && $e->getCourse() == $course;});
-
         $classStart = $course->getStartTime();
         $classEnd = $course->getEndTime();
         $length = $course->getLength();
@@ -1128,7 +1144,8 @@ END:VCALENDAR');
         }
 
         // merge events with saved
-        self::mergeSaved($course->getSchedule(), $existing, $events, $orm);
+        self::mergeSaved($course->getSchedule(), $course->getEvents()->filter(function (Event $e) use ($course) {
+            return !$e->getDeleted() && $e->getType() == 'c' && $e->getCourse() == $course;}), $events, $orm);
     }
 
     /**
@@ -1148,7 +1165,8 @@ END:VCALENDAR');
 
         /** @var Event $event */
         if(!empty($schedule))
-            $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
+            $event = $schedule->getEvents()->filter(function (Event $e)use($request) {
+                return !$e->getDeleted() && $e->getId() == $request->get('eventId');})->first();
 
         if (!empty($event)) {
             $oldStart = clone $event->getStart();
@@ -1181,19 +1199,24 @@ END:VCALENDAR');
             if($request->get('title') !== null)
                 $event->setName($request->get('title'));
 
+            $event->setUpdated(new \DateTime());
             $orm->merge($event);
 
-            // move subsequent events of the same type
-            $events = $schedule->getEvents()
-                ->filter(function (Event $e)use($event, $oldStart) {
-                    return $e->getType() == $event->getType() &&
-                            $e->getName() == $event->getName() &&
-                            $e->getStart() > $oldStart &&
-                            $e->getId() != $event->getId(); })
-                ->toArray();
-            usort($events, function (Event $a, Event $b) use ($events) {
+            $events = [];
+            if($request->get('reoccurring') !== false) {
+
+                // move subsequent events of the same type
+                $events = $schedule->getEvents()
+                    ->filter(function (Event $e)use($event, $oldStart) {
+                        return !$e->getDeleted() && $e->getType() == $event->getType() &&
+                        $e->getCourse() == $event->getCourse() && $e->getStart() > $oldStart &&
+                        $e->getId() != $event->getId(); })
+                    ->toArray();
+                usort($events, function (Event $a, Event $b) use ($events) {
                     return $a->getStart()->getTimestamp() - $b->getStart()->getTimestamp();
                 });
+
+            }
 
             foreach ($events as $k => $e)
             {
@@ -1210,14 +1233,14 @@ END:VCALENDAR');
                     // get events for the day to make sure we are not overlapping
                     $working = $schedule->getEvents()
                         ->filter(function (Event $x) use ($e) {
-                                // ignore all these event types because they are not displayed to the user
-                                return $e->getId() != $x->getId() && $x->getType() != 'h' && $x->getType() != 'd' &&
-                                    $x->getType() != 'r' && $x->getType() != 'm' && $x->getType() != 'z'; })
+                            // ignore all these event types because they are not displayed to the user
+                            return !$e->getDeleted() && $e->getId() != $x->getId() && $x->getType() != 'h'
+                                && $x->getType() != 'd' && $x->getType() != 'r' && $x->getType() != 'm'
+                                && $x->getType() != 'z'; })
                         ->map(function (Event $e) {return [
-                                'start' => $e->getStart(),
-                                'end' => $e->getEnd(),
-                                'type' => $e->getType()
-                            ];})->toArray();
+                            'start' => $e->getStart(),
+                            'end' => $e->getEnd(),
+                            'type' => $e->getType()];})->toArray();
                     self::sortEvents($working);
                     $working = self::getWorkingEvents($working,
                         $e->getStart()->getTimestamp() - 86400,
@@ -1246,12 +1269,13 @@ END:VCALENDAR');
                             $e->setMoved(true);
 
                             if($request->get('location') !== null)
-                                $event->setLocation($request->get('location'));
+                                $e->setLocation($request->get('location'));
                             if($request->get('alert') !== null)
-                                $event->setAlert($request->get('alert'));
+                                $e->setAlert($request->get('alert'));
                             if($request->get('title') !== null)
-                                $event->setName($request->get('title'));
+                                $e->setName($request->get('title'));
 
+                            $e->setUpdated(new \DateTime());
                             $orm->merge($e);
                             break;
                         }
@@ -1281,7 +1305,8 @@ END:VCALENDAR');
         $schedule = $user->getSchedules()->first();
 
         /** @var Event $event */
-        $event = $schedule->getEvents()->filter(function (Event $e)use($request) {return $e->getId() == $request->get('eventId');})->first();
+        $event = $schedule->getEvents()->filter(function (Event $e)use($request) {
+            return !$e->getDeleted() && $e->getId() == $request->get('eventId');})->first();
         if(empty($event))
             throw new NotFoundHttpException();
 

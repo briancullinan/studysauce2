@@ -10,7 +10,7 @@ use StudySauce\Bundle\Entity\Event;
             <a href="<?php print $view['router']->generate('premium'); ?>" class="cloak">Nothing set up yet.  Click <span class="reveal">here</span> to go premium.</a>
             <?php
         }
-        elseif(empty($classes) || empty($events)) {
+        elseif($isDemo || empty($events)) {
             ?>
             <a href="<?php print $view['router']->generate('schedule'); ?>" class="cloak">Nothing set up yet. Click <span
                     class="reveal">here</span> to set up your schedule.</a>
@@ -50,7 +50,7 @@ use StudySauce\Bundle\Entity\Event;
                 </div><?php
                 $count++;
             }
-            if(empty($count)) { ?>Nothing to do today<?php }
+            if(empty($count)) { ?><a href="<?php print $view['router']->generate('plan'); ?>" class="cloak">Nothing to do today. Click <span class="reveal">here</span> to go to your study plan.</a><?php }
         } ?>
     </div>
 </div>
