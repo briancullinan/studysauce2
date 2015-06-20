@@ -89,12 +89,14 @@ $view['slots']->start('sincludes');
 print $this->render('StudySauceBundle:Dialogs:plan-step-0.html.php', ['id' => 'plan-step-0', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-1.html.php', ['id' => 'plan-step-1', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-2.html.php', ['id' => 'plan-step-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-2-2.html.php', ['id' => 'plan-step-2-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-2-3.html.php', ['id' => 'plan-step-2-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-3.html.php', ['id' => 'plan-step-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-4.html.php', ['id' => 'plan-step-4', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-5.html.php', ['id' => 'plan-step-5', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-print $this->render('StudySauceBundle:Dialogs:plan-step-2-2.html.php', ['id' => 'plan-step-2-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-print $this->render('StudySauceBundle:Dialogs:plan-step-2-3.html.php', ['id' => 'plan-step-2-3', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-print $this->render('StudySauceBundle:Dialogs:plan-step-6.html.php', ['id' => 'plan-step-6', 'courses' => $courses, 'schedule' => $schedule, 'services' => $services, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-6.html.php', ['id' => 'plan-step-6', 'services' => $services, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-6-2.html.php', ['id' => 'plan-step-6-2', 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+
 if($isEmpty) {
     print $this->render('StudySauceBundle:Dialogs:plan-empty-schedule.html.php', ['id' => 'plan-empty-schedule']);
 }

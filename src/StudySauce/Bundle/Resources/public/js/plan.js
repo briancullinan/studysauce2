@@ -474,20 +474,24 @@ $(document).ready(function () {
         else
             $('#plan-upgrade').modal('hide');
 
-        if(!plan.is('.setup-mode') || $('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6').first().modal({
+        if (plan.is('.empty-schedule')) {
+            $('#plan-empty-schedule').modal({
                 backdrop: 'static',
                 keyboard: false,
                 show: true
-            }).length == 0) {
-            if (plan.is('.empty-schedule'))
-                $('#plan-empty-schedule').modal({
+            });
+        }
+        else {
+            $('#plan-empty-schedule').modal('hide');
+            if(plan.is('.setup-mode')) {
+                $('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6').first().modal({
                     backdrop: 'static',
                     keyboard: false,
                     show: true
-                });
-            else
-                $('#plan-empty-schedule').modal('hide');
+                })
+            }
         }
+
     }
 
     body.on('click', '#plan-step-2 a[href="#add-prework"]', function () {
@@ -725,14 +729,14 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#plan-step-6 a[href*="/plan/download"]', function () {
-        $('#plan-step-6').removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
+    body.on('click', '#plan-step-6-2 a[href*="/plan/download"]', function () {
+        $('#plan-step-6-2').removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
     });
 
-    body.on('click', '#plan-step-6 a[href="#done"]', function (evt) {
+    body.on('click', '#plan-step-6-2 a[href="#done"]', function (evt) {
         evt.preventDefault();
         var plan = $('#plan'),
-            dialog = $('#plan-step-6');
+            dialog = $('#plan-step-6-2');
         if(dialog.find('.highlighted-link').is('.invalid')) {
             dialog.addClass('invalid-only');
             return;
@@ -1252,15 +1256,9 @@ $(document).ready(function () {
                     // show empty dialog if needed
                     if(content.filter('#plan').is('.empty-schedule')) {
                         plan.addClass('empty-schedule');
-                        $('#plan-empty-schedule').modal({
-                            backdrop: 'static',
-                            keyboard: false,
-                            show: plan.is(':visible')
-                        });
                     }
                     else {
                         plan.removeClass('empty-schedule');
-                        $('#plan-empty-schedule').modal('hide');
                     }
 
                     // reset calendar

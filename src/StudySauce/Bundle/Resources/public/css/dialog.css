@@ -56,7 +56,6 @@
 #profile-upgrade .close,
 #plan-upgrade .close,
 #metrics-empty .close,
-#plan-empty .close,
 #plan-empty-schedule .close
 {
     display:none;
@@ -99,11 +98,6 @@
     position: relative;
     text-transform: uppercase;
     top: 12px;
-}
-
-#plan-empty.modal.in .modal-dialog .modal-content
-{
-    margin-top:-25%;
 }
 
 #bookmark .modal-body
@@ -433,7 +427,6 @@ body.right-menu #bookmark
         transform:none;
     }
 
-    #plan-empty.modal.in .modal-dialog .modal-content,
     .modal.in .modal-dialog .modal-content
     {
         margin-top:0;

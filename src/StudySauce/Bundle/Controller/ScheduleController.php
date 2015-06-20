@@ -352,8 +352,27 @@ class ScheduleController extends Controller
             if(empty($t['classes']))
                 continue;
 
+            // remove courses first
             foreach ($t['classes'] as $j => $c) {
-                if(empty($c['courseId']) && $c['remove'] == 'true')
+                if (empty($c['courseId']) || $c['remove'] != 'true')
+                    continue;
+
+                /** @var $course Course */
+                $course = $schedule->getCourses()->filter(function (Course $x) use($c) {
+                    return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
+
+                PlanController::mergeSaved($course->getSchedule(), $course->getEvents(), [], $orm);
+                self::removeCourse($course, $schedule, $orm);
+            }
+
+            // if schedule is empty, remove the rest of the events
+            if(empty($schedule->getClasses()->count())) {
+                PlanController::mergeSaved($schedule, $schedule->getEvents(), [], $orm);
+            }
+
+            // create new courses and ignore removes
+            foreach ($t['classes'] as $j => $c) {
+                if ($c['remove'] == 'true')
                     continue;
 
                 // check if class entity already exists
@@ -367,35 +386,38 @@ class ScheduleController extends Controller
                         return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
                 }
 
-                // remove course
-                if($c['remove'] == 'true') {
-                    PlanController::mergeSaved($course->getSchedule(), $course->getEvents(), [], $orm);
-                    self::removeCourse($course, $schedule, $orm);
-                }
                 // save course settings
-                else {
-                    $dotw = explode(',', $c['dotw']);
-                    if(empty($dotw[0]))
-                        $dotw = [];
+                $dotw = explode(',', $c['dotw']);
+                if(empty($dotw[0]))
+                    $dotw = [];
 
-                    $dotw = array_unique($dotw);
-                    sort($dotw);
+                $dotw = array_unique($dotw);
+                sort($dotw);
 
-                    $course->setName($c['className']);
-                    $course->setDotw($dotw);
-                    $course->setType($c['type']);
-                    $course->setStartTime(new \DateTime($c['start']));
-                    $course->setEndTime(new \DateTime($c['end']));
+                $course->setName($c['className']);
+                $course->setDotw($dotw);
+                $course->setType($c['type']);
+                $course->setStartTime(new \DateTime($c['start']));
+                $course->setEndTime(new \DateTime($c['end']));
 
-                    if (empty($c['courseId'])) {
-                        // save course
-                        $schedule->addCourse($course);
-                        $orm->persist($course);
-                    }
-                    else
-                        $orm->merge($course);
-                    PlanController::createCourseEvents($course, $orm);
+                if (empty($c['courseId'])) {
+                    // save course
+                    $schedule->addCourse($course);
+                    $orm->persist($course);
                 }
+                else
+                    $orm->merge($course);
+                PlanController::createCourseEvents($course, $orm);
+
+                // expand or collapse or add or remove study events
+                $eventInfo = [];
+                /*
+                $existingEvents = $course->getEvents()->filter(function (Event $e) use($course){
+                    return $e->getType() == 'p' &&
+                        $e->getStart()->getTimestamp()
+                        > $course->getEndTime()->getTimestamp() - 86400 * 8;})->toArray();
+                */
+                PlanController::createStudyEvents($schedule, $eventInfo, $orm);
 
                 $orm->flush();
             }

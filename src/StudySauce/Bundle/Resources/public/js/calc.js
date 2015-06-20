@@ -2,9 +2,11 @@ $(document).ready(function () {
 
     var body = $('body');
 
-    body.on('click', '#calculator .term-row > *:not(.term-editor)', function () {
+    body.on('click', '#calculator .term-row', function (evt) {
+        if($(evt.target).is('.term-editor, .term-editor *'))
+            return;
         var calc = body.find('#calculator'),
-            row = $(this).parents('.term-row');
+            row = $(this).closest('.term-row');
         if(!row.is('.selected')) {
             calc.find('.term-row.selected').removeClass('selected');
             calc.find('.term-row .term-name').addClass('read-only');
@@ -20,11 +22,10 @@ $(document).ready(function () {
         $(this).parents('.class-row').next().find('[value="#save-grades"]').css('visibility', 'visible');
     });
 
-    body.on('click', '#calculator .class-row > *:not(.grade-editor):not(.hours):not(.grade):not(.class-name),' +
-                     '#calculator .class-row:not(.selected) > .hours.read-only,' +
-                     '#calculator .class-row > .grade.read-only,' +
-                     '#calculator .term-row:not(.schedule-id-) .class-row > *.class-name', function () {
-        var row = $(this).parents('.class-row');
+    body.on('click', '#calculator .class-row', function (evt) {
+        if($(evt.target).is('input, select'))
+            return;
+        var row = $(this).closest('.class-row');
         if(row.is('.selected')) {
             row.removeClass('selected');
             if(row.find('> .hours input').val().trim() != '' &&

@@ -122,8 +122,8 @@
     position: relative;
 }
 
-#calculator .term-row:after,
-#calculator .class-row:after
+#calculator .term-row:before,
+#calculator .class-row:before
 {
     transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
@@ -148,19 +148,19 @@
     transition: transform ease-in-out .15s, -webkit-transform ease-in-out .15s, -moz-transform ease-in-out .15s, -ms-transform ease-in-out .15s, -o-transform ease-in-out .15s, filter ease-in-out .15s;
 }
 
-#calculator .term-row:after
+#calculator .term-row:before
 {
     right:10px;
 }
 
-#calculator .term-row:hover:not(.selected):not(.edit):after,
-#calculator .class-row:hover:not(.selected):not(.edit):after
+#calculator .term-row:hover:not(.selected):not(.edit):before,
+#calculator .class-row:hover:not(.selected):not(.edit):before
 {
     background-position: -4px -153px;
 }
 
-#calculator .term-row.selected:after,
-#calculator .class-row.selected:after
+#calculator .term-row.selected:before,
+#calculator .class-row.selected:before
 {
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
@@ -709,12 +709,12 @@
 @media all and (max-width: 700px)
 {
 
-    #calculator .term-row:after
+    #calculator .term-row:before
     {
         right:5px;
     }
 
-    #calculator .class-row:after
+    #calculator .class-row:before
     {
         right: -5px;
     }

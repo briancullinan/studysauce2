@@ -368,7 +368,8 @@ class PlanController extends Controller
         $isDemo = false;
         $isEmpty = false;
         if (empty($schedule) || empty($schedule->getClasses()->count()) ||
-            !$user->hasRole('ROLE_PAID')) {
+            !$user->hasRole('ROLE_PAID') || !$schedule->getClasses()->exists(function ($_, Course $c) {
+                return $c->getEndTime() > new \DateTime();})) {
             $schedule = ScheduleController::getDemoSchedule($this->container);
             if($user->hasRole('ROLE_PAID'))
                 $isEmpty = true;
@@ -692,7 +693,28 @@ class PlanController extends Controller
                     $orm->merge($c);
                 }
                 if(!empty($request->get('profile-difficulty-' . $c->getId()))) {
-                    $c->setStudyDifficulty($request->get('profile-difficulty-' . $c->getId()));
+                    $difficulty = $request->get('profile-difficulty-' . $c->getId());
+                    $c->setStudyDifficulty($difficulty);
+                    /** @var Event[] $prework */
+                    $prework = $c->getEvents()->filter(function (Event $e) {return $e->getType() == 'p';})->toArray();
+                    foreach($prework as $e) {
+                        if($difficulty == 'easy')
+                            $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT45M')));
+                        if($difficulty == 'average')
+                            $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT60M')));
+                        if($difficulty == 'tough')
+                            $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT90M')));
+                    }
+                    /** @var Event[] $study */
+                    $study = $c->getEvents()->filter(function (Event $e) {return $e->getType() == 'sr';})->toArray();
+                    foreach($study as $e) {
+                        if($difficulty == 'easy')
+                            $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT45M')));
+                        if($difficulty == 'average')
+                            $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT60M')));
+                        if($difficulty == 'tough')
+                            $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT120M')));
+                    }
                     $orm->merge($c);
                 }
             }

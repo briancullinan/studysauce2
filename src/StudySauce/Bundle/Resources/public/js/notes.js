@@ -3,17 +3,19 @@ $(document).ready(function () {
     var body = $('body'),
         noteId = '';
 
-    body.on('click', '#notes .term-row > *:not(.term-editor)', function () {
+    body.on('click', '#notes .term-row', function (evt) {
+        if($(evt.target).is('.term-editor, .term-editor *'))
+            return;
         var calc = body.find('#notes'),
-            row = $(this).parents('.term-row');
+            row = $(this).closest('.term-row');
         if(!row.is('.selected')) {
             calc.find('.term-row.selected').removeClass('selected');
             row.addClass('selected');
         }
     });
 
-    body.on('click', '#notes .class-row > *:not(.notes)', function () {
-        var row = $(this).parents('.class-row');
+    body.on('click', '#notes .class-row', function () {
+        var row = $(this).closest('.class-row');
         if(row.is('.selected')) {
             row.removeClass('selected');
         }

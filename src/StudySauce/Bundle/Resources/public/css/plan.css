@@ -390,7 +390,8 @@ a.fc-event:not([href])
 #plan.setup-mode ~ #plan-step-4 .dialog-tracker li:nth-child(4),
 #plan:not(.setup-mode) ~ #plan-step-4 .dialog-tracker li:nth-child(3),
 #plan-step-5 .dialog-tracker li:nth-child(5),
-#plan-step-6 .dialog-tracker li:nth-child(6)
+#plan-step-6 .dialog-tracker li:nth-child(6),
+#plan-step-6-2 .dialog-tracker li:nth-child(6)
 {
     font-size: 60px;
     color: #0099BB;
@@ -404,7 +405,8 @@ a.fc-event:not([href])
 #plan.setup-mode ~ #plan-step-3 .close,
 #plan.setup-mode ~ #plan-step-4 .close,
 #plan.setup-mode ~ #plan-step-5 .close,
-#plan.setup-mode ~ #plan-step-6 .close
+#plan.setup-mode ~ #plan-step-6 .close,
+#plan.setup-mode ~ #plan-step-6-2 .close
 {
     display:none;
 }
@@ -497,11 +499,13 @@ a.fc-event:not([href])
     width:40%;
 }
 
-#plan-step-6 .modal-body
+#plan-step-6 .modal-body,
+#plan-step-6-2 .modal-body
 {
     text-align: center;
 }
 
+#plan-step-6-2 img,
 #plan-step-6 img,
 #plan-step-6 .site-name img
 {
@@ -720,14 +724,6 @@ a.fc-event:not([href])
     display:inline;
 }
 
-#plan-empty
-{
-    position: absolute;
-    top:0;
-    left:0;
-    z-index:1;
-}
-
 #plan-step-3 h4,
 #plan-step-4 h4,
 #plan-step-1 h4
@@ -815,7 +811,7 @@ a.fc-event:not([href])
 }
 
 #edit-event .invalid-only,
-#plan-step-6 .invalid-only,
+#plan-step-6-2 .invalid-only,
 #plan-step-3 .invalid-only,
 #plan-step-4 .invalid-only,
 #plan-step-1 .invalid-only
@@ -830,7 +826,7 @@ a.fc-event:not([href])
 }
 
 #edit-event.invalid-only .invalid-only,
-#plan-step-6.invalid-only .invalid-only,
+#plan-step-6-2.invalid-only .invalid-only,
 #plan-step-3.invalid-only .invalid-only,
 #plan-step-4.invalid-only .invalid-only,
 #plan-step-1.invalid-only .invalid-only
@@ -852,7 +848,7 @@ a.fc-event:not([href])
     border-bottom-right-radius: 5px;
 }
 
-#plan-step-6 a[href*="/plan/download"]
+#plan-step-6-2 a[href*="/plan/download"]
 {
     display: block;
     margin: 0 auto;
