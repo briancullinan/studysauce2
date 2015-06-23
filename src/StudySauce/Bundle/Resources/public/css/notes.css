@@ -540,6 +540,19 @@
 
 @media all and (max-width: 700px)
 {
+    #notes.is-checkin .note-title
+    {
+        margin: -10px -10px 0 -10px;
+        padding:0;
+        width:auto;
+    }
+
+    #notes.edit-note.is-checkin .mini-checkin
+    {
+        display:block;
+        position:static;
+    }
+
     .left-menu #cke_editor1,
     .right-menu #cke_editor1
     {

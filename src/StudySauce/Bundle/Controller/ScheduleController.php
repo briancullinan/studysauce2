@@ -407,23 +407,106 @@ class ScheduleController extends Controller
                 }
                 else
                     $orm->merge($course);
-                PlanController::createCourseEvents($course, $orm);
 
-                // expand or collapse or add or remove study events
-                $eventInfo = [];
-                /*
-                $existingEvents = $course->getEvents()->filter(function (Event $e) use($course){
-                    return $e->getType() == 'p' &&
-                        $e->getStart()->getTimestamp()
-                        > $course->getEndTime()->getTimestamp() - 86400 * 8;})->toArray();
-                */
-                PlanController::createStudyEvents($schedule, $eventInfo, $orm);
+                PlanController::createCourseEvents($course, $orm);
+                self::refillCourseStudyEvents($schedule, $course, $orm);
 
                 $orm->flush();
             }
         }
 
         return $this->forward('StudySauceBundle:Schedule:index', ['_format' => 'tab']);
+    }
+
+    /**
+     * @param Schedule $schedule
+     * @param Course $course
+     * @param EntityManager $orm
+     */
+    private static function refillCourseStudyEvents(Schedule $schedule, Course $course, EntityManager $orm)
+    {
+        if(!$course->getEvents()->count())
+            return;
+        // get events closest in time to each class and rebuild study events from that
+        $eventInfo = [];
+        $week = strtotime('last Sunday', $course->getStartTime()->getTimestamp());
+        /** @var Event[] $prework */
+        $prework = array_values($course->getEvents()->filter(function (Event $e) use($course){
+            return $e->getType() == 'p'; })->toArray());
+        $pLength = 60;
+        if($course->getStudyDifficulty() == 'easy')
+            $pLength = 45;
+        if($course->getStudyDifficulty() == 'average')
+            $pLength = 60;
+        if($course->getStudyDifficulty() == 'tough')
+            $pLength = 90;
+        /** @var Event[] $study */
+        $study = array_values($course->getEvents()->filter(function (Event $e) use($course){
+            return $e->getType() == 'sr'; })->toArray());
+        $srLength = 60;
+        if($course->getStudyDifficulty() == 'easy')
+            $srLength = 45;
+        if($course->getStudyDifficulty() == 'average')
+            $srLength = 60;
+        if($course->getStudyDifficulty() == 'tough')
+            $srLength = 120;
+        foreach($course->getDotw() as $d) {
+
+            if (!isset(PlanController::$weekConversion[$d])) {
+                continue;
+            }
+
+            $t = $week + PlanController::$weekConversion[$d];
+            $classP = new \DateTime();
+            $classP->setTimestamp($t);
+            $classP->setTime($course->getStartTime()->format('H'), $course->getStartTime()->format('i'), $course->getStartTime()->format('s'));
+            $diff = $classP->getTimestamp() - strtotime('today', $classP->getTimestamp());
+            $last = $classP->getTimestamp() - strtotime('last Sunday', $classP->getTimestamp());
+
+            // find nearest prework
+            $closest = 608400;
+            for($i = count($prework)-1; $i >= 0; $i--) {
+                $lastWeek = $prework[$i]->getStart()->getTimestamp() - strtotime('last Sunday', $prework[$i]->getStart()->getTimestamp());
+                $today = $prework[$i]->getStart()->getTimestamp() - strtotime('today', $prework[$i]->getStart()->getTimestamp());
+                if(abs($last - $lastWeek) < 86400 && abs($diff - $today) < abs($closest)) {
+                    $closest = $diff - $today;
+                }
+            }
+            $classP->setTimestamp($classP->getTimestamp() - $closest);
+            $eventInfo[] = [
+                'courseId' => $course->getId(),
+                'name' => $course->getName(),
+                'type' => 'p',
+                'start' => $classP->format('r'),
+                'end' => date_add(clone $classP, new \DateInterval('PT' . $pLength . 'M'))->format('r')
+            ];
+
+            $classS = new \DateTime();
+            $classS->setTimestamp($t);
+            $classS->setTime($course->getStartTime()->format('H'), $course->getStartTime()->format('i'), $course->getStartTime()->format('s'));
+            $diff = $classS->getTimestamp() - strtotime('today', $classS->getTimestamp());
+            $last = $classS->getTimestamp() - strtotime('last Sunday', $classS->getTimestamp());
+
+            // find nearest prework
+            $closest = 608400;
+            for($i = count($study)-1; $i >= 0; $i--) {
+                $lastWeek = $study[$i]->getStart()->getTimestamp() - strtotime('last Sunday', $study[$i]->getStart()->getTimestamp());
+                $today = $study[$i]->getStart()->getTimestamp() - strtotime('today', $study[$i]->getStart()->getTimestamp());
+                if(abs($last - $lastWeek) < 86400 && abs($diff - $today) < abs($closest)) {
+                    $closest = $diff - $today;
+                }
+            }
+            $classS->setTimestamp($classS->getTimestamp() - $closest);
+            $eventInfo[] = [
+                'courseId' => $course->getId(),
+                'name' => $course->getName(),
+                'type' => 'sr',
+                'start' => $classS->format('r'),
+                'end' => date_add(clone $classS, new \DateInterval('PT' . $pLength . 'M'))->format('r')
+            ];
+        }
+        PlanController::createStudyEvents($schedule, $eventInfo, $orm);
+
     }
 
     /**
@@ -464,10 +547,9 @@ class ScheduleController extends Controller
 
     /**
      * @param Course $course
-     * @param Schedule $schedule
      * @param EntityManager $orm
      */
-    private static function removeCourse(Course $course, Schedule $schedule, EntityManager $orm)
+    private static function removeCourse(Course $course, EntityManager $orm)
     {
        $course->setDeleted(true);
         foreach($course->getDeadlines()->toArray() as $d) {

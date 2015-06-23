@@ -224,15 +224,17 @@ $(document).ready(function () {
             allDayDefault: false,
             views: {
                 day: {
-                    columnFormat: 'dddd'
+                    columnFormat: 'ddd'
                 },
                 week: {
-                    columnFormat: 'dddd'
+                    columnFormat: 'ddd'
                 },
                 month: {
-                    columnFormat: 'dddd'
+                    columnFormat: 'ddd'
                 }
             },
+            defaultDate: plans.is('.setup-mode') ? (new Date(Math.min.apply(null, window.planEvents.map(function (e) {
+                return e.start.valueOf();})) + 604800000)) : null,
             height: 600,
             editable: true,
             draggable: true,

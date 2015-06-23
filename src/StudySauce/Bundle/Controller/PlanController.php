@@ -32,7 +32,7 @@ class PlanController extends Controller
 {
     const OVERLAP_INCREMENT = 600;
 
-    private static $weekConversion = [
+    public static $weekConversion = [
         'M' => 86400,
         'Tu' => 172800,
         'W' => 259200,
@@ -1041,6 +1041,23 @@ END:VCALENDAR');
     }
 
     /**
+     * @param $merged
+     * @return array
+     */
+    private static function arrayUniqueObj($merged)
+    {
+        $final  = [];
+
+        foreach ($merged as $current) {
+            if ( ! in_array($current, $final)) {
+                $final[] = $current;
+            }
+        }
+
+        return $final;
+    }
+
+    /**
      * @param Schedule $schedule
      * @param $eventInfo
      * @param EntityManager $orm
@@ -1107,7 +1124,7 @@ END:VCALENDAR');
 
         }
         // merge events with saved
-        self::mergeSaved($schedule, new ArrayCollection($existing), $events, $orm);
+        self::mergeSaved($schedule, new ArrayCollection(self::arrayUniqueObj($existing)), $events, $orm);
     }
 
     /**

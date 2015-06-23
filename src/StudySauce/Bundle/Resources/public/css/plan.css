@@ -881,6 +881,12 @@ a.fc-event:not([href])
 
 @media all and (max-width:700px)
 {
+    #plan .mini-checkin
+    {
+        position:static;
+    }
+
+
 
     #plan-step-6 .evernote-name,
     #plan-step-6 .site-name
@@ -910,6 +916,7 @@ a.fc-event:not([href])
     {
         width: auto;
         display:none;
+        padding: 0;
     }
 
     #plan.session-selected .session-strategy

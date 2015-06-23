@@ -38,7 +38,6 @@ $(document).ready(function () {
         notes.find('.input.tags input')[0].selectize.setValue(JSON.parse(note.attr('data-tags')));
         noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notes.addClass('edit-note');
-        CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
         notes.find('.highlighted-link').removeClass('valid').addClass('invalid');
         $.ajax({
             url: window.callbackPaths['notes'].replace('/tab', '/body/' + noteId),
@@ -46,17 +45,20 @@ $(document).ready(function () {
             dataType: 'text',
             data: {},
             success: function (data) {
-                CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
                 notes.find('.highlighted-link').removeClass('invalid').addClass('valid');
                 setTimeout(function () {
-                    if(typeof CKEDITOR.instances.editor1 != 'undefined')
+                    if(typeof CKEDITOR.instances.editor1 != 'undefined') {
+                        CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
                         CKEDITOR.instances.editor1.fire('focus');
+                    }
                 }, 20);
             }
         });
         setTimeout(function () {
-            if(typeof CKEDITOR.instances.editor1 != 'undefined')
+            if(typeof CKEDITOR.instances.editor1 != 'undefined') {
+                CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
                 CKEDITOR.instances.editor1.fire('focus');
+            }
         }, 20);
     });
 
@@ -106,9 +108,9 @@ $(document).ready(function () {
         notes.find('.input.tags input')[0].selectize.setValue([]);
         noteId = '';
         notes.addClass('edit-note');
-        CKEDITOR.instances['editor1'].setData('');
         setTimeout(function () {
             if(typeof CKEDITOR.instances.editor1 != 'undefined')
+                CKEDITOR.instances['editor1'].setData('');
                 CKEDITOR.instances.editor1.fire('focus');
         }, 20);
     });
@@ -401,18 +403,23 @@ $(document).ready(function () {
                 CKEDITOR.inline(id);
             }
             that.addClass('loaded');
-            var editor = CKEDITOR.instances[id];
-            editor.on('blur',function( evt ){
-                if(that.parents('.panel-pane').is('.edit-note') && that.is(':visible')) {
-                    editor.fire('focus');
-                    evt.cancel();
+            setTimeout(function () {
+                if(typeof CKEDITOR.instances[id] != 'undefined') {
+                    var editor = CKEDITOR.instances[id];
+                    editor.on('blur',function( evt ){
+                        if(that.parents('.panel-pane').is('.edit-note') && that.is(':visible')) {
+                            editor.fire('focus');
+                            evt.cancel();
+                        }
+                    });
+                    editor.on('focus',function(){
+                        if(typeof editor.editable() != 'undefined')
+                            editor.setReadOnly(false);
+                        $(window).trigger('resize');
+                    });
+                    $(window).trigger('resize');
                 }
-            });
-            editor.on('focus',function(){
-                if(typeof editor.editable() != 'undefined')
-                    editor.setReadOnly(false);
-                $(window).trigger('resize');
-            });
+            }, 20);
             $(window).trigger('resize');
         });
     }
