@@ -122,6 +122,7 @@ $(document).ready(function () {
     // hide any visible modals when panel changes
     body.on('hide', '.panel-pane', function () {
         body.find('.modal:visible').modal('hide');
+        body.find('.tipsy, .ui-datepicker').hide();
     });
 
     function expandMenu(evt)

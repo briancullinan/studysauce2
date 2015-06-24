@@ -46,7 +46,8 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane <?php
     print ($isDemo ? ' demo' : '');
     print ($isEmpty ? ' empty-schedule' : '');
-    print ($step !== false ? ' setup-mode' : ''); ?>" id="plan">
+    print ($step !== false ? ' setup-mode' : '');
+    print (!empty($user->getGcalAccessToken()) ? ' connected' : ' not-connected'); ?>" id="plan">
     <div class="pane-content">
         <div id="external-events">
             <h4>Draggable Events</h4>
@@ -61,6 +62,7 @@ $view['slots']->start('body'); ?>
         </div>
         <div id="calendar" class="full-only fc fc-ltr fc-unthemed"></div>
         <div class="session-strategy">
+            <a href="#deselect" class="mobile-only">Back to calendar</a>
             <?php echo $view->render('StudySauceBundle:Checkin:mini-checkin.html.php'); ?>
             <h2 class="title"></h2>
             <h3 class="location"></h3>

@@ -860,6 +860,16 @@ a.fc-event:not([href])
     line-height: normal;
 }
 
+#plan a[href="#deselect"]
+{
+    position:absolute;
+    width:20%;
+    height: 50px;
+    display:none;
+    top: 10px;
+    left: 10px;
+}
+
 @media all and (max-width:1000px)
 {
 
@@ -881,12 +891,15 @@ a.fc-event:not([href])
 
 @media all and (max-width:700px)
 {
+    #plan.session-selected a[href="#deselect"]
+    {
+        display: block;
+    }
+
     #plan .mini-checkin
     {
         position:static;
     }
-
-
 
     #plan-step-6 .evernote-name,
     #plan-step-6 .site-name
@@ -971,5 +984,13 @@ a.fc-event:not([href])
         text-align: left;
         margin-right:0;
         padding-right:0;
+    }
+}
+
+@media all and (max-width: 500px)
+{
+    #plan .note-row
+    {
+        width:100%;
     }
 }

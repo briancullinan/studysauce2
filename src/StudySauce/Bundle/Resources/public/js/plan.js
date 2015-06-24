@@ -326,71 +326,72 @@ $(document).ready(function () {
                 if(body.is('.adviser'))
                     return;
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
-                if(!plan.is('.setup-mode')) {
-                    clickTimeout = setTimeout(function () {
-                        if($('#calendar').fullCalendar('getView').name != 'agendaDay') {
-                            calendar.fullCalendar('gotoDate', event.start);
-                            calendar.fullCalendar('changeView', 'agendaDay');
-                        }
-                        plan.addClass('session-selected');
-                        // change mini checkin color
-                        var notes;
-                        if(typeof event.courseId != 'undefined') {
-                            plan.find('.mini-checkin').show();
-                            plan.find('.mini-checkin a').attr('href', '#class' + classI[1]);
-                            plan.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
+                if(plan.is('.setup-mode'))
+                    return;
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(function () {
+                    if($('#calendar').fullCalendar('getView').name != 'agendaDay') {
+                        calendar.fullCalendar('gotoDate', event.start);
+                        calendar.fullCalendar('changeView', 'agendaDay');
+                    }
+                    plan.addClass('session-selected');
+                    // change mini checkin color
+                    var notes;
+                    if(typeof event.courseId != 'undefined') {
+                        plan.find('.mini-checkin').show();
+                        plan.find('.mini-checkin a').attr('href', '#class' + classI[1]);
+                        plan.find('.mini-checkin a').attr('class', 'checkin ' + classI[0] + ' course-id-' + event.courseId);
 
-                            // show related notes
-                            notes = $('#notes').find('.class-row.course-id-' + event.courseId).find('~ .notes .note-row');
-                        }
-                        else {
-                            plan.find('.mini-checkin').hide();
-                            notes = [];
-                        }
+                        // show related notes
+                        notes = $('#notes').find('.class-row.course-id-' + event.courseId).find('~ .notes .note-row');
+                    }
+                    else {
+                        plan.find('.mini-checkin').hide();
+                        notes = [];
+                    }
 
-                        if(notes.length == 0) {
-                            notes = $('#notes').find('.note-row').sort(function (a,b) {
-                                return $(a).attr('data-timestamp') - $(b).attr('data-timestamp');
-                            });
-                        }
-                        plan.find('.session-strategy .note-row').remove();
-                        notes.slice(0, Math.min(8, notes.length)).clone().appendTo(plan.find('.session-strategy'))
-                            .find('a').attr('href', window.callbackPaths['notes'].replace(/\/tab$/i, ''));
+                    if(notes.length == 0) {
+                        notes = $('#notes').find('.note-row').sort(function (a,b) {
+                            return $(a).attr('data-timestamp') - $(b).attr('data-timestamp');
+                        });
+                    }
+                    plan.find('.session-strategy .note-row').remove();
+                    notes.slice(0, Math.min(8, notes.length)).clone().appendTo(plan.find('.session-strategy'))
+                        .find('a').attr('href', window.callbackPaths['notes'].replace(/\/tab$/i, ''));
 
-                        // highlight selected event
-                        plan.find('.event-selected').removeClass('event-selected');
-                        plan.find('#calendar .event-id-' + event.eventId).addClass('event-selected');
+                    // highlight selected event
+                    plan.find('.event-selected').removeClass('event-selected');
+                    plan.find('#calendar .event-id-' + event.eventId).addClass('event-selected');
 
-                        // set the title
-                        plan.find('h2.title').html(event.title
-                            .replace(/<h4>C<\/h4>/, 'Class:<br/>')
-                            .replace(/<h4>F<\/h4>/, '')
-                            .replace(/<h4>D<\/h4>/, 'Deadline:<br/>')
-                            .replace(/<h4>P<\/h4>/, 'Pre-work:<br/>')
-                            .replace(/<h4>SR<\/h4>/, 'Study session:<br/>')
-                            .replace(/<h4>D<\/h4>/, 'Deadlines:<br/>'));
-                        plan.find('h3.location').html('<strong>Location:</strong> ' + (event.location == null || event.location.trim() == '' ? 'Unspecified' : event.location));
-                        plan.find('h3.duration').html('<strong>Duration:</strong> ' + ((event.end.valueOf() - event.start.valueOf()) / 60000) + ' minutes');
-                        // set the template for notes
-                        if(event.className.indexOf('event-type-p') > -1)
-                            plan.find('[name="strategy-select"]').val('prework');
-                        else if(typeof event.courseId != 'undefined') {
-                            var type = $('#plan-step-4').find('[name="profile-type-' + event.courseId + '"]').val();
-                            if(type == 'memorization') {
-                                plan.find('[name="strategy-select"]').val('spaced');
-                            }
-                            else if(type == 'reading') {
-                                plan.find('[name="strategy-select"]').val('active');
-                            }
-                            else if(type == 'conceptual') {
-                                plan.find('[name="strategy-select"]').val('teach');
-                            }
+                    // set the title
+                    plan.find('h2.title').html(event.title
+                        .replace(/<h4>C<\/h4>/, 'Class:<br/>')
+                        .replace(/<h4>F<\/h4>/, '')
+                        .replace(/<h4>D<\/h4>/, 'Deadline:<br/>')
+                        .replace(/<h4>P<\/h4>/, 'Pre-work:<br/>')
+                        .replace(/<h4>SR<\/h4>/, 'Study session:<br/>')
+                        .replace(/<h4>D<\/h4>/, 'Deadlines:<br/>'));
+                    plan.find('h3.location').html('<strong>Location:</strong> ' + (event.location == null || event.location.trim() == '' ? 'Unspecified' : event.location));
+                    plan.find('h3.duration').html('<strong>Duration:</strong> ' + ((event.end.valueOf() - event.start.valueOf()) / 60000) + ' minutes');
+                    // set the template for notes
+                    if(event.className.indexOf('event-type-p') > -1)
+                        plan.find('[name="strategy-select"]').val('prework');
+                    else if(typeof event.courseId != 'undefined') {
+                        var type = $('#plan-step-4').find('[name="profile-type-' + event.courseId + '"]').val();
+                        if(type == 'memorization') {
+                            plan.find('[name="strategy-select"]').val('spaced');
                         }
-                        else
-                            plan.find('[name="strategy-select"]').val('blank');
-                        plan.setClock();
-                    }, 300);
-                }
+                        else if(type == 'reading') {
+                            plan.find('[name="strategy-select"]').val('active');
+                        }
+                        else if(type == 'conceptual') {
+                            plan.find('[name="strategy-select"]').val('teach');
+                        }
+                    }
+                    else
+                        plan.find('[name="strategy-select"]').val('blank');
+                    plan.setClock();
+                }, 300);
             },
             eventDragStart: function (event) {
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
@@ -432,7 +433,8 @@ $(document).ready(function () {
                                 },
                                 error: revertFunc,
                                 success: function (content) {
-                                    if (!$('#plan').is('.setup-mode'))
+                                    var plan = $('#plan');
+                                    if (!plan.is('.setup-mode') && !plan.is('.connected'))
                                         body.addClass('download-plan');
                                     updatePlan(content)
                                 }
@@ -446,6 +448,11 @@ $(document).ready(function () {
         });
 
     }
+
+    body.on('click', '#plan a[href="#deselect"]', function (evt) {
+        evt.preventDefault();
+        $('#plan').removeClass('session-selected');
+    });
 
     body.on('hide.bs.modal', '#plan-drag', function () {
         var that = $(this);
@@ -955,10 +962,8 @@ $(document).ready(function () {
             success: function (content) {
                 dialog.find('.squiggle').remove();
                 dialog.modal('hide');
-                if(!plan.is('.setup-mode'))
-                    body.addClass('download-plan');
                 updatePlan(content);
-                if(!plan.is('.setup-mode'))
+                if(!plan.is('.setup-mode') && !plan.is('.connected'))
                     body.addClass('download-plan');
             },
             error: function () {
