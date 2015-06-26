@@ -224,13 +224,13 @@ $(document).ready(function () {
             allDayDefault: false,
             views: {
                 day: {
-                    columnFormat: 'ddd'
+                    columnFormat: 'ddd M/D'
                 },
                 week: {
-                    columnFormat: 'ddd'
+                    columnFormat: 'ddd M/D'
                 },
                 month: {
-                    columnFormat: 'ddd'
+                    columnFormat: 'ddd M/D'
                 }
             },
             defaultDate: plans.is('.setup-mode') ? (new Date(Math.min.apply(null, window.planEvents.map(function (e) {
@@ -265,9 +265,13 @@ $(document).ready(function () {
             },
             eventAfterAllRender: function () {
                 var calendar = $('#calendar'),
+                    plan = $('#plan'),
                     view = calendar.fullCalendar('getView');
-                if(view.name == 'agendaDay' && $('#plan').find('.session-strategy:visible').length > 0) {
+                if(view.name == 'agendaDay' && plan.find('.session-strategy:visible').length > 0) {
                     calendar.find('.fc-event').first().trigger('click');
+                }
+                if(plan.is('.setup-mode') || plan.is('.add-events')) {
+                    calendar.find('h2').text('Your typical week')
                 }
             },
             eventRender: function (event, element) {
@@ -326,7 +330,7 @@ $(document).ready(function () {
                 if(body.is('.adviser'))
                     return;
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
-                if(plan.is('.setup-mode'))
+                if(plan.is('.setup-mode') || plan.is('.add-events'))
                     return;
                 clearTimeout(clickTimeout);
                 clickTimeout = setTimeout(function () {
@@ -364,13 +368,13 @@ $(document).ready(function () {
                     plan.find('#calendar .event-id-' + event.eventId).addClass('event-selected');
 
                     // set the title
-                    plan.find('h2.title').html(event.title
-                        .replace(/<h4>C<\/h4>/, 'Class:<br/>')
+                    plan.find('h2.title').text(event.title
+                        .replace(/<h4>C<\/h4>/, 'Class:')
                         .replace(/<h4>F<\/h4>/, '')
-                        .replace(/<h4>D<\/h4>/, 'Deadline:<br/>')
-                        .replace(/<h4>P<\/h4>/, 'Pre-work:<br/>')
-                        .replace(/<h4>SR<\/h4>/, 'Study session:<br/>')
-                        .replace(/<h4>D<\/h4>/, 'Deadlines:<br/>'));
+                        .replace(/<h4>D<\/h4>/, 'Deadline:')
+                        .replace(/<h4>P<\/h4>/, 'Pre-work:')
+                        .replace(/<h4>SR<\/h4>/, 'Study session:')
+                        .replace(/<h4>D<\/h4>/, 'Deadlines:'));
                     plan.find('h3.location').html('<strong>Location:</strong> ' + (event.location == null || event.location.trim() == '' ? 'Unspecified' : event.location));
                     plan.find('h3.duration').html('<strong>Duration:</strong> ' + ((event.end.valueOf() - event.start.valueOf()) / 60000) + ' minutes');
                     // set the template for notes
@@ -418,28 +422,40 @@ $(document).ready(function () {
                 }
 
                 // setup mode saves events when we are all done with the step
-                if(!$('#plan').is('.add-events')) {
+                var callback = function (recurring) {
+                    $.ajax({
+                        url: window.callbackPaths['plan_update'],
+                        type: 'POST',
+                        dataType: 'text',
+                        data: {
+                            eventId: event['eventId'],
+                            start: event['start'].toJSON(),
+                            end: event['end'].toJSON(),
+                            reoccurring: recurring
+                        },
+                        success: function (content) {
+                            $('#plan-drag').find('.squiggle').remove();
+                            var plan = $('#plan');
+                            if (!plan.is('.setup-mode') && !plan.is('.connected') && !plan.is('.add-events'))
+                                body.addClass('download-plan');
+                            updatePlan(content)
+                        },
+                        error: function () {
+                            $('#plan-drag').find('.squiggle').remove();
+                            revertFunc();
+                        }
+                    });
+                };
+                var plan = $('#plan');
+                if(!plan.is('.add-events')) {
                     $('#plan-drag').modal({show:true})
                         .one('click.dragging', '.modal-footer a', function () {
-                            $.ajax({
-                                url: window.callbackPaths['plan_update'],
-                                type: 'POST',
-                                dataType: 'text',
-                                data: {
-                                    eventId: event['eventId'],
-                                    start: event['start'].toJSON(),
-                                    end: event['end'].toJSON(),
-                                    reoccurring: $(this).is('.more')
-                                },
-                                error: revertFunc,
-                                success: function (content) {
-                                    var plan = $('#plan');
-                                    if (!plan.is('.setup-mode') && !plan.is('.connected'))
-                                        body.addClass('download-plan');
-                                    updatePlan(content)
-                                }
-                            });
+                            loadingAnimation($('#plan-drag').find($(this)));
+                            callback($(this).is('.btn-primary'));
                         });
+                }
+                else if(!plan.is('.setup-mode')) {
+                    callback(true);
                 }
             },
             eventReceive: function () {
@@ -493,7 +509,7 @@ $(document).ready(function () {
         else {
             $('#plan-empty-schedule').modal('hide');
             if(plan.is('.setup-mode')) {
-                $('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6').first().modal({
+                $('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-2-2, #plan-step-2-3, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6, #plan-step-6-2, #plan-step-6-3').first().modal({
                     backdrop: 'static',
                     keyboard: false,
                     show: true
@@ -727,7 +743,7 @@ $(document).ready(function () {
     body.on('click', '#plan-step-5 a[href="#make-final"]', function () {
         var plan = $('#plan');
         var external = $('#external-events');
-        plan.addClass('add-events');
+        plan.addClass('add-events').removeClass('setup-mode');
         plan.find('a[href="#save-plan"]').text('Done');
         external.find('.fc-event, p').remove();
         external.find('h4').text('Final adjustments');
@@ -738,22 +754,8 @@ $(document).ready(function () {
         });
     });
 
-    body.on('click', '#plan-step-6-2 a[href*="/plan/download"]', function () {
-        $('#plan-step-6-2').removeClass('invalid-only').find('.highlighted-link').removeClass('invalid').addClass('valid');
-    });
-
-    body.on('click', '#plan-step-6-2 a[href="#done"]', function (evt) {
-        evt.preventDefault();
-        var plan = $('#plan'),
-            dialog = $('#plan-step-6-2');
-        if(dialog.find('.highlighted-link').is('.invalid')) {
-            dialog.addClass('invalid-only');
-            return;
-        }
-        plan.setClock();
-        calendar.fullCalendar('changeView', 'agendaDay');
-        plan.removeClass('setup-mode').addClass('session-selected');
-        dialog.modal('hide');
+    body.on('click', '#plan-step-6 a[href*="/plan/download"]', function () {
+        $('#plan-step-6-2').modal({show: true})
     });
 
     body.on('click', '#plan a[href*="/notes"]', function (evt) {
@@ -939,7 +941,6 @@ $(document).ready(function () {
             dialog.addClass('invalid-only');
             return false;
         }
-        loadingAnimation(dialog.find('[type="submit"]'));
         dialog.find('.highlighted-link').removeClass('valid').addClass('invalid');
         var changes = {
             eventId: eventId,
@@ -953,23 +954,27 @@ $(document).ready(function () {
         if(dialog.find('.title:not(.read-only) input').length > 0) {
             changes.title = dialog.find('.title input').val();
         }
-
-        $.ajax({
-            url: window.callbackPaths['plan_update'],
-            type: 'POST',
-            dataType: 'text',
-            data: changes,
-            success: function (content) {
-                dialog.find('.squiggle').remove();
-                dialog.modal('hide');
-                updatePlan(content);
-                if(!plan.is('.setup-mode') && !plan.is('.connected'))
-                    body.addClass('download-plan');
-            },
-            error: function () {
-                dialog.find('.squiggle').remove();
-            }
-        });
+        $('#plan-drag').modal({show:true})
+            .one('click.dragging', '.modal-footer a', function () {
+                loadingAnimation($('#plan-drag').find($(this)));
+                changes.reoccurring = $(this).is('.btn-primary');
+                $.ajax({
+                    url: window.callbackPaths['plan_update'],
+                    type: 'POST',
+                    dataType: 'text',
+                    data: changes,
+                    success: function (content) {
+                        $('#plan-drag').find('.squiggle').remove();
+                        dialog.modal('hide');
+                        updatePlan(content);
+                        if (!plan.is('.setup-mode') && !plan.is('.connected') && !plan.is('.add-events'))
+                            body.addClass('download-plan');
+                    },
+                    error: function () {
+                        $('#plan-drag').find('.squiggle').remove();
+                    }
+                });
+            });
     });
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead

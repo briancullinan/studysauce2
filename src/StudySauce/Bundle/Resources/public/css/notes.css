@@ -470,7 +470,7 @@
     display:block;
 }
 
-.connect-or {
+#notes-connect .connect-or {
     text-align: center;
     margin-bottom: 20px;
     clear: both;
@@ -478,7 +478,7 @@
     color: #777777;
 }
 
-.connect-or span {
+#notes-connect .connect-or span {
     border-radius: 4px 4px 4px 4px;
     padding: 3px 20px;
     position: relative;
@@ -571,7 +571,7 @@
         width:auto;
     }
 
-    .connect-or
+    #notes-connect .connect-or
     {
         margin: 20px 0;
     }

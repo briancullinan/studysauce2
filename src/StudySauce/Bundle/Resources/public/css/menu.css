@@ -856,7 +856,7 @@
 
 a[href*="/redirect/google"]
 {
-    width:160px;
+    width:180px;
     border-bottom-color:#DD4433;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5502px #DD4433;
@@ -873,7 +873,7 @@ a[href*="/redirect/google"]:focus {
 
 a[href*="/redirect/gcal"]
 {
-    width:160px;
+    width:180px;
     border-bottom-color:#DD4433;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -9202px #DD4433;
@@ -890,7 +890,7 @@ a[href*="/redirect/gcal"]:focus {
 
 a[href*="/redirect/evernote"]
 {
-    width:160px;
+    width:180px;
     border-bottom-color:#77CC44;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -7102px #77CC44;
@@ -907,7 +907,7 @@ a[href*="/redirect/evernote"]:focus {
 
 a[href*="/redirect/facebook"]
 {
-    width:160px;
+    width:180px;
     border-bottom-color:#5577AA;
     color: #ffffff;
     background:url("../images/menu_new_compressed.png") no-repeat left -5402px #5577AA;

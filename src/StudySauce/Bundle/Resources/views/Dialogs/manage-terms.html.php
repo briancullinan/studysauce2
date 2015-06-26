@@ -12,7 +12,7 @@ $view['slots']->start('modal-body'); ?>
 <p>Study Sauce can help you track your progress over multiple terms.  Use the Grade calculator to see your inputted grades from past terms.  Create a new schedule for each term so you can see how you have improved over time.</p>
 <p>Save the previous term as:
     <label class="input"><select>
-        <?php for ($y = intval(date('Y')); $y > intval(date('Y')) - 4; $y--) {
+        <?php for ($y = intval(date('Y')); $y > intval(date('Y')) - 8; $y--) {
             foreach ([11 => 'Winter', 8 => 'Fall', 6 => 'Summer', 1 => 'Spring'] as $m => $t) {
                 if(new \DateTime($y . '/' . $m . '/1') > new \DateTime())
                     continue; ?>

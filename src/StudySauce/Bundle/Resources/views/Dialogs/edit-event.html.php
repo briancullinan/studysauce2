@@ -88,6 +88,8 @@ $view['slots']->start('modal-body') ?>
         </label>
     </div>
     <div class="highlighted-link invalid">
+        <div class="invalid-times">Invalid class time</div>
+        <div class="invalid-dates">Invalid class date</div>
         <div class="invalid-only">You must complete all fields before moving on.</div>
         <button type="submit" class="more">Save</button>
     </div>

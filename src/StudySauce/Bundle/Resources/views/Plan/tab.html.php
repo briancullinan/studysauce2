@@ -97,7 +97,8 @@ print $this->render('StudySauceBundle:Dialogs:plan-step-3.html.php', ['id' => 'p
 print $this->render('StudySauceBundle:Dialogs:plan-step-4.html.php', ['id' => 'plan-step-4', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-5.html.php', ['id' => 'plan-step-5', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-6.html.php', ['id' => 'plan-step-6', 'services' => $services, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
-print $this->render('StudySauceBundle:Dialogs:plan-step-6-2.html.php', ['id' => 'plan-step-6-2', 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-6-2.html.php', ['id' => 'plan-step-6-2']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-6-3.html.php', ['id' => 'plan-step-6-3']);
 
 if($isEmpty) {
     print $this->render('StudySauceBundle:Dialogs:plan-empty-schedule.html.php', ['id' => 'plan-empty-schedule']);

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * TODO: unique on start, end, and type when all overlaps are removed?
- * @ORM\Table(name="event", uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id"})})
+ * @ORM\Table(name="event")
  * @ORM\HasLifecycleCallbacks()
  */
 class Event
@@ -145,6 +145,22 @@ class Event
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        if($this->getType() == 'sr')
+            $title = $this->getName() . ': Study session';
+        elseif($this->getType() == 'p')
+            $title = $this->getName() . ': Pre-work';
+        elseif($this->getType() == 'c')
+            $title = $this->getName() . ': Class';
+        else
+            $title = $this->getName();
+        return $title;
     }
 
     /**

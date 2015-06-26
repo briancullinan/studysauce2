@@ -63,6 +63,45 @@ class PlanController extends Controller
         return $holidays;
     }
 
+
+    /**
+     * @param Collection $events
+     * @return array
+     */
+    private static function groupRecurrenceEvents(Collection $events) {
+
+        // group events so we can create reoccurring settings easily
+        $grouped = [];
+        foreach($events as $event) {
+
+            /** @var Event $event */
+            if($event->getDeleted())
+                continue;
+
+            // group by course
+            $cid = !empty($event->getCourse()) ? $event->getCourse()->getId() : '';
+            // group by event type
+            $t = $event->getType();
+            // group by hour and minute setting
+            $hi = $event->getStart()->format('w H:i');
+            // group by consecutive weeks
+            $last = $event->getStart()->format('W');
+            if(!empty($grouped[$cid][$t][$hi])) {
+                $lastE = end($grouped[$cid][$t][$hi]);
+                /** @var Event $consecutive */
+                $consecutive = end($lastE);
+                if($consecutive->getStart()->format('W') == $event->getStart()->format('W') ||
+                    $consecutive->getStart()->format('W') == intval($event->getStart()->format('W')) + 1 ||
+                    $consecutive->getStart()->format('W') == intval($event->getStart()->format('W')) - 1) {
+                    $last = key($grouped[$cid][$t][$hi]);
+                }
+            }
+            $grouped[$cid][$t][$hi][$last][] = $event;
+        }
+
+        return $grouped;
+    }
+
     /**
      * @param User $user
      * @param ContainerInterface $container
@@ -75,6 +114,7 @@ class PlanController extends Controller
         $orm = $container->get('doctrine')->getManager();
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
+        $name = $user->getFirst() . ' ' . $user->getLast();
 
         $id = self::getCalendar($user, $container, $client, $service);
 
@@ -92,161 +132,218 @@ class PlanController extends Controller
         $list = $service->events->listEvents($id);
         $items = $list->getItems();
         $user->setProperty('eventSync', $list->getNextSyncToken());
-        $existing = array_map(function (\Google_Service_Calendar_Event $item) {return $item->getId();}, $items);
+        $remoteIds = array_map(function (\Google_Service_Calendar_Event $item) {return $item->getId();}, $items);
         $results = $orm->getRepository('StudySauceBundle:Event')->createQueryBuilder('n')
-            ->andWhere('n.remoteId IN (:id)')
-            ->setParameter('id', $existing)
+            ->where('n.remoteId IN (:id)')
+            ->setParameter('id', $remoteIds)
             ->getQuery()
             ->getResult();
         $stored = new ArrayCollection($results);
 
         // sync changes from google
+        $events = [];
+        $existing = [];
         foreach($items as $item) {
             /** @var \Google_Service_Calendar_Event $item */
-            /** @var Event $event */
-            $event = $stored->filter(function (Event $e) use ($item){return $e->getRemoteId() == $item->getId();})->first();
-            if(empty($event)) {
-                // TODO: add events to calendar as other
+            /** @var Event[] $editing */
+            $editing = array_values($stored->filter(function (Event $e) use ($item) {
+                // get ID from iCAL setting
+                return $e->getRemoteId() == $item->getId()
+                    || (substr($item->getICalUID(), 0, 11) == 'STUDYSAUCE-'
+                    && $e->getId() == substr($item->getICalUID(), 11));
+            })->toArray());
+
+            if (empty($editing)) {
+                if(substr($item->getICalUID(), 0, 11) == 'STUDYSAUCE-') {
+                    $service->events->delete($id, $item->getId());
+                }
+                // add events to calendar as other
+                else {
+                    $instances = $service->events->instances($id, $item->getId());
+                    foreach($instances->getItems() as $instance) {
+                        /** @var \Google_Service_Calendar_Event $instance */
+                        $event = [
+                            'deadline' => null,
+                            'course' => null,
+                            'name' => $item->getSummary(),
+                            'type' => 'o',
+                            'start' => date_timezone_set(
+                                new \DateTime($instance->getStart()->getDateTime()),
+                                new \DateTimeZone(date_default_timezone_get())
+                            ),
+                            'end' => date_timezone_set(
+                                new \DateTime($instance->getEnd()->getDateTime()),
+                                new \DateTimeZone(date_default_timezone_get())
+                            )
+                        ];
+                        $events[] = $event;
+                    }
+                }
                 continue;
-            }
-            if($event->getSchedule()->getId() != $schedule->getId()) {
-                if(!empty($event->getRemoteId())) {
-                    $service->events->delete($id, $event->getRemoteId());
+            } elseif ($editing[0]->getSchedule()->getId() != $schedule->getId()) {
+                $service->events->delete($id, $editing[0]->getRemoteId());
+                foreach($editing as $e) {
+                    $e->setRemoteId(null);
+                    $orm->remove($e);
                 }
                 continue;
             }
-            if(!empty($item->getUpdated())) {
-                $updated = date_timezone_set(new \DateTime($item->getUpdated()), new \DateTimeZone(date_default_timezone_get()));
-                if(empty($event->getRemoteUpdated()) || $updated > $event->getRemoteUpdated()) {
-                    /** @var \Google_Service_Calendar_EventDateTime $start */
-                    $start = $item->getStart();
-                    /** @var \Google_Service_Calendar_EventDateTime $end */
-                    $end = $item->getEnd();
-                    /** @var \DateTime $updated */
-                    $event->setStart(
-                        date_timezone_set(
-                            new \DateTime($start->getDateTime()),
-                            new \DateTimeZone(date_default_timezone_get())
-                        )
-                    );
-                    $event->setEnd(
-                        date_timezone_set(
-                            new \DateTime($end->getDateTime()),
-                            new \DateTimeZone(date_default_timezone_get())
-                        )
-                    );
 
-                    $event->setRemoteUpdated($updated);
-                    $orm->merge($event);
+            // set up events and merge
+            /** @var \DateTime $updated */
+            $updated = date_timezone_set(
+                new \DateTime($item->getUpdated()),
+                new \DateTimeZone(date_default_timezone_get())
+            );
+            $editing = array_merge($editing, array_values($stored->filter(function (Event $e) use ($editing) {
+                // get ID from iCAL setting
+                return $e->getRemoteId() == $editing[0]->getRemoteId();
+            })->toArray()));
+
+            if($updated->getTimestamp() > max(array_map(function (Event $e) {
+                    return $e->getRemoteUpdated()->getTimestamp();}, $editing))) {
+
+                $existing = array_merge($existing, $editing);
+                $instances = $service->events->instances($id, $editing[0]->getRemoteId());
+                foreach($instances->getItems() as $instance) {
+                    /** @var \Google_Service_Calendar_Event $instance */
+                    $event = [
+                        'deadline' => $editing[0]->getDeadline(),
+                        'course' => $editing[0]->getCourse(),
+                        'name' => str_replace([': Pre-work', ': Study session', ': Class'], '', $item->getSummary()),
+                        'type' => $editing[0]->getType(),
+                        'start' => date_timezone_set(
+                            new \DateTime($instance->getStart()->getDateTime()),
+                            new \DateTimeZone(date_default_timezone_get())
+                        ),
+                        'end' => date_timezone_set(
+                            new \DateTime($instance->getEnd()->getDateTime()),
+                            new \DateTimeZone(date_default_timezone_get())
+                        )
+                    ];
+                    $events[] = $event;
+                }
+                foreach($editing as $e) {
+                    $e->setRemoteUpdated($updated);
+                    $orm->merge($e);
                 }
             }
-
         }
 
-        // group events so we can create reoccurring settings easily
-        $grouped = [];
-        foreach($schedule->getEvents() as $event) {
-
+        // delete google events that no longer exist
+        foreach($schedule->getEvents() as $event)
+        {
             /** @var Event $event */
-            if($event->getDeleted()) {
+            if(($event->getDeleted() || !in_array($event->getRemoteId(), $remoteIds)) && !empty($event->getRemoteId())) {
                 try {
-                    if(!empty($event->getRemoteId())) {
-                        $service->events->delete($id, $event->getRemoteId());
-                    }
+                    $event->setRemoteId(null);
+                    $service->events->delete($id, $event->getRemoteId());
                 }
                 catch (\Exception $e) {
 
                 }
-                continue;
             }
-
-            $grouped[!empty($event->getCourse()) ? $event->getCourse()->getId() : null][$event->getType()][$event->getStart()->format('n H:i')][] = $event;
         }
+
+        $grouped = self::groupRecurrenceEvents($schedule->getEvents());
 
         // sync changes to google
-        foreach($grouped as $id => $types) {
+        foreach($grouped as $types) {
 
-            foreach($types as $type => $recurrence) {
+            foreach($types as $type => $hours) {
 
-                $key = key($recurrence);
-                /** @var Event $first */
-                $first = reset($recurrence[$key]);
+                foreach($hours as $recurrence) {
 
-                if($type == 'sr')
-                    $name = $first->getName() . ': Study session';
-                elseif($type == 'p')
-                    $name = $first->getName() . ': Pre-work';
-                elseif($type == 'c')
-                    $name = $first->getName() . ': Class';
-                else
-                    $name = $first->getName();
+                    /** @var Event $first */
+                    $last = end($recurrence);
+                    $first = end($last);
 
-                $config = [
-                    'summary' => $name,
-                    'location' => $first->getLocation(),
-                    'description' => 'Log in to StudySauce to take notes.',
-                    'start' => [
-                        'dateTime' => $first->getStart()->format('c'),
-                        'timeZone' => date_default_timezone_get(),
-                    ],
-                    'end' => [
-                        'dateTime' => $first->getEnd()->format('c'),
-                        'timeZone' => date_default_timezone_get(),
-                    ],
-                    'attendees' => [
-                        ['email' => $user->getEmail()]
-                    ],
-                    'iCalUID' => 'STUDYSAUCE-' . $first->getId(),
-                    'colorId' => 6
-                ];
-                $rRules = [];
-                /**
-                 * @var  $d
-                 * @var Event[] $events
-                 */
-                foreach($recurrence as $d => $events)
-                {
-                    $rRules[] = 'RRULE:FREQ=YEARLY;COUNT=1' .
-                        ';BYMONTH=' . $events[0]->getStart()->format('n') .
-                        ';BYMONTHDAY=' . implode(',', array_map(function (Event $e) {
-                            return $e->getStart()->format('j');}, $events)) .
-                        ';BYHOUR=' . $events[0]->getStart()->format('H') .
-                        ';BYMINUTE=' . $events[0]->getStart()->format('i');
-                }
-                $config['recurrence'] = $rRules;
-                if(!empty($first->getAlert())) {
-                    $config['reminders'] = [
-                        'useDefault' => FALSE,
-                        'overrides' => [
-                            ['method' => 'popup', 'minutes' => $first->getAlert()]
+                    $config = [
+                        'summary' => $first->getTitle(),
+                        'location' => $first->getLocation(),
+                        'description' => 'Log in to StudySauce to take notes.',
+                        'start' => [
+                            'dateTime' => $first->getStart()->format('c'),
+                            'timeZone' => date_default_timezone_get(),
                         ],
+                        'end' => [
+                            'dateTime' => $first->getEnd()->format('c'),
+                            'timeZone' => date_default_timezone_get(),
+                        ],
+//                        'attendees' => [[
+//                            'email' => $user->getEmail(),
+//                            'displayName' => $name,
+//                            'responseStatus' => 'accepted',
+//                            'optional' => true
+//                        ]],
+                        'iCalUID' => 'STUDYSAUCE-' . $first->getId(),
+                        'colorId' => 6
                     ];
-                }
 
-                $newEvent = new \Google_Service_Calendar_Event($config);
-                if(empty($first->getRemoteId()) || !in_array($first->getRemoteId(), $existing)) {
-                    $newEvent = $service->events->insert($id, $newEvent);
-                    foreach($recurrence as $d => $events) {
-                        foreach($events as $event) {
-                            $event->setRemoteUpdated(new \DateTime());
-                            $event->setRemoteId($newEvent->getId());
-                            $orm->merge($event);
-                        }
+                    $rRules = self::getRRules($recurrence);
+
+                    $config['recurrence'] = $rRules;
+                    if (!empty($first->getAlert())) {
+                        $config['reminders'] = [
+                            'useDefault' => false,
+                            'overrides' => [
+                                ['method' => 'popup', 'minutes' => $first->getAlert()]
+                            ],
+                        ];
                     }
-                }
-                elseif(!empty($first->getUpdated()) && (empty($first->getRemoteUpdated()) || $first->getUpdated() > $first->getRemoteUpdated())) {
-                    $service->events->update($id, $first->getRemoteId(), $newEvent);
-                    foreach($recurrence as $d => $events) {
-                        foreach($events as $event) {
-                            $event->setRemoteUpdated(new \DateTime());
-                            $orm->merge($event);
+
+                    $newEvent = new \Google_Service_Calendar_Event($config);
+                    if (empty($first->getRemoteId()) || !in_array($first->getRemoteId(), $remoteIds)) {
+                        $newEvent = $service->events->insert($id, $newEvent);
+                        foreach ($recurrence as $d => $e) {
+                            /** @var Event $event */
+                            foreach ($e as $event) {
+                                $event->setRemoteUpdated(new \DateTime());
+                                $event->setRemoteId($newEvent->getId());
+                                $orm->merge($event);
+                            }
+                        }
+                    } elseif (!empty($first->getUpdated())
+                        && (empty($first->getRemoteUpdated())
+                            || $first->getUpdated() > $first->getRemoteUpdated())
+                    ) {
+                        $service->events->update($id, $first->getRemoteId(), $newEvent);
+                        foreach ($recurrence as $d => $e) {
+                            /** @var Event $event */
+                            foreach ($e as $event) {
+                                $event->setRemoteUpdated(new \DateTime());
+                                $orm->merge($event);
+                            }
                         }
                     }
                 }
             }
 
         }
-        $orm->flush();
+
+        self::mergeSaved($schedule, new ArrayCollection(self::arrayUniqueObj($existing)), $events, $orm);
+    }
+
+
+    /**
+     * @param $recurrence
+     * @return array
+     */
+    private static function getRRules($recurrence)
+    {
+        $rRules = [];
+        /**
+         * @var  $d
+         * @var Event[] $events
+         */
+        foreach ($recurrence as $n => $events) {
+            $consecutive = reset($events);
+            $rRules[] = 'RRULE:FREQ=WEEKLY;BYDAY=' .
+                ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'][$events[0]->getStart()->format('w')] .
+                ';UNTIL=' . date_add(date_timezone_set(clone $consecutive->getStart(), new \DateTimeZone('Z')), new \DateInterval('P1D'))->format('Ymd') . 'T000000Z';
+        }
+
+        return $rRules;
     }
 
     /**
@@ -422,7 +519,9 @@ class PlanController extends Controller
         $step = self::getPlanStep($user);
         foreach($schedule->getClasses()->toArray() as $c) {
             /** @var Course $c */
-            if(empty($c->getEvents()->filter(function(Event $e) {return !$e->getDeleted();})->count())) {
+            $existing = $c->getEvents()->filter(function(Event $e) {
+                return !$e->getDeleted() && $e->getType() == 'c';})->toArray();
+            if(empty($existing)) {
                 self::createCourseEvents($c, $orm);
             }
         }
@@ -907,9 +1006,9 @@ class PlanController extends Controller
             $lastDistance = 172800;
             $similarEvents = $saved->filter(
                 function (Event $e) use ($event) {
-                    return $e->getType() == $event['type'] && $e->getName() == $event['name'] &&
-                    $e->getCourse() == (!empty($event['course']) ? $event['course'] : null) &&
-                    $e->getDeadline() == (!empty($event['deadline']) ? $event['deadline'] : null);
+                    return $e->getType() == $event['type']
+                    && $e->getCourse() == (!empty($event['course']) ? $event['course'] : null)
+                    && $e->getDeadline() == (!empty($event['deadline']) ? $event['deadline'] : null);
                 }
             )->toArray();
             foreach ($similarEvents as $j => $e) {
@@ -938,14 +1037,8 @@ class PlanController extends Controller
         $remove = $saved->toArray();
         foreach ($remove as $i => $save) {
             /** @var Event $save */
-            if(empty($save->getRemoteId())) {
-                $orm->remove($save);
-                $schedule->removeEvent($save);
-            }
-            else {
-                $save->setDeleted(true);
-                $orm->merge($save);
-            }
+            $orm->remove($save);
+            $schedule->removeEvent($save);
         }
         $orm->flush();
 
@@ -998,35 +1091,41 @@ X-WR-TIMEZONE:America/Phoenix
 EOCAL;
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
-        $events = $schedule->getEvents()->filter(function (Event $e) {return !$e->getDeleted();})->toArray();
-        $max = max(array_map(function (Event $e) {return $e->getCreated()->getTimestamp();}, $events));
-        $last = new \DateTime();
-        $last->setTimestamp($max);
-        $lastModified = $last->format('Ymd') . 'T' . $last->format('His') . 'Z';
-        foreach($events as $event) {
-            /** @var Event $event */
-            $id = $event->getId();
-            if($event->getType() == 'sr')
-                $title = $event->getName() . ': Study session';
-            elseif($event->getType() == 'p')
-                $title = $event->getName() . ': Pre-work';
-            elseif($event->getType() == 'c')
-                $title = $event->getName() . ': Class';
-            else
-                $title = $event->getName();
-            $start = date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
-            $end = date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $event->getEnd(), new \DateTimeZone('GMT'))->format('His') . 'Z';
-            $created = $event->getCreated()->format('Ymd') . 'T' . $event->getCreated()->format('His') . 'Z';
-            // load alert from settings
-            $alert = $event->getAlert() . 'M';
-            $eventStr = <<<EOEVT
+        $grouped = self::groupRecurrenceEvents($schedule->getEvents());
+        // sync changes to google
+        foreach($grouped as $types) {
+
+            foreach ($types as $type => $hours) {
+
+                foreach ($hours as $recurrence) {
+
+                    /** @var Event $first */
+                    $last = end($recurrence);
+                    $first = end($last);
+
+                    $max = max(array_map(function ($events) {return max(array_map(function (Event $e) {return $e->getCreated()->getTimestamp();}, $events));}, $recurrence));
+                    $last = new \DateTime();
+                    $last->setTimestamp($max);
+                    $lastModified = $last->format('Ymd') . 'T' . $last->format('His') . 'Z';
+
+                    $id = $first->getId();
+                    $title = $first->getTitle();
+                    $start = date_timezone_set(clone $first->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $first->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
+                    $end = date_timezone_set(clone $first->getEnd(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $first->getEnd(), new \DateTimeZone('GMT'))->format('His') . 'Z';
+                    $created = $first->getCreated()->format('Ymd') . 'T' . $first->getCreated()->format('His') . 'Z';
+                    // load alert from settings
+                    //ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=$name;X-NUM-GUESTS=0:mailto:$email
+
+                    $alert = $first->getAlert() . 'M';
+                    $rrules = implode("\r\n", self::getRRules($recurrence));
+                    $eventStr = <<<EOEVT
 BEGIN:VEVENT
 DTSTART:$start
+$rrules
 DTEND:$end
 DTSTAMP:$stamp
 ORGANIZER;CN=$name:mailto:$email
 UID:STUDYSAUCE-$id
-ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=$name;X-NUM-GUESTS=0:mailto:$email
 CREATED:$created
 DESCRIPTION:Log in to studysauce.com to take notes
 LAST-MODIFIED:$lastModified
@@ -1045,7 +1144,9 @@ END:VALARM
 END:VEVENT
 
 EOEVT;
-            $calendar .= $eventStr;
+                    $calendar .= $eventStr;
+                }
+            }
         }
 
         $response = new Response();
@@ -1279,7 +1380,7 @@ END:VCALENDAR');
             $orm->merge($event);
 
             $events = [];
-            if($request->get('reoccurring') !== false) {
+            if($request->get('reoccurring') !== 'false') {
 
                 // move subsequent events of the same type
                 $events = $schedule->getEvents()
@@ -1310,7 +1411,7 @@ END:VCALENDAR');
                     $working = $schedule->getEvents()
                         ->filter(function (Event $x) use ($e) {
                             // ignore all these event types because they are not displayed to the user
-                            return !$e->getDeleted() && $e->getId() != $x->getId() && $x->getType() != 'h'
+                            return !$x->getDeleted() && $x->getId() != $e->getId() && !$e->getDeleted() && $e->getId() != $x->getId() && $x->getType() != 'h'
                                 && $x->getType() != 'd' && $x->getType() != 'r' && $x->getType() != 'm'
                                 && $x->getType() != 'z'; })
                         ->map(function (Event $e) {return [

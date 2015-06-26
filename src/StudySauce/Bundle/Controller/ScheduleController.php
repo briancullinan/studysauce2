@@ -425,14 +425,15 @@ class ScheduleController extends Controller
      */
     private static function refillCourseStudyEvents(Schedule $schedule, Course $course, EntityManager $orm)
     {
-        if(!$course->getEvents()->count())
+        $existing = $course->getEvents()->filter(function (Event $e) {return !$e->getDeleted();});
+        if(empty($existing->count()))
             return;
         // get events closest in time to each class and rebuild study events from that
         $eventInfo = [];
         $week = strtotime('last Sunday', $course->getStartTime()->getTimestamp());
         /** @var Event[] $prework */
-        $prework = array_values($course->getEvents()->filter(function (Event $e) use($course){
-            return $e->getType() == 'p'; })->toArray());
+        $prework = array_values($existing->filter(function (Event $e) use($course){
+            return !$e->getDeleted() && $e->getType() == 'p'; })->toArray());
         $pLength = 60;
         if($course->getStudyDifficulty() == 'easy')
             $pLength = 45;
@@ -441,8 +442,8 @@ class ScheduleController extends Controller
         if($course->getStudyDifficulty() == 'tough')
             $pLength = 90;
         /** @var Event[] $study */
-        $study = array_values($course->getEvents()->filter(function (Event $e) use($course){
-            return $e->getType() == 'sr'; })->toArray());
+        $study = array_values($existing->filter(function (Event $e) use($course){
+            return !$e->getDeleted() && $e->getType() == 'sr'; })->toArray());
         $srLength = 60;
         if($course->getStudyDifficulty() == 'easy')
             $srLength = 45;
@@ -502,7 +503,7 @@ class ScheduleController extends Controller
                 'name' => $course->getName(),
                 'type' => 'sr',
                 'start' => $classS->format('r'),
-                'end' => date_add(clone $classS, new \DateInterval('PT' . $pLength . 'M'))->format('r')
+                'end' => date_add(clone $classS, new \DateInterval('PT' . $srLength . 'M'))->format('r')
             ];
         }
         PlanController::createStudyEvents($schedule, $eventInfo, $orm);

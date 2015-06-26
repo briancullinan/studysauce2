@@ -297,6 +297,8 @@ a.fc-event:not([href])
     border-radius: 5px;
 }
 
+#plan.add-events .fc-toolbar .fc-left,
+#plan.add-events .fc-toolbar .fc-right,
 #plan.setup-mode .fc-toolbar .fc-left,
 #plan.setup-mode .fc-toolbar .fc-right
 {
@@ -315,7 +317,8 @@ a.fc-event:not([href])
 
 #plan.agendaWeek #calendar,
 #plan.month #calendar,
-#plan.setup-mode #calendar
+#plan.setup-mode #calendar,
+#plan.add-events #calendar
 {
     width:100%;
 }
@@ -332,7 +335,8 @@ a.fc-event:not([href])
 #plan.agendaWeek .session-strategy,
 #plan.month .session-strategy,
 #plan.add-events .session-strategy,
-#plan.setup-mode .session-strategy
+#plan.setup-mode .session-strategy,
+#plan.add-events .session-strategy
 {
     display:none;
 }
@@ -404,9 +408,8 @@ a.fc-event:not([href])
 #plan.setup-mode ~ #plan-step-2-3 .close,
 #plan.setup-mode ~ #plan-step-3 .close,
 #plan.setup-mode ~ #plan-step-4 .close,
-#plan.setup-mode ~ #plan-step-5 .close,
-#plan.setup-mode ~ #plan-step-6 .close,
-#plan.setup-mode ~ #plan-step-6-2 .close
+#plan ~ #plan-step-5 .close,
+#plan ~ #plan-step-6 .close
 {
     display:none;
 }
@@ -486,33 +489,6 @@ a.fc-event:not([href])
     border-color: #09B;
 }
 
-#plan-step-6 .evernote-name,
-#plan-step-6 .site-name
-{
-    font-size: 40px;
-    letter-spacing: -3px;
-    display: inline-block;
-    vertical-align: middle;
-    line-height: 60px;
-    color: #777777;
-    font-family: 'Ubuntu',Arial,sans-serif;
-    width:40%;
-}
-
-#plan-step-6 .modal-body,
-#plan-step-6-2 .modal-body
-{
-    text-align: center;
-}
-
-#plan-step-6-2 img,
-#plan-step-6 img,
-#plan-step-6 .site-name img
-{
-    margin:0 auto;
-    display:block;
-}
-
 #edit-event .start-date .input.mobile-only,
 #edit-event .end-date .input.mobile-only,
 #edit-event .start-time .input.mobile-only,
@@ -541,26 +517,6 @@ a.fc-event:not([href])
     margin: 10px;
     cursor: pointer;
     height: 30px;
-}
-
-#plan .notes-or {
-    border-bottom: 2px solid #ccc;
-    text-align: center;
-    clear: both;
-    vertical-align: middle;
-    margin: 40px 0 60px;
-    padding: 0;
-}
-
-#plan .notes-or span {
-    background: url("../images/noise_darkgray.png") repeat scroll 0 0 #111111;
-    border-radius: 4px 4px 4px 4px;
-    color: #CCCCCC;
-    font-style: italic;
-    padding: 3px 20px;
-    position: relative;
-    text-transform: uppercase;
-    top: 12px;
 }
 
 #plan #external-events .fc-event[data-duration="00:30"]
@@ -810,8 +766,9 @@ a.fc-event:not([href])
     vertical-align: bottom;
 }
 
+#edit-event .invalid-dates,
+#edit-event .invalid-times,
 #edit-event .invalid-only,
-#plan-step-6-2 .invalid-only,
 #plan-step-3 .invalid-only,
 #plan-step-4 .invalid-only,
 #plan-step-1 .invalid-only
@@ -826,7 +783,6 @@ a.fc-event:not([href])
 }
 
 #edit-event.invalid-only .invalid-only,
-#plan-step-6-2.invalid-only .invalid-only,
 #plan-step-3.invalid-only .invalid-only,
 #plan-step-4.invalid-only .invalid-only,
 #plan-step-1.invalid-only .invalid-only
@@ -839,6 +795,10 @@ a.fc-event:not([href])
 #edit-event.invalid-only.end-time-required .end-time input,
 #edit-event.invalid-only.start-date-required .start-date input,
 #edit-event.invalid-only.end-date-required .end-date input,
+#edit-event.invalid-date .start-time input,
+#edit-event.invalid-date .end-time input,
+#edit-event.invalid-time .start-time input,
+#edit-event.invalid-time .end-time input,
 #plan-step-3.invalid-only .type-required,
 #plan-step-4.invalid-only .type-required,
 #plan-step-1.invalid-only .type-required
@@ -848,16 +808,88 @@ a.fc-event:not([href])
     border-bottom-right-radius: 5px;
 }
 
-#plan-step-6-2 a[href*="/plan/download"]
+#edit-event.invalid-date .invalid-dates,
+#edit-event.invalid-time .invalid-times
 {
-    display: block;
-    margin: 0 auto;
+    display:inline-block;
+}
+
+#plan-step-0 .modal-body
+{
+    font-size:20px;
+    font-weight:bold;
+    line-height: 160%;
+}
+
+#plan-step-0 ol
+{
+    font-weight: normal;
+}
+
+#plan-step-6 .google-sync
+{
+    display:inline-block;
+    margin: 0 -2px;
+    width: 55%;
+    vertical-align: top;
+    text-align: center;
+    position:relative;
+    padding: 10px 20px 20px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+#plan-step-6 .modal-content
+{
+    background:url("../images/noise_gray.png") repeat scroll 0 0 #EEEEEE;
+}
+
+#plan-step-6 .manual-download
+{
+    display:inline-block;
+    margin: 0 -2px;
+    width: 45%;
+    vertical-align: top;
+    text-align: center;
+    position:relative;
+    padding: 10px 20px 20px;
+}
+
+#plan-step-6 .google-sync img
+{
+    height:100px;
+    width:auto;
+    display:block;
+    margin: 40px auto;
+}
+
+#plan-step-6 .manual-download img
+{
+    height:120px;
+    width:auto;
+    display:block;
+    margin: 30px auto;
+}
+
+#plan-step-6 p
+{
+    margin: 0;
+}
+
+#plan-step-6 a
+{
+    margin-top:20px;
+}
+
+#plan-step-6 a[href*="/plan/download"]
+{
+    display: inline-block;
 }
 
 #plan-step-6 a[href*="/redirect/gcal"]
 {
-    letter-spacing: normal;
-    line-height: normal;
+    padding-left:40px;
+    background-image:none;
 }
 
 #plan a[href="#deselect"]
@@ -891,6 +923,12 @@ a.fc-event:not([href])
 
 @media all and (max-width:700px)
 {
+
+    #plan .fc-toolbar .fc-right .fc-button-group
+    {
+        display:none;
+    }
+
     #plan.session-selected a[href="#deselect"]
     {
         display: block;
@@ -899,13 +937,6 @@ a.fc-event:not([href])
     #plan .mini-checkin
     {
         position:static;
-    }
-
-    #plan-step-6 .evernote-name,
-    #plan-step-6 .site-name
-    {
-        display:block;
-        width:auto;
     }
 
     #plan #calendar

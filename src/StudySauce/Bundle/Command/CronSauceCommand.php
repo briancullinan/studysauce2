@@ -58,14 +58,8 @@ EOF
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    private function sendReminders()
     {
-        // set the timeout to 4 and a half minutes
-        set_time_limit(60*4.5);
-        $startTime = time();
 
         /** @var $orm EntityManager */
         $orm = $this->getContainer()->get('doctrine')->getManager();
@@ -97,6 +91,12 @@ EOF
                 $orm->flush();
             }
         }
+    }
+
+    private function send3DayMarketing()
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->getContainer()->get('doctrine')->getManager();
 
         // send 3 day signup reminder
         $users = $orm->getRepository('StudySauceBundle:User');
@@ -116,6 +116,15 @@ EOF
                 $orm->flush();
             }
         }
+
+    }
+
+    private function sendDeadlines()
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->getContainer()->get('doctrine')->getManager();
+        $emails = new EmailsController();
+        $emails->setContainer($this->getContainer());
 
         // send deadline reminders
         $reminders = new ArrayCollection($orm->getRepository('StudySauceBundle:Deadline')->createQueryBuilder('d')
@@ -226,6 +235,10 @@ EOF
             $emails->deadlineReminderAction($user, $all);
         }
 
+    }
+
+    private function sendSpool()
+    {
         // clear mail spool
         /** @var Swift_Mailer $mailer */
         $mailer = $this->getContainer()->get('mailer');
@@ -233,14 +246,20 @@ EOF
         $transport = $mailer->getTransport();
         /** @var DatabaseSpool $spool */
         $spool = $transport->getSpool();
-        $spoolTime = time() - $startTime;
-        $spool->setTimeLimit(60*4.5 - $spoolTime);
+        $spool->setTimeLimit(60*4.5);
         /** @var Swift_Transport $queue */
         $queue = $this->getContainer()->get('swiftmailer.transport.real');
         $spool->flushQueue($queue);
 
+    }
 
-        // TODO: sync user notes
+    private function syncNotes()
+    {
+
+        /** @var $orm EntityManager */
+        $orm = $this->getContainer()->get('doctrine')->getManager();
+
+        // sync user notes
         // list all users with an evernote access token
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
@@ -251,13 +270,20 @@ EOF
             try {
                 NotesController::syncNotes($u, $this->getContainer());
             }
-            catch (\Exception $e)
-            {
-
+            catch (\Exception $e) {
+                print $e;
             }
         }
 
-        // TODO: sync calendar
+    }
+
+    private function syncEvents()
+    {
+        /** @var $orm EntityManager */
+        $orm = $this->getContainer()->get('doctrine')->getManager();
+
+
+        // sync calendar
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('u')
@@ -268,9 +294,24 @@ EOF
                 PlanController::syncEvents($u, $this->getContainer());
             }
             catch (\Exception $e) {
-
+                print $e;
             }
         }
 
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        // set the timeout to 4 and a half minutes
+        set_time_limit(60*4.5);
+        //$this->sendReminders();
+        //$this->send3DayMarketing();
+        //$this->sendDeadlines();
+        //$this->sendSpool();
+        //$this->syncNotes();
+        $this->syncEvents();
     }
 }
