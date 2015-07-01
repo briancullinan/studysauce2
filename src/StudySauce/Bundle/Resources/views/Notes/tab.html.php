@@ -128,7 +128,7 @@ $view['slots']->start('body'); ?>
                                     print ($notesCount < 10 ? ' loaded' : ' loading');
                                     print ' notebook-id-' . $id;
                                     print ' course-id-' . (is_numeric($i) ? $i : ''); ?>" data-tags="<?php print htmlentities(json_encode(array_keys($n->getProperty('tags')?:[]))); ?>">
-                                        <h4 class="note-name"><a href="#view-note"><?php print $n->getTitle(); ?></a></h4>
+                                        <h4 class="note-name"><a href="#view-note"><?php print (empty($n->getTitle()) ? 'Untitled' : $n->getTitle()); ?></a></h4>
                                         <div class="summary">
                                             <small class="date"><?php print $time->format('j M'); ?></small>
                                             <?php if(!empty($n->getContent())) {

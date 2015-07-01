@@ -287,7 +287,7 @@ EOF
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('u')
-            ->andWhere('u.gcal_access_token IS NOT NULL');
+            ->andWhere('u.gcal_access_token IS NOT NULL AND u.gcal_access_token != \'\'');
         $users = $qb->getQuery()->execute();
         foreach($users as $u) {
             try {
