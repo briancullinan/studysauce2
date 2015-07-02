@@ -954,27 +954,34 @@ $(document).ready(function () {
         if(dialog.find('.title:not(.read-only) input').length > 0) {
             changes.title = dialog.find('.title input').val();
         }
-        $('#plan-drag').modal({show:true})
-            .one('click.dragging', '.modal-footer a', function () {
-                loadingAnimation($('#plan-drag').find($(this)));
-                changes.reoccurring = $(this).is('.btn-primary');
-                $.ajax({
-                    url: window.callbackPaths['plan_update'],
-                    type: 'POST',
-                    dataType: 'text',
-                    data: changes,
-                    success: function (content) {
-                        $('#plan-drag').find('.squiggle').remove();
-                        dialog.modal('hide');
-                        updatePlan(content);
-                        if (!plan.is('.setup-mode') && !plan.is('.connected') && !plan.is('.add-events'))
-                            body.addClass('download-plan');
-                    },
-                    error: function () {
-                        $('#plan-drag').find('.squiggle').remove();
-                    }
-                });
+        var callback = function (reoccurring) {
+            changes.reoccurring = reoccurring;
+            $.ajax({
+                url: window.callbackPaths['plan_update'],
+                type: 'POST',
+                dataType: 'text',
+                data: changes,
+                success: function (content) {
+                    $('#plan-drag').find('.squiggle').remove();
+                    dialog.modal('hide');
+                    updatePlan(content);
+                    if (!plan.is('.setup-mode') && !plan.is('.connected') && !plan.is('.add-events'))
+                        body.addClass('download-plan');
+                },
+                error: function () {
+                    $('#plan-drag').find('.squiggle').remove();
+                }
             });
+        };
+        if(!plan.is('.add-events')) {
+            $('#plan-drag').modal({show: true})
+                .one('click.dragging', '.modal-footer a', function () {
+                    loadingAnimation($('#plan-drag').find($(this)));
+                    callback($(this).is('.btn-primary'));
+                });
+        }
+        else
+            callback(true);
     });
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead
