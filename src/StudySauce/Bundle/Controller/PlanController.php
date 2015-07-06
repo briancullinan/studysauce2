@@ -150,6 +150,7 @@ class PlanController extends Controller
         $events = [];
         /** @var \Google_Service_Calendar_Event[] $remoteIds */
         $remoteIds = [];
+        $allIds = [];
         foreach($items as $item) {
             /** @var \Google_Service_Calendar_Event[] $instances */
             /** @var Event[] $editing */
@@ -158,13 +159,22 @@ class PlanController extends Controller
                 // get ID from iCAL setting
                 return substr($e->getRemoteId(), 0, strlen($item->getId())) == $item->getId();
             })->toArray());
-            if(isset($remoteIds[$item->getId()]) || isset($remoteIds[$item->getRecurringEventId()]))
-                continue;
             $remoteIds[$item->getId()] = $item;
+            if(in_array($item->getId(), $allIds)) {
+                continue;
+            }
+            $allIds[] = $item->getId();
             // TODO: only do this part if update is greater than any event in the series
             $existing = array_merge($existing, $editing);
-            $instances = $service->events->instances($calendarId, $item->getId())->getItems();
-            $working = array_map(function (\Google_Service_Calendar_Event $instance) use ($editing) {
+            $instances = [];
+            if(empty($item->getRecurringEventId())) {
+                $instances = $service->events->instances($calendarId, $item->getId())->getItems();
+            }
+            if(empty($instances)) {
+                $instances = [$item];
+            }
+            $working = array_map(function (\Google_Service_Calendar_Event $instance) use ($editing, &$allIds) {
+                $allIds[] = $instance->getId();
                 return [
                     'deadline' => empty($editing) ? null : $editing[0]->getDeadline(),
                     'course' => empty($editing) ? null : $editing[0]->getCourse(),
@@ -181,7 +191,7 @@ class PlanController extends Controller
             }, $instances);
             $events = array_merge($events, $working);
         }
-        self::mergeSaved($schedule, new ArrayCollection($existing), $events, $orm);
+        self::mergeSaved($schedule, new ArrayCollection(self::arrayUniqueObj($existing)), $events, $orm);
 
         $grouped = self::groupRecurrenceEvents($schedule->getEvents());
 
@@ -189,6 +199,11 @@ class PlanController extends Controller
         $reserved = [];
         foreach($grouped as $cid => $types) {
             foreach ($types as $type => $hours) {
+                $working = call_user_func_array('array_merge_recursive', call_user_func_array('array_merge_recursive', $hours));
+                $shouldUpdate = (new ArrayCollection($working))
+                    ->exists(function ($_, Event $e) {
+                        return empty($e->getRemoteUpdated()) || (!empty($e->getUpdated())
+                            && $e->getUpdated() > $e->getRemoteUpdated());});
                 foreach ($hours as $consecutive) {
                     foreach($consecutive as $events) {
 
@@ -201,11 +216,10 @@ class PlanController extends Controller
                         $remote = $events->filter(
                             function (Event $e) use ($remoteIds, $reserved) {
                                 return !empty($e->getRemoteId())
-                                && in_array(
-                                    $remoteId = substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1)),
-                                    array_keys($remoteIds)
-                                )
-                                && !in_array($remoteId, $reserved);
+                                && ((in_array($e->getRemoteId(), array_keys($remoteIds))
+                                && !in_array($e->getRemoteId(), $reserved))
+                                    || (in_array(substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1)), array_keys($remoteIds))
+                                        && !in_array(substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1)), $reserved)));
                             }
                         )->first();
                         if (empty($remote)) {
@@ -215,9 +229,12 @@ class PlanController extends Controller
                             else
                                 $instances = $service->events->instances($calendarId, $newEvent->getId())->getItems();
                         } else {
-                            $remoteId = substr($remote->getRemoteId(), 0, strpos($remote->getRemoteId(), '_', 1));
+                            $remoteId = isset($remoteIds[$remote->getRemoteId()])
+                                ? $remote->getRemoteId()
+                                : substr($remote->getRemoteId(), 0, strpos($remote->getRemoteId(), '_', 1));
                             $reserved[] = $remoteId;
-                            if ($remoteIds[$remoteId]->getRecurrence() != $config['recurrence']) {
+                            if ($shouldUpdate || $remoteIds[$remoteId]->getRecurrence() != $config['recurrence'] ||
+                                new \DateTime($remoteIds[$remoteId]->getStart()->getDateTime()) != $events->last()->getStart()) {
                                 $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
                                 if(empty($config['recurrence']))
                                     $instances = [$newEvent];
