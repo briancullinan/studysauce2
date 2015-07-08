@@ -36,11 +36,6 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
         ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
     <?php endforeach;
-    if($app->getRequest()->get('_format') == 'funnel') {
-        foreach ($view['assetic']->stylesheets(['@StudySauceBundle/Resources/public/css/funnel.css'],[],['output' => 'bundles/studysauce/css/*.css']) as $url): ?>
-            <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>" />
-        <?php endforeach;
-    }
     $view['slots']->output('tmp-stylesheets');
     $view['slots']->stop();
 

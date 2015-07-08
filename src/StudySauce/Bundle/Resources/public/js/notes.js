@@ -31,10 +31,10 @@ $(document).ready(function () {
             notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(note.attr('class'))[1],
             courseId = (/course-id-([a-z0-9\-]*)(\s|$)/ig).exec(note.attr('class'))[1];
         notes.find('.note-title .title input').val($(this).find('h4 a').text());
-        if(notebook != '')
-            notes.find('select[name="notebook"]').val(notebook);
-        else
+        if(courseId != '')
             notes.find('select[name="notebook"]').val(courseId);
+        else
+            notes.find('select[name="notebook"]').val(notebook);
         notes.find('.input.tags input')[0].selectize.setValue(JSON.parse(note.attr('data-tags')));
         noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
         notes.addClass('edit-note');
@@ -309,7 +309,7 @@ $(document).ready(function () {
     body.on('keyup change', '#notes input[name="search"]', function () {
         var notes = $('#notes');
         if($(this).val().trim() == '') {
-            notes.find('.note-row').show();
+            notes.find('.note-row, .class-row, .class-row + .notes, .term-row').show();
         }
     });
 
@@ -326,14 +326,35 @@ $(document).ready(function () {
             },
             success: function (data) {
                 notes.find('.squiggle').remove();
+
                 // only show notes and sections with results in them
                 notes.find('.note-row').each(function () {
                     var noteId = (/note-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).attr('class'))[1];
-                    if(data.indexOf(noteId) > -1) {
+                    if(data.indexOf(parseInt(noteId)) > -1) {
                         $(this).show();
                     }
                     else {
                         $(this).hide();
+                    }
+                });
+
+                // hide empty sections
+                notes.find('.class-row').each(function () {
+                    if($(this).next('.notes').find('.note-row:visible').length == 0) {
+                        $(this).add($(this).next()).hide();
+                    }
+                    else {
+                        $(this).add($(this).next()).show();
+                    }
+                });
+
+                // hide empty years
+                notes.find('.term-row').each(function () {
+                    if($(this).find('.class-row:visible').length == 0) {
+                        $(this).hide();
+                    }
+                    else {
+                        $(this).show();
                     }
                 });
             },

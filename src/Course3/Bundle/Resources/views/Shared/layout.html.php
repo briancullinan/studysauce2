@@ -26,18 +26,18 @@ if (!$courseIncluded) {
 
     // check for paid account
     if ($app->getUser() == 'anon.' || !is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
-        $view['slots']->start('sincludes2');
+        $view['slots']->start('sincludes-upgrade');
         echo $view['actions']->render(
             new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),
             ['strategy' => 'sinclude']
         );
         $view['slots']->stop();
-        $view['slots']->start('sincludes');
-        $view['slots']->output('sincludes2');
+        $view['slots']->start('sincludes-lesson');
+        $view['slots']->output('sincludes-upgrade');
         $view['slots']->stop();
     }
     else {
-        $view['slots']->start('sincludes');
+        $view['slots']->start('sincludes-lesson');
         $controller = $request->get('_controller');
         $pos = strpos($request->getUri(), '/_fragment');
         if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment') && !strpos($controller, ':template')) {
@@ -79,6 +79,10 @@ if (!$courseIncluded) {
         }
         $view['slots']->stop();
     }
+
+    $view['slots']->start('sincludes');
+    $view['slots']->output('sincludes-lesson');
+    $view['slots']->stop();
 
     $view['slots']->start('body');
     $view['slots']->output('lesson-body');

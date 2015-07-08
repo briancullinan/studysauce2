@@ -132,7 +132,7 @@ class Event
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = str_replace([': Pre-work', ': Study session', ': Class'], '', $name);
 
         return $this;
     }

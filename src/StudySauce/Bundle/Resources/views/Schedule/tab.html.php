@@ -31,17 +31,13 @@ $view['slots']->start('body'); ?>
     print ($step !== false ? ' setup-mode' : '');
     print ($needsNew ? ' needs-new' : ''); ?> " id="schedule">
     <div class="pane-content">
-    <?php if($app->getRequest()->get('_format') == 'funnel') {
-        echo $view->render('StudySauceBundle:Buy:funnel.html.php');
-    } else { ?>
-        <h2>Enter your class below</h2>
-        <a href="#manage-terms" data-toggle="modal">Create a new schedule</a>
-        <div class="schedule-history">
-            <a href="#prev-schedule" class="subtle disabled"><span></span> Previous</a>
-            <h3 class="term-label"></h3>
-            <a href="#next-schedule" class="subtle">Next <span></span></a>
-        </div>
-    <?php } ?>
+    <h2>Enter your class below</h2>
+    <a href="#manage-terms" data-toggle="modal">Create a new schedule</a>
+    <div class="schedule-history">
+        <a href="#prev-schedule" class="subtle disabled"><span></span> Previous</a>
+        <h3 class="term-label"></h3>
+        <a href="#next-schedule" class="subtle">Next <span></span></a>
+    </div>
     <form action="<?php print $view['router']->generate('update_schedule'); ?>" method="post" novalidate="novalidate">
         <?php foreach($schedules as $schedule) {
             /** @var $schedule Schedule */
@@ -205,11 +201,7 @@ $view['slots']->start('body'); ?>
                         <div class="invalid-dates">Invalid class date</div>
                         <div class="overlaps-only">Classes cannot overlap</div>
                         <div class="invalid-only">You must complete all fields before moving on.</div>
-                        <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-                            <button type="submit" value="#save-class" class="more">Next</button>
-                        <?php } else { ?>
-                            <button type="submit" value="#save-class" class="more">Save</button>
-                        <?php } ?>
+                        <button type="submit" value="#save-class" class="more">Save</button>
                     </div>
                 </div>
                 <hr/>
@@ -353,11 +345,7 @@ $view['slots']->start('body'); ?>
                         <div class="invalid-dates">Invalid class date</div>
                         <div class="overlaps-only">Classes cannot overlap</div>
                         <div class="invalid-only">You must complete all fields before moving on.</div>
-                        <?php if($app->getRequest()->get('_format') == 'funnel') { ?>
-                            <button type="submit" value="#save-class" class="more">Next</button>
-                        <?php } else { ?>
-                            <button type="submit" value="#save-class" class="more">Save</button>
-                        <?php } ?>
+                        <button type="submit" value="#save-class" class="more">Save</button>
                     </div>
                 </div>
             </div>

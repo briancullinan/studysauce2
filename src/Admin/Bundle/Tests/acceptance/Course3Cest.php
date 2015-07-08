@@ -108,7 +108,7 @@ class Course3Cest
         $I->click('input[value="memorizing"] + i');
         $I->click('input[name="quiz-building"][value="3"] + i');
         $I->fillField('input[name="quiz-groupRole"]', 'The leader role');
-        $I->click('input[name="quiz-groupBreaks"][value="1"]');
+        $I->click('input[name="quiz-groupBreaks"][value="1"] + i');
         $I->click('#course3_group_study-step2 .highlighted-link a:nth-of-type(1)');
         $I->wait(15);
         $I->click('#course3_group_study-step2 .highlighted-link a:nth-of-type(2)');

@@ -30,7 +30,6 @@ $view['slots']->stop();
 $view['slots']->start('body'); ?>
     <div class="panel-pane" id="checkout">
         <div class="pane-content clearfix">
-            <?php echo $view->render('StudySauceBundle:Buy:funnel.html.php'); ?>
             <fieldset id="billing-pane">
                 <legend>Billing information</legend>
                 <div class="first-name">

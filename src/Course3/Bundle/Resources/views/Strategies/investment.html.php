@@ -16,7 +16,7 @@ $view->extend('Course3Bundle:Shared:layout.html.php');
             <?php endforeach; ?>
         </div>
         <div class="highlighted-link">
-            <a href="<?php print $view['router']->generate('customization'); ?>" class="more">Customize classes</a>
+            <a href="<?php print $view['router']->generate('plan'); ?>" class="more">Customize classes</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
     </div>

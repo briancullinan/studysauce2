@@ -25,16 +25,16 @@ if (!$courseIncluded) {
     $request = $app->getRequest();
     $controller = $request->get('_controller');
     if (!is_object($app->getUser()) || !$app->getUser()->hasRole('ROLE_PAID')) {
-        $view['slots']->start('sincludes2');
+        $view['slots']->start('sincludes-upgrade');
         echo $view['actions']->render(new ControllerReference('StudySauceBundle:Premium:index', ['_format' => 'tab']),['strategy' => 'sinclude']);
         $view['slots']->stop();
     }
-    $view['slots']->start('sincludes');
+    $view['slots']->start('sincludes-lesson');
     if(!empty($services))
     {
         print $this->render('StudySauceBundle:Dialogs:account-options.html.php', ['id' => 'account-options', 'services' => $services]);
     }
-    $view['slots']->output('sincludes2');
+    $view['slots']->output('sincludes-upgrade');
     $pos = strpos($request->getUri(), '/_fragment');
     if($request->getMethod() == 'GET' && !strpos($request->getUri(), '/_fragment') && !strpos($controller, ':template')) {
         // include courses from the index page
@@ -73,6 +73,10 @@ if (!$courseIncluded) {
             );
         }
     }
+    $view['slots']->stop();
+
+    $view['slots']->start('sincludes');
+    $view['slots']->output('sincludes-lesson');
     $view['slots']->stop();
 
     $view['slots']->start('body');

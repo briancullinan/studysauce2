@@ -950,6 +950,15 @@ $(document).ready(function () {
         if(dialog.find('.start-time:visible input').length > 0) {
             changes.start = dialog.find('.start-time input').val() + ' ' + dialog.find('.start-date input').val();
             changes.end = dialog.find('.end-time input').val() + ' ' + dialog.find('.end-date input').val();
+            // subtract one week
+            if(plan.is('.add-event')) {
+                var s = new Date(dialog.find('.start-date input').val());
+                s.setDate(s.getDate()-7);
+                changes.start = (s.getMonth() + 1) + "/" + s.getDate() + "/" + s.getFullYear();
+                var e = new Date(dialog.find('.end-date input').val());
+                e.setDate(e.getDate()-7);
+                changes.start = (e.getMonth() + 1) + "/" + e.getDate() + "/" + e.getFullYear();
+            }
         }
         if(dialog.find('.title:not(.read-only) input').length > 0) {
             changes.title = dialog.find('.title input').val();

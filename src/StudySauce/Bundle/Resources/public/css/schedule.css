@@ -10,13 +10,6 @@
     white-space: nowrap;
 }
 
-#schedule .highlighted-link a[href*="/customization"]
-{
-    position:absolute;
-    bottom:10px;
-    left:10px;
-}
-
 #schedule h2:first-child
 {
     margin-right: -220px;
@@ -92,8 +85,7 @@
     visibility:hidden;
 }
 
-#schedule .class-row.edit ~ .highlighted-link [value="#save-class"],
-.funnel #schedule [value="#save-class"]
+#schedule .class-row.edit ~ .highlighted-link [value="#save-class"]
 {
     visibility:visible;
 }

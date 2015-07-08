@@ -307,11 +307,11 @@ EOF
     {
         // set the timeout to 4 and a half minutes
         set_time_limit(60*4.5);
-        //$this->sendReminders();
-        //$this->send3DayMarketing();
-        //$this->sendDeadlines();
-        //$this->sendSpool();
-        //$this->syncNotes();
+        $this->sendReminders();
+        $this->send3DayMarketing();
+        $this->sendDeadlines();
+        $this->sendSpool();
+        $this->syncNotes();
         $this->syncEvents();
     }
 }

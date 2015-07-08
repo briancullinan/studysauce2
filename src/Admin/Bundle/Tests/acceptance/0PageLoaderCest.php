@@ -566,7 +566,7 @@ class PageLoaderCest
      * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
-    public function tryStudyNotes(AcceptanceTester $I)
+    public function tryDetailedNotes(AcceptanceTester $I)
     {
         $I->amOnPage('/notes');
         $I->click('a[href*="/evernote"]');
@@ -583,20 +583,41 @@ class PageLoaderCest
         $I->click('study note');
         $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
         $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
-        for($i = 0; $i < strlen('' . time()); $i++)
+        $time = '' . time();
+        for($i = 0; $i < strlen($time); $i++)
         {
-            $key = constant('WebDriverKeys::NUMPAD' . substr('' . time(), $i, 1));
+            $key = constant('WebDriverKeys::NUMPAD' . substr($time, $i, 1));
             $I->pressKey('#editor1', $key);
         }
         $I->click('#notes a[href="#save-note"]');
         $I->wait(15);
         $I->fillField('#notes [name="search"]', date('Y-m-d'));
+        $I->click('#notes [value="search"]');
         $I->wait(5);
-        $I->see('This is a new note ' . date('Y-m-d'));
+        $I->see($time);
         $I->fillField('#notes [name="search"]', '');
-        $I->click('This is a new note ' . date('Y-m-d'));
+        $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
+        // change tags
+        $I->click('#notes .selectize-input');
+        $I->pressKey('#notes .selectize-input input', WebDriverKeys::BACKSPACE);
+        $I->fillField('#notes .selectize-input input', 'StudySauce');
+        $I->click('#notes a[href="#save-note"]');
+        $I->wait(10);
+        $I->amOnPage('/cron');
+        // TODO: check evernote to make sure changes were synced
+        $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
         $I->click('#notes a[href="#delete-note"]');
         $I->wait(5);
+    }
+
+    public function tryNewCalculator()
+    {
+
+    }
+
+    public function tryDetailedPlan()
+    {
+
     }
 
 }

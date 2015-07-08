@@ -226,7 +226,7 @@ input[type="button"].more
     -webkit-border-radius: 5px;
     display:inline-block;
     cursor: pointer;
-    white-space: nowrap;
+    white-space: normal;
     vertical-align: middle;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -1038,6 +1038,10 @@ sup.premium
 
 @media all and (max-width: 1000px)
 {
+    .btn, .btn-default, a.more, button.more, input[type="submit"].more, input[type="reset"].more, input[type="button"].more
+    {
+        padding:10px 20px;
+    }
 
     .highlighted-link
     {

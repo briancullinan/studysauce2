@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="study_note", uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id"})})
+ * @ORM\Table(name="study_note", uniqueConstraints={@ORM\UniqueConstraint(name="remote_idx", columns={"remote_id","user_id"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class StudyNote

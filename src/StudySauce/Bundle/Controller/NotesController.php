@@ -332,8 +332,8 @@ class NotesController extends Controller
 
                 /** @var StudyNote[] $stored */
                 $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
-                    ->andWhere('n.remoteId = :id')
-                    ->setParameter('id', $r->guid)
+                    ->andWhere('n.remoteId = :id AND n.user = :uid')
+                    ->setParameters(['id' => $r->guid, 'uid' => $user->getId()])
                     ->getQuery()
                     ->getResult();
                 if (!empty($stored) && $stored[0]->getRemoteUpdated() != null &&
@@ -344,8 +344,8 @@ class NotesController extends Controller
 
                 if(empty($stored)) {
                     $note = new StudyNote();
-                    $user->addNote($note);
                     $note->setUser($user);
+                    $user->addNote($note);
                     $note->setRemoteId($r->guid);
                     $note->setTitle($r->title);
                     $note->setProperty('notebook', $folder);
@@ -357,6 +357,8 @@ class NotesController extends Controller
                 }
                 else
                 {
+                    $stored[0]->setUser($user);
+                    $user->addNote($stored[0]);
                     $stored[0]->setTitle($r->title);
                     $stored[0]->setProperty('notebook', $folder);
                     $stored[0]->setProperty('tags', $tags);
@@ -505,18 +507,34 @@ class NotesController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
-        $results = $client->findNotesWithSearch($request->get('search'));
-        $result = [];
-        foreach ($results as $r) {
-            /** @var SearchResult $r */
 
-            if ($r->type === 1) {
-                $result[] = $r->guid;
+        if(!empty($user->getEvernoteAccessToken())) {
+            $client = new EvernoteClient(
+                $user->getEvernoteAccessToken(),
+                $this->get('kernel')->getEnvironment() != 'prod'
+            );
+            $results = $client->findNotesWithSearch($request->get('search'));
+            $result = [];
+            foreach ($results as $r) {
+                /** @var SearchResult $r */
+
+                if ($r->type === 1) {
+                    $result[] = $r->guid;
+                }
             }
         }
 
-        return new JsonResponse($result);
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+
+        /** @var Note[] $notes */
+        $notes = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
+            ->andWhere('n.user = :uid')
+            ->andWhere((!empty($result) ? 'n.remoteId IN :rids OR' : '') . ' n.title LIKE :search OR n.content LIKE :search')
+            ->setParameters(['uid' => $user->getId(), 'search' => '%' . $request->get('search') . '%'] + (!empty($result) ? ['rids' => $result] : []))
+            ->getQuery()->execute();
+
+        return new JsonResponse(array_map(function (StudyNote $n) {return $n->getId();}, $notes));
     }
 
     /**
@@ -652,6 +670,7 @@ class NotesController extends Controller
         if(empty($stored)) {
             $note = new StudyNote();
             $note->setUser($user);
+            $user->addNote($note);
             $note->setCreated(new \DateTime());
         }
         else {

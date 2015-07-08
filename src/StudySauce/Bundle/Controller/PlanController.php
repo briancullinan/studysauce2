@@ -71,6 +71,7 @@ class PlanController extends Controller
     private static function groupRecurrenceEvents(Collection $events) {
 
         // group events so we can create reoccurring settings easily
+        /** @var ArrayCollection[][] $grouped */
         $grouped = [];
         foreach($events as $event) {
 
@@ -82,47 +83,12 @@ class PlanController extends Controller
             $cid = !empty($event->getCourse()) ? $event->getCourse()->getId() : '';
             // group by event type
             $t = $event->getType();
-            // group by hour and minute setting
-            $hi = $event->getStart()->format('H:i');
-
-            if(substr_count($event->getRemoteId() ?: '', '_') > 1)
-                $hi .= $event->getRemoteId();
-
-            // group by consecutive weeks
-            $last = $event->getStart()->format('W');
-            if (!empty($grouped[$cid][$t][$hi])) {
-                $lastE = end($grouped[$cid][$t][$hi]);
-                /** @var Event $consecutive */
-                $consecutive = end($lastE);
-                if ($consecutive->getStart()->format('W') == $event->getStart()->format('W') ||
-                    $consecutive->getStart()->format('W') == intval($event->getStart()->format('W')) + 1 ||
-                    $consecutive->getStart()->format('W') == intval($event->getStart()->format('W')) - 1
-                ) {
-                    $last = key($grouped[$cid][$t][$hi]);
-                }
-            }
-
-            $grouped[$cid][$t][$hi][$last][] = $event;
+            if(!isset($grouped[$cid][$t]))
+                $grouped[$cid][$t] = new ArrayCollection();
+            $grouped[$cid][$t]->add($event);
         }
 
         return $grouped;
-    }
-
-    /**
-     * @param \Google_Service_Calendar_Event[] $items
-     * @param $calendarId
-     * @param \Google_Service_Calendar $service
-     * @param ArrayCollection $stored
-     * @param $remoteIds
-     * @return array
-     */
-    public static function generateEventsFromGoogle($items, $calendarId, \Google_Service_Calendar $service, ArrayCollection $stored, &$remoteIds)
-    {
-
-        $events = [];
-        $remoteIds = [];
-
-        return $events;
     }
 
     /**
@@ -178,7 +144,7 @@ class PlanController extends Controller
                 return [
                     'deadline' => empty($editing) ? null : $editing[0]->getDeadline(),
                     'course' => empty($editing) ? null : $editing[0]->getCourse(),
-                    'name' => str_replace([': Pre-work', ': Study session', ': Class'], '', $instance->getSummary()),
+                    'name' => $instance->getSummary(),
                     'type' => empty($editing) ? 'o' : $editing[0]->getType(),
                     'start' => date_timezone_set(
                         new \DateTime($instance->getStart()->getDateTime()),
@@ -186,7 +152,10 @@ class PlanController extends Controller
                     'end' => date_timezone_set(
                         new \DateTime($instance->getEnd()->getDateTime()),
                         new \DateTimeZone(date_default_timezone_get())),
-                    'remoteId' => $instance->getId()
+                    'remoteId' => $instance->getId(),
+                    'remoteUpdated' => date_timezone_set(
+                        new \DateTime($instance->getUpdated()),
+                        new \DateTimeZone(date_default_timezone_get())),
                 ];
             }, $instances);
             $events = array_merge($events, $working);
@@ -198,72 +167,76 @@ class PlanController extends Controller
         // sync changes to google
         $reserved = [];
         foreach($grouped as $cid => $types) {
-            foreach ($types as $type => $hours) {
-                $working = call_user_func_array('array_merge_recursive', call_user_func_array('array_merge_recursive', $hours));
-                $shouldUpdate = (new ArrayCollection($working))
-                    ->exists(function ($_, Event $e) {
-                        return empty($e->getRemoteUpdated()) || (!empty($e->getUpdated())
-                            && $e->getUpdated() > $e->getRemoteUpdated());});
-                foreach ($hours as $consecutive) {
-                    foreach($consecutive as $events) {
+            foreach ($types as $type => $events) {
+                /** @var ArrayCollection $events */
 
-                        $events = new ArrayCollection($events);
-                        $config = self::getGoogleCalendarConfig($events);
-                        $newEvent = new \Google_Service_Calendar_Event($config);
+                $config = self::getGoogleCalendarConfig($events);
+                $newEvent = new \Google_Service_Calendar_Event($config);
 
-                        $instances = [];
-                        /** @var Event $remote */
-                        $remote = $events->filter(
-                            function (Event $e) use ($remoteIds, $reserved) {
-                                return !empty($e->getRemoteId())
-                                && ((in_array($e->getRemoteId(), array_keys($remoteIds))
-                                && !in_array($e->getRemoteId(), $reserved))
-                                    || (in_array(substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1)), array_keys($remoteIds))
-                                        && !in_array(substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1)), $reserved)));
-                            }
-                        )->first();
-                        if (empty($remote)) {
-                            $newEvent = $service->events->insert($calendarId, $newEvent);
-                            if(empty($config['recurrence']))
-                                $instances = [$newEvent];
-                            else
-                                $instances = $service->events->instances($calendarId, $newEvent->getId())->getItems();
-                        } else {
-                            $remoteId = isset($remoteIds[$remote->getRemoteId()])
-                                ? $remote->getRemoteId()
-                                : substr($remote->getRemoteId(), 0, strpos($remote->getRemoteId(), '_', 1));
-                            $reserved[] = $remoteId;
-                            if ($shouldUpdate || $remoteIds[$remoteId]->getRecurrence() != $config['recurrence'] ||
-                                new \DateTime($remoteIds[$remoteId]->getStart()->getDateTime()) != $events->last()->getStart()) {
-                                $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
-                                if(empty($config['recurrence']))
-                                    $instances = [$newEvent];
-                                else
-                                    $instances = $service->events->instances($calendarId, $remoteId)->getItems();
-                            }
+                /** @var Event $remote */
+                $remote = $events
+                    ->filter(function (Event $e) use ($remoteIds, $reserved) {
+                        if(!empty($e->getRemoteId())) {
+                            $id = substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1));
+                            return in_array($id, array_keys($remoteIds))
+                            && !in_array($id, $reserved);
                         }
-                        foreach ($instances as $instance) {
-                            /** @var \Google_Service_Calendar_Event $instance */
-                            $start = date_timezone_set(
-                                new \DateTime($instance->getStart()->getDateTime()),
-                                new \DateTimeZone(date_default_timezone_get())
-                            )->format('Y/m/d');
-                            /** @var Event $event */
-                            $event = $events->filter(
-                                function (Event $e) use ($start) {
-                                    return $e->getStart()->format('Y/m/d') == $start;
-                                }
-                            )->first();
-                            $event->setRemoteUpdated(new \DateTime());
-                            $event->setRemoteId($instance->getId());
-                            $orm->merge($event);
-                        }
+                        return false;
+                    })
+                    ->first();
+                if (empty($remote)) {
+                    $newEvent = $service->events->insert($calendarId, $newEvent);
+                    if(empty($config['recurrence']))
+                        $instances = [$newEvent];
+                    else
+                        $instances = $service->events->instances($calendarId, $newEvent->getId())->getItems();
+                } else {
+                    $remoteId = substr($remote->getRemoteId(), 0, strpos($remote->getRemoteId(), '_', 1));
+                    $reserved[] = $remoteId;
+                    if ($remoteIds[$remoteId]->getRecurrence() != $config['recurrence'] ||
+                        new \DateTime($remoteIds[$remoteId]->getStart()->getDateTime()) != $events->last()->getStart()) {
+                        $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
                     }
+                    if(empty($config['recurrence']))
+                        $instances = [$newEvent];
+                    else
+                        $instances = $service->events->instances($calendarId, $remoteId)->getItems();
+                }
+                foreach ($instances as $instance) {
+                    /** @var \Google_Service_Calendar_Event $instance */
+                    $start = date_timezone_set(
+                        new \DateTime($instance->getStart()->getDateTime()),
+                        new \DateTimeZone(date_default_timezone_get())
+                    );
+                    /** @var Event $event */
+                    $event = $events->filter(
+                        function (Event $e) use ($start) {
+                            return $e->getStart()->format('Y/m/d') == $start->format('Y/m/d');
+                        }
+                    )->first();
+                    // check for changes on individual events
+                    if($event->getStart()->format('H:i') != $start->format('H:i') ||
+                        (!empty($event->getUpdated()) && $event->getUpdated() > $event->getRemoteUpdated())) {
+                        $instance->setStart(new \Google_Service_Calendar_EventDateTime([
+                            'dateTime' => $event->getStart()->format('c'),
+                            'timeZone' => date_default_timezone_get(),
+                        ]));
+                        $instance->setEnd(new \Google_Service_Calendar_EventDateTime([
+                            'dateTime' => $event->getEnd()->format('c'),
+                            'timeZone' => date_default_timezone_get(),
+                        ]));
+                        $instance->setLocation($event->getLocation());
+                        $instance->setSummary($event->getTitle());
+                        $service->events->update($calendarId, $instance->getId(), $instance);
+                    }
+                    $event->setRemoteId($instance->getId());
+                    $event->setRemoteUpdated(new \DateTime());
+                    $orm->merge($event);
+                    $orm->flush();
                 }
             }
         }
 
-        $orm->flush();
 
     }
 
@@ -301,9 +274,11 @@ class PlanController extends Controller
                 ';UNTIL=' . date_add(date_timezone_set(clone $events->first()->getStart(), new \DateTimeZone('Z')), new \DateInterval('P1D'))->format('Ymd') . 'T000000Z' .
                 ';BYDAY=' . implode(',', array_unique(array_map(function (Event $e) {return ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'][$e->getStart()->format('w')];}, $events->toArray())));
             $config['recurrence'] = $rRules;
+
+            // TODO: EXDATE for gaps and holidays
         }
         else {
-            $config['recurrence'] = [];
+            $config['recurrence'] = null;
         }
 
         if (!empty($events->last()->getAlert())) {
@@ -547,21 +522,6 @@ class PlanController extends Controller
             return empty($c->getStudyType()); })) {
             return 4;
         }
-        /*
-        if(empty($schedule->getWeekends()) || empty($schedule->getGrades()))
-            return 'profile';
-
-        if (empty($schedule->getUniversity()) ||
-            empty($schedule->getClasses()->count())) {
-            return 'schedule';
-        }
-
-        if($schedule->getClasses()->exists(function ($i, Course $c) {
-            return empty($c->getStudyType()) || empty($c->getStudyDifficulty()); }))
-        {
-            return 'customization';
-        }
-        */
 
         return false;
     }
@@ -999,10 +959,12 @@ class PlanController extends Controller
             if ($lastEvent) {
                 if(isset($event['remoteId'])) {
                     $lastEvent->setRemoteId($event['remoteId']);
-                    $lastEvent->setRemoteUpdated(new \DateTime());
                 }
-                $lastEvent->setStart($event['start']);
-                $lastEvent->setEnd($event['end']);
+                if(empty($event['remoteUpdated']) || $lastEvent->getRemoteUpdated() < $event['remoteUpdated']) {
+                    $lastEvent->setName($event['name']);
+                    $lastEvent->setStart($event['start']);
+                    $lastEvent->setEnd($event['end']);
+                }
                 $events[$i] = $lastEvent;
                 $saved->removeElement($lastEvent);
             }
@@ -1032,7 +994,7 @@ class PlanController extends Controller
                 $newEvent->setSchedule($schedule);
                 if(isset($event['remoteId'])) {
                     $newEvent->setRemoteId($event['remoteId']);
-                    $newEvent->setRemoteUpdated(new \DateTime());
+                    $newEvent->setRemoteUpdated($event['remoteUpdated']);
                 }
                 $schedule->addEvent($newEvent);
                 $orm->persist($newEvent);
@@ -1041,7 +1003,6 @@ class PlanController extends Controller
             else
             {
                 /** @var Event $event */
-                $event->setUpdated(new \DateTime());
                 $orm->merge($event);
             }
         }
@@ -1349,7 +1310,7 @@ END:VCALENDAR');
             }
         }
         else {
-            $diff = $diff = new \DateInterval('PT0S');
+            $diff = new \DateInterval('PT0S');
             $newStart = clone $event->getStart();
         }
 
