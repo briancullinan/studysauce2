@@ -99,6 +99,8 @@ class PlanController extends Controller
      */
     public static function syncEvents(User $user, ContainerInterface $container, \Google_Client &$client = null, \Google_Service_Calendar &$service = null) {
         // do initial sync
+        if(self::getPlanStep($user) !== false)
+            return;
         /** @var $orm EntityManager */
         $orm = $container->get('doctrine')->getManager();
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
@@ -111,6 +113,12 @@ class PlanController extends Controller
         $items = $list->getItems();
         $user->setProperty('eventSync', $list->getNextSyncToken());
 
+        $scheduleCreated = max(array_map(function (Event $e) {
+            return !empty($e->getUpdated())
+                ? $e->getUpdated()->getTimestamp()
+                : $e->getCreated()->getTimestamp();
+        }, $schedule->getEvents()->filter(function (Event $e) {
+            return !$e->getDeleted();})->toArray()));
         // sync changes from google
         $existing = [];
         $events = [];
@@ -129,7 +137,10 @@ class PlanController extends Controller
             // delete events that were created before the schedule
             if(date_timezone_set(
                     new \DateTime($item->created),
-                    new \DateTimeZone(date_default_timezone_get())) < $schedule->getCreated()) {
+                    new \DateTimeZone(date_default_timezone_get()))->getTimestamp() < $scheduleCreated &&
+                (empty($item->updated) || date_timezone_set(
+                        new \DateTime($item->updated),
+                        new \DateTimeZone(date_default_timezone_get()))->getTimestamp() < $scheduleCreated)) {
                 $service->events->delete($calendarId, $item->getId());
                 continue;
             }
@@ -173,8 +184,9 @@ class PlanController extends Controller
         }
         self::mergeSaved($schedule, new ArrayCollection(self::arrayUniqueObj($existing)), $events, $orm);
 
-        $grouped = self::groupRecurrenceEvents($schedule->getEvents()->filter(function (Event $e) {
-            return !$e->getDeleted();}));
+        $working = $schedule->getEvents()->filter(function (Event $e) {
+            return !$e->getDeleted();});
+        $grouped = self::groupRecurrenceEvents($working);
 
         // sync changes to google
         $reserved = [];
@@ -205,10 +217,10 @@ class PlanController extends Controller
                 } else {
                     $remoteId = substr($remote->getRemoteId(), 0, strpos($remote->getRemoteId(), '_', 1));
                     $reserved[] = $remoteId;
-                    if ($remoteIds[$remoteId]->getRecurrence() != $config['recurrence'] ||
-                        new \DateTime($remoteIds[$remoteId]->getStart()->getDateTime()) != $events->last()->getStart()) {
-                        $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
-                    }
+                    //if ($remoteIds[$remoteId]->getRecurrence() != $config['recurrence'] ||
+                    //    new \DateTime($remoteIds[$remoteId]->getStart()->getDateTime()) != $events->last()->getStart()) {
+                    //    $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
+                    //}
                     if(empty($config['recurrence']))
                         $instances = [$newEvent];
                     else
@@ -220,12 +232,14 @@ class PlanController extends Controller
                         new \DateTime($instance->getStart()->getDateTime()),
                         new \DateTimeZone(date_default_timezone_get())
                     );
+                    $criteria = [
+                        'start' => $start,
+                        'type' => $events->first()->getType(),
+                        'course' => $events->first()->getCourse(),
+                        'deadline' => $events->first()->getDeadline()
+                    ];
                     /** @var Event $event */
-                    $event = $events->filter(
-                        function (Event $e) use ($start) {
-                            return $e->getStart()->format('Y/m/d') == $start->format('Y/m/d');
-                        }
-                    )->first();
+                    $event = self::electExistingEvent($criteria, $working);
                     // check for changes on individual events
                     if($event->getStart()->format('H:i') != $start->format('H:i') ||
                         (!empty($event->getUpdated()) && $event->getUpdated() > $event->getRemoteUpdated())) {
@@ -929,6 +943,49 @@ class PlanController extends Controller
     }
 
     /**
+     * @param array $criteria
+     * @param Collection $saved
+     * @return null|Event
+     */
+    private static function electExistingEvent(array $criteria, Collection $saved)
+    {
+        /** @var \DateTime $s */
+        $s = $criteria['start'];
+        // no notes are enabled for these events so they don't have any associations
+        if($criteria['type'] == 'm' || $criteria['type'] == 'z' || $criteria['type'] == 'h')
+            return null;
+
+        // check if we have a saved event around the same time
+        $lastEvent = null;
+        $lastDistance = 172800;
+        $similarEvents = $saved->filter(
+            function (Event $e) use ($criteria) {
+                return $e->getType() == $criteria['type']
+                && $e->getCourse() == (!empty($criteria['course']) ? $criteria['course'] : null)
+                && $e->getDeadline() == (!empty($criteria['deadline']) ? $criteria['deadline'] : null);
+            }
+        )->toArray();
+        foreach ($similarEvents as $j => $e) {
+            /** @var Event $e */
+            // if saved is 24 hours before current event, skip and never go back because we are ordered by time
+            $distance = abs($s->getTimestamp() - $e->getStart()->getTimestamp());
+            if ($distance < $lastDistance) {
+                $lastEvent = $e;
+                $lastDistance = $distance;
+            } elseif (!empty($lastEvent)) {
+                break;
+            }
+        }
+
+        // change times of existing event to fit in to new schedule
+        /** @var Event $lastEvent */
+        if(!empty($lastEvent)) {
+            $saved->removeElement($lastEvent);
+        }
+        return $lastEvent;
+    }
+
+    /**
      * @param Schedule $schedule
      * @param Collection $saved
      * @param array $events
@@ -940,36 +997,8 @@ class PlanController extends Controller
         // find matching saved events
         foreach ($events as $i => $event) {
             /** @var array $event */
-            /** @var \DateTime $s */
-            $s = $event['start'];
-            // no notes are enabled for these events so they don't have any associations
-            if($event['type'] == 'm' || $event['type'] == 'z' || $event['type'] == 'h')
-                continue;
+            $lastEvent = self::electExistingEvent($event, $saved);
 
-            // check if we have a saved event around the same time
-            $lastEvent = null;
-            $lastDistance = 172800;
-            $similarEvents = $saved->filter(
-                function (Event $e) use ($event) {
-                    return $e->getType() == $event['type']
-                    && $e->getCourse() == (!empty($event['course']) ? $event['course'] : null)
-                    && $e->getDeadline() == (!empty($event['deadline']) ? $event['deadline'] : null);
-                }
-            )->toArray();
-            foreach ($similarEvents as $j => $e) {
-                /** @var Event $e */
-                // if saved is 24 hours before current event, skip and never go back because we are ordered by time
-                $distance = abs($s->getTimestamp() - $e->getStart()->getTimestamp());
-                if ($distance < $lastDistance) {
-                    $lastEvent = $e;
-                    $lastDistance = $distance;
-                } elseif (!empty($lastEvent)) {
-                    break;
-                }
-            }
-
-            // change times of existing event to fit in to new schedule
-            /** @var Event $lastEvent */
             if ($lastEvent) {
                 if(isset($event['remoteId'])) {
                     $lastEvent->setRemoteId($event['remoteId']);
@@ -984,7 +1013,6 @@ class PlanController extends Controller
                     $lastEvent->setEnd($event['end']);
                 }
                 $events[$i] = $lastEvent;
-                $saved->removeElement($lastEvent);
             }
         }
 

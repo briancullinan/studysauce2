@@ -576,7 +576,10 @@ class PageLoaderCest
         $I->seeAmOnUrl('/notes');
         $I->wantTo('run the same tests then check evernote sync');
         $I->click('study note');
-        $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
+        $I->selectOption('#notes select[name="notebook"]', 'Add notebook');
+        $I->fillField('#add-notebook input', 'Test notebook');
+        $I->click('#add-notebook button');
+        $I->selectOption('#notes select[name="notebook"]', 'Test notebook');
         $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
         $time = '' . time();
         for($i = 0; $i < strlen($time); $i++)
@@ -604,13 +607,13 @@ class PageLoaderCest
         $I->amOnPage('/cron/sync');
         $I->amOnUrl('https://sandbox.evernote.com');
         $I->click('#gwt-debug-SkippableDialog-skip');
-        $I->click('//span[contains(@class,"notebookName") and contains(.,"PHIL") and contains(.,"101")]');
+        $I->click('//span[contains(@class,"notebookName") and contains(.,"Test") and contains(.,"notebook")]');
         $I->click('//span[contains(@class,"noteSnippetContent") and contains(.,"' . $time . '")]');
         $I->see('StudySauce123');
-        $I->amOnUrl('https://staging.studysauce.com/notes');
-        $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
-        $I->click('#notes a[href="#delete-note"]');
-        $I->wait(5);
+        $I->click('//div[contains(@class,"dragdrop-handle") and contains(.,"Test") and contains(.,"notebook")]/div[contains(@class,"notebookMenuButton")]');
+        $I->click('#gwt-debug-menuItemDelete');
+        $I->click('#gwt-debug-confirm');
+        $I->amOnUrl('https://staging.studysauce.com/cron/sync');
     }
 
     /**

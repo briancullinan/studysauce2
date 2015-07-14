@@ -480,9 +480,9 @@ $(document).ready(function () {
                 }
             },
             eventDragStop: function (event, jsEvent, ui, view) {
+                $('.fc-highlight-skeleton').remove();
             },
             eventDrop: function (event, delta, revertFunc) {
-                $('.fc-highlight-skeleton').remove();
 
                 if (event.allDay) {
                     revertFunc();
