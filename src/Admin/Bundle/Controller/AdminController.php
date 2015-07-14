@@ -859,10 +859,11 @@ class AdminController extends Controller
         $u = $orm->getRepository('StudySauceBundle:User')->findOneBy(['id' => $request->get('userId')]);
         if(!empty($u)) {
             // remove all entities attached
-            foreach($u->getVisits()->toArray() as $i => $v) {
-                $u->removeVisit($v);
-                $orm->remove($v);
-            }
+            $orm->getRepository('StudySauceBundle:Visit')->createQueryBuilder('v')
+                ->delete()
+                ->andWhere('v.user = :uid')
+                ->setParameter(':uid', $u)
+                ->getQuery()->execute();
             foreach($u->getCourse1s()->toArray() as $i => $c1) {
                 /** @var Course1 $c1 */
                 foreach($c1->getQuiz1()->toArray() as $j => $q1) {

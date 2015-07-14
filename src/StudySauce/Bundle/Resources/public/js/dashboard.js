@@ -168,6 +168,7 @@ $(document).ready(function () {
     function showTip()
     {
         var that = $(this);
+        $('.tipsy').remove();
         if(!that.is('[original-title]') && !that.is('.ui-datepicker *')) {
             that.tipsy({delayIn: 500}).trigger('mouseenter');
         }

@@ -24,6 +24,7 @@ use Swift_Transport;
 use Swift_Transport_SpoolTransport;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use WhiteOctober\SwiftMailerDBBundle\Spool\DatabaseSpool;
 
@@ -42,7 +43,7 @@ class CronSauceCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        // TODO: use studysauce:cron to send reminder emails
+        // use sauce:cron to send reminder emails
         $this
             ->setName('sauce:cron')
             ->setDescription('Run all the periodic things Study Sauce needs to do.')
@@ -52,10 +53,23 @@ class CronSauceCommand extends ContainerAwareCommand
                 The <info>%command.name%</info> command performs the following tasks:
 * Send reminder e-mails
 * Clear the mail queue
+* Syncs notes and events with services
 <info>php %command.full_name%</info>
 
 EOF
-            );
+            )
+            ->addOption(
+                'emails',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, cron will only run emails'
+            )
+            ->addOption(
+                'sync',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, cron will only sync'
+            );;
     }
 
     private function sendReminders()
@@ -264,7 +278,7 @@ EOF
         $users = $orm->getRepository('StudySauceBundle:User');
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('u')
-            ->andWhere('u.evernote_access_token IS NOT NULL');
+            ->andWhere('u.evernote_access_token IS NOT NULL AND u.evernote_access_token != \'\'');
         $users = $qb->getQuery()->execute();
         foreach($users as $u) {
             try {
@@ -307,11 +321,15 @@ EOF
     {
         // set the timeout to 4 and a half minutes
         set_time_limit(60*4.5);
-        $this->sendReminders();
-        $this->send3DayMarketing();
-        $this->sendDeadlines();
-        $this->sendSpool();
-        $this->syncNotes();
-        $this->syncEvents();
+        if(!$input->getOption('sync')) {
+            $this->sendReminders();
+            $this->send3DayMarketing();
+            $this->sendDeadlines();
+            $this->sendSpool();
+        }
+        if(!$input->getOption('emails')) {
+            $this->syncNotes();
+            $this->syncEvents();
+        }
     }
 }

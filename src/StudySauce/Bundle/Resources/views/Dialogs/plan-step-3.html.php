@@ -74,7 +74,7 @@ $view['slots']->start('modal-body') ?>
                 <li>&bullet;</li>
                 <li>&bullet;</li>
             </ul>
-            <button type="submit" data-target="#plan-step-4" data-toggle="modal" class="more">Next</button>
+            <button type="submit" class="more">Next</button>
         </div>
         <div class="highlighted-link">
             <ul class="dialog-tracker">
@@ -82,7 +82,7 @@ $view['slots']->start('modal-body') ?>
                 <li><a href="#plan-step-3" title="Notifications" data-toggle="modal">&bullet;</a></li>
                 <li><a href="#plan-step-4" title="Class type" data-toggle="modal">&bullet;</a></li>
             </ul>
-            <button type="submit" data-target="#plan-step-4" data-toggle="modal" class="more">Next</button>
+            <button type="submit" class="more">Next</button>
         </div>
     </form>
 <?php $view['slots']->stop();

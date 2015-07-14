@@ -428,16 +428,37 @@
     width:100%;
 }
 
-#notes a[href*="/redirect/evernote"]
+#notes a[href*="evernote"]
 {
     position: absolute;
     top: 10px;
     right: 10px;
+    z-index: 10;
 }
 
-#notes.edit-note a[href*="/redirect/evernote"]
+#notes.edit-note a[href*="evernote"]
 {
     display:none;
+}
+
+#notes a[href*="evernote.com"]
+{
+    width: 55px;
+    content: " ";
+    overflow: hidden;
+    box-sizing: border-box;
+    padding-right: 0;
+    padding-left: 55px;
+    white-space: nowrap;
+}
+
+#notes a[href*="evernote.com"]:hover
+{
+    width:auto;
+    content: normal;
+    overflow: visible;
+    padding-right: 40px;
+    padding-left: 60px;
 }
 
 #notes a[href*="/redirect/evernote"],

@@ -230,23 +230,6 @@ class PageLoaderCest
     /**
      * @param AcceptanceTester $I
      */
-    public function tryFunnelProfile(AcceptanceTester $I)
-    {
-        $I->wantTo('fill out the study profile');
-        $I->seeAmOnUrl('/profile/funnel');
-        $I->checkOption('Nothing but As');
-        $I->checkOption('Hit hard, keep weeks open');
-        $I->checkOption('input[name="profile-11am"][value="2"]');
-        $I->checkOption('input[name="profile-4pm"][value="3"]');
-        $I->checkOption('input[name="profile-9pm"][value="4"]');
-        $I->checkOption('input[name="profile-2am"][value="5"]');
-        $I->click('#profile .highlighted-link button');
-        $I->wait(10);
-    }
-
-    /**
-     * @param AcceptanceTester $I
-     */
     public function tryFunnelSchedule(AcceptanceTester $I)
     {
         $I->wantTo('fill out my class schedule');
@@ -266,19 +249,6 @@ class PageLoaderCest
         $I->click('.class-row:nth-child(1) .end-date input');
         $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
         $I->click('#schedule .highlighted-link [value="#save-class"]');
-        $I->wait(10);
-    }
-
-    /**
-     * @param AcceptanceTester $I
-     */
-    public function tryFunnelCustomization(AcceptanceTester $I)
-    {
-        $I->wantTo('customize my courses');
-        $I->seeAmOnUrl('/customization/funnel');
-        $I->checkOption('#customization input[value="memorization"]');
-        $I->checkOption('#customization input[value="tough"]');
-        $I->click('#customization .highlighted-link [value="#save-profile"]');
         $I->wait(10);
     }
 
@@ -563,23 +533,11 @@ class PageLoaderCest
     }
 
     /**
-     * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
-    public function tryDetailedNotes(AcceptanceTester $I)
+    public function tryNewNote(AcceptanceTester $I)
     {
-        $I->amOnPage('/notes');
-        $I->click('a[href*="/evernote"]');
-        $I->fillField('input[name="username"]', 'brian@studysauce.com');
-        $I->fillField('input[name="password"]', 'Da1ddy23');
-        $I->click('[type="submit"]');
-        $I->click('authorize');
-        $I->seeInCurrentUrl('/notes');
-        $I->click('#right-panel a[href="#expand"] span');
-        $I->click('a[href="/schedule"]');
-        $I->wait(5);
-        $I->test('tryNewSchedule');
-        $I->seeAmOnUrl('/notes');
+        $I->wantTo('create a new note regardless of connectivity');
         $I->click('study note');
         $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
         $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
@@ -590,7 +548,7 @@ class PageLoaderCest
             $I->pressKey('#editor1', $key);
         }
         $I->click('#notes a[href="#save-note"]');
-        $I->wait(15);
+        $I->wait(10);
         $I->fillField('#notes [name="search"]', date('Y-m-d'));
         $I->click('#notes [value="search"]');
         $I->wait(5);
@@ -598,26 +556,244 @@ class PageLoaderCest
         $I->fillField('#notes [name="search"]', '');
         $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
         // change tags
+        $I->executeJS('window.scrollTo(0,0);');
         $I->click('#notes .selectize-input');
         $I->pressKey('#notes .selectize-input input', WebDriverKeys::BACKSPACE);
-        $I->fillField('#notes .selectize-input input', 'StudySauce');
+        $I->fillField('#notes .selectize-input input', 'StudySauce123');
+        $I->click('#notes .selectize-dropdown-content .create');
         $I->click('#notes a[href="#save-note"]');
         $I->wait(10);
-        $I->amOnPage('/cron');
-        // TODO: check evernote to make sure changes were synced
         $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
         $I->click('#notes a[href="#delete-note"]');
         $I->wait(5);
     }
 
-    public function tryNewCalculator()
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryNewEvernote(AcceptanceTester $I)
     {
+        $I->seeAmOnUrl('/notes');
+        $I->wantTo('run the same tests then check evernote sync');
+        $I->click('study note');
+        $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
+        $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
+        $time = '' . time();
+        for($i = 0; $i < strlen($time); $i++)
+        {
+            $key = constant('WebDriverKeys::NUMPAD' . substr($time, $i, 1));
+            $I->pressKey('#editor1', $key);
+        }
+        $I->click('#notes a[href="#save-note"]');
+        $I->wait(10);
+        $I->fillField('#notes [name="search"]', date('Y-m-d'));
+        $I->click('#notes [value="search"]');
+        $I->wait(5);
+        $I->see($time);
+        $I->fillField('#notes [name="search"]', '');
+        $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
+        // change tags
+        $I->executeJS('window.scrollTo(0,0);');
+        $I->click('#notes .selectize-input');
+        $I->pressKey('#notes .selectize-input input', WebDriverKeys::BACKSPACE);
+        $I->fillField('#notes .selectize-input input', 'StudySauce123');
+        $I->click('#notes .selectize-dropdown-content .create');
+        $I->click('#notes a[href="#save-note"]');
+        $I->wait(10);
+        // check evernote to make sure changes were synced
+        $I->amOnPage('/cron/sync');
+        $I->amOnUrl('https://sandbox.evernote.com');
+        $I->click('#gwt-debug-SkippableDialog-skip');
+        $I->click('//span[contains(@class,"notebookName") and contains(.,"PHIL") and contains(.,"101")]');
+        $I->click('//span[contains(@class,"noteSnippetContent") and contains(.,"' . $time . '")]');
+        $I->see('StudySauce123');
+        $I->amOnUrl('https://staging.studysauce.com/notes');
+        $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
+        $I->click('#notes a[href="#delete-note"]');
+        $I->wait(5);
+    }
+
+    /**
+     * @depends tryGuestCheckout
+     * @param AcceptanceTester $I
+     */
+    public function tryDetailedNotes(AcceptanceTester $I)
+    {
+        $I->seeAmOnUrl('/notes');
+        $I->test('tryNewSchedule');
+        $I->seeAmOnUrl('/notes');
+        $I->click('#notes-connect a[href="#close"]');
+        $I->test('tryNewNote');
+        $I->click('#notes a[href*="evernote"]');
+        $I->fillField('input[name="username"]', 'brian@studysauce.com');
+        $I->fillField('input[name="password"]', 'Da1ddy23');
+        $I->click('[type="submit"]');
+        $I->click('authorize');
+        $I->seeInCurrentUrl('/notes');
+        $I->test('tryNewEvernote');
+        $I->wait(5);
+    }
+
+    /**
+     * @depends tryGuestCheckout
+     * @param AcceptanceTester $I
+     */
+    public function tryNewCalculator(AcceptanceTester $I)
+    {
+        $I->seeAmOnUrl('/calc');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function tryNewPlan(AcceptanceTester $I)
+    {
+        // complete the setup wizard
+        $I->wantTo('complete the plan setup');
+        $I->seeAmOnUrl('/plan');
+        $I->click('Get started');
+        $I->click('#plan-step-1 input[value="tough"] + i');
+        $I->click('#plan-step-1 [type="submit"]');
+        $I->wait(10);
+
+        $I->click('Add pre-work');
+        $start = (new \DateTime('this Monday 9:00'))->format('r');
+        $end = (new \DateTime('this Monday 10:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-p:nth-child(2)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $start = (new \DateTime('this Wednesday 9:00'))->format('r');
+        $end = (new \DateTime('this Wednesday 10:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-p:nth-child(3)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $start = (new \DateTime('this Friday 9:00'))->format('r');
+        $end = (new \DateTime('this Friday 10:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-p:nth-child(4)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $I->click('Save');
+        $I->wait(10);
+
+        $I->click('Add spaced-repetition');
+        $start = (new \DateTime('this Monday 14:00'))->format('r');
+        $end = (new \DateTime('this Monday 15:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-sr:nth-child(2)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $start = (new \DateTime('this Wednesday 14:00'))->format('r');
+        $end = (new \DateTime('this Wednesday 15:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-sr:nth-child(3)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $start = (new \DateTime('this Friday 14:00'))->format('r');
+        $end = (new \DateTime('this Friday 15:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-sr:nth-child(4)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $I->click('Save');
+        $I->wait(10);
+
+        $I->click('Add free study');
+        $start = (new \DateTime('this Sunday 12:00'))->format('r');
+        $end = (new \DateTime('this Sunday 13:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-f:nth-child(3)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $start = (new \DateTime('this Saturday 12:00'))->format('r');
+        $end = (new \DateTime('this Saturday 13:00'))->format('r');
+        $newEvent = <<< EOJS
+        var event = $('#external-events .event-type-f:nth-child(4)').data('event');
+        event.start = new Date('$start');
+        event.end = new Date('$end');
+        $('#calendar').fullCalendar('renderEvent', event, true)
+EOJS;
+        $I->executeJS($newEvent);
+        $I->click('Save');
+        $I->wait(10);
+
+        $I->click('#plan-step-3 [type="submit"]');
+        $I->wait(10);
+        $I->selectOption('#plan-step-4 select', 'memorization');
+        $I->click('#plan-step-4 [type="submit"]');
+        $I->wait(10);
+        $I->click('Make final adjustments');
+        $I->doubleClick('#calendar .event-type-p');
+        $I->fillField('#edit-event .location input', 'The Library');
+        $I->click('#edit-event [type="submit"]');
+        $I->wait(10);
+        $I->click('Done');
+        $I->executeJS('$(\'#plan-step-6 [href*="download"]\').trigger(\'click\')');
+        $I->click('Go to study plan');
+    }
+
+    public function tryNewStudySession(AcceptanceTester $I)
+    {
+        $I->wantTo('start a study session');
+        $I->click('.fc-agendaWeek-button');
+        $I->click('#calendar .event-type-p');
+        $I->click('#plan a.checkin');
+        $I->click('Continue to session');
+        $I->wait(20);
+        $I->click('new note');
+        $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
+        $time = '' . time();
+        for($i = 0; $i < strlen($time); $i++)
+        {
+            $key = constant('WebDriverKeys::NUMPAD' . substr($time, $i, 1));
+            $I->pressKey('#editor1', $key);
+        }
+        $I->click('#notes a[href="#save-note"]');
+        $I->wait(10);
+        $I->click('#right-panel a[href="#expand"] span');
+        $I->click('Study plan');
+        $I->click('#plan a.checkin');
+        $I->click('#timer-expire a[href="#close"]');
 
     }
 
-    public function tryDetailedPlan()
+    /**
+     * @depends tryGuestCheckout
+     * @param AcceptanceTester $I
+     */
+    public function tryDetailedPlan(AcceptanceTester $I)
     {
-
+        $I->wantTo('test entire plan');
+        $I->seeAmOnUrl('/plan');
+        $I->click('Edit schedule');
+        $I->wait(10);
+        $I->seeAmOnUrl('/schedule');
+        $I->test('tryNewSchedule');
+        $I->test('tryNewPlan');
+        $I->test('tryNewStudySession');
     }
 
 }

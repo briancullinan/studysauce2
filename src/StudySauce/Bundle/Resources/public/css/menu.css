@@ -860,7 +860,7 @@ a[href*="/redirect/gcal"]:focus {
     border-bottom-color: #771100;
 }
 
-a[href*="/redirect/evernote"]
+a[href*="evernote"]
 {
     width:180px;
     border-bottom-color:#77CC44;
@@ -870,9 +870,9 @@ a[href*="/redirect/evernote"]
     position:relative;
 }
 
-a[href*="/redirect/evernote"]:hover,
-a[href*="/redirect/evernote"]:active,
-a[href*="/redirect/evernote"]:focus {
+a[href*="evernote"]:hover,
+a[href*="evernote"]:active,
+a[href*="evernote"]:focus {
     background-color: #559922;
     border-bottom-color: #447711;
 }

@@ -581,6 +581,10 @@ input[type=month],
     max-width: 100%;
 }
 
+input:-webkit-autofill {
+    background: #fff !important;
+}
+
 .sinclude
 {
     display:none;
@@ -786,6 +790,10 @@ input[type=month][disabled]
     resize: none;
     height: auto;
     border: 0;
+}
+
+input:-webkit-autofill {
+    background: transparent !important;
 }
 
 .read-only textarea,
@@ -1046,6 +1054,11 @@ sup.premium
     .highlighted-link
     {
         text-align: center;
+    }
+
+    .modal-dialog .highlighted-link
+    {
+        text-align: right;
     }
 
 }

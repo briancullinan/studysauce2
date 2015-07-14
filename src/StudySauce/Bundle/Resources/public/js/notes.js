@@ -83,7 +83,7 @@ $(document).ready(function () {
             dataType: 'text',
             data: {},
             success: function (data) {
-                notes.find('.squiggle').remove();
+                notes.find('.squiggle').stop().remove();
                 notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
                 var response = $(data);
                 notes.find('.term-row').remove();
@@ -92,7 +92,7 @@ $(document).ready(function () {
                 CKEDITOR.instances.editor1.fire('blur');
             },
             error: function () {
-                notes.find('.squiggle').remove();
+                notes.find('.squiggle').stop().remove();
             }
         });
     }
@@ -119,7 +119,7 @@ $(document).ready(function () {
     {
         var notes = $('#notes'),
             notebookId = notes.find('select[name="notebook"]').val();
-        notes.find('.squiggle').remove();
+        notes.find('.squiggle').stop().remove();
         notes.removeClass('edit-note').find('.highlighted-link').removeClass('invalid').addClass('valid');
         var response = $(data);
         notes.find('.term-row').remove();
@@ -160,7 +160,7 @@ $(document).ready(function () {
             },
             success: updateNotes,
             error: function () {
-                notes.find('.squiggle').remove();
+                notes.find('.squiggle').stop().remove();
             }
         });
     }
@@ -168,6 +168,9 @@ $(document).ready(function () {
     body.on('click', '#notes a[href="#save-note"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes');
+        if(notes.find('.highlighted-link').is('.invalid')) {
+            return;
+        }
         if(notes.is(':visible') && CKEDITOR.instances['editor1'].getData().trim() == '') {
             var dialog = $('#notes-discard').modal({show:true});
             dialog.one('click.discard', 'a[href="#close"]', saveNote);
@@ -232,7 +235,7 @@ $(document).ready(function () {
                 name: dialog.find('input').val().trim()
             },
             success: function (data) {
-                dialog.find('.squiggle').remove();
+                dialog.find('.squiggle').stop().remove();
                 var response = $(data);
                 notes.find('.term-row').remove();
                 response.find('.term-row').insertAfter('.new-study-note');
@@ -250,7 +253,7 @@ $(document).ready(function () {
                 dialog.modal('hide');
             },
             error: function () {
-                dialog.find('.squiggle').remove();
+                dialog.find('.squiggle').stop().remove();
             }
         });
     });
@@ -278,14 +281,14 @@ $(document).ready(function () {
                 remove: notebookId
             },
             success: function (data) {
-                dialog.find('.squiggle').remove();
+                dialog.find('.squiggle').stop().remove();
                 var response = $(data);
                 notes.find('.term-row').remove();
                 response.find('.term-row').insertAfter('.new-study-note');
                 dialog.modal('hide');
             },
             error: function () {
-                dialog.find('.squiggle').remove();
+                dialog.find('.squiggle').stop().remove();
             }
         });
     });
@@ -325,7 +328,7 @@ $(document).ready(function () {
                 search: notes.find('input[name="search"]').val().trim()
             },
             success: function (data) {
-                notes.find('.squiggle').remove();
+                notes.find('.squiggle').stop().remove();
 
                 // only show notes and sections with results in them
                 notes.find('.note-row').each(function () {
@@ -359,18 +362,16 @@ $(document).ready(function () {
                 });
             },
             error: function () {
-                notes.find('.squiggle').remove();
+                notes.find('.squiggle').stop().remove();
             }
         })
     });
 
     body.on('show', '#notes', function () {
-
         var notes = $('#notes');
 
         // load editor
         if(!$(this).is('.setup')) {
-
             $(this).addClass('setup');
 
             // initialize tags selectize
@@ -411,6 +412,13 @@ $(document).ready(function () {
                 });
             }
         }
+
+        setTimeout(function () {
+            if(notes.is('.not-connected') && !notes.is('.connect-shown') && !notes.is('.is-checkin')) {
+                notes.addClass('connect-shown');
+                $('#notes-connect').modal({show:true});
+            }
+        }, 150);
     });
 
     function initializeCKE()

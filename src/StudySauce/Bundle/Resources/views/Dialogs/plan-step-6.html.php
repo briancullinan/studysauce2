@@ -19,7 +19,7 @@ $view['slots']->start('modal-body') ?>
     <?php foreach ($view['assetic']->image(['@StudySauceBundle/Resources/public/images/plan-download-white.png'], [], ['output' => 'bundles/studysauce/images/*']) as $url): ?>
             <img height="100" src="<?php echo $view->escape($url) ?>" alt="LOGO" />
     <?php endforeach; ?>
-    <a href="<?php print $view['router']->generate('plan_download'); ?>" data-toggle="modal" class="more">Download</a>
+    <a href="<?php print $view['router']->generate('plan_download'); ?>" class="more">Download</a>
 </div>
 <br/><br/><br/>
 <div class="highlighted-link">

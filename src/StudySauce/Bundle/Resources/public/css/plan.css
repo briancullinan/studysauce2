@@ -235,11 +235,6 @@ a.fc-event:not([href])
     display:none;
 }
 
-#plan .fc-resizer
-{
-    display: none !important;
-}
-
 .plan-widget .session-row.done:after
 {
     display:block;
@@ -323,6 +318,12 @@ a.fc-event:not([href])
     width:100%;
 }
 
+#plan.setup-mode #calendar .fc-head,
+#plan.add-events #calendar .fc-head
+{
+    display:none;
+}
+
 #plan.add-events #calendar
 {
     display:inline-block;
@@ -351,7 +352,7 @@ a.fc-event:not([href])
     display:inline-block;
     width:50%;
     margin: 0 -4px;
-    padding: 100px 20px;
+    padding: 0 20px;
     vertical-align: top;
 }
 
@@ -368,6 +369,7 @@ a.fc-event:not([href])
 {
     margin-bottom: 0;
     font-size: 24px;
+    margin-top:100px;
 }
 
 #plan .session-strategy .location,
@@ -565,8 +567,9 @@ a.fc-event:not([href])
 {
     text-align: center;
     position:absolute;
-    top:0;
-    right:0;
+    top:10px;
+    right:10px;
+    z-index: 10;
 }
 
 #plan [class*="strategy-"]
@@ -937,6 +940,12 @@ a.fc-event:not([href])
     #plan .mini-checkin
     {
         position:static;
+    }
+
+
+    #plan .session-strategy h2
+    {
+        margin-top:20px;
     }
 
     #plan #calendar

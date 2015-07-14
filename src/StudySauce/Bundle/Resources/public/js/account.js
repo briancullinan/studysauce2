@@ -185,7 +185,7 @@ jQuery(document).ready(function() {
                 csrf_token: account.find('input[name="csrf_token"]').val()
             },
             success: function (data) {
-                account.find('.squiggle').remove();
+                account.find('.squiggle').stop().remove();
                 account.find('input[name="csrf_token"]').val(data.csrf_token);
                 account.data('state', hash);
                 if(typeof data.error != 'undefined') {
@@ -199,7 +199,7 @@ jQuery(document).ready(function() {
                 account.find('.social-login').show();
             },
             error: function () {
-                account.find('.squiggle').remove();
+                account.find('.squiggle').stop().remove();
             }
         });
     }

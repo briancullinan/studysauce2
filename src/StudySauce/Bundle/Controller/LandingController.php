@@ -50,14 +50,21 @@ class LandingController extends Controller
     }
 
     /**
+     * @param null $options
      * @return JsonResponse
      * @throws \Exception
      */
-    public function cronAction()
+    public function cronAction($options = null)
     {
+        if(is_string($options))
+            $options = explode(',', $options);
         $command = new CronSauceCommand();
         $command->setContainer($this->container);
-        $input = new ArrayInput([] /* array('some-param' => 10, '--some-option' => true)*/);
+        $input = new ArrayInput(!empty($options)
+            ? array_combine(
+                array_map(function ($k) {return '--' . $k;}, $options),
+                array_map(function () {return true;}, $options))
+            : [] /* array('some-param' => 10, '--some-option' => true)*/);
         $output = new NullOutput();
         $command->run($input, $output);
         return new JsonResponse(true);

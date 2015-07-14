@@ -1,5 +1,6 @@
 <?php
 
+use StudySauce\Bundle\Controller\NotesController;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\StudyNote;
@@ -20,7 +21,15 @@ $view['slots']->stop();
 $view['slots']->start('javascripts'); ?>
 <script type="text/javascript">
     CKEDITOR_BASEPATH = '<?php print $view['router']->generate('_welcome'); ?>bundles/admin/js/ckeditor/';
-    window.initialTags = JSON.parse('<?php print json_encode($allTags); ?>');
+    window.initialTags = JSON.parse('<?php
+     $tags = [];
+     foreach($allTags as $guid => $t) {
+        if(is_numeric($guid))
+        $tags[] = ['value' => $t, 'text' => $t];
+        else
+        $tags[] = ['value' => $guid, 'text' => $t];
+     }
+     print json_encode($tags); ?>');
 </script>
 <?php foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/ckeditor/ckeditor.js',],[],['output' => 'bundles/studysauce/js/*.js']) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
@@ -39,7 +48,10 @@ $view['slots']->start('body'); ?>
                 foreach($services as $o => $url) { ?>
                     <a href="<?php print $url; ?>?_target=<?php print $view['router']->generate('notes'); ?>" class="more">Connect Evernote</a>
                 <?php }
-            } ?>
+            }
+            else { ?>
+                <a href="https://sandbox.evernote.com/" target="evernote" class="more">Backed up with Evernote</a>
+            <?php } ?>
             <div class="new-study-note highlighted-link">
                 <form action="<?php print $view['router']->generate('notes_search'); ?>">
                     <a href="#add-note" class="big-add">Add <span>+</span> study note</a>
@@ -83,28 +95,19 @@ $view['slots']->start('body'); ?>
                         $orig = array_keys($notes[$s->getId()]);
                         array_multisort($keys, SORT_ASC, SORT_STRING, $notes[$s->getId()], $orig);
                         $notes[$s->getId()] = array_combine($orig, array_values($notes[$s->getId()]));
-                        foreach ($notes[$s->getId()] as $i => $books) {
-                            if(is_numeric($i)) {
-                                /** @var Course $c */
-                                $c = \StudySauce\Bundle\Controller\NotesController::getCourseByName($i, new Doctrine\Common\Collections\ArrayCollection($schedules));
+                        foreach ($notes[$s->getId()] as $id => $books) {
+                            $c = NotesController::getCourseByName($id, new Doctrine\Common\Collections\ArrayCollection($schedules));
+                            if(!empty($c)) {
                                 $name = $c->getName();
                                 $classI = $c->getIndex();
                                 $id = '';
-                                foreach($notebooks as $guid => $notebookName) {
-                                    if($notebookName == $c->getName()) {
-                                        $id = $guid;
-                                        break;
-                                    }
-                                }
-
                             }
                             else {
-                                $id = $i;
-                                $name = $notebooks[$i];
+                                $name = $notebooks[$id];
                                 $classI = '';
                             }
                             ?>
-                            <div class="class-row notebook-id-<?php print $id; ?> course-id-<?php print (is_numeric($i) ? $i : '');
+                            <div class="class-row notebook-id-<?php print $id; ?> course-id-<?php print (!empty($c) ? $c->getId() : '');
                                 print ($first && !empty($books) ? ' selected' : ' '); ?>">
                                 <div class="class-name read-only">
                                     <label class="input"><span>Class name</span>
@@ -127,7 +130,16 @@ $view['slots']->start('body'); ?>
                                     <div data-timestamp="<?php print $time->getTimestamp(); ?>" class="note-row note-id-<?php print $n->getId();
                                     print ($notesCount < 10 ? ' loaded' : ' loading');
                                     print ' notebook-id-' . $id;
-                                    print ' course-id-' . (is_numeric($i) ? $i : ''); ?>" data-tags="<?php print htmlentities(json_encode(array_keys($n->getProperty('tags')?:[]))); ?>">
+                                    print ' course-id-' . (!empty($c) ? $c->getId() : ''); ?>" data-tags="<?php
+                                    $theseTags = $n->getProperty('tags') ?: [];
+                                    $tags = [];
+                                    foreach($theseTags as $guid => $t) {
+                                        if(is_numeric($guid))
+                                            $tags[$t] = $t;
+                                        else
+                                            $tags[$guid] = $t;
+                                    }
+                                    print htmlentities(json_encode(array_keys($tags))); ?>">
                                         <h4 class="note-name"><a href="#view-note"><?php print (empty($n->getTitle()) ? 'Untitled' : $n->getTitle()); ?></a></h4>
                                         <div class="summary">
                                             <small class="date"><?php print $time->format('j M'); ?></small>

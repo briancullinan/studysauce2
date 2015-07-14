@@ -69,7 +69,16 @@ class NotesController extends Controller
         /** @var User $user */
         // list all notebooks from evernote and compare notes
         $notebooks = NotesController::getNotebooksFromEvernote($user, $container->get('kernel')->getEnvironment());
-        $allTags = NotesController::getTags($user);
+        $client = new EvernoteClient($user->getEvernoteAccessToken(), $container->get('kernel')->getEnvironment() != 'prod');
+        $allTags = $client->getUserNotestore()->listTags($user->getEvernoteAccessToken());
+        $allTags = array_combine(
+            array_map(function (Tag $t) {
+                return $t->guid;
+            }, $allTags),
+            array_map(function (Tag $t) {
+                return $t->name;
+            }, $allTags)
+        );
         $existing = [];
         foreach ($notebooks as $guid => $notebookName) {
             // list all notes
@@ -77,7 +86,8 @@ class NotesController extends Controller
                 $user,
                 [$guid, $notebookName],
                 $container->get('kernel')->getEnvironment(),
-                $orm
+                $orm,
+                $allTags
             );
 
             // download note from Evernote if content is empty or note on server is newer
@@ -106,7 +116,8 @@ class NotesController extends Controller
         $store = $client->getUserNotestore();
 
         foreach($user->getNotes()->toArray() as $note) {
-            if(!empty($note->getRemoteId()) && !in_array($note->getRemoteId(), $existing)) {
+            if(!empty($user->getEvernoteAccessToken()) && !empty($note->getRemoteId()) &&
+                !in_array($note->getRemoteId(), $existing)) {
                 // TODO: mark the note as deleted from our store
                 $orm->remove($note);
                 $user->removeNote($note);
@@ -130,13 +141,19 @@ class NotesController extends Controller
                             // create a notebook based on class name
                             $nb = new \EDAM\Types\Notebook(['name' => $c->getName()]);
                             $notebook = $store->createNotebook($user->getEvernoteAccessToken(), $nb)->guid;
+                            $notebooks[$notebook] = $c->getName();
                         }
                     }
                     elseif(isset($notebooks[$note->getProperty('notebook')[0]])) {
                         $notebook = $note->getProperty('notebook')[0];
                     }
+                    elseif(!empty($notebook = array_search($note->getProperty('notebook')[1], $notebooks))) {
+                        // look up notebook by name instead of id
+                    }
                     else {
-                        $notebook = $store->getDefaultNotebook($user->getEvernoteAccessToken())->guid;
+                        $nb = new \EDAM\Types\Notebook(['name' => $note->getProperty('notebook')[1]]);
+                        $notebook = $store->createNotebook($user->getEvernoteAccessToken(), $nb)->guid;
+                        $notebooks[$notebook] = $note->getProperty('notebook')[1];
                     }
                 }
 
@@ -159,8 +176,8 @@ class NotesController extends Controller
 
                 // update and create tags
                 if(!empty($tags = $note->getProperty('tags'))) {
-                    $existing = array_intersect_key($tags, $allTags);
-                    $newTags = array_diff_key($tags, $existing);
+                    $existingTags = array_merge(array_intersect($allTags, $tags), array_intersect_key($allTags, $tags));
+                    $newTags  = array_diff($tags, $existingTags);
                     foreach($newTags as $k => $t) {
                         $tag = new Tag();
                         if(empty($t))
@@ -168,12 +185,12 @@ class NotesController extends Controller
                         $tag->name = $t;
                         /** @var Tag $t */
                         $t = $store->createTag($user->getEvernoteAccessToken(), $tag);
-                        $existing[] = $t->guid;
-                        $allTags[$t->guid] = $t->getName();
+                        $existingTags[$t->guid] = $t->name;
+                        $allTags[$t->guid] = $t->name;
                     }
-                    $note->setProperty('tags', $tags = array_intersect_key($allTags, array_flip($existing)));
-                    $evernote->tagGuids = $existing;
-                    $evernote->tagNames = array_values($tags);
+                    $note->setProperty('tags', $existingTags);
+                    $evernote->tagGuids = array_keys($existingTags);
+                    $evernote->tagNames = array_values($existingTags);
                 }
 
                 if(empty($note->getRemoteId())) {
@@ -198,18 +215,11 @@ class NotesController extends Controller
     public static function getCourseByName($name, Collection $schedules)
     {
         /** @var Schedule $s */
-        $s = $schedules->filter(function (Schedule $s) use ($name) {
-            return $s->getClasses()->exists(function ($_, Course $c) use ($name) {
-                return $c->getName() == $name || $c->getId() == $name;
-            });
-        })->first();
-        if(!empty($s)) {
-            /** @var Course $c */
+        return $schedules->map(function (Schedule $s) use ($name) {
             return $s->getClasses()->filter(function (Course $c) use ($name) {
                 return $c->getName() == $name || $c->getId() == $name;
             })->first();
-        }
-        return null;
+        })->filter(function ($c) {return !empty($c);})->first();
     }
 
     /**
@@ -256,25 +266,6 @@ class NotesController extends Controller
 
     /**
      * @param User $user
-     * @return array
-     */
-    public static function getTags(User $user)
-    {
-        // try to get notebooks from existing notes
-        $notes = $user->getNotes()->toArray();
-        $allTags = [];
-        foreach($notes as $n) {
-            /** @var StudyNote $n */
-            $allTags = array_merge($allTags, $n->getProperty('tags') ?: []);
-
-        }
-
-        // TODO: add Google folders in here
-        return $allTags;
-    }
-
-    /**
-     * @param User $user
      * @param string $env
      * @return array
      */
@@ -289,8 +280,22 @@ class NotesController extends Controller
             $notebooks[$guid] = $name;
         }
 
+        $added = $user->getProperty('addedNotebooks') ?: [];
+        foreach($added as $nb) {
+            if(array_search($nb, $notebooks) === false) {
+                $notebooks[$nb] = $nb;
+            }
+        }
+
         if(empty($notebooks)) {
             return self::getNotebooksFromEvernote($user, $env);
+        }
+
+        $removed = $user->getProperty('removedNotebooks') ?: [];
+        foreach($removed as $nb) {
+            if(($rm = array_search($nb, $notebooks)) !== false) {
+                unset($notebooks[$rm]);
+            }
         }
         // TODO: add Google folders in here
         return $notebooks;
@@ -301,22 +306,32 @@ class NotesController extends Controller
      * @param array $folder
      * @param string $env
      * @param EntityManager $orm
+     * @param $allTags
      * @return array
      */
-    public static function getNotesFromEvernote(User $user, $folder, $env, EntityManager $orm)
+    public static function getNotesFromEvernote(User $user, $folder, $env, EntityManager $orm, &$allTags)
     {
+        if(empty($user->getEvernoteAccessToken()) || is_numeric($folder[0])
+            || in_array($folder[0], $user->getProperty('addedNotebooks') ?: [])
+            || in_array($folder[0], $user->getProperty('removedNotebooks') ?: []))
+            return [];
+
         $nb = new Notebook();
         $nb->setGuid($folder[0]);
         $notes = [];
 
-        if(empty($user->getEvernoteAccessToken()))
-            return $notes;
-
         $client = new EvernoteClient($user->getEvernoteAccessToken(), $env != 'prod');
-        $bookTags = $client->getUserNotestore()->listTagsByNotebook($user->getEvernoteAccessToken(), $folder[0]);
-        $bookTags = array_combine(array_map(function (Tag $t) {
-            return $t->guid;}, $bookTags), array_map(function (Tag $t) {return $t->name;}, $bookTags));
-
+        if(empty($allTags)) {
+            $allTags = $client->getUserNotestore()->listTags($user->getEvernoteAccessToken());
+            $allTags = array_combine(
+                array_map(function (Tag $t) {
+                        return $t->guid;
+                    }, $allTags),
+                array_map(function (Tag $t) {
+                        return $t->name;
+                    }, $allTags)
+            );
+        }
         $results = $client->findNotesWithSearch(null, $nb);
 
         // check our cache of notes, if it has been updated, remove it from the database to force it to redownload from evernote
@@ -326,14 +341,14 @@ class NotesController extends Controller
                 $s = null;
 
                 if(!empty($r->tagGuids))
-                    $tags = array_intersect_key($bookTags, array_combine($r->tagGuids, range(0, count($r->tagGuids)-1)));
+                    $tags = array_intersect_key($allTags, array_combine($r->tagGuids, range(0, count($r->tagGuids)-1)));
                 else
                     $tags = [];
 
                 /** @var StudyNote[] $stored */
                 $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
                     ->andWhere('n.remoteId = :id AND n.user = :uid')
-                    ->setParameters(['id' => $r->guid, 'uid' => $user->getId()])
+                    ->setParameters(['id' => $r->guid, 'uid' => $user])
                     ->getQuery()
                     ->getResult();
                 if (!empty($stored) && $stored[0]->getRemoteUpdated() != null &&
@@ -355,7 +370,7 @@ class NotesController extends Controller
                     $orm->persist($note);
                     $notes[] = $note;
                 }
-                else
+                elseif(date_timestamp_set(new \DateTime(), $r->updated / 1000) > $stored[0]->getRemoteUpdated())
                 {
                     $stored[0]->setUser($user);
                     $user->addNote($stored[0]);
@@ -365,6 +380,9 @@ class NotesController extends Controller
                     $stored[0]->setCreated(date_timestamp_set(new \DateTime(), $r->created / 1000));
                     $stored[0]->setRemoteUpdated(date_timestamp_set(new \DateTime(), $r->updated / 1000));
                     $orm->merge($stored[0]);
+                    $notes[] = $stored[0];
+                }
+                else {
                     $notes[] = $stored[0];
                 }
             }
@@ -379,15 +397,24 @@ class NotesController extends Controller
      * @param array $folder
      * @param string $env
      * @param EntityManager $orm
-     * @return StudyNote[]
+     * @param $allTags
+     * @return \StudySauce\Bundle\Entity\StudyNote[]
      */
-    public static function getNotes($user, $folder, $env, $orm) {
+    public static function getNotes($user, $folder, $env, $orm, &$allTags) {
         $notes = $user->getNotes()->filter(function (StudyNote $n) use ($folder) {
             return (empty($n->getProperty('notebook')) && empty($folder[0])) ||
             (!empty($n->getProperty('notebook')) && $n->getProperty('notebook')[0] == $folder[0]);})->toArray();
+
+        if(empty($allTags)) {
+            foreach($user->getNotes()->toArray() as $n) {
+                /** @var StudyNote $n */
+                $allTags = array_merge($allTags, $n->getProperty('tags') ?: []);
+            }
+        }
+
         // don't try to download notes from evernote that haven't been uploaded yet
         if(empty($notes) && !empty($folder[0])) {
-            return self::getNotesFromEvernote($user, $folder, $env, $orm);
+            return self::getNotesFromEvernote($user, $folder, $env, $orm, $allTags);
         }
 
         return $notes;
@@ -409,11 +436,11 @@ class NotesController extends Controller
 
         $services = [];
         $allNotes = [];
-        $allTags = self::getTags($user);
+        $allTags = [];
         $notebooks = self::getNotebooks($user, $this->get('kernel')->getEnvironment());
         foreach($notebooks as $guid => $notebookName) {
             // find all the notes in this notebook and put them in the right schedule
-            $notes = self::getNotes($user, [$guid, $notebookName], $this->get('kernel')->getEnvironment(), $orm);
+            $notes = self::getNotes($user, [$guid, $notebookName], $this->get('kernel')->getEnvironment(), $orm, $allTags);
             foreach($notes as $note) {
                 /** @var StudyNote $note */
                 // find course with matching name
@@ -528,10 +555,11 @@ class NotesController extends Controller
         $orm = $this->get('doctrine')->getManager();
 
         /** @var Note[] $notes */
+        $params = array_merge(['uid' => $user, 'search' => '%' . $request->get('search') . '%'], !empty($result) ? ['rids' => $result] : []);
         $notes = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
             ->andWhere('n.user = :uid')
-            ->andWhere((!empty($result) ? 'n.remoteId IN :rids OR' : '') . ' n.title LIKE :search OR n.content LIKE :search')
-            ->setParameters(['uid' => $user->getId(), 'search' => '%' . $request->get('search') . '%'] + (!empty($result) ? ['rids' => $result] : []))
+            ->andWhere((!empty($result) ? 'n.remoteId IN (:rids) OR' : '') . ' n.title LIKE :search OR n.content LIKE :search')
+            ->setParameters($params)
             ->getQuery()->execute();
 
         return new JsonResponse(array_map(function (StudyNote $n) {return $n->getId();}, $notes));
@@ -619,9 +647,24 @@ class NotesController extends Controller
      */
     public function notebookAction(Request $request)
     {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+
         /** @var User $user */
         $user = $this->getUser();
-        if(!empty($user->getEvernoteAccessToken())) {
+        if(!empty($request->get('name'))) {
+            $added = $user->getProperty('addedNotebooks');
+            $added[] = $request->get('name');
+            $user->setProperty('addedNotebooks', $added);
+        }
+        elseif(!empty($request->get('remove'))) {
+            $removed = $user->getProperty('removedNotebooks');
+            $removed[] = $request->get('remove');
+            $user->setProperty('removedNotebooks', $removed);
+        }
+        $userManager->updateUser($user);
+
+        /*if(!empty($user->getEvernoteAccessToken())) {
             $client = new EvernoteClient($user->getEvernoteAccessToken(), $this->get('kernel')->getEnvironment() != 'prod');
             $store = $client->getUserNotestore();
 
@@ -633,7 +676,7 @@ class NotesController extends Controller
                 $store->expungeNotebook($user->getEvernoteAccessToken(), $request->get('remove'));
             }
             $store->close();
-        }
+        }*/
 
         return $this->forward('StudySauceBundle:Notes:index', ['_format' => 'tab']);
 
@@ -650,7 +693,12 @@ class NotesController extends Controller
         /** @var User $user */
         $user = $this->getUser();
 
-        $allTags = self::getTags($user);
+        $allTags = [];
+        foreach($user->getNotes()->toArray() as $n) {
+            /** @var StudyNote $n */
+            $allTags = array_merge($allTags, $n->getProperty('tags') ?: []);
+
+        }
         if(is_numeric($request->get('notebookId'))) {
             $c = self::getCourseByName($request->get('notebookId'), $user->getSchedules());
         }
@@ -658,7 +706,7 @@ class NotesController extends Controller
         $notebook = isset($notebooks[$request->get('notebookId')])
             ? [$request->get('notebookId'), $notebooks[$request->get('notebookId')]]
             : (!empty($c)
-                ? [array_search($c->getName(), $notebooks), $c->getName()]
+                ? [$c->getId(), $c->getName()]
                 : []);
 
         $stored = $orm->getRepository('StudySauceBundle:StudyNote')->createQueryBuilder('n')
@@ -690,9 +738,9 @@ class NotesController extends Controller
         if(!empty($request->get('tags'))) {
             $tags = explode(',', $request->get('tags'));
             $tags = array_combine($tags, range(0, count($tags)-1));
-            $newTags = array_diff_key($allTags, $tags);
             $existing = array_intersect_key($allTags, $tags);
-            $note->setProperty('tags', array_merge($existing, $newTags));
+            $newTags = array_diff_key($tags, $existing);
+            $note->setProperty('tags', array_merge($existing, array_flip($newTags)));
         }
         if(empty($stored)) {
             $orm->persist($note);

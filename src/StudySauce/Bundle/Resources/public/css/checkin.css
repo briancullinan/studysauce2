@@ -66,14 +66,13 @@
 .mini-checkin .checkin
 {
     vertical-align: middle;
-    margin: 10px;
+    margin: 0 20px;
 }
 
 .mini-checkin .flip-counter
 {
     display:inline-block;
     width:200px;
-    margin: 10px;
     vertical-align: middle;
 }
 

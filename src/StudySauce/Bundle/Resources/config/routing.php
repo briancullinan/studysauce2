@@ -11,7 +11,10 @@ $collection->add('_welcome',
     new Route('/', ['_controller' => 'StudySauceBundle:Landing:index'])
 );
 $collection->add('cronsauce',
-    new Route('/cron', ['_controller' => 'StudySauceBundle:Landing:cron'])
+    new Route(
+        '/cron/{options}',
+        ['_controller' => 'StudySauceBundle:Landing:cron', 'options' => null]
+    )
 );
 $collection->add(
     'terms',

@@ -111,7 +111,7 @@ $(document).ready(function () {
                 length: dialog.find('.time select').val()
             },
             success: function () {
-                dialog.find('.squiggle').remove();
+                dialog.find('.squiggle').stop().remove();
                 body.trigger('checkin');
                 dialog.find('.date input, .time select').val('');
                 if(dialog.find('.highlighted-link input:checked').length == 0) {
@@ -119,7 +119,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                dialog.find('.squiggle').remove();
+                dialog.find('.squiggle').stop().remove();
             }
         })
     });

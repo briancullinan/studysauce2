@@ -82,7 +82,7 @@ class PlanController extends Controller
             // group by course
             $cid = !empty($event->getCourse()) ? $event->getCourse()->getId() : '';
             // group by event type
-            $t = $event->getType();
+            $t = $event->getType() . ($event->getType() == 'd' || $event->getType() == 'h' ? $event->getId() : '');
             if(!isset($grouped[$cid][$t]))
                 $grouped[$cid][$t] = new ArrayCollection();
             $grouped[$cid][$t]->add($event);
@@ -123,12 +123,23 @@ class PlanController extends Controller
             // get all events involved in the series
             $editing = array_values($schedule->getEvents()->filter(function (Event $e) use ($item) {
                 // get ID from iCAL setting
-                return substr($e->getRemoteId(), 0, strlen($item->getId())) == $item->getId();
+                return !$e->getDeleted() && substr($e->getRemoteId(), 0, strlen($item->getId())) == $item->getId();
             })->toArray());
-            $remoteIds[$item->getId()] = $item;
+
+            // delete events that were created before the schedule
+            if(date_timezone_set(
+                    new \DateTime($item->created),
+                    new \DateTimeZone(date_default_timezone_get())) < $schedule->getCreated()) {
+                $service->events->delete($calendarId, $item->getId());
+                continue;
+            }
+
+            // skip already added items
             if(in_array($item->getId(), $allIds)) {
                 continue;
             }
+
+            $remoteIds[$item->getId()] = $item;
             $allIds[] = $item->getId();
             // TODO: only do this part if update is greater than any event in the series
             $existing = array_merge($existing, $editing);
@@ -162,12 +173,13 @@ class PlanController extends Controller
         }
         self::mergeSaved($schedule, new ArrayCollection(self::arrayUniqueObj($existing)), $events, $orm);
 
-        $grouped = self::groupRecurrenceEvents($schedule->getEvents());
+        $grouped = self::groupRecurrenceEvents($schedule->getEvents()->filter(function (Event $e) {
+            return !$e->getDeleted();}));
 
         // sync changes to google
         $reserved = [];
-        foreach($grouped as $cid => $types) {
-            foreach ($types as $type => $events) {
+        foreach($grouped as $types) {
+            foreach ($types as $events) {
                 /** @var ArrayCollection $events */
 
                 $config = self::getGoogleCalendarConfig($events);
@@ -485,7 +497,8 @@ class PlanController extends Controller
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'schedule' => $schedule,
                 'courses' => array_values($courses),
-                'jsonEvents' =>  self::getJsonEvents($schedule->getEvents()->toArray()),
+                'jsonEvents' =>  self::getJsonEvents($schedule->getEvents()->filter(function (Event $e) {
+                    return !$e->getDeleted();})->toArray()),
                 'user' => $user,
                 'overlap' => false,
                 'step' => $step,
@@ -956,11 +969,16 @@ class PlanController extends Controller
             }
 
             // change times of existing event to fit in to new schedule
+            /** @var Event $lastEvent */
             if ($lastEvent) {
                 if(isset($event['remoteId'])) {
                     $lastEvent->setRemoteId($event['remoteId']);
                 }
-                if(empty($event['remoteUpdated']) || $lastEvent->getRemoteUpdated() < $event['remoteUpdated']) {
+                if(empty($event['remoteUpdated']) || $event['remoteUpdated'] > $lastEvent->getRemoteUpdated()) {
+                    if(isset($event['location']))
+                        $lastEvent->setLocation($event['location']);
+                    if(isset($event['alert']))
+                        $lastEvent->setAlert($event['alert']);
                     $lastEvent->setName($event['name']);
                     $lastEvent->setStart($event['start']);
                     $lastEvent->setEnd($event['end']);
@@ -996,6 +1014,10 @@ class PlanController extends Controller
                     $newEvent->setRemoteId($event['remoteId']);
                     $newEvent->setRemoteUpdated($event['remoteUpdated']);
                 }
+                if(isset($event['location']))
+                    $newEvent->setLocation($event['location']);
+                if(isset($event['alert']))
+                    $newEvent->setAlert($event['alert']);
                 $schedule->addEvent($newEvent);
                 $orm->persist($newEvent);
                 $events[$i] = $newEvent;
@@ -1032,45 +1054,83 @@ X-WR-TIMEZONE:America/Phoenix
 EOCAL;
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
-        $grouped = self::groupRecurrenceEvents($schedule->getEvents());
+        $grouped = self::groupRecurrenceEvents($schedule->getEvents()->filter(function (Event $e) {
+            return !$e->getDeleted();}));
         // sync changes to google
-        foreach($grouped as $types) {
+        foreach($grouped as $g => $types) {
+            foreach ($types as $type => $events) {
+                /** @var ArrayCollection $events */
+                $config = self::getGoogleCalendarConfig($events);
+                $rrules = implode("\r\n", $config['recurrence']);
+                $id = $g . '-' . strtoupper($type);
+                $title = $events->last()->getTitle();
+                $start = $events->last()->getStart()->format('Ymd') . 'T' . $events->last()->getStart()->format('His') . 'Z';
+                $end = $events->last()->getEnd()->format('Ymd') . 'T' . $events->last()->getEnd()->format('His') . 'Z';
 
-            foreach ($types as $type => $hours) {
-
-                foreach ($hours as $recurrence) {
-
-                    /** @var Event $first */
-                    $last = end($recurrence);
-                    $first = end($last);
-
-                    $max = max(array_map(function ($events) {return max(array_map(function (Event $e) {return $e->getCreated()->getTimestamp();}, $events));}, $recurrence));
-                    $last = new \DateTime();
-                    $last->setTimestamp($max);
-                    $lastModified = $last->format('Ymd') . 'T' . $last->format('His') . 'Z';
-
-                    $id = $first->getId();
-                    $title = $first->getTitle();
-                    $start = date_timezone_set(clone $first->getStart(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $first->getStart(), new \DateTimeZone('GMT'))->format('His') . 'Z';
-                    $end = date_timezone_set(clone $first->getEnd(), new \DateTimeZone('GMT'))->format('Ymd') . 'T' . date_timezone_set(clone $first->getEnd(), new \DateTimeZone('GMT'))->format('His') . 'Z';
-                    $created = $first->getCreated()->format('Ymd') . 'T' . $first->getCreated()->format('His') . 'Z';
-                    // load alert from settings
-                    //ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=$name;X-NUM-GUESTS=0:mailto:$email
-
-                    $alert = $first->getAlert() . 'M';
-                    $rrules = implode("\r\n", self::getRRules($recurrence));
-                    $eventStr = <<<EOEVT
+                foreach($events->toArray() as $event)
+                {
+                    /** @var Event $event */
+                    if($event->getStart()->format('H:i') != $events->last()->getStart()->format('H:i')) {
+                        $alert = $events->last()->getAlert() . 'M';
+                        $recurrenceId = $event->getStart()->format('Ymd') . 'T' . $events->last()->getStart()->format('His');
+                        $start2 = $event->getStart()->format('Ymd') . 'T' . $event->getStart()->format('His') . 'Z';
+                        $end2 = $event->getEnd()->format('Ymd') . 'T' . $event->getEnd()->format('His') . 'Z';
+                        $location = $event->getLocation();
+                        $lastModified = !empty($event->getUpdated())
+                            ? $event->getUpdated()->format('Ymd') . 'T' . $event->getUpdated()->format('His') . 'Z'
+                            : $event->getCreated()->format('Ymd') . 'T' . $event->getCreated()->format('His') . 'Z';
+                        $created = $event->getCreated()->format('Ymd') . 'T' . $event->getCreated()->format('His') . 'Z';
+                        $title = $event->getTitle();
+                        $eventStr = <<<EOEVT
 BEGIN:VEVENT
-DTSTART:$start
-$rrules
-DTEND:$end
+DTSTART;TZID=America/Phoenix:$start2
+DTEND;TZID=America/Phoenix:$end2
 DTSTAMP:$stamp
 ORGANIZER;CN=$name:mailto:$email
-UID:STUDYSAUCE-$id
+UID:STUDYSAUCE-$id@studysauce.com
+RECURRENCE-ID;TZID=America/Phoenix:$recurrenceId
 CREATED:$created
 DESCRIPTION:Log in to studysauce.com to take notes
 LAST-MODIFIED:$lastModified
-LOCATION:
+LOCATION:$location
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:$title
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-PT$alert
+REPEAT:1
+DURATION:PT$alert
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+
+EOEVT;
+                        $calendar .= $eventStr;
+                    }
+                }
+
+
+                $alert = $events->last()->getAlert() . 'M';
+                $created = $events->last()->getCreated()->format('Ymd') . 'T' . $events->last()->getCreated()->format('His') . 'Z';
+                $max = max($events->map(function (Event $e) {return $e->getCreated()->getTimestamp();})->toArray());
+                $last = new \DateTime();
+                $last->setTimestamp($max);
+                $lastModified = $last->format('Ymd') . 'T' . $last->format('His') . 'Z';
+                $location = $events->last()->getLocation();
+                $eventStr = <<<EOEVT
+BEGIN:VEVENT
+DTSTART;TZID=America/Phoenix:$start
+DTEND;TZID=America/Phoenix:$end
+DTSTAMP:$stamp
+$rrules
+ORGANIZER;CN=$name:mailto:$email
+UID:STUDYSAUCE-$id@studysauce.com
+CREATED:$created
+DESCRIPTION:Log in to studysauce.com to take notes
+LAST-MODIFIED:$lastModified
+LOCATION:$location
 SEQUENCE:0
 STATUS:CONFIRMED
 SUMMARY:$title
@@ -1085,8 +1145,8 @@ END:VALARM
 END:VEVENT
 
 EOEVT;
-                    $calendar .= $eventStr;
-                }
+                $calendar .= $eventStr;
+
             }
         }
 
@@ -1191,14 +1251,22 @@ END:VCALENDAR');
                 $classT->setTimestamp($t);
                 $classT->setTime($newStart->format('H'), $newStart->format('i'), $newStart->format('s'));
 
-                $event = [
+                $newEvent = [
                     'course' => $course,
                     'name' => $title,
                     'type' => $event['type'],
                     'start' => $classT,
                     'end' => date_add(clone $classT, new \DateInterval('PT' . $length . 'S'))
                 ];
-                $events[] = $event;
+
+                if(isset($event['location']))
+                    $newEvent['location'] = $event['location'];
+                if(isset($event['alert']))
+                    $newEvent['alert'] = $event['alert'];
+                if(isset($event['title']))
+                    $newEvent['title'] = $event['title'];
+
+                $events[] = $newEvent;
             }
 
         }
@@ -1312,7 +1380,9 @@ END:VCALENDAR');
         else {
             $diff = new \DateInterval('PT0S');
             $newStart = clone $event->getStart();
+            $newEnd = clone $event->getEnd();
         }
+        $length = new \DateInterval('PT' . ($newEnd->getTimestamp() - $newStart->getTimestamp()) . 'S');
 
         if($request->get('location') !== null)
             $event->setLocation($request->get('location'));
@@ -1355,7 +1425,7 @@ END:VCALENDAR');
                 $working = $schedule->getEvents()
                     ->filter(function (Event $x) use ($e) {
                         // ignore all these event types because they are not displayed to the user
-                        return !$x->getDeleted() && $x->getId() != $e->getId() && !$e->getDeleted() && $e->getId() != $x->getId() && $x->getType() != 'h'
+                        return !$e->getDeleted() && $e->getId() != $x->getId() && $x->getType() != 'h'
                             && $x->getType() != 'd' && $x->getType() != 'r' && $x->getType() != 'm'
                             && $x->getType() != 'z'; })
                     ->map(function (Event $e) {return [
@@ -1370,7 +1440,7 @@ END:VCALENDAR');
                 /** @var \DateTime $tempStart */
                 $tempStart = date_add(clone $e->getStart(), $diff);
                 /** @var \DateTime $tempEnd */
-                $tempEnd = date_add(clone $e->getEnd(), $diff);
+                $tempEnd = date_add(date_add(clone $e->getStart(), $diff), $length);
 
                 $gaps = self::getGaps(
                     $working,

@@ -306,7 +306,7 @@ class BuyController extends Controller
                 $subscription->name = 'Study Sauce ' . ucfirst($option) . ' Plan';
                 $subscription->intervalLength = $reoccurs;
                 $subscription->intervalUnit = 'months';
-                $subscription->startDate = date('Y-m-d');
+                $subscription->startDate = date_add(new \DateTime(), new \DateInterval('P' . $reoccurs . 'M'))->format('Y-m-d');
                 $subscription->amount = $options[$option]['price'];
                 $subscription->creditCardCardNumber = $request->get('number');
                 $subscription->creditCardExpirationDate = '20' . $request->get('year') . '-' . $request->get('month');
