@@ -18,7 +18,7 @@ $view['slots']->start('modal-body') ?>
                                                     value="1" <?php print (!isset($alerts['c']) || $alerts['c'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
         <label class="radio"><span>No</span><input name="event-type-c" type="radio"
                                                    value="0" <?php print (isset($alerts['c']) && $alerts['c'] === 0 ? 'checked="checked"' : ''); ?>><i></i></label>
-        <label class="input"><span>Alert</span><select name="event-type-c">
+        <label class="input" <?php print (isset($alerts['c']) && $alerts['c'] === 0 ? 'style="visibility:hidden;"' : ''); ?>><span>Alert</span><select name="event-type-c">
                 <option value="15" <?php print (isset($alerts['c']) && $alerts['c'] === 15 ? 'selected="selected"' : ''); ?>>15 min</option>
                 <option value="30" <?php print (isset($alerts['c']) && $alerts['c'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['c']) && $alerts['c'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
@@ -28,7 +28,7 @@ $view['slots']->start('modal-body') ?>
                                                     value="1" <?php print (!isset($alerts['p']) || $alerts['p'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
         <label class="radio"><span>No</span><input name="event-type-p" type="radio"
                                                    value="0" <?php print (isset($alerts['p']) && $alerts['p'] === 0 ? 'checked="checked"' : ''); ?>><i></i></label>
-        <label class="input"><span>Alert</span><select name="event-type-p">
+        <label class="input" <?php print (isset($alerts['p']) && $alerts['p'] === 0 ? 'style="visibility:hidden;"' : ''); ?>><span>Alert</span><select name="event-type-p">
                 <option value="15" <?php print (isset($alerts['p']) && $alerts['p'] === 15 ? 'selected="selected"' : ''); ?>>15 min</option>
                 <option value="30" <?php print (isset($alerts['p']) && $alerts['p'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['p']) && $alerts['p'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
@@ -38,7 +38,7 @@ $view['slots']->start('modal-body') ?>
                                                     value="1" <?php print (!isset($alerts['sr']) || $alerts['sr'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
         <label class="radio"><span>No</span><input name="event-type-sr" type="radio"
                                                    value="0" <?php print (isset($alerts['sr']) && $alerts['sr'] === 0 ? 'checked="checked"' : ''); ?>><i></i></label>
-        <label class="input"><span>Alert</span><select name="event-type-sr">
+        <label class="input" <?php print (isset($alerts['sr']) && $alerts['sr'] === 0 ? 'style="visibility:hidden;"' : ''); ?>><span>Alert</span><select name="event-type-sr">
                 <option value="15" <?php print (isset($alerts['sr']) && $alerts['sr'] === 15 ? 'selected="selected"' : ''); ?>>15 min</option>
                 <option value="30" <?php print (isset($alerts['sr']) && $alerts['sr'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['sr']) && $alerts['sr'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
@@ -48,7 +48,7 @@ $view['slots']->start('modal-body') ?>
                                                     value="1" <?php print (!isset($alerts['f']) || $alerts['f'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
         <label class="radio"><span>No</span><input name="event-type-f" type="radio"
                                                    value="0" <?php print (isset($alerts['f']) && $alerts['f'] === 0 ? 'checked="checked"' : ''); ?>><i></i></label>
-        <label class="input"><span>Alert</span><select name="event-type-f">
+        <label class="input" <?php print (isset($alerts['f']) && $alerts['f'] === 0 ? 'style="visibility:hidden;"' : ''); ?>><span>Alert</span><select name="event-type-f">
                 <option value="15" <?php print (isset($alerts['f']) && $alerts['f'] === 15 ? 'selected="selected"' : ''); ?>>15 min</option>
                 <option value="30" <?php print (isset($alerts['f']) && $alerts['f'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['f']) && $alerts['f'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
@@ -58,7 +58,7 @@ $view['slots']->start('modal-body') ?>
                                                     value="1" <?php print (!isset($alerts['o']) || $alerts['o'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
         <label class="radio"><span>No</span><input name="event-type-o" type="radio"
                                                    value="0" <?php print (isset($alerts['o']) && $alerts['o'] === 0 ? 'checked="checked"' : ''); ?>><i></i></label>
-        <label class="input"><span>Alert</span><select name="event-type-o">
+        <label class="input" <?php print (isset($alerts['o']) && $alerts['o'] === 0 ? 'style="visibility:hidden;"' : ''); ?>><span>Alert</span><select name="event-type-o">
                 <option value="15" <?php print (isset($alerts['o']) && $alerts['o'] === 15 ? 'selected="selected"' : ''); ?>>15 min</option>
                 <option value="30" <?php print (isset($alerts['o']) && $alerts['o'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['o']) && $alerts['o'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>

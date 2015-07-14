@@ -83,6 +83,7 @@ class PlanController extends Controller
             $cid = !empty($event->getCourse()) ? $event->getCourse()->getId() : '';
             // group by event type
             $t = $event->getType() . ($event->getType() == 'd' || $event->getType() == 'h' ? $event->getId() : '');
+            $t = $event->getId();
             if(!isset($grouped[$cid][$t]))
                 $grouped[$cid][$t] = new ArrayCollection();
             $grouped[$cid][$t]->add($event);
@@ -135,6 +136,7 @@ class PlanController extends Controller
             })->toArray());
 
             // delete events that were created before the schedule
+            /*
             if(date_timezone_set(
                     new \DateTime($item->created),
                     new \DateTimeZone(date_default_timezone_get()))->getTimestamp() < $scheduleCreated &&
@@ -144,6 +146,7 @@ class PlanController extends Controller
                 $service->events->delete($calendarId, $item->getId());
                 continue;
             }
+            */
 
             // skip already added items
             if(in_array($item->getId(), $allIds)) {
@@ -161,28 +164,8 @@ class PlanController extends Controller
             if(empty($instances)) {
                 $instances = [$item];
             }
-            $working = array_map(function (\Google_Service_Calendar_Event $instance) use ($editing, &$allIds) {
-                $allIds[] = $instance->getId();
-                return [
-                    'deadline' => empty($editing) ? null : $editing[0]->getDeadline(),
-                    'course' => empty($editing) ? null : $editing[0]->getCourse(),
-                    'name' => $instance->getSummary(),
-                    'type' => empty($editing) ? 'o' : $editing[0]->getType(),
-                    'start' => date_timezone_set(
-                        new \DateTime($instance->getStart()->getDateTime()),
-                        new \DateTimeZone(date_default_timezone_get())),
-                    'end' => date_timezone_set(
-                        new \DateTime($instance->getEnd()->getDateTime()),
-                        new \DateTimeZone(date_default_timezone_get())),
-                    'remoteId' => $instance->getId(),
-                    'remoteUpdated' => date_timezone_set(
-                        new \DateTime($instance->getUpdated()),
-                        new \DateTimeZone(date_default_timezone_get())),
-                ];
-            }, $instances);
-            $events = array_merge($events, $working);
+
         }
-        self::mergeSaved($schedule, new ArrayCollection(self::arrayUniqueObj($existing)), $events, $orm);
 
         $working = $schedule->getEvents()->filter(function (Event $e) {
             return !$e->getDeleted();});
@@ -202,8 +185,8 @@ class PlanController extends Controller
                     ->filter(function (Event $e) use ($remoteIds, $reserved) {
                         if(!empty($e->getRemoteId())) {
                             $id = substr($e->getRemoteId(), 0, strpos($e->getRemoteId(), '_', 1));
-                            return in_array($id, array_keys($remoteIds))
-                            && !in_array($id, $reserved);
+                            return (in_array($id, array_keys($remoteIds)) && !in_array($id, $reserved)) ||
+                            (in_array($e->getRemoteId(), array_keys($remoteIds)) && !in_array($e->getRemoteId(), $reserved));
                         }
                         return false;
                     })
@@ -216,11 +199,9 @@ class PlanController extends Controller
                         $instances = $service->events->instances($calendarId, $newEvent->getId())->getItems();
                 } else {
                     $remoteId = substr($remote->getRemoteId(), 0, strpos($remote->getRemoteId(), '_', 1));
+                    if(!in_array($remoteId, $remoteIds))
+                        $remoteId = $remote->getRemoteId();
                     $reserved[] = $remoteId;
-                    //if ($remoteIds[$remoteId]->getRecurrence() != $config['recurrence'] ||
-                    //    new \DateTime($remoteIds[$remoteId]->getStart()->getDateTime()) != $events->last()->getStart()) {
-                    //    $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
-                    //}
                     if(empty($config['recurrence']))
                         $instances = [$newEvent];
                     else
@@ -251,6 +232,7 @@ class PlanController extends Controller
                             'dateTime' => $event->getEnd()->format('c'),
                             'timeZone' => date_default_timezone_get(),
                         ]));
+                        $instance->setReminders(new \Google_Service_Calendar_EventReminders($config['reminders']));
                         $instance->setLocation($event->getLocation());
                         $instance->setSummary($event->getTitle());
                         $service->events->update($calendarId, $instance->getId(), $instance);
@@ -776,6 +758,12 @@ class PlanController extends Controller
                     else
                         $toSave[$t] = 15;
                 }
+                foreach($schedule->getEvents()->toArray() as $e)
+                {
+                    /** @var Event $e */
+                    $e->setUpdated(new \DateTime());
+                    $orm->merge($e);
+                }
                 $schedule->setAlerts($toSave);
                 $orm->merge($schedule);
             }
@@ -799,6 +787,8 @@ class PlanController extends Controller
                             $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT60M')));
                         if($difficulty == 'tough')
                             $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT90M')));
+                        $e->setUpdated(new \DateTime());
+                        $orm->merge($e);
                     }
                     /** @var Event[] $study */
                     $study = $c->getEvents()->filter(function (Event $e) {return $e->getType() == 'sr';})->toArray();
@@ -809,6 +799,8 @@ class PlanController extends Controller
                             $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT60M')));
                         if($difficulty == 'tough')
                             $e->setEnd(date_add(clone $e->getStart(), new \DateInterval('PT120M')));
+                        $e->setUpdated(new \DateTime());
+                        $orm->merge($e);
                     }
                     $orm->merge($c);
                 }
