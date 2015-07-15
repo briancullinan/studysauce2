@@ -90,10 +90,12 @@ class PlanController extends Controller
         foreach($items as $item) {
             $remoteIds[] = $item->getId();
             /** @var \DateTime[] $instances */
-            $instances = self::getInstances($item->getStart(), $item->getRecurrence());
+            $instances = self::getInstances(new \DateTime($item->getStart()->getDateTime(), new \DateTimeZone($item->getStart()->getTimeZone())), $item->getRecurrence());
             foreach($instances as $i) {
                 $remoteIds[] = $item->getId() . '_' . $i->format('Ymd') . 'T' . $i->format('His');
             }
+            $remoteInstances = $service->events->instances($calendarId, $item->getId())->getItems();
+            $remoteInstanceIds = array_map(function (\Google_Service_Calendar_Event $instance) {return $instance->getId();}, $remoteInstances);
             // TODO: delete instances that are no longer in series
 
             // TODO: find event by remote id
@@ -988,7 +990,7 @@ END:VCALENDAR');
                 for($t = $start->getTimestamp(); $t < $until->getTimestamp(); $t += $freq) {
                     $sunday = $t - array_values(self::$weekConversion)[$start->format('w')];
                     foreach($dotw as $d) {
-                        $instances[] = date_timestamp_set(new \DateTime(), $sunday + array_values(self::$weekConversion)[$days[$d]]);
+                        $instances[] = date_timestamp_set(new \DateTime('now', $start->getTimezone()), $sunday + array_values(self::$weekConversion)[$days[$d]]);
                     }
                 }
             }
