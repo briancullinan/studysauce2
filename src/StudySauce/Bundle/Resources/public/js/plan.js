@@ -1081,7 +1081,7 @@ $(document).ready(function () {
     body.on('show', '#plan', function () {
         setupPlan();
 
-        if($(this).is('.setup-mode') && $(this).find('.session-strategy:visible').length == 0) {
+        if($(this).is('.setup-mode') && window.outerWidth < 700) {
             $('#plan-mobile').modal({show:true});
         }
         var notes = $('#notes');

@@ -80,6 +80,11 @@ class Event
     protected $deadline;
 
     /**
+     * @ORM\Column(type="array", name="recurrence", nullable=true)
+     */
+    protected $recurrence = [];
+
+    /**
      * @ORM\Column(type="boolean", name="completed")
      */
     protected $completed = false;
@@ -511,5 +516,28 @@ class Event
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Set recurrence
+     *
+     * @param array $recurrence
+     * @return Event
+     */
+    public function setRecurrence($recurrence)
+    {
+        $this->recurrence = $recurrence;
+
+        return $this;
+    }
+
+    /**
+     * Get recurrence
+     *
+     * @return array 
+     */
+    public function getRecurrence()
+    {
+        return $this->recurrence;
     }
 }
