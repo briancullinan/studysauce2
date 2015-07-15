@@ -86,7 +86,16 @@ class PlanController extends Controller
         $user->setProperty('eventSync', $list->getNextSyncToken());
 
         // sync changes from google
+        $remoteIds = [];
         foreach($items as $item) {
+            $remoteIds[] = $item->getId();
+            /** @var \DateTime[] $instances */
+            $instances = self::getInstances($item->getStart(), $item->getRecurrence());
+            foreach($instances as $i) {
+                $remoteIds[] = $item->getId() . '_' . $i->format('Ymd') . 'T' . $i->format('His');
+            }
+            // TODO: delete instances that are no longer in series
+
             // TODO: find event by remote id
 
             // TODO: recognize event by name and type in title
@@ -98,23 +107,40 @@ class PlanController extends Controller
             return !$e->getDeleted();});
 
         // sync changes to google
-        foreach($working as $event) {
+        foreach($working->toArray() as $event) {
             /** @var Event $event */
             $config = self::getGoogleCalendarConfig($event);
             $newEvent = new \Google_Service_Calendar_Event($config);
 
-            if (empty($event->getRemoteId())) {
+            if (empty($event->getRemoteId()) || !in_array($event->getRemoteId(), $remoteIds)) {
                 $newEvent = $service->events->insert($calendarId, $newEvent);
-                // TODO: store remoteId in all existing instances
+                // store remoteId in all existing instances
+                foreach($working->filter(function (Event $e) {
+                    return !empty($e->getRecurrence()) && substr($e->getRecurrence()[0], 0, 14) == 'RECURRENCE-ID:'
+                        && substr($e->getRecurrence()[0], 14, strpos($e->getRecurrence(), '_'));})->toArray() as $child) {
+                    /** @var Event $child */
+                    $child->setRemoteUpdated(new \DateTime());
+                    $child->setRemoteId($newEvent->getId());
+                    $orm->merge($child);
+                }
+                $event->setRemoteUpdated(new \DateTime());
                 $event->setRemoteId($newEvent->getId());
                 $orm->merge($event);
-            } elseif(!empty($event->getUpdated()) && $event->getUpdated() > $event->getRemoteUpdated()) {
+            } elseif(empty($event->getRemoteUpdated()) || !empty($event->getUpdated()) && $event->getUpdated() > $event->getRemoteUpdated()) {
                 $remoteId = $event->getRemoteId();
                 if(!empty($event->getRecurrence()) && substr($event->getRecurrence()[0], 0, 14) == 'RECURRENCE-ID:' &&
-                    preg_match('/:([0-9){8}T[0-9]{6})/i', $event->getRecurrence()[0], $matches) > 0) {
+                    preg_match('/:[0-9]*?_([0-9){8}T[0-9]{6})/i', $event->getRecurrence()[0], $matches) > 0) {
                     $remoteId .= '_' . $matches[1];
                 }
-                $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
+                $service->events->update($calendarId, $remoteId, $newEvent);
+                foreach($working->filter(function (Event $e) {
+                    return !empty($e->getRecurrence()) && substr($e->getRecurrence()[0], 0, 14) == 'RECURRENCE-ID:'
+                    && substr($e->getRecurrence()[0], 14, strpos($e->getRecurrence(), '_'));})->toArray() as $child) {
+                    /** @var Event $child */
+                    $child->setRemoteUpdated(new \DateTime());
+                    $orm->merge($child);
+                }
+                $event->setRemoteUpdated(new \DateTime());
             }
 
         }
@@ -147,9 +173,15 @@ class PlanController extends Controller
 //                            'responseStatus' => 'accepted',
 //                            'optional' => true
 //                        ]],
-            'colorId' => 6,
-            'recurrence' => $event->getRecurrence()
+            'colorId' => 6
         ];
+
+        if(!empty($event->getRecurrence()) && substr($event->getRecurrence()[0], 0, 14) != 'RECURRENCE-ID:') {
+            $config['recurrence'] = $event->getRecurrence();
+        }
+        else {
+            $event['recurrence'] = null;
+        }
 
         if (!empty($event->getAlert())) {
             $config['reminders'] = [
@@ -983,7 +1015,7 @@ END:VCALENDAR');
         /** @var Event $event */
         if(!empty($schedule))
             $event = $schedule->getEvents()->filter(function (Event $e)use($request) {
-                return !$e->getDeleted() && $e->getId() == $request->get('eventId');})->first();
+                return !$e->getDeleted() && $e->getId() == substr($request->get('eventId'), 0, strpos($request->get('eventId'), '_'));})->first();
 
         if (empty($event)) {
             return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
