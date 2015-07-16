@@ -361,13 +361,14 @@ class ScheduleController extends Controller
                 $course = $schedule->getCourses()->filter(function (Course $x) use($c) {
                     return !$x->getDeleted() && $x->getId() == $c['courseId'];})->first();
 
-                PlanController::mergeSaved($course->getSchedule(), $course->getEvents(), [], $orm);
-                self::removeCourse($course, $schedule, $orm);
+                self::removeCourse($course, $orm);
             }
 
             // if schedule is empty, remove the rest of the events
             if(empty($schedule->getClasses()->count())) {
-                PlanController::mergeSaved($schedule, $schedule->getEvents(), [], $orm);
+                foreach($schedule->getEvents()->toArray() as $e) {
+                    $orm->remove($e);
+                }
             }
 
             // create new courses and ignore removes
@@ -430,7 +431,7 @@ class ScheduleController extends Controller
             return;
         // get events closest in time to each class and rebuild study events from that
         $eventInfo = [];
-        $week = strtotime('last Sunday', $course->getStartTime()->getTimestamp());
+        $week = $course->getStartTime()->getTimestamp() - array_values(PlanController::$weekConversion)[$course->getStartTime()->format('w')];
         /** @var Event[] $prework */
         $prework = array_values($existing->filter(function (Event $e) use($course){
             return !$e->getDeleted() && $e->getType() == 'p'; })->toArray());
