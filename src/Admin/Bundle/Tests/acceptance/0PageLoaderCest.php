@@ -754,8 +754,11 @@ EOJS;
         $I->click('#edit-event [type="submit"]');
         $I->wait(10);
         $I->click('Done');
-        $I->executeJS('$(\'#plan-step-6 [href*="download"]\').trigger(\'click\')');
+        $I->wait(10);
+        $I->executeJS('$(\'#plan-step-6 [href*="download"]\').trigger(\'click\');');
+        $I->wait(1);
         $I->click('Go to study plan');
+        $I->wait(1);
     }
 
     public function tryNewStudySession(AcceptanceTester $I)
@@ -763,6 +766,7 @@ EOJS;
         $I->wantTo('start a study session');
         $I->click('.fc-agendaWeek-button');
         $I->click('#calendar .event-type-p');
+        $I->wait(1);
         $I->click('#plan a.checkin');
         $I->click('Continue to session');
         $I->wait(20);
@@ -777,10 +781,36 @@ EOJS;
         $I->click('#notes a[href="#save-note"]');
         $I->wait(10);
         $I->click('#right-panel a[href="#expand"] span');
-        $I->click('Study plan');
+        $I->click('#right-panel a[href*="/plan"]');
+        $I->wait(1);
         $I->click('#plan a.checkin');
         $I->click('#timer-expire a[href="#close"]');
 
+    }
+
+    /**
+     * @depends tryGuestCheckout
+     * @param AcceptanceTester $I
+     */
+    public function tryGoogleSync(AcceptanceTester $I)
+    {
+        $I->wantTo('connect to Google Calendar');
+        $I->seeAmOnUrl('/account');
+        $I->click('#account a[href*="gcal"]');
+        $I->fillField('input[id="Email"]', 'brian@studysauce.com');
+        $I->click('Next');
+        $I->fillField('input[id="Passwd"]', 'Da1ddy23');
+        $I->click('Sign in');
+        $I->click('Accept');
+        $I->amOnPage('/cron/sync');
+        $I->amOnPage('/plan');
+        $I->wantTo('check if schedule has synced');
+        $I->amOnUrl('https://www.google.com/calendar/render');
+        $I->click('PHIL 101: Pre-work');
+        $I->fillField('input[title="From time"]', '11');
+        $I->click('Save');
+        $I->click('All events');
+        //$I->amOnUrl()
     }
 
     /**
@@ -796,7 +826,9 @@ EOJS;
         $I->seeAmOnUrl('/schedule');
         $I->test('tryNewSchedule');
         $I->test('tryNewPlan');
-        $I->test('tryNewStudySession');
+        //$I->test('tryNewStudySession');
+        $I->test('tryGoogleSync');
+
     }
 
 }

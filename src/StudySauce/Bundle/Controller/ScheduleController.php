@@ -426,15 +426,15 @@ class ScheduleController extends Controller
      */
     private static function refillCourseStudyEvents(Schedule $schedule, Course $course, EntityManager $orm)
     {
-        $existing = $course->getEvents()->filter(function (Event $e) {return !$e->getDeleted();});
-        if(empty($existing->count()))
+        $existing = $course->getEvents()->filter(function (Event $e) {return !$e->getDeleted() && ($e->getType() == 'p' || $e->getType() == 'sr');});
+        if(empty($existing->count()) || $course->getStudyDifficulty() == 'none')
             return;
         // get events closest in time to each class and rebuild study events from that
         $eventInfo = [];
         $week = $course->getStartTime()->getTimestamp() - array_values(PlanController::$weekConversion)[$course->getStartTime()->format('w')];
         /** @var Event[] $prework */
         $prework = array_values($existing->filter(function (Event $e) use($course){
-            return !$e->getDeleted() && $e->getType() == 'p'; })->toArray());
+            return $e->getType() == 'p'; })->toArray());
         $pLength = 60;
         if($course->getStudyDifficulty() == 'easy')
             $pLength = 45;
@@ -444,7 +444,7 @@ class ScheduleController extends Controller
             $pLength = 90;
         /** @var Event[] $study */
         $study = array_values($existing->filter(function (Event $e) use($course){
-            return !$e->getDeleted() && $e->getType() == 'sr'; })->toArray());
+            return $e->getType() == 'sr'; })->toArray());
         $srLength = 60;
         if($course->getStudyDifficulty() == 'easy')
             $srLength = 45;
