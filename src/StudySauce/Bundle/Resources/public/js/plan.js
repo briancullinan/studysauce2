@@ -350,8 +350,13 @@ $(document).ready(function () {
                         }
                         dialog.find('.title input').val(event.title.replace(/<h4>[^<]*<\/h4>/, ''));
                         var type = (/event-type-([a-z]*)(\s|$)/ig).exec(event.className.join(' '))[1];
-                        var alert = $('#plan-step-3').find('[name="event-type-' + type + '"][value="0"]:checked, select[name="event-type-' + type + '"]').first().val();
-                        dialog.find('.reminder select').val(alert);
+                        if(typeof event.alert == 'undefined') {
+                            var alert = $('#plan-step-3').find('[name="event-type-' + type + '"][value="0"]:checked, select[name="event-type-' + type + '"]').first().val();
+                            dialog.find('.reminder select').val(alert);
+                        }
+                        else {
+                            dialog.find('.reminder select').val(event.alert);
+                        }
                         dialog.find('.location input').val(event.location);
                         dialog.modal({show:true});
                     }, 300);
@@ -386,7 +391,7 @@ $(document).ready(function () {
                         calendar.fullCalendar('gotoDate', event.start);
                         calendar.fullCalendar('changeView', 'agendaDay');
                     }
-                    plan.addClass('session-selected');
+                    plan.addClass('session-selected').scrollintoview(DASHBOARD_MARGINS);
                     // change mini checkin color
                     var notes;
                     if(typeof event.courseId != 'undefined') {
@@ -621,13 +626,12 @@ $(document).ready(function () {
             studyEvents = [], removeEvents = [];
 
         // check for newly added events
+        var eventIds = [];
         for(var i = 0; i < events.length; i++) {
             var type = (/event-type-([a-z]+)(\s|$)/i).exec(events[i].className.join(' '));
-            if((events[i].className.indexOf('event-type-p') > -1
-                || events[i].className.indexOf('event-type-sr') > -1
-                || events[i].className.indexOf('event-type-f') > -1)
-                && (typeof events[i].eventId == 'undefined'
-                || calendar.find('.event-id-' + events[i].eventId).is(':visible'))) {
+            if(typeof events[i].eventId == 'undefined'
+                || calendar.find('.event-id-' + events[i].eventId).is(':visible') && eventIds.indexOf(events[i].eventId.split('_')[0]) == -1) {
+                eventIds[eventIds.length] = events[i].eventId.split('_')[0];
                 studyEvents[studyEvents.length] = {
                     type: type[1],
                     eventId: events[i].eventId,
@@ -880,6 +884,7 @@ $(document).ready(function () {
                             event.dates.map(function (d) {return '<en-todo></en-todo>'+d+'<br />';}).join('')) +
                             '</div>';
                     }
+                    notes.find('#editor1').html(content);
                     CKEDITOR.instances['editor1'].setData(content);
                 }, 150);
             }
@@ -1050,12 +1055,32 @@ $(document).ready(function () {
             location: dialog.find('.location input').val(),
             alert: dialog.find('.reminder select').val()
         };
+        event.location = changes.location;
+        event.alert = changes.alert;
         if(dialog.find('.start-time:visible input').length > 0) {
-            changes.start = dialog.find('.start-time input').val() + ' ' + dialog.find('.start-date input').val();
-            changes.end = dialog.find('.end-time input').val() + ' ' + dialog.find('.end-date input').val();
+            var s = dialog.find('.start-date input[type="text"]').datepicker('getDate'),
+                st = dialog.find('.start-time input').timeEntry('getTime'),
+                e = dialog.find('.end-date input[type="text"]').datepicker('getDate'),
+                et = dialog.find('.end-time input').timeEntry('getTime');
+            changes.start = s.getFullYear() + '-'
+                + (s.getMonth() + 1 < 10
+                    ? ('0' + (s.getMonth() + 1))
+                    : (s.getMonth() + 1)) + '-' + (s.getDate() < 10
+                    ? ('0' + s.getDate()) : s.getDate())
+                + 'T' + st.getHours() + ':' + st.getMinutes() + ':00';
+            changes.end = e.getFullYear() + '-'
+                + (e.getMonth() + 1 < 10
+                    ? ('0' + (e.getMonth() + 1))
+                    : (e.getMonth() + 1)) + '-' + (e.getDate() < 10
+                    ? ('0' + e.getDate()) : e.getDate())
+                + 'T' + et.getHours() + ':' + et.getMinutes() + ':00';
+            event.start = moment(changes.start);
+            event.end = moment(changes.end);
         }
         if(dialog.find('.title:not(.read-only) input').length > 0) {
             changes.title = dialog.find('.title input').val();
+            var type = (/event-type-([a-z]+)(\s|$)/i).exec(event.className.join(' '));
+            event.title = '<h4>' + type[1] + '</h4>' + changes.title;
         }
 
         if(!plan.is('.add-events')) {
@@ -1066,14 +1091,9 @@ $(document).ready(function () {
                 });
         }
         else {
-            var type = (/event-type-([a-z]+)(\s|$)/i).exec(event.className.join(' '));
-            event.location = changes.location;
-            event.alert = changes.alert;
-            event.start = new Date(changes.start);
-            event.end = new Date(changes.end);
-            event.title = '<h4>' + type[1] + '</h4>' + changes.title;
             dialog.modal('hide');
         }
+        $('#calendar').fullCalendar('updateEvent', event);
     });
 
     // The calendar needs to be in view for sizing information.  This will not initialize when display:none;, so instead

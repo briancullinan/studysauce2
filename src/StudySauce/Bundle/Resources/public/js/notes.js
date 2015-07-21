@@ -46,6 +46,7 @@ $(document).ready(function () {
             data: {},
             success: function (data) {
                 notes.find('.highlighted-link').removeClass('invalid').addClass('valid');
+                notes.find('#editor1').html($(data).filter('en-note').html());
                 setTimeout(function () {
                     if(typeof CKEDITOR.instances.editor1 != 'undefined') {
                         CKEDITOR.instances.editor1.setData($(data).filter('en-note').html());
@@ -54,6 +55,7 @@ $(document).ready(function () {
                 }, 20);
             }
         });
+        notes.find('#editor1').html(note.find('.summary en-note').html());
         setTimeout(function () {
             if(typeof CKEDITOR.instances.editor1 != 'undefined') {
                 CKEDITOR.instances.editor1.setData(note.find('.summary en-note').html());
@@ -108,6 +110,7 @@ $(document).ready(function () {
         notes.find('.input.tags input')[0].selectize.setValue([]);
         noteId = '';
         notes.addClass('edit-note');
+        notes.find('#editor1').html('');
         setTimeout(function () {
             if(typeof CKEDITOR.instances.editor1 != 'undefined')
                 CKEDITOR.instances['editor1'].setData('');

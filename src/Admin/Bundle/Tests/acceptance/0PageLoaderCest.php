@@ -752,7 +752,7 @@ EOJS;
         $I->doubleClick('#calendar .event-type-p');
         $I->fillField('#edit-event .location input', 'The Library');
         $I->click('#edit-event [type="submit"]');
-        $I->wait(10);
+        $I->wait(1);
         $I->click('Done');
         $I->wait(10);
         $I->executeJS('$(\'#plan-step-6 [href*="download"]\').trigger(\'click\');');
@@ -806,11 +806,24 @@ EOJS;
         $I->amOnPage('/plan');
         $I->wantTo('check if schedule has synced');
         $I->amOnUrl('https://www.google.com/calendar/render');
-        $I->click('PHIL 101: Pre-work');
+        $I->click('//span[contains(.,"PHIL 101: Pre-work")]');
+        // test changes in gcal syncing to studysauce
+        $I->seeInField('span[title="Reminder time"] input', 15);
         $I->fillField('input[title="From time"]', '11');
-        $I->click('Save');
-        $I->click('All events');
-        //$I->amOnUrl()
+        $I->fillField('input[placeholder="Enter a location"]', 'the library');
+        $I->fillField('span[title="Reminder time"] input', 30);
+        $I->click('//div[contains(.,"Save") and contains(@class,"goog-imageless-button-content")]');
+        $I->wait(1);
+        $I->click('//div[contains(.,"All events") and contains(@class,"goog-imageless-button-content")]');
+        $I->wait(2);
+        $I->amOnUrl('https://staging.studysauce.com/cron/sync');
+        $I->amOnPage('/plan');
+        // check studysauce for the changes we just made
+        $I->click('.fc-agendaWeek-button');
+        $I->doubleClick('#calendar .event-type-p');
+        $I->seeInField('#edit-event .start-time input', '11:00 AM');
+        $I->seeInField('#edit-event .location input', 'the library');
+        $I->seeOptionIsSelected('#edit-event .reminder select', '30');
     }
 
     /**
@@ -826,7 +839,7 @@ EOJS;
         $I->seeAmOnUrl('/schedule');
         $I->test('tryNewSchedule');
         $I->test('tryNewPlan');
-        //$I->test('tryNewStudySession');
+        $I->test('tryNewStudySession');
         $I->test('tryGoogleSync');
 
     }

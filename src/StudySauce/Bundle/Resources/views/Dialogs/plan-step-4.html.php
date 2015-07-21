@@ -26,6 +26,7 @@ $view['slots']->start('modal-body') ?>
                 <option value="conceptual" <?php print ($c->getStudyType() == 'conceptual' ? 'selected="selected"' : ''); ?>>Conceptual</option>
             </select>
         </label>
+        <br />
     <?php } ?>
     <br/><br/><br/><br/>
     <div class="highlighted-link setup-mode invalid">

@@ -23,6 +23,7 @@ $view['slots']->start('modal-body') ?>
                 <option value="30" <?php print (isset($alerts['c']) && $alerts['c'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['c']) && $alerts['c'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
             </select></label>
+        <br />
         <h4>Prework</h4>
         <label class="radio"><span>Yes</span><input name="event-type-p" type="radio"
                                                     value="1" <?php print (!isset($alerts['p']) || $alerts['p'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
@@ -33,6 +34,7 @@ $view['slots']->start('modal-body') ?>
                 <option value="30" <?php print (isset($alerts['p']) && $alerts['p'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['p']) && $alerts['p'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
             </select></label>
+        <br />
         <h4>Spaced repetition</h4>
         <label class="radio"><span>Yes</span><input name="event-type-sr" type="radio"
                                                     value="1" <?php print (!isset($alerts['sr']) || $alerts['sr'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
@@ -43,6 +45,7 @@ $view['slots']->start('modal-body') ?>
                 <option value="30" <?php print (isset($alerts['sr']) && $alerts['sr'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['sr']) && $alerts['sr'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
             </select></label>
+        <br />
         <h4>Free study</h4>
         <label class="radio"><span>Yes</span><input name="event-type-f" type="radio"
                                                     value="1" <?php print (!isset($alerts['f']) || $alerts['f'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
@@ -53,6 +56,7 @@ $view['slots']->start('modal-body') ?>
                 <option value="30" <?php print (isset($alerts['f']) && $alerts['f'] === 30 ? 'selected="selected"' : ''); ?>>30 min</option>
                 <option value="60" <?php print (isset($alerts['f']) && $alerts['f'] === 60 ? 'selected="selected"' : ''); ?>>1 hour</option>
             </select></label>
+        <br />
         <h4>Non-academic events</h4>
         <label class="radio"><span>Yes</span><input name="event-type-o" type="radio"
                                                     value="1" <?php print (!isset($alerts['o']) || $alerts['o'] !== 0 ? 'checked="checked"' : ''); ?>><i></i></label>
