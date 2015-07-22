@@ -657,11 +657,7 @@ class PlanController extends Controller
             )
         ) {
             $schedule = ScheduleController::getDemoSchedule($this->container);
-            if ($user->hasRole('ROLE_PAID')) {
-                $isEmpty = true;
-            } else {
-                $isDemo = true;
-            }
+            $isEmpty = true;
             self::createDemoEvents($this->container);
         }
 
