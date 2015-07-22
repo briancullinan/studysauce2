@@ -938,9 +938,8 @@ class PlanController extends Controller
 
         // add deadlines and holidays
         foreach ($deadlines as $did => $d) {
-            if($d->getDeleted())
-                continue;
             $isNew = false;
+            /** @var Event $event */
             $event = $schedule->getEvents()->filter(
                 function (Event $e) use ($d) {
                     return !empty($e->getDeadline()) && $e->getDeadline()->getId() == $d->getId();
@@ -952,6 +951,10 @@ class PlanController extends Controller
                 $event->setDeadline($d);
                 $event->setSchedule($schedule);
                 $schedule->addEvent($event);
+            }
+            elseif($d->getDeleted()) {
+                // remove event
+                $event->setDeleted(true);
             }
             $event->setCourse($d->getCourse());
             if(!empty($d->getCourse())) {

@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
+use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -53,7 +54,10 @@ class DeadlinesController extends Controller
 
         // show new deadline and hide headings if all the deadlines are in the past
         $isEmpty = false;
-        if(!$deadlines->exists(function ($_, Deadline $d) { return $d->getDueDate() >= date_sub(new \Datetime('today'), new \DateInterval('P1D')); })) {
+        if(!$deadlines->exists(function ($_, Deadline $d) use ($schedule) {
+            return $d->getDueDate() >= date_sub(new \Datetime('today'), new \DateInterval('P1D'));
+            //&& !empty($d->getCourse()) && $d->getCourse()->getSchedule() == $schedule;
+        })) {
             $isEmpty = true;
         }
 
@@ -73,6 +77,7 @@ class DeadlinesController extends Controller
                 'csrf_token' => $csrfToken,
                 'deadlines' => $deadlines->toArray(),
                 'courses' => array_values($courses),
+                'schedule' => $schedule,
                 'user' => $user,
                 'isDemo' => $isDemo,
                 'isEmpty' => $isEmpty
@@ -269,11 +274,25 @@ class DeadlinesController extends Controller
         /** @var $user User */
         $user = $this->getUser();
 
+        /** @var Schedule $schedule */
+        $schedule = $user->getSchedules()->first();
         /** @var Deadline $deadline */
-        $deadline = $user->getDeadlines()->filter(function (Deadline $d) use ($request) {return $d->getId() == $request->get('remove');})->first();
+        $deadline = $user->getDeadlines()->filter(function (Deadline $d) use ($request) {
+            return $d->getId() == $request->get('remove');})->first();
         if(!empty($deadline)) {
             $deadline->setDeleted(1);
             $orm->merge($deadline);
+            // remove event
+            /** @var Event $event */
+            $event = $schedule->getEvents()->filter(
+                function (Event $e) use ($deadline) {
+                    return !empty($e->getDeadline()) && $e->getDeadline()->getId() == $d->getId();
+                }
+            )->first();
+            if (!empty($event)) {
+                $event->setDeleted(true);
+                $orm->merge($event);
+            }
             $orm->flush();
         }
 

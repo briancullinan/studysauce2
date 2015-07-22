@@ -240,7 +240,6 @@ class NotesController extends Controller
             $notebooks = $client->listPersonalNotebooks();
         } catch (EDAMSystemException $e) {
             if ($e->errorCode == 19) {
-                sleep(ceil($e->rateLimitDuration));
                 $notebooks = $client->listPersonalNotebooks();
             }
         }
