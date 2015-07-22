@@ -236,7 +236,11 @@ class NotesController extends Controller
             $user->getEvernoteAccessToken(),
             $env != 'prod'
         );
-        $notebooks = $client->listPersonalNotebooks();
+        try {
+            $notebooks = $client->listPersonalNotebooks();
+        } catch (EDAMSystemException $e) {
+            return [];
+        }
         if (isset($notebooks)) {
             $notebooks = array_combine(
                 array_map(
