@@ -650,7 +650,7 @@ class PlanController extends Controller
         $isDemo = false;
         $isEmpty = false;
         if (empty($schedule) || empty($schedule->getClasses()->count()) ||
-            !$user->hasRole('ROLE_PAID') || !$schedule->getClasses()->exists(
+            !$schedule->getClasses()->exists(
                 function ($_, Course $c) {
                     return $c->getEndTime() > new \DateTime();
                 }
