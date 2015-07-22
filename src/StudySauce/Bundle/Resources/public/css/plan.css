@@ -318,6 +318,8 @@ a.fc-event:not([href])
     width:100%;
 }
 
+#plan.setup-mode #calendar .fc-day-grid,
+#plan.add-events #calendar .fc-day-grid,
 #plan.setup-mode #calendar .fc-head,
 #plan.add-events #calendar .fc-head
 {
@@ -497,6 +499,12 @@ a.fc-event:not([href])
 #edit-event .end-time .input.mobile-only {
     display: none;
 }
+
+#plan-mobile .close
+{
+    display:none;
+}
+
 
 #edit-event .start-time, #edit-event .end-time,
 #edit-event .start-date, #edit-event .end-date {

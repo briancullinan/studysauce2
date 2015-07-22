@@ -407,20 +407,9 @@ class ScheduleController extends Controller
                 else
                     $orm->merge($course);
 
-                foreach($course->getEvents()->toArray() as $e) {
-                    /** @var Event $e */
-                    $orm->remove($e);
-                    $course->removeEvent($e);
-                    $schedule->removeEvent($e);
-                }
-                foreach($schedule->getEvents()->toArray() as $e) {
-                    if($e->getType() == 'f') {
-                        $orm->remove($e);
-                        $course->removeEvent($e);
-                        $schedule->removeEvent($e);
-                    }
-                }
                 PlanController::createCourseEvents($course, $orm);
+                PlanController::expandStudyEvents($course, $schedule, $orm);
+                PlanController::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
                 $orm->flush();
             }
         }

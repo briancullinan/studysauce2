@@ -792,7 +792,9 @@ input[type=month][disabled]
     border: 0;
 }
 
-input:-webkit-autofill {
+.read-only input:-webkit-autofill,
+input[disabled]:-webkit-autofill
+{
     background: transparent !important;
 }
 

@@ -687,7 +687,7 @@ EOJS;
         $('#calendar').fullCalendar('renderEvent', event, true)
 EOJS;
         $I->executeJS($newEvent);
-        $I->click('Save');
+        $I->click('#external-events a[href="#save-plan"]');
         $I->wait(10);
 
         $I->click('Add spaced-repetition');
@@ -718,7 +718,7 @@ EOJS;
         $('#calendar').fullCalendar('renderEvent', event, true)
 EOJS;
         $I->executeJS($newEvent);
-        $I->click('Save');
+        $I->click('#external-events a[href="#save-plan"]');
         $I->wait(10);
 
         $I->click('Add free study');
@@ -740,7 +740,7 @@ EOJS;
         $('#calendar').fullCalendar('renderEvent', event, true)
 EOJS;
         $I->executeJS($newEvent);
-        $I->click('Save');
+        $I->click('#external-events a[href="#save-plan"]');
         $I->wait(10);
 
         $I->click('#plan-step-3 [type="submit"]');

@@ -78,7 +78,7 @@ $view['slots']->start('body'); ?>
                     </div>
                     <div class="email">
                         <label class="input"><span>E-mail address</span>
-                            <input type="text" placeholder="Email" value="<?php print $user->getEmail(); ?>">
+                            <input type="text" placeholder="Email" value="<?php print $user->getEmail(); ?>" autocomplete="off">
                         </label>
                     </div>
                 </div>

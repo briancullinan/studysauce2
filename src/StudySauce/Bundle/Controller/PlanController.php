@@ -42,6 +42,78 @@ class PlanController extends Controller
         'Sa' => 518400
     ];
 
+    public static function expandStudyEvents(Course $course, Schedule $schedule, EntityManager $orm)
+    {
+        // get the last closest event to each day of the week
+        if($course->getEvents()->filter(function (Event $e) {return $e->getType() == 'sr' || $e->getType() == 'p';})->count() == 0)
+            return;
+        $eventInfo = [];
+        foreach($course->getDotw() as $d) {
+            $classT = date_time_set(date_timestamp_set(new \DateTime(), strtotime('last Sunday', $course->getStartTime()->getTimestamp())
+                + PlanController::$weekConversion[$d]),
+                $course->getStartTime()->format('H'),
+                $course->getStartTime()->format('i'),
+                $course->getStartTime()->format('s'));
+            $classDiff = $classT->getTimestamp() - strtotime('last Sunday', $classT->getTimestamp());
+            $closestP = -86400;
+            $closestSR = 86400;
+            foreach ($course->getEvents()->toArray() as $e) {
+                /** @var Event $e */
+                /** @var Event $closestP */
+                $beginning = $e->getStart()->getTimestamp() - strtotime('last Sunday', $e->getStart()->getTimestamp());
+                if($e->getType() == 'p' && (!isset($closestP) || $beginning - $classDiff > $closestP && $beginning - $classDiff < 0)) {
+                    $closestP = $beginning - $classDiff;
+                }
+                if($e->getType() == 'sr' && (!isset($closestSR) || $beginning - $classDiff < $closestSR && $beginning - $classDiff > 0)) {
+                    $closestSR = $beginning - $classDiff;
+                }
+            }
+            $eventInfo[] = [
+                'courseId' => $course->getId(),
+                'type' => 'p',
+                'start' => date_timestamp_set(clone $classT, $classT->getTimestamp() + $closestP)->format('r'),
+                'end' => date_add(date_timestamp_set(clone $classT, $classT->getTimestamp() + $closestP), new \DateInterval('PT60M'))->format('r')
+            ];
+            $eventInfo[] = [
+                'courseId' => $course->getId(),
+                'type' => 'sr',
+                'start' => date_timestamp_set(clone $classT, $classT->getTimestamp() + $closestSR)->format('r'),
+                'end' => date_add(date_timestamp_set(clone $classT, $classT->getTimestamp() + $closestSR), new \DateInterval('PT60M'))->format('r')
+            ];
+        }
+        // get final weeks free study events to extend
+        $freeStudy = [];
+        foreach($schedule->getEvents()->toArray() as $e) {
+            /** @var Event $e */
+            if($e->getType() == 'f') {
+                $freeStudy[$e->getStart()->format('W')][$e->getStart()->format('w')] = $e;
+            }
+        }
+        $mostF = '';
+        foreach($freeStudy as $w => $f) {
+            if(empty($mostF) || count($f) > count($freeStudy[$mostF])) {
+                $mostF = $w;
+            }
+        }
+        if(isset($freeStudy[$mostF])) {
+            foreach ($freeStudy[$mostF] as $f) {
+                // add free study time of week to schedule start time of week for expansion
+                /** @var Event $f */
+                $freeDiff = $f->getStart()->getTimestamp() - strtotime('last Sunday', $f->getStart()->getTimestamp());
+                $freeT = strtotime('last Sunday', $schedule->getStart()->getTimestamp()) + $freeDiff;
+                $eventInfo[] = [
+                    'courseId' => null,
+                    'type' => 'f',
+                    'start' => date_timestamp_set(new \DateTime(), $freeT)->format('r'),
+                    'end' => date_add(date_timestamp_set(new \DateTime(), $freeT), new \DateInterval('PT60M'))->format(
+                        'r'
+                    )
+                ];
+            }
+        }
+        self::createStudyEvents($schedule, $eventInfo, $orm);
+    }
+
     /**
      * @return array
      */
@@ -107,7 +179,6 @@ class PlanController extends Controller
             $eventTimestamps = $schedule->getCourses()->map(function (Course $c) {return $c->getCreated();});
         if(empty($eventTimestamps))
             $eventTimestamps = [$schedule->getCreated()->getTimestamp()];
-        $scheduleStart = min($eventTimestamps);
 
         // sync changes from google
         $remoteIds = [];
@@ -119,7 +190,6 @@ class PlanController extends Controller
         );
         $deleted = [];
         foreach ($items as $item) {
-            $remoteIds[] = $item->getId();
 
             $instanceId = self::getInstaceFromId($item->getId(), $parentId);
             // find event by remote id
@@ -186,27 +256,11 @@ class PlanController extends Controller
             ), new \DateTimeZone(date_default_timezone_get()));
 
             // ignore instances that are no longer in series
-            if ((new \DateTime($item->getCreated()))->getTimestamp() < $scheduleStart) {
+            if ((new \DateTime($item->getCreated()))->getTimestamp() < min($eventTimestamps)) {
                 // skip parents that where already deleted
                 if(!in_array($parentId, $deleted)) {
                     $deleted[] = $item->getId();
                     $service->events->delete($calendarId, $item->getId());
-                }
-                if (!empty($parent)) {
-                    $orm->remove($parent);
-                    if (!empty($parent->getCourse())) {
-                        $parent->getCourse()->removeEvent($parent);
-                    }
-                    $parent->getSchedule()->removeEvent($parent);
-                    // remove children of old events
-                    foreach ($children as $e) {
-                        /** @var Event $e */
-                        $orm->remove($e);
-                        if (!empty($e->getCourse())) {
-                            $e->getCourse()->removeEvent($e);
-                        }
-                        $e->getSchedule()->removeEvent($e);
-                    }
                 }
                 continue;
             } elseif (empty($parent)) {
@@ -275,12 +329,15 @@ class PlanController extends Controller
                         foreach ($children as $e) {
                             /** @var Event $e */
                             $orm->remove($e);
+                            if(!empty($e->getCourse()))
+                                $e->getCourse()->removeEvent($e);
                             $e->getSchedule()->removeEvent($e);
                         }
                     }
                 }
 
             }
+            $remoteIds[] = $item->getId();
 
             // update fields
             if (empty($event->getRemoteUpdated())
@@ -301,8 +358,8 @@ class PlanController extends Controller
                 } else {
                     $orm->merge($event);
                 }
-                $orm->flush();
             }
+            $orm->flush();
         }
 
         // sync changes to google
@@ -310,25 +367,21 @@ class PlanController extends Controller
         usort(
             $sorted,
             function (Event $e) {
-                return !empty($e->getRecurrence()) && substr($e->getRecurrence()[0], 0, 14) == 'RECURRENCE-ID:';
+                return !empty($e->getRecurrence()) && strpos($e->getRecurrence()[0], 'RECURRENCE-ID:') !== false;
             }
         );
         foreach ($sorted as $event) {
             /** @var Event $event */
             $config = self::getGoogleCalendarConfig($event);
             $newEvent = new \Google_Service_Calendar_Event($config);
-            $parent = !empty($event->getRecurrence()) && substr($event->getRecurrence()[0], 0, 14) == 'RECURRENCE-ID:'
+            $parent = !empty($event->getRecurrence()) && strpos($event->getRecurrence()[0], 'RECURRENCE-ID:') !== false
                 ? $schedule->getEvents()->filter(
                     function (Event $e) use ($event) {
-                        return $e->getId() == substr(
-                            $event->getRecurrence()[0],
-                            14,
-                            strpos($event->getRecurrence()[0], '_')
-                        );
+                        return strpos($event->getRecurrence()[0], $e->getId() . '_') !== false;
                     }
                 )->first()
                 : $event;
-            if (empty($parent->getRemoteId()) || !in_array($parent->getRemoteId(), $remoteIds)) {
+            if (empty($parent->getRemoteId())) {
                 $newEvent = $service->events->insert($calendarId, $newEvent);
                 // store remoteId in all existing instances
                 $parent->setRemoteUpdated(date_timezone_set(new \DateTime($newEvent->getUpdated()), new \DateTimeZone(date_default_timezone_get())));
@@ -344,8 +397,12 @@ class PlanController extends Controller
                 $newEvent = $service->events->update($calendarId, $remoteId, $newEvent);
                 $event->setRemoteUpdated(date_timezone_set(new \DateTime($newEvent->getUpdated()), new \DateTimeZone(date_default_timezone_get())));
                 $orm->merge($event);
+            } elseif (!empty($event->getRemoteId()) && !in_array($event->getRemoteId(), $remoteIds)) {
+                $orm->remove($event);
+                if(!empty($event->getCourse()))
+                    $event->getCourse()->removeEvent($event);
+                $event->getSchedule()->removeEvent($event);
             }
-
         }
 
         $orm->flush();
@@ -391,19 +448,25 @@ class PlanController extends Controller
             ];
         }
 
-        if (!empty($event->getRecurrence()) && substr($event->getRecurrence()[0], 0, 14) != 'RECURRENCE-ID:') {
+        if (!empty($event->getRecurrence()) && strpos($event->getRecurrence()[0], 'RECURRENCE-ID:') === false) {
             $config['recurrence'] = $event->getRecurrence();
         } else {
             $config['recurrence'] = null;
         }
 
-        if (!empty($event->getAlert())) {
+        if (!empty($event->getAlert()) || $event->getType() == 'd') {
             $config['reminders'] = [
                 'useDefault' => false,
-                'overrides' => [
-                    ['method' => 'popup', 'minutes' => $event->getAlert()]
-                ],
+                'overrides' => []
             ];
+            if($event->getType() == 'd') {
+                foreach($event->getDeadline()->getReminder() as $r) {
+                    $config['reminders']['overrides'][] = ['method' => 'popup', 'minutes' => $r / 60 - 540];
+                }
+            }
+            else {
+                $config['reminders']['overrides'][] = ['method' => 'popup', 'minutes' => $event->getAlert()];
+            }
         } else {
             $config['reminders'] = null;
         }
@@ -528,6 +591,7 @@ class PlanController extends Controller
         $eventInfo = [];
         foreach (array_values($schedule->getClasses()->toArray()) as $i => $c) {
             self::createCourseEvents($c, $orm);
+            self::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
             /** @var Course $c */
             $week = strtotime('last Sunday', $c->getStartTime()->getTimestamp());
             foreach ($c->getDotw() as $j => $d) {
@@ -615,6 +679,7 @@ class PlanController extends Controller
             )->toArray();
             if (empty($existing)) {
                 self::createCourseEvents($c, $orm);
+                self::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
             }
         }
 
@@ -709,14 +774,14 @@ class PlanController extends Controller
             $events = [];
             $isDemo = true;
         } else {
-            $events = $schedule->getEvents()->toArray();
+            $events = $schedule->getEvents();
         }
 
         return $this->render(
             'StudySauceBundle:Plan:widget.html.php',
             [
                 'isDemo' => $isDemo,
-                'events' => $events,
+                'events' => self::getJsonEvents($events),
                 'user' => $user
             ]
         );
@@ -850,7 +915,8 @@ class PlanController extends Controller
                     'editable' => ($child->getType() == 'sr' || $child->getType() == 'f' || $child->getType() == 'p'),
                     'dates' => isset($dates) ? $dates : null,
                     'alert' => $child->getAlert(),
-                    'location' => $child->getLocation()
+                    'location' => $child->getLocation(),
+                    'completed' => $child->getCompleted()
                 ];
                 if (!empty($child->getCourse())) {
                     $newEvent['courseId'] = $child->getCourse()->getId();
@@ -858,6 +924,9 @@ class PlanController extends Controller
                 $jsEvents[] = $newEvent;
             }
         }
+        usort($jsEvents, function ($a, $b) {
+            return (new \DateTime($a['start']))->getTimestamp() - (new \DateTime($b['start']))->getTimestamp();
+        });
 
         return $jsEvents;
     }
@@ -873,6 +942,8 @@ class PlanController extends Controller
 
         // add deadlines and holidays
         foreach ($deadlines as $did => $d) {
+            if($d->getDeleted())
+                continue;
             $isNew = false;
             $event = $schedule->getEvents()->filter(
                 function (Event $e) use ($d) {
@@ -890,12 +961,13 @@ class PlanController extends Controller
             if(!empty($d->getCourse())) {
                 $d->getCourse()->addEvent($event);
             }
-            $event->setName($d->getAssignment());
+            $event->setName((empty($d->getCourse()) ? 'Non-academic: ' : ($d->getCourse()->getName() . ': ')) . $d->getAssignment());
             $event->setType('d');
 
             /** @var Deadline $d */
             $event->setStart(date_time_set(clone $d->getDueDate(), 0, 0, 0));
             $event->setEnd(date_add(clone $event->getStart(), new \DateInterval('PT86399S')));
+            $event->setUpdated(new \DateTime());
             if($isNew) {
                 $orm->persist($event);
             }
@@ -963,6 +1035,7 @@ class PlanController extends Controller
                 if (!empty($request->get('profile-difficulty-' . $c->getId()))) {
                     $difficulty = $request->get('profile-difficulty-' . $c->getId());
                     $c->setStudyDifficulty($difficulty);
+                    // remove existing study events when it is switched to none
                     if($difficulty == 'none') {
                         foreach($c->getEvents()->toArray() as $e) {
                             if($e->getType() == 'p' || $e->getType() == 'sr') {
@@ -1047,12 +1120,9 @@ EOCAL;
         // sync changes to google
         foreach ($schedule->getEvents()->toArray() as $event) {
             /** @var Event $event */
-            $rrules = $event->getRecurrence();
-            if(!empty($rrules)) {
-                $rrules = implode("\r\n", $rrules);
-                if(strpos($rrules, 'RECURRENCE-ID:') !== false) {
-                    $rrules = explode('_', $rrules)[1];
-                }
+            $rrules = implode("\r\n", $event->getRecurrence() ?: []);
+            if(strpos($rrules, 'RECURRENCE-ID:') !== false) {
+                $rrules = explode('_', $rrules)[1];
             }
             $id = $event->getId();
             $title = $event->getTitle();
@@ -1138,46 +1208,11 @@ END:VCALENDAR'
      */
     public static function createStudyEvents(Schedule $schedule, $eventInfo, EntityManager $orm)
     {
-        // delete previous course events
-        foreach ($eventInfo as $event) {
-            if(!($event['type'] == 'p' || $event['type'] == 'sr' || $event['type'] == 'f')) {
-                continue;
-            }
-
-            if (!empty($event['courseId'])) {
-                /** @var Course $course */
-                $course = $schedule->getClasses()->filter(
-                    function (Course $c) use ($event) {
-                        return $c->getId() == $event['courseId'];
-                    }
-                )->first();
-                if (empty($course)) {
-                    continue;
-                }
-                foreach ($course->getEvents()->toArray() as $e) {
-                    /** @var Event $e */
-                    if ($e->getType() == $event['type']) {
-                        $orm->remove($e);
-                        $course->removeEvent($e);
-                        $schedule->removeEvent($e);
-                    }
-                }
-            } elseif ($event['type'] == 'f') {
-                foreach ($schedule->getEvents()->toArray() as $e) {
-                    /** @var Event $e */
-                    if ($e->getType() == $event['type']) {
-                        $orm->remove($e);
-                        $schedule->removeEvent($e);
-                    }
-                }
-            } else {
-                continue;
-            }
-        }
-        $orm->flush();
-
+        $used = [];
+        $courses = [];
         // create new events
         foreach ($eventInfo as $event) {
+            $isNew = false;
             if(!($event['type'] == 'p' || $event['type'] == 'sr' || $event['type'] == 'f')) {
                 if($event['type'] == 'c') {
                     $event['reoccurring'] = true;
@@ -1197,50 +1232,63 @@ END:VCALENDAR'
                     continue;
                 }
 
-                $newEvent = new Event();
-                $newEvent->setCourse($course);
-                $course->addEvent($newEvent);
+                // find an existing event of the same type to update
+                /** @var Event $newEvent */
+                if(empty($newEvent = $course->getEvents()->filter(function (Event $e) use ($event, $used) {
+                    return $e->getType() == $event['type']
+                    && !in_array($e->getId(), $used)
+                    && (empty($e->getRecurrence())
+                        || strpos('RECURRENCE-ID:', $e->getRecurrence()[0]) === false);})->first())) {
+                    $newEvent = new Event();
+                    $isNew = true;
+                    $newEvent->setSchedule($schedule);
+                    $schedule->addEvent($newEvent);
+                    $newEvent->setCourse($course);
+                    $course->addEvent($newEvent);
+                }
                 $newEvent->setName($course->getName());
                 $start = clone $course->getStartTime();
                 $end = clone $course->getEndTime();
             } elseif ($event['type'] == 'f') {
-
-                $newEvent = new Event();
-                $newEvent->setType($event['type']);
+                if(empty($newEvent = $schedule->getEvents()->filter(function (Event $e) use ($event, $used) {
+                    return $e->getType() == $event['type']
+                    && !in_array($e->getId(), $used)
+                    && (empty($e->getRecurrence())
+                        || strpos('RECURRENCE-ID:', $e->getRecurrence()[0]) === false);})->first())) {
+                    $newEvent = new Event();
+                    $isNew = true;
+                    $newEvent->setSchedule($schedule);
+                    $schedule->addEvent($newEvent);
+                    $newEvent->setType($event['type']);
+                }
                 $newEvent->setName('Free study');
-                $start = date_timestamp_set(
-                    new \DateTime(),
-                    min(
-                        array_map(
-                            function (Course $c) {
-                                return $c->getStartTime()->getTimestamp();
-                            },
-                            $schedule->getClasses()->toArray()
-                        )
-                    )
-                );
-                $end = date_timestamp_set(
-                    new \DateTime(),
-                    max(
-                        array_map(
-                            function (Course $c) {
-                                return $c->getEndTime()->getTimestamp();
-                            },
-                            $schedule->getClasses()->toArray()
-                        )
-                    )
-                );
+                $start = $schedule->getStart();
+                $end = $schedule->getEnd();
             } else {
                 continue;
             }
 
-            if(isset($event['location']))
+            // delete child events to reset all times to default
+            foreach($schedule->getEvents()->toArray() as $e) {
+                /** @var Event $e */
+                if(!empty($e->getRecurrence()) && strpos($e->getRecurrence()[0], 'RECURRENCE-ID:' . $newEvent->getId() . '_') !== false) {
+                    $orm->remove($e);
+                    if(!empty($e->getCourse()))
+                        $e->getCourse()->removeEvent($e);
+                    $schedule->removeEvent($e);
+                }
+            }
+            // set alert and locations
+            if (isset($event['title'])) {
+                $newEvent->setName($event['title']);
+            }
+            if(isset($event['location'])) {
                 $newEvent->setLocation($event['location']);
-            if(isset($event['alert']))
+            }
+            if(isset($event['alert'])) {
                 $newEvent->setAlert($event['alert']);
+            }
             $newEvent->setType($event['type']);
-            $newEvent->setSchedule($schedule);
-            $schedule->addEvent($newEvent);
             $newStart = date_timezone_set(
                 new \DateTime($event['start']),
                 new \DateTimeZone(date_default_timezone_get())
@@ -1252,7 +1300,6 @@ END:VCALENDAR'
             }
             $newEvent->setStart($newStart);
             $newEvent->setEnd($newEnd);
-            // TODO: set alert and locations
             // TODO: add exceptions for holidays
             $newEvent->setRecurrence(
                 [
@@ -1266,9 +1313,30 @@ END:VCALENDAR'
                     ';BYDAY=' . strtoupper(substr($newStart->format('D'), 0, 2))
                 ]
             );
-            $orm->persist($newEvent);
+            if($isNew) {
+                $orm->persist($newEvent);
+            }
+            else {
+                $newEvent->setUpdated(new \DateTime());
+                $orm->merge($newEvent);
+            }
             $orm->flush();
+            $used[] = $newEvent->getId();
+            if(!empty($newEvent->getCourse()))
+                $courses[] = $newEvent->getCourse();
         }
+
+        // remove unused
+        foreach($schedule->getEvents()->toArray() as $e) {
+            if(($e->getType() == 'sr' || $e->getType() == 'p' || $e->getType() == 'f')
+            && !in_array($e->getId(), $used) && (in_array($e->getCourse(), $courses) || $e->getType() == 'f')) {
+                $orm->remove($e);
+                if(!empty($e->getCourse()))
+                    $e->getCourse()->removeEvent($e);
+                $schedule->removeEvent($e);
+            }
+        }
+        $orm->flush();
     }
 
     /**
@@ -1278,22 +1346,18 @@ END:VCALENDAR'
     public static function createCourseEvents(Course $course, EntityManager $orm)
     {
         $days = ['SU' => 'Su', 'MO' => 'M', 'TU' => 'Tu', 'WE' => 'W', 'TH' => 'Th', 'FR' => 'F', 'SA' => 'Sa'];
-        // delete previous course events
-        foreach ($course->getEvents()->toArray() as $e) {
-            /** @var Event $e */
-            if ($e->getType() == 'c') {
-                $orm->remove($e);
-                $course->removeEvent($e);
-                $course->getSchedule()->removeEvent($e);
-            }
-        }
 
-        $event = new Event();
-        $event->setType('c');
-        $event->setCourse($course);
-        $course->addEvent($event);
-        $event->setSchedule($course->getSchedule());
-        $course->getSchedule()->addEvent($event);
+        $isNew = false;
+        if(empty($event = $course->getEvents()->filter(function (Event $e) {
+            return $e->getType() == 'c';})->first())) {
+            $isNew = true;
+            $event = new Event();
+            $event->setType('c');
+            $event->setCourse($course);
+            $course->addEvent($event);
+            $event->setSchedule($course->getSchedule());
+            $course->getSchedule()->addEvent($event);
+        }
 
         $event->setName($course->getName());
         $firstDay = min(
@@ -1321,7 +1385,13 @@ END:VCALENDAR'
                 ';BYDAY=' . implode(',', array_keys(array_intersect($days, $course->getDotw())))
             ]
         );
-        $orm->persist($event);
+        if($isNew) {
+            $orm->persist($event);
+        }
+        else {
+            $event->setUpdated(new \DateTime());
+            $orm->merge($event);
+        }
         $orm->flush();
     }
 
@@ -1406,54 +1476,76 @@ END:VCALENDAR'
         }
 
         $isNew = false;
-        $newStart = date_timezone_set(
-            new \DateTime($eventInfo['start']),
-            new \DateTimeZone(date_default_timezone_get())
-        );
-        $newEnd = date_timezone_set(
-            new \DateTime($eventInfo['end']),
-            new \DateTimeZone(date_default_timezone_get())
-        );
         $original = new \DateTime(explode('_', $eventInfo['eventId'])[1]);
 
         if ($eventInfo['reoccurring'] !== 'false') {
-            // get original instance day and change days
-            if (!empty($newRecurrence = $parent->getRecurrence())) {
-                // change original day to new day of the week,
-                // unless current event was moved before make that the new time
-                preg_match('/BYDAY=[a-z\,]*/i', $parent->getRecurrence()[0], $matches);
-                $newDays = str_replace(
-                    strtoupper(substr(date_timezone_set(clone $original, new \DateTimeZone(date_default_timezone_get()))->format('D'), 0, 2)),
-                    strtoupper(substr($newStart->format('D'), 0, 2)),
-                    $matches[0]
+            if(!empty($eventInfo['start']) && !empty($eventInfo['end'])) {
+                $newStart = date_timezone_set(
+                    new \DateTime($eventInfo['start']),
+                    new \DateTimeZone(date_default_timezone_get())
                 );
-                // TODO: exclude days
-                $newRecurrence[0] = preg_replace('/BYDAY=[a-z\,]*/i', $newDays, $parent->getRecurrence()[0]);
-                $parent->setRecurrence($newRecurrence);
-            }
+                $newEnd = date_timezone_set(
+                    new \DateTime($eventInfo['end']),
+                    new \DateTimeZone(date_default_timezone_get())
+                );
 
-            // select the earliest date, either the original day with new time or the new day and time
-            if ($newStart < $parent->getStart()) {
-                $parent->setStart($newStart);
-                $parent->setEnd($newEnd);
-            } else {
-                // only change times
-                $diff = new \DateInterval('PT' . abs($newStart->getTimestamp() - $original->getTimestamp()) . 'S');
-                if($newStart->getTimestamp() - $original->getTimestamp() < 0)
-                    $diff->invert = true;
-                $parent->setStart(date_add(clone $parent->getStart(), $diff));
-                $parent->setEnd(date_add(clone $parent->getStart(), new \DateInterval('PT' . ($newEnd->getTimestamp() - $newStart->getTimestamp()) . 'S')));
-            }
-            // remove out of series children
-            // TODO: does this only work if we are changing days?
-            $children = $schedule->getEvents()->filter(function (Event $e) use ($parent) {!empty($e->getRecurrence()) && strpos(
-                $e->getRecurrence()[0],
-                'RECURRENCE-ID:' . $parent->getId() . '_'
-            ) !== false;})->toArray();
-            foreach ($children as $e) {
-                /** @var Event $e */
-                $orm->remove($e);
-                $e->getSchedule()->removeEvent($e);
+                // get original instance day and change days
+                if (!empty($newRecurrence = $parent->getRecurrence())) {
+                    // change original day to new day of the week,
+                    // unless current event was moved before make that the new time
+                    preg_match('/BYDAY=[a-z\,]*/i', $parent->getRecurrence()[0], $matches);
+                    $newDays = str_replace(
+                        strtoupper(
+                            substr(
+                                date_timezone_set(
+                                    clone $original,
+                                    new \DateTimeZone(date_default_timezone_get())
+                                )->format('D'),
+                                0,
+                                2
+                            )
+                        ),
+                        strtoupper(substr($newStart->format('D'), 0, 2)),
+                        $matches[0]
+                    );
+                    // TODO: exclude days
+                    $newRecurrence[0] = preg_replace('/BYDAY=[a-z\,]*/i', $newDays, $parent->getRecurrence()[0]);
+                    $parent->setRecurrence($newRecurrence);
+                }
+
+                // select the earliest date, either the original day with new time or the new day and time
+                if ($newStart < $parent->getStart()) {
+                    $parent->setStart($newStart);
+                    $parent->setEnd($newEnd);
+                } else {
+                    // only change times
+                    $diff = new \DateInterval('PT' . abs($newStart->getTimestamp() - $original->getTimestamp()) . 'S');
+                    if ($newStart->getTimestamp() - $original->getTimestamp() < 0) {
+                        $diff->invert = true;
+                    }
+                    $parent->setStart(date_add(clone $parent->getStart(), $diff));
+                    $parent->setEnd(
+                        date_add(
+                            clone $parent->getStart(),
+                            new \DateInterval('PT' . ($newEnd->getTimestamp() - $newStart->getTimestamp()) . 'S')
+                        )
+                    );
+                }
+                // remove out of series children
+                // TODO: does this only work if we are changing days?
+                $children = $schedule->getEvents()->filter(
+                    function (Event $e) use ($parent) {
+                        !empty($e->getRecurrence()) && strpos(
+                            $e->getRecurrence()[0],
+                            'RECURRENCE-ID:' . $parent->getId() . '_'
+                        ) !== false;
+                    }
+                )->toArray();
+                foreach ($children as $e) {
+                    /** @var Event $e */
+                    $orm->remove($e);
+                    $e->getSchedule()->removeEvent($e);
+                }
             }
             $event = $parent;
         } else {
@@ -1487,8 +1579,23 @@ END:VCALENDAR'
                     ]
                 );
             }
-            $event->setStart($newStart);
-            $event->setEnd($newEnd);
+            if(!empty($eventInfo['start']) && !empty($eventInfo['end'])) {
+                $newStart = date_timezone_set(
+                    new \DateTime($eventInfo['start']),
+                    new \DateTimeZone(date_default_timezone_get())
+                );
+                $newEnd = date_timezone_set(
+                    new \DateTime($eventInfo['end']),
+                    new \DateTimeZone(date_default_timezone_get())
+                );
+
+                $event->setStart($newStart);
+                $event->setEnd($newEnd);
+            }
+            else {
+                $event->setStart(date_timezone_set(clone $original, new \DateTimeZone(date_default_timezone_get())));
+                $event->setEnd(date_add(clone $event->getStart(), new \DateInterval('PT' . ($parent->getEnd()->getTimestamp() - $parent->getStart()->getTimestamp()) . 'S')));
+            }
         }
         if ($eventInfo['location'] !== null) {
             $event->setLocation($eventInfo['location']);
@@ -1528,7 +1635,7 @@ END:VCALENDAR'
         /** @var Event $event */
         $event = $schedule->getEvents()->filter(
             function (Event $e) use ($request) {
-                return $e->getId() == $request->get('eventId');
+                return $e->getId() == explode('_', $request->get('eventId'))[0];
             }
         )->first();
         if (empty($event)) {

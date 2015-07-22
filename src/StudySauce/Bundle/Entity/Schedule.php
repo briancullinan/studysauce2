@@ -501,4 +501,36 @@ class Schedule
     {
         return $this->alerts;
     }
+
+    public function getStart()
+    {
+        $start = date_timestamp_set(
+            new \DateTime(),
+            min(
+                array_map(
+                    function (Course $c) {
+                        return $c->getStartTime()->getTimestamp();
+                    },
+                    $this->getClasses()->toArray()
+                )
+            )
+        );
+        return $start;
+    }
+
+    public function getEnd()
+    {
+        $end = date_timestamp_set(
+            new \DateTime(),
+            max(
+                array_map(
+                    function (Course $c) {
+                        return $c->getEndTime()->getTimestamp();
+                    },
+                    $this->getClasses()->toArray()
+                )
+            )
+        );
+        return $end;
+    }
 }

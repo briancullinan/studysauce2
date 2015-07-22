@@ -19,31 +19,31 @@ use StudySauce\Bundle\Entity\Event;
         else {
             $count = 0;
             foreach($events as $i => $event) {
-                /** @var Event $event */
-                if ($event->getType() == 'm' || $event->getType() == 'r' || $event->getType() == 'z' || $event->getType() == 'h') {
+                if (strpos($event['className'], 'event-type-m')
+                    || strpos($event['className'], 'event-type-r')
+                    || strpos($event['className'], 'event-type-z')
+                    || strpos($event['className'], 'event-type-h')) {
                     continue;
                 }
 
-                if ($event->getStart() < new \DateTime('today') || $event->getStart() > new \DateTime('tomorrow'))
+                if (new \DateTime($event['start']) < new \DateTime('today') || new \DateTime($event['start']) > new \DateTime('tomorrow'))
                     continue;
                 ?>
                 <div class="session-row <?php
-                    print ' event-type-' . $event->getType();
-                    print ' event-id-' . $event->getId();
-                    print ($event->getCompleted() ? ' done' : ''); ?>">
+                    print preg_replace('/(class[0-9])/i', '', $event['className']);
+                    print ' event-id-' . $event['eventId'];
+                    print ($event['completed'] ? ' done' : ''); ?>">
                     <div class="class-name">
-                        <span class="class<?php print (!empty($event->getCourse())
-                            ? $event->getCourse()->getIndex()
-                            : ''); ?>">&nbsp;</span> <?php print $event->getName(); ?>
+                        <span class="<?php print preg_replace('/.*(class[0-9]).*/i', '$1', $event['className']); ?>">&nbsp;</span> <?php print preg_replace('/<h4>(.*?)<\/h4>/i', '', $event['title']); ?>
                     </div>
                     <div class="date">
-                        <div class="read-only"><?php print $event->getStart()->format('g:i') .
-                                '&nbsp;' . $event->getStart()->format('A'); ?> -
-                            <?php print $event->getEnd()->format('g:i') .
-                                '&nbsp;' . $event->getEnd()->format('A'); ?></div>
+                        <div class="read-only"><?php print date_timezone_set(new \DateTime($event['start']), new \DateTimeZone(date_default_timezone_get()))->format('g:i') .
+                                '&nbsp;' . date_timezone_set(new \DateTime($event['start']), new \DateTimeZone(date_default_timezone_get()))->format('A'); ?> -
+                            <?php print date_timezone_set(new \DateTime($event['end']), new \DateTimeZone(date_default_timezone_get()))->format('g:i') .
+                                '&nbsp;' . date_timezone_set(new \DateTime($event['end']), new \DateTimeZone(date_default_timezone_get()))->format('A'); ?></div>
                     </div>
                     <div class="completed">
-                        <label class="checkbox"><input type="checkbox" value="true" <?php print ($event->getCompleted()
+                        <label class="checkbox"><input type="checkbox" value="true" <?php print ($event['completed']
                                 ? 'checked="checked"'
                                 : ''); ?>><i></i></label>
                     </div>

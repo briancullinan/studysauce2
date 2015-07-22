@@ -236,18 +236,18 @@ $(document).ready(function () {
         $.fullCalendar.Grid.prototype.listenToExternalDrag = function (el, ev, ui) {
             var classI = (/class([0-9])(\s|$)/ig).exec(el.attr('class'));
             var type = (/event-type-([a-z]*?)(\s|$)/ig).exec(el.attr('class'));
+            if(type == null) {
+                return false;
+            }
             if(classI != null) {
                 shortlist = calendar.fullCalendar('clientEvents').filter(function (e) {
                     return e.className.indexOf('class' + classI[1]) > -1 && e != ev;
                 });
             }
-            else if(type != null) {
+            else {
                 shortlist = calendar.fullCalendar('clientEvents').filter(function (e) {
                     return e.className.indexOf('event-type-' + type[1]) > -1 && e != ev;
                 });
-            }
-            else {
-                shortlist = [];
             }
             prevDragged = el;
             this.renderDrag = function (dropLocation, seg) {
@@ -317,7 +317,7 @@ $(document).ready(function () {
                     plan = $('#plan'),
                     view = calendar.fullCalendar('getView');
                 if(view.name == 'agendaDay' && plan.find('.session-strategy:visible').length > 0) {
-                    calendar.find('.fc-event').first().trigger('click');
+                    calendar.find('.fc-event:not(.event-type-d)').first().trigger('click');
                 }
                 if(plan.is('.setup-mode') || plan.is('.add-events')) {
                     calendar.find('h2').text('Your typical week')
@@ -329,6 +329,9 @@ $(document).ready(function () {
                 if (view.name == 'month' && !event.allDay) return false;
                 element.addClass('event-id-' + (typeof event.eventId == 'undefined' ? '' : event.eventId));
                 element.find('.fc-title').html(event.title);
+                // skip double click event for deadlines
+                if(event.className.indexOf('event-type-d') > -1)
+                    return true;
                 element.bind('dblclick', function () {
                     clearTimeout(clickTimeout);
                     setTimeout(function () {
@@ -368,7 +371,7 @@ $(document).ready(function () {
                 center: 'title',
                 right: 'today agendaDay,agendaWeek,month'
             },
-            defaultView: plans.is('.setup-mode') ? 'agendaWeek' : 'agendaDay',
+            defaultView: plans.is('.setup-mode') && window.outerWidth > 700 ? 'agendaWeek' : 'agendaDay',
             selectable: false,
             events: function (start, end, timezone, callback) {
                 callback(window.planEvents);
@@ -383,7 +386,8 @@ $(document).ready(function () {
                 if(body.is('.adviser'))
                     return;
                 var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
-                if(plan.is('.setup-mode') || plan.is('.add-events'))
+                // skip click event for deadlines
+                if(plan.is('.setup-mode') || plan.is('.add-events') || event.className.indexOf('event-type-d') > -1)
                     return;
                 clearTimeout(clickTimeout);
                 clickTimeout = setTimeout(function () {
@@ -629,9 +633,14 @@ $(document).ready(function () {
         var eventIds = [];
         for(var i = 0; i < events.length; i++) {
             var type = (/event-type-([a-z]+)(\s|$)/i).exec(events[i].className.join(' '));
+            if(type[1] == 'd')
+                continue;
             if(typeof events[i].eventId == 'undefined'
-                || calendar.find('.event-id-' + events[i].eventId).is(':visible') && eventIds.indexOf(events[i].eventId.split('_')[0]) == -1) {
-                eventIds[eventIds.length] = events[i].eventId.split('_')[0];
+                || calendar.find('.event-id-' + events[i].eventId).is(':visible')
+                && eventIds.indexOf(events[i].eventId.split('_')[0]) == -1) {
+                if(typeof events[i].eventId != 'undefined') {
+                    eventIds[eventIds.length] = events[i].eventId.split('_')[0];
+                }
                 studyEvents[studyEvents.length] = {
                     type: type[1],
                     eventId: events[i].eventId,
@@ -1062,25 +1071,22 @@ $(document).ready(function () {
                 st = dialog.find('.start-time input').timeEntry('getTime'),
                 e = dialog.find('.end-date input[type="text"]').datepicker('getDate'),
                 et = dialog.find('.end-time input').timeEntry('getTime');
-            changes.start = s.getFullYear() + '-'
-                + (s.getMonth() + 1 < 10
-                    ? ('0' + (s.getMonth() + 1))
-                    : (s.getMonth() + 1)) + '-' + (s.getDate() < 10
-                    ? ('0' + s.getDate()) : s.getDate())
-                + 'T' + st.getHours() + ':' + st.getMinutes() + ':00';
-            changes.end = e.getFullYear() + '-'
-                + (e.getMonth() + 1 < 10
-                    ? ('0' + (e.getMonth() + 1))
-                    : (e.getMonth() + 1)) + '-' + (e.getDate() < 10
-                    ? ('0' + e.getDate()) : e.getDate())
-                + 'T' + et.getHours() + ':' + et.getMinutes() + ':00';
-            event.start = moment(changes.start);
-            event.end = moment(changes.end);
+            // combine date and times
+            var newStart = new Date();
+            newStart.setFullYear(s.getFullYear(), s.getMonth(), s.getDate());
+            newStart.setHours(st.getHours(), st.getMinutes(), 0);
+            changes.start = newStart.toJSON();
+            var newEnd = new Date();
+            newEnd.setFullYear(e.getFullYear(), e.getMonth(), e.getDate());
+            newEnd.setHours(et.getHours(), et.getMinutes(), 0);
+            changes.end = newEnd.toJSON();
+            event.start = moment(newStart);
+            event.end = moment(newEnd);
         }
         if(dialog.find('.title:not(.read-only) input').length > 0) {
             changes.title = dialog.find('.title input').val();
             var type = (/event-type-([a-z]+)(\s|$)/i).exec(event.className.join(' '));
-            event.title = '<h4>' + type[1] + '</h4>' + changes.title;
+            event.title = '<h4>' + type[1].toUpperCase() + '</h4>' + changes.title;
         }
 
         if(!plan.is('.add-events')) {
@@ -1101,7 +1107,10 @@ $(document).ready(function () {
     body.on('show', '#plan', function () {
         setupPlan();
 
-        if($(this).is('.setup-mode') && window.outerWidth < 700) {
+        if($(this).is('.setup-mode') && ((navigator.userAgent.toLowerCase().indexOf("iphone") > -1 ||
+            navigator.userAgent.toLowerCase().indexOf("ipad") > -1) ||
+            navigator.userAgent.toLowerCase().indexOf("android") > -1 ||
+            navigator.userAgent.toLowerCase().indexOf("mobile") > -1)) {
             $('#plan-mobile').modal({show:true});
         }
         var notes = $('#notes');
@@ -1397,7 +1406,7 @@ $(document).ready(function () {
     body.on('change', '.plan-widget .completed input', function () {
         var that = jQuery(this),
             row = that.parents('.session-row'),
-            eventId = (/event-id-([0-9]*)(\s|$)/ig).exec(row.attr('class'))[1];
+            eventId = (/event-id-([0-9TZ_]*)(\s|$)/ig).exec(row.attr('class'))[1];
 
         $.ajax({
             url: window.callbackPaths['plan_complete'],
