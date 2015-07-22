@@ -112,9 +112,10 @@ $(document).ready(function () {
         notes.addClass('edit-note');
         notes.find('#editor1').html('');
         setTimeout(function () {
-            if(typeof CKEDITOR.instances.editor1 != 'undefined')
+            if(typeof CKEDITOR.instances.editor1 != 'undefined') {
                 CKEDITOR.instances['editor1'].setData('');
                 CKEDITOR.instances.editor1.fire('focus');
+            }
         }, 20);
     });
 
@@ -137,7 +138,9 @@ $(document).ready(function () {
         }
         row.scrollintoview(DASHBOARD_MARGINS);
         $('#editor1').blur();
-        CKEDITOR.instances.editor1.fire('blur');
+        if(typeof CKEDITOR.instances.editor1 != 'undefined') {
+            CKEDITOR.instances.editor1.fire('blur');
+        }
         if(notes.is('.not-connected') && !notes.is('.connect-shown') && notes.is(':visible')) {
             notes.addClass('connect-shown');
             $('#notes-connect').modal({show:true});
@@ -159,7 +162,9 @@ $(document).ready(function () {
                 tags: notes.find('.input.tags input')[0].selectize.getValue(),
                 title: notes.find('.note-title .title input').val().trim(),
                 notebookId: notebookId,
-                body: CKEDITOR.instances['editor1'].getData()
+                body: typeof CKEDITOR.instances != 'undefined' && typeof  CKEDITOR.instances.editor1 != 'undefined'
+                    ? CKEDITOR.instances['editor1'].getData()
+                    : notes.find('#editor1').html()
             },
             success: updateNotes,
             error: function () {
@@ -174,7 +179,7 @@ $(document).ready(function () {
         if(notes.find('.highlighted-link').is('.invalid')) {
             return;
         }
-        if(notes.is(':visible') && CKEDITOR.instances['editor1'].getData().trim() == '') {
+        if(notes.is(':visible') && (notes.find('#editor1').text().trim() == '' || typeof CKEDITOR.instances != 'undefined' && typeof CKEDITOR.instances.editor1 != 'undefined' && CKEDITOR.instances['editor1'].getData().trim() == '')) {
             var dialog = $('#notes-discard').modal({show:true});
             dialog.one('click.discard', 'a[href="#close"]', saveNote);
             // if the note is cleared and it has an id, we should delete it
