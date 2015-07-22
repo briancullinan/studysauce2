@@ -1127,7 +1127,19 @@ EOCAL;
             $title = $event->getTitle();
             $start = $event->getStart()->format('Ymd') . 'T' . $event->getStart()->format('His');
             $end = $event->getEnd()->format('Ymd') . 'T' . $event->getEnd()->format('His');
-            $alert = $event->getAlert() . 'M';
+            $alert = '';
+            if(!empty($event->getAlert())) {
+                $minutes = $event->getAlert() . 'M';
+                $alert = <<<EOA
+BEGIN:VALARM
+TRIGGER:-PT$minutes
+REPEAT:1
+DURATION:PT$minutes
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+EOA;
+            }
             $created = date_timezone_set(clone $event->getCreated(), new \DateTimeZone('Z'));
             $created = $created->format('Ymd') . 'T' . $created->format('Hise');
             $modified = date_timezone_set(empty($event->getUpdated()) ? clone $event->getCreated() : clone $event->getUpdated(), new \DateTimeZone('Z'));
@@ -1149,13 +1161,7 @@ SEQUENCE:0
 STATUS:CONFIRMED
 SUMMARY:$title
 TRANSP:OPAQUE
-BEGIN:VALARM
-TRIGGER:-PT$alert
-REPEAT:1
-DURATION:PT$alert
-ACTION:DISPLAY
-DESCRIPTION:Reminder
-END:VALARM
+$alert
 END:VEVENT
 
 EOEVT;
