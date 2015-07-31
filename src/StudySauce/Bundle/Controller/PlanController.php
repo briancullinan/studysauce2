@@ -1252,8 +1252,8 @@ END:VCALENDAR'
                     $course->addEvent($newEvent);
                 }
                 $newEvent->setName($course->getName());
-                $start = clone $course->getStartTime();
-                $end = clone $course->getEndTime();
+                $firstDay = strtotime('last Sunday', $course->getStartTime()->getTimestamp());
+                $lastDay = strtotime('last Sunday', $course->getEndTime()->getTimestamp());
             } elseif ($event['type'] == 'f') {
                 if(empty($newEvent = $schedule->getEvents()->filter(function (Event $e) use ($event, $used) {
                     return $e->getType() == $event['type']
@@ -1267,8 +1267,10 @@ END:VCALENDAR'
                     $newEvent->setType($event['type']);
                 }
                 $newEvent->setName('Free study');
-                $start = $schedule->getStart();
-                $end = $schedule->getEnd();
+                $firstDay = strtotime('last Sunday', min(array_map(function (Course $c) {
+                    return $c->getStartTime()->getTimestamp();}, $schedule->getClasses()->toArray())));
+                $lastDay = strtotime('last Sunday', min(array_map(function (Course $c) {
+                    return $c->getEndTime()->getTimestamp();}, $schedule->getClasses()->toArray())));
             } else {
                 continue;
             }
@@ -1294,28 +1296,22 @@ END:VCALENDAR'
                 $newEvent->setAlert($event['alert']);
             }
             $newEvent->setType($event['type']);
-            $newStart = date_timezone_set(
-                new \DateTime($event['start']),
-                new \DateTimeZone(date_default_timezone_get())
-            );
-            $newEnd = date_timezone_set(new \DateTime($event['end']), new \DateTimeZone(date_default_timezone_get()));
-            if (date_sub(clone $newStart, new \DateInterval('P7D')) > date_sub($start, new \DateInterval('P1D'))) {
-                $newStart = date_sub($newStart, new \DateInterval('P7D'));
-                $newEnd = date_sub($newEnd, new \DateInterval('P7D'));
-            }
-            $newEvent->setStart($newStart);
-            $newEvent->setEnd($newEnd);
+            $diff = (new \DateTime($event['start']))->getTimestamp() - strtotime('last Sunday', (new \DateTime($event['start']))->getTimestamp());
+            $start = ($next = $firstDay + $diff) < $firstDay - 86400
+                ? date_timestamp_set(new \DateTime(), $next + 608400)
+                : date_timestamp_set(new \DateTime(), $next);
+            $newEvent->setStart($start);
+            $length = (new \DateTime($event['end']))->getTimestamp() - (new \DateTime($event['start']))->getTimestamp();
+            $newEvent->setEnd(date_add(clone $newEvent->getStart(), new \DateInterval('PT' . $length . 'S')));
             // TODO: add exceptions for holidays
+            $last = ($next = $lastDay + $diff) > $lastDay + 86400
+                ? date_timestamp_set(new \DateTime(), $next - 608400)
+                : date_timestamp_set(new \DateTime(), $next);
             $newEvent->setRecurrence(
                 [
                     'RRULE:FREQ=WEEKLY' .
-                    ';UNTIL=' . date_timestamp_set(
-                        new \DateTime(),
-                        strtotime('this Sunday', $end->getTimestamp()) + array_values(
-                            self::$weekConversion
-                        )[$newStart->format('w')]
-                    )->format('Ymd') . 'T000000Z' .
-                    ';BYDAY=' . strtoupper(substr($newStart->format('D'), 0, 2))
+                    ';UNTIL=' . $last->format('Ymd') . 'T000000Z' .
+                    ';BYDAY=' . strtoupper(substr($start->format('D'), 0, 2))
                 ]
             );
             if($isNew) {

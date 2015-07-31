@@ -233,31 +233,6 @@ class PageLoaderCest
     /**
      * @param AcceptanceTester $I
      */
-    public function tryFunnelSchedule(AcceptanceTester $I)
-    {
-        $I->wantTo('fill out my class schedule');
-        $I->seeAmOnUrl('/schedule/funnel');
-        $I->click('.selectize-input');
-        $I->pressKey('.selectize-input input', WebDriverKeys::BACKSPACE);
-        $I->fillField('.selectize-input input', 'Ariz');
-        $I->wait(10);
-        $I->click('//span[contains(.,"Arizona State University")]');
-        $I->fillField('.class-row:nth-child(1) .class-name input', 'PHIL 101');
-        $I->click('.class-row:nth-child(1) input[value="M"] + i');
-        $I->click('.class-row:nth-child(1) input[value="W"] + i');
-        $I->click('.class-row:nth-child(1) input[value="F"] + i');
-        $I->fillField('.class-row:nth-child(1) .start-time input', '11');
-        $I->fillField('.class-row:nth-child(1) .end-time input', '12');
-        $I->fillField('.class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
-        $I->click('.class-row:nth-child(1) .end-date input');
-        $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
-        $I->click('#schedule .highlighted-link [value="#save-class"]');
-        $I->wait(10);
-    }
-
-    /**
-     * @param AcceptanceTester $I
-     */
     public function tryNewGoals(AcceptanceTester $I) {
 
         $I->wantTo('complete goals');
@@ -290,7 +265,8 @@ class PageLoaderCest
         $I->click('#schedule .class-row:nth-child(1) input[value="F"] + i');
         $I->fillField('#schedule .class-row:nth-child(1) .start-time input', '11');
         $I->fillField('#schedule .class-row:nth-child(1) .end-time input', '12');
-        $I->fillField('#schedule .class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
+        $I->click('#schedule .class-row:nth-child(1) .start-date input');
+        $I->click('.ui-datepicker-calendar tr:first-child td:first-child a');
         $I->click('#schedule .class-row:nth-child(1) .end-date input');
         $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
         $I->click('#schedule .highlighted-link [value="#save-class"]');
@@ -386,7 +362,8 @@ class PageLoaderCest
         $I->click('.class-row:nth-child(1) input[value="F"] + i');
         $I->fillField('.class-row:nth-child(1) .start-time input', '11');
         $I->fillField('.class-row:nth-child(1) .end-time input', '12');
-        $I->fillField('.class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
+        $I->click('.class-row:nth-child(1) .start-date input');
+        $I->click('.ui-datepicker-calendar tr:first-child td:first-child a');
         $I->click('.class-row:nth-child(1) .end-date input');
         $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
 
@@ -424,7 +401,8 @@ class PageLoaderCest
         $I->click('.class-row:nth-child(1) input[value="F"] + i');
         $I->fillField('.class-row:nth-child(1) .start-time input', '11');
         $I->fillField('.class-row:nth-child(1) .end-time input', '12');
-        $I->fillField('.class-row:nth-child(1) .start-date input', (new \DateTime())->format('m/d/y'));
+        $I->click('.class-row:nth-child(1) .start-date input');
+        $I->click('.ui-datepicker-calendar tr:first-child td:first-child a');
         $I->click('.class-row:nth-child(1) .end-date input');
         $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
 

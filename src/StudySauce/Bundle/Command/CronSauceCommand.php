@@ -128,8 +128,9 @@ EOF
             if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time() - 86400 * 4) {
                 $u->setProperty('welcome_reminder', time());
                 //$emails->marketingReminderAction($u);
-                $orm->merge($u);
-                $orm->flush();
+                /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+                $userManager = $this->getContainer()->get('fos_user.user_manager');
+                $userManager->updateUser($u);
             }
         }
 
@@ -396,14 +397,30 @@ EOF
             ->andWhere('u.evernote_access_token IS NOT NULL AND u.evernote_access_token != \'\'');
         $users = $qb->getQuery()->execute();
         foreach($users as $u) {
+            /** @var User $u */
             try {
                 NotesController::syncNotes($u, $this->getContainer());
             }
             catch (\Exception $e) {
-                //print $e->getMessage();
+                if($e instanceof \EDAM\Error\EDAMSystemException) {
+                    if($e->getCode() == 8) {
+                        $u->setEvernoteAccessToken(null);
+                        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+                        $userManager = $this->getContainer()->get('fos_user.user_manager');
+                        $userManager->updateUser($u);
+                    }
+                    elseif($e->getCode() == 19) {
+                        // ignore rate limit errors
+                    }
+                    else
+                        $error = $e;
+                }
+                else
+                    $error = $e;
             }
         }
-
+        if(!empty($error))
+            throw $error;
     }
 
     private function syncEvents()
@@ -423,9 +440,11 @@ EOF
                 PlanController::syncEvents($u, $this->getContainer());
             }
             catch (\Exception $e) {
-                //print $e->getMessage();
+                $error = $e;
             }
         }
+        if(!empty($error))
+            throw $error;
 
     }
 
@@ -437,15 +456,32 @@ EOF
         // set the timeout to 4 and a half minutes
         set_time_limit(60*4.5);
         if(!$input->getOption('sync')) {
-            $this->sendReminders();
-            $this->send3DayMarketing();
-            $this->sendDeadlines();
-            $this->sendInactivity();
-            $this->sendSpool();
+            try {
+                $this->sendReminders();
+                $this->send3DayMarketing();
+                $this->sendDeadlines();
+                $this->sendInactivity();
+                $this->sendSpool();
+            }
+            catch (\Exception $e) {
+                $error = $e;
+            }
         }
         if(!$input->getOption('emails')) {
-            $this->syncNotes();
-            $this->syncEvents();
+            try {
+                $this->syncNotes();
+            }
+            catch (\Exception $e) {
+                $error = $e;
+            }
+            try {
+                $this->syncEvents();
+            }
+            catch (\Exception $e) {
+                $error = $e;
+            }
         }
+        if(!empty($error))
+            throw $error;
     }
 }
