@@ -114,6 +114,7 @@
     left: auto;
     padding-right: 240px;
     vertical-align: middle;
+    line-height: 50px;
 }
 
 #welcome-message > * {
@@ -127,6 +128,7 @@
     background: url(../images/menu_new_compressed.png) no-repeat -10px -2810px;
     overflow: hidden;
     color: transparent;
+    margin-left: 10px;
 }
 
 @media all and (max-width:1300px)

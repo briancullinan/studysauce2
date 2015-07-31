@@ -36,7 +36,7 @@ class AdviserCest
         $I->wantTo('Login as the adviser account studymarketing@mailinator.com');
         $I->amOnPage('/login');
         $I->fillField('#login .email input', 'studymarketing@mailinator.com');
-        $I->fillField('#login .password input', 'password');
+        $I->fillField('#login .password input', 'guest');
         $I->click('#login [value="#user-login"]');
         $I->wait(5);
     }

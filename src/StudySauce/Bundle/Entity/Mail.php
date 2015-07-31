@@ -104,6 +104,44 @@ class Mail implements EmailInterface
         return $this->message;
     }
 
+
+    public function getObject()
+    {
+        if(!isset($this->object) && !empty($this->getMessage()))
+            $this->object = unserialize($this->getMessage());
+        return $this->object;
+    }
+
+    public function getTemplate()
+    {
+        /** @var \Swift_Message $message */
+        $message = $this->getObject();
+        /** @var \Swift_Mime_Headers_ParameterizedHeader $jsonStr */
+        if(!empty($jsonStr = $message->getHeaders()->get('x-smtpapi'))) {
+            $json = json_decode($jsonStr->getValue());
+            if (isset($json->category)) {
+                return $json->category[0];
+            }
+        }
+        return null;
+    }
+
+    public function getRecipient()
+    {
+        /** @var \Swift_Message $message */
+        $message = $this->getObject();
+        $recipient = array_keys($message->getTo())[0];
+        return $recipient;
+    }
+
+    public function getSender()
+    {
+        /** @var \Swift_Message $message */
+        $message = $this->getObject();
+        $recipient = array_keys($message->getFrom())[0];
+        return $recipient;
+    }
+
     /**
      * Set environment
      *
@@ -150,26 +188,4 @@ class Mail implements EmailInterface
         return $this->created;
     }
 
-    /**
-     * Set user
-     *
-     * @param \StudySauce\Bundle\Entity\User $user
-     * @return Mail
-     */
-    public function setUser(\StudySauce\Bundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \StudySauce\Bundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 }

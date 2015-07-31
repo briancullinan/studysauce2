@@ -301,7 +301,7 @@ class BuyController extends Controller
             }
 
             // only set up reoccurring if the term is greater than zero
-            if(!empty($reoccurs = intval($options[$option]['reoccurs'])) && $reoccurs < 12) {
+            if(isset($options[$option]['reoccurs']) && !empty($reoccurs = intval($options[$option]['reoccurs'])) && $reoccurs < 12) {
                 $subscription = new \AuthorizeNet_Subscription();
                 $subscription->name = 'Study Sauce ' . ucfirst($option) . ' Plan';
                 $subscription->intervalLength = $reoccurs;

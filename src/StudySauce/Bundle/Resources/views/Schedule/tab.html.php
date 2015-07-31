@@ -45,12 +45,12 @@ $view['slots']->start('body'); ?>
             <div class="term-row schedule-id-<?php print $schedule->getId(); ?>">
                 <?php
                 $isDemo = false;
-                $courses = array_values($schedule->getClasses()->toArray());
-                $others = array_values($schedule->getOthers()->toArray());
+                $courses = $schedule->getClasses()->toArray();
+                $others = $schedule->getOthers()->toArray();
                 if(empty($courses)) {
                     $isDemo = true;
                     $schedule = $demoSchedules[0];
-                    $courses = array_values($schedule->getClasses()->toArray());
+                    $courses = $schedule->getClasses()->toArray();
                     for($i = count($courses); $i < 6; $i++) {
                         $courses[] = new Course();
                     }

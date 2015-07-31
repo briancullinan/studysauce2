@@ -170,7 +170,7 @@ $(document).ready(function () {
         var that = $(this);
         $('.tipsy').remove();
         if(!that.is('[original-title]') && !that.is('.ui-datepicker *')) {
-            that.tipsy({delayIn: 500}).trigger('mouseenter');
+            that.tipsy({delayIn: 500, html: true}).trigger('mouseenter');
         }
     }
 

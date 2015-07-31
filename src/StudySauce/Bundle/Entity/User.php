@@ -213,7 +213,7 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $groups;
 
     /** @ORM\Column(name="properties", type="array", nullable=true) */
-    protected $properties;
+    protected $properties = [];
 
     /**
      * @ORM\PrePersist
@@ -304,6 +304,7 @@ class User extends BaseUser implements EncoderAwareInterface
     public function setProperty($prop, $value)
     {
         $this->properties[$prop] = $value;
+        $this->setProperties($this->properties);
     }
 
     /**

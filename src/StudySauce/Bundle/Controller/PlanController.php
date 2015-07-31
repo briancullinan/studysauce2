@@ -589,7 +589,7 @@ class PlanController extends Controller
         /** @var Schedule $schedule */
         $schedule = $guest->getSchedules()->first();
         $eventInfo = [];
-        foreach (array_values($schedule->getClasses()->toArray()) as $i => $c) {
+        foreach ($schedule->getClasses()->toArray() as $i => $c) {
             self::createCourseEvents($c, $orm);
             self::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
             /** @var Course $c */
@@ -767,7 +767,7 @@ class PlanController extends Controller
         // get events for current week
         $isDemo = false;
         if (empty($schedule) || empty($schedule->getClasses()->count())) {
-            $events = [];
+            $events = new ArrayCollection();
             $isDemo = true;
         } else {
             $events = $schedule->getEvents();

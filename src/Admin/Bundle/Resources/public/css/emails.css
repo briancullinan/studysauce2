@@ -1,17 +1,4 @@
 
-#emails a[href="#edit-email"]
-{
-    display: inline-block;
-    height: 24px;
-    width: 24px;
-    background: url(../../studysauce/images/menu_new_half.png) no-repeat left -1552px transparent;
-}
-
-#emails a[href="#edit-email"]:hover
-{
-    background-position: left -1602px;
-}
-
 #emails .templates a[href="#send-email"]
 {
     display: inline-block;
@@ -27,7 +14,8 @@
 }
 
 #emails table.variables,
-#emails table.templates
+#emails table.templates,
+#emails table.history
 {
     width: 100%;
     table-layout: fixed;
@@ -38,11 +26,6 @@
 #editor1
 {
     background-color:#fff;
-}
-
-#emails .pane-content
-{
-    padding-bottom: 0;
 }
 
 #send-email .preview
@@ -105,6 +88,11 @@
     transition:opacity ease-in-out .15s;
 }
 
+#emails .ui-datepicker > a {
+    display: block;
+    text-align: left;
+    padding-left: 10px;
+}
 
 .cke:hover
 {
@@ -120,6 +108,96 @@
     bottom: auto;
 }
 
+#emails .history > thead > tr > th:first-child
+{
+    width:160px;
+}
+
+#emails .history > tbody > tr > td:first-child
+{
+    text-align: right;
+    width:80px;
+}
+
+#emails .history > tbody > tr > td:nth-child(2)
+{
+    text-align: left;
+    width:80px;
+}
+
+#emails .history > tbody > tr > td:nth-child(4),
+#emails .history > tbody > tr > td:nth-child(6)
+{
+    text-align: center;
+}
+
+#emails .history > thead > tr > th:nth-child(3),
+#emails .history > tbody > tr > td:nth-child(4)
+{
+    width: 150px;
+}
+
+#emails .history > thead > tr > th:nth-child(5),
+#emails .history > tbody > tr > td:nth-child(6)
+{
+    width: 200px;
+}
+
+#emails .history > tbody > tr > td {
+    padding: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    table-layout: fixed;
+}
+
+#emails .history > tbody > tr > td:nth-child(3) span:nth-child(1),
+#emails .history > tbody > tr > td:nth-child(3) span:nth-child(2),
+#emails .history > tbody > tr > td:nth-child(5) span:nth-child(1),
+#emails .history > tbody > tr > td:nth-child(5) span:nth-child(2)
+{
+    width:50%;
+    display:inline-block;
+    margin: 0 -2px;
+    padding: 0 2px;
+}
+
+#emails .history > tbody > tr > td:nth-child(3) span:nth-child(3),
+#emails .history > tbody > tr > td:nth-child(5) span:nth-child(3)
+{
+    display:block;
+}
+
+#emails .paginate {
+    display: inline-block;
+    width: 300px;
+    margin: 0 -4px;
+    padding: 0 2px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#emails .paginate label {
+    margin: 0 -50px;
+    padding: 0 50px;
+    display: inline-block;
+}
+
+#emails .paginate input {
+    margin-right: -50px;
+    padding-right: 50px;
+    display:inline-block;
+}
+
+#emails .search {
+    display:inline-block;
+    width:100%;
+    margin-right:-300px;
+    padding-right:300px;
+}
+
+#emails .history > thead > tr > th:last-child,
+#emails .history > tbody > tr > td:last-child,
 #emails .templates > thead > tr > th:last-child,
 #emails .templates > tbody > tr > td:last-child
 {
@@ -188,7 +266,8 @@
 }
 
 #emails .variables > tbody > tr > td,
-#emails .templates > tbody > tr > td
+#emails .templates > tbody > tr > td,
+#emails .history > tbody > tr > td
 {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
@@ -196,7 +275,8 @@
 }
 
 #emails .variables > tbody > tr:hover:not(.selected):not(.edit) > td,
-#emails .templates > tbody > tr:hover:not(.selected):not(.edit) > td
+#emails .templates > tbody > tr:hover:not(.selected):not(.edit) > td,
+#emails .history > tbody > tr:hover:not(.selected):not(.edit) > td
 {
     box-shadow: 0 1px 4px rgba(255,255,255,.25);
     border-top: 1px solid #DDDDDD;

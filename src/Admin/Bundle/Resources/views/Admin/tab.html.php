@@ -45,11 +45,11 @@ $view['slots']->start('body'); ?>
         <label class="input"><input name="search" type="text" value="" placeholder="Search"/></label>
     </div>
     <div class="paginate">
-        <a href="?page=first">&lt;&lt;</a> <a href="?page=prev">&lt;</a>
-        <label class="input"><input name="page" type="text" value="1"/> / <span id="page-total"><?php print ceil(
-                    $total / 25
-                ); ?></span></label>
-        <a href="?page=next">&gt;</a> <a href="?page=last">&gt;&gt;</a>
+        <a href="#first">&lt;&lt;</a> <a href="#prev">&lt;</a>
+        <label class="input"><input name="page" type="text" value="1"/> / <span id="page-total">
+                <?php print ceil($total / 25); ?>
+            </span></label>
+        <a href="#next">&gt;</a> <a href="#last">&gt;&gt;</a>
     </div>
     <table class="results">
     <thead>
@@ -59,7 +59,6 @@ $view['slots']->start('body'); ?>
                 <span>Visitors: <?php print $visitors; ?></span><br/>
                 <input type="text" name="lastLogin" value="" placeholder="All Visits"/>
             </label>
-
             <div></div>
         </th>
         <th><label><span>Parents: <?php print $parents; ?></span><br/>
@@ -305,7 +304,7 @@ $view['slots']->start('body'); ?>
             <td data-timestamp="<?php print (empty($u->getLastLogin())
                 ? ''
                 : $u->getLastLogin()->getTimestamp()); ?>"><?php print (empty($u->getLastLogin())
-                    ? $u->getCreated()->format('j M')
+                    ? 'N/A'
                     : $u->getLastLogin()->format('j M')); ?></td>
             <td>
                 <label class="checkbox"><input type="checkbox" name="roles" value="ROLE_PAID" <?php print ($u->hasRole(
@@ -353,7 +352,7 @@ $view['slots']->start('body'); ?>
                 <label class="input"><input type="text" name="email" value="<?php print $u->getEmail(); ?>"
                                             placeholder="Email"/></label>
             </td>
-            <td><?php print $u->getCompleted(); ?>%</td>
+            <td title="&lt;pre style='text-align:left; width:300px;'&gt;<?php print $view->escape(implode("\r\n", array_map(function ($i, $k) {return $k . ' = ' . print_r($i, true);}, $u->getProperties(), array_keys($u->getProperties())))); ?>&lt;/pre&gt;"><?php print $u->getCompleted(); ?>%</td>
             <td data-timestamp="<?php print $u->getCreated()->getTimestamp(); ?>"><?php print $u->getCreated()->format(
                     'j M y'
                 ); ?></td>

@@ -73,7 +73,7 @@ class Course2Cest
         $I->wait(5);
         $I->seeInCurrentUrl('/course/2/lesson/5/step');
         $I->test('tryCourse2TestTaking');
-        $I->test('tryNewHome');
+        $I->test('tryNewCalculator');
     }
 
     /**

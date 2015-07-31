@@ -199,7 +199,7 @@ class EmailsController extends Controller
         if(empty($user))
             $user = $this->getUser();
 
-        $codeUrl = $this->generateUrl('login', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $codeUrl = $this->generateUrl('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         /** @var Swift_Mime_Message $message */
         $message = Swift_Message::newInstance()
@@ -527,6 +527,358 @@ class EmailsController extends Controller
         return new Response();
     }
 
+    public function sendInactivityDeadlines(User $user)
+    {
+        $link = $this->generateUrl('deadlines', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Don\'t let deadlines sneak up on you')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-deadlines.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Click here to set up your Study Sauce deadline reminders</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-deadlines']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityNotes(User $user)
+    {
+        $link = $this->generateUrl('notes', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Never lose your study notes again')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-notes.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Click here to get organized</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-notes']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityProcrastination(User $user)
+    {
+        $link = $this->generateUrl('course1_procrastination', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Procrastinate much?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-procrastination.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Click here to watch it.</a>  Then again, maybe you will get around to it in a week or so...',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-procrastination']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityCalculator(User $user)
+    {
+        $link = $this->generateUrl('calculator', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('What are your grades like this term?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-calculator.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Use our grade calculator here to remove the guesswork and know where you stand with your grades.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-calculator']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityDistractions(User $user)
+    {
+        $link = $this->generateUrl('course1_distractions', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Your cell phone is killing you...')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-distractions.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Click here to learn about how to remove distractions from your school work.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-distractions']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityStudyTests(User $user)
+    {
+        $link = $this->generateUrl('course2_study_tests', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Do you know how to study for tests?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-study-tests.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Learn some of the nuances of effective studying for different types of by watching our studying for tests video here.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-study-tests']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityTestTaking(User $user)
+    {
+        $link = $this->generateUrl('course2_test_taking', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Does taking tests freak you out?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-test-taking.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Watch our test-taking video here.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-test-taking']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivitySpacedRepetition(User $user)
+    {
+        $link = $this->generateUrl('course3_spaced_repetition', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Why do you forget everything you study so quickly?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-spaced-repetition.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Click here to watch our video on spaced repetition.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-spaced-repetition']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityStudyMetrics(User $user)
+    {
+        $link = $this->generateUrl('course2_study_metrics', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Are you studying enough?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-study-metrics.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Watch our study metrics video here to learn more.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-study-metrics']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityEnvironment(User $user)
+    {
+        $link = $this->generateUrl('course1_environment', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Do you listen to music when you study?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-environment.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Watch our video on study environments here.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-environment']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityPartner(User $user)
+    {
+        $link = $this->generateUrl('partner', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Do you actually miss your parents holding you accountable?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-partner.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Click here to set up your accountability partner.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-partner']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityActiveReading(User $user)
+    {
+        $link = $this->generateUrl('course3_active_reading', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Stop spacing out when you read')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-active-reading.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Watch the active reading video here to improve your reading skills.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-active-reading']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityGoals(User $user)
+    {
+        $link = $this->generateUrl('goals', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Did you know that simply setting goals makes you more likely to achieve them?')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-goals.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Set up your goals here and achieve them this term!</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-goals']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityInterleaving(User $user)
+    {
+        $link = $this->generateUrl('course2_interleaving', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Learn how to cross train your brain')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-interleaving.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">This method is very effective, so take a few minutes and learn about it here.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-interleaving']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityGroupStudy(User $user)
+    {
+        $link = $this->generateUrl('course3_group_study', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Make better use of your time studying with groups')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-group-study.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Watch the group study video here to transform your group and make the most of your time together.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-group-study']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    public function sendInactivityTeaching(User $user)
+    {
+        $link = $this->generateUrl('course3_teaching', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        /** @var \Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Memorizing facts won\'t help you...')
+            ->setFrom(!empty($user) ? $user->getEmail() : 'guest@studysauce.com')
+            ->setTo($user->getEmail())
+            ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-teaching.html.php', [
+                'greeting' => 'Dear ' . $user->getFirst() . ',',
+                'link' => '<a href="' . $link . '">Watch our video here to learn how to study for classes with more complicated subject matters.</a>',
+                'user' => $user
+            ]), 'text/html' );
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['inactivity-teaching']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
     /**
      * @param User $user
      * @param $properties
@@ -608,7 +960,6 @@ class EmailsController extends Controller
         }
 
         /** @var \Swift_Mailer $mailer */
-        $mailer = $this->get('mailer');
         $mailer = $this->get('mailer');
         $mailer->send($message);
     }
@@ -729,5 +1080,6 @@ class EmailsController extends Controller
                 break;
         }
     }
+
 
 }

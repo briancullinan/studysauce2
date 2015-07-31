@@ -139,7 +139,7 @@ class DeadlinesController extends Controller
             $guest = $userManager->findUserByUsername('guest');
         }
         $demo = ScheduleController::getDemoSchedule($container);
-        $courses = array_values($demo->getClasses()->toArray());
+        $courses = $demo->getClasses()->toArray();
 
         $deadlines = $guest->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
             $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D'));});

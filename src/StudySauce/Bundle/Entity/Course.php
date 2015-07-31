@@ -197,7 +197,7 @@ class Course
      */
     public function getIndex()
     {
-        return array_search($this, array_values($this->getSchedule()->getClasses()->toArray()));
+        return array_search($this, $this->getSchedule()->getClasses()->toArray());
     }
 
     /**

@@ -1026,7 +1026,10 @@ class AdminController extends Controller
                 $u->removeInvitedGroup($ig);
                 $orm->remove($ig);
             }
-
+            foreach($u->getNotes()->toArray() as $i => $n) {
+                $u->removeNote($n);
+                $orm->remove($n);
+            }
             $orm->remove($u);
             $orm->flush();
         }

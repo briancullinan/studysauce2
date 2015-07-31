@@ -5,6 +5,7 @@ use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\StudyNote;
 
+/** @var \Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables $app */
 /** @var Course[] $classes */
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
@@ -50,7 +51,7 @@ $view['slots']->start('body'); ?>
                 <?php }
             }
             else { ?>
-                <a href="https://sandbox.evernote.com/" target="evernote" class="more">Backed up with Evernote</a>
+                <a href="https://<?php print ($app->getEnvironment() == 'prod' ? 'www' : 'sandbox'); ?>.evernote.com/" target="evernote" class="more">Backed up with Evernote</a>
             <?php } ?>
             <div class="new-study-note highlighted-link">
                 <form action="<?php print $view['router']->generate('notes_search'); ?>">

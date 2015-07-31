@@ -43,10 +43,33 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
     }
 
     /**
-     * @throws AccessDeniedHttpException
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param EntityManager $orm
+     * @param Request $request
+     * @param $joins
+     * @return QueryBuilder
      */
-    public function indexAction()
+    static function searchBuilder(EntityManager $orm, Request $request, &$joins = [])
+    {
+        $joins = [];
+        /** @var QueryBuilder $qb */
+        $qb = $orm->getRepository('StudySauceBundle:Mail')->createQueryBuilder('m');
+
+        if(!empty($search = $request->get('search'))) {
+            if(strpos($search, '%') === false) {
+                $search = '%' . str_replace(['@', '_', 'mailinator.com'], ['%', '%', ''], $search) . '%';
+            }
+            $qb = $qb->andWhere('m.message LIKE :search')
+                ->setParameter('search', $search);
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function indexAction(Request $request)
     {
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
@@ -57,26 +80,6 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
             throw new AccessDeniedHttpException();
         }
 
-        $emails = [];
-        $templatesDir = new \DirectoryIterator(self::$emailsDir);
-        foreach($templatesDir as $f) {
-            /** @var \DirectoryIterator $f */
-            if($f->getFilename() == 'layout.html.php')
-                continue;
-            if(!$f->isDot()) {
-                // get count for current email category
-                $base = basename($f->getFilename(), '.html.' . $f->getExtension());
-                $count = $orm->getRepository('StudySauceBundle:Mail')->createQueryBuilder('m')
-                    ->select('COUNT(DISTINCT m.id)')
-                    ->andWhere('m.message LIKE \'%s:' . (17 + strlen($base)) . ':"{"category":["' . $base . '"]}"%\'')
-                    ->getQuery()
-                    ->getSingleScalarResult();
-                $emails[] = [
-                    'id' => $base,
-                    'count' => $count
-                ];
-            }
-        }
 
         $yesterday = new \DateTime('yesterday');
         /** @var QueryBuilder $qb */
@@ -103,12 +106,81 @@ class EmailsController extends \StudySauce\Bundle\Controller\EmailsController
             }
         }
 
+        // count total so we know the max pages
+        $total = self::searchBuilder($orm, $request)
+            ->select('COUNT(DISTINCT m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // max pagination to search count
+        if(!empty($page = $request->get('page'))) {
+            if($page == 'last') {
+                $page = $total / 25;
+            }
+            $resultOffset = (min(max(1, ceil($total / 25)), max(1, intval($page))) - 1) * 25;
+        }
+        else {
+            $resultOffset = 0;
+        }
+
+        // get the actual list of users
+        /** @var QueryBuilder $emails */
+        $emails = self::searchBuilder($orm, $request, $joins)->distinct(true)->select('m');
+
+        // figure out how to sort
+        if(!empty($order = $request->get('order'))) {
+            $field = explode(' ', $order)[0];
+            $direction = explode(' ', $order)[1];
+            if($direction != 'ASC' && $direction != 'DESC')
+                $direction = 'DESC';
+            // no extra join information needed
+            if($field == 'created' || $field == 'status') {
+                $emails = $emails->orderBy('m.' . $field, $direction);
+            }
+        }
+        else {
+            $emails = $emails->orderBy('m.created', 'DESC');
+        }
+
+        $emails = $emails
+            ->setFirstResult($resultOffset)
+            ->setMaxResults(25)
+            ->getQuery()
+            ->getResult();
+
+        $status = (new \ReflectionClass('WhiteOctober\SwiftMailerDBBundle\EmailInterface'))->getConstants();
+
+        // get count for each template that has been sent
+        $templates = [];
+        $templatesDir = new \DirectoryIterator(self::$emailsDir);
+        foreach($templatesDir as $f) {
+            /** @var \DirectoryIterator $f */
+            if($f->getFilename() == 'layout.html.php')
+                continue;
+            if(!$f->isDot()) {
+                // get count for current email category
+                $base = basename($f->getFilename(), '.html.' . $f->getExtension());
+                $count = self::searchBuilder($orm, $request, $joins)
+                    ->select('COUNT(DISTINCT m.id)')
+                    ->andWhere('m.message LIKE \'%s:' . (17 + strlen($base)) . ':"{"category":["' . $base . '"]}"%\'')
+                    ->getQuery()
+                    ->getSingleScalarResult();
+                $templates[$base] = [
+                    'id' => $base,
+                    'count' => $count
+                ];
+            }
+        }
+
         return $this->render('AdminBundle:Emails:tab.html.php', [
-                'emails' => $emails,
-                'total' => 0,
-                'recent' => $recent,
-                'entities' => $entities
-            ]);
+            'emails' => $emails,
+            'status' => $status,
+            'templates' => $templates,
+            'total' => $total,
+            'recent' => $recent,
+            'entities' => $entities,
+            'repository' => $orm->getRepository('StudySauceBundle:User')
+        ]);
     }
 
     public static $templateVars = [];

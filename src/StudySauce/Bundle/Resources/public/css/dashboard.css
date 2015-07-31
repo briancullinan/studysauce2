@@ -32,6 +32,7 @@
 {
     display:inline-block;
     margin-top:-3px;
+    margin-left: 10px;
 }
 
 .dashboard-home a[href="#yt-pause"]

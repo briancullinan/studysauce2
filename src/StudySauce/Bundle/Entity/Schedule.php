@@ -98,7 +98,7 @@ class Schedule
      */
     public function getClasses()
     {
-        return $this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';});
+        return new ArrayCollection(array_values($this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'c';})->toArray()));
     }
 
     /**
@@ -106,7 +106,7 @@ class Schedule
      */
     public function getOthers()
     {
-        return $this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'o';});
+        return new ArrayCollection(array_values($this->getCourses()->filter(function (Course $b) {return !$b->getDeleted() && $b->getType() == 'o';})->toArray()));
     }
 
     /**

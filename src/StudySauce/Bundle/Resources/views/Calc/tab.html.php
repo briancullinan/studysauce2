@@ -68,7 +68,7 @@ $view['slots']->start('body'); ?>
                             <label title="Your grade point for the class (calculates your GPA)">Grade point</label>
                         </header>
                         <?php
-                        $courses = array_values($s->getClasses()->toArray());
+                        $courses = $s->getClasses()->toArray();
                         foreach($courses as $i => $c) {
                             /** @var Course $c */
                             ?>

@@ -28,6 +28,9 @@ class PageLoaderCest
     }
 
     // tests
+    public function tryAllTests(AcceptanceTester $I) {
+        
+    }
 
     /**
      * @param AcceptanceTester $I
@@ -304,16 +307,11 @@ class PageLoaderCest
         $I->seeAmOnUrl('/deadlines');
         $I->selectOption('.deadline-row.edit .class-name select', 'PHIL 101');
         $I->fillField('.deadline-row.edit .assignment input', 'Exam 1');
-        $I->checkOption('.deadline-row.edit input[value="86400"] + i');
-        $I->checkOption('.deadline-row.edit input[value="172800"] + i');
-        $I->checkOption('.deadline-row.edit input[value="345600"] + i');
-        $I->checkOption('.deadline-row.edit input[value="604800"] + i');
-        $I->click('.deadline-row.edit .due-date input');
-        $d = date_add(new \DateTime(), new \DateInterval('P8D'))->format('j');
-        if($d < 8) {
-            $I->click('.ui-datepicker-next');
-        }
-        $I->click('//*[@id="ui-datepicker-div"]//td[not(@class="ui-datepicker-unselectable")]/a[contains(.,"' . $d . '")]');
+        $I->click('.deadline-row.edit input[value="172800"] + i');
+        $d = date_add(new \DateTime(), new \DateInterval('P8D'))->format('m/d/Y');
+        $I->fillField('.deadline-row.edit .due-date input', $d);
+        $I->wait(1);
+        $I->click('.deadline-row.edit .percent input');
         $I->fillField('.deadline-row.edit .percent input', '10');
         $I->click('#deadlines .highlighted-link [value="#save-deadline"]');
         $I->wait(10);
@@ -474,46 +472,6 @@ class PageLoaderCest
     }
 
     /**
-     * @depends tryNewPartner
-     * @param AcceptanceTester $I
-     */
-    public function tryPartnerEmail(AcceptanceTester $I)
-    {
-        $I->amOnPage('/cron');
-        $I->amOnUrl('http://mailinator.com');
-        $I->fillField('.input-append input', 'studymarketing');
-        $I->click('.input-append btn');
-        $I->waitForText('a minute ago', 60*5);
-        $I->seeLink('needs your help with school');
-        $I->click('//a[contains(.,"needs your help with school")]');
-        $I->executeInSelenium(function (WebDriver $driver) {
-            $driver->switchTo()->defaultContent();
-            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
-        });
-
-    }
-
-    /**
-     * @depends tryNewDeadlines
-     * @param AcceptanceTester $I
-     */
-    public function tryDeadlineEmail(AcceptanceTester $I)
-    {
-        $I->amOnPage('/cron');
-        $I->amOnUrl('http://mailinator.com');
-        $I->fillField('.input-append input', 'studymarketing');
-        $I->click('.input-append btn');
-        $I->waitForText('a minute ago', 60*5);
-        $I->seeLink('notification');
-        $I->click('//a[contains(.,"notification")]');
-        $I->executeInSelenium(function (WebDriver $driver) {
-            $driver->switchTo()->defaultContent();
-            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
-        });
-        $I->see('Exam 1');
-    }
-
-    /**
      * @depends tryGuestCheckout
      * @param AcceptanceTester $I
      */
@@ -538,6 +496,8 @@ class PageLoaderCest
     public function tryNewNote(AcceptanceTester $I)
     {
         $I->wantTo('create a new note regardless of connectivity');
+        $I->seeAmOnUrl('/notes');
+        $I->click('#notes-connect a[href="#close"]');
         $I->click('study note');
         $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
         $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
@@ -563,9 +523,6 @@ class PageLoaderCest
         $I->click('#notes .selectize-dropdown-content .create');
         $I->click('#notes a[href="#save-note"]');
         $I->wait(10);
-        $I->click('//div[@class="summary" and contains(.,"' . $time . '")]');
-        $I->click('#notes a[href="#delete-note"]');
-        $I->wait(5);
     }
 
     /**
@@ -573,8 +530,8 @@ class PageLoaderCest
      */
     public function tryNewEvernote(AcceptanceTester $I)
     {
-        $I->seeAmOnUrl('/notes');
         $I->wantTo('run the same tests then check evernote sync');
+        $I->seeAmOnUrl('/notes');
         $I->click('study note');
         $I->selectOption('#notes select[name="notebook"]', 'Add notebook');
         $I->fillField('#add-notebook input', 'Test notebook');
@@ -624,8 +581,6 @@ class PageLoaderCest
     {
         $I->seeAmOnUrl('/notes');
         $I->test('tryNewSchedule');
-        $I->seeAmOnUrl('/notes');
-        $I->click('#notes-connect a[href="#close"]');
         $I->test('tryNewNote');
         $I->click('#notes a[href*="evernote"]');
         $I->fillField('input[name="username"]', 'brian@studysauce.com');
@@ -643,7 +598,12 @@ class PageLoaderCest
      */
     public function tryNewCalculator(AcceptanceTester $I)
     {
-        $I->seeAmOnUrl('/calc');
+        $I->seeAmOnUrl('/calculator');
+        $I->fillField('#calculator .hours input', '3');
+        $I->fillField('#calculator .assignment input', 'Exam 1');
+        $I->fillField('#calculator .percent input', '50');
+        $I->fillField('#calculator .score input', '90');
+        $I->click('#calculator [value="#save-grades"]');
     }
 
     /**

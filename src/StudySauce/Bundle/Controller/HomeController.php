@@ -21,7 +21,7 @@ class HomeController extends Controller
         /** @var User $user */
         $user = $this->getUser();
         list($route, $options) = self::getUserRedirect($user);
-        if($route != 'home' && $route != '_welcome')
+        if($route != 'home')
             return $this->redirect($this->generateUrl($route, $options));
 
         $csrfToken = $this->has('form.csrf_provider')

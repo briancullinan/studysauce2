@@ -136,7 +136,7 @@ $view['slots']->start('body'); ?>
                             /** @var $c Course */
                             ?>
                             <option value="<?php print $c->getId(); ?>" <?php print (
-                                $d->getCourse()->getId() == $c->getId() ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
+                                !empty($d->getCourse()) && $d->getCourse()->getId() == $c->getId() ? 'selected="selected"' : ''); ?>><?php print $c->getName(); ?></option>
                         <?php endforeach; ?>
                         <option value="Nonacademic" <?php print (!empty($d->getAssignment()) &&
                             empty($d->getCourse()) ? 'selected="selected"' : ''); ?>>Nonacademic</option>

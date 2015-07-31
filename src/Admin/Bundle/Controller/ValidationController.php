@@ -7,6 +7,7 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Module\Doctrine2;
 use Codeception\Module\Symfony2;
 use Codeception\Module\WebDriver;
 use Codeception\PHPUnit\Listener;
@@ -253,6 +254,7 @@ class ValidationController extends Controller
             $suiteManager->getSuite()->setBackupGlobals(false);
             $suiteManager->getSuite()->setBackupStaticAttributes(false);
             $suiteManager->loadTests(null);
+            Doctrine2::$em = $this->get('doctrine')->getManager();
             $suiteManager->run($runner, $result, $options);
         }
         if(isset($result) && isset($runner)) {

@@ -13,10 +13,12 @@ use Evernote\Client as EvernoteClient;
 use StudySauce\Bundle\Controller\EmailsController;
 use StudySauce\Bundle\Controller\NotesController;
 use StudySauce\Bundle\Controller\PlanController;
+use StudySauce\Bundle\Entity\Course;
 use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\GroupInvite;
 use StudySauce\Bundle\Entity\PartnerInvite;
+use StudySauce\Bundle\Entity\Schedule;
 use StudySauce\Bundle\Entity\StudyNote;
 use StudySauce\Bundle\Entity\User;
 use Swift_Mailer;
@@ -117,14 +119,14 @@ EOF
         /** @var QueryBuilder $qb */
         $qb = $users->createQueryBuilder('u')
             ->andWhere('u.created > \'' . date_timestamp_set(new \DateTime(), time() - 86400 * 4)->format('Y-m-d 00:00:00') . '\'')
-            ->andWhere('u.properties NOT LIKE \'%s:16:"welcome_reminder";b:1;%\' OR u.properties IS NULL')
+            ->andWhere('u.properties NOT LIKE \'%s:16:"welcome_reminder";%\' OR u.properties IS NULL')
             ->andWhere('u.roles NOT LIKE \'%GUEST%\' AND u.roles NOT LIKE \'%DEMO%\'');
         $users = $qb->getQuery()->execute();
         foreach ($users as $i => $u) {
             /** @var User $u */
             // TODO: skip advised users
             if ($u->getCreated()->getTimestamp() < time() - 86400 * 3 && $u->getCreated()->getTimestamp() > time() - 86400 * 4) {
-                $u->setProperty('welcome_reminder', true);
+                $u->setProperty('welcome_reminder', time());
                 //$emails->marketingReminderAction($u);
                 $orm->merge($u);
                 $orm->flush();
@@ -251,6 +253,119 @@ EOF
 
     }
 
+    private function sendInactivity()
+    {
+        // send inactivity email
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->getContainer()->get('fos_user.user_manager');
+        /** @var $orm EntityManager */
+        $orm = $this->getContainer()->get('doctrine')->getManager();
+        $emails = new EmailsController();
+        $emails->setContainer($this->getContainer());
+
+        // send 3 day signup reminder
+        $orm->clear();
+        $users = $orm->getRepository('StudySauceBundle:User')->createQueryBuilder('u')
+            ->andWhere('u.lastLogin <= \'' . date_sub(new \DateTime(), new \DateInterval('P7D'))->format('Y-m-d') . ' 00:00:00\'')
+            ->andWhere('u.created >= \'2015-07-27 00:00:00\'')
+            ->getQuery()->execute();
+        foreach ($users as $i => $u) {
+            /** @var User $u */
+            if($u->hasRole('ROLE_ADVISER') || $u->hasRole('ROLE_MASTER_ADVISER') || $u->hasRole('ROLE_PARENT') || $u->hasRole('ROLE_PARTNER') ||
+                $u->hasRole('ROLE_ADMIN') || $u->hasRole('ROLE_GUEST') || $u->hasRole('ROLE_DEMO'))
+                continue;
+
+            if(empty($u->getProperty('inactivity')) || !is_numeric($u->getProperty('inactivity')) ||
+                $u->getProperty('inactivity') < time() - 86400 * 7) {
+                $u->setProperty('inactivity', time());
+
+                // send deadline reminder
+                if($u->getDeadlines()->count() == 0 && empty($u->getProperty('seen_deadlines'))) {
+                    $u->setProperty('seen_deadlines', time());
+                    $emails->sendInactivityDeadlines($u);
+                }
+                elseif($u->getNotes()->count() == 0 && empty($u->getProperty('seen_notes'))) {
+                    $u->setProperty('seen_notes', time());
+                    $emails->sendInactivityNotes($u);
+                }
+                elseif(($u->getCourse1s()->count() == 0 || $u->getCourse1s()->first()->getLesson4() < 4) &&
+                    empty($u->getProperty('seen_procrastination'))) {
+                    $u->setProperty('seen_procrastination', time());
+                    $emails->sendInactivityProcrastination($u);
+                }
+                /** @var Schedule $schedule */
+                elseif((empty($schedule = $u->getSchedules()->first()) ||
+                        !$schedule->getCourses()->exists(function ($_, Course $c) {
+                            return $c->getGrades()->count() > 0;})) &&
+                    empty($u->getProperty('seen_calculator'))) {
+                    $u->setProperty('seen_calculator', time());
+                    $emails->sendInactivityCalculator($u);
+                }
+                elseif(($u->getCourse1s()->count() == 0 || $u->getCourse1s()->first()->getLesson3() < 4) &&
+                    empty($u->getProperty('seen_distractions'))) {
+                    $u->setProperty('seen_distractions', time());
+                    $emails->sendInactivityDistractions($u);
+                }
+                elseif(($u->getCourse2s()->count() == 0 || $u->getCourse2s()->first()->getLesson4() < 4) &&
+                    empty($u->getProperty('seen_study_tests'))) {
+                    $u->setProperty('seen_study_tests', time());
+                    $emails->sendInactivityStudyTests($u);
+                }
+                elseif(($u->getCourse2s()->count() == 0 || $u->getCourse2s()->first()->getLesson5() < 4) &&
+                    empty($u->getProperty('seen_test_taking'))) {
+                    $u->setProperty('seen_test_taking', time());
+                    $emails->sendInactivityTestTaking($u);
+                }
+                elseif(($u->getCourse3s()->count() == 0 || $u->getCourse3s()->first()->getLesson5() < 4) &&
+                    empty($u->getProperty('seen_spaced_repetition'))) {
+                    $u->setProperty('seen_spaced_repetition', time());
+                    $emails->sendInactivitySpacedRepetition($u);
+                }
+                elseif(($u->getCourse2s()->count() == 0 || $u->getCourse2s()->first()->getLesson1() < 4) &&
+                    empty($u->getProperty('seen_study_metrics'))) {
+                    $u->setProperty('seen_study_metrics', time());
+                    $emails->sendInactivityStudyMetrics($u);
+                }
+                elseif(($u->getCourse1s()->count() == 0 || $u->getCourse1s()->first()->getLesson5() < 4) &&
+                    empty($u->getProperty('seen_environment'))) {
+                    $u->setProperty('seen_environment', time());
+                    $emails->sendInactivityEnvironment($u);
+                }
+                elseif(empty($u->getPartnerOrAdviser()) &&
+                    empty($u->getProperty('seen_partner'))) {
+                    $u->setProperty('seen_partner', time());
+                    $emails->sendInactivityPartner($u);
+                }
+                elseif(($u->getCourse3s()->count() == 0 || $u->getCourse3s()->first()->getLesson4() < 4) &&
+                    empty($u->getProperty('seen_active_reading'))) {
+                    $u->setProperty('seen_active_reading', time());
+                    $emails->sendInactivityActiveReading($u);
+                }
+                elseif($u->getGoals()->count() == 0 && empty($u->getProperty('seen_goals'))) {
+                    $u->setProperty('seen_goals', time());
+                    $emails->sendInactivityGoals($u);
+                }
+                elseif(($u->getCourse2s()->count() == 0 || $u->getCourse2s()->first()->getLesson3() < 4) &&
+                    empty($u->getProperty('seen_interleaving'))) {
+                    $u->setProperty('seen_interleaving', time());
+                    $emails->sendInactivityInterleaving($u);
+                }
+                elseif(($u->getCourse3s()->count() == 0 || $u->getCourse3s()->first()->getLesson2() < 4) &&
+                    empty($u->getProperty('seen_group_study'))) {
+                    $u->setProperty('seen_group_study', time());
+                    $emails->sendInactivityGroupStudy($u);
+                }
+                elseif(($u->getCourse3s()->count() == 0 || $u->getCourse3s()->first()->getLesson3() < 4) &&
+                    empty($u->getProperty('seen_teaching'))) {
+                    $u->setProperty('seen_teaching', time());
+                    $emails->sendInactivityTeaching($u);
+                }
+
+                $userManager->updateUser($u);
+            }
+        }
+    }
+
     private function sendSpool()
     {
         // clear mail spool
@@ -285,7 +400,7 @@ EOF
                 NotesController::syncNotes($u, $this->getContainer());
             }
             catch (\Exception $e) {
-                print $e;
+                //print $e->getMessage();
             }
         }
 
@@ -308,7 +423,7 @@ EOF
                 PlanController::syncEvents($u, $this->getContainer());
             }
             catch (\Exception $e) {
-                print $e;
+                //print $e->getMessage();
             }
         }
 
@@ -325,6 +440,7 @@ EOF
             $this->sendReminders();
             $this->send3DayMarketing();
             $this->sendDeadlines();
+            $this->sendInactivity();
             $this->sendSpool();
         }
         if(!$input->getOption('emails')) {

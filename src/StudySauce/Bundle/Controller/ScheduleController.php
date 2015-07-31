@@ -59,7 +59,7 @@ class ScheduleController extends Controller
         if($needsNew) {
             /** @var $userManager UserManager */
             $userManager = $this->get('fos_user.user_manager');
-            $user->setProperty('needs_new', new \DateTime());
+            $user->setProperty('needs_new', (new \DateTime())->getTimestamp());
             $userManager->updateUser($user);
         }
 

@@ -42,7 +42,7 @@ class MetricsController extends Controller
         if(empty($checkins)) {
             $isDemo = true;
             $demo = ScheduleController::getDemoSchedule($this->container);
-            $courses = array_values($demo->getCourses()->toArray());
+            $courses = $demo->getClasses()->toArray();
             list($checkins, $checkouts) = self::getDemoCheckins($this->container);
         }
 
@@ -53,7 +53,7 @@ class MetricsController extends Controller
         return $this->render('StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php', [
                 'hours' => !empty($goal) ? $goal->getGoal() : '',
                 'total' => $total,
-                'courses' => array_values($courses),
+                'courses' => $courses,
                 'checkins' => $checkins,
                 'checkouts' => $checkouts,
                 'times' => $times,

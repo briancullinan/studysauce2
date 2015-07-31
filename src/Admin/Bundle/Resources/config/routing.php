@@ -202,6 +202,20 @@ $collection->add(
 );
 
 $collection->add(
+    'emails_callback',
+    new Route(
+        '/emails/list',
+        ['_controller' => 'AdminBundle:Emails:index', '_format' => 'tab'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'emails_template',
     new Route(
         '/emails/template/{_email}',

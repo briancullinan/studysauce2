@@ -426,12 +426,12 @@ $(document).ready(function () {
 
                     // set the title
                     plan.find('h2.title').text(event.title
-                        .replace(/<h4>C<\/h4>/, 'Class:')
+                        .replace(/<h4>C<\/h4>/, 'Class: ')
                         .replace(/<h4>F<\/h4>/, '')
-                        .replace(/<h4>D<\/h4>/, 'Deadline:')
-                        .replace(/<h4>P<\/h4>/, 'Pre-work:')
-                        .replace(/<h4>SR<\/h4>/, 'Study session:')
-                        .replace(/<h4>D<\/h4>/, 'Deadlines:'));
+                        .replace(/<h4>D<\/h4>/, 'Deadline: ')
+                        .replace(/<h4>P<\/h4>/, 'Pre-work: ')
+                        .replace(/<h4>SR<\/h4>/, 'Study session: ')
+                        .replace(/<h4>D<\/h4>/, 'Deadlines: '));
                     plan.find('h3.location').html('<strong>Location:</strong> ' + (event.location == null || event.location.trim() == '' ? 'Unspecified' : event.location));
                     plan.find('h3.duration').html('<strong>Duration:</strong> ' + ((event.end.valueOf() - event.start.valueOf()) / 60000) + ' minutes');
                     // set the template for notes
@@ -894,7 +894,11 @@ $(document).ready(function () {
                             '</div>';
                     }
                     notes.find('#editor1').html(content);
-                    CKEDITOR.instances['editor1'].setData(content);
+                    setTimeout(function () {
+                        if(typeof CKEDITOR.instances.editor1 != 'undefined') {
+                            CKEDITOR.instances['editor1'].setData(content);
+                        }
+                    }, 150);
                 }, 150);
             }
         });

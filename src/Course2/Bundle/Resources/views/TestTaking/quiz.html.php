@@ -4,7 +4,7 @@ use Course2\Bundle\Entity\TestTaking;
 $view->extend('Course2Bundle:Shared:layout.html.php');
 
 /** @var TestTaking $quiz */
-$complete = !empty($quiz->getIdeaCram()) && !empty($quiz->getBreathing()) && !empty($quiz->getSkimming());
+$complete = $quiz->getIdeaCram() !== null && !empty($quiz->getBreathing()) && !empty($quiz->getSkimming());
 
 $view['slots']->start('body'); ?>
 <div class="panel-pane course2 step2 <?php print ($complete ? ' right' : ''); ?>" id="course2_test_taking-step2">

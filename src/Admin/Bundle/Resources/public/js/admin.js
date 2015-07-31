@@ -74,6 +74,15 @@ $(document).ready(function () {
         row.removeClass('read-only').addClass('edit');
     });
 
+    body.on('click', '#command_control a[href^="mailto:"]', function (evt) {
+        evt.preventDefault();
+        var that = $(this);
+        body.one('show', '#emails', function () {
+            $('#emails').find('input[name="search"]').val(that.attr('href').substr(7)).trigger('keyup');
+        });
+        activateMenu.apply($('#right-panel').find('a[href*="/emails"]'), ['/emails', false])
+    });
+
     body.on('click', '#command_control a[href="#cancel-edit"]', function (evt) {
         evt.preventDefault();
         var row = $(this).parents('tr');
@@ -549,8 +558,9 @@ $(document).ready(function () {
     body.on('click', '#command_control .paginate a', function (evt) {
         evt.preventDefault();
         var admin = $('#command_control'),
-            page = this.search.match(/([0-9]*|last|prev|next|first)$/i)[0],
-            current = parseInt(admin.find('input[name="page"]').val());
+            page = this.hash.match(/([0-9]*|last|prev|next|first)$/i)[0],
+            current = parseInt(admin.find('input[name="page"]').val()),
+            last = parseInt(admin.find('#page-total').text());
         if(page == 'first')
             page = 1;
         if(page == 'next')
@@ -558,7 +568,11 @@ $(document).ready(function () {
         if(page == 'prev')
             page = current - 1;
         if(page == 'last')
-            page = parseInt(admin.find('#page-total').text());
+            page = last;
+        if(page > last)
+            page = last;
+        if(page < 1)
+            page = 1;
         admin.find('input[name="page"]').val(page);
         loadResults();
     });
