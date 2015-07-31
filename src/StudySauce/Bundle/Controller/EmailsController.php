@@ -538,7 +538,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-deadlines.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Click here to set up your Study Sauce deadline reminders</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Click <span class="reveal" style="color: #FF9900;">here</span> to set up your Study Sauce deadline reminders</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -560,7 +560,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-notes.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Click here to get organized</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Click <span class="reveal" style="color: #FF9900;">here</span> to get organized</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -582,7 +582,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-procrastination.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Click here to watch it.</a>  Then again, maybe you will get around to it in a week or so...',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Click <span class="reveal" style="color: #FF9900;">here</span> to watch it.  Then again, maybe you will get around to it in a week or so...</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -604,7 +604,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-calculator.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Use our grade calculator here to remove the guesswork and know where you stand with your grades.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Use our grade calculator <span class="reveal" style="color: #FF9900;">here</span> to remove the guesswork and know where you stand with your grades.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -626,7 +626,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-distractions.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Click here to learn about how to remove distractions from your school work.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Click <span class="reveal" style="color: #FF9900;">here</span> to learn how to remove distractions from your school work.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -648,7 +648,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-study-tests.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Learn some of the nuances of effective studying for different types of by watching our studying for tests video here.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch our studying for tests video <span class="reveal" style="color: #FF9900;">here</span>.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -670,7 +670,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-test-taking.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Watch our test-taking video here.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch our test-taking video <span class="reveal" style="color: #FF9900;">here</span>.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -692,7 +692,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-spaced-repetition.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Click here to watch our video on spaced repetition.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Click <span class="reveal" style="color: #FF9900;">here</span> to watch our video on spaced repetition.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -714,7 +714,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-study-metrics.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Watch our study metrics video here to learn more.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch our study metrics video <span class="reveal" style="color: #FF9900;">here</span> to learn more.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -736,7 +736,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-environment.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Watch our video on study environments here.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch our video on study environments <span class="reveal" style="color: #FF9900;">here</span>.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -758,7 +758,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-partner.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Click here to set up your accountability partner.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Click <span class="reveal" style="color: #FF9900;">here</span> to set up your accountability partner.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -780,7 +780,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-active-reading.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Watch the active reading video here to improve your reading skills.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch the active reading video <span class="reveal" style="color: #FF9900;">here</span> to improve your reading skills.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -802,7 +802,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-goals.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Set up your goals here and achieve them this term!</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Set up your goals <span class="reveal" style="color: #FF9900;">here</span> and achieve them this term!</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -824,7 +824,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-interleaving.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">This method is very effective, so take a few minutes and learn about it here.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">This method is very effective, so take a few minutes and learn about it <span class="reveal" style="color: #FF9900;">here</span>.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -846,7 +846,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-group-study.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Watch the group study video here to transform your group and make the most of your time together.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch the group study video <span class="reveal" style="color: #FF9900;">here</span> to transform your group and make the most of your time together.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -868,7 +868,7 @@ class EmailsController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:inactivity-teaching.html.php', [
                 'greeting' => 'Dear ' . $user->getFirst() . ',',
-                'link' => '<a href="' . $link . '">Watch our video here to learn how to study for classes with more complicated subject matters.</a>',
+                'link' => '<a href="' . $link . '" class="cloak" style="color: #555555; text-decoration: none;">Watch our video <span class="reveal" style="color: #FF9900;">here</span> to learn how to study for classes with more complicated subject matters.</a>',
                 'user' => $user
             ]), 'text/html' );
         $headers = $message->getHeaders();
@@ -939,7 +939,7 @@ class EmailsController extends Controller
 
         if($this->container->getParameter('defer_all_emails') !== false) {
             $message->getHeaders()->addParameterizedHeader('X-Original-To', key($to));
-            $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
+            $message->setTo(explode(';', $this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com'));
         }
 
         // check to make sure the limit hasn't been reached
@@ -956,7 +956,7 @@ class EmailsController extends Controller
         {
             $message->setSubject('CANCELLED: ' . $message->getSubject());
             $message->getHeaders()->addParameterizedHeader('X-Original-To', key($to));
-            $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
+            $message->setTo(explode(';', $this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com'));
         }
 
         /** @var \Swift_Mailer $mailer */
@@ -970,7 +970,7 @@ class EmailsController extends Controller
     protected function sendToAdmin(\Swift_Mime_Message $message)
     {
         if($this->container->getParameter('defer_all_emails') !== false) {
-            $message->setTo($this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com');
+            $message->setTo(explode(';', $this->container->getParameter('defer_all_emails') ?: 'brian@studysauce.com'));
         }
         /** @var \Swift_Transport_EsmtpTransport $transport */
         $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')

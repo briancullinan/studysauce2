@@ -74,13 +74,11 @@ $(document).ready(function () {
         row.removeClass('read-only').addClass('edit');
     });
 
-    body.on('click', '#command_control a[href^="mailto:"]', function (evt) {
-        evt.preventDefault();
+    body.on('click', '#command_control a[href^="/emails"]', function () {
         var that = $(this);
         body.one('show', '#emails', function () {
-            $('#emails').find('input[name="search"]').val(that.attr('href').substr(7)).trigger('keyup');
+            $('#emails').find('input[name="search"]').val(that[0].hash).trigger('keyup');
         });
-        activateMenu.apply($('#right-panel').find('a[href*="/emails"]'), ['/emails', false])
     });
 
     body.on('click', '#command_control a[href="#cancel-edit"]', function (evt) {

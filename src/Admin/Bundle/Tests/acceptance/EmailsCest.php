@@ -253,7 +253,7 @@ class EmailsCest
         $I->waitForText('a minute ago', 60*5);
     }
 
-    public function tryDeadlinesSetupEmail(AcceptanceTester $I)
+    public function tryInactivityDeadlinesEmail(AcceptanceTester $I)
     {
         $I->test('tryGuestCheckout');
         $this->setLastLogin($I);
@@ -264,7 +264,7 @@ class EmailsCest
         $I->click('a[href*="/deadlines"]');
     }
 
-    public function tryNotesSetupEmail(AcceptanceTester $I)
+    public function tryInactivityNotesEmail(AcceptanceTester $I)
     {
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');

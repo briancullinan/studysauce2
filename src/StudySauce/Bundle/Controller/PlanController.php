@@ -713,7 +713,9 @@ class PlanController extends Controller
     public static function getPlanStep(User $user)
     {
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
-        $schedule = $user->getSchedules()->first() ?: new Schedule();
+        $schedule = $user->getSchedules()->first();
+        if(empty($schedule))
+            return 0;
 
         if ($schedule->getClasses()->exists(
             function ($_, Course $c) {
@@ -1252,8 +1254,8 @@ END:VCALENDAR'
                     $course->addEvent($newEvent);
                 }
                 $newEvent->setName($course->getName());
-                $firstDay = strtotime('last Sunday', $course->getStartTime()->getTimestamp());
-                $lastDay = strtotime('last Sunday', $course->getEndTime()->getTimestamp());
+                $firstDay = $course->getStartTime()->getTimestamp();
+                $lastDay = $course->getEndTime()->getTimestamp();
             } elseif ($event['type'] == 'f') {
                 if(empty($newEvent = $schedule->getEvents()->filter(function (Event $e) use ($event, $used) {
                     return $e->getType() == $event['type']
@@ -1267,10 +1269,10 @@ END:VCALENDAR'
                     $newEvent->setType($event['type']);
                 }
                 $newEvent->setName('Free study');
-                $firstDay = strtotime('last Sunday', min(array_map(function (Course $c) {
-                    return $c->getStartTime()->getTimestamp();}, $schedule->getClasses()->toArray())));
-                $lastDay = strtotime('last Sunday', min(array_map(function (Course $c) {
-                    return $c->getEndTime()->getTimestamp();}, $schedule->getClasses()->toArray())));
+                $firstDay = min(array_map(function (Course $c) {
+                    return $c->getStartTime()->getTimestamp();}, $schedule->getClasses()->toArray()));
+                $lastDay = max(array_map(function (Course $c) {
+                    return $c->getEndTime()->getTimestamp();}, $schedule->getClasses()->toArray()));
             } else {
                 continue;
             }
@@ -1296,21 +1298,26 @@ END:VCALENDAR'
                 $newEvent->setAlert($event['alert']);
             }
             $newEvent->setType($event['type']);
-            $diff = (new \DateTime($event['start']))->getTimestamp() - strtotime('last Sunday', (new \DateTime($event['start']))->getTimestamp());
-            $start = ($next = $firstDay + $diff) < $firstDay - 86400
-                ? date_timestamp_set(new \DateTime(), $next + 608400)
+            $startTime = date_timezone_set(new \DateTime($event['start']), new \DateTimeZone(date_default_timezone_get()));
+            $endTime = date_timezone_set(new \DateTime($event['end']), new \DateTimeZone(date_default_timezone_get()));
+            $diff = array_values(self::$weekConversion)[$startTime->format('w')];
+            $first = date_timestamp_set(new \DateTime(), strtotime('last Sunday ' . $startTime->format('H:i:s'), $firstDay));
+            $last = date_timestamp_set(new \DateTime(), strtotime('last Sunday ' . $startTime->format('H:i:s'), $lastDay));
+            $start = ($next = $first->getTimestamp() + $diff) < ($firstDay - 86400)
+                ? date_timestamp_set(new \DateTime(), $next + 604800)
                 : date_timestamp_set(new \DateTime(), $next);
             $newEvent->setStart($start);
-            $length = (new \DateTime($event['end']))->getTimestamp() - (new \DateTime($event['start']))->getTimestamp();
+            $length = $endTime->getTimestamp() - $startTime->getTimestamp();
             $newEvent->setEnd(date_add(clone $newEvent->getStart(), new \DateInterval('PT' . $length . 'S')));
             // TODO: add exceptions for holidays
-            $last = ($next = $lastDay + $diff) > $lastDay + 86400
-                ? date_timestamp_set(new \DateTime(), $next - 608400)
+            $end = ($next = $last->getTimestamp() + $diff + 604800) > ($lastDay + 86400)
+                ? date_timestamp_set(new \DateTime(), $next - 604800)
                 : date_timestamp_set(new \DateTime(), $next);
+            $tomorrow = date_timestamp_set(new \DateTime(), strtotime('tomorrow', $end->getTimestamp()));
             $newEvent->setRecurrence(
                 [
                     'RRULE:FREQ=WEEKLY' .
-                    ';UNTIL=' . $last->format('Ymd') . 'T000000Z' .
+                    ';UNTIL=' . $tomorrow->format('Ymd') . 'T000000Z' .
                     ';BYDAY=' . strtoupper(substr($start->format('D'), 0, 2))
                 ]
             );
@@ -1367,7 +1374,7 @@ END:VCALENDAR'
                     return ($next = $course->getStartTime()->getTimestamp()
                         - array_values(self::$weekConversion)[$course->getStartTime()->format('w')]
                         + self::$weekConversion[$d]) < $course->getStartTime()->getTimestamp()
-                        ? $next + 608400
+                        ? $next + 604800
                         : $next;
                 },
                 $course->getDotw()

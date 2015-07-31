@@ -758,6 +758,7 @@ EOJS;
         $I->amOnPage('/plan');
         // check studysauce for the changes we just made
         $I->click('.fc-agendaWeek-button');
+        $I->wait(1);
         $I->doubleClick('#calendar .event-type-p');
         $I->seeInField('#edit-event .start-time input', '11:00 AM');
         $I->seeInField('#edit-event .location input', 'the library');

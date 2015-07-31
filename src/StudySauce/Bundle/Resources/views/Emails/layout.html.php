@@ -3,11 +3,12 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
 ?>
 <html>
 <body style="padding:0; margin:0; background: url(<?php print $email_base; ?>/images/noise_white.png) #FFFFFF;">
-<div style="margin: 0 auto; display:block; height: 40px; background-color:#555; color:#FF9900; padding: 5px 15px; width:100%; max-width:600px;">
-    <a title="Home" href="<?php print $view['router']->generate('_welcome', [], true); ?>" style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif;font-size: 32px; color:#FFFFFF; white-space: nowrap; text-decoration: none; display:inline-block;">
-        <img width="40" height="40" alt="" style="margin: 0 5px 0 5px; float: left;" src="<?php print $email_base; ?>/images/Study_Sauce_Logo.png"><strong style="color:#FF9900;">Study</strong> Sauce</a>
+<div style="margin: 0 auto; padding: 0 5px; box-sizing:border-box; max-width:600px; display:block;">
+<div style="margin: 0; display:block; height: 40px; background-color:#555; color:#FF9900; padding: 5px;">
+    <a title="Home" href="<?php print $view['router']->generate('_welcome', [], true); ?>" style="line-height: 40px; vertical-align: middle; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif;font-size: 32px; color:#FFFFFF; white-space: nowrap; text-decoration: none; display:inline-block;">
+        <img width="40" height="40" alt="" style="margin: 0 5px 0 5px; float: left; line-height:40px; vertical-align: middle;" src="<?php print $email_base; ?>/images/Study_Sauce_Logo.png"><strong style="color:#FF9900;">Study</strong> Sauce</a>
 </div>
-<div style="margin: 0 auto; padding:15px; background: url(<?php print $email_base; ?>/images/noise_gray.png) #EEEEEE; width:100%; max-width:600px;">
+<div style="margin: 0; padding:5px; background: url(<?php print $email_base; ?>/images/noise_gray.png) #EEEEEE; display:block;">
     <?php if(!empty($greeting)): ?>
     <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555; ">
         <strong><?php print $greeting; ?></strong>
@@ -65,6 +66,7 @@ $email_base = $view['router']->generate('_welcome', [], true) . 'bundles/studysa
                                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Privacy
         Policy</a>&nbsp;|&nbsp;<a target="_blank" href="%unsubscribe%"
                                   style="text-decoration: underline; color: #555555; font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 9px;">Unsubscribe</a>
+</div>
 </div>
 </body>
 </html>

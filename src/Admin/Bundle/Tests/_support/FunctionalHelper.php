@@ -59,6 +59,8 @@ class FunctionalHelper extends \Codeception\Module
         $emails = new EmailsController();
         $emails->setContainer($container);
         $emails->confirm = true;
-        $emails->buildEmail($email, ['userEmail' => $container->getParameter('defer_all_emails') ?: 'brian@studysauce.com']);
+        foreach(explode(';', $container->getParameter('defer_all_emails') ?: 'brian@studysauce.com') as $address) {
+            $emails->buildEmail($email, ['userEmail' => $address]);
+        }
     }
 }

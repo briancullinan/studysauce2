@@ -403,7 +403,7 @@ EOF
             }
             catch (\Exception $e) {
                 if($e instanceof \EDAM\Error\EDAMSystemException) {
-                    if($e->getCode() == 8) {
+                    if($e->errorCode() == 8) {
                         $u->setEvernoteAccessToken(null);
                         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
                         $userManager = $this->getContainer()->get('fos_user.user_manager');

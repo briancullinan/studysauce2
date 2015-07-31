@@ -367,42 +367,42 @@ $view['slots']->start('body'); ?>
                 })->toArray()); ?></td>
             <td><?php print ($u->getPartnerInvites()->count() > 0 ? 'Y' : 'N'); ?></td>
             <td><?php print (!empty($u->getEvernoteAccessToken()) ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson1(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson2(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson3(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson4(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson5(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson6(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse1s()->count() > 0 && $u->getCourse1s()->first()->getLesson7(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson1(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson2(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson3(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson4(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse2s()->count() > 0 && $u->getCourse2s()->first()->getLesson5(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson1(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson2(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson3(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson4(
-                ) == 4 ? 'Y' : 'N'); ?></td>
-            <td><?php print ($u->getCourse3s()->count() > 0 && $u->getCourse3s()->first()->getLesson5(
-                ) == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson6() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse1s()->count() > 0
+                && $u->getCourse1s()->first()->getLesson7() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse2s()->count() > 0
+                && $u->getCourse2s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse2s()->count() > 0
+                && $u->getCourse2s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse2s()->count() > 0
+                && $u->getCourse2s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse2s()->count() > 0
+                && $u->getCourse2s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse2s()->count() > 0
+                && $u->getCourse2s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse3s()->count() > 0
+                && $u->getCourse3s()->first()->getLesson1() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse3s()->count() > 0
+                && $u->getCourse3s()->first()->getLesson2() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse3s()->count() > 0
+                && $u->getCourse3s()->first()->getLesson3() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse3s()->count() > 0
+                && $u->getCourse3s()->first()->getLesson4() == 4 ? 'Y' : 'N'); ?></td>
+            <td><?php print ($u->getCourse3s()->count() > 0
+                && $u->getCourse3s()->first()->getLesson5() == 4 ? 'Y' : 'N'); ?></td>
             <td class="highlighted-link">
-                <a title="Send email" href="mailto:<?php print $u->getEmail(); ?>"></a>
+                <a title="Send email" href="<?php print $view['router']->generate('emails'); ?>#<?php print $u->getEmail(); ?>"></a>
                 <a title="Masquerade"
                    href="<?php print $view['router']->generate('_welcome'); ?>?_switch_user=<?php print $u->getEmail(
                    ); ?>"></a>
