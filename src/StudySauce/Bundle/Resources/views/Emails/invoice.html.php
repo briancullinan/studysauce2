@@ -10,8 +10,7 @@ Thank you for your recent purchase.  You can find the details of your order belo
 <strong>Purchasing Information:</strong><br />
 <?php print $payment->getFirst(); ?> <?php print $payment->getLast(); ?></p>
 <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555;">
-<strong>Billing Address</strong></p>
-<p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555;">
+<strong>Billing Address</strong><br />
 <?php print $address; ?></p>
 <p style="font-family: 'Ubuntu',Helvetica Neue,Arial,sans-serif; font-size: 16px; color: #555555;">
 <strong>E-mail Address:</strong></p>
