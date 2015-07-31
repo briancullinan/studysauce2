@@ -563,4 +563,10 @@ class EmailsCest
         $I->switchToIFrame('rendermail');
         $I->click('a[href*="/course/3/lesson/3"]');
     }
+
+    public function tryInactivityNone(AcceptanceTester $I)
+    {
+        $I->test('tryInactivityTeaching');
+        $I->amOnPage('/cron');
+    }
 }
