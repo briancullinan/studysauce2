@@ -403,13 +403,13 @@ EOF
             }
             catch (\Exception $e) {
                 if($e instanceof \EDAM\Error\EDAMSystemException) {
-                    if($e->errorCode() == 8) {
+                    if($e->errorCode == 8) {
                         $u->setEvernoteAccessToken(null);
                         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
                         $userManager = $this->getContainer()->get('fos_user.user_manager');
                         $userManager->updateUser($u);
                     }
-                    elseif($e->getCode() == 19) {
+                    elseif($e->errorCode == 19) {
                         // ignore rate limit errors
                     }
                     else
