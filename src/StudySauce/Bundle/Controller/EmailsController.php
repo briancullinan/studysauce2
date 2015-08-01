@@ -107,7 +107,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:partner-invite.html.php', [
                         'user' => $user,
                         'greeting' => 'Hello ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">If you are prepared to help ' . $user->getFirst() . ', click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">If you are prepared to help ' . $user->getFirst() . ', click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -146,7 +146,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:partner-reminder.html.php', [
                         'user' => $user,
                         'greeting' => 'Hello ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">If you are prepared to help ' . $user->getFirst() . ', click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">If you are prepared to help ' . $user->getFirst() . ', click here to join Study Sauce and learn more about how we help students achieve their academic goals.</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -177,7 +177,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:student-invite.html.php', [
                         'user' => $user,
                         'greeting' => 'Hello ' . $student->getFirst() . ' ' . $student->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -211,7 +211,7 @@ class EmailsController extends Controller
                         'address' => $address,
                         'payment' => $payment,
                         'greeting' => 'Hello ' . $user->getFirst() . ' ' . $user->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -241,7 +241,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:welcome-reminder.html.php', [
                         'user' => $user,
                         'greeting' => 'Hello ' . $user->getFirst() . ' ' . $user->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -275,7 +275,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:prepay.html.php', [
                         'user' => $user,
                         'greeting' => 'Hello ' . $studentFirst . ' ' . $studentLast . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -326,7 +326,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:deadline-reminder.html.php', [
                         'reminders' => $reminderOutput,
                         'greeting' => 'Hi ' . $user->getFirst() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Click here to log in to Study Sauce and edit your deadlines</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Click here to log in to Study Sauce and edit your deadlines</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -393,7 +393,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:achievement.html.php', [
                         'user' => $user,
                         'greeting' => 'Dear ' . $partner->getFirst() . ' ' . $partner->getLast() . ',',
-                        'link' => '<a href="' . $this->generateUrl('goals', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $this->generateUrl('goals', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -424,7 +424,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:parent-invite.html.php', [
                         'user' => $user,
                         'greeting' => 'Dear ' . $parent->getFirst() . ' ' . $parent->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -459,7 +459,7 @@ class EmailsController extends Controller
                         'invite' => $invite,
                         'group' => $group,
                         'greeting' => 'Dear ' . $invite->getFirst() . ' ' . $invite->getLast() . ',',
-                        'link' => '<a href="' . $this->generateUrl('register', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Go to Study Sauce</a>'
+                        'link' => '<a href="' . $this->generateUrl('register', ['_code' => $invite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '" style="color: #FF9900;">Go to Study Sauce</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
@@ -489,7 +489,7 @@ class EmailsController extends Controller
             ->setBody($this->renderView('StudySauceBundle:Emails:reset-password.html.php', [
                         'user' => $user,
                         'greeting' => 'Dear ' . $user->getFirst() . ' ' . $user->getLast() . ',',
-                        'link' => '<a href="' . $codeUrl . '">Create a new password</a>'
+                        'link' => '<a href="' . $codeUrl . '" style="color: #FF9900;">Create a new password</a>'
                     ]), 'text/html');
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
