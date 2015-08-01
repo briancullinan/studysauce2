@@ -533,10 +533,13 @@ class PlanController extends Controller
 
         /** @var $orm EntityManager */
         $orm = $container->get('doctrine')->getManager();
+        /** @var $userManager UserManager */
+        $userManager = $container->get('fos_user.user_manager');
 
         $calendars = self::getCalendars($user, $container, $client, $service);
         /** @var \Google_Client $client */
         /** @var \Google_Service_Calendar $service */
+        $oldId = $user->getProperty('calendarId');
         $id = '';
         foreach ($calendars->getItems() as $cal) {
             /** @var \Google_Service_Calendar_CalendarListEntry $cal */
@@ -557,9 +560,20 @@ class PlanController extends Controller
             $calendar = $service->calendars->insert($calendar);
             $user->setProperty('calendarId', $calendar->getId());
             $user->setProperty('eventSync', '');
-            $orm->merge($user);
-            $orm->flush();
+            $userManager->updateUser($user);
             $id = $calendar->getId();
+        }
+        if($user->getProperty('calendarId') != $oldId && !empty($schedule = $user->getSchedules()->first())) {
+            /** @var Schedule $schedule */
+            foreach($schedule->getEvents()->toArray() as $e) {
+                /** @var Event $e */
+                if(!empty($e->getRemoteId())) {
+                    $e->setRemoteId(null);
+                    $e->setRemoteUpdated(null);
+                    $orm->merge($e);
+                }
+            }
+            $orm->flush();
         }
 
         return $id;
