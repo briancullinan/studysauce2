@@ -165,6 +165,11 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $created;
 
     /**
+     * @ORM\Column(type="datetime", name="last_visit")
+     */
+    protected $lastVisit;
+
+    /**
      * @ORM\Column(type="string", length=256, name="first")
      */
     protected $first = '';
@@ -1312,5 +1317,28 @@ class User extends BaseUser implements EncoderAwareInterface
     public function getGcalAccessToken()
     {
         return $this->gcal_access_token;
+    }
+
+    /**
+     * Set lastVisit
+     *
+     * @param \DateTime $lastVisit
+     * @return User
+     */
+    public function setLastVisit($lastVisit)
+    {
+        $this->lastVisit = $lastVisit;
+
+        return $this;
+    }
+
+    /**
+     * Get lastVisit
+     *
+     * @return \DateTime 
+     */
+    public function getLastVisit()
+    {
+        return $this->lastVisit;
     }
 }

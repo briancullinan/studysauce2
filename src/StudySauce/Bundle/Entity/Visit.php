@@ -53,6 +53,11 @@ class Visit
     protected $method;
 
     /**
+     * @ORM\Column(type="integer", length=12, name="ip")
+     */
+    protected $ip;
+
+    /**
      * @ORM\Column(type="datetime", name="created")
      */
     protected $created;
@@ -235,5 +240,28 @@ class Visit
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set ip
+     *
+     * @param integer $ip
+     * @return Visit
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    /**
+     * Get ip
+     *
+     * @return integer 
+     */
+    public function getIp()
+    {
+        return $this->ip;
     }
 }

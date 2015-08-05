@@ -72,6 +72,10 @@ class AdviserController extends Controller
             $userManager->updateUser($user);
         }
 
+        usort($users, function (User $a, User $b) {
+            return (!empty($a->getLastVisit()) ? $a->getLastVisit()->getTimestamp() : 0) - (!empty($b->getLastVisit()) ? $b->getLastVisit()->getTimestamp() : 0);
+        });
+
         return $this->render('AdminBundle:Adviser:userlist.html.php', [
             'total' => count($users),
             'users' => $users,

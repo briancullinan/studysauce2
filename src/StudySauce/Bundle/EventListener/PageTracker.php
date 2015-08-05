@@ -3,6 +3,7 @@
 namespace StudySauce\Bundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Controller\LandingController;
 use StudySauce\Bundle\Entity\User;
 use StudySauce\Bundle\Entity\Visit;
@@ -85,6 +86,7 @@ class PageTracker implements EventSubscriberInterface
             $visit->setPath($path);
             $visit->setHash('');
             $visit->setMethod($request->getMethod());
+            $visit->setIp(ip2long($request->server->get('REMOTE_ADDR')));
             if($this->session->isStarted())
                 $id = $this->session->getId();
 
@@ -108,6 +110,10 @@ class PageTracker implements EventSubscriberInterface
                 if ($user != 'anon.') {
                     $visit->setUser($user);
                     $user->addVisit($visit);
+                    $user->setLastVisit(new \DateTime());
+                    /** @var $userManager UserManager */
+                    $userManager = $this->container->get('fos_user.user_manager');
+                    $userManager->updateUser($user, false);
                 }
                 $this->orm->persist($visit);
                 $this->orm->flush($visit);
@@ -120,6 +126,7 @@ class PageTracker implements EventSubscriberInterface
                     $visited->setTimezone(new \DateTimeZone(date_default_timezone_get()));
                     $prev->setCreated($visited);
                     $prev->setMethod($request->getMethod());
+                    $prev->setIp(ip2long($request->server->get('REMOTE_ADDR')));
                     $prev->setHash(isset($v['hash']) ? $v['hash'] : '');
                     if(!empty($base = $request->getBaseUrl()) && strpos($v['path'], $base) == 0)
                         $v['path'] = substr($v['path'], strlen($request->getBaseUrl()));
@@ -136,7 +143,6 @@ class PageTracker implements EventSubscriberInterface
                         $user->addVisit($prev);
                     }
                     $this->orm->persist($prev);
-                    $this->orm->flush($prev);
                 }
             }
             // call visit action
@@ -145,6 +151,7 @@ class PageTracker implements EventSubscriberInterface
                 $ctrl->setContainer($this->container);
                 $ctrl->visitAction($request);
             }
+            $this->orm->flush();
        }
     }
 

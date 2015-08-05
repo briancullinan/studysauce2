@@ -282,6 +282,14 @@ $collection->add(
     )
 );
 $collection->add(
+    'plan_pdf',
+    new Route(
+        '/plan/pdf/{user}',
+        ['_controller' => 'StudySauceBundle:Plan:pdf', 'user' => null],
+        ['user' => '[0-9]+']
+    )
+);
+$collection->add(
     'plan_complete',
     new Route(
         '/plan/complete',

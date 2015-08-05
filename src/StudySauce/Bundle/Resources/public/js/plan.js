@@ -322,6 +322,20 @@ $(document).ready(function () {
                 if(plan.is('.setup-mode') || plan.is('.add-events')) {
                     calendar.find('h2').text('Your typical week')
                 }
+                if(view.name == 'agendaWeek' || view.name == 'month') {
+                    if(calendar.find('a[href*="/plan/pdf"]').length == 0) {
+                        if(body.find('.panel-pane[id^="uid-"]').length > 0) {
+                            var uid = (/uid-([0-9]+)/i).exec(body.find('.panel-pane[id^="uid-"]').attr('id'))[1];
+                            $('<a href="/plan/pdf/' + uid + '">&nbsp;</a>').appendTo(calendar.find('.fc-right'));
+                        }
+                        else {
+                            $('<a href="/plan/pdf">&nbsp;</a>').appendTo(calendar.find('.fc-right'));
+                        }
+                    }
+                }
+                else {
+                    calendar.find('a[href*="/plan/pdf"]').remove();
+                }
             },
             eventRender: function (event, element) {
                 element.data('event', event);
@@ -371,7 +385,7 @@ $(document).ready(function () {
                 center: 'title',
                 right: 'today agendaDay,agendaWeek,month'
             },
-            defaultView: plans.is('.setup-mode') && window.outerWidth > 700 ? 'agendaWeek' : 'agendaDay',
+            defaultView: plans.is('.setup-mode') && window.outerWidth > 700 || body.is('.adviser') ? 'agendaWeek' : 'agendaDay',
             selectable: false,
             events: function (start, end, timezone, callback) {
                 callback(window.planEvents);

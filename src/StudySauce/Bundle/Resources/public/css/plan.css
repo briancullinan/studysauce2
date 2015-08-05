@@ -1,4 +1,22 @@
 
+.adviser .fc-agendaDay-button {
+    display:none !important;
+}
+
+.pane-content a[href*="/plan/pdf"]:not(.more)
+{
+    background: url(../images/menu_new_compressed.png) no-repeat left -9304px transparent;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    float:right;
+    padding:0;
+}
+
+.pane-content a[href*="/plan/pdf"]:not(.more):before {
+    display:none;
+    padding-left:0;
+}
 
 #plan .pane-content
 {

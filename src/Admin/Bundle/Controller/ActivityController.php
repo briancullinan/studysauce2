@@ -64,7 +64,12 @@ class ActivityController extends Controller
             return [
                 'id' => $v->getId(),
                 'start' => $v->getCreated()->format('r'),
-                'content' => '<a href="#visit-id-' . $v->getId() . '"><strong>Path:</strong><span> ' . $v->getMethod() . ' ' . $v->getPath() . '</span><br /><strong>User:</strong><span> ' . (!empty($v->getUser()) ? $v->getUser()->getEmail() : 'Guest') . '</span><br /><strong>Session Id:</strong><span> ' . (!empty($v->getSession()) ? $v->getSession() : 'New session') . '</span></a>',
+                'content' => '<a href="#visit-id-' . $v->getId() . '">' .
+                    '<strong>Path:</strong><span> ' . $v->getMethod() . ' ' . $v->getPath() . '</span><br />' .
+                    '<strong>User:</strong><span> ' . (!empty($v->getUser()) ? $v->getUser()->getEmail() : 'Guest') . '</span><br />' .
+                    '<strong>Session Id:</strong><span> ' . (!empty($v->getSession()) ? $v->getSession() : 'New session') . '</span>' .
+                    '<strong>IP:</strong><span> ' . long2ip($v->getIp()) . '</span><br />' .
+                    '</a>',
                 'className' => 'session-id-' . (!empty($v->getSession()) ? $v->getSession() : '') . ' user-id-' . (!empty($v->getUser()) && !$v->getUser()->hasRole('ROLE_GUEST') && !$v->getUser()->hasRole('ROLE_DEMO') ? $v->getUser()->getId() : '')
             ];
         }, $entities);

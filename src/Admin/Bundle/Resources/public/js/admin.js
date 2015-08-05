@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     var body = $('body'),
-        orderBy = 'lastLogin DESC',
+        orderBy = 'lastVisit DESC',
         searchTimeout = null,
         searchRequest = null;
 
@@ -35,7 +35,7 @@ $(document).ready(function () {
             partners: admin.find('select[name="hasPartners"]').val().trim(),
             notes: admin.find('select[name="hasNotes"]').val().trim(),
             grades: admin.find('select[name="hasGrades"]').val().trim(),
-            lastLogin: admin.find('input[name="lastLogin"]').val().trim(),
+            lastVisit: admin.find('input[name="lastVisit"]').val().trim(),
             created: admin.find('input[name="created"]').val().trim()
         };
 

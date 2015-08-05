@@ -52,14 +52,14 @@ class AdminController extends Controller
             self::$paidStr = implode(', ', array_map(function ($x) { return $x['id']; }, $paidGroups));
         }
 
-        if(!empty($lastLogin = $request->get('lastLogin'))) {
-            $start = new \DateTime(explode(' - ', $lastLogin)[0]);
-            if(count(explode(' - ', $lastLogin)) > 1) {
-                $end = new \DateTime(explode(' - ', $lastLogin)[1]);
-                $qb = $qb->andWhere('u.lastLogin >= \'' . $start->format('Y-m-d 00:00:00') . '\' AND u.lastLogin <= \'' . $end->format('Y-m-d 23:59:59') . '\'');
+        if(!empty($lastVisit = $request->get('lastLogin'))) {
+            $start = new \DateTime(explode(' - ', $lastVisit)[0]);
+            if(count(explode(' - ', $lastVisit)) > 1) {
+                $end = new \DateTime(explode(' - ', $lastVisit)[1]);
+                $qb = $qb->andWhere('u.lastVisit >= \'' . $start->format('Y-m-d 00:00:00') . '\' AND u.lastVisit <= \'' . $end->format('Y-m-d 23:59:59') . '\'');
             }
             else {
-                $qb = $qb->andWhere('u.lastLogin >= \'' . $start->format('Y-m-d 00:00:00') . '\'');
+                $qb = $qb->andWhere('u.lastVisit >= \'' . $start->format('Y-m-d 00:00:00') . '\'');
             }
         }
 
@@ -319,7 +319,7 @@ class AdminController extends Controller
             if($direction != 'ASC' && $direction != 'DESC')
                 $direction = 'DESC';
             // no extra join information needed
-            if($field == 'created' || $field == 'lastLogin' || $field == 'last') {
+            if($field == 'created' || $field == 'lastLogin' || $field == 'lastVisit' || $field == 'last') {
                 $users = $users->orderBy('u.' . $field, $direction);
             }
             if($field == 'completed') {
@@ -338,7 +338,7 @@ class AdminController extends Controller
             }
         }
         else {
-            $users = $users->orderBy('u.lastLogin', 'DESC');
+            $users = $users->orderBy('u.lastVisit', 'DESC');
         }
 
         $users = $users
@@ -359,7 +359,7 @@ class AdminController extends Controller
 
         $visitors = self::searchBuilder($orm, $request)
             ->select('COUNT(DISTINCT u.id)')
-            ->andWhere('u.lastLogin > :yesterday')
+            ->andWhere('u.lastVisit > :yesterday')
             ->setParameter('yesterday', $yesterday)
             ->getQuery()
             ->getSingleScalarResult();

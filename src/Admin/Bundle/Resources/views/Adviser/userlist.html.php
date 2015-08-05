@@ -102,8 +102,8 @@ $view['slots']->start('body'); ?>
                             <option>Y</option>
                             <option>N</option>
                         </select></th>
-                <th><select name="hasNotes">
-                            <option>Notes</option>
+                <th><select name="hasSchedule">
+                            <option>Schedule</option>
                             <option>Y</option>
                             <option>N</option>
                         </select></th>
@@ -125,7 +125,7 @@ $view['slots']->start('body'); ?>
                 $schedule = $u->getSchedules()->first();
                 /** @var User $adviser */
                 $adviser = $u->getPartnerOrAdviser();
-                $ts = !empty($u->getLastLogin()) ? $u->getLastLogin() : $u->getCreated();
+                $ts = !empty($u->getLastVisit()) ? $u->getLastLogin() : $u->getCreated();
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print $ts->getTimestamp(); ?>"><?php print $ts->format('j M'); ?></td>
@@ -144,7 +144,7 @@ $view['slots']->start('body'); ?>
                 })->toArray());
                 print ($gradesCount > 0 ? 'Y' : 'N'); ?>"><?php print $gradesCount; ?></td>
                 <td data-value="<?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?>"><?php print $u->getDeadlines()->count(); ?></td>
-                <td data-value="<?php print (!empty($u->getEvernoteAccessToken()) && $u->getNotes()->count() > 0 ? 'Y' : 'N'); ?>"><?php print (!empty($u->getEvernoteAccessToken()) ? $u->getNotes()->count() : 'N'); ?></td>
+                <td data-value="<?php print $u->getSchedules()->count(); ?>"><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
                 </tr><?php
             } ?>
             </tbody>

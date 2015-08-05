@@ -213,7 +213,7 @@ class ResultsController extends Controller
             if($direction != 'ASC' && $direction != 'DESC')
                 $direction = 'DESC';
             // no extra join information needed
-            if($field == 'created' || $field == 'lastLogin' || $field == 'last') {
+            if($field == 'created' || $field == 'lastLogin' || $field == 'lastVisit' || $field == 'last') {
                 $users = $users->orderBy('u.' . $field, $direction);
             }
             if($field == 'completed') {
@@ -232,7 +232,7 @@ class ResultsController extends Controller
             }
         }
         else {
-            $users = $users->orderBy('u.lastLogin', 'DESC');
+            $users = $users->orderBy('u.lastVisit', 'DESC');
         }
 
         $users = $users
