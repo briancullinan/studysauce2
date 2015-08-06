@@ -165,7 +165,7 @@ class User extends BaseUser implements EncoderAwareInterface
     protected $created;
 
     /**
-     * @ORM\Column(type="datetime", name="last_visit")
+     * @ORM\Column(type="datetime", name="last_visit", nullable = true)
      */
     protected $lastVisit;
 

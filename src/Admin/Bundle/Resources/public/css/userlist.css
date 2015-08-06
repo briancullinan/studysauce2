@@ -98,8 +98,8 @@
     height: 24px;
 }
 
-#userlist th:nth-child(3),
-#userlist td:nth-child(3),
+#userlist th:nth-child(4),
+#userlist td:nth-child(4),
 #userlist th:nth-child(2),
 #userlist td:nth-child(2),
 #userlist th:nth-child(1),
@@ -115,16 +115,16 @@
     width: 10%;
 }
 
-#userlist th:nth-child(4),
-#userlist td:nth-child(4),
+#userlist th:nth-child(3),
+#userlist td:nth-child(3),
 #userlist th:nth-child(5),
 #userlist td:nth-child(5)
 {
     width: 20%;
 }
 
-#userlist .master th:nth-child(4),
-#userlist .master td:nth-child(4),
+#userlist .master th:nth-child(3),
+#userlist .master td:nth-child(3),
 #userlist .master th:nth-child(5),
 #userlist .master td:nth-child(5),
 #userlist .master th:nth-child(6),

@@ -757,9 +757,10 @@ EOJS;
         $I->amOnUrl('https://staging.studysauce.com/cron/sync');
         $I->amOnPage('/plan');
         // check studysauce for the changes we just made
-        $I->click('.fc-agendaWeek-button');
-        $I->wait(1);
-        $I->doubleClick('#calendar .event-type-p');
+        $I->wait(2);
+        $I->doubleClick('#calendar .fc-agendaWeek-button');
+        $I->wait(2);
+        $I->doubleClick('#calendar td:nth-child(3) .fc-event-container :nth-child(2).event-type-p');
         $I->seeInField('#edit-event .start-time input', '11:00 AM');
         $I->seeInField('#edit-event .location input', 'the library');
         $I->seeOptionIsSelected('#edit-event .reminder select', '30');

@@ -30,7 +30,7 @@ use StudySauce\Bundle\Entity\Event;
             position: relative;
             left: 0;
             color: #555;
-            font-size: 14px;;
+            font-size: 12px;;
         }
 
         body {
@@ -49,7 +49,7 @@ use StudySauce\Bundle\Entity\Event;
         table td {
             position: relative;
             border: .035in solid #555;
-            padding: 15px 5px 5px 5px;
+            padding: 0 5px;
             margin-top: 15px;
             vertical-align: top;
         }
@@ -59,29 +59,59 @@ use StudySauce\Bundle\Entity\Event;
             color: #ccc;
         }
 
-        table td:first-child,
-        table td:last-child {
+        .month-view table td:first-child,
+        .month-view table td:last-child,
+        .week-view table td.gray,
+        .week-view table td.gray {
             background-color: #EEE;
+        }
+
+        table tr {
+            page-break-inside: avoid;
         }
 
         table thead tr {
             height: 40px;
+            background-color: #fff;
+            position: relative;
+            z-index: 100;
         }
 
-        table tbody.row-count-4 tr {
+        .month-view table tbody.row-count-4 tr {
             height: 25%;
         }
 
-        table tbody.row-count-5 tr {
+        .month-view table tbody.row-count-5 tr {
             height: 20%;
         }
 
-        table tbody.row-count-6 tr {
+        .month-view table tbody.row-count-6 tr {
             height: 16.66%;
         }
 
-        table tbody.row-count-7 tr {
+        .month-view table tbody.row-count-7 tr {
             height: 14.28%;
+        }
+
+        .month-view table tbody td {
+            padding-top: 25px;
+        }
+
+        .week-view table tbody tr:first-child td {
+            padding-top: 25px;
+            border-top: .035in solid #555;
+        }
+
+        .week-view table tbody tr:last-child td,
+        .week-view table tbody tr td[rowspan] {
+            border-bottom: .035in solid #555;
+            height: 100%;
+            padding: 0;
+        }
+
+        .week-view table tbody tr td {
+            border-top: 0;
+            border-bottom: 0;
         }
 
         .week-view table tbody tr {
@@ -90,6 +120,19 @@ use StudySauce\Bundle\Entity\Event;
 
         .month-view table tbody tr {
             min-height: 100px;
+        }
+
+        .week-view table tbody tr.deadlines {
+            height: 40px;
+            min-height: 0;
+        }
+
+        .week-view table tbody tr.deadlines td {
+            border-bottom: .035in solid #555;
+        }
+
+        .deadlines .class-row {
+            color: #FF1100;
         }
 
         h1 {
@@ -115,6 +158,7 @@ use StudySauce\Bundle\Entity\Event;
             margin: 0 -2px 10px -2px;
             line-height: 40px;
             vertical-align: middle;
+            text-align: left;
         }
 
         h1 img {
@@ -151,9 +195,9 @@ use StudySauce\Bundle\Entity\Event;
         }
 
         .class-row {
-            padding-left: 20px;
             position: relative;
-            padding-right: 20px;
+            page-break-inside: avoid;
+            padding: 5px 5px 5px 20px;
         }
 
         .class-row i {
@@ -163,7 +207,7 @@ use StudySauce\Bundle\Entity\Event;
             border-radius: 100%;
             display: inline-block;
             position: absolute;
-            top: 2px;
+            top: 5px;
             left: 0;
         }
 
@@ -171,6 +215,7 @@ use StudySauce\Bundle\Entity\Event;
             page-break-inside: avoid;
             page-break-after: always;
             page-break-before: auto;
+            overflow: visible !important;
         }
 
         .page:last-child {
@@ -217,11 +262,6 @@ use StudySauce\Bundle\Entity\Event;
             background-color: #BB0088;
         }
 
-        .deadlines .class-row {
-            height: 1%;
-            color: #882211;
-        }
-
     </style>
 </head>
 
@@ -257,7 +297,7 @@ $scheduleEnd = date_timestamp_set(
         )->toArray()
     )
 );
-for ($m = 1; $m <= 12; $m++) {
+for ($m = $scheduleStart->format('m'); $m <= $scheduleEnd->format('m'); $m++) {
     $month = new \DateTime($scheduleStart->format('Y') . '/' . $m . '/1');
     $monthEnd = strtotime($month->format('Y/m/t'));
     if ($month->format('w') == 0) {
@@ -341,6 +381,8 @@ if ($weekEnd->format('w') != 0) {
 }
 $weekDays = [];
 foreach ($schedule->getEvents()->toArray() as $e) {
+    if($e->getType() == 'd')
+        continue;
     /** @var Event $e */
     $instances = PlanController::getInstances(
         date_timezone_set(clone $e->getStart(), new \DateTimeZone('Z')),
@@ -362,19 +404,21 @@ foreach ($schedule->getEvents()->toArray() as $e) {
             if (!$child->getDeleted()) {
                 continue;
             }
-            $weekDays[$start->format('G')][date_timezone_set(
+            $weekDays[date_timezone_set(
                 clone $child->getStart(),
                 new \DateTimeZone(date_default_timezone_get())
-            )->format('Y/m/d')][] = $child;
+            )->format('Y/m/d')][$start->format('G')][] = $child;
         } else {
-            $weekDays[$start->format('G')][date_timezone_set(
+            $weekDays[date_timezone_set(
                 clone $start,
                 new \DateTimeZone(date_default_timezone_get())
-            )->format('Y/m/d')][] = $e;
+            )->format('Y/m/d')][$start->format('G')][] = $e;
         }
     }
 }
-for ($j = $weekStart->getTimestamp(); $j < $weekEnd->getTimestamp(); $j += 604800) {
+for ($j = $weekStart->getTimestamp();
+     $j < $weekEnd->getTimestamp();
+     $j += 604800) {
     $current = date_timestamp_set(new \DateTime(), $j);
     ?>
     <div class="page week-view">
@@ -408,80 +452,98 @@ for ($j = $weekStart->getTimestamp(); $j < $weekEnd->getTimestamp(); $j += 60480
             for ($d = 0; $d < 7; $d++) {
                 $weekDay = date_timestamp_set(new \DateTime(), $j + $d * 86400);
                 ?>
-                <td>
+                <td class="<?php print ($d == 0 || $d == 6 ? 'gray' : ''); ?>">
                     <h3><?php print $weekDay->format('j'); ?></h3>
                     <?php
-                    for ($h = 0; $h < 24; $h++) {
-                        if (!isset($weekDays[$h][$weekDay->format('Y/m/d')])) {
-                            continue;
-                        }
-                        foreach ($weekDays[$h][$weekDay->format('Y/m/d')] as $e) {
-                            /** @var Event $e */
-                            $exists = true;
-                            if($e->getType() != 'd')
-                                continue;
-                            $hasDeadlines = true;
-                            ?>
-                            <div class="class-row event-type-<?php print $e->getType(); ?>">
-                                <i class="class<?php print (!empty($e->getCourse()) ? $e->getCourse()->getIndex(
-                                ) : ''); ?>"></i>
-                                <span><?php print $e->getName(); ?></span>
-                                <?php
-                                if ($e->getType() != 'd') {
-                                    print $e->getStart()->format('H:i'); ?> - <?php print $e->getEnd()->format('H:i');
-                                }
-                                if (!empty($e->getLocation())) { ?>; Location: <?php print $e->getLocation();
-                                } ?>
-                            </div>
+                    if (!isset($days[$weekDay->format('Y/m/d')])) {
+                        continue;
+                    }
+                    foreach ($days[$weekDay->format('Y/m/d')] as $e) {
+                        /** @var Event $e */
+                        $exists = true;
+                        $hasDeadlines = true;
+                        ?>
+                        <div class="class-row event-type-<?php print $e->getType(); ?>">
+                            <i class="class<?php print (!empty($e->getCourse()) ? $e->getCourse()->getIndex(
+                            ) : ''); ?>"></i>
+                            <strong><?php print $e->getName(); ?></strong>
                             <?php
-                        }
+                            if (!empty($e->getLocation())) { ?>Location: <?php print $e->getLocation();
+                            } ?>
+                        </div>
+                        <?php
                     } ?>
                 </td>
                 <?php
             }
             $view['slots']->stop();
-            if($hasDeadlines) { ?>
+            if ($hasDeadlines) { ?>
                 <tr class="deadlines">
                     <?php $view['slots']->output('deadlines'); ?>
                 </tr>
-            <?php } ?>
-            <tr>
-                <?php
+            <?php }
+            $most = max(
+                array_map(
+                    function ($d) use ($j, $weekDays) {
+                        $weekDay = date_timestamp_set(new \DateTime(), $j + $d * 86400);
+                        if (!isset($weekDays[$weekDay->format('Y/m/d')])) {
+                            return 0;
+                        }
+
+                        return count($weekDays[$weekDay->format('Y/m/d')]);
+                    },
+                    range(0, 7)
+                )
+            );
+            for ($k = 0; $k <= $most; $k++) { ?>
+                <tr><?php
                 for ($d = 0; $d < 7; $d++) {
                     $weekDay = date_timestamp_set(new \DateTime(), $j + $d * 86400);
-                    ?>
-                    <td>
-                    <?php if(!$hasDeadlines) { ?>
-                    <h3><?php print $weekDay->format('j'); ?></h3>
-                    <?php }
-
-                    for ($h = 0; $h < 24; $h++) {
-                        if (!isset($weekDays[$h][$weekDay->format('Y/m/d')])) {
-                            continue;
-                        }
-                        foreach ($weekDays[$h][$weekDay->format('Y/m/d')] as $e) {
-                            /** @var Event $e */
-                            $exists = true;
-                            if($e->getType() == 'd')
-                                continue;
+                    if (!isset($weekDays[$weekDay->format('Y/m/d')])
+                        || count($weekDays[$weekDay->format('Y/m/d')]) <= $k
+                    ) {
+                        if ((!isset($weekDays[$weekDay->format('Y/m/d')]) && $k == 0)
+                            || (isset($weekDays[$weekDay->format('Y/m/d')])
+                                && count($weekDays[$weekDay->format('Y/m/d')]) == $k)
+                        ) {
+                            $cnt = !isset($weekDays[$weekDay->format('Y/m/d')])
+                                ? 0
+                                : count($weekDays[$weekDay->format('Y/m/d')]);
                             ?>
-                            <div class="class-row event-type-<?php print $e->getType(); ?>">
-                                <i class="class<?php print (!empty($e->getCourse()) ? $e->getCourse()->getIndex(
-                                ) : ''); ?>"></i>
-                                <span><?php print $e->getName() . ($e->getType() == 'c' ? ' - Class': ($e->getType() == 'p' ? ' - Pre-work': ($e->getType() == 'sr' ? ' - Study': ''))); ?></span><br />
-                                <?php
-                                if ($e->getType() != 'd') {
-                                    print $e->getStart()->format('H:i'); ?> - <?php print $e->getEnd()->format('H:i');
-                                }
-                                if (!empty($e->getLocation())) { ?>; Location: <?php print $e->getLocation();
-                                } ?>
-                            </div>
-                            <?php
+                            <td class="<?php print ($d == 0 || $d == 6 ? 'gray' : ''); ?>"
+                                rowspan="<?php print $most - $cnt + 1; ?>"></td><?php
                         }
-                    } ?>
-                    </td><?php
-                } ?>
-            </tr>
+                        continue;
+                    }
+                    ?>
+                    <td class="<?php print ($d == 0 || $d == 6 ? 'gray' : ''); ?>">
+                    <?php
+                    $h = array_keys($weekDays[$weekDay->format('Y/m/d')])[$k];
+                    foreach ($weekDays[$weekDay->format('Y/m/d')][$h] as $e) {
+                        /** @var Event $e */
+                        $exists = true;
+                        if (!$hasDeadlines && $k == 0) { ?>
+                            <h3><?php print $weekDay->format('j'); ?></h3>
+                        <?php } ?>
+                        <div class="class-row event-type-<?php print $e->getType(); ?>">
+                            <i class="class<?php print (!empty($e->getCourse())
+                                ? $e->getCourse()->getIndex()
+                                : ''); ?>"></i>
+                            <strong><?php print $e->getName() . ($e->getType() == 'c'
+                                        ? ' - Class'
+                                        : ($e->getType() == 'p'
+                                            ? ' - Pre-work'
+                                            : ($e->getType() == 'sr'
+                                                ? ' - Study'
+                                                : ''))); ?></strong><br/>
+                            <?php
+                            print $e->getStart()->format('H:i'); ?> - <?php
+                            print $e->getEnd()->format('H:i');
+                            if (!empty($e->getLocation())) {
+                                ?>; Location: <?php print $e->getLocation();
+                            } ?>
+                        </div>
+                    <?php } ?></td><?php } ?></tr><?php } ?>
             </tbody>
         </table>
     </div>
