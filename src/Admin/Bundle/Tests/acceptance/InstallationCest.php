@@ -64,7 +64,9 @@ yum update -y
 yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl openssl php55-mbstring php55-mcrypt php55-common php55-gd php55-xml libjpeg libpng git
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
 
-service mysql start
+chown -R mysql /var/lib/mysql
+chgrp -R mysql /var/lib/mysql
+service mysqld start
 /usr/bin/mysqladmin -u root password 'MyNewPass'
 echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhost' IDENTIFIED BY 'itekIO^#(';" | mysql -u root --password=MyNewPass -h localhost
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
