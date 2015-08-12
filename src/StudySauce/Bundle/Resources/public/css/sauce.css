@@ -241,44 +241,6 @@ input[type="button"].more
     position: relative;
 }
 
-#plan .fc-button,
-a.subtle,
-button.subtle
-{
-    background-clip: border-box;
-    background-origin: padding-box;
-    background: #eee;
-    border:none;
-    border-bottom:1px solid #eee;
-    box-shadow: none;
-    display:inline-block;
-    margin:0;
-    float:none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    height:auto;
-    color:#555;
-}
-
-a.subtle.disabled,
-a.subtle.disabled:hover,
-a.subtle.disabled:active,
-a.subtle.disabled:focus,
-button.subtle.disabled,
-button.subtle.disabled:hover,
-button.subtle.disabled:active,
-button.subtle.disabled:focus,
-#plan .fc-button.fc-state-disabled,
-#plan .fc-button.fc-state-disabled:hover,
-#plan .fc-button.fc-state-disabled:active,
-#plan .fc-button.fc-state-disabled:focus
-{
-    margin-top:0;
-    background-color: #eeeeee;
-    border-bottom:1px solid #eeeeee;
-    color:#999;
-}
-
 .btn-primary,
 .highlighted-link .more
 {
@@ -294,7 +256,7 @@ a.more:hover,
 button.more:hover,
 input[type="submit"].more:hover,
 input[type="reset"].more:hover,
-input[type="button"].more:hover
+input[type="button"].more:hover,
 .btn:focus,
 .btn-default:focus,
 a.more:focus,
@@ -310,18 +272,6 @@ input[type="button"].more:focus
     color: #ffffff;
     background-color: #0088BB;
     border-color: #004477;
-}
-
-#plan .fc-button:focus,
-a.subtle:focus,
-#plan .fc-button:focus,
-#plan .fc-button:hover,
-a.subtle:hover,
-#plan .fc-button:hover
-{
-    background: #dddddd;
-    border-bottom:1px solid #bbb;
-    color:#555;
 }
 
 .net-promoter label

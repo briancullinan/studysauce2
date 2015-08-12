@@ -38,6 +38,55 @@
     position:relative;
 }
 
+#plan .fc-button
+{
+    background-clip: border-box;
+    background-origin: padding-box;
+    background: #eee;
+    border:none;
+    border-bottom:1px solid #eee;
+    box-shadow: none;
+    display:inline-block;
+    margin:0;
+    float:none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    height:auto;
+    color:#555;
+}
+
+.fc-toolbar > * {
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.fc-toolbar h2
+{
+    font-size: 28px;
+    letter-spacing: -1px;
+    vertical-align: middle;
+}
+
+#plan .fc-button.fc-state-disabled,
+#plan .fc-button.fc-state-disabled:hover,
+#plan .fc-button.fc-state-disabled:active,
+#plan .fc-button.fc-state-disabled:focus
+{
+    margin-top:0;
+    background-color: #eeeeee;
+    border-bottom:1px solid #eeeeee;
+    color:#999;
+}
+
+#plan .fc-button:focus,
+#plan .fc-button:hover,
+#plan .fc-button:active
+{
+    background: #dddddd;
+    border-bottom:1px solid #bbb;
+    color:#555;
+}
+
 #plan a[href="#plan-step-1"]
 {
     position:absolute;
