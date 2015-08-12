@@ -279,7 +279,7 @@ $(document).ready(function () {
                     columnFormat: 'ddd M/D'
                 },
                 month: {
-                    columnFormat: 'ddd M/D'
+                    columnFormat: 'dddd'
                 }
             },
             defaultDate: plans.is('.setup-mode') ? (new Date(Math.min.apply(null, window.planEvents.filter(function (e) {return e.className.indexOf('event-type-c') > -1}).map(function (e) {

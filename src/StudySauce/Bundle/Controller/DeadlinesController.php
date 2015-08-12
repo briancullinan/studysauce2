@@ -168,6 +168,7 @@ class DeadlinesController extends Controller
             }
         }
         $orm->flush();
+        PlanController::createAllDay($demo, $guest->getDeadlines()->toArray(), $orm);
 
         return $deadlines;
     }
