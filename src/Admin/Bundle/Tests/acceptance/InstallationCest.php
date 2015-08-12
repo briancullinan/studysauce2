@@ -55,6 +55,8 @@ class InstallationCest
         $I->click('//span[contains(.,"Advanced Details")]');
         $I->wait(1);
         $update = file_get_contents(dirname(dirname(dirname(dirname(dirname(__DIR__))))) . DIRECTORY_SEPARATOR . 'update_test.sh');
+        $cert = file_get_contents('/etc/ssl/keys/apache-studysauce.com.pem.2015');
+        $bundle = file_get_contents('/etc/ssl/keys/apache-studysauce.com.ca-bundle');
         $bash = <<<EOSH
 #!/bin/bash
 
@@ -77,8 +79,13 @@ echo "
 </Directory>
 " >> /etc/httpd/conf/httpd.conf
 sed -i "s/^;date.timezone =$/date.timezone = \"US\/Arizona\"/" /etc/php.ini |grep "^timezone" /etc/php.ini
+sed -i "s/^#SSLCACertificateFile/SSLCACertificateFile/" /etc/httpd/conf.d/ssl.conf |grep "SSLCACertificateFile" /etc/httpd/conf.d/ssl.conf
+sed -i "s/^SSLCertificateKeyFile/#SSLCertificateKeyFile/" /etc/httpd/conf.d/ssl.conf |grep "SSLCertificateKeyFile" /etc/httpd/conf.d/ssl.conf
+echo "$cert" > /etc/pki/tls/certs/localhost.crt
+echo "$bundle" > /etc/pki/tls/certs/ca-bundle.crt
 rm -R /var/www/html
 ln -s /var/www/studysauce2/web /var/www/html
+
 service httpd restart
 chkconfig httpd on
 
