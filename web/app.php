@@ -22,11 +22,11 @@ if (isset($_SERVER) &&
     isset($_SERVER['HTTP_HOST'])) {
     if(preg_match('/test\.studysauce\.com/', $_SERVER['HTTP_HOST'])) {
         Symfony\Component\Debug\Debug::enable();
-        $kernel = new AppKernel('dev', true);
+        $kernel = new AppKernel('test', true);
     }
     elseif(preg_match('/staging\.studysauce\.com/', $_SERVER['HTTP_HOST'])) {
         Symfony\Component\Debug\Debug::enable();
-        $kernel = new AppKernel('test', true);
+        $kernel = new AppKernel('dev', true);
     }
     else {
         $kernel = new AppKernel('prod', false);

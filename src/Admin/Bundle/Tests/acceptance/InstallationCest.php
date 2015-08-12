@@ -54,6 +54,7 @@ class InstallationCest
         $I->wait(1);
         $I->click('//span[contains(.,"Advanced Details")]');
         $I->wait(1);
+        $update = file_get_contents(dirname(dirname(dirname(dirname(dirname(__DIR__))))) . DIRECTORY_SEPARATOR . 'update_test.sh');
         $bash = <<<EOSH
 #!/bin/bash
 
@@ -62,28 +63,24 @@ cd /var/www
 yum update -y
 yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl openssl php55-mbstring php55-mcrypt php55-common php55-gd php55-xml libjpeg libpng git
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
-rm -R /var/www/html
-ln -s /var/www/studysauce2/web /var/www/html
-chmod o+x /var/www/studysauce2/update_test.sh
-killall mysqld
-chown -R mysql /var/lib/mysql
-chgrp -R mysql /var/lib/mysql
-echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewPass');" > /tmp/mysql-init
-service mysqld start
-service mysqld stop
-mysqld_safe --init-file=/tmp/mysql-init &
+
+service mysql start
+/usr/bin/mysqladmin -u root password 'MyNewPass'
 echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhost' IDENTIFIED BY 'itekIO^#(';" | mysql -u root --password=MyNewPass -h localhost
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
-sed -i "s/^;date.timezone =$/date.timezone = \"US\/Arizona\"/" /etc/php.ini |grep "^timezone" /etc/php.ini
-cd /var/www/studysauce2
-./update_test.sh
+
 echo "
 <Directory \"/var/www/html\">
     AllowOverride All
 </Directory>
 " >> /etc/httpd/conf/httpd.conf
+sed -i "s/^;date.timezone =$/date.timezone = \"US\/Arizona\"/" /etc/php.ini |grep "^timezone" /etc/php.ini
+rm -R /var/www/html
+ln -s /var/www/studysauce2/web /var/www/html
 service httpd restart
 chkconfig httpd on
+
+$update
 EOSH;
 
         $I->fillField('textarea', $bash);
@@ -109,7 +106,7 @@ EOSH;
         $I->wait(3);
         $instanceId = $I->grabTextFrom('a[href*="Instances:search"]');
         $I->click('View Instances');
-        $I->wait(20);
+        $I->wait(30);
         // change public IP
         $I->click('Elastic IPs');
         $I->wait(1);
@@ -124,6 +121,7 @@ EOSH;
         $I->click('.dialogMiddle input[placeholder*="Search"]');
         $I->wait(1);
         $I->click('//div[contains(.,"' . $instanceId . '")]');
+        $I->checkOption('.dialogMiddle input[type="checkbox"]'); // reassociate IP even if its already assigned
         $I->wait(1);
         $I->click('Associate');
         $I->wait(1);
