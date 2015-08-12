@@ -322,7 +322,7 @@ $(document).ready(function () {
                 if(plan.is('.setup-mode') || plan.is('.add-events')) {
                     calendar.find('h2').text('Your typical week')
                 }
-                if(!plan.is('.setup-mode,.empty-schedule') && (view.name == 'agendaWeek' || view.name == 'month')) {
+                if(!plan.is('.setup-mode,.empty-schedule')) {
                     if(calendar.find('a[href*="/plan/pdf"]').length == 0) {
                         if(body.find('.panel-pane[id^="uid-"]').length > 0) {
                             var uid = (/uid-([0-9]+)/i).exec(body.find('.panel-pane[id^="uid-"]').attr('id'))[1];

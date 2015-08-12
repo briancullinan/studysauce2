@@ -384,7 +384,8 @@ if ($weekEnd->format('w') != 0) {
     $weekEnd = date_timestamp_set(new \DateTime(), strtotime('next Sunday', $weekEnd->getTimestamp()));
 }
 $weekDays = [];
-$events = usort($schedule->getEvents()->toArray(), function (Event $a, Event $b) {
+$events = $schedule->getEvents()->toArray();
+usort($events, function (Event $a, Event $b) {
     return $a->getStart()->getTimestamp() - $b->getStart()->getTimestamp();
 });
 foreach ($events as $e) {
