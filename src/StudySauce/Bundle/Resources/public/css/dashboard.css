@@ -103,6 +103,22 @@
     position:relative;
 }
 
+.adviser .panel-pane,
+.admin .panel-pane
+{
+    padding-left:20px;
+    padding-right:70px;
+}
+
+.admin aside + .panel-pane,
+.admin .header-wrapper ~ .panel-pane:nth-of-type(2),
+.admin .tipsy ~ .panel-pane:nth-of-type(3)
+{
+    display:inline-block;
+    width:auto;
+    max-width: none;
+}
+
 aside + .panel-pane,
 .header-wrapper ~ .panel-pane:nth-of-type(2),
 .tipsy ~ .panel-pane:nth-of-type(3)
@@ -427,20 +443,21 @@ a[href="#remove-deadline"]:hover
 
 @media all and (max-width: 1300px)
 {
+    .adviser .panel-pane,
+    .admin .panel-pane,
     .panel-pane
     {
         padding-left:20px;
-        padding-right:20px;
-        max-width: 900px;
+        padding-right:70px;
     }
 
     .dashboard-home .footer
     {
         padding-bottom:20px;
-        padding-left:10px;
-        padding-right:10px;
+        padding-left:70px;
+        padding-right:70px;
         margin:0 auto;
-        max-width: 900px;
+        width: 900px;
     }
 }
 
@@ -491,6 +508,14 @@ a[href="#remove-deadline"]:hover
         left:7px;
     }
 
+    .adviser .panel-pane,
+    .admin .panel-pane
+    {
+        padding-left: 20px;
+        padding-right: 70px;
+        max-width: none;
+    }
+
     .panel-pane {
         padding-left: 70px;
         padding-right: 70px;
@@ -501,6 +526,7 @@ a[href="#remove-deadline"]:hover
     {
         padding-left:70px;
         padding-right:70px;
+        max-width: 100%;
     }
 }
 
@@ -531,9 +557,11 @@ a[href="#remove-deadline"]:hover
         display:none;
     }
 
+    .adviser .panel-pane,
+    .admin .panel-pane,
     .panel-pane {
         padding: 50px 0 40px 0;
-        max-width: 900px;
+        width: 100%;
         transition: left linear .15s;
         left:0;
     }

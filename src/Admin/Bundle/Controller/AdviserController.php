@@ -72,7 +72,7 @@ class AdviserController extends Controller
             $userManager->updateUser($user);
         }
 
-        usort($users, function (User $a, User $b) {
+        usort($users, function (User $b, User $a) {
             return (!empty($a->getLastVisit()) ? $a->getLastVisit()->getTimestamp() : 0) - (!empty($b->getLastVisit()) ? $b->getLastVisit()->getTimestamp() : 0);
         });
 

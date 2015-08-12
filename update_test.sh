@@ -9,9 +9,9 @@ sudo php app/console doctrine:generate:entities Course3;
 sudo php app/console doctrine:schema:update --force --env=test;
 sudo php app/console assets:install --env=test --symlink;
 sudo php app/console assetic:dump --env=test;
-sudo chown www-data:www-data -R app/cache/
-sudo chown www-data:www-data -R app/logs/
-sudo chown www-data:www-data -R src/Admin/Bundle/Tests
-sudo chown www-data:www-data -R app/logs/
-sudo chown www-data:www-data -R src/Admin/Bundle/Tests/_output/
-sudo chown www-data:www-data -R src/Admin/Bundle/Resources/public/results/
+sudo chown apache:apache -R app/cache/
+sudo chown apache:apache -R app/logs/
+sudo chown apache:apache -R src/Admin/Bundle/Tests
+sudo chown apache:apache -R app/logs/
+sudo chown apache:apache -R src/Admin/Bundle/Tests/_output/
+sudo chown apache:apache -R src/Admin/Bundle/Resources/public/results/

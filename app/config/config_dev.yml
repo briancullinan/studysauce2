@@ -4,6 +4,25 @@ imports:
 parameters:
     defer_all_emails: "marketing@studysauce.com"
 
+
+doctrine:
+    dbal:
+        driver:   "pdo_mysql"
+        host:     "localhost"
+        dbname:   "studysauce"
+        user:     "study"
+        password: "itekIO^#("
+
+services:
+    pdo:
+        class: Doctrine\DBAL\Driver\PDOConnection
+        arguments:
+            - "mysql:host=localhost;port=3306;dbname=studysauce"
+            - study
+            - itekIO^#(
+        calls:
+            - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+
 framework:
     router:
         resource: "%kernel.root_dir%/config/routing_dev.yml"

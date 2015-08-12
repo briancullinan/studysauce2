@@ -1,6 +1,7 @@
 #command_control .pane-content
 {
     min-height: 800px;
+    min-width: 1200px;
 }
 
 #command_control .search {

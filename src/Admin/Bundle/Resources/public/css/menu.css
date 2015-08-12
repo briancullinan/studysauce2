@@ -45,14 +45,31 @@
     background-position: left -905px;
 }
 
+@media all and (max-width: 700px ) {
 
+    #right-panel .main-menu a[href*="/command"] span
+    {
+        background-position: left -5605px;
+    }
 
-.dashboard-home.adviser .panel-pane,
-.dashboard-home.admin .panel-pane
-{
-    padding-left:20px;
-    padding-right:70px;
-    width:auto;
-    min-width:100%;
-    display: inline-block;
+    #right-panel .main-menu a[href*="/emails"] span
+    {
+        background-position: left -9405px;
+    }
+
+    #right-panel .main-menu a[href*="/validation"] span
+    {
+        background-position: left -5705px;
+    }
+
+    #right-panel .main-menu a[href*="/activity"] span
+    {
+        background-position: left -6005px;
+    }
+
+    #right-panel .main-menu a[href*="/results"] span
+    {
+        background-position: left -5805px;
+    }
+
 }

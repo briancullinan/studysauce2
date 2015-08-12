@@ -109,7 +109,9 @@
 #userlist th:nth-child(7),
 #userlist td:nth-child(7),
 #userlist th:nth-child(8),
-#userlist td:nth-child(8)
+#userlist td:nth-child(8),
+#userlist th:nth-child(9),
+#userlist td:nth-child(9)
 {
     text-align: center;
     width: 10%;
@@ -123,6 +125,22 @@
     width: 20%;
 }
 
+#userlist .master th:nth-child(4),
+#userlist .master td:nth-child(4),
+#userlist .master th:nth-child(2),
+#userlist .master td:nth-child(2),
+#userlist .master th:nth-child(1),
+#userlist .master td:nth-child(1),
+#userlist .master th:nth-child(7),
+#userlist .master td:nth-child(7),
+#userlist .master th:nth-child(8),
+#userlist .master td:nth-child(8),
+#userlist .master th:nth-child(9),
+#userlist .master td:nth-child(9)
+{
+    width: 8%;
+}
+
 #userlist .master th:nth-child(3),
 #userlist .master td:nth-child(3),
 #userlist .master th:nth-child(5),
@@ -130,11 +148,17 @@
 #userlist .master th:nth-child(6),
 #userlist .master td:nth-child(6)
 {
-    width: 23.33%;
+    width: 17.33%;
 }
 
 @media all and (max-width:1000px)
 {
+    #userlist table th:nth-child(9),
+    #userlist table td:nth-child(9),
+    #userlist table th:nth-child(8),
+    #userlist table td:nth-child(8),
+    #userlist table th:nth-child(7),
+    #userlist table td:nth-child(7),
     #userlist table th:nth-child(5),
     #userlist table td:nth-child(5),
     #userlist table th:nth-child(2),

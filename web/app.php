@@ -17,16 +17,23 @@ $apcLoader->register(true);
 require_once __DIR__.'/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';
 
-if ( isset($_SERVER) &&
+if (isset($_SERVER) &&
     is_array($_SERVER) &&
-    isset($_SERVER['HTTP_HOST']) &&
-    (preg_match('/test\.studysauce\.com/', $_SERVER['HTTP_HOST']) ||
-        preg_match('/staging\.studysauce\.com/', $_SERVER['HTTP_HOST']))) {
-    Symfony\Component\Debug\Debug::enable();
-    $kernel = new AppKernel('test', true);
+    isset($_SERVER['HTTP_HOST'])) {
+    if(preg_match('/test\.studysauce\.com/', $_SERVER['HTTP_HOST'])) {
+        Symfony\Component\Debug\Debug::enable();
+        $kernel = new AppKernel('dev', true);
+    }
+    elseif(preg_match('/staging\.studysauce\.com/', $_SERVER['HTTP_HOST'])) {
+        Symfony\Component\Debug\Debug::enable();
+        $kernel = new AppKernel('test', true);
+    }
+    else {
+        $kernel = new AppKernel('prod', false);
+    }
 }
 else {
-    $kernel = new AppKernel('prod', false);
+    die('no http host');
 }
 $kernel->loadClassCache();
 //$kernel = new AppCache($kernel);

@@ -262,6 +262,10 @@ use StudySauce\Bundle\Entity\Event;
             background-color: #BB0088;
         }
 
+        .event-type-o .class {
+            background-color: #000;
+        }
+
     </style>
 </head>
 

@@ -125,7 +125,7 @@ $view['slots']->start('body'); ?>
                 $schedule = $u->getSchedules()->first();
                 /** @var User $adviser */
                 $adviser = $u->getPartnerOrAdviser();
-                $ts = !empty($u->getLastVisit()) ? $u->getLastLogin() : $u->getCreated();
+                $ts = !empty($u->getLastVisit()) ? $u->getLastVisit() : $u->getCreated();
                 ?><tr class="user-id-<?php print $u->getId(); ?> status_<?php print ($u->getProperty('adviser_status') ?: 'green'); ?>">
                 <td><a href="#change-status"><span>&nbsp;</span></a></td>
                 <td data-timestamp="<?php print $ts->getTimestamp(); ?>"><?php print $ts->format('j M'); ?></td>

@@ -1288,6 +1288,11 @@ a[href*="/redirect/facebook"]:focus
         background-position: left -5605px;
     }
 
+    #right-panel .main-menu a[href*="/userlist"] span
+    {
+        background-position: left -5605px;
+    }
+
     #right-panel .main-menu a[href*="/goals"] span
     {
         background-position: left -5705px;
@@ -1314,6 +1319,11 @@ a[href*="/redirect/facebook"]:focus
     }
 
     #right-panel .main-menu a[href*="/partner"] span
+    {
+        background-position: left -6205px;
+    }
+
+    #right-panel .main-menu a[href*="/import"] span
     {
         background-position: left -6205px;
     }
@@ -1403,7 +1413,7 @@ a[href*="/redirect/facebook"]:focus
     #left-panel.expanded, #right-panel.expanded
     {
         padding-top:0;
-        background:transparent none;
+        background:#555 none;
         color:#ffffff;
         border-color:transparent;
     }

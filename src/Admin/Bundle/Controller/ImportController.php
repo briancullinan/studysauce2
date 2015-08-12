@@ -24,7 +24,20 @@ class ImportController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('AdminBundle:Import:tab.html.php');
+        /** @var User $user */
+        $user = $this->getUser();
+        /** @var $orm EntityManager */
+        $orm = $this->get('doctrine')->getManager();
+        // get the groups this user has control over
+        $groups = $user->getGroups()->toArray();
+        if($user->hasRole('ROLE_ADMIN')) {
+            $groups = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
+                ->select('g')
+                ->getQuery()
+                ->getResult();
+        }
+
+        return $this->render('AdminBundle:Import:tab.html.php', ['groups' => $groups]);
     }
 
     /**
@@ -34,13 +47,12 @@ class ImportController extends Controller
      */
     public function updateAction(Request $request, Group $group = null)
     {
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
         /** @var User $user */
         $user = $this->getUser();
-
-        if($group == null)
-            $group = $user->getGroups()->first();
 
         $users = $request->get('users');
         $existing = $user->getGroupInvites()->toArray();
@@ -48,6 +60,27 @@ class ImportController extends Controller
         $emails->setContainer($this->container);
         foreach($users as $i => $u)
         {
+            if($group == null) {
+                if(!empty($u['adviser'])) {
+                    /** @var User $adviser */
+                    $adviser = $userManager->findUserByEmail($u['adviser']);
+                    if(!empty($adviser)) {
+                        $group = $adviser->getGroups()->first();
+                    }
+                    else {
+                        $group = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
+                            ->select('g')
+                            ->where('g.name LIKE :search')
+                            ->orWhere('g.id=:group')
+                            ->setParameter('search', '%' . $u['adviser'] . '%')
+                            ->setParameter('group', intval($u['adviser']))
+                            ->getQuery()
+                            ->getOneOrNullResult();
+                    }
+                }
+                if(empty($group))
+                    $group = $user->getGroups()->first();
+            }
             unset($invite);
             // check if invite has already been sent
             foreach($existing as $j => $gi)
@@ -60,8 +93,6 @@ class ImportController extends Controller
             }
 
             // check if the user already exists
-            /** @var $userManager UserManager */
-            $userManager = $this->get('fos_user.user_manager');
             /** @var User $invitee */
             $invitee = $userManager->findUserByEmail($u['email']);
 

@@ -12,6 +12,11 @@
     width:33.33%
 }
 
+.master .import-row > *
+{
+    width:25%
+}
+
 .import-row label > span
 {
     display:none;

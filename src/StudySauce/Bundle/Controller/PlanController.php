@@ -1488,14 +1488,14 @@ END:VCALENDAR'
 
         $isNew = false;
         if (empty($event = $course->getEvents()->filter(
-            function (Event $e) {
-                return $e->getType() == 'c';
+            function (Event $e) use ($course) {
+                return $e->getType() == $course->getType();
             }
         )->first())
         ) {
             $isNew = true;
             $event = new Event();
-            $event->setType('c');
+            $event->setType($course->getType());
             $event->setCourse($course);
             $course->addEvent($event);
             $event->setSchedule($course->getSchedule());
