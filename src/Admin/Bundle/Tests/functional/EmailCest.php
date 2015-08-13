@@ -32,7 +32,7 @@ class EmailCest
     /**
      * @param FunctionalTester $I
      */
-    public function tryAllEmails(FunctionalTester $I)
+    public function tryAllEmailTemplates(FunctionalTester $I)
     {
         $I->test('tryWelcomeStudent');
         $I->test('tryContactMessage');

@@ -273,6 +273,15 @@ EOSH;
         $I->click('Associate');
         $I->wait(1);
         $I->click('Instances');
+        $I->wait(600);
+        $I->amOnUrl('https://test.studysauce.com');
+        $I->click('Log in');
+        $I->fillField('.email input', 'stephen@studysauce.com');
+        $I->fillField('.password input', '2StudyBetter!');
+        $I->wait(5);
+        $I->amOnPage('/validation');
+        $I->click('Deploy');
+        $I->wait(600);
     }
 
     public function tryDeploy(AcceptanceTester $I) {
