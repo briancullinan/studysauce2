@@ -21,7 +21,7 @@ $view['slots']->start('modal-body') ?>
         <br />
         <a href="<?php print $view['router']->generate('password_reset'); ?>">Forgot password?</a>
         <div class="invalid-only">You must complete all fields before moving on.</div>
-        <button type="submit" value="#user-login" class="more">Login</button>
+        <button type="submit" value="#user-login" class="more">Sign in</button>
         <br />
         <br />
     </div>
