@@ -281,7 +281,7 @@ EOSH;
         $I->fillField('.password input', 'this computer is 1337');
         $I->wait(5);
         $I->amOnPage('/validation');
-        $I->click('//tr[contains(.,"Deploy") and contains(@class,"test-id-tryDeploy")]//a[contains(@href,"run-test")]');
+        $I->click('//tr[contains(.,"Deploy")]//a[contains(@href,"run-test")]');
         $I->wait(900);
     }
 
