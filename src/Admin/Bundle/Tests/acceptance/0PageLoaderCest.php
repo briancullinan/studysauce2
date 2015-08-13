@@ -35,15 +35,15 @@ class PageLoaderCest
     public function tryLandingPages(AcceptanceTester $I)
     {
         $I->wantTo('see StudySauce in title');
-        $I->amOnPage('/');
+        $I->seeAmOnUrl('/');
         $I->seeInTitle('StudySauce');
-        $I->wait(2);
+        $I->wait(3);
         $I->executeInSelenium(function (WebDriver $driver) {
             $driver->switchTo()->defaultContent();
             $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[src*="youtube.com"]')));
         });
-        $I->wait(1);
-        $I->click('[aria-label="Play"]');
+        $I->wait(2);
+        $I->click('[class*="play"]');
         $I->wait(2);
         $I->executeInSelenium(function (WebDriver $driver) {
             $driver->switchTo()->window($driver->getWindowHandle());
@@ -86,13 +86,13 @@ class PageLoaderCest
     public function tryContactUs(AcceptanceTester $I)
     {
         $I->wantTo('contact the site\'s administrators');
+        $I->seeAmOnUrl('/');
         $I->wait(5);
-        $I->seeLink('Contact us');
-        $I->click('Contact us');
+        $I->click('.footer a[href="#contact-support"]');
         $I->fillField('#contact-support input[name="your-name"]', 'test testers');
         $I->fillField('#contact-support input[name="your-email"]', 'tester@mailinator.com');
         $I->fillField('#contact-support textarea', 'I love this site.');
-        $I->click('Send');
+        $I->click('#contact-support [value="#submit-contact"]');
         $I->wait(10);
     }
 
@@ -777,7 +777,7 @@ EOJS;
         $I->wait(1);
         $I->click('//div[contains(.,"All events") and contains(@class,"goog-imageless-button-content")]');
         $I->wait(3);
-        $I->amOnPage('/cron/sync');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/cron/sync');
         $I->amOnPage('/plan');
         // check studysauce for the changes we just made
         $I->wait(2);

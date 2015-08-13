@@ -194,9 +194,9 @@ class ValidationController extends Controller
                     // check for failures
                     //$x->getTest()->getTestResultObject()->failures()
                     if($x->getStep()->getAction() == 'wait')
-                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction() . '</strong> ' . $x->getStep()->getArguments(true) . ' seconds</span>';
+                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction() . '</strong> ' . str_replace('"', '', $x->getStep()->getArguments(true)) . ' seconds</span>';
                     else
-                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction() . '</strong> ' . $x->getStep()->getArguments(true) . '</span>';
+                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction() . '</strong> ' . str_replace('"', '', $x->getStep()->getArguments(true)) . '</span>';
                 });
             self::$dispatcher->addListener(Events::TEST_ERROR, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
