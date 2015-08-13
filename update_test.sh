@@ -13,3 +13,4 @@ chown apache:apache -R app/cache/
 chown apache:apache -R app/logs/
 chown apache:apache -R src/Admin/Bundle/Tests
 chown apache:apache -R src/Admin/Bundle/Resources/public/results/
+chown apache:apache -R vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer

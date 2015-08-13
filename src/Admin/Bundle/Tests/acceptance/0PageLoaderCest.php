@@ -776,8 +776,8 @@ EOJS;
         $I->click('//div[contains(.,"Save") and contains(@class,"goog-imageless-button-content")]');
         $I->wait(1);
         $I->click('//div[contains(.,"All events") and contains(@class,"goog-imageless-button-content")]');
-        $I->wait(2);
-        $I->amOnUrl('/cron/sync');
+        $I->wait(3);
+        $I->amOnPage('/cron/sync');
         $I->amOnPage('/plan');
         // check studysauce for the changes we just made
         $I->wait(2);

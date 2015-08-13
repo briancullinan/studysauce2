@@ -13,3 +13,4 @@ sudo chown www-data:www-data -R app/cache/
 sudo chown www-data:www-data -R app/logs/
 sudo chown www-data:www-data -R src/Admin/Bundle/Tests
 sudo chown www-data:www-data -R src/Admin/Bundle/Resources/public/results/
+sudo chown www-data:www-data -R vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer
