@@ -42,6 +42,10 @@ $view['slots']->start('body'); ?>
             <label class="input browser-setting"><span>Browser</span>
                 <select>
                     <option
+                        value="phantomjs" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'phantomjs' ? 'checked="checked"' : ''); ?>>
+                        PhantomJS
+                    </option>
+                    <option
                         value="chrome" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'chrome' ? 'checked="checked"' : ''); ?>>
                         Chrome
                     </option>

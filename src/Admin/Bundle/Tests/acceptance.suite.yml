@@ -17,7 +17,7 @@ modules:
 #            url: 'http://localhost/myapp/'
         WebDriver:
             url: 'http://localhost/Symfony/web/app_dev.php/'
-            browser: 'chrome'
+            browser: 'phantomjs'
             wait: 1
             host: 71.36.230.3
             clear_cookies: false
