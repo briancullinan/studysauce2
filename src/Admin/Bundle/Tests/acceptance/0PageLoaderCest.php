@@ -117,8 +117,7 @@ class PageLoaderCest
         $I->wantTo('bill my parents');
         $I->seeAmOnUrl('/torchandlaurel');
         $I->wait(5);
-        $I->seeLink('Ask your parents');
-        $I->click('Ask your parents');
+        $I->click('a[href="#bill-parents"]');
         $I->fillField('#bill-parents .first-name input', 'Test');
         $I->fillField('#bill-parents .last-name input', 'Parent');
         $I->fillField('#bill-parents .email input', 'TestParent@mailinator.com');
