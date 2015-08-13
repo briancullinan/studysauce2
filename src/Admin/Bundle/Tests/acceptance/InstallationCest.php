@@ -34,8 +34,9 @@ class InstallationCest
     /**
      * @param AcceptanceTester $I
      */
-    public function tryInstallation(AcceptanceTester $I)
+    public function tryInstall(AcceptanceTester $I)
     {
+        $I->wantTo('install StudySauce on a new instance');
         $I->amOnUrl('https://aws.amazon.com/');
         $I->wait(1);
         $I->moveMouseOver('div[data-dropdown="aws-nav-dropdown-account"]');
@@ -56,63 +57,62 @@ class InstallationCest
         $I->wait(1);
         $update = file_get_contents(dirname(dirname(dirname(dirname(dirname(__DIR__))))) . DIRECTORY_SEPARATOR . 'update_test.sh');
         $cert = "-----BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxeZa5BvDqXoze
-z/H7utzlkP5V//2oowU3OtGRuusG+01EgvF2uvY6r2hQ6K3VJ7Ay91LRaN4xHLxq
-RG9GOPRvbZNPYUXMz4x8cYy0lhuoRmt2Rh/4UcN4mN/JlCqjoehw3K09l73apNaU
-UJJlcdEG71Zi/XzOqrkVQH0v6yH5INrz2xrrVA39PY6vnkY0A0nbXOwjaUeO23cA
-+uwWw0QDj2dhM4fd+ESepmzRBlXFEFt5/R2BChCSlDX9mNVgu7itdIVnvekOpalu
-5kmtjnEnvvkvyiJpGzZeLF97vwQABZ0xFVTvSDDzNNCVaqlvGx74eQXx+flFyrH4
-Dvv8FInTAgMBAAECggEAbiPnRizolorXIfArXO466L1zGiwkX+PL+Nqn9Kjr8wlC
-iqI4+FZPOVxigNPmDcLztq2G2C8ctZ3/0HNoG0x9Zim6oijcCJ9FsHVHvUrrHyOU
-zXH3pUQY6170g0VQsPxqJKDPYsopKOfjw2e9cvePoZ4nHofyTM/mzSmYh4SFMPYK
-WyNRDh7QPKAjsp3Buvje/kUgysY12BPE7CQh5MbbydY5xhc/CtAueeGYOI3TbDwQ
-IAzvx0yd8F8NxzfgbbWydTTaiXrr/dyRzwsuYIXnJsasuisIXuOSkKcDwYMNrMJe
-SaQWiRL0wQG/3lMY9RIlofxtv72X7MdH41f0CZMeAQKBgQDVLxBzkRfAK+yOjfP9
-q/QJK0Lu3krEjU2PeH7rvbaGl0nLVPz+liGnHwg2PYvHLCELl+7mZFEpCzze7Oyo
-OaeIxfFG1iQEp7XImWeJmP2ZZVle4tFLDZ51+BKe6vb/e9566qyrX3lRjH9Egc+p
-+jFdFwZqbkmUbyCwfEhsJ5XxaQKBgQDVHomFAIFma0v2jAD3NIF+YIQkPqE6Gqu7
-n/46s9VYz6h7cQPyz0uuJxhb3/qVFIHDuMighuQtCUYHquv6KMCZLSga7bb2X6HU
-4JeKbhF/3LIEpKPT3u/aDYSTZQf475uvMNekPfkvCU/TlDDoCn7Ws4MGSgM6edDz
-UUcen+E92wKBgGsqgpml2YuoSP2MjJf7xeyKC9aqdmmCIvg5eYwmTUgxa05Exf1x
-GS+64NTrcYXJQD9kvBqjWU1JserarUkP2pFd+CFE6sxQRoi13R+Fgg6HrTqOyOly
-yjLBZxLuSQY7jaa6q9xmXUVKXHviybLH6+LA/V+pW2G7z3IIuBtudujpAoGAOJsO
-zbvPouN23rpa+03/4xBBqNrVufghiwk43mCrlxY42uiussxqfow1xRldlkFHIjQv
-XavWaTvgVOMKIHy4gzbiQxzGjvPhqQgqWANaNIrq4Z7VQM4jCNi0UO3xyyXhRQwF
-CsPHLr4bbMgcoVVAUUiG0aHQ77QxUp9Q84plqicCgYEAhJbg4RexY6u+anKcCj42
-n9d0Qd2MnZCdSaFoEdlpeiWPTAGDDSVLxJ9avJfHwn5LTdVt4Pi1bbFI4FFJV27M
-yf5oMok9jc+vBFCQ7hE3Lo4xguhEdqw4+HDN03eTBTJfwIVadukLjp0ySW4bQ8DE
-Zne1CAi8RtxMqtZquIsjxSg=
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDOzzVPVDZgtYNy
+P3yZdcPUu5U+NjyaK+fMdna09eBD1f5M+O1PSHCytzt2jd1Pd4m1l8WPRjdzsGT0
+IPz53dJRjEEA0FoMoH40HXfTR0zcmRf44eBEf0toSAmKkvRQ8+YVMJHm0nnWhdrv
+VWqCJVLeFSBq6ft6PV00gLhOoBj3Gw+KvPOwIjwPuVBltXENygXHsoXQltSp3V2G
+NcBPAlj/vPPz9AnP0QbyhEhcISRQX5JSsJoHVjnFWNJZ7kLcOppmZWnQSrqRXAEn
+tWFMKtpNz0EAgmiLbPfqBFDeSkDe6nxdLLUS0sYsp2iqIawCUHHMqZTw3T2juyyR
+2idavUT5AgMBAAECggEBAM6u5Q9QETxbi2+tpT/VIw7DHedb2vsVcAa2SfKWXDhP
+cGPKz5hRxFfHqcTVCN23kMgMU2PZ/+c93dbh9RFesCfRrNE8aRJ/f0FkRfHAKz+4
+PO3+B91M/rbMb8SvEz6oUkTREq+FoEBV7DUOv3AsDwJmSMyw5SQImdKz5f6mH+0r
+sNYAIlgz6Re7Gc7Z/xc+LSKtdcVXIGtx9RUB5oDn67/0WRdxL8+WkrodhPSk4tjB
+c6zbXbxeuD89Gc2J6L5VviPUCqz5biHXOvWwe61pjJnJiWGBva7of2GtXmJPFPNG
+gL4xynz/qNbzXFWER6ifePFfLDMLI/WUZZdINTY4sAECgYEA8RAofaqIUPAhQCcx
+MWUgnOCqabs4rtmEu5xyw62u9IvReQXY0r6/loinb/xecHwhx6Bj+n81VUJtMNoK
+xPgnkpUANm8IvUir/00QGT0sPV8/BwUaOe00bzI6HSV0PZHmTKCspgBbQUMUgOWr
++IxCeERLuhPR6OqN0f40j1/pevkCgYEA25+0JYD/dkwnqJTFlauGlDfG0LAU0eH8
+8WrordyE/Fovdj2aDCLAv85E5SeLS+XEKbx4IZEz0ccbq8bQlbp2NHOfu8sF/wmv
+C+hB6Y2zsIE1bftJCq8Y7JzVWFu9XUleLW1ze3kxBVWHJrErJe2XDdmeHhURhqoQ
+sgpK3qoqmgECgYBDJKsChZM+aAP66G+tQGubBoCwvnMFUJTF5MeadS/78U3BFb3U
+xUh710g7yuFLF2gZQDVYukHSo5PiPXkub6gmDdZnUvnuLuWpUH+haAaAeZ0GiYdK
+hyVJq4XARIRh+ddZlI9CFWtVfCej11TU/8wrz2oARDD9XQdvbAybuq0/kQKBgQDU
+sZT4YTaGbXhW5kV4DpaWAnJz9qMjJDYf44aVoiPUdM7UNxJyQFHlL7E/MA3SIiHY
+vaKl94Z02dwtfqzQ5LTHVVbTuuoCtXEmGfeDZW0pOejxq1NwmmSL+dMP8ECzEHO5
+kO8vHA5ieRMbYKdF4xPQIPnlbkf738WtdxRNEgWSAQKBgCOlN/NatUlb/dC4lcDM
+G1swHsf5LpoQWdyEtCMFxPSmAsykGR61Qp3qCPgbjcZCuxGgbBqW3pdpOg+uWexl
+6IGJEBXHXPztN2l/apa1cb8NMf3PVtvv2/w4BkboYadDrX/3CFG3gY0njYIco7XG
+Xj77Msrev6eKbm9npWxUwtV3
 -----END PRIVATE KEY-----
 -----BEGIN CERTIFICATE-----
-MIIFTDCCBDSgAwIBAgIHJ4FrBUoJvjANBgkqhkiG9w0BAQUFADCByjELMAkGA1UE
-BhMCVVMxEDAOBgNVBAgTB0FyaXpvbmExEzARBgNVBAcTClNjb3R0c2RhbGUxGjAY
-BgNVBAoTEUdvRGFkZHkuY29tLCBJbmMuMTMwMQYDVQQLEypodHRwOi8vY2VydGlm
-aWNhdGVzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkxMDAuBgNVBAMTJ0dvIERhZGR5
-IFNlY3VyZSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTERMA8GA1UEBRMIMDc5Njky
-ODcwHhcNMTQwOTExMTU1MDE4WhcNMTUwOTE2MTg0MTAzWjBAMSEwHwYDVQQLExhE
-b21haW4gQ29udHJvbCBWYWxpZGF0ZWQxGzAZBgNVBAMTEnd3dy5zdHVkeXNhdWNl
-LmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALF5lrkG8OpejN7P
-8fu63OWQ/lX//aijBTc60ZG66wb7TUSC8Xa69jqvaFDordUnsDL3UtFo3jEcvGpE
-b0Y49G9tk09hRczPjHxxjLSWG6hGa3ZGH/hRw3iY38mUKqOh6HDcrT2Xvdqk1pRQ
-kmVx0QbvVmL9fM6quRVAfS/rIfkg2vPbGutUDf09jq+eRjQDSdtc7CNpR47bdwD6
-7BbDRAOPZ2Ezh934RJ6mbNEGVcUQW3n9HYEKEJKUNf2Y1WC7uK10hWe96Q6lqW7m
-Sa2OcSe++S/KImkbNl4sX3u/BAAFnTEVVO9IMPM00JVqqW8bHvh5BfH5+UXKsfgO
-+/wUidMCAwEAAaOCAb4wggG6MAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYB
-BQUHAwEGCCsGAQUFBwMCMA4GA1UdDwEB/wQEAwIFoDA0BgNVHR8ELTArMCmgJ6Al
-hiNodHRwOi8vY3JsLmdvZGFkZHkuY29tL2dkczEtMTEyLmNybDBTBgNVHSAETDBK
-MEgGC2CGSAGG/W0BBxcBMDkwNwYIKwYBBQUHAgEWK2h0dHA6Ly9jZXJ0aWZpY2F0
-ZXMuZ29kYWRkeS5jb20vcmVwb3NpdG9yeS8wgYAGCCsGAQUFBwEBBHQwcjAkBggr
-BgEFBQcwAYYYaHR0cDovL29jc3AuZ29kYWRkeS5jb20vMEoGCCsGAQUFBzAChj5o
-dHRwOi8vY2VydGlmaWNhdGVzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvZ2RfaW50
-ZXJtZWRpYXRlLmNydDAfBgNVHSMEGDAWgBT9rGEyk2xF1uLuhV+auud2mWjM5zAt
-BgNVHREEJjAkghJ3d3cuc3R1ZHlzYXVjZS5jb22CDnN0dWR5c2F1Y2UuY29tMB0G
-A1UdDgQWBBQqmflf9UgnkNXTLSVzyiTAC0G2KjANBgkqhkiG9w0BAQUFAAOCAQEA
-o9NSv8aCmGzfc9EuMVrO4I3lLNGciJorJ4p0VRXSd5x/4C/VM0jdOjO4Oz6zpZx2
-HgChm2+3NyfGKVnfM0V7iyQ3vVsKS7/KlgbSwUwf5D6TDu86hsl9+NsRH5IcG5IJ
-6rsjaBrhIbzXAhZ7n6G/TeJO4pNS2UHrRQM4TLg2IIiJly1xDUHL3dwaz4K8VvQh
-j/Lbg1Odo7YyVHIPZaV/fGmtH5B9Ojxb3AAVl1nO/vl7KUBu3dlu+9ifFItwITJA
-uw7kYAZq1SQiSDVFIumg8D4UItSmie+LDbzt8aBIhHHMvAG8SwwtfUUXiFiqFoFi
-9krPntAPL62+n7RXi94xOA==
+MIIFKjCCBBKgAwIBAgIISkZiXpz31IAwDQYJKoZIhvcNAQELBQAwgbQxCzAJBgNV
+BAYTAlVTMRAwDgYDVQQIEwdBcml6b25hMRMwEQYDVQQHEwpTY290dHNkYWxlMRow
+GAYDVQQKExFHb0RhZGR5LmNvbSwgSW5jLjEtMCsGA1UECxMkaHR0cDovL2NlcnRz
+LmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvMTMwMQYDVQQDEypHbyBEYWRkeSBTZWN1
+cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IC0gRzIwHhcNMTUwNDI0MjExNjM5WhcN
+MTYwNDI0MjExNjM5WjA+MSEwHwYDVQQLExhEb21haW4gQ29udHJvbCBWYWxpZGF0
+ZWQxGTAXBgNVBAMMECouc3R1ZHlzYXVjZS5jb20wggEiMA0GCSqGSIb3DQEBAQUA
+A4IBDwAwggEKAoIBAQDOzzVPVDZgtYNyP3yZdcPUu5U+NjyaK+fMdna09eBD1f5M
++O1PSHCytzt2jd1Pd4m1l8WPRjdzsGT0IPz53dJRjEEA0FoMoH40HXfTR0zcmRf4
+4eBEf0toSAmKkvRQ8+YVMJHm0nnWhdrvVWqCJVLeFSBq6ft6PV00gLhOoBj3Gw+K
+vPOwIjwPuVBltXENygXHsoXQltSp3V2GNcBPAlj/vPPz9AnP0QbyhEhcISRQX5JS
+sJoHVjnFWNJZ7kLcOppmZWnQSrqRXAEntWFMKtpNz0EAgmiLbPfqBFDeSkDe6nxd
+LLUS0sYsp2iqIawCUHHMqZTw3T2juyyR2idavUT5AgMBAAGjggGzMIIBrzAMBgNV
+HRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAOBgNVHQ8B
+Af8EBAMCBaAwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nb2RhZGR5LmNv
+bS9nZGlnMnMxLTg3LmNybDBTBgNVHSAETDBKMEgGC2CGSAGG/W0BBxcBMDkwNwYI
+KwYBBQUHAgEWK2h0dHA6Ly9jZXJ0aWZpY2F0ZXMuZ29kYWRkeS5jb20vcmVwb3Np
+dG9yeS8wdgYIKwYBBQUHAQEEajBoMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5n
+b2RhZGR5LmNvbS8wQAYIKwYBBQUHMAKGNGh0dHA6Ly9jZXJ0aWZpY2F0ZXMuZ29k
+YWRkeS5jb20vcmVwb3NpdG9yeS9nZGlnMi5jcnQwHwYDVR0jBBgwFoAUQMK9J47M
+NIMwojPX+2yz8LQsgM4wKwYDVR0RBCQwIoIQKi5zdHVkeXNhdWNlLmNvbYIOc3R1
+ZHlzYXVjZS5jb20wHQYDVR0OBBYEFLZ4DMEoBwQoi9quqDhkKqDBfosxMA0GCSqG
+SIb3DQEBCwUAA4IBAQALTdCFQbKj9O4i21Q7Z/zKAxav8tnYrf2slZqaNIvU911l
+jxDr75R/i45f5ptpXOONefNG1mAeVU5Tj+lneinTcaDWtN6ORz/5ebgybcSXeeHZ
+YxreZVkz0t4oPtLnK5CqjCNxlN5tStER2kWOPnfb33AsWI4+brWfNVR6jaDoAnab
+Zs6tsyEwvop3ak5Sha1u/61b4+RTbS50Mj4/6YyTCyu9k+b6t0rOiq0XpVau4Jdz
+7DVHGxghaYIVzk6EX2X2siMlLxd+v96kk7Xb2t0Qup8gEACC0beuVrgbXf48guDE
+/c9+E1+gRs0XFZZ5dRiPxKVd9d6X/mUsqWIbmHy5
 -----END CERTIFICATE-----
 ";
         $bundle = "-----BEGIN CERTIFICATE-----
@@ -273,5 +273,42 @@ EOSH;
         $I->click('Associate');
         $I->wait(1);
         $I->click('Instances');
+    }
+
+    public function tryDeploy(AcceptanceTester $I) {
+        $I->wantTo('test everything before deployment');
+        $I->test('tryLandingPages');
+        $I->test('tryBillMyParents');
+        $I->test('tryDetailedNotes');
+        $I->click('a[href*="/logout"]');
+        $I->test('tryGuestCheckout');
+        $I->test('tryDetailedPlan');
+        $I->click('a[href*="/logout"]');
+        $I->test('tryGuestCheckout');
+        $I->test('tryFreeCourse');
+        $I->test('tryAllCourse2');
+        $I->test('tryAllCourse3');
+        $I->click('a[href*="/logout"]');
+        $I->test('tryAllEmails');
+        $I->test('tryPushToProduction');
+    }
+
+    /**
+     * @depends tryLandingPages
+     * @depends tryBillMyParents
+     * @depends tryDetailedNotes
+     * @depends tryGuestCheckout
+     * @depends tryDetailedPlan
+     * @depends tryGuestCheckout
+     * @depends tryFreeCourse
+     * @depends tryAllCourse2
+     * @depends tryAllCourse3
+     * @depends tryAllEmails
+     * @param AcceptanceTester $I
+     */
+    public function tryPushToProduction(AcceptanceTester $I)
+    {
+        $I->wantTo('log in to AWS to re-associate IP address to new version and copy database to production');
+
     }
 }

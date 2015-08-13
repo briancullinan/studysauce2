@@ -12,6 +12,4 @@ sudo php app/console assetic:dump --env=dev;
 sudo chown www-data:www-data -R app/cache/
 sudo chown www-data:www-data -R app/logs/
 sudo chown www-data:www-data -R src/Admin/Bundle/Tests
-sudo chown www-data:www-data -R app/logs/
-sudo chown www-data:www-data -R src/Admin/Bundle/Tests/_output/
 sudo chown www-data:www-data -R src/Admin/Bundle/Resources/public/results/

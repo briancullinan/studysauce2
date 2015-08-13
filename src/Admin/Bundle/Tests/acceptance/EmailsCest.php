@@ -44,7 +44,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/deadlines"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/deadlines');
         $I->test('tryNewDeadlines');
         $this->setLastLogin($I);
         $I->seeLink('study notes again');
@@ -52,7 +52,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/notes"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/notes');
         $I->test('tryNewNote');
         $this->setLastLogin($I);
         $I->seeLink('Procrastinate much');
@@ -60,7 +60,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/1/lesson/4"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/1/lesson/4');
         $I->test('tryCourse1Procrastination');
         $this->setLastLogin($I);
         $I->seeLink('your grades like');
@@ -68,7 +68,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/calculator"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/calculator');
         $I->test('tryNewCalculator');
         $this->setLastLogin($I);
         $I->seeLink('phone is killing');
@@ -76,7 +76,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/1/lesson/3"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/1/lesson/3');
         $I->test('tryCourse1Distractions');
         $this->setLastLogin($I);
         $I->seeLink('study for tests');
@@ -84,7 +84,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/4"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/2/lesson/4');
         $I->test('tryCourse2StudyTests');
         $this->setLastLogin($I);
         $I->seeLink('taking tests freak');
@@ -92,7 +92,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/5"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/2/lesson/5');
         $I->test('tryCourse2TestTaking');
         $this->setLastLogin($I);
         $I->seeLink('forget everything');
@@ -100,7 +100,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/5"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/3/lesson/5');
         $I->test('tryCourse3SpacedRepetition');
         $this->setLastLogin($I);
         $I->seeLink('studying enough');
@@ -108,7 +108,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/1"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/2/lesson/1');
         $I->test('tryCourse2StudyMetrics');
         $this->setLastLogin($I);
         $I->seeLink('music when you study');
@@ -116,7 +116,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/1/lesson/5"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/1/lesson/5');
         $I->test('tryCourse1Environment');
         $this->setLastLogin($I);
         $I->seeLink('holding you accountable');
@@ -124,7 +124,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/partner"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/partner');
         $I->test('tryNewPartner');
         $this->setLastLogin($I);
         $I->seeLink('spacing out when you read');
@@ -132,7 +132,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/4"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/3/lesson/4');
         $I->test('tryCourse3ActiveReading');
         $this->setLastLogin($I);
         $I->seeLink('setting goals');
@@ -140,7 +140,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/goals"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/goals');
         $I->test('tryNewGoals');
         $this->setLastLogin($I);
         $I->seeLink('train your brain');
@@ -148,7 +148,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/3"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/2/lesson/3');
         $I->test('tryCourse2Interleaving');
         $this->setLastLogin($I);
         $I->seeLink('studying with groups');
@@ -156,7 +156,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/2"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/3/lesson/2');
         $I->test('tryCourse3GroupStudy');
         $this->setLastLogin($I);
         $I->seeLink('Memorizing facts');
@@ -164,7 +164,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/3"]');
-        $I->amOnUrl('https://staging.studysauce.com');
+        $I->amOnUrl('/course/3/lesson/3');
         $I->test('tryCourse3Teaching');
     }
 

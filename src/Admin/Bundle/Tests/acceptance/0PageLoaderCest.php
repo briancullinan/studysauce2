@@ -28,9 +28,6 @@ class PageLoaderCest
     }
 
     // tests
-    public function tryAllTests(AcceptanceTester $I) {
-        
-    }
 
     /**
      * @param AcceptanceTester $I
@@ -471,11 +468,19 @@ class PageLoaderCest
     /**
      * @param AcceptanceTester $I
      */
+    public function tryNotesCloseFirstTime(AcceptanceTester $I) {
+        $I->seeAmOnUrl('/notes');
+        $I->click('#notes-connect a[href="#close"]');
+    }
+
+    /**
+     * @depends tryNotesCloseFirstTime
+     * @param AcceptanceTester $I
+     */
     public function tryNewNote(AcceptanceTester $I)
     {
         $I->wantTo('create a new note regardless of connectivity');
         $I->seeAmOnUrl('/notes');
-        $I->click('#notes-connect a[href="#close"]');
         $I->click('study note');
         $I->selectOption('#notes select[name="notebook"]', 'PHIL 101');
         $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
@@ -504,6 +509,24 @@ class PageLoaderCest
     }
 
     /**
+     * @depends tryNotesCloseFirstTime
+     * @param AcceptanceTester $I
+     */
+    public function tryEvernoteConnect(AcceptanceTester $I) {
+        $I->wantTo('log in to evernote');
+        $I->seeAmOnUrl('/notes');
+        $I->click('#notes a[href*="evernote"]');
+        $I->fillField('input[name="username"]', 'brian@studysauce.com');
+        $I->fillField('input[name="password"]', 'Da1ddy23');
+        $I->click('[type="submit"]');
+        $I->click('authorize');
+        $I->seeInCurrentUrl('/notes');
+    }
+
+    /**
+     * @depemds tryNewSchedule
+     * @depends tryEvernoteConnect
+     * @depends tryNotesCloseFirstTime
      * @param AcceptanceTester $I
      */
     public function tryNewEvernote(AcceptanceTester $I)
@@ -514,6 +537,7 @@ class PageLoaderCest
         $I->selectOption('#notes select[name="notebook"]', 'Add notebook');
         $I->fillField('#add-notebook input', 'Test notebook');
         $I->click('#add-notebook button');
+        $I->wait(6);
         $I->selectOption('#notes select[name="notebook"]', 'Test notebook');
         $I->fillField('#notes .input.title input', 'This is a new note ' . date('Y-m-d'));
         $time = '' . time();
@@ -542,13 +566,16 @@ class PageLoaderCest
         $I->amOnPage('/cron/sync');
         $I->amOnUrl('https://sandbox.evernote.com');
         $I->click('#gwt-debug-SkippableDialog-skip');
-        $I->click('//span[contains(@class,"notebookName") and contains(.,"Test") and contains(.,"notebook")]');
-        $I->click('//span[contains(@class,"noteSnippetContent") and contains(.,"' . $time . '")]');
+        $I->click('.notebook[title="Test notebook"]');
+        $I->wait(2);
+        $I->click('//div[contains(@class,"noteSnippet") and contains(.,"' . $time . '")]//div[contains(@class,"noteSnippetTitle")]');
         $I->see('StudySauce123');
-        $I->click('//div[contains(@class,"dragdrop-handle") and contains(.,"Test") and contains(.,"notebook")]/div[contains(@class,"notebookMenuButton")]');
+        // delete the evernote notebook
+        $I->moveMouseOver('.notebook[title="Test notebook"]');
+        $I->click('.notebook[title="Test notebook"] .notebookMenuButton');
         $I->click('#gwt-debug-menuItemDelete');
         $I->click('#gwt-debug-confirm');
-        $I->amOnUrl('https://staging.studysauce.com/cron/sync');
+        $I->amOnPage('/cron/sync');
     }
 
     /**
@@ -560,12 +587,7 @@ class PageLoaderCest
         $I->seeAmOnUrl('/notes');
         $I->test('tryNewSchedule');
         $I->test('tryNewNote');
-        $I->click('#notes a[href*="evernote"]');
-        $I->fillField('input[name="username"]', 'brian@studysauce.com');
-        $I->fillField('input[name="password"]', 'Da1ddy23');
-        $I->click('[type="submit"]');
-        $I->click('authorize');
-        $I->seeInCurrentUrl('/notes');
+        $I->test('tryEvernoteConnect');
         $I->test('tryNewEvernote');
         $I->wait(5);
     }
@@ -754,7 +776,7 @@ EOJS;
         $I->wait(1);
         $I->click('//div[contains(.,"All events") and contains(@class,"goog-imageless-button-content")]');
         $I->wait(2);
-        $I->amOnUrl('https://staging.studysauce.com/cron/sync');
+        $I->amOnUrl('/cron/sync');
         $I->amOnPage('/plan');
         // check studysauce for the changes we just made
         $I->wait(2);
@@ -781,7 +803,6 @@ EOJS;
         $I->test('tryNewPlan');
         $I->test('tryNewStudySession');
         $I->test('tryGoogleSync');
-
     }
 
 }

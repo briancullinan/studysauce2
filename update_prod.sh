@@ -11,7 +11,3 @@ sudo php app/console assets:install --env=prod --symlink;
 sudo php app/console assetic:dump --env=prod;
 sudo chown www-data:www-data -R app/cache/prod/
 sudo chown www-data:www-data -R app/logs/
-sudo chown www-data:www-data -R src/Admin/Bundle/Tests
-sudo chown www-data:www-data -R app/logs/
-sudo chown www-data:www-data -R src/Admin/Bundle/Tests/_output/
-sudo chown www-data:www-data -R src/Admin/Bundle/Resources/public/results/

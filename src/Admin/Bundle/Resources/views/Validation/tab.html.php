@@ -64,14 +64,9 @@ $view['slots']->start('body'); ?>
                 </small>
             </label>
             <label class="input url-setting"><span>StudySauce URL</span>
-                <input type="text" value="<?php print (preg_match(
-                    '/staging\.studysauce\.com/',
-                    $_SERVER['HTTP_HOST']
-                ) ? 'https://staging.studysauce.com' : $view->escape(
-                    $acceptance['modules']['config']['WebDriver']['url']
-                )); ?>"/>
+                <input type="text" value="https://<?php print $view->escape($_SERVER['HTTP_HOST']); ?>"/>
                 <small>Path to StudySauce instance to test (e.g. https://staging.studysauce.com or
-                    https://studysauce.com). WARNING: database changes will occur on the selected instance.
+                    https://test.studysauce.com). WARNING: database changes will occur on the selected instance.
                 </small>
             </label>
             <?php foreach ($suites as $i => $suite) { ?>

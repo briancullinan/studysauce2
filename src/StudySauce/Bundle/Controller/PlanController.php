@@ -1822,8 +1822,7 @@ END:VCALENDAR'
                 2 => array("pipe", "php://stderr") // stderr is a file to write to
             );
 
-            $command = 'wkhtmltopdf -O landscape https://' . ($this->get('kernel')->getEnvironment(
-                ) != 'prod' ? 'staging' : 'www') . '.studysauce.com/plan/pdf/' . $user->getId() . ' - ';
+            $command = 'wkhtmltopdf -O landscape https://' . $_SERVER['HTTP_HOST'] . '/plan/pdf/' . $user->getId() . ' - ';
             $process = proc_open($command, $descriptorspec, $pipes, '/tmp');
             if (!is_resource($process)) {
                 throw new \Exception("popen error");

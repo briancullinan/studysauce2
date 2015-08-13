@@ -12,6 +12,4 @@ php app/console assetic:dump --env=test;
 chown apache:apache -R app/cache/
 chown apache:apache -R app/logs/
 chown apache:apache -R src/Admin/Bundle/Tests
-chown apache:apache -R app/logs/
-chown apache:apache -R src/Admin/Bundle/Tests/_output/
 chown apache:apache -R src/Admin/Bundle/Resources/public/results/

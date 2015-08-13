@@ -2,6 +2,7 @@ namespace: Admin\Bundle\Tests
 actor: Tester
 paths:
     tests: Tests
+    output: Resources/public/results
     log: Resources/public/results
     data: Resourses/public/results
     helpers: Tests/_support
