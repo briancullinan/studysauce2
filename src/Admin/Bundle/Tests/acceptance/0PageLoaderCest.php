@@ -43,7 +43,7 @@ class PageLoaderCest
             $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[src*="youtube.com"]')));
         });
         $I->wait(1);
-        $I->click('[role="button"]');
+        $I->click('[aria-label="Play"]');
         $I->wait(2);
         $I->executeInSelenium(function (WebDriver $driver) {
             $driver->switchTo()->window($driver->getWindowHandle());

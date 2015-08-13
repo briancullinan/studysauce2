@@ -1,16 +1,16 @@
 #! /bin/bash
 
 cd /var/www/studysauce2/;
-sudo php app/console cache:clear --env=dev;
-sudo php app/console doctrine:generate:entities StudySauceBundle;
-sudo php app/console doctrine:generate:entities Course1;
-sudo php app/console doctrine:generate:entities Course2;
-sudo php app/console doctrine:generate:entities Course3;
-sudo php app/console doctrine:schema:update --force --env=dev;
-sudo php app/console assets:install --env=dev --symlink;
-sudo php app/console assetic:dump --env=dev;
-sudo chown www-data:www-data -R app/cache/
-sudo chown www-data:www-data -R app/logs/
-sudo chown www-data:www-data -R src/Admin/Bundle/Tests
-sudo chown www-data:www-data -R src/Admin/Bundle/Resources/public/results/
-sudo chown www-data:www-data -R vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer
+php app/console cache:clear --env=dev;
+php app/console doctrine:generate:entities StudySauceBundle;
+php app/console doctrine:generate:entities Course1;
+php app/console doctrine:generate:entities Course2;
+php app/console doctrine:generate:entities Course3;
+php app/console doctrine:schema:update --force --env=dev;
+php app/console assets:install --env=dev --symlink;
+php app/console assetic:dump --env=dev;
+chown www-data:www-data -R app/cache/
+chown www-data:www-data -R app/logs/
+chown www-data:www-data -R src/Admin/Bundle/Tests
+chown www-data:www-data -R src/Admin/Bundle/Resources/public/results/
+chown www-data:www-data -R vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer
