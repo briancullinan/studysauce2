@@ -211,7 +211,7 @@ service mysqld start
 echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhost' IDENTIFIED BY 'itekIO^#(';" | mysql -u root --password=MyNewPass -h localhost
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
 
-echo "* * * * * www-data /var/www/studysauce2/cron_test.sh" > /etc/cron.d/symfony
+echo "* * * * * www-data /var/www/studysauce2/cron.sh" > /etc/cron.d/symfony
 echo "
 <Directory \"/var/www/html\">
     AllowOverride All
@@ -276,7 +276,7 @@ EOSH;
         $I->click('Instances');
         $I->wait(900);
         $I->amOnUrl('https://test.studysauce.com');
-        $I->click('Log in');
+        $I->click('Sign in');
         $I->fillField('.email input', 'admin@studysauce.com');
         $I->fillField('.password input', 'this computer is 1337');
         $I->wait(5);
