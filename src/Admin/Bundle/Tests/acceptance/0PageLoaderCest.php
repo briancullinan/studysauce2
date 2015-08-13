@@ -37,10 +37,12 @@ class PageLoaderCest
         $I->wantTo('see StudySauce in title');
         $I->amOnPage('/');
         $I->seeInTitle('StudySauce');
+        $I->wait(2);
         $I->executeInSelenium(function (WebDriver $driver) {
             $driver->switchTo()->defaultContent();
             $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[src*="youtube.com"]')));
         });
+        $I->wait(1);
         $I->click('[role="button"]');
         $I->wait(2);
         $I->executeInSelenium(function (WebDriver $driver) {
