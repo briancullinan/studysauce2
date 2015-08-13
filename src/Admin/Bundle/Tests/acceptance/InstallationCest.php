@@ -211,6 +211,7 @@ service mysqld start
 echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhost' IDENTIFIED BY 'itekIO^#(';" | mysql -u root --password=MyNewPass -h localhost
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
 
+echo "* * * * * www-data /var/www/studysauce2/cron_test.sh" > /etc/cron.d/symfony
 echo "
 <Directory \"/var/www/html\">
     AllowOverride All
@@ -273,15 +274,15 @@ EOSH;
         $I->click('Associate');
         $I->wait(1);
         $I->click('Instances');
-        $I->wait(600);
+        $I->wait(900);
         $I->amOnUrl('https://test.studysauce.com');
         $I->click('Log in');
         $I->fillField('.email input', 'admin@studysauce.com');
         $I->fillField('.password input', 'this computer is 1337');
         $I->wait(5);
         $I->amOnPage('/validation');
-        $I->click('//tr[contains(.,"Deploy")]//a[contains(@href,"run-test")]');
-        $I->wait(600);
+        $I->click('//tr[contains(.,"Deploy") and contains(@class,"test-id-tryDeploy")]//a[contains(@href,"run-test")]');
+        $I->wait(900);
     }
 
     public function tryDeploy(AcceptanceTester $I) {
