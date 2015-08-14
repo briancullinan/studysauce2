@@ -239,8 +239,8 @@ EOSH;
         $I->click('Configure Security Group');
         $I->wait(1);
         $I->click('//label[contains(.,"existing")]');
-        $I->wait(1);
-        $I->click('//tr[contains(.,"sg-a416bfc1")]');
+        $I->wait(2);
+        $I->click('//tr[contains(.,"sg-a416bfc1")]//label');
         $I->wait(1);
         // add security group
         // $I->click('//tr[contains(.,"sg-a416bfc1")]//a[contains(.,"Copy to new")]');
@@ -258,11 +258,11 @@ EOSH;
         // change public IP
         $I->click('Elastic IPs');
         $I->wait(1);
-        $I->click('//tr[contains(.,"52.24.94.177")]');
+        $I->click('//tr[contains(.,"52.24.94.177")]//label');
         $I->wait(1);
         $I->click('//button[contains(.,"Actions")]');
         $I->wait(1);
-        $I->click('//div[contains(.,"Associate Address")]');
+        $I->click('//div[contains(.,"Associate Address") and contains(@role,"menuitem")]');
         $I->wait(1);
         $I->fillField('.dialogMiddle input[placeholder*="Search"]', $instanceId);
         $I->wait(1);

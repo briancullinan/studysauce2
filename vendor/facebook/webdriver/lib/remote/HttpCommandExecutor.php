@@ -199,7 +199,8 @@ class HttpCommandExecutor implements WebDriverCommandExecutor {
       $encoded_params = json_encode($params);
     }
     curl_setopt($this->curl, CURLOPT_POSTFIELDS, $encoded_params);
-
+    curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, 0);
     $raw_results = trim(curl_exec($this->curl));
 
     if ($error = curl_error($this->curl)) {

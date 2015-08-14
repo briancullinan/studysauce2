@@ -42,19 +42,19 @@ $view['slots']->start('body'); ?>
             <label class="input browser-setting"><span>Browser</span>
                 <select>
                     <option
-                        value="phantomjs" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'phantomjs' ? 'checked="checked"' : ''); ?>>
+                        value="phantomjs" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'phantomjs' ? 'selected="selected"' : ''); ?>>
                         PhantomJS
                     </option>
                     <option
-                        value="chrome" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'chrome' ? 'checked="checked"' : ''); ?>>
+                        value="chrome" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'chrome' ? 'selected="selected"' : ''); ?>>
                         Chrome
                     </option>
                     <option
-                        value="firefox" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'firefox' ? 'checked="checked"' : ''); ?>>
+                        value="firefox" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'firefox' ? 'selected="selected"' : ''); ?>>
                         Firefox
                     </option>
                     <option
-                        value="ie" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'ie' ? 'checked="checked"' : ''); ?>>
+                        value="ie" <?php print ($acceptance['modules']['config']['WebDriver']['browser'] == 'ie' ? 'selected="selected"' : ''); ?>>
                         Internet Explorer
                     </option>
                 </select>

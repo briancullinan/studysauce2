@@ -7,6 +7,8 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\TestRuntime;
 use Codeception\Module\Doctrine2;
 use Codeception\Module\Symfony2;
 use Codeception\Module\WebDriver;
@@ -23,12 +25,15 @@ use Codeception\SuiteManager;
 use Codeception\TestCase;
 use Codeception\TestCase\Cest;
 use Codeception\TestLoader;
+use Codeception\Util\Locator;
 use Doctrine\ORM\Query;
 use PHP_Timer;
 use PHPUnit_Framework_TestFailure;
 use PHPUnit_Util_Test;
+use RemoteWebDriver;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +76,7 @@ class ValidationController extends Controller
 
         /** @var $user User */
         $user = $this->getUser();
-        if(!$user->hasRole('ROLE_ADMIN')) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             throw new AccessDeniedHttpException();
         }
 
@@ -89,32 +94,143 @@ class ValidationController extends Controller
     private static function getTestDependencies($allTests, $tests, $level = 1)
     {
         $dependencies = [];
-        if($level <= 0)
+        if ($level <= 0) {
             return $dependencies;
-        foreach($allTests as $i => $t) {
+        }
+        foreach ($allTests as $i => $t) {
             /** @var Cest $t */
             if (in_array($t->getName(), $tests)) {
                 // automatically include dependencies
-                $depends = array_map(function ($d) {
-                    $test = explode('::', $d);
-                    return count($test) == 1 ? $test[0] : $test[1];
-                }, PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName()));
+                $depends = array_map(
+                    function ($d) {
+                        $test = explode('::', $d);
+
+                        return count($test) == 1 ? $test[0] : $test[1];
+                    },
+                    PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName())
+                );
                 $dependencies = array_merge(
                     array_merge($dependencies, $depends),
-                    self::getTestDependencies($allTests, self::getIncludedTests($t), $level-1));
+                    self::getTestDependencies($allTests, self::getIncludedTests($t), $level - 1)
+                );
             }
         }
+
         return $dependencies;
+    }
+
+    protected function getStrictLocator(array $by)
+    {
+        $type = key($by);
+        $locator = $by[$type];
+        switch ($type) {
+            case 'id':
+                return \WebDriverBy::id($locator);
+            case 'name':
+                return \WebDriverBy::name($locator);
+            case 'css':
+                return \WebDriverBy::cssSelector($locator);
+            case 'xpath':
+                return \WebDriverBy::xpath($locator);
+            case 'link':
+                return \WebDriverBy::linkText($locator);
+            case 'class':
+                return \WebDriverBy::className($locator);
+            default:
+                throw new TestRuntime(
+                    "Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name"
+                );
+        }
+    }
+
+    protected function match(RemoteWebDriver $page, $selector)
+    {
+        $nodes = array();
+        if (is_array($selector)) {
+            return $page->findElements($this->getStrictLocator($selector));
+        }
+        if ($selector instanceof \WebDriverBy) {
+            return $page->findElements($selector);
+        }
+
+        if (Locator::isID($selector)) {
+            $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
+        }
+        if (!empty($nodes)) {
+            return $nodes;
+        }
+        if (Locator::isCSS($selector)) {
+            $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
+        }
+        if (!empty($nodes)) {
+            return $nodes;
+        }
+        if (Locator::isXPath($selector)) {
+            $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+        } else {
+            codecept_debug("XPath `$selector` is malformed!");
+        }
+
+        return $nodes;
+    }
+
+    protected function findClickable(RemoteWebDriver $page, $link)
+    {
+        if (is_array($link) or ($link instanceof \WebDriverBy)) {
+            $els = $this->match($page, $link);
+            if (count($els)) {
+                return reset($els);
+            }
+            throw new ElementNotFound($link, 'CSS or XPath');
+        }
+
+        // try to match by CSS or XPath
+        $els = $this->match($page, $link);
+        if (!empty($els)) {
+            return reset($els);
+        }
+
+        $locator = Crawler::xpathLiteral(trim($link));
+
+        // narrow
+        $xpath = Locator::combine(
+            ".//a[normalize-space(.)=$locator]",
+            ".//button[normalize-space(.)=$locator]",
+            ".//a/img[normalize-space(@alt)=$locator]/ancestor::a",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][normalize-space(@value)=$locator]"
+        );
+
+        $els = $page->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) {
+            return reset($els);
+        }
+
+        // wide
+        $xpath = Locator::combine(
+            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
+            ".//input[./@type = 'image'][contains(./@alt, $locator)]",
+            ".//button[contains(normalize-space(string(.)), $locator)]",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator]",
+            ".//button[./@name = $locator]"
+        );
+
+        $els = $page->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) {
+            return reset($els);
+        }
+
+        return null;
     }
 
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function testAction(Request $request) {
+    public function testAction(Request $request)
+    {
         set_time_limit(0);
-        if(!defined('PHPUNIT_TESTSUITE'))
-        {
+        if (!defined('PHPUNIT_TESTSUITE')) {
             define('PHPUNIT_TESTSUITE', true);
         }
 
@@ -123,29 +239,30 @@ class ValidationController extends Controller
         self::setupThis();
 
         $steps = [];
-        if(!empty($settings = self::$config[$suite = $request->get('suite')])) {
+        if (!empty($settings = self::$config[$suite = $request->get('suite')])) {
             // get the path of the test
             $options = ['verbosity' => 3, 'colors' => false];
-            if(!empty($request->get('test'))) {
+            if (!empty($request->get('test'))) {
                 $tests = explode('|', $request->get('test'));
                 $depends = self::getTestDependencies(self::$config['tests'][$suite], $tests);
                 $tests = array_merge($tests, $depends);
                 $options['filter'] = implode('|', array_unique($tests));
-                if(!isset($options['filter']))
+                if (!isset($options['filter'])) {
                     return new JsonResponse(true);
+                }
             }
 
             // set customized settings
-            if(!empty($request->get('host'))) {
+            if (!empty($request->get('host'))) {
                 $settings['modules']['config']['WebDriver']['host'] = $request->get('host');
             }
-            if(!empty($request->get('browser'))) {
+            if (!empty($request->get('browser'))) {
                 $settings['modules']['config']['WebDriver']['browser'] = $request->get('browser');
             }
-            if(!empty($request->get('wait'))) {
+            if (!empty($request->get('wait'))) {
                 $settings['modules']['config']['WebDriver']['wait'] = $request->get('wait');
             }
-            if(!empty($request->get('url'))) {
+            if (!empty($request->get('url'))) {
                 $settings['modules']['config']['WebDriver']['url'] = $request->get('url');
             }
 
@@ -161,48 +278,131 @@ class ValidationController extends Controller
 
             $features = [];
             $screenDir = $this->container->getParameter('kernel.root_dir') . '/../web/bundles/admin/results/';
-            self::$dispatcher->addListener(Events::STEP_BEFORE, function (StepEvent $x) use (&$steps, &$features) {
+            self::$dispatcher->addListener(
+                Events::STEP_BEFORE,
+                function (StepEvent $x) use (&$steps, &$features, $screenDir) {
                     /** @var Scenario $scenario */
                     if (($scenario = $x->getTest()->getScenario()) && $scenario->getFeature() != end($features)) {
                         $steps[$x->getTest()->getName()] .= '<h3>I want to ' . $scenario->getFeature() . '</h3>';
                         array_push($features, $scenario->getFeature());
                     }
-                });
-            self::$dispatcher->addListener(Events::TEST_BEFORE, function (TestEvent $x) use (&$steps, &$features) {
+                    // take a screenshot before click
+                    if ($x->getStep()->getAction() == 'wait') {
+                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction(
+                            ) . '</strong> ' . str_replace(
+                                '"',
+                                '',
+                                $x->getStep()->getArguments(true)
+                            ) . ' seconds</span>';
+                    } elseif ($x->getStep()->getAction() == 'click') {
+                        $ss = 'TestClick' . substr(md5(microtime()), -5);
+                        /** @var WebDriver $driver */
+                        $driver = SuiteManager::$modules['WebDriver'];
+                        /** @var \RemoteWebElement $ele */
+                        $ele = $this->findClickable($driver->webDriver, trim($x->getStep()->getArguments()[0], '"'));
+                        if (!empty($ele)) {
+                            $driver->makeScreenshot($ss);
+                            $point = $ele->getCoordinates()->onPage();
+                            $size = $ele->getSize();
+                            $im = imagecreatefrompng(codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png');
+                            $background = imagecolorallocate($im, 0, 0, 0);
+                            imagecolortransparent($im, $background);
+                            $targetImage = imagecreatetruecolor( 128, 128 );
+                            imagealphablending( $targetImage, false );
+                            imagesavealpha( $targetImage, true );
+
+                            imagecopyresampled( $targetImage, $im,
+                                0, 0,
+                                $point->getX(), $point->getY(),
+                                $size->getWidth(), $size->getHeight(),
+                                $size->getWidth(), $size->getHeight());
+                            imagepng($targetImage, codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png');
+                            //Get width and height of the element
+                            $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep(
+                                )->getAction() . '</strong> <a target="_blank" href="/bundles/admin/results/debug/' .
+                                $ss . '.png"><img style="max-width:300px;" src="/bundles/admin/results/debug/' . $ss . '.png" /></a></span>';
+                        } else {
+                            $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep(
+                                )->getAction() . '</strong> ' . str_replace(
+                                    '"',
+                                    '',
+                                    $x->getStep()->getArguments(true)
+                                ) . '</span>';
+                        }
+                    } else {
+                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction(
+                            ) . '</strong> ' . str_replace('"', '', $x->getStep()->getArguments(true)) . '</span>';
+                    }
+                }
+            );
+            self::$dispatcher->addListener(
+                Events::TEST_BEFORE,
+                function (TestEvent $x) use (&$steps, &$features) {
                     if (!isset($steps[$x->getTest()->getName()])) {
                         $steps[$x->getTest()->getName()] = '';
                     }
                     array_push($features, end($features));
-                });
-            self::$dispatcher->addListener(Events::TEST_AFTER, function (TestEvent $x) use (&$features) {
+                }
+            );
+            self::$dispatcher->addListener(
+                Events::TEST_AFTER,
+                function (TestEvent $x) use (&$features) {
                     array_pop($features);
-                });
-            self::$dispatcher->addListener(Events::STEP_AFTER, function (StepEvent $x) use (&$steps) {
+                }
+            );
+            self::$dispatcher->addListener(
+                Events::STEP_AFTER,
+                function (StepEvent $x) use (&$steps) {
                     // look for javascript errors
-                    if(isset(SuiteManager::$modules['WebDriver'])) {
+                    if (isset(SuiteManager::$modules['WebDriver'])) {
                         /** @var WebDriver $driver */
                         $driver = SuiteManager::$modules['WebDriver'];
-                        $jsErrors = $driver->executeJS('return (function () {var tmpErrors = window.jsErrors; window.jsErrors = []; return tmpErrors || [];})();');
+                        $jsErrors = $driver->executeJS(
+                            'return (function () {var tmpErrors = window.jsErrors; window.jsErrors = []; return tmpErrors || [];})();'
+                        );
                         try {
-                            $x->getTest()->assertEmpty($jsErrors, 'Javascript errors: ' . (is_array($jsErrors) ? implode($jsErrors) : $jsErrors));
-                        }
-                        catch(\PHPUnit_Framework_AssertionFailedError $e) {
+                            $x->getTest()->assertEmpty(
+                                $jsErrors,
+                                'Javascript errors: ' . (is_array($jsErrors) ? implode($jsErrors) : $jsErrors)
+                            );
+                        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
                             $x->getTest()->getTestResultObject()->addFailure($x->getTest(), $e, PHP_Timer::stop());
                         }
-                   }
+                    }
 
                     // check for failures
                     //$x->getTest()->getTestResultObject()->failures()
-                    if($x->getStep()->getAction() == 'wait')
-                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction() . '</strong> ' . str_replace('"', '', $x->getStep()->getArguments(true)) . ' seconds</span>';
-                    else
-                        $steps[$x->getTest()->getName()] .= '<span class="step">I <strong>' . $x->getStep()->getAction() . '</strong> ' . str_replace('"', '', $x->getStep()->getArguments(true)) . '</span>';
-                });
-            self::$dispatcher->addListener(Events::TEST_ERROR, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
+                }
+            );
+            self::$dispatcher->addListener(
+                Events::TEST_ERROR,
+                function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
-                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . htmlspecialchars($x->getFail()->getMessage(), ENT_QUOTES);
+                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . htmlspecialchars(
+                            $x->getFail()->getMessage(),
+                            ENT_QUOTES
+                        );
                     // try to get a screenshot to show in the browser
-                    if(isset(SuiteManager::$modules['WebDriver'])) {
+                    if (isset(SuiteManager::$modules['WebDriver'])) {
+                        /** @var WebDriver $driver */
+                        $driver = SuiteManager::$modules['WebDriver'];
+                        $driver->makeScreenshot($ss);
+                        $steps[$x->getTest()->getName()] .= '<br /><a target="_blank" href="/bundles/admin/results/debug/' .
+                            $ss . '.png"><img width="300" src="/bundles/admin/results/debug/' . $ss . '.png" /></a>';
+                    }
+                    $steps[$x->getTest()->getName()] .= '</pre>';
+                }
+            );
+            self::$dispatcher->addListener(
+                Events::TEST_FAIL,
+                function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
+                    $ss = 'TestFailure' . substr(md5(microtime()), -5);
+                    $steps[$x->getTest()->getName()] .= '<pre class="failure">' . htmlspecialchars(
+                            $x->getFail()->getMessage(),
+                            ENT_QUOTES
+                        );
+                    // try to get a screenshot to show in the browser
+                    if (isset(SuiteManager::$modules['WebDriver'])) {
                         /** @var WebDriver $driver */
                         $driver = SuiteManager::$modules['WebDriver'];
                         $driver->makeScreenshot($ss);
@@ -214,24 +414,8 @@ class ValidationController extends Controller
                             $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a>';
                     }
                     $steps[$x->getTest()->getName()] .= '</pre>';
-                });
-            self::$dispatcher->addListener(Events::TEST_FAIL, function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
-                    $ss = 'TestFailure' . substr(md5(microtime()), -5);
-                    $steps[$x->getTest()->getName()] .= '<pre class="failure">' . htmlspecialchars($x->getFail()->getMessage(), ENT_QUOTES);
-                    // try to get a screenshot to show in the browser
-                    if(isset(SuiteManager::$modules['WebDriver'])) {
-                        /** @var WebDriver $driver */
-                        $driver = SuiteManager::$modules['WebDriver'];
-                        $driver->makeScreenshot($ss);
-                        rename(
-                            codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png',
-                            $screenDir . $ss . '.png'
-                        );
-                        $steps[$x->getTest()->getName()] .= '<br /><a target="_blank" href="/bundles/admin/results/' .
-                            $ss . '.png"><img width="200" src="/bundles/admin/results/' . $ss . '.png" /></a>';
-                    }
-                    $steps[$x->getTest()->getName()] .= '</pre>';
-                });
+                }
+            );
 
             $result = new \PHPUnit_Framework_TestResult;
             $result->addListener(new Listener(self::$dispatcher));
@@ -240,8 +424,9 @@ class ValidationController extends Controller
             $runner->setPrinter($printer);
 
             // don't initialize Symfony2 module because we are already running and will feed it the right parameters
-            if(($i = array_search('Symfony2', $settings['modules']['enabled'])) !== false)
+            if (($i = array_search('Symfony2', $settings['modules']['enabled'])) !== false) {
                 unset($settings['modules']['enabled'][$i]);
+            }
 
             $suiteManager = new SuiteManager(self::$dispatcher, $suite, $settings);
             $suiteManager->initialize();
@@ -250,28 +435,31 @@ class ValidationController extends Controller
             /** @var Symfony2 $symfony */
             $symfony = Configuration::modules($settings)['Symfony2'];
             SuiteManager::$modules['Symfony2'] = $symfony;
-            $symfony->kernel = $this->container->get( 'kernel' );
+            $symfony->kernel = $this->container->get('kernel');
             $suiteManager->getSuite()->setBackupGlobals(false);
             $suiteManager->getSuite()->setBackupStaticAttributes(false);
             $suiteManager->loadTests(null);
             Doctrine2::$em = $this->get('doctrine')->getManager();
             $suiteManager->run($runner, $result, $options);
         }
-        if(isset($result) && isset($runner)) {
+        if (isset($result) && isset($runner)) {
             $result->flushListeners();
             $printer = $runner->getPrinter();
             $errors = [];
-            foreach($result->errors() as $e)
-            {
+            foreach ($result->errors() as $e) {
                 /** @var PHPUnit_Framework_TestFailure $e */
                 $errors[] = $e->thrownException();
             }
-            return $this->render('AdminBundle:Validation:results.html.php', [
+
+            return $this->render(
+                'AdminBundle:Validation:results.html.php',
+                [
                     'printer' => $printer,
                     'result' => $result,
                     'errors' => $errors,
                     'steps' => $steps
-                ]);
+                ]
+            );
         }
 
         return new JsonResponse(true);
@@ -285,30 +473,39 @@ class ValidationController extends Controller
     {
         // get a list of all tests
         $allTests = '';
-        foreach(self::$config['tests'] as $suite)
-        {
-            $allTests .= (!empty($allTests) ? '|' : '') . implode('|', array_map(function (Cest $t) { return $t->getName(); }, $suite));
+        foreach (self::$config['tests'] as $suite) {
+            $allTests .= (!empty($allTests) ? '|' : '') . implode(
+                    '|',
+                    array_map(
+                        function (Cest $t) {
+                            return $t->getName();
+                        },
+                        $suite
+                    )
+                );
         }
 
         $tests = [];
         // get function code
         $reflector = new \ReflectionClass(get_class($test->getTestClass()));
-        if($reflector->hasMethod($test->getName())) {
+        if ($reflector->hasMethod($test->getName())) {
             $method = $reflector->getMethod($test->getName());
-            $line_start     = $method->getStartLine() - 1;
-            $line_end       = $method->getEndLine();
-            $line_count     = $line_end - $line_start;
-            $line_array     = file($method->getFileName());
-            $text = implode("", array_slice($line_array,$line_start,$line_count));
+            $line_start = $method->getStartLine() - 1;
+            $line_end = $method->getEndLine();
+            $line_count = $line_end - $line_start;
+            $line_array = file($method->getFileName());
+            $text = implode("", array_slice($line_array, $line_start, $line_count));
 
             // find calls to other functions in the class in this test
             preg_match_all('/' . $allTests . '/i', $text, $matches);
-            foreach($matches[0] as $i => $m) {
-                if($m == $test->getName())
+            foreach ($matches[0] as $i => $m) {
+                if ($m == $test->getName()) {
                     continue;
+                }
                 $tests[] = $m;
             }
         }
+
         return array_unique($tests);
     }
 
