@@ -279,7 +279,7 @@ EOSH;
         $I->click('Sign in');
         $I->fillField('.email input', 'admin@studysauce.com');
         $I->fillField('.password input', 'this computer is 1337');
-        $I->click('Sign in');
+        $I->click('.highlighted-link button');
         $I->wait(5);
         $I->amOnPage('/validation');
         $I->click('//tr[contains(.,"Deploy")]//a[contains(@href,"run-test")]');

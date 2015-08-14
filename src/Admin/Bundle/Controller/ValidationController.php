@@ -301,17 +301,17 @@ class ValidationController extends Controller
                         /** @var \RemoteWebElement $ele */
                         $ele = $this->findClickable($driver->webDriver, trim($x->getStep()->getArguments()[0], '"'));
                         if (!empty($ele)) {
+                            $driver->webDriver->executeScript('arguments[0].scrollIntoView(true);', [$ele]);
                             $driver->makeScreenshot($ss);
-                            $point = $ele->getCoordinates()->onPage();
+                            $point = $ele->getCoordinates()->inViewPort();
                             $size = $ele->getSize();
                             $im = imagecreatefrompng(codecept_log_dir() . 'debug' . DIRECTORY_SEPARATOR . $ss . '.png');
+                            $targetImage = imagecreatetruecolor($size->getWidth(), $size->getHeight());
                             $background = imagecolorallocate($im, 0, 0, 0);
                             imagecolortransparent($im, $background);
-                            $targetImage = imagecreatetruecolor( 128, 128 );
-                            imagealphablending( $targetImage, false );
-                            imagesavealpha( $targetImage, true );
-
-                            imagecopyresampled( $targetImage, $im,
+                            imagealphablending($targetImage, false);
+                            imagesavealpha($targetImage, true);
+                            imagecopyresampled($targetImage, $im,
                                 0, 0,
                                 $point->getX(), $point->getY(),
                                 $size->getWidth(), $size->getHeight(),
