@@ -10,16 +10,28 @@ $user = $app->getUser();
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 $view['slots']->start('stylesheets');
-foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/menu.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
+foreach ($view['assetic']->stylesheets(
+    ['@AdminBundle/Resources/public/css/menu.css'],
+    [],
+    ['output' => 'bundles/admin/css/*.css']
+) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
-foreach ($view['assetic']->stylesheets(['@AdminBundle/Resources/public/css/validation.css'],[],['output' => 'bundles/admin/css/*.css']) as $url): ?>
+foreach ($view['assetic']->stylesheets(
+    ['@AdminBundle/Resources/public/css/validation.css'],
+    [],
+    ['output' => 'bundles/admin/css/*.css']
+) as $url): ?>
     <link type="text/css" rel="stylesheet" href="<?php echo $view->escape($url) ?>"/>
 <?php endforeach;
 $view['slots']->stop();
 
 $view['slots']->start('javascripts');
-foreach ($view['assetic']->javascripts(['@AdminBundle/Resources/public/js/validation.js'],[],['output' => 'bundles/admin/js/*.js']) as $url): ?>
+foreach ($view['assetic']->javascripts(
+    ['@AdminBundle/Resources/public/js/validation.js'],
+    [],
+    ['output' => 'bundles/admin/js/*.js']
+) as $url): ?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
 <?php endforeach;
 $view['slots']->stop();
@@ -35,7 +47,8 @@ $view['slots']->start('body'); ?>
                 <small>You must run <a href="http://www.seleniumhq.org/download/">Selenium Server</a> and <a
                         href="https://sites.google.com/a/chromium.org/chromedriver/downloads">ChromeDriver</a> with the
                     command
-                    <code>java -jar selenium-server-standalone-2.44.0.jar -Dwebdriver.chrome.driver=.\chromedriver.exe -port
+                    <code>java -jar selenium-server-standalone-2.44.0.jar -Dwebdriver.chrome.driver=.\chromedriver.exe
+                        -port
                         4444</code>
                 </small>
             </label>
@@ -74,7 +87,9 @@ $view['slots']->start('body'); ?>
                 </small>
             </label>
             <?php foreach ($suites as $i => $suite) { ?>
-                <h2><?php print $suite; ?> <small>(<?php print count($tests[$suite]); ?>)</small></h2>
+                <h2><?php print $suite; ?>
+                    <small>(<?php print count($tests[$suite]); ?>)</small>
+                </h2>
                 <div class="suite-actions">
                     <a href="#run-all" class=" suite-<?php print $suite; ?> ">Run</a>
                     <label class="checkbox"><input type="checkbox"><i></i></label>
@@ -83,10 +98,14 @@ $view['slots']->start('body'); ?>
                 <table>
                     <?php foreach ($tests[$suite] as $s => $t) {
                         /** @var Cest $t */
-                        $depends = array_map(function ($d) {
+                        $depends = array_map(
+                            function ($d) {
                                 $test = explode('::', $d);
+
                                 return count($test) == 1 ? $test[0] : $test[1];
-                            }, PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName()));
+                            },
+                            PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $t->getName())
+                        );
                         $includes = \Admin\Bundle\Controller\ValidationController::getIncludedTests($t);
                         ?>
                         <tr class=" test-id-<?php print $t->getName();
@@ -95,13 +114,29 @@ $view['slots']->start('body'); ?>
                         ?> suite-<?php print $suite; ?> ">
                             <td><?php print substr($t->getName(), 3); ?>
                                 <?php if (!empty($depends)) { ?>
-                                <br /><small>Depends on: <?php print implode(', ', $depends); ?></small>
+                                    <br/>
+                                    <small>Depends on: <?php print implode(', ', $depends); ?></small>
                                 <?php } ?>
                                 <?php if (!empty($includes)) { ?>
-                                    <br /><small>Includes: <?php print implode(', ', $includes); ?></small>
+                                    <br/>
+                                    <small>Includes: <?php print implode(', ', $includes); ?></small>
                                 <?php } ?>
                             </td>
-                            <td></td>
+                            <td><?php
+                                foreach ($results as $r) {
+                                    if (isset($r[$t->getName()])) {
+                                        ?>
+                                        <h3><?php print date_timestamp_set(new \DateTime, $r['created'])->format('r'); ?></h3>
+                                        <div data-timestamp="<?php print $r['created']; ?>">
+                                        <pre><?php print $r[$t->getName()]['result']; ?></pre><?php
+                                        print $r[$t->getName()]['steps'];
+                                        foreach ($r[$t->getName()]['errors'] as $e) {
+                                            print $e;
+                                        }
+                                        ?></div><?php
+                                    }
+                                } ?>
+                            </td>
                             <td>
                                 <a href="#run-test">Run</a>
                                 <label class="checkbox"><input type="checkbox"><i></i></label>

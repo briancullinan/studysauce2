@@ -52,6 +52,10 @@ class ValidationController extends Controller
 
     private static function setupThis()
     {
+        if (!defined('PHPUNIT_TESTSUITE')) {
+            define('PHPUNIT_TESTSUITE', true);
+        }
+        require_once(__DIR__ . '/../../../../vendor/codeception/codeception/autoload.php');
 
         Configuration::config(__DIR__ . '/../');
 
@@ -69,9 +73,10 @@ class ValidationController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
 
         /** @var $user User */
@@ -81,8 +86,25 @@ class ValidationController extends Controller
         }
 
         self::setupThis();
+        // get results since submitted timestamp
+        $since = date_sub(new \DateTime(), new \DateInterval('P1D'));
+        $results = [];
+        if(!empty($request->get('since'))) {
 
-        return $this->render('AdminBundle:Validation:tab.html.php', self::$config);
+        }
+        foreach(scandir(codecept_log_dir()) as $file) {
+            $fpath = codecept_log_dir() . DIRECTORY_SEPARATOR . $file;
+            $ftime = filectime($fpath);
+            if($ftime < $since->getTimestamp() ||
+                substr($file, 0, strlen('TestResults-')) != 'TestResults-')
+                continue;
+            $results[] = unserialize(file_get_contents($fpath)) + ['created' => $ftime];
+        }
+        usort($results, function ($b, $a) {
+            return $a['created'] - $b['created'];
+        });
+
+        return $this->render('AdminBundle:Validation:tab.html.php', self::$config + ['results' => $results]);
     }
 
     /**
@@ -230,11 +252,6 @@ class ValidationController extends Controller
     public function testAction(Request $request)
     {
         set_time_limit(0);
-        if (!defined('PHPUNIT_TESTSUITE')) {
-            define('PHPUNIT_TESTSUITE', true);
-        }
-
-        require_once(__DIR__ . '/../../../../vendor/codeception/codeception/autoload.php');
 
         self::setupThis();
 
@@ -269,6 +286,9 @@ class ValidationController extends Controller
 
             /** @var EventDispatcher self::$dispatcher */
             self::$dispatcher = new EventDispatcher();
+            $result = new \PHPUnit_Framework_TestResult;
+            $runner = new Runner($options);
+            $printer = new UI(self::$dispatcher, $options);
             // required
             self::$dispatcher->addSubscriber(new ErrorHandler());
             self::$dispatcher->addSubscriber(new Bootstrap());
@@ -283,7 +303,7 @@ class ValidationController extends Controller
                 function (StepEvent $x) use (&$steps, &$features, $screenDir) {
                     /** @var Scenario $scenario */
                     if (($scenario = $x->getTest()->getScenario()) && $scenario->getFeature() != end($features)) {
-                        $steps[$x->getTest()->getName()] .= '<h3>I want to ' . $scenario->getFeature() . '</h3>';
+                        $steps[$x->getTest()->getName()] .= '<h4>I want to ' . $scenario->getFeature() . '</h4>';
                         array_push($features, $scenario->getFeature());
                     }
                     // take a screenshot before click
@@ -301,7 +321,8 @@ class ValidationController extends Controller
                         /** @var \RemoteWebElement $ele */
                         $ele = $this->findClickable($driver->webDriver, trim($x->getStep()->getArguments()[0], '"'));
                         if (!empty($ele)) {
-                            $driver->webDriver->executeScript('arguments[0].scrollIntoView(true);', [$ele]);
+                            $driver->webDriver->executeScript('if(typeof $ != \'undefined\') { $(arguments[0]).scrollintoview(DASHBOARD_MARGINS); } else { arguments[0].scrollIntoView(true); }', [$ele]);
+                            $driver->wait(1);
                             $driver->makeScreenshot($ss);
                             $point = $ele->getCoordinates()->inViewPort();
                             $size = $ele->getSize();
@@ -346,8 +367,32 @@ class ValidationController extends Controller
             );
             self::$dispatcher->addListener(
                 Events::TEST_AFTER,
-                function (TestEvent $x) use (&$features) {
+                function (TestEvent $x) use (&$features, $result, $runner, &$steps) {
                     array_pop($features);
+                    if (isset($result) && isset($runner)) {
+                        $result->flushListeners();
+                        $printer = $runner->getPrinter();
+                        $errors = [];
+                        foreach ($result->errors() as $e) {
+                            /** @var PHPUnit_Framework_TestFailure $e */
+                            $errors[] = $e->thrownException()->getMessage();
+                        }
+                        $output = '';
+                        ob_start(function ($str) use (&$output, $printer, $result) {
+                            $output .= $str;
+                        });
+                        $printer->printResult($result);
+                        ob_end_flush();
+                        $results = [$x->getTest()->getName() => [
+                            'result' => $output,
+                            'errors' => $errors,
+                            'steps' => $steps[$x->getTest()->getName()]
+                        ]];
+                        $steps[$x->getTest()->getName()] = [];
+                        $fh = fopen(codecept_log_dir() . 'TestResults-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
+                        fwrite($fh, serialize($results));
+                        fclose($fh);
+                    }
                 }
             );
             self::$dispatcher->addListener(
@@ -417,10 +462,7 @@ class ValidationController extends Controller
                 }
             );
 
-            $result = new \PHPUnit_Framework_TestResult;
             $result->addListener(new Listener(self::$dispatcher));
-            $runner = new Runner($options);
-            $printer = new UI(self::$dispatcher, $options);
             $runner->setPrinter($printer);
 
             // don't initialize Symfony2 module because we are already running and will feed it the right parameters
@@ -441,25 +483,6 @@ class ValidationController extends Controller
             $suiteManager->loadTests(null);
             Doctrine2::$em = $this->get('doctrine')->getManager();
             $suiteManager->run($runner, $result, $options);
-        }
-        if (isset($result) && isset($runner)) {
-            $result->flushListeners();
-            $printer = $runner->getPrinter();
-            $errors = [];
-            foreach ($result->errors() as $e) {
-                /** @var PHPUnit_Framework_TestFailure $e */
-                $errors[] = $e->thrownException();
-            }
-
-            return $this->render(
-                'AdminBundle:Validation:results.html.php',
-                [
-                    'printer' => $printer,
-                    'result' => $result,
-                    'errors' => $errors,
-                    'steps' => $steps
-                ]
-            );
         }
 
         return new JsonResponse(true);

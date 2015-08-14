@@ -32,6 +32,21 @@
     text-align: right;
 }
 
+#validation h3
+{
+    cursor: pointer;
+}
+
+#validation h3 ~ div
+{
+    display:none;
+}
+
+#validation h3.selected + div
+{
+    display:block;
+}
+
 #validation h2
 {
     text-transform: capitalize;

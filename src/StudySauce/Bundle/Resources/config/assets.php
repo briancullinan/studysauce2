@@ -36,6 +36,7 @@ $container->loadFromExtension('assetic', [
             'inputs' => [
                 '@StudySauceBundle/Resources/public/js/landing.js',
                 '@StudySauceBundle/Resources/public/js/sauce.js',
+                '@StudySauceBundle/Resources/public/js/jquery.scrollintoview.js',
                 '@StudySauceBundle/Resources/public/js/contact.js'
             ],
             'filters' => [],

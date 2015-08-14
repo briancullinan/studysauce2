@@ -32,6 +32,10 @@ $(document).ready(function () {
         });
     });
 
+    body.on('click', '#validation h3', function () {
+        $(this).toggleClass('selected');
+    });
+
     body.on('click', '#validation a[href="#run-all"]', function (evt) {
         evt.preventDefault();
         var validation = $('#validation'),
