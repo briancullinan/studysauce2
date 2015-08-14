@@ -375,7 +375,7 @@ class ValidationController extends Controller
                         $errors = [];
                         foreach ($result->errors() as $e) {
                             /** @var PHPUnit_Framework_TestFailure $e */
-                            $errors[] = $e->thrownException()->getMessage();
+                            $errors[] = $e->thrownException() . '';
                         }
                         $output = '';
                         ob_start(function ($str) use (&$output, $printer, $result) {

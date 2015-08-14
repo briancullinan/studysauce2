@@ -202,6 +202,7 @@ mkdir /var/www
 cd /var/www
 yum update -y
 yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl openssl php55-mbstring php55-mcrypt php55-common php55-gd php55-xml libjpeg libpng git
+export GIT_SSL_NO_VERIFY=true
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
 
 chown -R mysql /var/lib/mysql
