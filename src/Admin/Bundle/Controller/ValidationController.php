@@ -388,7 +388,7 @@ class ValidationController extends Controller
                             'errors' => $errors,
                             'steps' => $steps[$x->getTest()->getName()]
                         ]];
-                        $steps[$x->getTest()->getName()] = [];
+                        $steps[$x->getTest()->getName()] = '';
                         $fh = fopen(codecept_log_dir() . 'TestResults-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
                         fwrite($fh, serialize($results));
                         fclose($fh);
@@ -402,8 +402,9 @@ class ValidationController extends Controller
                     if (isset(SuiteManager::$modules['WebDriver'])) {
                         /** @var WebDriver $driver */
                         $driver = SuiteManager::$modules['WebDriver'];
+                        $driver->wait(1);
                         $jsErrors = $driver->executeJS(
-                            'return (function () {var tmpErrors = window.jsErrors; window.jsErrors = []; return tmpErrors || [];})();'
+                            'if(typeof window.jsErrors != \'undefined\') { return (function () {var tmpErrors = window.jsErrors; window.jsErrors = []; return tmpErrors || [];})() };'
                         );
                         try {
                             $x->getTest()->assertEmpty(
@@ -421,8 +422,29 @@ class ValidationController extends Controller
             );
             self::$dispatcher->addListener(
                 Events::TEST_ERROR,
-                function (FailEvent $x, $y, $z) use (&$steps, $screenDir) {
+                function (FailEvent $x) use (&$steps, $screenDir) {
                     $ss = 'TestFailure' . substr(md5(microtime()), -5);
+                    $steps[$x->getTest()->getName()] .= '<pre class="error">' . htmlspecialchars(
+                            $x->getFail()->getMessage(),
+                            ENT_QUOTES
+                        );
+                    // try to get a screenshot to show in the browser
+                    if (isset(SuiteManager::$modules['WebDriver'])) {
+                        /** @var WebDriver $driver */
+                        $driver = SuiteManager::$modules['WebDriver'];
+                        $driver->makeScreenshot($ss);
+                        $steps[$x->getTest()->getName()] .= '<br /><a target="_blank" href="/bundles/admin/results/debug/' .
+                            $ss . '.png"><img width="300" src="/bundles/admin/results/debug/' . $ss . '.png" /></a>';
+                    }
+                    $steps[$x->getTest()->getName()] .= '</pre>';
+                }
+            );
+            self::$dispatcher->addListener(
+                Events::TEST_SKIPPED,
+                function (FailEvent $x) use (&$steps, $screenDir) {
+                    $ss = 'TestFailure' . substr(md5(microtime()), -5);
+                    if(!isset($steps[$x->getTest()->getName()]))
+                        $steps[$x->getTest()->getName()] = '';
                     $steps[$x->getTest()->getName()] .= '<pre class="error">' . htmlspecialchars(
                             $x->getFail()->getMessage(),
                             ENT_QUOTES

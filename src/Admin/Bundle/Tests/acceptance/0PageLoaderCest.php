@@ -128,7 +128,7 @@ class PageLoaderCest
         $I->wait(10);
 
         $I->wantTo('check mailinator for bill my parents email');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -178,7 +178,7 @@ class PageLoaderCest
         // previous invite will autofill checkout page otherwise it will fail
         $I->test('tryGuestCheckout');
         $I->seeInCurrentUrl('/thanks');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
 
         // check mailinator for emails
         $I->amOnUrl('http://mailinator.com');
@@ -323,6 +323,7 @@ class PageLoaderCest
         $I->click('.ui-datepicker-calendar td:not(.ui-datepicker-unselectable) a');
         $I->selectOption('#add-study-hours .time select', '45');
         $I->click('#add-study-hours [value="#submit-checkin"]');
+        $I->wait(5);
     }
 
     /**
@@ -433,7 +434,7 @@ class PageLoaderCest
         $I->wait(10);
 
         $I->wantTo('visit mailinator and check for organization email');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -576,7 +577,8 @@ class PageLoaderCest
         $I->click('.notebook[title="Test notebook"] .notebookMenuButton');
         $I->click('#gwt-debug-menuItemDelete');
         $I->click('#gwt-debug-confirm');
-        $I->amOnPage('/cron/sync');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/cron/sync');
+        $I->amOnPage('/notes');
     }
 
     /**
@@ -587,6 +589,7 @@ class PageLoaderCest
     {
         $I->seeAmOnUrl('/notes');
         $I->test('tryNewSchedule');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryEvernoteConnect');
         $I->test('tryNewEvernote');
@@ -616,7 +619,7 @@ class PageLoaderCest
         $I->wantTo('complete the plan setup');
         $I->seeAmOnUrl('/plan');
         $I->click('Get started');
-        $I->click('#plan-step-1 input[value="tough"] + i');
+        $I->click('#plan-step-1 input[value="easy"] + i');
         $I->click('#plan-step-1 [type="submit"]');
         $I->wait(10);
 
@@ -763,8 +766,8 @@ EOJS;
         $I->fillField('input[id="Passwd"]', 'Da1ddy23');
         $I->click('Sign in');
         $I->click('Accept');
-        $I->amOnPage('/cron/sync');
         $I->amOnPage('/plan');
+        $I->amOnPage('/cron/sync');
         $I->wantTo('check if schedule has synced');
         $I->amOnUrl('https://www.google.com/calendar/render');
         $I->click('//span[contains(.,"PHIL 101: Pre-work")]');

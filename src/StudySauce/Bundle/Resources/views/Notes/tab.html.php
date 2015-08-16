@@ -108,7 +108,7 @@ $view['slots']->start('body'); ?>
                                 $classI = '';
                             }
                             ?>
-                            <div class="class-row notebook-id-<?php print $id; ?> course-id-<?php print (!empty($c) ? $c->getId() : '');
+                            <div data-notebook="<?php print $id; ?>" class="class-row course-id-<?php print (!empty($c) ? $c->getId() : '');
                                 print ($first && !empty($books) ? ' selected' : ' '); ?>">
                                 <div class="class-name read-only">
                                     <label class="input"><span>Class name</span>
@@ -128,9 +128,8 @@ $view['slots']->start('body'); ?>
                                             ? $n->getRemoteUpdated()
                                             : $n->getCreated()))
                                     ?>
-                                    <div data-timestamp="<?php print $time->getTimestamp(); ?>" class="note-row note-id-<?php print $n->getId();
+                                    <div data-notebook="<?php print $id; ?>" data-timestamp="<?php print $time->getTimestamp(); ?>" class="note-row note-id-<?php print $n->getId();
                                     print ($notesCount < 10 ? ' loaded' : ' loading');
-                                    print ' notebook-id-' . $id;
                                     print ' course-id-' . (!empty($c) ? $c->getId() : ''); ?>" data-tags="<?php
                                     $theseTags = $n->getProperty('tags') ?: [];
                                     $tags = [];

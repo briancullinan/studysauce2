@@ -44,7 +44,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/deadlines"]');
-        $I->amOnUrl('/deadlines');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/deadlines');
         $I->test('tryNewDeadlines');
         $this->setLastLogin($I);
         $I->seeLink('study notes again');
@@ -52,7 +52,8 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/notes"]');
-        $I->amOnUrl('/notes');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/notes');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $this->setLastLogin($I);
         $I->seeLink('Procrastinate much');
@@ -60,7 +61,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/1/lesson/4"]');
-        $I->amOnUrl('/course/1/lesson/4');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/1/lesson/4/step');
         $I->test('tryCourse1Procrastination');
         $this->setLastLogin($I);
         $I->seeLink('your grades like');
@@ -68,7 +69,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/calculator"]');
-        $I->amOnUrl('/calculator');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/calculator');
         $I->test('tryNewCalculator');
         $this->setLastLogin($I);
         $I->seeLink('phone is killing');
@@ -76,7 +77,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/1/lesson/3"]');
-        $I->amOnUrl('/course/1/lesson/3');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/1/lesson/3/step');
         $I->test('tryCourse1Distractions');
         $this->setLastLogin($I);
         $I->seeLink('study for tests');
@@ -84,7 +85,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/4"]');
-        $I->amOnUrl('/course/2/lesson/4');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/2/lesson/4/step');
         $I->test('tryCourse2StudyTests');
         $this->setLastLogin($I);
         $I->seeLink('taking tests freak');
@@ -92,7 +93,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/5"]');
-        $I->amOnUrl('/course/2/lesson/5');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/2/lesson/5/step');
         $I->test('tryCourse2TestTaking');
         $this->setLastLogin($I);
         $I->seeLink('forget everything');
@@ -100,7 +101,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/5"]');
-        $I->amOnUrl('/course/3/lesson/5');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/3/lesson/5/step');
         $I->test('tryCourse3SpacedRepetition');
         $this->setLastLogin($I);
         $I->seeLink('studying enough');
@@ -108,7 +109,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/1"]');
-        $I->amOnUrl('/course/2/lesson/1');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/2/lesson/1/step');
         $I->test('tryCourse2StudyMetrics');
         $this->setLastLogin($I);
         $I->seeLink('music when you study');
@@ -116,7 +117,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/1/lesson/5"]');
-        $I->amOnUrl('/course/1/lesson/5');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/1/lesson/5/step');
         $I->test('tryCourse1Environment');
         $this->setLastLogin($I);
         $I->seeLink('holding you accountable');
@@ -124,7 +125,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/partner"]');
-        $I->amOnUrl('/partner');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/partner');
         $I->test('tryNewPartner');
         $this->setLastLogin($I);
         $I->seeLink('spacing out when you read');
@@ -132,7 +133,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/4"]');
-        $I->amOnUrl('/course/3/lesson/4');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/3/lesson/4/step');
         $I->test('tryCourse3ActiveReading');
         $this->setLastLogin($I);
         $I->seeLink('setting goals');
@@ -140,7 +141,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/goals"]');
-        $I->amOnUrl('/goals');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/goals');
         $I->test('tryNewGoals');
         $this->setLastLogin($I);
         $I->seeLink('train your brain');
@@ -148,7 +149,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/2/lesson/3"]');
-        $I->amOnUrl('/course/2/lesson/3');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/2/lesson/3/step');
         $I->test('tryCourse2Interleaving');
         $this->setLastLogin($I);
         $I->seeLink('studying with groups');
@@ -156,7 +157,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/2"]');
-        $I->amOnUrl('/course/3/lesson/2');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/3/lesson/2/step');
         $I->test('tryCourse3GroupStudy');
         $this->setLastLogin($I);
         $I->seeLink('Memorizing facts');
@@ -164,7 +165,7 @@ class EmailsCest
         $I->wait(1);
         $I->switchToIFrame('rendermail');
         $I->seeElement('a[href*="/course/3/lesson/3"]');
-        $I->amOnUrl('/course/3/lesson/3');
+        $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/course/3/lesson/3/step');
         $I->test('tryCourse3Teaching');
     }
 
@@ -172,7 +173,7 @@ class EmailsCest
     {
         $I->test('tryGuestCheckout');
         $I->wantTo('visit mailinator and check for welcome student email');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -188,7 +189,7 @@ class EmailsCest
     {
         $I->test('tryGuestCheckout');
         $I->test('tryNewPartner');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -205,7 +206,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -221,7 +222,7 @@ class EmailsCest
     {
         $I->test('tryGuestCheckout');
         $I->wantTo('visit mailinator and check for welcome student email');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -246,7 +247,7 @@ class EmailsCest
             $user->setProperty('inactivity', $user->getProperty('inactivity') - 86400 * 8);
         Doctrine2::$em->merge($user);
         Doctrine2::$em->flush();
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -282,6 +283,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $this->setLastLogin($I);
         $I->seeLink('Procrastinate much');
@@ -296,6 +298,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $this->setLastLogin($I);
@@ -311,6 +314,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -327,6 +331,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -344,6 +349,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -362,6 +368,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -381,6 +388,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -401,6 +409,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -422,6 +431,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -444,6 +454,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -467,6 +478,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -491,6 +503,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -516,6 +529,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -542,6 +556,7 @@ class EmailsCest
         $I->test('tryGuestCheckout');
         $I->test('tryNewSchedule');
         $I->test('tryNewDeadlines');
+        $I->test('tryNotesCloseFirstTime');
         $I->test('tryNewNote');
         $I->test('tryCourse1Procrastination');
         $I->test('tryNewCalculator');
@@ -567,6 +582,6 @@ class EmailsCest
     public function tryInactivityNone(AcceptanceTester $I)
     {
         $I->test('tryInactivityTeaching');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
     }
 }

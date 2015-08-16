@@ -91,7 +91,7 @@ class AdviserCest
         $I->wait(5);
 
         $I->wantTo('Register as a new student using the invite email');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
@@ -183,7 +183,7 @@ class AdviserCest
         $I->wait(10);
 
         $I->wantTo('check mailinator to see if the students received the email');
-        $I->amOnPage('/cron');
+        $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');

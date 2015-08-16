@@ -83,6 +83,10 @@
 
 }
 
+#validation code {
+    cursor:pointer;
+}
+
 #validation table
 {
     table-layout: fixed;

@@ -28,7 +28,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var notes = $('#notes'),
             note = $(this),
-            notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(note.attr('class'))[1],
+            notebook = note.attr('data-notebook'),
             courseId = (/course-id-([a-z0-9\-]*)(\s|$)/ig).exec(note.attr('class'))[1];
         notes.find('.note-title .title input').val($(this).find('h4 a').text());
         if(courseId != '')
@@ -129,7 +129,7 @@ $(document).ready(function () {
         notes.find('.term-row').remove();
         response.find('.term-row').insertAfter('.new-study-note');
         notes.find('select[name="notebook"]').replaceWith(response.find('select[name="notebook"]'));
-        var row = notes.find('.class-row.notebook-id-' + notebookId + ', .class-row.course-id-' + notebookId);
+        var row = notes.find('.class-row[data-notebook="' + notebookId + '"], .class-row.course-id-' + notebookId);
         if (!row.parents('.term-row').is('.selected')) {
             row.parents('.term-row').find('> :first-child').trigger('click');
         }
@@ -267,19 +267,19 @@ $(document).ready(function () {
     });
 
     body.on('click', '#notes a[href="#delete-notebook"]', function () {
-        var notebook = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec($(this).parents('.class-row').attr('class'))[1];
+        var notebook = $(this).parents('.class-row').attr('data-notebook');
         var dialog = $('#delete-notebook');
-        var current = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(dialog.attr('class'));
+        var current = dialog.attr('data-notebook');
         if(current != null)
             dialog.removeClass(current[0]);
-        dialog.addClass('notebook-id-' + notebook);
+        dialog.attr('data-notebook', notebook);
     });
 
     body.on('click', '#delete-notebook a[href="#confirm-delete-notebook"]', function (evt) {
         evt.preventDefault();
         var notes = $('#notes'),
             dialog = $('#delete-notebook');
-        var notebookId = (/notebook-id-([a-z0-9\-]*)(\s|$)/ig).exec(dialog.attr('class'))[1];
+        var notebookId = dialog.attr('data-notebook');
         loadingAnimation($(this));
         $.ajax({
             url: window.callbackPaths['notes_notebook'],

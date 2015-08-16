@@ -443,9 +443,14 @@ a[href="#remove-deadline"]:hover
 
 @media all and (max-width: 1300px)
 {
-    .adviser .panel-pane,
-    .admin .panel-pane,
     .panel-pane
+    {
+        padding-left:70px;
+        padding-right:70px;
+    }
+
+    .adviser .panel-pane,
+    .admin .panel-pane
     {
         padding-left:20px;
         padding-right:70px;

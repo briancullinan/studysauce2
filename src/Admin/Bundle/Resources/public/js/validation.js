@@ -36,6 +36,22 @@ $(document).ready(function () {
         $(this).toggleClass('selected');
     });
 
+    body.on('click', '#validation code', function () {
+        var text = this;
+        var range, selection;
+        if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(text);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(text);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    });
+
     body.on('click', '#validation a[href="#run-all"]', function (evt) {
         evt.preventDefault();
         var validation = $('#validation'),
