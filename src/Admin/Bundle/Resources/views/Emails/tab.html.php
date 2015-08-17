@@ -191,7 +191,7 @@ $view['slots']->start('body'); ?>
                                         <span class="input"><?php print $u->getFirst(); ?></span>
                                         <span class="input"><?php print $u->getLast(); ?></span>
                                         <span class="input"><?php print $u->getEmail(); ?></span>
-                                    <? }
+                                    <?php }
                                     else
                                         print $recipient; ?></td>
                                 <td><?php print str_replace('STATUS_', '', array_search($email->getStatus(), $status)); ?></td>
@@ -207,7 +207,7 @@ $view['slots']->start('body'); ?>
                                         <span class="input"><?php print $u->getFirst(); ?></span>
                                         <span class="input"><?php print $u->getLast(); ?></span>
                                         <span class="input"><?php print $u->getEmail(); ?></span>
-                                    <? }
+                                    <?php }
                                     else
                                         print $sender; ?></td>
                                 <td><?php

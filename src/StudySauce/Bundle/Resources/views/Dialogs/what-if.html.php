@@ -21,7 +21,7 @@ $view['slots']->start('modal-body') ?>
                 <?php for($i = 0; $i < count($scale); $i++) {
                     if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
                         <option value="<?php print $scale[$i][0]; ?>"><?php print $scale[$i][0]; ?></option>
-                    <? }} ?>
+                    <?php }} ?>
             </select></label><div class="description">Grade I want</div>
         <span class="result">98%</span><div class="description">Grade I need on my remaining assignments.</div>
         <div class="calc-completed">* Class already 100% complete</div>
@@ -34,7 +34,7 @@ $view['slots']->start('modal-body') ?>
                     <?php for($i = 0; $i < count($scale); $i++) {
                         if (!empty($scale[$i]) && count($scale[$i]) == 4 && !empty($scale[$i][0])) { ?>
                             <option value="<?php print $scale[$i][0]; ?>"><?php print $scale[$i][0]; ?></option>
-                        <? }} ?>
+                        <?php }} ?>
                 </select></label>
             <div class="class-name description"></div>
             <div class="hours"></div>
