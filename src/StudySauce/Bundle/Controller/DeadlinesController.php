@@ -287,7 +287,7 @@ class DeadlinesController extends Controller
             /** @var Event $event */
             $event = $schedule->getEvents()->filter(
                 function (Event $e) use ($deadline) {
-                    return !empty($e->getDeadline()) && $e->getDeadline()->getId() == $d->getId();
+                    return !empty($e->getDeadline()) && $e->getDeadline()->getId() == $deadline->getId();
                 }
             )->first();
             if (!empty($event)) {

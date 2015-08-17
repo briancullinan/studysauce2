@@ -85,7 +85,7 @@ $view['slots']->start('body'); ?>
                                                     str_replace(['-', '+'], '', $c->getGrade()) == $scale[$i][0] && count($scale) < 6
                                                     ? 'selected="selected"'
                                                     : ''); ?>><?php print $scale[$i][0]; ?></option>
-                                            <? }} ?>
+                                            <?php }} ?>
                                         </select></label></div>
                                 <div class="gpa" title="Your grade point for the class (calculates your GPA)"><?php print (empty($c->getGPA()) ? '&bullet;' : $c->getGPA()); ?></div>
                             </div>

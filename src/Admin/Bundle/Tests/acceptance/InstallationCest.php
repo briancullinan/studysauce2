@@ -201,12 +201,14 @@ ReYNnyicsbkqWletNw+vHX/bvZ8=
 mkdir /var/www
 cd /var/www
 yum update -y
-yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl openssl php55-mbstring php55-mcrypt php55-common php55-gd php55-xml libjpeg libpng git
+yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl openssl php55-mbstring php55-mcrypt php55-common php55-gd php55-xml libjpeg libpng git fontconfig libXrender libXext icu xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi freetype libpng zlib libjpeg-turbo openssl
+cd /tmp/
+wget --no-check-certificate https://bitbucket.org/wkhtmltopdf/wkhtmltopdf/downloads/wkhtmltox-0.13.0-alpha-7b36694_linux-centos7-amd64.rpm
+rpm -ivh /tmp/wkhtmltox-0.13.0-alpha-7b36694_linux-centos7-amd64.rpm
 export GIT_SSL_NO_VERIFY=true
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
 
-chown -R mysql /var/lib/mysql
-chgrp -R mysql /var/lib/mysql
+chown -R mysql:mysql /var/lib/mysql
 service mysqld start
 /usr/bin/mysqladmin -u root password 'MyNewPass'
 echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhost' IDENTIFIED BY 'itekIO^#(';" | mysql -u root --password=MyNewPass -h localhost
