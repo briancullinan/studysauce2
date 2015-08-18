@@ -665,10 +665,13 @@ class PlanController extends Controller
         /** @var Schedule $schedule */
         $schedule = $guest->getSchedules()->first();
         $eventInfo = [];
-        foreach ($schedule->getClasses()->toArray() as $i => $c) {
+        $courses = $schedule->getCourses()->filter(function (Course $c) {return !$c->getDeleted();})->toArray();
+        foreach ($courses as $i => $c) {
             self::createCourseEvents($c, $orm);
-            self::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
             /** @var Course $c */
+            if($c->getType() != 'c')
+                continue;
+
             $week = strtotime('last Sunday', $c->getStartTime()->getTimestamp());
             foreach ($c->getDotw() as $j => $d) {
                 if (!isset(self::$weekConversion[$d])) {
@@ -715,6 +718,7 @@ class PlanController extends Controller
             }
         }
         self::createStudyEvents($schedule, $eventInfo, $orm);
+        self::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
     }
 
     /**
@@ -1816,34 +1820,8 @@ END:VCALENDAR'
             header('Content-Type: application/pdf');
             header('Content-Disposition: attachment; filename="Study Sauce Plan.pdf"');
 
-            $descriptorspec = array(
-                0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-                1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-                2 => array("pipe", "php://stderr") // stderr is a file to write to
-            );
-
             $command = 'wkhtmltopdf -O landscape https://' . $_SERVER['HTTP_HOST'] . '/plan/pdf/' . $user->getId() . ' - ';
-            $process = proc_open($command, $descriptorspec, $pipes, '/tmp');
-            if (!is_resource($process)) {
-                throw new \Exception("popen error");
-            }
-
-            // set both pipes non-blocking
-            stream_set_blocking($pipes[0], 0);
-            stream_set_blocking($pipes[1], 0);
-
-            ////////////////////////////////////////////////////////////////////
-
-            // reading the rest of output stream
-            stream_set_blocking($pipes[1], 1);
-            return new StreamedResponse(function () use ($pipes, $process) {
-                while (!feof($pipes[1])) {
-                    print fread($pipes[1], 16384);
-                    ob_flush();
-                    flush();
-                }
-                proc_close($process);
-            });
+            passthru($command);
         }
     }
 

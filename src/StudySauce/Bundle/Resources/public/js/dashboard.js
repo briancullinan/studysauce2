@@ -122,7 +122,7 @@ $(document).ready(function () {
     // hide any visible modals when panel changes
     body.on('hide', '.panel-pane', function () {
         body.find('.modal:visible').modal('hide');
-        body.find('.tipsy, .ui-datepicker').hide();
+        body.find('.ui-datepicker').hide();
     });
 
     function expandMenu(evt)
@@ -167,11 +167,10 @@ $(document).ready(function () {
 
     function showTip()
     {
-        var that = $(this);
-        $('.tipsy').remove();
-        if(!that.is('[original-title]') && !that.is('.ui-datepicker *')) {
-            that.tipsy({delayIn: 500, html: true}).trigger('mouseenter');
-        }
+        //var that = $(this);
+        //if(!that.is('[original-title]') && !that.is('.ui-datepicker *')) {
+        //    that.tooltip({delayIn: 500, html: true}).trigger('mouseenter');
+        //}
     }
 
     body.on('mouseenter', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);

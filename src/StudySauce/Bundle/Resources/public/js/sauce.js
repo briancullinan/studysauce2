@@ -359,6 +359,8 @@ if(typeof window.jqAjax == 'undefined') {
         };
         settings.error = function ( jqXHR, textStatus, errorThrown) {
             window.sincluding.splice(window.sincluding.indexOf(url), 1);
+            var message = "Error: [" + errorThrown + "], url: [" + url + "], status: [" + textStatus + "]";
+            window.jsErrors.push(message);
             if (typeof error != 'undefined')
                 error(jqXHR, textStatus, errorThrown);
         };

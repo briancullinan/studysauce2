@@ -388,10 +388,10 @@ class ValidationController extends Controller
                             'errors' => $errors,
                             'steps' => $steps[$x->getTest()->getName()]
                         ]];
-                        $steps[$x->getTest()->getName()] = '';
                         $fh = fopen(codecept_log_dir() . 'TestResults-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
                         fwrite($fh, serialize($results));
                         fclose($fh);
+                        $steps[$x->getTest()->getName()] = '';
                     }
                 }
             );

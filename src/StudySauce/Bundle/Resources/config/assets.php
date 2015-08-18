@@ -24,7 +24,6 @@ $container->loadFromExtension('assetic', [
                 '@StudySauceBundle/Resources/public/js/plupload/js/plupload.full.min.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/moxie.js',
                 //'@StudySauceBundle/Resources/public/js/plupload/js/plupload.dev.js',
-                '@StudySauceBundle/Resources/public/js/jquery.tipsy.js',
                 '@StudySauceBundle/Resources/public/js/dashboard.js',
             ],
             'filters' => [],

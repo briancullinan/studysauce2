@@ -289,6 +289,22 @@ class PageLoaderCest
         $I->fillField('.deadline-row.edit .percent input', '10');
         $I->click('#deadlines .highlighted-link [value="#save-deadline"]');
         $I->wait(10);
+
+        $I->click('#deadlines a[href="#add-deadline"]');
+
+        $I->selectOption('.deadline-row.edit .class-name select', 'PHIL 101');
+        $I->fillField('.deadline-row.edit .assignment input', 'Exam 2');
+        $I->click('.deadline-row.edit input[value="172800"] + i');
+        $d = date_add(new \DateTime(), new \DateInterval('P8D'))->format('m/d/Y');
+        $I->fillField('.deadline-row.edit .due-date input', $d);
+        $I->wait(1);
+        $I->click('.deadline-row.edit .percent input');
+        $I->fillField('.deadline-row.edit .percent input', '10');
+        $I->click('#deadlines .highlighted-link [value="#save-deadline"]');
+        $I->wait(10);
+
+        $I->click('//div[contains(@class,"deadline-row") and .//input[contains(@value,"Exam 2")]]//a[contains(@href,"remove-deadline")]');
+        $I->wait(10);
     }
 
     /**
@@ -603,10 +619,10 @@ class PageLoaderCest
     public function tryNewCalculator(AcceptanceTester $I)
     {
         $I->seeAmOnUrl('/calculator');
-        $I->fillField('#calculator .hours input', '3');
-        $I->fillField('#calculator .assignment input', 'Exam 1');
-        $I->fillField('#calculator .percent input', '50');
-        $I->fillField('#calculator .score input', '90');
+        $I->fillField('#calculator .edit .hours input', '3');
+        $I->fillField('#calculator .edit .assignment input', 'Exam 1');
+        $I->fillField('#calculator .edit .percent input', '50');
+        $I->fillField('#calculator .edit .score input', '90');
         $I->click('#calculator [value="#save-grades"]');
     }
 

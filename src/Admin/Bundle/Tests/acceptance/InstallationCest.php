@@ -203,8 +203,8 @@ cd /var/www
 yum update -y
 yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl openssl php55-mbstring php55-mcrypt php55-common php55-gd php55-xml libjpeg libpng git fontconfig libXrender libXext icu xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi freetype libpng zlib libjpeg-turbo openssl
 cd /tmp/
-wget --no-check-certificate https://bitbucket.org/wkhtmltopdf/wkhtmltopdf/downloads/wkhtmltox-0.13.0-alpha-7b36694_linux-centos7-amd64.rpm
-rpm -ivh /tmp/wkhtmltox-0.13.0-alpha-7b36694_linux-centos7-amd64.rpm
+wget --no-check-certificate http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm
+rpm -ivh /tmp/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm
 export GIT_SSL_NO_VERIFY=true
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
 
@@ -215,6 +215,10 @@ echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhos
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
 
 echo "* * * * * www-data /var/www/studysauce2/cron.sh" > /etc/cron.d/symfony
+echo "
+127.0.0.1  studysauce.com
+127.0.0.1  test.studysauce.com
+" >> /etc/hosts
 echo "
 <Directory \"/var/www/html\">
     AllowOverride All
@@ -294,6 +298,8 @@ EOSH;
         $I->test('tryLandingPages');
         $I->test('tryBillMyParents');
         $I->test('tryDetailedNotes');
+        $I->click('a[href*="/logout"]');
+        $I->test('tryGroupDeadlines');
         $I->click('a[href*="/logout"]');
         $I->test('tryGuestCheckout');
         $I->test('tryDetailedPlan');
