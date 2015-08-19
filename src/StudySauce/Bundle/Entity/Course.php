@@ -365,7 +365,7 @@ class Course
      */
     public function getDotw()
     {
-        return $this->dotw;
+        return array_intersect(['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'], $this->dotw);
     }
 
     /**

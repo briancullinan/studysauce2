@@ -165,18 +165,6 @@ $(document).ready(function () {
         }
     }
 
-    function showTip()
-    {
-        //var that = $(this);
-        //if(!that.is('[original-title]') && !that.is('.ui-datepicker *')) {
-        //    that.tooltip({delayIn: 500, html: true}).trigger('mouseenter');
-        //}
-    }
-
-    body.on('mouseenter', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
-    body.on('click', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
-    body.on('focus', '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)', showTip);
-
     body.on('show', '#home', function () {
         // TODO: add mobile check here?
         if (typeof navigator != 'undefined' &&
@@ -240,13 +228,7 @@ $(document).ready(function () {
     body.filter('.dashboard-home').on('click', 'button[value]', function () {
         
     });
-    body.filter('.dashboard-home').on('click', 'a[href]:not(.accordion-toggle)', handleLink);
-    body.filter('.dashboard-home').on('dblclick', 'a[href]:not(.accordion-toggle)', handleLink);
-    body.filter('.dashboard-home').on('dragstart', 'a[href]:not(.accordion-toggle)', handleLink);
-
-    // TODO: we no longer need this because our tabs are always first?
-    //if(window.callbackUri.indexOf(window.location.pathname) > -1)
-    //    activateMenu(window.location.pathname);
+    body.filter('.dashboard-home').on('click dblclick dragstart', 'a[href]:not(.accordion-toggle)', handleLink);
 
     window.onpopstate = function(e){
         if(window.callbackKeys.indexOf(e.state) > -1) {

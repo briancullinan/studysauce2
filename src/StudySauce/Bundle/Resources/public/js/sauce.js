@@ -229,6 +229,28 @@ function ssMergeScripts(content)
 $(document).ready(function () {
     var body = $('body');
 
+    $(document).tooltip({
+        items: '*[title]:not(iframe):not(.cke_editable):not(.cke),*[original-title]:not(iframe):not(.cke_editable):not(.cke)',
+        position: { my: "center top", at: "center bottom+10" },
+        content: function() {
+            var element = $(this);
+            if ( element.is( "[title]" ) ) {
+                return $(this).attr('title');
+            }
+        }
+    });
+
+    $(document).on('mouseover', 'rect[title],path[title]', function () {
+        var that = $(this);
+        setTimeout(function () {
+            var id = that.data('ui-tooltip-id'),
+                tip = $('#' + id);
+            tip.position({my: 'left-10 center'});
+            tip.css('left', that.offset().left + that[0].getBBox().width + 10).css('top', that.offset().top + that[0].getBBox().height / 2 - tip.height() / 2)
+            tip.addClass('left-arrow')
+        }, 15);
+    });
+
     body.on('click', 'a[href="#yt-pause"]', function (evt) {
         evt.preventDefault();
         var frame = $(this).prev().closest('iframe');

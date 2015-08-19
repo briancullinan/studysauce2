@@ -25,7 +25,7 @@
     </script>
     <?php foreach ($view['assetic']->javascripts(
         [
-            '@StudySauceBundle/Resources/public/js/jquery-2.1.1.js',
+            '@StudySauceBundle/Resources/public/js/jquery-2.1.4.js',
             '@AdminBundle/Resources/public/js/ckeditor/ckeditor.js',
             '@AdminBundle/Resources/public/js/codemirror.js',
             '@AdminBundle/Resources/public/js/addon/fold/foldcode.js',

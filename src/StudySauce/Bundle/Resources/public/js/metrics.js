@@ -239,16 +239,11 @@ $(document).ready(function () {
             .data(function () { return pie(classes); })
             .each(arcTween);
 
-        piechart.find('.symbol path').tipsy({
-                gravity: $.fn.tipsy.autoBounds(100, 'w'),
-                html: true,
-                title: function () {
-                    var total = d3.sum(classes, function (c) { return c.sumLength; }),
-                        d = this.__data__.data; //, c = color(d.key);
-                    return d['class'] + '<br />' + (Math.round(d.sumLength * 10 / 3600) / 10) + ' hrs' + '<br />' + (Math.round(d.sumLength / total * 1000) / 10) + '%';
-                }
-            })
-
+        piechart.find('.symbol path').each(function () {
+            var total = d3.sum(classes, function (c) { return c.sumLength; }),
+                d = this.__data__.data; //, c = color(d.key);
+            $(this).attr('title', d['class'] + '<br />' + (Math.round(d.sumLength * 10 / 3600) / 10) + ' hrs' + '<br />' + (Math.round(d.sumLength / total * 1000) / 10) + '%');
+        });
     }
 
     function redraw() {
@@ -352,15 +347,11 @@ $(document).ready(function () {
 
         });
 
-        timeline.find('.symbol rect').tipsy({
-                gravity: $.fn.tipsy.autoBounds(100, 'w'),
-                html: true,
-                title: function () {
-                    var d = this.__data__; //, c = color(d['class']);
-                    var g = d.time.getWeekNumber();
-                    return d['class'] + '<br />' + (Math.round(this.parentNode.__data__.bases[g] * 10 / 3600) / 10) + ' hrs';
-                }
-            });
+        timeline.find('.symbol rect').each(function () {
+            var d = this.__data__; //, c = color(d['class']);
+            var g = d.time.getWeekNumber();
+            $(this).attr('title', d['class'] + '<br />' + (Math.round(this.parentNode.__data__.bases[g] * 10 / 3600) / 10) + ' hrs');
+        });
 
         svg.select('.x.axisT')
             .selectAll('text').each(function (w) {

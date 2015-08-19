@@ -391,7 +391,8 @@
 			}
 			var inst = plugin._getInst(event.target);
 			switch (event.keyCode) {
-				case 9: return (inst.options.tabToExit ? true : (event.shiftKey ?
+				case 9:
+					return (inst.options.tabToExit ? true : (event.shiftKey ?
 							// Move to previous time field, or out if at the beginning
 							plugin._changeField(inst, -1, true) :
 							// Move to next time field, or out if at the end
@@ -858,6 +859,11 @@
 			@param moveOut {boolean} <code>true</code> if can move out of the field.
 			@return {boolean} <code>true</code> if exiting the field, <code>false</code> if not. */
 		_changeField: function(inst, offset, moveOut) {
+			if(this.lastChange)
+				return false;
+			this.lastChange = true;
+			var that = this;
+			setTimeout(function () {that.lastChange = false}, 300);
 			var atFirstLast = (inst.elem.val() === '' ||
 				inst._field === (offset === -1 ? 0 : Math.max(1, inst._secondField, inst._ampmField)));
 			if (!atFirstLast) {

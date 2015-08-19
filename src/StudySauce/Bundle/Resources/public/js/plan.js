@@ -267,6 +267,7 @@ $(document).ready(function () {
             origExternalDrag.apply(this, [el, ev, ui]);
         };
 
+        var isOverlapping;
         calendar = $('#calendar').fullCalendar({
             //minTime: '06:00:00',
             //maxTime: '26:00:00',
@@ -291,9 +292,7 @@ $(document).ready(function () {
             //aspectRatio: 1.9,
             timezone: 'local',
             businessHours: true,
-            timeslotsPerHour: 4,
-            slotEventOverlap: false,
-            slotMinutes: 15,
+            snapDuration: '00:15:00',
             firstHour: new Date().getHours(),
             viewRender: function( view, element )
             {
@@ -316,6 +315,13 @@ $(document).ready(function () {
                 var calendar = $('#calendar'),
                     plan = $('#plan'),
                     view = calendar.fullCalendar('getView');
+                if(view.name == 'agendaWeek' && plans.is('.setup-mode,add-events')) {
+                    view.dayGrid.colHeadFormat = 'dddd';
+                    calendar.find('.fc-widget-header thead > tr').replaceWith(view.dayGrid.rowHtml('head'));
+                }
+                else {
+                    view.dayGrid.colHeadFormat = 'ddd M/D';
+                }
                 if(view.name == 'agendaDay' && plan.find('.session-strategy:visible').length > 0) {
                     calendar.find('.fc-event:not(.event-type-d)').first().trigger('click');
                 }
@@ -387,10 +393,15 @@ $(document).ready(function () {
             },
             defaultView: plans.is('.setup-mode') && window.outerWidth > 700 || body.is('.adviser') ? 'agendaWeek' : 'agendaDay',
             selectable: false,
+            eventOverlap: function (stillEvent, movingEvent) {
+                isOverlapping = stillEvent;
+                return true;
+            },
             events: function (start, end, timezone, callback) {
                 callback(window.planEvents);
             },
             drop: function(date, jsEvent, ui) {
+
                 // TODO: count down to remove with numbers in event
                 if(!$(this).is('.invalid'))
                     $(this).remove();
@@ -512,6 +523,25 @@ $(document).ready(function () {
                     return;
                 }
 
+                var length = event.end.valueOf() - event.start.valueOf(),
+                    date = event.start;
+                var view = $('#calendar').fullCalendar('getView');
+                var tryPlace = 5;
+                isOverlapping = null;
+                do {
+                    if(isOverlapping != null) {
+                        date = moment(isOverlapping.end.valueOf() + 60 * 15 * 1000);
+                    }
+                    isOverlapping = null;
+                    view.calendar.isEventRangeAllowed({start: date, end: moment(date.valueOf() + length)}, event);
+                    tryPlace--;
+                } while(tryPlace > 0 && isOverlapping != null);
+                if(isOverlapping == null) {
+                    event.start = date;
+                    event.end = moment(event.start.valueOf() + length);
+                    calendar.fullCalendar('updateEvent', event);
+                }
+
                 prevDropLocation = {start: event.start, end: event.end};
                 if(shouldRevert.apply(this)) {
                     revertFunc();
@@ -528,8 +558,29 @@ $(document).ready(function () {
                         .one('click.dragging', 'a[href="#close"]', revertFunc);
                 }
             },
-            eventReceive: function () {
-
+            eventReceive: function (event) {
+                var length = 3600000,
+                    date = event.start.clone();
+                if(typeof $(this).attr('data-duration') != 'undefined') {
+                    var parts = $(this).attr('data-duration').split(':');
+                    length = (parseInt(parts[0]) * 60 + parseInt(parts[1])) * 60 * 1000;
+                }
+                var view = $('#calendar').fullCalendar('getView');
+                var tryPlace = 5;
+                isOverlapping = null;
+                do {
+                    if(isOverlapping != null) {
+                        date = moment(isOverlapping.end.valueOf() + 60 * 15 * 1000);
+                    }
+                    isOverlapping = null;
+                    view.calendar.isEventRangeAllowed({start: date, end: moment(date.valueOf() + length)}, event);
+                    tryPlace--;
+                } while(tryPlace > 0 && isOverlapping != null);
+                if(isOverlapping == null) {
+                    event.start = date;
+                    event.end = moment(event.start.valueOf() + length);
+                    calendar.fullCalendar('updateEvent', event);
+                }
             },
             eventResize: function(event, delta, revertFunc) {
                 if (event.allDay) {

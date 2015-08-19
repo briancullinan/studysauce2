@@ -384,14 +384,6 @@ a.fc-event:not([href])
     width:100%;
 }
 
-#plan.setup-mode #calendar .fc-day-grid,
-#plan.add-events #calendar .fc-day-grid,
-#plan.setup-mode #calendar .fc-head,
-#plan.add-events #calendar .fc-head
-{
-    display:none;
-}
-
 #plan.add-events #calendar
 {
     display:inline-block;

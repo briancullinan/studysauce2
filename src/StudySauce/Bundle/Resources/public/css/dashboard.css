@@ -41,36 +41,6 @@
     padding-right:70px;
 }
 
-.tipsy
-{
-    font-size:14px;
-    padding:7px;
-}
-
-.tipsy .tipsy-inner
-{
-    border:3px solid #eeeeee;
-    box-shadow:0 0 10px rgba(0,0,0,.75);
-    border-radius: 5px;
-}
-
-.tipsy-arrow
-{
-    border-width: 10px;
-}
-
-.tipsy-s .tipsy-arrow,
-.tipsy-n .tipsy-arrow
-{
-    margin-left:-10px;
-}
-
-.tipsy-e .tipsy-arrow,
-.tipsy-w .tipsy-arrow
-{
-    margin-top:-10px;
-}
-
 .dashboard-home .footer
 {
     padding: 0 240px 20px 240px;
