@@ -42,8 +42,8 @@ $view['slots']->start('body'); ?>
                             print $payment->getCoupon()->getDescription();
                         }
                         elseif (!empty($payment) && !empty($payment->getCoupon()) &&
-                            !empty($payment->getCoupon()->getOptions()) && isset(array_shift($payment->getCoupon()->getOptions())['description'])) {
-                            print array_shift($payment->getCoupon()->getOptions())['description'];
+                            !empty($payment->getCoupon()->getOptions()) && isset(array_pop($payment->getCoupon()->getOptions())['description'])) {
+                            print array_pop($payment->getCoupon()->getOptions())['description'];
                         }
                         else {
                             print 'Yearly';
