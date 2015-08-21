@@ -791,7 +791,7 @@ EOJS;
         $I->click('Accept');
         $I->amOnPage('/plan');
         $I->seeElement('#plan-step-6-3');
-        $I->click('Go to study plan');
+        $I->click('#plan-step-6-3 .highlighted-link a');
         $I->amOnPage('/cron/sync');
         $I->wantTo('check if schedule has synced');
         $I->amOnUrl('https://www.google.com/calendar/render');

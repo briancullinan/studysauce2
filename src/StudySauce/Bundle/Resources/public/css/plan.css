@@ -508,7 +508,8 @@ a.fc-event:not([href])
 #plan:not(.setup-mode) ~ #plan-step-4 .dialog-tracker li:nth-child(3),
 #plan-step-5 .dialog-tracker li:nth-child(5),
 #plan-step-6 .dialog-tracker li:nth-child(6),
-#plan-step-6-2 .dialog-tracker li:nth-child(6)
+#plan-step-6-2 .dialog-tracker li:nth-child(6),
+#plan-step-6-3 .dialog-tracker li:nth-child(6)
 {
     font-size: 60px;
     color: #0099BB;
