@@ -1866,6 +1866,7 @@ END:VCALENDAR'
 
             $command = 'wkhtmltopdf -O landscape https://' . $_SERVER['HTTP_HOST'] . '/plan/pdf/' . $user->getId() . ' - ';
             passthru($command);
+            exit();
         }
     }
 
