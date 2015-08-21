@@ -935,8 +935,8 @@ class PlanController extends Controller
             }
         )->toArray() as $x) {
             /** @var Event $x */
-            // skip data entry events
-            if ($x->getDeleted()) {
+            // skip deleted entry events
+            if ($x->getDeleted() || (!empty($x->getCourse()) && $x->getCourse()->getDeleted())) {
                 continue;
             }
 

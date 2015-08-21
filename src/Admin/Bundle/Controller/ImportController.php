@@ -108,6 +108,7 @@ class ImportController extends Controller
                 $user->addGroupInvite($invite);
                 $orm->persist($invite);
                 $orm->flush();
+                // don't send emails to existing users
                 if(empty($invitee)) {
                     $emails->groupInviteAction($user, $invite);
                 }
