@@ -451,8 +451,8 @@ class EmailsController extends Controller
 
         /** @var Swift_Message $message */
         $message = Swift_Message::newInstance()
-            ->setSubject('Welcome to Study Sauce!')
-            ->setFrom($user->getEmail())
+            ->setSubject('Invitation to Study Sauce!')
+            ->setFrom($invite->getUser()->getEmail())
             ->setTo($invite->getEmail())
             ->setBody($this->renderView('StudySauceBundle:Emails:group-invite.html.php', [
                         'user' => $user,

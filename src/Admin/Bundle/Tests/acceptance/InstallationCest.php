@@ -299,6 +299,7 @@ EOSH;
 
     public function tryDeploy(AcceptanceTester $I) {
         $I->wantTo('test everything before deployment');
+        $I->test('tryCheckSettings');
         $I->test('tryLandingPages');
         $I->test('tryBillMyParents');
         $I->test('tryDetailedNotes');

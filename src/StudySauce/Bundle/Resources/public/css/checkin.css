@@ -57,10 +57,12 @@
     position: relative;
     margin: 25px;
     vertical-align: bottom;
-    background: url("../images/classes_textured.png") no-repeat scroll 0 0 transparent;
+    background-image: url("../images/classes_textured.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
     color: #666666;
+    border-radius: 100%;
     text-align: center;
-    /* color: #FF0D00; */
 }
 
 .mini-checkin .checkin
@@ -93,221 +95,20 @@
     text-align: center;
 }
 
-.checkin-widget .classes .class1,
-.mini-checkin .class1,
-#checkin .classes .class1,
-#checkin .classes a:nth-child(2)
-{
-    background-position: 0 -100px;
-    /*    color:#FF9900; */
-}
-
-.checkin-widget .classes .class2,
-.mini-checkin .class2,
-#checkin .classes .class2,
-#checkin .classes a:nth-child(3)
-{
-    background-position: 0 -200px;
-    /*    color:#FFD700; */
-}
-
-.checkin-widget .classes .class3,
-.mini-checkin .class3,
-#checkin .classes .class3,
-#checkin .classes a:nth-child(4)
-{
-    background-position: 0 -300px;
-    /*    color:#BAF300; */
-}
-
-.checkin-widget .classes .class4,
-.mini-checkin .class4,
-#checkin .classes .class4,
-#checkin .classes a:nth-child(5)
-{
-    background-position: 0 -400px;
-    /*    color:#2DD700; */
-}
-
-.checkin-widget .classes .class5,
-.mini-checkin .class5,
-#checkin .classes .class5,
-#checkin .classes a:nth-child(6)
-{
-    background-position: 0 -500px;
-    /*    color:#009999; */
-}
-
-.checkin-widget .classes .class6,
-.mini-checkin .class6,
-#checkin .classes .class6,
-#checkin .classes a:nth-child(7)
-{
-    background-position: 0 -600px;
-    /*    color:#162EAE; */
-}
-
-.checkin-widget .classes .class7,
-.mini-checkin .class7,
-#checkin .classes .class7,
-#checkin .classes a:nth-child(8)
-{
-    background-position: 0 -700px;
-    /*    color:#6A0AAB; */
-}
-
-.checkin-widget .classes .class8,
-.mini-checkin .class8,
-#checkin .classes .class8,
-#checkin .classes a:nth-child(9)
-{
-    background-position: 0 -800px;
-    /*    color:#BE008A; */
-}
-
-.checkin-widget .classes .class0.checked-in,
+.checkin-widget .classes .checked-in,
 .mini-checkin .checked-in,
-#checkin .classes .class0.checked-in,
+#checkin .classes .checked-in,
 #checkin .classes a.checked-in
 {
     background-position: -200px 0;
 }
 
-.checkin-widget .classes .class1.checked-in,
-.mini-checkin .class1.checked-in,
-#checkin .classes .class1.checked-in,
-#checkin .classes a:nth-child(2).checked-in
-{
-    background-position: -200px -100px;
-}
-
-.checkin-widget .classes .class2.checked-in,
-.mini-checkin .class3.checked-in,
-#checkin .classes .class2.checked-in,
-#checkin .classes a:nth-child(3).checked-in
-{
-    background-position: -200px -200px;
-}
-
-.checkin-widget .classes .class3.checked-in,
-.mini-checkin .class3.checked-in,
-#checkin .classes .class3.checked-in,
-#checkin .classes a:nth-child(4).checked-in
-{
-    background-position: -200px -300px;
-}
-
-.checkin-widget .classes .class4.checked-in,
-.mini-checkin .class4.checked-in,
-#checkin .classes .class4.checked-in,
-#checkin .classes a:nth-child(5).checked-in
-{
-    background-position: -200px -400px;
-}
-
-.checkin-widget .classes .class5.checked-in,
-.mini-checkin .class5.checked-in,
-#checkin .classes .class5.checked-in,
-#checkin .classes a:nth-child(6).checked-in
-{
-    background-position: -200px -500px;
-}
-
-.checkin-widget .classes .class6.checked-in,
-.mini-checkin .class6.checked-in,
-#checkin .classes .class6.checked-in,
-#checkin .classes a:nth-child(7).checked-in
-{
-    background-position: -200px -600px;
-}
-
-.checkin-widget .classes .class7.checked-in,
-.mini-checkin .class7.checked-in,
-#checkin .classes .class7.checked-in,
-#checkin .classes a:nth-child(8).checked-in
-{
-    background-position: -200px -700px;
-}
-
-.checkin-widget .classes .class8.checked-in,
-.mini-checkin .class8.checked-in,
-#checkin .classes .class8.checked-in,
-#checkin .classes a:nth-child(9).checked-in
-{
-    background-position: -200px -800px;
-}
-
-
-.checkin-widget .classes .class0:active,
-.mini-checkin .class0:active,
-#checkin .classes .class0:active,
+.checkin-widget .classes :active,
+.mini-checkin :active,
+#checkin .classes :active,
 #checkin .classes a:active
 {
     background-position: -100px 0;
-}
-
-.checkin-widget .classes .class1:active,
-.mini-checkin .class1:active,
-#checkin .classes .class1:active,
-#checkin .classes a:active:nth-child(2)
-{
-    background-position: -100px -100px;
-}
-
-.checkin-widget .classes .class2:active,
-.mini-checkin .class2:active,
-#checkin .classes .class2:active,
-#checkin .classes a:active:nth-child(3)
-{
-    background-position: -100px -200px;
-}
-
-.checkin-widget .classes .class3:active,
-.mini-checkin .class3:active,
-#checkin .classes .class3:active,
-#checkin .classes a:active:nth-child(4)
-{
-    background-position: -100px -300px;
-}
-
-.checkin-widget .classes .class4:active,
-.mini-checkin .class4:active,
-#checkin .classes .class4:active,
-#checkin .classes a:active:nth-child(5)
-{
-    background-position: -100px -400px;
-}
-
-.checkin-widget .classes .class5:active,
-.mini-checkin .class5:active,
-#checkin .classes .class5:active,
-#checkin .classes a:active:nth-child(6)
-{
-    background-position: -100px -500px;
-}
-
-.checkin-widget .classes .class6:active,
-.mini-checkin .class6:active,
-#checkin .classes .class6:active,
-#checkin .classes a:active:nth-child(7)
-{
-    background-position: -100px -600px;
-}
-
-.checkin-widget .classes .class7:active,
-.mini-checkin .class7:active,
-#checkin .classes .class7:active,
-#checkin .classes a:active:nth-child(8)
-{
-    background-position: -100px -700px;
-}
-
-.checkin-widget .classes .class8:active,
-.mini-checkin .class8:active,
-#checkin .classes .class8:active,
-#checkin .classes a:active:nth-child(9)
-{
-    background-position: -100px -800px;
 }
 
 #checklist ol,
