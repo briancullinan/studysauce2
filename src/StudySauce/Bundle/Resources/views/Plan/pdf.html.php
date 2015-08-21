@@ -262,6 +262,18 @@ use StudySauce\Bundle\Entity\Event;
             background-color: #BB0088;
         }
 
+        .class9 {
+            background-color:#ff5600;
+        }
+
+        .class10 {
+            background-color:#316dac;
+        }
+
+        .class11 {
+            background-color:#e95b8b;
+        }
+
         .event-type-o .class {
             background-color: #000;
         }

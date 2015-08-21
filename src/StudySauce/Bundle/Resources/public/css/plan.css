@@ -204,6 +204,58 @@ a.fc-event:not([href])
     right:2px;
 }
 
+#plan .fc-event.event-type-sr {
+    background-image: url(../images/plan-noise-2.png);
+}
+
+#plan .fc-event.event-type-p.class0 {
+    background-color:#F44;
+}
+
+#plan .fc-event.event-type-p.class1 {
+    background-color:#FB4;
+}
+
+#plan .fc-event.event-type-p.class2 {
+    background-color:#FE4;
+}
+
+#plan .fc-event.event-type-p.class3 {
+    background-color:#CF4;
+}
+
+#plan .fc-event.event-type-p.class4 {
+    background-color:#6E4;
+}
+
+#plan .fc-event.event-type-p.class5 {
+    background-color:#4BB;
+}
+
+#plan .fc-event.event-type-p.class6 {
+    background-color:#46B;
+}
+
+#plan .fc-event.event-type-p.class7 {
+    background-color:#84B;
+}
+
+#plan .fc-event.event-type-p.class8 {
+    background-color:#C4A;
+}
+
+#plan .fc-event.event-type-p.class9 {
+    background-color:#F84;
+}
+
+#plan .fc-event.event-type-p.class10 {
+    background-color:#68B;
+}
+
+#plan .fc-event.event-type-p.class11 {
+    background-color:#F8A;
+}
+
 #plan .fc-agenda-axis
 {
     line-height: 13px;
@@ -247,7 +299,7 @@ a.fc-event:not([href])
 #plan .event-type-c,
 #plan .fc-event.event-type-o
 {
-    border: 3px solid #555555;
+    border: 4px solid #555555;
 }
 
 #plan .event-type-f .class-name span,
@@ -260,7 +312,6 @@ a.fc-event:not([href])
 
 #plan .fc-event.event-type-d
 {
-    border: 3px solid #555555;
     color: #555555;
 }
 
@@ -594,7 +645,7 @@ a.fc-event:not([href])
 
 #plan #external-events .fc-event[data-duration="00:45"]
 {
-    height: 30px;
+    height: 32px;
 }
 
 #plan #external-events .fc-event[data-duration="01:00"]

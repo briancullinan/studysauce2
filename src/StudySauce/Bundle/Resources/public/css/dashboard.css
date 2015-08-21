@@ -323,6 +323,24 @@ a[href="#remove-deadline"]:hover
     background-color:#BB0088;
 }
 
+.fc-event.class9,
+.class9
+{
+    background-color:#FF5500;
+}
+
+.fc-event.class10,
+.class10
+{
+    background-color:#3366AA;
+}
+
+.fc-event.class11,
+.class11
+{
+    background-color:#EE5588;
+}
+
 .plupload
 {
     padding:0 2px;

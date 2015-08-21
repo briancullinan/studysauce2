@@ -478,7 +478,41 @@ class PlanController extends Controller
      */
     private static function getGoogleCalendarConfig($event)
     {
+        switch(!empty($event->getCourse()) && $event->getCourse()->getType() == 'c' ? $event->getCourse()->getIndex() : null) {
+            case 0:
+                $color = 11;
+                break;
+            case 1:
+                $color = 6;
+                break;
+            case 2:
+                $color = 5;
+                break;
+            case 3:
+                $color = 2;
+                break;
+            case 4:
+                $color = 10;
+                break;
+            case 5:
+                $color = 7;
+                break;
+            case 6:
+                $color = 9;
+                break;
+            case 7:
+                $color = 1;
+                break;
+            case 8:
+                $color = 3;
+                break;
+            case 9:
+                $color = 4;
+                break;
+            default:
+                $color = 8;
 
+        }
         $config = [
             'summary' => $event->getTitle(),
             'location' => $event->getLocation(),
@@ -489,7 +523,7 @@ class PlanController extends Controller
 //                            'responseStatus' => 'accepted',
 //                            'optional' => true
 //                        ]],
-            'colorId' => 6
+            'colorId' => $color
         ];
         if ($event->getType() == 'h' || $event->getType() == 'd') {
             $config['start'] = [
@@ -782,6 +816,15 @@ class PlanController extends Controller
             $services[$o] = $oauth->getLoginUrl($o);
         }
 
+        $showConnected = false;
+        if($step === false && empty($user->getProperty('showConnected')) && !empty($user->getGcalAccessToken())) {
+            $showConnected = true;
+            $user->setProperty('showConnected', true);
+            /** @var $userManager UserManager */
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updateUser($user);
+        }
+
         return $this->render(
             'StudySauceBundle:' . $template[0] . ':' . $template[1] . '.html.php',
             [
@@ -793,7 +836,8 @@ class PlanController extends Controller
                 'step' => $step,
                 'isDemo' => $isDemo,
                 'isEmpty' => $isEmpty,
-                'services' => $services
+                'services' => $services,
+                'showConnected' => $showConnected
             ]
         );
     }

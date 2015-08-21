@@ -206,6 +206,7 @@ cd /tmp/
 wget --no-check-certificate http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm
 rpm -ivh /tmp/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm
 export GIT_SSL_NO_VERIFY=true
+cd /var/www/
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
 
 chown -R mysql:mysql /var/lib/mysql
@@ -265,7 +266,7 @@ EOSH;
         // change public IP
         $I->click('Elastic IPs');
         $I->wait(1);
-        $I->click('//tr[contains(.,"52.24.94.177")]//label');
+        $I->click('//tr[contains(.,"54.201.44.140")]//label');
         $I->wait(1);
         $I->click('//button[contains(.,"Actions")]');
         $I->wait(1);
@@ -299,6 +300,7 @@ EOSH;
         $I->test('tryBillMyParents');
         $I->test('tryDetailedNotes');
         $I->click('a[href*="/logout"]');
+        $I->test('tryAdviserLogin');
         $I->test('tryGroupDeadlines');
         $I->click('a[href*="/logout"]');
         $I->test('tryGuestCheckout');

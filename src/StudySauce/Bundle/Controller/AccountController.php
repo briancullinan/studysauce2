@@ -403,7 +403,11 @@ class AccountController extends Controller
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
+        /** @var User $user */
         $user = $this->getUser();
+        if($request->get('remove') == 'gcal') {
+            $user->setProperty('showConnected', 'false');
+        }
         $setter = 'set'.ucfirst($request->get('remove'));
         $setter_id = $setter.'Id';
         $user->$setter_id('');

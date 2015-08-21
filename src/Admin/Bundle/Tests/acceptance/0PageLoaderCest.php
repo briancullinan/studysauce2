@@ -263,6 +263,9 @@ class PageLoaderCest
         $I->click('#schedule .class-row:nth-child(1) input[value="F"] + i');
         $I->fillField('#schedule .class-row:nth-child(1) .start-time input', '11');
         $I->fillField('#schedule .class-row:nth-child(1) .end-time input', '12');
+        $I->pressKey('#schedule .class-row:nth-child(1) .end-time input', WebDriverKeys::TAB);
+        $I->pressKey('#schedule .class-row:nth-child(1) .end-time input', WebDriverKeys::NUMPAD1);
+        $I->pressKey('#schedule .class-row:nth-child(1) .end-time input', WebDriverKeys::NUMPAD9);
         $I->click('#schedule .class-row:nth-child(1) .start-date input');
         $I->click('.ui-datepicker-calendar tr:first-child td:first-child a');
         $I->click('#schedule .class-row:nth-child(1) .end-date input');
@@ -634,6 +637,10 @@ class PageLoaderCest
         // complete the setup wizard
         $I->wantTo('complete the plan setup');
         $I->seeAmOnUrl('/plan');
+        $plan0 = $I->grabAttributeFrom('#plan-step-0 .highlighted-link', 'class');
+        if(strpos($plan0, 'invalid')) {
+            $I->test('tryCourse2StudyPlan');
+        }
         $I->click('Get started');
         $I->click('#plan-step-1 input[value="easy"] + i');
         $I->click('#plan-step-1 [type="submit"]');
@@ -783,6 +790,8 @@ EOJS;
         $I->click('Sign in');
         $I->click('Accept');
         $I->amOnPage('/plan');
+        $I->seeElement('#plan-step-6-3');
+        $I->click('Go to study plan');
         $I->amOnPage('/cron/sync');
         $I->wantTo('check if schedule has synced');
         $I->amOnUrl('https://www.google.com/calendar/render');

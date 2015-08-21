@@ -322,9 +322,12 @@ $(document).ready(function () {
                 else {
                     view.dayGrid.colHeadFormat = 'ddd M/D';
                 }
-                if(view.name == 'agendaDay' && plan.find('.session-strategy:visible').length > 0) {
-                    calendar.find('.fc-event:not(.event-type-d)').first().trigger('click');
-                }
+                setTimeout(function () {
+                    if(view.name == 'agendaDay' && plan.find('.session-strategy:visible').length > 0 &&
+                        plan.find('.fc-event.event-selected:visible').length == 0) {
+                        calendar.find('.fc-event:not(.event-type-d)').first().trigger('click');
+                    }
+                }, 30);
                 if(plan.is('.setup-mode') || plan.is('.add-events')) {
                     calendar.find('h2').text('Your typical week')
                 }
@@ -358,6 +361,23 @@ $(document).ready(function () {
                         clearTimeout(clickTimeout);
                         var dialog = $('#edit-event');
                         dialog.data('event', event);
+                        var title = event.title.replace(/<h4>[^<]*<\/h4>/, '');
+                        if(event.className.indexOf('event-type-sr') > -1) {
+                            dialog.find('.modal-header').text(title + ': Study session');
+                        }
+                        else if(event.className.indexOf('event-type-p') > -1) {
+                            dialog.find('.modal-header').text(title + ': Pre-work');
+                        }
+                        else if(event.className.indexOf('event-type-d') > -1) {
+                            dialog.find('.modal-header').text(title + ': Deadline');
+                        }
+                        else if(event.className.indexOf('event-type-c') > -1) {
+                            dialog.find('.modal-header').text(title + ': Class');
+                        }
+                        else {
+                            dialog.find('.modal-header').text(title);
+                        }
+
                         if(event.className.indexOf('event-type-c') > -1) {
                             dialog.addClass('class-only');
                             dialog.find('.title').addClass('read-only');
@@ -371,7 +391,7 @@ $(document).ready(function () {
                             dialog.find('.start-date input[type="text"]').datepicker('setDate', event.start.toDate());
                             dialog.find('.end-date input[type="text"]').datepicker('setDate', event.end.toDate());
                         }
-                        dialog.find('.title input').val(event.title.replace(/<h4>[^<]*<\/h4>/, ''));
+                        dialog.find('.title input').val(title);
                         var type = (/event-type-([a-z]*)(\s|$)/ig).exec(event.className.join(' '))[1];
                         if(typeof event.alert == 'undefined') {
                             var alert = $('#plan-step-3').find('[name="event-type-' + type + '"][value="0"]:checked, select[name="event-type-' + type + '"]').first().val();
@@ -416,6 +436,7 @@ $(document).ready(function () {
                     return;
                 clearTimeout(clickTimeout);
                 clickTimeout = setTimeout(function () {
+
                     if($('#calendar').fullCalendar('getView').name != 'agendaDay') {
                         calendar.fullCalendar('gotoDate', event.start);
                         calendar.fullCalendar('changeView', 'agendaDay');
@@ -559,12 +580,8 @@ $(document).ready(function () {
                 }
             },
             eventReceive: function (event) {
-                var length = 3600000,
+                var length = event.end ? (event.end.valueOf() - event.start.valueOf()) : 3600000,
                     date = event.start.clone();
-                if(typeof $(this).attr('data-duration') != 'undefined') {
-                    var parts = $(this).attr('data-duration').split(':');
-                    length = (parseInt(parts[0]) * 60 + parseInt(parts[1])) * 60 * 1000;
-                }
                 var view = $('#calendar').fullCalendar('getView');
                 var tryPlace = 5;
                 isOverlapping = null;
@@ -576,9 +593,9 @@ $(document).ready(function () {
                     view.calendar.isEventRangeAllowed({start: date, end: moment(date.valueOf() + length)}, event);
                     tryPlace--;
                 } while(tryPlace > 0 && isOverlapping != null);
-                if(isOverlapping == null) {
-                    event.start = date;
-                    event.end = moment(event.start.valueOf() + length);
+                if(event.start.valueOf() != date.valueOf()) {
+                    event.start = moment(date.valueOf());
+                    event.end = moment(date.valueOf() + length);
                     calendar.fullCalendar('updateEvent', event);
                 }
             },
@@ -680,15 +697,23 @@ $(document).ready(function () {
         else {
             $('#plan-empty-schedule').modal('hide');
             if(plan.is('.setup-mode')) {
-                $('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-2-2, #plan-step-2-3, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6, #plan-step-6-2, #plan-step-6-3').first().modal({
+                $('#plan-step-0, #plan-step-1, #plan-step-2, #plan-step-2-2, #plan-step-2-3, #plan-step-3, #plan-step-4, #plan-step-5, #plan-step-6, #plan-step-6-2').first().modal({
                     backdrop: 'static',
                     keyboard: false,
                     show: true
-                })
+                });
             }
+            $('#plan-step-6-3').modal({show: true});
         }
 
     }
+
+    body.on('click', '#plan-step-0 a[href="#plan-step-1"]', function (evt) {
+        evt.preventDefault();
+        if($(this).parents().is('.invalid'))
+            return false;
+        $('#plan-step-1').modal({show: true});
+    });
 
     function submitNewEvents(next) {
         var events = calendar.fullCalendar('clientEvents'),
@@ -786,6 +811,9 @@ $(document).ready(function () {
                 // make the event draggable using jQuery UI
                 event.draggable({
                     zIndex: 999,
+                    start: function() {
+                        $(this).width($('#calendar .fc-event:visible').first().width());
+                    },
                     revert: shouldRevert,      // will cause the event to go back to its
                     revertDuration:.15  //  original position after the drag
                 });
@@ -835,6 +863,9 @@ $(document).ready(function () {
                 // make the event draggable using jQuery UI
                 event.draggable({
                     zIndex: 999,
+                    start: function() {
+                        $(this).width($('#calendar .fc-event:visible').first().width());
+                    },
                     revert: shouldRevert,      // will cause the event to go back to its
                     revertDuration: .15  //  original position after the drag
                 });
@@ -882,6 +913,9 @@ $(document).ready(function () {
             // make the event draggable using jQuery UI
             event.draggable({
                 zIndex: 999,
+                start: function() {
+                    $(this).width($('#calendar .fc-event:visible').first().width());
+                },
                 revert: shouldRevert,      // will cause the event to go back to its
                 revertDuration: .15  //  original position after the drag
             });

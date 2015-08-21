@@ -320,7 +320,7 @@ class ValidationController extends Controller
                         $driver = SuiteManager::$modules['WebDriver'];
                         /** @var \RemoteWebElement $ele */
                         $ele = $this->findClickable($driver->webDriver, trim($x->getStep()->getArguments()[0], '"'));
-                        if (!empty($ele)) {
+                        if (!empty($ele) && $ele->getSize()->getWidth() > 0 && $ele->getSize()->getHeight() > 0) {
                             $driver->webDriver->executeScript('if(typeof $ != \'undefined\' && typeof DASHBOARD_MARGINS != \'undefined\') { $(arguments[0]).scrollintoview(DASHBOARD_MARGINS); } else { arguments[0].scrollIntoView(true); }', [$ele]);
                             $driver->wait(1);
                             $driver->makeScreenshot($ss);

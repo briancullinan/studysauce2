@@ -206,6 +206,12 @@
     margin-right:-2px;
 }
 
+#schedule .online-courses
+{
+    color: #CC0000;
+    float:right;
+}
+
 #schedule.invalid-only .class-required .class-name input,
 #schedule.invalid-only .dotw-required .day-of-the-week,
 #schedule.invalid-only .start-time-required .start-time input,

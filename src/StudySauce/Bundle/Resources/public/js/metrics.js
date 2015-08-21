@@ -112,7 +112,7 @@ $(document).ready(function () {
 
         color = d3.scale.category10()
             .range(["#FF1100", "#FF9900", "#FFDD00", "#BBEE00", "#33DD00",
-            "#009999", "#1133AA", "#6611AA", "#BB0088"])
+            "#009999", "#1133AA", "#6611AA", "#BB0088", "#FF5600", "#316DAC", "#E95B8B"])
             .domain(window.classIds);
 
         redraw();

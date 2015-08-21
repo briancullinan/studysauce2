@@ -57,6 +57,7 @@ $view['slots']->start('body'); ?>
                 } ?>
                 <input type="hidden" name="term-name" value="<?php print ($isDemo ? '' : (empty($schedule->getTerm()) ? $schedule->getCreated()->format('n/Y') : $schedule->getTerm()->format('n/Y'))); ?>" />
                 <div class="university">
+                    <span class="online-courses">* For online classes, choose any time you prefer</span>
                     <label class="input">
                         School name
                         <input type="text" placeholder="Enter the full name" data-data="<?php print (!empty($schedule)

@@ -191,6 +191,7 @@ $(document).ready(function () {
             return;
         }
         actions.removeClass('valid').addClass('invalid');
+        loadingAnimation(actions.find('a, button'));
         $.ajax({
             url: window.callbackPaths['course1_introduction_update'],
             type: 'POST',
@@ -204,10 +205,14 @@ $(document).ready(function () {
             },
             success: function (data) {
                 var content = $(data);
+                step.find('.squiggle').remove();
                 step.find('input[name="csrf_token"]').val(content.find('input[name="csrf_token"]').val());
                 step.addClass('right');
                 actions.removeClass('invalid').addClass('valid');
                 step.scrollintoview(DASHBOARD_MARGINS);
+            },
+            error: function () {
+                step.find('.squiggle').remove();
             }
         });
     });

@@ -35,6 +35,11 @@ $(document).ready(function () {
     });
 
     body.on('show', '.course2.step4', function () {
+        if($(this).is('#course2_study_plan-step4')) {
+            var planDialog = $('#plan-step-0');
+            planDialog.find('li:first-child').css('text-decoration', 'line-through');
+            planDialog.find('.highlighted-link').removeClass('invalid');
+        }
         // mark lesson completed on the menu
         var step = $(this).attr('id').replace(/-step[0-9]+/ig, ''),
             path = window.callbackUri[window.callbackKeys.indexOf(step)];
