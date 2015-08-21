@@ -46,7 +46,8 @@ $view['slots']->start('body'); ?>
 <div class="panel-pane <?php
     print ($isDemo ? ' demo' : '');
     print ($isEmpty ? ' empty-schedule' : '');
-    print ($step !== false || $showConnected ? ' setup-mode' : '');
+    print ($step !== false ? ' setup-mode' : '');
+    print ($showConnected ? ' show-connected' : '');
     print (!empty($user->getGcalAccessToken()) ? ' connected' : ' not-connected'); ?>" id="plan">
     <div class="pane-content">
         <div id="external-events">

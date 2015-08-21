@@ -703,7 +703,9 @@ $(document).ready(function () {
                     show: true
                 });
             }
-            $('#plan-step-6-3').modal({show: true});
+            if(plan.is('.show-connected')) {
+                $('#plan-step-6-3').modal({show: true});
+            }
         }
 
     }
@@ -1378,6 +1380,7 @@ $(document).ready(function () {
         // update plan tab
         if (calendar != null && typeof calendar.fullCalendar != 'undefined')
             calendar.fullCalendar('refetchEvents');
+
     }
 
     function submitStep4(evt)
