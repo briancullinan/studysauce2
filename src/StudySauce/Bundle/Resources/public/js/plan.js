@@ -234,7 +234,7 @@ $(document).ready(function () {
         };
 
         $.fullCalendar.Grid.prototype.listenToExternalDrag = function (el, ev, ui) {
-            var classI = (/class([0-9])(\s|$)/ig).exec(el.attr('class'));
+            var classI = (/class([0-9]+)(\s|$)/ig).exec(el.attr('class'));
             var type = (/event-type-([a-z]*?)(\s|$)/ig).exec(el.attr('class'));
             if(type == null) {
                 return false;
@@ -430,7 +430,7 @@ $(document).ready(function () {
                 var plan = $('#plan');
                 if(body.is('.adviser'))
                     return;
-                var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
+                var classI = (/class([0-9]+)(\s|$)/ig).exec($(this).attr('class'));
                 // skip click event for deadlines
                 if(plan.is('.setup-mode') || plan.is('.add-events') || event.className.indexOf('event-type-d') > -1)
                     return;
@@ -501,7 +501,7 @@ $(document).ready(function () {
                 }, 300);
             },
             eventDragStart: function (event) {
-                var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
+                var classI = (/class([0-9]+)(\s|$)/ig).exec($(this).attr('class'));
                 var type = (/event-type-([a-z]*?)(\s|$)/ig).exec($(this).attr('class'));
                 if(classI != null) {
                     shortlist = calendar.fullCalendar('clientEvents').filter(function (e) {
@@ -518,7 +518,7 @@ $(document).ready(function () {
                 }
             },
             eventResizeStart: function (event) {
-                var classI = (/class([0-9])(\s|$)/ig).exec($(this).attr('class'));
+                var classI = (/class([0-9]+)(\s|$)/ig).exec($(this).attr('class'));
                 var type = (/event-type-([a-z]*?)(\s|$)/ig).exec($(this).attr('class'));
                 if(classI != null) {
                     shortlist = calendar.fullCalendar('clientEvents').filter(function (e) {
@@ -958,7 +958,7 @@ $(document).ready(function () {
         evt.preventDefault();
         var plan = $('#plan');
         var event = plan.find('.event-selected').data('event');
-        var classI = (/class([0-9])(\s|$)/ig).exec(event.className.join(' '));
+        var classI = (/class([0-9]+)(\s|$)/ig).exec(event.className.join(' '));
         var that = $(this);
         var isNew = !that.is('#plan .note-row a');
         body.one('show', '#notes', function () {
