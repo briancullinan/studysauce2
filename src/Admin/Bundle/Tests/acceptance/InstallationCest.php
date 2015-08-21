@@ -217,7 +217,7 @@ service mysqld start
 echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhost' IDENTIFIED BY 'itekIO^#(';" | mysql -u root --password=MyNewPass -h localhost
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
 
-echo "* * * * * www-data /var/www/studysauce2/cron.sh" > /etc/cron.d/symfony
+echo "* * * * * apache /var/www/studysauce2/cron.sh" >> /etc/crontab
 chmod a+x /var/www/cron.sh
 echo "
 127.0.0.1  studysauce.com
