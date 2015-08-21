@@ -42,10 +42,9 @@ class ImportController extends Controller
 
     /**
      * @param Request $request
-     * @param Group $group
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction(Request $request, Group $group = null)
+    public function updateAction(Request $request)
     {
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -60,27 +59,26 @@ class ImportController extends Controller
         $emails->setContainer($this->container);
         foreach($users as $i => $u)
         {
-            if($group == null) {
-                if(!empty($u['adviser'])) {
-                    /** @var User $adviser */
-                    $adviser = $userManager->findUserByEmail($u['adviser']);
-                    if(!empty($adviser)) {
-                        $group = $adviser->getGroups()->first();
-                    }
-                    else {
-                        $group = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
-                            ->select('g')
-                            ->where('g.name LIKE :search')
-                            ->orWhere('g.id=:group')
-                            ->setParameter('search', '%' . $u['adviser'] . '%')
-                            ->setParameter('group', intval($u['adviser']))
-                            ->getQuery()
-                            ->getOneOrNullResult();
-                    }
+            if(!empty($u['adviser'])) {
+                /** @var User $adviser */
+                $adviser = $userManager->findUserByEmail($u['adviser']);
+                if(!empty($adviser)) {
+                    $group = $adviser->getGroups()->first();
                 }
-                if(empty($group))
-                    $group = $user->getGroups()->first();
+                else {
+                    $group = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
+                        ->select('g')
+                        ->where('g.name LIKE :search')
+                        ->orWhere('g.id=:group')
+                        ->setParameter('search', '%' . $u['adviser'] . '%')
+                        ->setParameter('group', intval($u['adviser']))
+                        ->getQuery()
+                        ->getOneOrNullResult();
+                }
             }
+            if(empty($group))
+                $group = $user->getGroups()->first();
+
             unset($invite);
             // check if invite has already been sent
             foreach($existing as $j => $gi)
