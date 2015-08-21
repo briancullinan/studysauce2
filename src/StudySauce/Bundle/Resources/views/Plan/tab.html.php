@@ -90,9 +90,6 @@ $view['slots']->stop();
 
 $view['slots']->start('sincludes');
 // put this dialog to pop up first if we have already completed the rest of the set up process
-if($showConnected) {
-    print $this->render('StudySauceBundle:Dialogs:plan-step-6-3.html.php', ['id' => 'plan-step-6-3']);
-}
 print $this->render('StudySauceBundle:Dialogs:plan-step-0.html.php', ['id' => 'plan-step-0', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-1.html.php', ['id' => 'plan-step-1', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-2.html.php', ['id' => 'plan-step-2', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
@@ -103,6 +100,7 @@ print $this->render('StudySauceBundle:Dialogs:plan-step-4.html.php', ['id' => 'p
 print $this->render('StudySauceBundle:Dialogs:plan-step-5.html.php', ['id' => 'plan-step-5', 'courses' => $courses, 'schedule' => $schedule, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-6.html.php', ['id' => 'plan-step-6', 'services' => $services, 'attributes' => 'data-backdrop="static" data-keyboard="false"']);
 print $this->render('StudySauceBundle:Dialogs:plan-step-6-2.html.php', ['id' => 'plan-step-6-2']);
+print $this->render('StudySauceBundle:Dialogs:plan-step-6-3.html.php', ['id' => 'plan-step-6-3']);
 
 if($isEmpty) {
     print $this->render('StudySauceBundle:Dialogs:plan-empty-schedule.html.php', ['id' => 'plan-empty-schedule']);

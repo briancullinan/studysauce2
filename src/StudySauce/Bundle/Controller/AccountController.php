@@ -406,7 +406,7 @@ class AccountController extends Controller
         /** @var User $user */
         $user = $this->getUser();
         if($request->get('remove') == 'gcal') {
-            $user->setProperty('showConnected', 'false');
+            $user->setProperty('showConnected', false);
         }
         $setter = 'set'.ucfirst($request->get('remove'));
         $setter_id = $setter.'Id';
