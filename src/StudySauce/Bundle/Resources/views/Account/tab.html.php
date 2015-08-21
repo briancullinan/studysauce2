@@ -38,8 +38,8 @@ $view['slots']->start('body'); ?>
                             print 'Monthly';
                         }
                         elseif (!empty($payment) && !empty($payment->getCoupon()) &&
-                            !empty($payment->getCoupon()[$payment->getProduct()])) {
-                            print $payment->getCoupon()[$payment->getProduct()]['description'];
+                            !empty($payment->getCoupon()->getDescription())) {
+                            print $payment->getCoupon()->getDescription();
                         }
                         else {
                             print 'Yearly';

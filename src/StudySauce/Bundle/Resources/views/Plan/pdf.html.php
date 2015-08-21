@@ -139,7 +139,7 @@ use StudySauce\Bundle\Entity\Event;
             font-family: 'Ubuntu', Arial, sans-serif;
             color: #F90;
             font-size: 32px;
-            width: 50%;
+            width: 40%;
             display: inline-block;
             margin: 0 -2px 10px -2px;
             text-align: right;
@@ -153,7 +153,7 @@ use StudySauce\Bundle\Entity\Event;
 
         h2 {
             font-size: 32px;
-            width: 50%;
+            width: 60%;
             display: inline-block;
             margin: 0 -2px 10px -2px;
             line-height: 40px;

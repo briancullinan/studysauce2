@@ -205,6 +205,8 @@ yum install -y mysql-server httpd24 php55 php55-mysqlnd php55-pdo mod24_ssl open
 cd /tmp/
 wget --no-check-certificate http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm
 rpm -ivh /tmp/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm
+ln -s /usr/local/bin/wkhtmltopdf /bin/wkhtmltopdf
+
 export GIT_SSL_NO_VERIFY=true
 cd /var/www/
 git clone https://bjcullinan:Da1ddy23@bitbucket.org/StudySauce/studysauce2.git
@@ -216,6 +218,7 @@ echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhos
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
 
 echo "* * * * * www-data /var/www/studysauce2/cron.sh" > /etc/cron.d/symfony
+chmod a+x /var/www/cron.sh
 echo "
 127.0.0.1  studysauce.com
 127.0.0.1  test.studysauce.com
