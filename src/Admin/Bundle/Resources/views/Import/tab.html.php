@@ -99,7 +99,7 @@ $view['slots']->start('body'); ?>
             <label class="import-users">
                 <textarea rows="4" placeholder="first,last,email&para;first,last,email"></textarea>
             </label>
-            <fieldset id="user-preview">
+            <fieldset id="user-preview" class="read-only">
                 <legend>Preview</legend>
             </fieldset>
             <div class="highlighted-link invalid">

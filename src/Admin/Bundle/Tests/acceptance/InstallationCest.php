@@ -229,6 +229,7 @@ echo "
 </Directory>
 " >> /etc/httpd/conf/httpd.conf
 sed -i "s/^;date.timezone =$/date.timezone = \"US\/Arizona\"/" /etc/php.ini |grep "^timezone" /etc/php.ini
+sed -i "s/^memory_limit = 128M$/memory_limit = 256M/" /etc/php.ini |grep "^memory_limit" /etc/php.ini
 sed -i "s/^#SSLCACertificateFile/SSLCACertificateFile/" /etc/httpd/conf.d/ssl.conf |grep "SSLCACertificateFile" /etc/httpd/conf.d/ssl.conf
 sed -i "s/^SSLCertificateKeyFile/#SSLCertificateKeyFile/" /etc/httpd/conf.d/ssl.conf |grep "SSLCertificateKeyFile" /etc/httpd/conf.d/ssl.conf
 echo "$cert" > /etc/pki/tls/certs/localhost.crt
