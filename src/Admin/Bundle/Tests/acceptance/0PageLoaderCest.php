@@ -834,6 +834,19 @@ EOJS;
         $I->test('tryGoogleSync');
     }
 
+    /**
+     * @depends tryGuestCheckout
+     * @param AcceptanceTester $I
+     */
+    public function trySessionExpire(AcceptanceTester $I) {
+        $I->seeAmOnUrl('/schedule');
+        for($i = 0; $i < 35; $i++) {
+            $I->wait(60);
+        }
+        $I->test('tryNewSchedule');
+        $I->test('tryNewPlan');
+    }
+
 }
 
 

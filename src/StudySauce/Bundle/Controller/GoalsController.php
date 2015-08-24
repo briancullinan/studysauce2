@@ -142,9 +142,6 @@ class GoalsController extends Controller
      */
     public function updateAction(Request $request)
     {
-        if (false === $this->get('form.csrf_provider')->isCsrfTokenValid('update_goals',$request->get('csrf_token'))) {
-            throw new AccessDeniedHttpException('Invalid CSRF token.');
-        }
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 

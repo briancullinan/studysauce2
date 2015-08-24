@@ -362,6 +362,7 @@ $(document).ready(function () {
                         var dialog = $('#edit-event');
                         dialog.data('event', event);
                         var title = event.title.replace(/<h4>[^<]*<\/h4>/, '');
+                        var close = dialog.find('.modal-header .close').detach();
                         if(event.className.indexOf('event-type-sr') > -1) {
                             dialog.find('.modal-header').text(title + ': Study session');
                         }
@@ -377,6 +378,7 @@ $(document).ready(function () {
                         else {
                             dialog.find('.modal-header').text(title);
                         }
+                        close.prependTo(dialog.find('.modal-header'));
 
                         if(event.className.indexOf('event-type-c') > -1) {
                             dialog.addClass('class-only');

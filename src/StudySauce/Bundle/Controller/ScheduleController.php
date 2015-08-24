@@ -286,10 +286,6 @@ class ScheduleController extends Controller
      */
     public function updateAction(Request $request)
     {
-        if (FALSE === $this->get('form.csrf_provider')->isCsrfTokenValid('update_schedule', $request->get('csrf_token')))
-        {
-            throw new AccessDeniedHttpException('Invalid CSRF token.');
-        }
         /** @var $orm EntityManager */
         $orm = $this->get('doctrine')->getManager();
 

@@ -197,18 +197,11 @@ class PlanController extends Controller
         /** @var \Google_Service_Calendar_Event[] $items */
         $items = $list->getItems();
         $user->setProperty('eventSync', $list->getNextSyncToken());
-        $eventTimestamps = $schedule->getEvents()->map(
-            function (Event $e) {
-                return $e->getCreated()->getTimestamp();
+        $eventTimestamps = $schedule->getCourses()->map(
+            function (Course $c) {
+                return $c->getCreated();
             }
-        )->toArray();
-        if (empty($eventTimestamps)) {
-            $eventTimestamps = $schedule->getCourses()->map(
-                function (Course $c) {
-                    return $c->getCreated();
-                }
-            );
-        }
+        );
         if (empty($eventTimestamps)) {
             $eventTimestamps = [$schedule->getCreated()->getTimestamp()];
         }
@@ -300,7 +293,7 @@ class PlanController extends Controller
                 new \DateTimeZone(date_default_timezone_get())
             );
 
-            // ignore instances that are no longer in series
+            // delete instances that were created before the current calendar
             if ((new \DateTime($item->getCreated()))->getTimestamp() < min($eventTimestamps)) {
                 // skip parents that where already deleted
                 if (!in_array($parentId, $deleted)) {
@@ -308,6 +301,7 @@ class PlanController extends Controller
                     $service->events->delete($calendarId, $item->getId());
                 }
                 continue;
+                // TODO: merge remote events with local events
             } elseif (empty($parent)) {
                 $isNew = true;
                 $event = new Event();
@@ -342,6 +336,7 @@ class PlanController extends Controller
                 // TODO: look up all free study events and ids and make sure there is only one per day?
             } // only update event if the updated timestamp is greater than the studysauce database
             else {
+                // update the instance from remote to local
                 if (!empty($instanceId)) {
                     // find child event
                     $event = $schedule->getEvents()->filter(
@@ -386,7 +381,7 @@ class PlanController extends Controller
             }
             $remoteIds[] = $item->getId();
 
-            // update fields
+            // update changes from remote to local
             if (empty($event->getRemoteUpdated())
                 || new \DateTime($item->getUpdated()) > $event->getRemoteUpdated()
             ) {
@@ -434,6 +429,7 @@ class PlanController extends Controller
                     }
                 )->first()
                 : $event;
+            // create remote events if there is nothing like it already
             if (empty($parent->getRemoteId())) {
                 $newEvent = $service->events->insert($calendarId, $newEvent);
                 // store remoteId in all existing instances
@@ -445,6 +441,7 @@ class PlanController extends Controller
                 );
                 $parent->setRemoteId($newEvent->getId());
                 $orm->merge($parent);
+                // update events that have changed
             } elseif (empty($event->getRemoteUpdated()) || !empty($event->getUpdated()) && $event->getUpdated(
                 ) > $event->getRemoteUpdated()
             ) {
@@ -460,6 +457,7 @@ class PlanController extends Controller
                     )
                 );
                 $orm->merge($event);
+                // remove events that have a remote id but no longer exist in remove
             } elseif (!empty($event->getRemoteId()) && !in_array($event->getRemoteId(), $remoteIds)) {
                 $orm->remove($event);
                 if (!empty($event->getCourse())) {
