@@ -550,6 +550,17 @@ a[href="#remove-deadline"]:hover
         display:none;
     }
 
+    .dashboard-home .player-wrapper iframe.yt-state-1,
+    .dashboard-home iframe.yt-state-1
+    {
+        padding: 50px 0 0;
+    }
+
+    .dashboard-home a[href="#yt-pause"]
+    {
+        padding-right: 20px;
+    }
+
     .adviser .panel-pane,
     .admin .panel-pane,
     .panel-pane {

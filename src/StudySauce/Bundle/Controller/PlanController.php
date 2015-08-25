@@ -205,6 +205,7 @@ class PlanController extends Controller
         if (empty($eventTimestamps)) {
             $eventTimestamps = [$schedule->getCreated()->getTimestamp()];
         }
+        $syncCreated = count($eventTimestamps) < 2 ? $eventTimestamps[0] : min($eventTimestamps);
 
         // sync changes from google
         $remoteIds = [];
@@ -294,7 +295,7 @@ class PlanController extends Controller
             );
 
             // delete instances that were created before the current calendar
-            if ((new \DateTime($item->getCreated()))->getTimestamp() < min($eventTimestamps)) {
+            if ((new \DateTime($item->getCreated()))->getTimestamp() < $syncCreated) {
                 // skip parents that where already deleted
                 if (!in_array($parentId, $deleted)) {
                     $deleted[] = $item->getId();

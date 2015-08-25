@@ -30,7 +30,7 @@ class ConnectController extends BaseController
      * Connects a user to a given account if the user is logged in and connect is enabled.
      *
      * @param Request $request The active request.
-     * @param string  $service Name of the resource owner to connect to.
+     * @param string $service Name of the resource owner to connect to.
      *
      * @throws \Exception
      *
@@ -64,33 +64,36 @@ class ConnectController extends BaseController
             );
 
             // save in session
-            $session->set('_hwi_oauth.connect_confirmation.'.$key, $accessToken);
+            $session->set('_hwi_oauth.connect_confirmation.' . $key, $accessToken);
         } else {
-            $accessToken = $session->get('_hwi_oauth.connect_confirmation.'.$key);
+            $accessToken = $session->get('_hwi_oauth.connect_confirmation.' . $key);
         }
-
-        $userInformation = $resourceOwner->getUserInformation($accessToken);
-
-        // Show confirmation page?
 
         /** @var $currentToken OAuthToken */
         $currentToken = $this->container->get('security.context')->getToken();
-        $currentUser  = $currentToken->getUser();
+        $currentUser = $currentToken->getUser();
 
-        $this->container->get('hwi_oauth.account.connector')->connect($currentUser, $userInformation);
+        if (!empty($accessToken)) {
+            $userInformation = $resourceOwner->getUserInformation($accessToken);
 
-        if ($currentToken instanceof OAuthToken) {
-            // Update user token with new details
-            $this->authenticateUser($request, $currentUser, $service, $currentToken->getRawToken(), false);
+           $this->container->get('hwi_oauth.account.connector')->connect($currentUser, $userInformation);
+
+            if ($currentToken instanceof OAuthToken) {
+                // Update user token with new details
+                $this->authenticateUser($request, $currentUser, $service, $currentToken->getRawToken(), false);
+            }
+
         }
 
+        // TODO: Show confirmation page?
         $target = $session->get('_security.main.target_path');
-        if(empty($target)) {
+        if (empty($target)) {
             list($route, $options) = HomeController::getUserRedirect($currentUser);
+
             return new RedirectResponse($this->container->get('router')->generate($route, $options));
-        }
-        else {
+        } else {
             $session->remove('_security.main.target_path');
+
             return new RedirectResponse($target);
         }
     }

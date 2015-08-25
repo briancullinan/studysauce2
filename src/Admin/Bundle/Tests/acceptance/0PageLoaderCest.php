@@ -775,13 +775,9 @@ EOJS;
 
     }
 
-    /**
-     * @depends tryGuestCheckout
-     * @param AcceptanceTester $I
-     */
-    public function tryGoogleSync(AcceptanceTester $I)
+    public function tryGoogleLogin(AcceptanceTester $I)
     {
-        $I->wantTo('connect to Google Calendar');
+        $I->wantTo('connect to google');
         $I->seeAmOnUrl('/account');
         $I->click('#account a[href*="gcal"]');
         $I->fillField('input[id="Email"]', 'brian@studysauce.com');
@@ -789,12 +785,29 @@ EOJS;
         $I->fillField('input[id="Passwd"]', 'Da1ddy23');
         $I->click('Sign in');
         $I->click('Accept');
+    }
+
+    private static $googleI = 0;
+    /**
+     * @depends tryGuestCheckout
+     * @param AcceptanceTester $I
+     */
+    public function tryGoogleSync(AcceptanceTester $I)
+    {
+        $I->wantTo('connect to Google Calendar');
         $I->amOnPage('/plan');
         $I->seeElement('#plan-step-6-3');
         $I->click('#plan-step-6-3 .highlighted-link a');
+        $I->wait(1);
+        $I->doubleClick('#calendar .fc-agendaWeek-button');
+        $I->wait(2);
+        $I->doubleClick('#calendar td:nth-child(3) .fc-event-container .event-type-p');
+        $I->selectOption('#edit-event .reminder select', 15);
+        $I->click('#edit-event button');
+        $I->wait(5);
         $I->amOnPage('/cron/sync');
         $I->wantTo('check if schedule has synced');
-        $I->amOnUrl('https://www.google.com/calendar/render');
+        $I->amOnUrl('https://www.google.com/calendar/b/' . self::$googleI . '/render');
         $I->click('//span[contains(.,"PHIL 101: Pre-work")]');
         // test changes in gcal syncing to studysauce
         $I->seeInField('span[title="Reminder time"] input', 15);
@@ -808,13 +821,32 @@ EOJS;
         $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/cron/sync');
         $I->amOnPage('/plan');
         // check studysauce for the changes we just made
-        $I->wait(2);
+        $I->wait(1);
         $I->doubleClick('#calendar .fc-agendaWeek-button');
         $I->wait(2);
-        $I->doubleClick('#calendar td:nth-child(3) .fc-event-container :nth-child(2).event-type-p');
+        $I->doubleClick('#calendar td:nth-child(3) .fc-event-container .event-type-p');
         $I->seeInField('#edit-event .start-time input', '11:00 AM');
         $I->seeInField('#edit-event .location input', 'the library');
         $I->seeOptionIsSelected('#edit-event .reminder select', '30');
+    }
+
+    public function tryGoogleReconnect(AcceptanceTester $I)
+    {
+        $I->seeAmOnUrl('/account');
+        $I->click('#account a[href="#remove-gcal"]');
+        $I->wait(5);
+        $I->click('#account a[href*="gcal"]');
+        $I->click('Cancel');
+        $I->click('#account a[href*="gcal"]');
+        $I->click('brian@studysauce.com');
+        $I->click('Add account');
+        $I->fillField('input[id="Email"]', 'bjcullinan@gmail.com');
+        $I->click('Next');
+        $I->fillField('input[id="Passwd"]', '%rm0#B&Z59$*LOr7');
+        $I->click('Sign in');
+        $I->click('Accept');
+        self::$googleI = 1;
+        $I->test('tryGoogleSync');
     }
 
     /**
@@ -831,7 +863,9 @@ EOJS;
         $I->test('tryNewSchedule');
         $I->test('tryNewPlan');
         $I->test('tryNewStudySession');
+        $I->test('tryGoogleLogin');
         $I->test('tryGoogleSync');
+        $I->test('tryGoogleReconnect');
     }
 
     /**

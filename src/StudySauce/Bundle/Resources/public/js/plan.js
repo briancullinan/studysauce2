@@ -325,7 +325,15 @@ $(document).ready(function () {
                 setTimeout(function () {
                     if(view.name == 'agendaDay' && plan.find('.session-strategy:visible').length > 0 &&
                         plan.find('.fc-event.event-selected:visible').length == 0) {
-                        calendar.find('.fc-event:not(.event-type-d)').first().trigger('click');
+                        var closest = null;
+                        calendar.find('.fc-event:not(.event-type-d)').each(function () {
+                            if(closest == null || moment().valueOf() - $(this).data('event').start.valueOf() < moment() - closest.data('event').start.valueOf()) {
+                                closest = $(this);
+                            }
+                        });
+                        if(closest != null) {
+                            closest.trigger('click');
+                        }
                     }
                 }, 30);
                 if(plan.is('.setup-mode') || plan.is('.add-events')) {
