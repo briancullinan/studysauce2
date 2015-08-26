@@ -32,6 +32,15 @@
     text-align: right;
 }
 
+#validation {
+    position: absolute;
+    height: 100%;
+}
+
+#validation .pane-content {
+    height: 100%;
+}
+
 #validation h3
 {
     cursor: pointer;
@@ -47,14 +56,69 @@
     display:block;
 }
 
-#validation h2
+#validation #sigma-container
+{
+    min-height: 100%;
+}
+
+#validation #settings {
+    overflow:hidden;
+    position:absolute;
+    top:20px;
+    width:auto;
+    height: 50px;
+    z-index: 10;
+    background-color: #EEE;
+}
+
+#validation #settings.open {
+    height: auto;
+    width: 100%;
+}
+
+#validation #settings > * {
+    display:none;
+}
+
+.sigma-tooltip {
+    background-color: white;
+    border:1px solid #CCC;
+    box-shadow: 1px 2px 10px rgba(0,0,0,0.50);
+    border-radius: 5px;
+}
+.sigma-tooltip-header {
+    padding: 10px;
+    font-size: 20px;
+}
+.sigma-tooltip > .arrow {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+}
+.sigma-tooltip.right {
+    margin: 20px 40px;
+}
+.sigma-tooltip.right > .arrow {
+    top: 50%;
+    left: -10px;
+    margin-top: -10px;
+    border-right-color: rgb(249, 247, 237);
+    border-left-width: 0;
+}
+
+#validation #settings.open > *
+{
+    display:block;
+}
+
+#validation #settings > h2
 {
     text-transform: capitalize;
-    margin-right: -150px;
-    padding-right: 150px;
-    width: 100%;
     display: inline-block;
     margin-bottom:0;
+    cursor: pointer;
 }
 
 #validation .host-setting,

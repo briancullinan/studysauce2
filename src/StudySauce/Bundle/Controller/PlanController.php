@@ -295,7 +295,7 @@ class PlanController extends Controller
             );
 
             // delete instances that were created before the current calendar
-            if ((new \DateTime($item->getCreated()))->getTimestamp() < $syncCreated) {
+            if ((new \DateTime($item->getCreated()))->getTimestamp() < $syncCreated->getTimestamp()) {
                 // skip parents that where already deleted
                 if (!in_array($parentId, $deleted)) {
                     $deleted[] = $item->getId();

@@ -68,6 +68,7 @@ class ValidationController extends Controller
             $testLoader = new TestLoader(self::$config[$suite]['path']);
             $testLoader->loadTests();
             self::$config['tests'][$suite] = $testLoader->getTests();
+            self::$config['tests'][$suite] = array_combine(array_map(function (Cest $t) { return $t->getName();}, self::$config['tests'][$suite]), self::$config['tests'][$suite]);
         }
 
     }
@@ -105,6 +106,101 @@ class ValidationController extends Controller
         });
 
         return $this->render('AdminBundle:Validation:tab.html.php', self::$config + ['results' => $results]);
+    }
+
+    public function refreshAction(Request $request)
+    {
+        self::setupThis();
+        $nodes = [];
+        $edges = [];
+        $edgeIndex = [];
+        $count = 2;
+        $deployIncludes = self::getIncludedTests(self::$config['tests']['acceptance']['tryDeploy']);
+        $since = date_sub(new \DateTime(), new \DateInterval('P1D'));
+        foreach(scandir(codecept_log_dir()) as $file) {
+            $fpath = codecept_log_dir() . DIRECTORY_SEPARATOR . $file;
+            $ftime = filectime($fpath);
+            if($ftime < $since->getTimestamp() ||
+                substr($file, 0, strlen('TestResults-')) != 'TestResults-')
+                continue;
+            $results[substr($file, strlen('TestResults-PASS-'), -10)] = ['status' => substr($file, strlen('TestResults-'), 4), 'created' => $ftime];
+        }
+        foreach (self::$config['suites'] as $suite) {
+            foreach (self::$config['tests'][$suite] as $id => $t) {
+                /** @var Cest $t */
+
+                $depends = array_map(
+                    function ($d) {
+                        $test = explode('::', $d);
+
+                        return count($test) == 1 ? $test[0] : $test[1];
+                    },
+                    PHPUnit_Util_Test::getDependencies(get_class($t->getTestClass()), $id)
+                );
+                $includes = self::getIncludedTests($t);
+
+                $clusters = array_unique(array_intersect($deployIncludes, array_merge($depends, $includes)));
+
+
+                $nodes[] = [
+                    'id' => $id,
+                    'label' => preg_replace('/[A-Z]/', " $0", substr($id, 3)),
+                    'x' => floor($count / 20) * 10,
+                    'y' => $count % 20,
+                    'color' => !isset($results[$id]) ? '#555' : ($results[$id] == 'SKIP' ? '#55C' : (($results[$id] == 'FAIL') ? '#C55' : '#5C5')),
+                    'size' => ($id == 'tryInstall' || $id == 'tryDeploy' ? 5 : 0) + (in_array($id, $deployIncludes) ? 2 : 0) +
+                        + (count($depends) > 0 ? 1 : 0) + (count($includes) > 0 ? 1 : 0) + 1,
+                    'depends' => array_values($depends),
+                    'includes' => array_values($includes),
+                    'type' => !isset($results[$id]) || $results[$id] == 'SKIP' ? 'circle' : (($results[$id] == 'FAIL') ? 'square' : 'diamond'),
+                    'suite' => $suite
+                    //'cluster' => implode(' ' . $suite . '-', $clusters)
+                ];
+
+                foreach($depends as $edge) {
+                    $existing = array_merge(isset($edgeIndex[$id . $edge]) ? $edgeIndex[$id . $edge] : [], isset($edgeIndex[$edge . $id]) ? $edgeIndex[$id . $edge] : []);
+                    $size = count($existing) + 1;
+                    foreach($existing as $eI) {
+                        $edges[$eI]['size'] = $size;
+                        $edges[$eI]['type'] = 'parallel';
+                    }
+
+                    $edgeIndex[$id . $edge][] = count($edges);
+                    $edges[] = [
+                        'id' => 'e' . count($edges),
+                        'source' => $id,
+                        'type' => $id == $edge ? 'curve' : ($size > 1 ? 'parallel' : 'curvedArrow'),
+                        'target' => $edge,
+                        'color' => 'rgba(0,0,0,0)',
+                        'size' => $size
+                        //'weight' => (in_array($id, $deployIncludes) || in_array($edge, $deployIncludes) ? 2 : 1)
+                    ];
+                }
+
+                foreach($includes as $edge) {
+                    $existing = array_merge(isset($edgeIndex[$id . $edge]) ? $edgeIndex[$id . $edge] : [], isset($edgeIndex[$edge . $id]) ? $edgeIndex[$id . $edge] : []);
+                    $size = count($existing) + 1;
+                    foreach($existing as $eI) {
+                        $edges[$eI]['size'] = $size;
+                        $edges[$eI]['type'] = 'parallel';
+                    }
+
+                    $edgeIndex[$id . $edge][] = count($edges);
+                    $edges[] = [
+                        'id' => 'e' . count($edges),
+                        'source' => $id,
+                        'target' => $edge,
+                        'type' => $id == $edge ? 'curve' : ($size > 1 ? 'parallel' : 'arrow'),
+                        'color' => 'rgba(0,0,0,0)',
+                        'size' => $size
+                        //'weight' => (in_array($id, $deployIncludes) || in_array($edge, $deployIncludes) ? 2 : 1)
+                    ];
+                }
+                $count++;
+            }
+        }
+
+        return new JsonResponse(['nodes' => $nodes, 'edges' => array_values($edges)]);
     }
 
     /**
@@ -388,7 +484,7 @@ class ValidationController extends Controller
                             'errors' => $errors,
                             'steps' => $steps[$x->getTest()->getName()]
                         ]];
-                        $fh = fopen(codecept_log_dir() . 'TestResults-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
+                        $fh = fopen(codecept_log_dir() . 'TestResults-' . (strpos($output, 'failed') !== false ? 'FAIL' : (strpos($output, 'success') !== false ? 'PASS' : 'SKIP')) . '-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
                         fwrite($fh, serialize($results));
                         fclose($fh);
                         $steps[$x->getTest()->getName()] = '';

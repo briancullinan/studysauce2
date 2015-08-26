@@ -11,6 +11,8 @@ modules:
         - AcceptanceHelper
         - WebDriver
         - Symfony2
+        - Filesystem
+        - Asserts
 #        - Doctrine2
     config:
 #        PhpBrowser:

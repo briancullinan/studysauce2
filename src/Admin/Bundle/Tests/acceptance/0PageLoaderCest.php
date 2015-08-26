@@ -1,6 +1,8 @@
 <?php
 namespace Admin\Bundle\Tests;
 
+use Codeception\Module\Doctrine2;
+use StudySauce\Bundle\Entity\User;
 use WebDriver;
 use WebDriverBy;
 use WebDriverKeys;
@@ -847,6 +849,20 @@ EOJS;
         $I->click('Accept');
         self::$googleI = 1;
         $I->test('tryGoogleSync');
+    }
+
+    public function tryPlanDuplicates(AcceptanceTester $I)
+    {
+        /** @var User $user */
+        Doctrine2::$em->clear();
+        $dupes = Doctrine2::$em->getRepository('StudySauceBundle:Event')->createQueryBuilder('e')
+            ->select(['e'])
+            ->groupBy('e.course')
+            ->addGroupBy('e.type')
+            ->addGroupBy('SUBSTRING(e.start,11)')
+            ->having('COUNT(*) > 1')
+            ->getQuery()
+            ->getResult();
     }
 
     /**

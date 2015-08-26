@@ -193,6 +193,20 @@ $collection->add(
 );
 
 $collection->add(
+    'validation_refresh',
+    new Route(
+        '/validation/refresh',
+        ['_controller' => 'AdminBundle:Validation:refresh'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'true || request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'emails',
     new Route(
         '/emails/{_format}',
