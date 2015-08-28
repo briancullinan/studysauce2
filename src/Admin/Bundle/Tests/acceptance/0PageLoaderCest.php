@@ -2,6 +2,7 @@
 namespace Admin\Bundle\Tests;
 
 use Codeception\Module\Doctrine2;
+use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\User;
 use WebDriver;
 use WebDriverBy;
@@ -866,16 +867,30 @@ EOJS;
 
     public function tryPlanDuplicates(AcceptanceTester $I)
     {
+        $I->seeAmOnUrl('/account');
+        $I->wait(1);
+        $email = $I->grabValueFrom('#account .email input');
         /** @var User $user */
         Doctrine2::$em->clear();
         $dupes = Doctrine2::$em->getRepository('StudySauceBundle:Event')->createQueryBuilder('e')
             ->select(['e'])
-            ->groupBy('e.course')
-            ->addGroupBy('e.type')
-            ->addGroupBy('SUBSTRING(e.start,11)')
-            ->having('COUNT(*) > 1')
+            ->leftJoin('e.schedule', 's')
+            ->leftJoin('s.user', 'u')
+            ->where('u.email LIKE :email')
+            ->setParameter('email', $email)
             ->getQuery()
             ->getResult();
+        $events = [];
+        foreach($dupes as $e) {
+            /** @var Event $e */
+            $key = (!empty($e->getCourse()) ? $e->getCourse()->getId() : '')
+                . $e->getSchedule()->getId()
+                . $e->getType()
+                . $e->getStart()->format('H:i:s')
+                . (empty($e->getRecurrence()) ? '' : $e->getRecurrence()[0]);
+            $I->assertTrue(!in_array($key, $events), 'The event is not duplicated');
+            $events[] = $key;
+        }
     }
 
     /**
@@ -895,6 +910,7 @@ EOJS;
         $I->test('tryGoogleLogin');
         $I->test('tryGoogleSync');
         $I->test('tryGoogleReconnect');
+        $I->test('tryPlanDuplicates');
     }
 
     /**

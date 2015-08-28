@@ -728,7 +728,7 @@ $(document).ready(function () {
         $('#plan-step-1').modal({show: true});
     });
 
-    function submitNewEvents(next) {
+    function submitNewEvents(next, isFinal) {
         var events = calendar.fullCalendar('clientEvents'),
             studyEvents = [], removeEvents = [];
 
@@ -776,7 +776,8 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'text',
             data: {
-                events: studyEvents
+                events: studyEvents,
+                complete: isFinal
             },
             success: function (content) {
                 $('#external-events').removeClass('invalid').addClass('valid').find('.squiggle').remove();
@@ -957,7 +958,7 @@ $(document).ready(function () {
             submitNewEvents(function () {
                 $('#plan').removeClass('add-events');
                 $('#plan-step-6').modal({show: true});
-            });
+            }, true);
         });
     });
 

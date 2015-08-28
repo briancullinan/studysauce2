@@ -399,6 +399,11 @@ class ScheduleController extends Controller
                     // save course
                     $schedule->addCourse($course);
                     $orm->persist($course);
+
+                    $user->setProperty('plan_complete', false);
+                    /** @var $userManager UserManager */
+                    $userManager = $this->get('fos_user.user_manager');
+                    $userManager->updateUser($user);
                 }
                 else
                     $orm->merge($course);

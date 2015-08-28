@@ -24,6 +24,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 // TODO: update labels with new test results times
+
             }
         });
     });

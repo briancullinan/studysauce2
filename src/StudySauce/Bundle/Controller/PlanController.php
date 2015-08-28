@@ -304,35 +304,64 @@ class PlanController extends Controller
                 continue;
                 // TODO: merge remote events with local events
             } elseif (empty($parent)) {
-                $isNew = true;
-                $event = new Event();
-                $event->setName(trim(explode(':', $item->getSummary())[0]));
-                $event->setSchedule($schedule);
-                $schedule->addEvent($event);
-                $event->setRecurrence($item->getRecurrence());
-                $event->setRemoteId($item->getId());
+
                 // recognize event by name and type in title
                 /** @var Course $course */
-                if (!empty($course = $schedule->getCourses()->filter(
+                $course = $schedule->getCourses()->filter(
                     function (Course $c) use ($item) {
                         return strpos($item->getSummary(), $c->getName()) !== false;
                     }
-                )->first())
-                ) {
-                    $event->setCourse($course);
-                    $course->addEvent($event);
-                }
+                )->first();
+
+                // try to match type
                 if (strpos(strtolower($item->getSummary()), 'free study') !== false) {
-                    $event->setType('f');
+                    $type = 'f';
                 } elseif (strpos(strtolower($item->getSummary()), 'study session') !== false) {
-                    $event->setType('sr');
+                    $type = 'sr';
                 } elseif (strpos(strtolower($item->getSummary()), 'class') !== false) {
-                    $event->setType('c');
+                    $type = 'c';
                 } elseif (strpos(strtolower($item->getSummary()), 'pre-work') !== false) {
-                    $event->setType('p');
+                    $type = 'p';
                     // TODO: check for deadlines
                 } else {
-                    $event->setType('o');
+                    $type = 'o';
+                }
+
+                // try to find event in existing because we know some types of events on have specific occurrences
+                $event = $schedule->getEvents()->filter(
+                    function (Event $e) use ($parent, $instanceId, $items, $type, $course) {
+
+                        return $e->getType() == $type && $e->getCourse() == $course &&
+                            // pick a parent event
+                            (empty($e->getRecurrence()) || strpos($e->getRecurrence()[0], 'RECURRENCE-ID:') === false) &&
+                            // without a remote id or remote id no longer exists in our list
+                            (empty($e->getRemoteId()) || !in_array($e->getRemoteId(), array_map(function (\Google_Service_Calendar_Event $e) { return $e->getId();}, $items)));
+                    }
+                )->first();
+                if(empty($event)) {
+                    $isNew = true;
+                    $event = new Event();
+                    $event->setSchedule($schedule);
+                    $schedule->addEvent($event);
+                    if(!empty($course)) {
+                        $event->setCourse($course);
+                        $course->addEvent($event);
+                    }
+                    $event->setRemoteId($item->getId());
+                    $event->setType($type);
+                }
+                $event->setName(trim(explode(':', $item->getSummary())[0]));
+                $event->setRecurrence($item->getRecurrence());
+                $event->setRemoteUpdated(
+                    date_timezone_set(
+                        new \DateTime($item->getUpdated()),
+                        new \DateTimeZone(date_default_timezone_get())
+                    )
+                );
+                if ($isNew) {
+                    $orm->persist($event);
+                } else {
+                    $orm->merge($event);
                 }
                 // TODO: look up all free study events and ids and make sure there is only one per day?
             } // only update event if the updated timestamp is greater than the studysauce database
@@ -378,7 +407,6 @@ class PlanController extends Controller
                         }
                     }
                 }
-
             }
             $remoteIds[] = $item->getId();
 
@@ -458,7 +486,7 @@ class PlanController extends Controller
                     )
                 );
                 $orm->merge($event);
-                // remove events that have a remote id but no longer exist in remove
+                // remove events that have a remote id but no longer exist in remote
             } elseif (!empty($event->getRemoteId()) && !in_array($event->getRemoteId(), $remoteIds)) {
                 $orm->remove($event);
                 if (!empty($event->getCourse())) {
@@ -847,6 +875,8 @@ class PlanController extends Controller
      */
     public static function getPlanStep(User $user)
     {
+        if($user->getProperty('plan_complete'))
+            return false;
         /** @var $schedule \StudySauce\Bundle\Entity\Schedule */
         $schedule = $user->getSchedules()->first();
         if (empty($schedule)) {
@@ -1241,6 +1271,11 @@ class PlanController extends Controller
     {
         /** @var \StudySauce\Bundle\Entity\User $user */
         $user = $this->getUser();
+        $user->setProperty('plan_complete', true);
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
         $email = $user->getEmail();
         $name = $user->getFirst() . ' ' . $user->getLast();
         $now = new \DateTime('now', new \DateTimeZone('Z'));
@@ -1346,6 +1381,16 @@ END:VCALENDAR'
             }
             self::createStudyEvents($schedule, $request->get('events'), $orm);
         }
+
+        if(!empty($request->get('complete'))) {
+            $user->setProperty('plan_complete', true);
+        }
+        else {
+            $user->setProperty('plan_complete', false);
+        }
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
 
         return $this->forward('StudySauceBundle:Plan:index', ['_format' => 'tab']);
     }
