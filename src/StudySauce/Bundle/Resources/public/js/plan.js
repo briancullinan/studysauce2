@@ -327,7 +327,7 @@ $(document).ready(function () {
                         plan.find('.fc-event.event-selected:visible').length == 0) {
                         var closest = null;
                         calendar.find('.fc-event:not(.event-type-d)').each(function () {
-                            if(closest == null || moment().valueOf() - $(this).data('event').start.valueOf() < moment() - closest.data('event').start.valueOf()) {
+                            if(closest == null || Math.abs(moment().valueOf() - $(this).data('event').start.valueOf()) < Math.abs(moment() - closest.data('event').start.valueOf())) {
                                 closest = $(this);
                             }
                         });
@@ -424,7 +424,8 @@ $(document).ready(function () {
             defaultView: plans.is('.setup-mode') && window.outerWidth > 700 || body.is('.adviser') ? 'agendaWeek' : 'agendaDay',
             selectable: false,
             eventOverlap: function (stillEvent, movingEvent) {
-                isOverlapping = stillEvent;
+                if(stillEvent.className.indexOf('event-type-d') == -1)
+                    isOverlapping = stillEvent;
                 return true;
             },
             events: function (start, end, timezone, callback) {

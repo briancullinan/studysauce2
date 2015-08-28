@@ -96,8 +96,8 @@ class AdviserCest
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
         $I->waitForText('a minute ago', 60*5);
-        $I->seeLink('Welcome to Study Sauce!');
-        $I->click('//a[contains(.,"Welcome to Study Sauce!")]');
+        $I->seeLink('Invitation to Study Sauce!');
+        $I->click('//a[contains(.,"Invitation to Study Sauce!")]');
         $I->executeInSelenium(function (WebDriver $driver) {
             $driver->switchTo()->defaultContent();
             $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
@@ -168,17 +168,19 @@ class AdviserCest
         $I->click('Deadlines');
         $I->wait(5);
 
+        if($I->grabValueFrom('.deadline-row .assignment input') == 'Course completion') {
+            $I->click(
+                '//div[contains(@class,"deadline-row") and .//input[contains(@value,"Course completion")]]//a[contains(@href,"remove-deadline")]'
+            );
+            $I->wait(5);
+        }
+
         $I->selectOption('.deadline-row.edit .class-name select', 'Course completion');
         $I->click('.deadline-row.edit input[value="86400"] + i');
         $I->click('.deadline-row.edit input[value="172800"] + i');
         $I->click('.deadline-row.edit input[value="345600"] + i');
         $I->click('.deadline-row.edit input[value="604800"] + i');
-        $I->click('.deadline-row.edit .due-date input');
-        $d = date_add(new \DateTime(), new \DateInterval('P8D'))->format('j');
-        if($d < 8) {
-            $I->click('.ui-datepicker-next');
-        }
-        $I->click('//*[@id="ui-datepicker-div"]//td[not(@class="ui-datepicker-unselectable")]/a[contains(.,"' . $d . '")]');
+        $I->fillField('.deadline-row.edit .due-date input', date_add(new \DateTime(), new \DateInterval('P8D'))->format('m/d/Y'));
         $I->click('#deadlines .highlighted-link [value="#save-deadline"]');
         $I->wait(10);
 

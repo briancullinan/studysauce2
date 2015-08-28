@@ -65,13 +65,21 @@ class ImportController extends Controller
                 if(!empty($adviser)) {
                     $group = $adviser->getGroups()->first();
                 }
+                elseif(is_numeric($u['adviser'])) {
+                    $group = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
+                        ->select('g')
+                        ->orWhere('g.id=:group')
+                        ->setParameter('group', intval($u['adviser']))
+                        ->setMaxResults(1)
+                        ->getQuery()
+                        ->getOneOrNullResult();
+                }
                 else {
                     $group = $orm->getRepository('StudySauceBundle:Group')->createQueryBuilder('g')
                         ->select('g')
                         ->where('g.name LIKE :search')
-                        ->orWhere('g.id=:group')
                         ->setParameter('search', '%' . $u['adviser'] . '%')
-                        ->setParameter('group', intval($u['adviser']))
+                        ->setMaxResults(1)
                         ->getQuery()
                         ->getOneOrNullResult();
                 }
@@ -95,7 +103,7 @@ class ImportController extends Controller
             $invitee = $userManager->findUserByEmail($u['email']);
 
             // save the invite
-            if(!isset($invite) && !empty($group)) {
+            if((!isset($invite) || $invite->getCreated() < date_sub(new \DateTime(), new \DateInterval('P1D'))) && !empty($group)) {
                 $invite = new GroupInvite();
                 $invite->setGroup($group);
                 $invite->setUser($user);

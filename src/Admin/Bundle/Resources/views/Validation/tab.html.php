@@ -52,7 +52,6 @@ $view['slots']->start('body'); ?>
         <div class="pane-content">
             <div id="settings">
                 <h2>Validation / <a href="#settings">Settings</a></h2>
-                <hr/>
                 <label class="input host-setting"><span>Selenium Server</span>
                     <input type="text"
                            value="<?php print $view->escape(

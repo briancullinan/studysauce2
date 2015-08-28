@@ -332,12 +332,15 @@ class PageLoaderCest
 
     /**
      * @depends tryNewSchedule
-     * @depends tryNewCheckin
      * @param AcceptanceTester $I
      */
     public function tryNewMetrics(AcceptanceTester $I) {
         $I->wantTo('enter a manually study session');
         $I->seeAmOnUrl('/metrics');
+        $empty = $I->grabAttributeFrom('#metrics', 'class');
+        if(strpos($empty, 'demo')) {
+            $I->test('tryNewCheckin');
+        }
         $I->click('#metrics a[href="#add-study-hours"]');
         $I->selectOption('#add-study-hours .class-name select', 'PHIL 101');
         $I->click('#add-study-hours .date input');
@@ -588,16 +591,19 @@ class PageLoaderCest
         // check evernote to make sure changes were synced
         $I->amOnPage('/cron/sync');
         $I->amOnUrl('https://sandbox.evernote.com');
-        $I->click('#gwt-debug-SkippableDialog-skip');
-        $I->click('.notebook[title="Test notebook"]');
+        $I->wait(1);
+        $I->click('#gwt-debug-DialogB-skip');
+        $I->click('#gwt-debug-Sidebar-notebooksButton-container');
+        $I->click('//div[contains(@class,"qa-notebookWidget") and contains(.,"Test notebook")]');
         $I->wait(2);
-        $I->click('//div[contains(@class,"noteSnippet") and contains(.,"' . $time . '")]//div[contains(@class,"noteSnippetTitle")]');
+        $I->click('//div[contains(@class,"qa-noteWidget") and contains(.,"' . $time . '")]//div[contains(@class,"qa-title")]');
         $I->see('StudySauce123');
+
         // delete the evernote notebook
-        $I->moveMouseOver('.notebook[title="Test notebook"]');
-        $I->click('.notebook[title="Test notebook"] .notebookMenuButton');
-        $I->click('#gwt-debug-menuItemDelete');
-        $I->click('#gwt-debug-confirm');
+        $I->click('#gwt-debug-Sidebar-notebooksButton-container');
+        $I->moveMouseOver('//div[contains(@class,"qa-notebookWidget") and contains(.,"Test notebook")]');
+        $I->click('//div[contains(@class,"qa-notebookWidget") and contains(.,"Test notebook")]//div[contains(@class,"qa-deleteButton")]');
+        $I->click('#gwt-debug-ConfirmationDialog-confirm');
         $I->amOnUrl('https://' . $_SERVER['HTTP_HOST'] . '/cron/sync');
         $I->amOnPage('/notes');
     }
@@ -619,12 +625,13 @@ class PageLoaderCest
 
     /**
      * @depends tryGuestCheckout
+     * @depends tryNewSchedule
      * @param AcceptanceTester $I
      */
     public function tryNewCalculator(AcceptanceTester $I)
     {
         $I->seeAmOnUrl('/calculator');
-        $I->fillField('#calculator .edit .hours input', '3');
+        $I->fillField('#calculator .hours input', '3');
         $I->fillField('#calculator .edit .assignment input', 'Exam 1');
         $I->fillField('#calculator .edit .percent input', '50');
         $I->fillField('#calculator .edit .score input', '90');
@@ -639,6 +646,10 @@ class PageLoaderCest
         // complete the setup wizard
         $I->wantTo('complete the plan setup');
         $I->seeAmOnUrl('/plan');
+        $empty = $I->grabAttributeFrom('#plan', 'class');
+        if(strpos($empty, 'empty-schedule')) {
+            $I->test('tryNewSchedule');
+        }
         $plan0 = $I->grabAttributeFrom('#plan-step-0 .highlighted-link', 'class');
         if(strpos($plan0, 'invalid')) {
             $I->test('tryCourse2StudyPlan');
@@ -679,7 +690,7 @@ EOJS;
         $I->click('#external-events a[href="#save-plan"]');
         $I->wait(10);
 
-        $I->click('Add spaced-repetition');
+        $I->click('#plan-step-2-2 [href="#add-spaced-repetition"]');
         $start = (new \DateTime('this Monday 14:00'))->format('r');
         $end = (new \DateTime('this Monday 15:00'))->format('r');
         $newEvent = <<< EOJS
@@ -786,7 +797,7 @@ EOJS;
         $I->click('Next');
         $I->fillField('input[id="Passwd"]', 'Da1ddy23');
         $I->click('Sign in');
-        $I->click('Accept');
+        $I->click('Allow');
     }
 
     private static $googleI = 0;
@@ -806,6 +817,8 @@ EOJS;
         $I->doubleClick('#calendar td:nth-child(3) .fc-event-container .event-type-p');
         $I->selectOption('#edit-event .reminder select', 15);
         $I->click('#edit-event button');
+        $I->wait(1);
+        $I->click('#plan-drag [href="#all"]');
         $I->wait(5);
         $I->amOnPage('/cron/sync');
         $I->wantTo('check if schedule has synced');
@@ -838,7 +851,7 @@ EOJS;
         $I->click('#account a[href="#remove-gcal"]');
         $I->wait(5);
         $I->click('#account a[href*="gcal"]');
-        $I->click('Cancel');
+        $I->click('Deny');
         $I->click('#account a[href*="gcal"]');
         $I->click('brian@studysauce.com');
         $I->click('Add account');
@@ -846,7 +859,7 @@ EOJS;
         $I->click('Next');
         $I->fillField('input[id="Passwd"]', '%rm0#B&Z59$*LOr7');
         $I->click('Sign in');
-        $I->click('Accept');
+        $I->click('Allow');
         self::$googleI = 1;
         $I->test('tryGoogleSync');
     }

@@ -306,6 +306,7 @@ EOSH;
         $I->test('tryDetailedNotes');
         $I->click('a[href*="/logout"]');
         $I->test('tryAdviserLogin');
+        $I->test('tryGroupInvite');
         $I->test('tryGroupDeadlines');
         $I->click('a[href*="/logout"]');
         $I->test('tryGuestCheckout');

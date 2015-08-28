@@ -193,6 +193,20 @@ $collection->add(
 );
 
 $collection->add(
+    'validation_result',
+    new Route(
+        '/validation/result',
+        ['_controller' => 'AdminBundle:Validation:result'],
+        [],
+        [],
+        '',
+        [],
+        [],
+        'request.isXmlHttpRequest()'
+    )
+);
+
+$collection->add(
     'validation_refresh',
     new Route(
         '/validation/refresh',

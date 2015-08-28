@@ -28,6 +28,37 @@ $(document).ready(function () {
         });
     });
 
+    body.on('click', '#validation a[href^="#results-"]', function (evt) {
+        evt.preventDefault();
+        var id = $(this).attr('href').substring(9) + '',
+            validation = $('#validation'),
+            test = id.substring('TestResults-PASS-'.length, id.length - 10),
+            result = $('[data-resultId="' + id + '"]');
+        if(result.length > 0) {
+            validation.find('.result.open').removeClass('open');
+            result.addClass('open');
+            return;
+        }
+        $.ajax({
+            url: window.callbackPaths['validation_result'],
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                result: id
+            },
+            success: function (response) {
+                // TODO: update labels with new test results times
+                var newResult = $('<div class="result" data-resultId="{{resultId}}"><div class="results-inner"><pre>{{status}}</pre>{{steps}}</div></div>'
+                        .replace('{{resultId}}', id)
+                        .replace('{{status}}', response[test].result)
+                        .replace('{{steps}}', response[test].steps)
+                ).appendTo(validation.find('.pane-content'));
+                validation.find('.result.open').removeClass('open');
+                newResult.addClass('open');
+            }
+        });
+    });
+
     body.on('click', '#validation h3', function () {
         $(this).toggleClass('selected');
     });
@@ -169,6 +200,13 @@ $(document).ready(function () {
                 defaultLabelSize: 20,
                 scalingMode: 'inside',
                 minArrowSize: 10,
+                zoomingRatio: 1,
+                mouseZoomDuration: 0,
+                mouseWheelEnabled: false,
+                doubleClickZoomingRatio: 1,
+                doubleClickEnabled: false,
+                zoomMin:.5,
+                zoomMax:.5,
                 nodePowRatio: 2,
                 edgePowRatio: 2,
                 labelSizeRatio: 1,
@@ -228,19 +266,23 @@ $(document).ready(function () {
 
             var config = {
                 node: {
-                    show: 'clickNode',
+                    //show: 'clickNode',
                     //hide: 'hovers',
                     cssClass: 'sigma-tooltip',
                     position: 'right',
                     template: '<div class="arrow"></div>' +
-                    '<div class="sigma-tooltip-header">{{label}} <a href="#run-test" data-suite="{{suite}}" data-test="{{id}}">Run</a></div>',
+                    '<div class="previous"><a href="#results-{{resultId}}">{{prev}}</a></div>' +
+                    '<div class="sigma-tooltip-header">{{label}} <a href="#run-test" data-suite="{{suite}}" data-test="{{id}}">Run</a></div>' +
+                    '<div class="results">{{results}}</div>',
                     renderer: function(node, template) {
                         // The function context is s.graph
                         node.degree = this.degree(node.id);
                         // Returns an HTML string:
                         return template.replace('{{label}}', node.label)
                             .replace('{{suite}}', node.suite)
-                            .replace('{{id}}', node.id);
+                            .replace('{{id}}', node.id)
+                            .replace('{{prev}}', typeof node.results != 'undefined' && node.results != null ? node.results[0].created : '')
+                            .replace('{{resultId}}', typeof node.results != 'undefined' && node.results != null ? node.results[0].resultId : '');
                         // Returns a DOM Element:
                         //var el = document.createElement('div');
                         //return el.innerHTML = Mustache.render(template, node);
@@ -276,13 +318,12 @@ $(document).ready(function () {
                     toKeep = s.graph.neighbors(nodeId);
                 toKeep[nodeId] = e.data.current.nodes[0];
 
-                var prefix = s.renderers[0].camera.prefix;
                 tooltips.open(node, config.node, node['renderer1:x'], node['renderer1:y']);
 
 
                 s.graph.nodes().forEach(function(n) {
                     if (toKeep[n.id])
-                        n.color = 'rgba(85,85,85,.66)';
+                        n.color = n.originalColor;
                     else
                         n.color = 'rgba(0,0,0,0)';
                 });
@@ -311,6 +352,15 @@ $(document).ready(function () {
 
             $(window).resize(function () {
                 s.refresh();
+            });
+
+            s.bind('clickNode', function (e) {
+
+                var node = e.data.node;
+                setTimeout(function () {
+                    tooltips.open(node, config.node, node['renderer1:x'], node['renderer1:y']);
+                }, 13);
+
             });
 
             // When the stage is clicked, we just color each

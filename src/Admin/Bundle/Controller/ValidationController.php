@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ValidationController
@@ -87,29 +88,38 @@ class ValidationController extends Controller
         }
 
         self::setupThis();
-        // get results since submitted timestamp
-        $since = date_sub(new \DateTime(), new \DateInterval('P1D'));
-        $results = [];
-        if(!empty($request->get('since'))) {
 
+        return $this->render('AdminBundle:Validation:tab.html.php', self::$config);
+    }
+
+    public function resultAction(Request $request)
+    {
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if (!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
         }
+        self::setupThis();
+
         foreach(scandir(codecept_log_dir()) as $file) {
             $fpath = codecept_log_dir() . DIRECTORY_SEPARATOR . $file;
             $ftime = filectime($fpath);
-            if($ftime < $since->getTimestamp() ||
-                substr($file, 0, strlen('TestResults-')) != 'TestResults-')
+            if($file != $request->get('result'))
                 continue;
-            $results[] = unserialize(file_get_contents($fpath)) + ['created' => $ftime];
+            return new JsonResponse(unserialize(file_get_contents($fpath)) + ['created' => $ftime]);
         }
-        usort($results, function ($b, $a) {
-            return $a['created'] - $b['created'];
-        });
-
-        return $this->render('AdminBundle:Validation:tab.html.php', self::$config + ['results' => $results]);
+        throw new NotFoundHttpException();
     }
 
     public function refreshAction(Request $request)
     {
+
+        /** @var $user User */
+        $user = $this->getUser();
+        if (!$user->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
         self::setupThis();
         $nodes = [];
         $edges = [];
@@ -123,7 +133,12 @@ class ValidationController extends Controller
             if($ftime < $since->getTimestamp() ||
                 substr($file, 0, strlen('TestResults-')) != 'TestResults-')
                 continue;
-            $results[substr($file, strlen('TestResults-PASS-'), -10)] = ['status' => substr($file, strlen('TestResults-'), 4), 'created' => $ftime];
+
+            $results[substr($file, strlen('TestResults-PASS-'), -10)][] = [
+                'status' => substr($file, strlen('TestResults-'), 4),
+                'created' => date_timestamp_set(new \DateTime(), $ftime)->format('r'),
+                'resultId' => $file
+            ];
         }
         foreach (self::$config['suites'] as $suite) {
             foreach (self::$config['tests'][$suite] as $id => $t) {
@@ -140,19 +155,24 @@ class ValidationController extends Controller
                 $includes = self::getIncludedTests($t);
 
                 $clusters = array_unique(array_intersect($deployIncludes, array_merge($depends, $includes)));
-
+                if(isset($results[$id])) {
+                    usort($results[$id], function ($a, $b) {
+                        return strtotime($b['created']) - strtotime($a['created']);
+                    });
+                }
 
                 $nodes[] = [
                     'id' => $id,
                     'label' => preg_replace('/[A-Z]/', " $0", substr($id, 3)),
                     'x' => floor($count / 20) * 10,
                     'y' => $count % 20,
-                    'color' => !isset($results[$id]) ? '#555' : ($results[$id] == 'SKIP' ? '#55C' : (($results[$id] == 'FAIL') ? '#C55' : '#5C5')),
+                    'color' => !isset($results[$id]) ? '#555' : ($results[$id][0]['status'] == 'SKIP' ? '#55C' : (($results[$id][0]['status'] == 'FAIL') ? '#C55' : '#5C5')),
                     'size' => ($id == 'tryInstall' || $id == 'tryDeploy' ? 5 : 0) + (in_array($id, $deployIncludes) ? 2 : 0) +
                         + (count($depends) > 0 ? 1 : 0) + (count($includes) > 0 ? 1 : 0) + 1,
                     'depends' => array_values($depends),
                     'includes' => array_values($includes),
-                    'type' => !isset($results[$id]) || $results[$id] == 'SKIP' ? 'circle' : (($results[$id] == 'FAIL') ? 'square' : 'diamond'),
+                    'results' => isset($results[$id]) ? $results[$id] : null,
+                    'type' => !isset($results[$id]) || $results[$id][0]['status'] == 'SKIP' ? 'circle' : (($results[$id][0]['status'] == 'FAIL') ? 'square' : 'diamond'),
                     'suite' => $suite
                     //'cluster' => implode(' ' . $suite . '-', $clusters)
                 ];
@@ -484,7 +504,8 @@ class ValidationController extends Controller
                             'errors' => $errors,
                             'steps' => $steps[$x->getTest()->getName()]
                         ]];
-                        $fh = fopen(codecept_log_dir() . 'TestResults-' . (strpos($output, 'failed') !== false ? 'FAIL' : (strpos($output, 'success') !== false ? 'PASS' : 'SKIP')) . '-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
+                        $status = strpos($output, 'FAILURES!') !== false ? 'FAIL' : (strpos($output, 'OK (') !== false ? 'PASS' : 'SKIP');
+                        $fh = fopen(codecept_log_dir() . 'TestResults-' . $status . '-' . $x->getTest()->getName() . substr(md5(microtime()), -5) . '.html', 'w+');
                         fwrite($fh, serialize($results));
                         fclose($fh);
                         $steps[$x->getTest()->getName()] = '';

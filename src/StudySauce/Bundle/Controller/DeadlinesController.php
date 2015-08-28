@@ -144,30 +144,35 @@ class DeadlinesController extends Controller
         $deadlines = $guest->getDeadlines()->filter(function (Deadline $d) {return !$d->getDeleted() &&
             $d->getDueDate() >= date_sub(new \DateTime(), new \DateInterval('P1D'));});
 
-        foreach($courses as $course) {
-            $assignment = self::getRandomAssignment();
-            // pick a number between 1 and 10
-            $repeat = rand(1, 10);
-            $reminders = array_rand(['86400' => '', '172800' => '', '345600' => '', '604800' => '', '1209600' => ''], rand(2, 5));
-            for($j = 0; $j < $repeat; $j++) {
-                $deadline = new Deadline();
-                $deadline->setUser($guest);
-                $deadline->setCourse($course);
-                $deadline->setAssignment($assignment . ' ' . ($j + 1));
-                // evenly space $repeat over the next 4 weeks
-                $space = floor(7.0 * 8.0 / $repeat);
-                $due = new \DateTime();
-                $due->setTime(0, 0, 0);
-                $due->add(new \DateInterval('P' . ($space * $j + rand(1, 7)) . 'D'));
-                $deadline->setDueDate($due);
-                $deadline->setPercent(rand(5, 30));
-                $deadline->setReminder($reminders);
-                $deadlines->add($deadline);
-                $guest->addDeadline($deadline);
-                $orm->persist($deadline);
+        if($guest->getDeadlines()->count() < 10) {
+            foreach ($courses as $course) {
+                $assignment = self::getRandomAssignment();
+                // pick a number between 1 and 10
+                $repeat = rand(1, 10);
+                $reminders = array_rand(
+                    ['86400' => '', '172800' => '', '345600' => '', '604800' => '', '1209600' => ''],
+                    rand(2, 5)
+                );
+                for ($j = 0; $j < $repeat; $j++) {
+                    $deadline = new Deadline();
+                    $deadline->setUser($guest);
+                    $deadline->setCourse($course);
+                    $deadline->setAssignment($assignment . ' ' . ($j + 1));
+                    // evenly space $repeat over the next 4 weeks
+                    $space = floor(7.0 * 8.0 / $repeat);
+                    $due = new \DateTime();
+                    $due->setTime(0, 0, 0);
+                    $due->add(new \DateInterval('P' . ($space * $j + rand(1, 7)) . 'D'));
+                    $deadline->setDueDate($due);
+                    $deadline->setPercent(rand(5, 30));
+                    $deadline->setReminder($reminders);
+                    $deadlines->add($deadline);
+                    $guest->addDeadline($deadline);
+                    $orm->persist($deadline);
+                }
             }
+            $orm->flush();
         }
-        $orm->flush();
         PlanController::createAllDay($demo, $guest->getDeadlines()->toArray(), $orm);
 
         return $deadlines;

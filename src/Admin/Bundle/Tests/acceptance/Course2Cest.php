@@ -31,6 +31,7 @@ class Course2Cest
 
     /**
      * @depends tryGuestCheckout
+     * @depends tryNewSchedule
      * @param AcceptanceTester $I
      */
     public function tryAllCourse2(AcceptanceTester $I)

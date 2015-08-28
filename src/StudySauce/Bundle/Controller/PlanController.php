@@ -199,7 +199,7 @@ class PlanController extends Controller
         $user->setProperty('eventSync', $list->getNextSyncToken());
         $eventTimestamps = $schedule->getCourses()->map(
             function (Course $c) {
-                return $c->getCreated();
+                return $c->getCreated()->getTimestamp();
             }
         );
         if (empty($eventTimestamps)) {
@@ -295,7 +295,7 @@ class PlanController extends Controller
             );
 
             // delete instances that were created before the current calendar
-            if ((new \DateTime($item->getCreated()))->getTimestamp() < $syncCreated->getTimestamp()) {
+            if ((new \DateTime($item->getCreated()))->getTimestamp() < $syncCreated) {
                 // skip parents that where already deleted
                 if (!in_array($parentId, $deleted)) {
                     $deleted[] = $item->getId();
