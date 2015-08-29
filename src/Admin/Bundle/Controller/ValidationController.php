@@ -661,7 +661,7 @@ class ValidationController extends Controller
             // find calls to other functions in the class in this test
             preg_match_all('/' . $allTests . '/i', $text, $matches);
             foreach ($matches[0] as $i => $m) {
-                if ($m == $test->getName()) {
+                if ($m == $test->getName() || empty($m)) {
                     continue;
                 }
                 $tests[] = $m;

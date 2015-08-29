@@ -934,7 +934,7 @@ class PlanController extends Controller
 
         // get events for current week
         $isDemo = false;
-        if (empty($schedule) || empty($schedule->getClasses()->count())) {
+        if (empty($schedule) || empty($schedule->getClasses()->count()) || self::getPlanStep($user) !== false) {
             $events = new ArrayCollection();
             $isDemo = true;
         } else {
