@@ -265,7 +265,7 @@ EOF
         $emails->setContainer($this->getContainer());
 
         // send 3 day signup reminder
-        $orm->clear();
+        $orm->flush();
         $users = $orm->getRepository('StudySauceBundle:User')->createQueryBuilder('u')
             ->andWhere('u.lastLogin <= \'' . date_sub(new \DateTime(), new \DateInterval('P7D'))->format('Y-m-d') . ' 00:00:00\'')
             ->andWhere('u.created >= \'2015-07-27 00:00:00\'')
