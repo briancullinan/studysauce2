@@ -1376,7 +1376,7 @@ END:VCALENDAR'
         if (!empty($request->get('events'))) {
             foreach ($request->get('events') as $event) {
                 if (!($event['type'] == 'p' || $event['type'] == 'sr' || $event['type'] == 'f')) {
-                    $this->forward('StudySauceBundle:Plan:update', $event);
+                    self::updateEvent( $event, $schedule, $orm );
                 }
             }
             self::createStudyEvents($schedule, $request->get('events'), $orm);

@@ -411,7 +411,16 @@ class NotesController extends Controller
 
         // don't try to download notes from evernote that haven't been uploaded yet
         if(empty($notes) && !empty($folder[0])) {
-            return self::getNotesFromEvernote($user, $folder, $env, $orm, $allTags);
+            try {
+                return self::getNotesFromEvernote($user, $folder, $env, $orm, $allTags);
+            }
+            catch (\Exception $e) {
+                if ($e instanceof \EDAM\Error\EDAMSystemException) {
+                    if ($e->errorCode == 19) {
+                        // ignore rate limit errors
+                    }
+                }
+            }
         }
 
         return $notes;
