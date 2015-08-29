@@ -276,7 +276,6 @@ class PlanController extends Controller
                 continue;
             }
 
-            $isNew = false;
             $start = date_timezone_set(
                 new \DateTime(
                     $item->getStart()->getDateTime(),
@@ -338,6 +337,7 @@ class PlanController extends Controller
                             (empty($e->getRemoteId()) || !in_array($e->getRemoteId(), array_map(function (\Google_Service_Calendar_Event $e) { return $e->getId();}, $items)));
                     }
                 )->first();
+                $isNew = false;
                 if(empty($event)) {
                     $isNew = true;
                     $event = new Event();
@@ -368,6 +368,7 @@ class PlanController extends Controller
             } // only update event if the updated timestamp is greater than the studysauce database
             else {
                 // update the instance from remote to local
+                $isNew = false;
                 if (!empty($instanceId)) {
                     // find child event
                     $event = $schedule->getEvents()->filter(
@@ -1377,6 +1378,7 @@ END:VCALENDAR'
         if (!empty($request->get('events'))) {
             foreach ($request->get('events') as $event) {
                 if (!($event['type'] == 'p' || $event['type'] == 'sr' || $event['type'] == 'f')) {
+                    $event['reoccurring'] = true;
                     self::updateEvent( $event, $schedule, $orm );
                 }
             }
