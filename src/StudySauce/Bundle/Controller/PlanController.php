@@ -363,6 +363,7 @@ class PlanController extends Controller
                 } else {
                     $orm->merge($event);
                 }
+                $orm->flush();
                 // TODO: look up all free study events and ids and make sure there is only one per day?
             } // only update event if the updated timestamp is greater than the studysauce database
             else {
