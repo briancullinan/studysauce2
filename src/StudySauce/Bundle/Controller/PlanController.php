@@ -352,19 +352,6 @@ class PlanController extends Controller
                 }
                 $event->setName(trim(explode(':', $item->getSummary())[0]));
                 $event->setRecurrence($item->getRecurrence());
-                $event->setRemoteUpdated(
-                    date_timezone_set(
-                        new \DateTime($item->getUpdated()),
-                        new \DateTimeZone(date_default_timezone_get())
-                    )
-                );
-                if ($isNew) {
-                    $orm->persist($event);
-                } else {
-                    $orm->merge($event);
-                }
-                $orm->flush();
-                continue;
                 // TODO: look up all free study events and ids and make sure there is only one per day?
             } // only update event if the updated timestamp is greater than the studysauce database
             else {
