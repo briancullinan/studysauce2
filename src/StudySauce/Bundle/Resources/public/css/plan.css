@@ -121,6 +121,12 @@ a.fc-event:not([href])
     border: 3px solid transparent;
 }
 
+#plan .fc-event.class2,
+#plan .fc-event.class3
+{
+    color: #555;
+}
+
 #plan .event-selected
 {
     overflow: visible;

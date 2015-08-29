@@ -218,7 +218,7 @@ echo "CREATE DATABASE studysauce; GRANT ALL ON studysauce.* TO 'study'@'localhos
 mysqldump -u study -h studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com --password=itekIO^#\( studysauce | mysql -u study --password=itekIO^#\( -h localhost studysauce
 
 echo "* * * * * apache /var/www/studysauce2/cron.sh" >> /etc/crontab
-chmod a+x /var/www/cron.sh
+chmod a+x /var/www/studysauce2/cron.sh
 echo "
 127.0.0.1  studysauce.com
 127.0.0.1  test.studysauce.com

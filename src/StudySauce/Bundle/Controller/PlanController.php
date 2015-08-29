@@ -201,7 +201,7 @@ class PlanController extends Controller
             function (Course $c) {
                 return $c->getCreated()->getTimestamp();
             }
-        );
+        )->toArray();
         if (empty($eventTimestamps)) {
             $eventTimestamps = [$schedule->getCreated()->getTimestamp()];
         }
