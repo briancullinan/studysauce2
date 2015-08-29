@@ -87,7 +87,7 @@ jQuery(document).ready(function() {
                 }
                 else {
                     var option = newRow.find('option:contains("' + clipRows[i][j] + '")');
-                    if(option.length > 0) {
+                    if(j == 3 && option.length > 0) {
                         newRow.find('input, select').eq(j).val(option.attr('value'));
                     }
                     else {

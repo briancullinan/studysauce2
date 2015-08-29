@@ -109,7 +109,7 @@ class ImportController extends Controller
                 $invite->setUser($user);
                 $invite->setFirst($u['first']);
                 $invite->setLast($u['last']);
-                $invite->setEmail($u['email']);
+                $invite->setEmail(trim($u['email']));
                 $invite->setCode(md5(microtime()));
                 $user->addGroupInvite($invite);
                 $orm->persist($invite);
