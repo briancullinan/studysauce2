@@ -46,6 +46,7 @@ class ImportController extends Controller
      */
     public function updateAction(Request $request)
     {
+        set_time_limit(0);
         /** @var $userManager UserManager */
         $userManager = $this->get('fos_user.user_manager');
         /** @var $orm EntityManager */

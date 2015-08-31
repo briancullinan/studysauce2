@@ -49,7 +49,9 @@ class InstallationCest
         $I->wait(1);
         $I->click('Launch Instance');
         $I->wait(1);
-        $I->click('button[id*="selectButton"]');
+        $I->click('//div[contains(.,"AMI") and contains(@gwtuirendered,"gwt-uid")]//button');
+        $I->wait(1);
+        $I->click('//td[contains(.,"t2.large")][following-sibling::*]/..//label');
         $I->wait(1);
         $I->click('Configure Instance Details');
         $I->wait(1);
