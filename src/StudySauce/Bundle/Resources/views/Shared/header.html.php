@@ -15,7 +15,7 @@ $session = $app->getSession();
 
 // TODO: generalize this for other groups
 if(!empty($user) && $user->hasGroup('Torch And Laurel') ||
-    ($session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
+    (!empty($session) && $session->has('organization') && $session->get('organization') == 'Torch And Laurel'))
 {
     print $view->render('TorchAndLaurelBundle:Shared:header.html.php');
     return;

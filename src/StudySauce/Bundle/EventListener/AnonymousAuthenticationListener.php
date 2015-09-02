@@ -122,7 +122,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
             $user->setUsername($username);
             $password = $encoder->getEncoder($user)->encodePassword('guest', $user->getSalt());
             $user->setPassword($password);
-            $user->setEmail($username . '_studysauce.com@mailinator.com');
+            $user->setEmail($username . '@mailinator.com');
             $userManager->updateCanonicalFields($user);
             if($request->get('_route') == 'demoadviser') {
                 $user->addRole('ROLE_DEMO');

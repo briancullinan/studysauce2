@@ -52,9 +52,9 @@ class InviteListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onInviteAccept', -100],
-            KernelEvents::RESPONSE => ['onInviteResponse', -100],
-            SecurityEvents::INTERACTIVE_LOGIN => ['onLogin', -100],
+            KernelEvents::REQUEST => ['onInviteAccept', 256],
+            KernelEvents::RESPONSE => ['onInviteResponse', 256],
+            SecurityEvents::INTERACTIVE_LOGIN => ['onLogin', 256],
         ];
     }
 
@@ -119,7 +119,8 @@ class InviteListener implements EventSubscriberInterface
             /** @var SecurityContext $context */
             $context = $this->container->get('security.context');
             $context->setToken(null);
-            $session->invalidate();
+            if(!empty($session))
+                $session->invalidate();
             /** @var EncoderFactory $encoder_service */
             $encoder_service = $this->container->get('security.encoder_factory');
             /** @var PasswordEncoderInterface $encoder */
@@ -287,7 +288,7 @@ class InviteListener implements EventSubscriberInterface
             $setter = self::$autoLogoutUser[$request->get('_code')];
             $setter($session);
 
-            // only do this one per landing
+            // only do this once per landing
             unset(self::$autoLogoutUser[$request->get('_code')]);
         }
     }

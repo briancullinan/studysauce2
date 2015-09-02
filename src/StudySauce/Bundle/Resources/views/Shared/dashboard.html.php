@@ -118,7 +118,7 @@ if($app->getRequest()->get('_format') == 'index' || $app->getRequest()->get('_fo
 
 }
 
-if($app->getRequest()->get('_format') == 'tab') {
+if($app->getRequest()->get('_format') == 'tab' && empty($exclude_layout)) {
     $view['slots']->output('stylesheets');
     $request = $app->getRequest();
     if(empty($request->get('_route')) && $request->get('_format') == 'tab') {
@@ -157,6 +157,7 @@ if($app->getRequest()->get('_format') == 'tab') {
     $view['slots']->output('javascripts');
     $view['slots']->output('sincludes');
 
+    // clear the templates
     $view['slots']->start('stylesheets');
     $view['slots']->stop();
     $view['slots']->start('body');
@@ -167,3 +168,15 @@ if($app->getRequest()->get('_format') == 'tab') {
     $view['slots']->stop();
 }
 
+else if(!empty($exclude_layout)) {
+    $view['slots']->output('body');
+
+    $view['slots']->start('stylesheets');
+    $view['slots']->stop();
+    $view['slots']->start('body');
+    $view['slots']->stop();
+    $view['slots']->start('javascripts');
+    $view['slots']->stop();
+    $view['slots']->start('sincludes');
+    $view['slots']->stop();
+}

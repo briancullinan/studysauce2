@@ -104,6 +104,7 @@ class AccountController extends Controller
                     $user->setPassword($password);
                 }
                 $user->setEmail($request->get('email'));
+                $user->setUsername($request->get('email'));
                 $userManager->updateCanonicalFields($user);
                 $orm->merge($user);
                 $orm->flush();

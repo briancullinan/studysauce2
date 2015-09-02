@@ -95,6 +95,7 @@ class AdviserController extends Controller
         if(!$u->hasRole('ROLE_PARTNER') && !$u->hasRole('ROLE_ADVISER') && !$u->hasRole('ROLE_MASTER_ADVISER') &&
             !$u->hasRole('ROLE_ADMIN'))
             throw new AccessDeniedHttpException();
+
         return $this->render('AdminBundle:Adviser:adviser.html.php', [
             'user' => $_user,
             'tab' => $_tab
@@ -165,10 +166,11 @@ class AdviserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param User $_user
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function resultsAction(User $_user)
+    public function resultsAction(Request $request, User $_user)
     {
         return $this->render('AdminBundle:Adviser:results.html.php', [
             'course1' => $_user->getCourse1s()->first() ?: new Course1(),

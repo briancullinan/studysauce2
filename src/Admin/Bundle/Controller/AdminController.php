@@ -668,6 +668,7 @@ class AdminController extends Controller
                 if(!empty($last = $user['lastName']))
                     $u->setLast($last);
                 if(!empty($email = $user['email'])) {
+                    $u->setUsername($email);
                     $u->setEmail($email);
                     $userManager->updateCanonicalFields($u);
                 }

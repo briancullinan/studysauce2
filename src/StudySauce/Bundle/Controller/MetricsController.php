@@ -257,9 +257,11 @@ class MetricsController extends Controller
         }
 
         $times = array_map(function (Checkin $a) {
-            return $a->getCheckin()->getTimestamp();}, $checkins);
+            return $a->getCheckin()->getTimestamp();
+        }, $checkins);
         $times2 = array_map(function (Checkin $a) {
-            return $a->getUtcCheckin()->getTimestamp();}, $checkins);
+            return $a->getUtcCheckin()->getTimestamp();
+        }, $checkins);
         $keys = array_keys($checkins);
         array_multisort($times, SORT_NUMERIC, SORT_DESC, $times2, SORT_NUMERIC, SORT_DESC, $checkins, $keys);
         $checkins = array_combine($keys, $checkins);
@@ -269,7 +271,7 @@ class MetricsController extends Controller
         foreach($checkins as $i => $class)
         {
             /** @var Checkin $class */
-            if($class->getCheckout() != null && $class->getCheckin() == $class->getCheckout()) {
+            if($class->getUtcCheckout() != null && $class->getUtcCheckin() == $class->getUtcCheckout()) {
                 $length = $class->getCheckout()->getTimestamp() - $class->getCheckin()->getTimestamp();
             }
             else {
