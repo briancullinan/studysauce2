@@ -188,7 +188,7 @@ class AdminController extends Controller
                 $qb = $qb->andWhere('u.roles LIKE \'%s:9:"ROLE_PAID"%\' OR g.id IN (' . self::$paidStr . ')');
             }
             else {
-                $qb = $qb->andWhere('u.roles NOT LIKE \'%s:9:"ROLE_PAID"%\' AND g.id NOT IN (' . self::$paidStr . ')');
+                $qb = $qb->andWhere('u.roles NOT LIKE \'%s:9:"ROLE_PAID"%\' AND (g IS NULL OR g.id NOT IN (' . self::$paidStr . '))');
             }
         }
 
