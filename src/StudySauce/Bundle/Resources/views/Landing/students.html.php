@@ -29,9 +29,24 @@ $view['slots']->start('javascripts');
 
 foreach ($view['assetic']->javascripts(['@landing_scripts'],[],['output' => 'bundles/studysauce/js/*.js']) as $url):?>
     <script type="text/javascript" src="<?php echo $view->escape($url) ?>"></script>
-<?php endforeach;
-
-$view['slots']->stop();
+<?php endforeach; ?>
+    <!-- Facebook Conversion Code for Facebook -->
+    <script>(function() {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', '6008770260529', {'value':'0.00','currency':'USD'}]);
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6008770260529&amp;cd[value]=0.00&amp;cd[currency]=USD&amp;noscript=1" /></noscript>
+<?php $view['slots']->stop();
 
 $view['slots']->start('body');
 echo $view->render('StudySauceBundle:Landing:video.html.php');

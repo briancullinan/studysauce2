@@ -25,6 +25,22 @@ $view->extend('Course1Bundle:Shared:layout.html.php');
             <a href="<?php print $view['router']->generate('course1_introduction', ['_step' => 1]); ?>" class="more">Launch</a>
         </div>
         <ul class="tab-tracker"><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li><li>&bullet;</li></ul>
+        <!-- Facebook Conversion Code for Facebook sale -->
+        <script>(function() {
+                var _fbq = window._fbq || (window._fbq = []);
+                if (!_fbq.loaded) {
+                    var fbds = document.createElement('script');
+                    fbds.async = true;
+                    fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(fbds, s);
+                    _fbq.loaded = true;
+                }
+            })();
+            window._fbq = window._fbq || [];
+            window._fbq.push(['track', '6008770262329', {'value':'0.00','currency':'USD'}]);
+        </script>
+        <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6008770262329&amp;cd[value]=0.00&amp;cd[currency]=USD&amp;noscript=1" /></noscript>
     </div>
 </div>
 <?php $view['slots']->stop();
