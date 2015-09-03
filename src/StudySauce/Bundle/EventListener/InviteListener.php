@@ -53,8 +53,8 @@ class InviteListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => ['onInviteAccept', 256],
-            KernelEvents::RESPONSE => ['onInviteResponse', 256],
-            SecurityEvents::INTERACTIVE_LOGIN => ['onLogin', 256],
+            KernelEvents::RESPONSE => ['onInviteResponse', -100],
+            SecurityEvents::INTERACTIVE_LOGIN => ['onLogin', -100],
         ];
     }
 
@@ -183,19 +183,21 @@ class InviteListener implements EventSubscriberInterface
         if(!empty($request->get('_code'))) {
             $criteria = ['code' => $request->get('_code')];
         }
-        if(!empty($request->getSession()->get('partner'))) {
-            $user->addRole('ROLE_PARTNER');
-            $criteria = ['code' => $request->getSession()->get('partner')];
-        }
-        if(!empty($request->getSession()->get('parent'))) {
-            $user->addRole('ROLE_PARENT');
-            $criteria = ['code' => $request->getSession()->get('parent')];
-        }
-        if(!empty($request->getSession()->get('student'))) {
-            $criteria = ['code' => $request->getSession()->get('student')];
-        }
-        if(!empty($request->getSession()->get('group'))) {
-            $criteria = ['code' => $request->getSession()->get('group')];
+        if(!empty($request->getSession())) {
+            if (!empty($request->getSession()->get('partner'))) {
+                $user->addRole('ROLE_PARTNER');
+                $criteria = ['code' => $request->getSession()->get('partner')];
+            }
+            if (!empty($request->getSession()->get('parent'))) {
+                $user->addRole('ROLE_PARENT');
+                $criteria = ['code' => $request->getSession()->get('parent')];
+            }
+            if (!empty($request->getSession()->get('student'))) {
+                $criteria = ['code' => $request->getSession()->get('student')];
+            }
+            if (!empty($request->getSession()->get('group'))) {
+                $criteria = ['code' => $request->getSession()->get('group')];
+            }
         }
 
         if(isset($criteria)) {
@@ -240,7 +242,7 @@ class InviteListener implements EventSubscriberInterface
             }
         }
         // assign correct group to anonymous users
-        if(!empty($request->getSession()->get('organization'))) {
+        if(!empty($request->getSession()) && !empty($request->getSession()->get('organization'))) {
             /** @var Group $group */
             $group = $orm->getRepository('StudySauceBundle:Group')->findOneBy(['name' => $request->getSession()->get('organization')]);
             if(!$user->hasGroup($group->getName()))
@@ -252,6 +254,7 @@ class InviteListener implements EventSubscriberInterface
      * @param InteractiveLoginEvent $e
      */
     public function onLogin(InteractiveLoginEvent $e) {
+        return;
         /** @var $orm EntityManager */
         $orm = $this->container->get('doctrine')->getManager();
         /** @var $request Request */

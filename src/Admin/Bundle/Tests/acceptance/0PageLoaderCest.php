@@ -349,6 +349,7 @@ class PageLoaderCest
         $I->selectOption('#add-study-hours .time select', '45');
         $I->click('#add-study-hours [value="#submit-checkin"]');
         $I->wait(5);
+        $I->seeElement('//div[contains(.,"45 minutes")]');
     }
 
     /**

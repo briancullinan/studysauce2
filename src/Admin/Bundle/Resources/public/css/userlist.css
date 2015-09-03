@@ -69,13 +69,6 @@
     white-space: normal;
 }
 
-#userlist td a
-{
-    overflow:hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 #userlist table
 {
     table-layout: fixed;

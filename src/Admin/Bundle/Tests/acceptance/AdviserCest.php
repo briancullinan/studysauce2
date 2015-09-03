@@ -98,10 +98,8 @@ class AdviserCest
         $I->waitForText('a minute ago', 60*5);
         $I->seeLink('Invitation to Study Sauce!');
         $I->click('//a[contains(.,"Invitation to Study Sauce!")]');
-        $I->executeInSelenium(function (WebDriver $driver) {
-            $driver->switchTo()->defaultContent();
-            $driver->switchTo()->frame($driver->findElement(WebDriverBy::cssSelector('iframe[name="rendermail"]')));
-        });
+        $I->wait(1);
+        $I->switchToIFrame('rendermail');
 
         $I->seeLink('Go to Study Sauce');
         $I->click('Go to Study Sauce');
@@ -112,9 +110,11 @@ class AdviserCest
             $webdriver->switchTo()->window($last_window);
         });
         $I->seeInCurrentUrl('/register');
+        $I->fillField('#register .email input', 'firstlast' . $last . '2@mailinator.com');
         $I->fillField('#register .password input', 'password');
         $I->click('[value="#user-register"]');
         $I->wait(5);
+        $I->test('tryCourse1Introduction');
 
         $I->wantTo('See the student\'s entries from the adviser view');
         $I->click('a[href*="/logout"]');
@@ -123,6 +123,9 @@ class AdviserCest
         $I->see('last' . $last); // check for student name in user list
         $I->click('last' . $last); // load the student
         $I->see('last' . $last); // check the name in the corner of the tab
+        $I->click('//h3[contains(.,"Course 1")]');
+        $I->click('//h4[contains(.,"Introduction")]');
+        $I->seeCheckboxIsChecked('input[value="college-senior"]');
 
         $I->wantTo('Register as a new student before my adviser has a chance to invite me');
         $I->click('a[href*="/logout"]');
@@ -134,10 +137,9 @@ class AdviserCest
         $I->fillField('#register .password input', 'password');
         $I->click('[value="#user-register"]');
         $I->wait(5);
-        $I->seeAmOnUrl('/schedule');
 
         $I->wantTo('invite a user that already jump the gun and signed up early');
-        $I->click('a[href*="/logout"]');
+        $I->amOnPage('/logout');
         $I->click('a[href*="/login"]');
         $I->test('tryAdviserLogin');
         $I->click('#right-panel a[href="#expand"]');

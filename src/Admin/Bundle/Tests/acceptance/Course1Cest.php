@@ -37,7 +37,6 @@ class Course1Cest
     {
         $I->wantTo('complete all the free courses');
         $I->seeAmOnUrl('/course/1/lesson/1/step');
-        $I->click('#account-options a[href="#close"]');
         $I->test('tryCourse1Introduction');
         $I->seeInCurrentUrl('/course/1/lesson/2/step');
         $I->test('tryCourse1SettingGoals');
@@ -97,6 +96,12 @@ class Course1Cest
     public function tryCourse1Introduction(AcceptanceTester $I)
     {
         $I->wantTo('complete course 1');
+        $I->executeInSelenium(function (WebDriver $driver) use ($I) {
+            $dialog = $driver->findElement(WebDriverBy::cssSelector('#account-options'));
+            if($dialog->isDisplayed()) {
+                $I->click('#account-options a[href="#close"]');
+            }
+        });
         $I->seeAmOnUrl('/course/1/lesson/1/step');
         $I->seeLink('Launch');
         $I->click('Launch');

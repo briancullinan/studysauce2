@@ -35,6 +35,9 @@ $view['slots']->start('body'); ?>
     <div class="pane-content">
         <h2>Welcome, let's get started.</h2>
         <form action="<?php print $view['router']->generate('account_create'); ?>" method="post">
+            <?php if(!empty($app->getRequest()->get('_code'))) { ?>
+                <input type="hidden" name="_code" value="<?php print $app->getRequest()->get('_code'); ?>" />
+            <?php } ?>
             <input type="hidden" name="_remember_me" value="on" />
             <div class="first-name">
                 <label class="input"><input type="text" placeholder="First name" value="<?php print (isset($first) ? $first : ''); ?>"></label>

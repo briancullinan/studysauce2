@@ -24,7 +24,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 // TODO: update labels with new test results times
-
+                validation.trigger('testended');
             }
         });
     });
@@ -317,6 +317,7 @@ $(document).ready(function () {
                 var node = e.data.current.nodes[0],
                     nodeId = node.id,
                     toKeep = s.graph.neighbors(nodeId);
+                window.lastNode = node;
                 toKeep[nodeId] = e.data.current.nodes[0];
 
                 tooltips.open(node, config.node, node['renderer1:x'], node['renderer1:y']);
@@ -353,6 +354,11 @@ $(document).ready(function () {
 
             $(window).resize(function () {
                 s.refresh();
+                if(typeof window.lastNode != 'undefined') {
+                    setTimeout(function () {
+                        tooltips.open(window.lastNode, config.node, window.lastNode['renderer1:x'], window.lastNode['renderer1:y']);
+                    }, 13);
+                }
             });
 
             s.bind('clickNode', function (e) {
@@ -377,6 +383,12 @@ $(document).ready(function () {
 
                 // Same as in the previous event:
                 s.refresh();
+            });
+
+            body.on('testended', '#validation', function () {
+                sigma.parsers.json(window.callbackPaths['validation_refresh'], s, function () {
+                    s.refresh();
+                });
             });
 
             /*
