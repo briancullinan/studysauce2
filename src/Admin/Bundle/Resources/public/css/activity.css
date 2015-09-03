@@ -78,14 +78,21 @@ div.timeline-navigation
     text-overflow: ellipsis;
 }
 
-.vis.timeline .item.box a span ~ *
+.vis.timeline .item.box a ~ *
 {
     display:none;
 }
 
-.vis.timeline .item.box a:hover span ~ *
+.vis.timeline .item.box a:first-child {
+    display: inline-block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.vis.timeline .item.box.selected a ~ *,
+.vis.timeline .item.box:hover a ~ *
 {
-    display:inline;
+    display:inline-block;
 }
 
 .vis.timeline .item.line.related-user,

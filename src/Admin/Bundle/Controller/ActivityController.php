@@ -48,8 +48,34 @@ class ActivityController extends Controller
             ->leftJoin('u.groups', 'g')
             ->where('v.created > :start AND v.created < :end' . (!empty($request->get('not')) ? (' AND v.id NOT IN (' . $request->get('not') . ')') : ''))
             ->andWhere('u.roles NOT LIKE \'%s:10:"ROLE_ADMIN"%\' AND v.path != \'/cron\'');
-        if(!empty($request->get('search')))
-            $entities = $entities->andWhere('v.session LIKE \'%' . $request->get('search') . '%\' OR u.email LIKE \'%' . $request->get('search') . '%\' OR u.first LIKE \'%' . $request->get('search') . '%\' OR u.last LIKE \'%' . $request->get('search') . '%\' OR u.id LIKE \'%' . $request->get('search') . '%\' OR g.name LIKE \'%' . $request->get('search') . '%\' OR g.description LIKE \'%' . $request->get('search') . '%\'');
+        if(!empty($request->get('search'))) {
+            if($request->get('search') == 'New session') {
+                $entities = $entities->andWhere('v.session IS NULL');
+            }
+            elseif(strlen($request->get('search')) == 26) {
+                $entities = $entities->andWhere('v.session=:sess')
+                    ->setParameter('sess', trim($request->get('search')));
+            }
+            elseif(!empty(ip2long($request->get('search')))) {
+                $entities = $entities->andWhere('v.ip=:ip')
+                    ->setParameter('ip', ip2long($request->get('search')));
+            }
+            elseif(substr($request->get('search'), 0, 1) == '/') {
+                $entities = $entities->andWhere('v.path LIKE :path')
+                    ->setParameter('path', $request->get('search') . '%');
+            }
+            elseif(strpos($request->get('search'), '@') !== false) {
+                $entities = $entities->andWhere('OR u.email LIKE :email')
+                    ->setParameter('email', '%' . $request->get('search') . '%');
+            }
+            elseif(is_numeric($request->get('search'))) {
+                $entities = $entities->andWhere('u.id=:id')
+                    ->setParameter('id', intval($request->get('search')));
+            }
+            else {
+                $entities = $entities->andWhere('u.email LIKE \'%' . $request->get('search') . '%\' OR u.first LIKE \'%' . $request->get('search') . '%\' OR u.last LIKE \'%' . $request->get('search') . '%\' OR g.name LIKE \'%' . $request->get('search') . '%\' OR g.description LIKE \'%' . $request->get('search') . '%\'');
+            }
+        }
         $entities = $entities
             ->setParameter('start', $start)
             ->setParameter('end', $end)
@@ -64,12 +90,13 @@ class ActivityController extends Controller
             return [
                 'id' => $v->getId(),
                 'start' => $v->getCreated()->format('r'),
-                'content' => '<a href="#visit-id-' . $v->getId() . '">' .
-                    '<strong>Path:</strong><span> ' . $v->getMethod() . ' ' . $v->getPath() . '</span><br />' .
-                    '<strong>User:</strong><span> ' . (!empty($v->getUser()) ? $v->getUser()->getEmail() : 'Guest') . '</span><br />' .
-                    '<strong>Session Id:</strong><span> ' . (!empty($v->getSession()) ? $v->getSession() : 'New session') . '</span><br />' .
-                    '<strong>IP:</strong><span> ' . long2ip($v->getIp()) . '</span><br />' .
-                    '</a>',
+                'content' => '<div data-id="' . $v->getId() . '">' .
+                    '<a target="_blank" href="https://' . $_SERVER['HTTP_HOST']
+                        . $v->getPath() . '"><strong>' . $v->getMethod() . '</strong><span> ' . $v->getPath() . '</span></a><br />' .
+                    '<a href="#search-' . (!empty($v->getUser()) ? $v->getUser()->getEmail() : 'Guest') . '"><strong>User:</strong><span> ' . (!empty($v->getUser()) ? $v->getUser()->getEmail() : 'Guest') . '</span></a><br />' .
+                    '<a href="#search-' . (!empty($v->getSession()) ? $v->getSession() : 'New session') . '"><strong>Session Id:</strong><span> ' . (!empty($v->getSession()) ? $v->getSession() : 'New session') . '</span></a><br />' .
+                    '<a href="#search-' . long2ip($v->getIp()) . '"><strong>IP:</strong><span> ' . long2ip($v->getIp()) . '</span></a><br />' .
+                    '</div>',
                 'className' => 'session-id-' . (!empty($v->getSession()) ? $v->getSession() : '') . ' user-id-' . (!empty($v->getUser()) && !$v->getUser()->hasRole('ROLE_GUEST') && !$v->getUser()->hasRole('ROLE_DEMO') ? $v->getUser()->getId() : '')
             ];
         }, $entities);

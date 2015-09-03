@@ -4,6 +4,12 @@ $(document).ready(function () {
         processing = false,
         timeLine;
 
+    body.on('click', 'a[href^="#search-"]', function (evt) {
+        evt.preventDefault();
+        $('#activity').find('.search input').val($(this).attr('href').substring(8));
+        timeLine.itemsData.clear();
+    });
+
     body.on('show', '#activity', function () {
         if($(this).is('.loaded'))
             return;
@@ -213,7 +219,7 @@ $(document).ready(function () {
                 search: $('#activity').find('input[name="search"]').val().trim(),
                 start: start,
                 end: end,
-                not: $('a[href^="#visit-id-"]').map(function () {return $(this).attr('href').substr(10);}).toArray().join(',')
+                not: $('div[data-id]').map(function () {return $(this).attr('data-id');}).toArray().join(',')
             },
             success: function (data) {
                 //var ids = timeLine.itemsData._data.map(function (x) {return x.className;});
