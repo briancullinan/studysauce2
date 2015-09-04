@@ -34,7 +34,7 @@ $view['slots']->start('body'); ?>
     <div class="pane-content">
         <?php if(!empty($error)) { ?>
             <h2>Account not found.&nbsp; Please register or log in with email.</h2>
-            <div class="social-login highlighted-link" style="width:30%;">
+            <div class="social-login highlighted-link">
                 <a href="<?php print $view['router']->generate('register'); ?>" class="more">Register</a>
             </div>
         <?php } else { ?>

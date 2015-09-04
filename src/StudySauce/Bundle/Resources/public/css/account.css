@@ -45,8 +45,8 @@ a[href="#sign-in-with-email"]
     margin: 0 -2px;
     padding: 100px 140px 0 2px;
     vertical-align: middle;
-    text-align: right;
-    width:30%;
+    text-align: center;
+    width:40%;
 }
 
 #login .social-login a
@@ -54,6 +54,7 @@ a[href="#sign-in-with-email"]
     display:block;
     margin-left:auto;
     margin-bottom:10px;
+    width: 180px;
 }
 
 #login .social-login a:last-of-type
