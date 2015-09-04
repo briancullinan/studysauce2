@@ -440,7 +440,11 @@ EOF
                 PlanController::syncEvents($u, $this->getContainer());
             }
             catch (\Exception $e) {
-                $error = $e;
+                if(strpos($e->getMessage(), 'Rate Limit Exceeded') !== false) {
+                    // ignore rate limit errors
+                }
+                else
+                    $error = $e;
             }
         }
         if(!empty($error))

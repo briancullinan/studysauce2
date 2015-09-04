@@ -88,7 +88,7 @@ $(document).ready(function () {
     });
 
     var ctrlDown = false;
-    var ctrlKey = 17, vKey = 86, cKey = 67;
+    var ctrlKey = 17, cKey = 67;
 
     $(document).keydown(function(e)
     {
@@ -102,7 +102,7 @@ $(document).ready(function () {
     body.find('#command_control').on('keydown', function(e)
     {
         var command = $('#command_control');
-        if (ctrlDown && (e.keyCode == vKey || e.keyCode == cKey)) {
+        if (ctrlDown && e.keyCode == cKey) {
 
             // get the clipboard text
             var that = $(this),

@@ -436,6 +436,13 @@ foreach ($events as $e) {
         }
     }
 }
+foreach($weekDays as $d => $w) {
+    usort($weekDays[$d], function ($a, $b) {
+        /** @var Event[] $a */
+        /** @var Event[] $b */
+        return $a[0]->getStart()->format('G') - $b[0]->getStart()->format('G');
+    });
+}
 for ($j = $weekStart->getTimestamp();
      $j < $weekEnd->getTimestamp();
      $j += 604800) {

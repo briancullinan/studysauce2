@@ -205,11 +205,11 @@ $(document).ready(function () {
     });
 
     function updateTimeline() {
-        var start = Math.floor(timeLine.range.start / 1000),
-            end = Math.floor(timeLine.range.end / 1000);
-        if(processing) {
+        if(processing || timeLine == null) {
             return;
         }
+        var start = Math.floor(timeLine.range.start / 1000),
+            end = Math.floor(timeLine.range.end / 1000);
         processing = true;
         $.ajax({
             url: window.callbackPaths['activity'],
