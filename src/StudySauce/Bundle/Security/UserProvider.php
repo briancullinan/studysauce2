@@ -64,7 +64,7 @@ class UserProvider extends BaseUserProvider
         //$request = $this->container->get('request');
         /** @var User $user */
         /** @var PathUserResponse $response */
-        $property = $this->getProperty($response);
+        $prop = $this->getProperty($response);
         $username = $response->getUsername();
 
         //on connect - get the access token and the user ID
@@ -75,7 +75,7 @@ class UserProvider extends BaseUserProvider
         $setter_token = $setter.'AccessToken';
 
         //we "disconnect" previously connected users
-        if (null !== $previousUser = $this->userManager->findUserBy([$property => $username])) {
+        if (null !== ($previousUser = $this->userManager->findUserBy([$prop => $username]))) {
             $previousUser->$setter_id(null);
             $previousUser->$setter_token(null);
             $this->userManager->updateUser($previousUser);
@@ -110,16 +110,17 @@ class UserProvider extends BaseUserProvider
         }
         /** @var User $user */
         $prop = $this->getProperty($response);
-        $user = $this->userManager->findUserBy([$prop => $response->getUsername()]);
+        if(!empty($response->getUsername()))
+            $user = $this->userManager->findUserBy([$prop => $response->getUsername()]);
         // allow user with same email address to connect because we trust facebook and google auth
-        if(empty($user))
+        if(empty($user) && !empty($response->getUsername()))
             $user = $this->userManager->findUserBy(['email' => $response->getEmail()]);
 
         $service = $response->getResourceOwner()->getName();
         $setter = 'set'.ucfirst($service);
 
         // create new user here
-        if (null !== $user) {
+        if (!empty($user) && !$user->hasRole('ROLE_GUEST') && !$user->hasRole('ROLE_DEMO')) {
 
             // these fields can always be updated and sync from the service
             $setter_id = $setter.'Id';
