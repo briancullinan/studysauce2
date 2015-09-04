@@ -146,7 +146,10 @@ EOF
         // send deadline reminders
         $reminders = new ArrayCollection($orm->getRepository('StudySauceBundle:Deadline')->createQueryBuilder('d')
             ->select('d')
+            ->leftJoin('d.user', 'u')
             ->andWhere('d.user IS NOT NULL AND d.deleted != 1')
+            ->andWhere('d.dueDate >= :now OR u.roles LIKE \'%adviser%\'')
+            ->setParameter('now', date_sub(new \DateTime(), new \DateInterval('P1D'))->format('Y-m-d H:i:s'))
             ->getQuery()
             ->getResult());
         $deadlines = [];
@@ -458,7 +461,7 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // set the timeout to 4 and a half minutes
-        set_time_limit(60*4.5);
+        set_time_limit(60*6);
         if(!$input->getOption('sync')) {
             try {
                 $this->sendReminders();

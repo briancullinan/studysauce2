@@ -373,8 +373,10 @@
 {
     .landing-home .flexslider
     {
-        margin-right:auto;
-        max-width: 50%;
+        margin-right:100px;
+        margin-left:100px;
+        max-width: none;
+        width:auto;
     }
 
     .landing-home #site-name
@@ -399,6 +401,20 @@
 
     .landing-home .flexslider
     {
+        max-width: 60%;
+        width: 100%;
+        margin-left:auto;
         margin-right:20px;
+    }
+}
+
+@media all and (max-width: 500px) {
+
+    .landing-home .flexslider
+    {
+        max-width: none;
+        width:auto;
+        margin-left:10px;
+        margin-right:10px;
     }
 }

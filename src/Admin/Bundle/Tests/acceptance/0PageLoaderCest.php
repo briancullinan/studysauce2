@@ -480,11 +480,13 @@ class PageLoaderCest
      */
     public function trySocialLogin(AcceptanceTester $I)
     {
-        $I->amOnPage('/course/1/lesson/1/step');
+        $I->seeAmOnUrl('/course/1/lesson/1/step');
         $I->click('a[href*="/google"]');
         $I->fillField('input[name="Email"]', 'brian@studysauce.com');
+        $I->click('Next');
+        $I->wait(1);
         $I->fillField('input[name="Passwd"]', 'Da1ddy23');
-        $I->click('[type="submit"]');
+        $I->click('Sign in');
         $I->seeAmOnUrl('/course/1/lesson/1/step');
 
         // log out and log back in using social login
