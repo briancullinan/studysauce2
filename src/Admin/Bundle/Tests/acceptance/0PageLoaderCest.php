@@ -405,8 +405,26 @@ class PageLoaderCest
         // fix time
         $I->fillField('.class-row:nth-child(2) .start-time input', '9');
         $I->fillField('.class-row:nth-child(2) .end-time input', '10');
+
+        // add a third class
+        $I->fillField('.class-row:nth-child(3) .class-name input', 'GEO 102');
+        $I->click('.class-row:nth-child(3) input[value="M"] + i');
+        $I->click('.class-row:nth-child(3) input[value="W"] + i');
+        $I->click('.class-row:nth-child(3) input[value="F"] + i');
+        $I->fillField('.class-row:nth-child(3) .start-time input', '9');
+        $I->fillField('.class-row:nth-child(3) .end-time input', '10');
+
+        $I->click('.class-row:nth-child(3) .end-date input');
+        $I->click('.ui-datepicker .ui-datepicker-next');
+        $I->click('.ui-datepicker .ui-datepicker-next');
+        $I->click('.ui-datepicker-calendar tr:last-child td:last-child a');
+        $I->click('.class-row:nth-child(3) .start-date input');
+        $I->click('.ui-datepicker .ui-datepicker-next');
+        $I->click('.ui-datepicker .ui-datepicker-next');
+        $I->click('.ui-datepicker-calendar tr:first-child td:first-child a');
         $I->click('#schedule .highlighted-link [value="#save-class"]');
         $I->wait(10);
+
 
         // add a new term
         $I->click('#schedule a[href="#manage-terms"]');

@@ -7,6 +7,8 @@ $(document).ready(function () {
         var schedule = $('#schedule');
         schedule.find('.term-row').each(function () {
             var term = $(this);
+            // reset overlaps tag to start
+            term.find('.class-row').removeClass('overlaps');
             term.find('.class-row').each(function () {
                 var row = $(this);
                 if(row.length == 0)
@@ -143,11 +145,11 @@ $(document).ready(function () {
                 }
 
                 // check if there are any overlaps with the other rows
-                var startDate = new Date(row.find('.start-date input.hasDatepicker').val());
-                var endDate = new Date(row.find('.end-time input.hasDatepicker').val());
+                var startDate = row.find('.start-date input.hasDatepicker').datepicker('getDate');
+                var endDate = row.find('.end-date input.hasDatepicker').datepicker('getDate');
 
                 // check if dates are reverse
-                if(!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && startDate.getTime() > endDate.getTime()) {
+                if(startDate != null && endDate != null && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && startDate.getTime() > endDate.getTime()) {
                     row.addClass('invalid-date');
                 }
                 else {
@@ -162,17 +164,16 @@ $(document).ready(function () {
                     endTime = endTime.addHours(12);
                 var dotw = row.find('.day-of-the-week input:not([value="Weekly"]):checked').map(function (i, x) {return $(x).val();}).get();
 
-                // reset overlaps tag to start
-                var overlaps = row.is('.overlaps');
-                row.removeClass('overlaps');
+                // find overlaps
                 term.find('.class-row').not(row).each(function () {
                     var that = $(this);
                     // check if dates overlap
-                    var startDate2 = new Date(that.find('.start-date input').val());
-                    var endDate2 = new Date(that.find('.end-date input').val());
-                    if(isNaN(startDate.getTime()) || isNaN(endDate.getTime()) ||
-                        isNaN(startDate2.getTime()) || isNaN(endDate2.getTime()) ||
-                        startDate <= endDate2 || endDate >= startDate2)
+                    var startDate2 = that.find('.start-date input.hasDatepicker').datepicker('getDate');
+                    var endDate2 = that.find('.end-date input.hasDatepicker').datepicker('getDate');
+                    if(startDate != null && endDate != null
+                        && startDate2 != null && endDate2 != null
+                        && that.find('.start-date input.hasDatepicker').length > 0
+                        && endDate2 >= startDate && startDate2 <= endDate)
                     {
                         // check if weekdays overlap
                         var dotwOverlaps = false,
