@@ -2,6 +2,8 @@
 
 use StudySauce\Bundle\Entity\Group;
 use StudySauce\Bundle\Entity\GroupInvite;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 $user = $app->getUser();
 
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
@@ -57,6 +59,7 @@ $view['slots']->start('body'); ?>
                             </select>
                             <input type="text" placeholder="Adviser" value="<?php print $g->getGroup()->getName(); ?>"/>
                         </label>
+                        <a href="<?php print $view['router']->generate('register', ['_code' => $g->getCode()], UrlGeneratorInterface::ABSOLUTE_URL); ?>">Register</a>
                     <?php } ?>
                 </div>
             <?php } ?>
