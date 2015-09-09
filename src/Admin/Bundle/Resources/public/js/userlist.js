@@ -182,7 +182,8 @@ $(document).ready(function () {
                 jQuery(this).val() != 'Adviser' &&
                 jQuery(this).val() != 'Deadlines' &&
                 jQuery(this).val() != 'Notes' &&
-                jQuery(this).val() != 'Grades')
+                jQuery(this).val() != 'Grades' &&
+                jQuery(this).val() != 'Schedule')
             {
                 jQuery(this).parent().removeClass('unfiltered').addClass('filtered');
                 jQuery(this).data('last', jQuery(this).val());

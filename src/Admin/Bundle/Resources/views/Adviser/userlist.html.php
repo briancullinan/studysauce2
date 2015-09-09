@@ -134,7 +134,7 @@ $view['slots']->start('body'); ?>
                 <td><?php print $u->getCompleted(); ?>%</td>
                 <td><?php print (empty($schedule) || empty($schedule->getUniversity()) ? 'Not set' : $schedule->getUniversity()); ?></td>
                 <?php if($user->hasRole('ROLE_MASTER_ADVISER') && $user->getGroups()->count() > 1) { ?>
-                    <td><?php print (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned'); ?></td>
+                    <td><?php print (!empty($u->getGroups()->first()) ? $u->getGroups()->first()->getName() : (!empty($adviser) ? ($adviser->getFirst() . ' ' . $adviser->getLast()) : 'Not assigned')); ?></td>
                 <?php } ?>
                 <td data-value="<?php print ($u->getDeadlines()->count() > 0 ? 'Y' : 'N'); ?>"><?php print $u->getDeadlines()->count(); ?></td>
                 <td data-value="<?php print $u->getSchedules()->count(); ?>"><?php print ($u->getSchedules()->count() > 0 ? 'Y' : 'N'); ?></td>
