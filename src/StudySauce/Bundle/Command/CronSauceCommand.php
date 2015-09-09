@@ -83,30 +83,64 @@ EOF
         $emails->setContainer($this->getContainer());
 
         // send reminders
-        $notActivated = Criteria::create()->where(Criteria::expr()->isNull('activated'))->orWhere(
-            Criteria::expr()->eq('activated', false)
-        );
-        $partners = $orm->getRepository('StudySauceBundle:PartnerInvite')->matching($notActivated)->toArray();
+        $partners = $orm->getRepository('StudySauceBundle:PartnerInvite')->createQueryBuilder('p')
+            ->where('p.activated=0 AND p.partner IS NULL')
+            ->andWhere('p.reminder IS NULL OR p.reminder < :reminder')
+            ->andWhere('(p.created < :d1 AND p.created > :d2) OR (p.created < :d3 AND p.created > :d4)' .
+                ' OR (p.created < :d5 AND p.created > :d6) OR (p.created < :d7 AND p.created > :d8)')
+            ->setParameter('reminder', date_sub(new \DateTime(), new \DateInterval('P7D')))
+            ->setParameter('d1', date_sub(new \DateTime(), new \DateInterval('P3D')))
+            ->setParameter('d2', date_sub(new \DateTime(), new \DateInterval('P4D')))
+            ->setParameter('d3', date_sub(new \DateTime(), new \DateInterval('P10D')))
+            ->setParameter('d4', date_sub(new \DateTime(), new \DateInterval('P11D')))
+            ->setParameter('d5', date_sub(new \DateTime(), new \DateInterval('P17D')))
+            ->setParameter('d6', date_sub(new \DateTime(), new \DateInterval('P18D')))
+            ->setParameter('d7', date_sub(new \DateTime(), new \DateInterval('P24D')))
+            ->setParameter('d8', date_sub(new \DateTime(), new \DateInterval('P25D')))
+            ->getQuery()->getResult();
         foreach ($partners as $i => $p) {
-            /** @var PartnerInvite $p */
-            // send for 4 weeks
-            if (!$p->getActivated() &&
-                (($p->getCreated()->getTimestamp() < time() - 86400 * 3 && $p->getCreated()->getTimestamp() > time(
-                        ) - 86400 * 4) ||
-                    ($p->getCreated()->getTimestamp() < time() - 86400 * 10 && $p->getCreated()->getTimestamp() > time(
-                        ) - 86400 * 11) ||
-                    ($p->getCreated()->getTimestamp() < time() - 86400 * 17 && $p->getCreated()->getTimestamp() > time(
-                        ) - 86400 * 18) ||
-                    ($p->getCreated()->getTimestamp() < time() - 86400 * 24 && $p->getCreated()->getTimestamp() > time(
-                        ) - 86400 * 25)) &&
-                (empty($p->getReminder()) || $p->getReminder()->getTimestamp() < time() - 86400 * 7)
-            ) {
+            try {
+                /** @var PartnerInvite $p */
+                // send for 4 weeks
                 $emails->partnerReminderAction($p->getUser(), $p);
                 $p->setReminder(new \DateTime());
                 $orm->merge($p);
                 $orm->flush();
+            } catch (\Exception $e) {
+                $error = $e;
             }
         }
+
+        $groupInvites = $orm->getRepository('StudySauceBundle:GroupInvite')->createQueryBuilder('g')
+            ->where('g.activated=0 AND g.student IS NULL')
+            ->andWhere('g.reminder IS NULL OR g.reminder < :reminder')
+            ->andWhere('(g.created < :d1 AND g.created > :d2) OR (g.created < :d3 AND g.created > :d4)' .
+                ' OR (g.created < :d5 AND g.created > :d6) OR (g.created < :d7 AND g.created > :d8)')
+            ->setParameter('reminder', date_sub(new \DateTime(), new \DateInterval('P7D')))
+            ->setParameter('d1', date_sub(new \DateTime(), new \DateInterval('P3D')))
+            ->setParameter('d2', date_sub(new \DateTime(), new \DateInterval('P4D')))
+            ->setParameter('d3', date_sub(new \DateTime(), new \DateInterval('P10D')))
+            ->setParameter('d4', date_sub(new \DateTime(), new \DateInterval('P11D')))
+            ->setParameter('d5', date_sub(new \DateTime(), new \DateInterval('P17D')))
+            ->setParameter('d6', date_sub(new \DateTime(), new \DateInterval('P18D')))
+            ->setParameter('d7', date_sub(new \DateTime(), new \DateInterval('P24D')))
+            ->setParameter('d8', date_sub(new \DateTime(), new \DateInterval('P25D')))
+            ->getQuery()->getResult();
+        foreach ($groupInvites as $i => $g) {
+            try {
+                /** @var GroupInvite $g */
+                // send for 4 weeks
+                $emails->groupReminderAction($g->getUser(), $g);
+                $g->setReminder(new \DateTime());
+                $orm->merge($g);
+                $orm->flush();
+            } catch (\Exception $e) {
+                $error = $e;
+            }
+        }
+
+        if(!empty($error))
+            throw $error;
     }
 
     private function send3DayMarketing()
@@ -149,7 +183,7 @@ EOF
             ->leftJoin('d.user', 'u')
             ->andWhere('d.user IS NOT NULL AND d.deleted != 1')
             ->andWhere('d.dueDate >= :now OR u.roles LIKE \'%adviser%\'')
-            ->setParameter('now', date_sub(new \DateTime(), new \DateInterval('P1D'))->format('Y-m-d H:i:s'))
+            ->setParameter('now', new \DateTime('today'))
             ->getQuery()
             ->getResult());
         $deadlines = [];
@@ -465,9 +499,24 @@ EOF
         if(!$input->getOption('sync')) {
             try {
                 $this->sendReminders();
-                $this->send3DayMarketing();
+                //$this->send3DayMarketing();
+            }
+            catch (\Exception $e) {
+                $error = $e;
+            }
+            try {
                 $this->sendDeadlines();
+            }
+            catch (\Exception $e) {
+                $error = $e;
+            }
+            try {
                 $this->sendInactivity();
+            }
+            catch (\Exception $e) {
+                $error = $e;
+            }
+            try {
                 $this->sendSpool();
             }
             catch (\Exception $e) {

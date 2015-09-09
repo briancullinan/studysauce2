@@ -769,7 +769,7 @@ class PlanController extends Controller
             }
         }
         self::createStudyEvents($schedule, $eventInfo, $orm);
-        self::createAllDay($schedule, $user->getDeadlines()->toArray(), $orm);
+        self::createAllDay($schedule, $guest->getDeadlines()->toArray(), $orm);
     }
 
     /**

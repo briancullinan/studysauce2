@@ -1,6 +1,7 @@
 <?php
 namespace Admin\Bundle\Tests;
 
+use Codeception\Module\Doctrine2;
 use WebDriver;
 use WebDriverBy;
 use WebDriverKeys;
@@ -89,15 +90,23 @@ class AdviserCest
         $I->fillField('#import .edit .email input', 'firstlast' . $last . '@mailinator.com');
         $I->click('#import [href="#save-group"]');
         $I->wait(5);
+        $I->amOnPage('/cron/emails');
 
-        $I->wantTo('Register as a new student using the invite email');
+        // change the created day back 8 days so the invite reminder is sent
+        Doctrine2::$em->clear();
+        $invite = Doctrine2::$em->getRepository('StudySauceBundle:GroupInvite')->findOneBy(['email' => 'firstlast' . $last . '@mailinator.com']);
+        $invite->setCreated(date_sub(new \DateTime(), new \DateInterval('P3D')));
+        Doctrine2::$em->merge($invite);
+        Doctrine2::$em->flush();
+
+        $I->wantTo('Register as a new student with a different email address using the invite reminder email');
         $I->amOnPage('/cron/emails');
         $I->amOnUrl('http://mailinator.com');
         $I->fillField('.input-append input', 'studymarketing');
         $I->click('.input-append btn');
         $I->waitForText('a minute ago', 60*5);
         $I->seeLink('Invitation to Study Sauce!');
-        $I->click('//a[contains(.,"Invitation to Study Sauce!")]');
+        $I->click('//a[contains(.,"Your invitation to join Study Sauce is still pending")]');
         $I->wait(1);
         $I->switchToIFrame('rendermail');
 

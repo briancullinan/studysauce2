@@ -128,14 +128,6 @@ class EmailsController extends Controller
         if(empty($user))
             $user = $this->getUser();
 
-        if($partner == null)
-            $partner = $user->getPartnerInvites()->filter(function (PartnerInvite $p) {return $p->getActivated();})->first();
-
-        if(empty($partner)) {
-            $logger = $this->get('logger');
-            $logger->error('Achievement called with no partner.');
-            return new Response();
-        }
         $codeUrl = $this->generateUrl('partner_welcome', ['_code' => $partner->getCode()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         /** @var Swift_Mime_Message $message */
@@ -151,6 +143,37 @@ class EmailsController extends Controller
         $headers = $message->getHeaders();
         $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
                         'category' => ['partner-reminder']])));
+        $this->send($message);
+
+        return new Response();
+    }
+
+    /**
+     * @param User $user
+     * @param GroupInvite $groupInvite
+     * @return Response
+     */
+    public function groupReminderAction(User $user = null, GroupInvite $groupInvite = null)
+    {
+        /** @var $user User */
+        if(empty($user))
+            $user = $this->getUser();
+
+        /** @var Swift_Mime_Message $message */
+        $message = Swift_Message::newInstance()
+            ->setSubject('Your invitation to join Study Sauce is still pending')
+            ->setFrom($user->getEmail())
+            ->setTo(trim($groupInvite->getEmail()))
+            ->setBody($this->renderView('StudySauceBundle:Emails:group-invite.html.php', [
+                'user' => $user,
+                'invite' => $groupInvite,
+                'group' => $groupInvite->getGroup(),
+                'greeting' => 'Dear ' . $groupInvite->getFirst() . ' ' . $groupInvite->getLast() . ',',
+                'link' => '<a href="' . $this->generateUrl('register', ['_code' => $groupInvite->getCode()], UrlGeneratorInterface::ABSOLUTE_URL) . '" style="color: #FF9900;">Go to Study Sauce</a>'
+            ]), 'text/html');
+        $headers = $message->getHeaders();
+        $headers->addParameterizedHeader('X-SMTPAPI', preg_replace('/(.{1,72})(\s)/i', "\1\n   ", json_encode([
+            'category' => ['group-reminder']])));
         $this->send($message);
 
         return new Response();

@@ -110,7 +110,7 @@ class Deadline
         return false;
     }
 
-    public static $reminders = [-48, -28, -14, -7, -1, 0, 1, 2, 4, 7, 14];
+    public static $reminders = [-48, -28, -14, -7, -1, 0, 1, 2, 4, 7, 14, 28, 48];
 
     public function markSent()
     {

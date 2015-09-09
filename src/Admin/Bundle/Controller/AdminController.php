@@ -14,6 +14,7 @@ use StudySauce\Bundle\Controller\BuyController;
 use StudySauce\Bundle\Controller\EmailsController as StudySauceEmails;
 use StudySauce\Bundle\Entity\Coupon;
 use StudySauce\Bundle\Entity\Course;
+use StudySauce\Bundle\Entity\Deadline;
 use StudySauce\Bundle\Entity\Event;
 use StudySauce\Bundle\Entity\Goal;
 use StudySauce\Bundle\Entity\Group;
@@ -982,13 +983,29 @@ class AdminController extends Controller
             }
             foreach($u->getSchedules()->toArray() as $i => $s) {
                 /** @var Schedule $s */
-                foreach($s->getEvents()->toArray() as $j => $e) {
+                foreach ($s->getEvents()->toArray() as $j => $e) {
                     /** @var Event $e */
                     $s->removeEvent($e);
                     $orm->remove($e);
                 }
+            }
+            $orm->flush();
+            foreach($u->getDeadlines()->toArray() as $i => $d) {
+                /** @var Deadline $d */
+                $u->removeDeadline($d);
+                if(!empty($d->getCourse())) {
+                    $d->getCourse()->removeDeadline($d);
+                }
+                $orm->remove($d);
+            }
+            $orm->flush();
+            foreach($u->getSchedules()->toArray() as $i => $s) {
                 foreach($s->getCourses()->toArray() as $j => $co) {
                     /** @var Course $co */
+                    foreach($co->getDeadlines()->toArray() as $d) {
+                        $co->removeDeadline($d);
+                        $orm->remove($d);
+                    }
                     foreach($co->getCheckins()->toArray() as $k => $ch) {
                         $co->removeCheckin($ch);
                         $orm->remove($ch);
@@ -1003,11 +1020,7 @@ class AdminController extends Controller
                 $u->removeSchedule($s);
                 $orm->remove($s);
             }
-            foreach($u->getDeadlines()->toArray() as $i => $d) {
-                $u->removeDeadline($d);
-                $orm->remove($d);
-            }
-            foreach($u->getStudentInvites()->toArray() as $i => $st) {
+           foreach($u->getStudentInvites()->toArray() as $i => $st) {
                 $u->removeStudentInvite($st);
                 $orm->remove($st);
             }

@@ -93,7 +93,7 @@ class ImportController extends Controller
             foreach($existing as $j => $gi)
             {
                 /** @var GroupInvite $gi */
-                if(strtolower($gi->getEmail()) == $u['email']) {
+                if(trim(strtolower($gi->getEmail())) == trim(strtolower($u['email']))) {
                     $invite = $gi;
                     break;
                 }
@@ -101,7 +101,7 @@ class ImportController extends Controller
 
             // check if the user already exists
             /** @var User $invitee */
-            $invitee = $userManager->findUserByEmail($u['email']);
+            $invitee = $userManager->findUserByEmail(trim($u['email']));
 
             // save the invite
             if((!isset($invite) || $invite->getCreated() < date_sub(new \DateTime(), new \DateInterval('P1D'))) && !empty($group)) {
