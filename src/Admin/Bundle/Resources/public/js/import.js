@@ -37,7 +37,7 @@ jQuery(document).ready(function() {
         }
     }
 
-    $('click', '#import a[href*="/register"]', function (evt) {
+    body.on('click', '#import a[href*="/register"]', function (evt) {
         evt.preventDefault();
     });
 
