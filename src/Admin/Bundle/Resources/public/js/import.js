@@ -37,6 +37,10 @@ jQuery(document).ready(function() {
         }
     }
 
+    $('click', '#import a[href*="/register"]', function (evt) {
+        evt.preventDefault();
+    });
+
     body.on('change', '#import .first-name input, #import .last-name input, #import .email input', importFunc);
     body.on('keyup', '#import .first-name input, #import .last-name input, #import .email input', importFunc);
 
