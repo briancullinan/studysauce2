@@ -1494,6 +1494,11 @@ $(document).ready(function () {
                     else
                         plan.removeClass('setup-mode');
 
+                    if(content.filter('#plan').is('.show-connected'))
+                        plan.addClass('show-connected');
+                    else
+                        plan.removeClass('show-connected');
+
                     // update dialogs
                     content.filter('#plan-step-1, #plan-step-3, #plan-step-4').each(function () {
                         $('#' + $(this).attr('id')).find('.modal-body').replaceWith($(this).find('.modal-body'));
