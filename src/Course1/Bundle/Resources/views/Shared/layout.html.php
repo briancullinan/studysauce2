@@ -14,7 +14,7 @@ $collection = $router->getRouteCollection();
 $view->extend('StudySauceBundle:Shared:dashboard.html.php');
 
 global $courseIncluded;
-if (!$courseIncluded) {
+if (!$courseIncluded && !!empty($exclude_layout)) {
     $courseIncluded = true;
 
     $view['slots']->start('lesson-body');

@@ -2,12 +2,14 @@
 
 namespace Admin\Bundle\Controller;
 
+use Aws\Sns\Exception\NotFoundException;
 use Course1\Bundle\Entity\Course1;
 use Course2\Bundle\Entity\Course2;
 use Course3\Bundle\Entity\Course3;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use StudySauce\Bundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
@@ -15,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TimedPhpEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Templating\Helper\SlotsHelper;
 
 /**
@@ -561,8 +564,11 @@ class ResultsController extends Controller
      */
     public function userAction(Request $request)
     {
-        /** @var User $user */
-        $user = $this->getUser();
+        /** @var $userManager UserManager */
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $userManager->findUserBy(['id' => intval($request->get('userId'))]);
+        if(empty($user))
+            throw new NotFoundHttpException();
 
         return $this->render('AdminBundle:Results:result.html.php', [
             'course1' => $user->getCourse1s()->first() ?: new Course1(),
