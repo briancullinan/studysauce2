@@ -522,6 +522,18 @@
 #userlist a[href*="/notes"]:not(.more)
 {
     background: none;
+    color:#0099BB;
+}
+
+#userlist a[href*="evernote"]:not(.more):hover,
+#userlist a[href*="evernote"]:not(.more):focus,
+#userlist a[href*="evernote"]:not(.more):active,
+#userlist a[href*="evernote"].active:not(.more),
+#userlist a[href*="/notes"]:not(.more):hover,
+#userlist a[href*="/notes"]:not(.more):focus,
+#userlist a[href*="/notes"]:not(.more):active,
+#userlist a[href*="/notes"].active:not(.more) {
+    color:#00CCEE;
 }
 
 #userlist a[href*="evernote"]:not(.more):before,
