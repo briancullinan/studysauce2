@@ -481,6 +481,8 @@
 .pane-content a[href*="#grade-scale"]:not(.more),
 .pane-content a[href*="#manage-terms"]:not(.more),
 .pane-content a[href*="/calculator"]:not(.more),
+#userlist a[href*="evernote"]:not(.more),
+#userlist a[href*="/notes"]:not(.more),
 #login a[href*="/reset"]:not(.more)
 {
     padding-left:30px;
@@ -501,6 +503,8 @@
 .pane-content a[href*="#grade-scale"]:not(.more):before,
 .pane-content a[href*="#manage-terms"]:not(.more):before,
 .pane-content a[href*="/calculator"]:not(.more):before,
+#userlist a[href*="evernote"]:not(.more):before,
+#userlist a[href*="/notes"]:not(.more):before,
 #login a[href*="/reset"]:not(.more):before
 {
     background: url(../images/menu_new_half.png) no-repeat left -302px transparent;
@@ -512,6 +516,23 @@
     position:absolute;
     left:2px;
     top:50%;
+}
+
+#userlist a[href*="evernote"]:not(.more):before,
+#userlist .main-menu a[href*="/notes"]:not(.more):before
+{
+    background-position: left -2202px;
+}
+
+#userlist a[href*="evernote"]:not(.more):hover:before,
+#userlist a[href*="evernote"]:not(.more):focus:before,
+#userlist a[href*="evernote"]:not(.more):active:before,
+#userlist a[href*="evernote"].active:not(.more):before,
+#userlist .main-menu a[href*="/notes"]:not(.more):hover:before,
+#userlist .main-menu a[href*="/notes"]:not(.more):focus:before,
+#userlist .main-menu a[href*="/notes"]:not(.more):active:before,
+#userlist .main-menu a[href*="/notes"].active:not(.more):before {
+    background-position: left -2252px;
 }
 
 #login a[href*="/reset"]:not(.more):before
