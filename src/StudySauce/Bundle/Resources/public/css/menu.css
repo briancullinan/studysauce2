@@ -519,8 +519,9 @@
 }
 
 #userlist a[href*="evernote"]:not(.more):before,
-#userlist .main-menu a[href*="/notes"]:not(.more):before
+#userlist a[href*="/notes"]:not(.more):before
 {
+    background-color: transparent;
     background-position: left -2202px;
 }
 
@@ -528,10 +529,10 @@
 #userlist a[href*="evernote"]:not(.more):focus:before,
 #userlist a[href*="evernote"]:not(.more):active:before,
 #userlist a[href*="evernote"].active:not(.more):before,
-#userlist .main-menu a[href*="/notes"]:not(.more):hover:before,
-#userlist .main-menu a[href*="/notes"]:not(.more):focus:before,
-#userlist .main-menu a[href*="/notes"]:not(.more):active:before,
-#userlist .main-menu a[href*="/notes"].active:not(.more):before {
+#userlist a[href*="/notes"]:not(.more):hover:before,
+#userlist a[href*="/notes"]:not(.more):focus:before,
+#userlist a[href*="/notes"]:not(.more):active:before,
+#userlist a[href*="/notes"].active:not(.more):before {
     background-position: left -2252px;
 }
 
