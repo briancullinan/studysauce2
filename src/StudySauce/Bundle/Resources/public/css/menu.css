@@ -518,10 +518,15 @@
     top:50%;
 }
 
+#userlist a[href*="evernote"]:not(.more),
+#userlist a[href*="/notes"]:not(.more)
+{
+    background: none;
+}
+
 #userlist a[href*="evernote"]:not(.more):before,
 #userlist a[href*="/notes"]:not(.more):before
 {
-    background-color: transparent;
     background-position: left -2202px;
 }
 
