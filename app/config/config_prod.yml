@@ -8,7 +8,7 @@ parameters:
 doctrine:
     dbal:
         driver:   "pdo_mysql"
-        host:     "studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com"
+        host:     "localhost"
         dbname:   "studysauce"
         user:     "study"
         password: "itekIO^#("
@@ -17,7 +17,7 @@ services:
     pdo:
         class: Doctrine\DBAL\Driver\PDOConnection
         arguments:
-            - "mysql:host=studysauce2.cjucxx5pvknl.us-west-2.rds.amazonaws.com;port=3306;dbname=studysauce"
+            - "mysql:host=localhost;port=3306;dbname=studysauce"
             - "study"
             - "itekIO^#("
         calls:
