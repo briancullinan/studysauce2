@@ -34,3 +34,16 @@ else
         exit 0
 fi
 fi
+
+
+if  dig course.studysauce.com | grep '^[^;].*IN\sA' | grep "$myip" ; then
+    echo "This is course"
+    if ps -ef | grep -v grep | grep course\.studysauce ; then
+        echo "Cron already running."
+        exit 0
+    else
+        wget --no-check-certificate -O /dev/null -o /dev/null https://course.studysauce.com/cron &
+        exit 0
+    fi
+fi
+

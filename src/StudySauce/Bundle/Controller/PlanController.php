@@ -1886,9 +1886,7 @@ END:VCALENDAR'
 
     public function pdfAction(Request $request, User $user = null)
     {
-        if ($request->server->get('REMOTE_ADDR') == '127.0.0.1' && !empty($user)) {
-            if(empty($user))
-                $user = $this->getUser();
+        if (!empty($user)) {
             $schedule = $user->getSchedules()->first();
             return $this->render('StudySauceBundle:Plan:pdf.html.php', ['schedule' => $schedule]);
         } else {
